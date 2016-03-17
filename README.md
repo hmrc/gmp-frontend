@@ -1,6 +1,8 @@
 Frontend service for the Guaranteed Minimum Pension service
 ===========================================================
 
+[![Build Status](https://travis-ci.org/hmrc/gmp-frontend.svg)](https://travis-ci.org/hmrc/nisp-frontend) [ ![Download](https://api.bintray.com/packages/hmrc/releases/gmp-frontend/images/download.svg) ](https://bintray.com/hmrc/releases/gmp-frontend/_latestVersion)
+
 This service provides the frontend application for the Guaranteed Minimum Pension service.
 
 Summary
