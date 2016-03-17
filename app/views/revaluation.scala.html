@@ -1,0 +1,111 @@
+@*
+* Copyright 2016 HM Revenue & Customs
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*     http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*@
+
+@(revaluationForm: Form[models.RevaluationDate])(implicit request: Request[_])
+
+@import uk.gov.hmrc.play.views.html._
+@import uk.gov.hmrc.play.views.html.helpers._
+@import views.html.helpers._
+@import play.i18n._
+
+@implicitFormInstance = @{ Some(revaluationForm) }
+
+@gmp_main(title = Messages.get("gmp.revaluation.title")) {
+
+@views.html.helpers.errorSummary(revaluationForm)
+
+<div class="grid">
+    <div class="grid-2-3">
+        <h1>@Messages.get("gmp.revaluation.question")</h1>
+    </div>
+</div>
+
+<div class="grid">
+    <div class="grid-2-3">
+
+        <div>@Messages.get("gmp.revaluation.info")</div>
+        <br/>
+
+        @form(action = routes.RevaluationController.post) {
+
+            @if(revaluationForm.hasErrors || revaluationForm.hasGlobalErrors) {
+              <div class="form-field--error form-date" id="revaluation-date">
+            } else {
+              <div class="form-date" id="revaluation-Date">
+            }
+
+                @views.html.helpers.groupError(revaluationForm("revaluationDate"))
+                  @if(revaluationForm.hasGlobalErrors) {
+                    @revaluationForm.globalErrors.zipWithIndex.map { case (error, index) =>
+                        <span style="display: block" class="error-notification" id="global-error-@index">@error.message</span>
+                    }
+                  }
+
+                <fieldset id="reval-date">
+
+                    <legend id="revaluationDate">
+                       <p class="form-hint">@Messages.get("gmp.date.example")</p>
+                    </legend>
+
+                    <div class="form-group">
+                        @gmpInput(revaluationForm("revaluationDate.day"),
+                        '_label -> Html(Messages.get("gmp.day")),
+                        '_id -> "revaluationDate_day",
+                        '_maxLength -> 2,
+                        '_showConstraints -> false)
+                    </div>
+                    <div class="form-group">
+                        @gmpInput(revaluationForm("revaluationDate.month"),
+                        '_label -> Html(Messages.get("gmp.month")),
+                        '_id -> "revaluationDate_month",
+                        '_maxLength -> 2,
+                        '_showConstraints -> false)
+                    </div>
+                    <div class="form-group">
+                        @gmpInput(revaluationForm("revaluationDate.year"),
+                        '_label -> Html(Messages.get("gmp.year")),
+                        '_id -> "revaluationDate_year",
+                        '_maxLength ->4,
+                        '_inputClass -> "form-control year-input",
+                        '_showConstraints -> false)
+                    </div>
+                    <br/>
+                    <br/>
+                    <br/>
+
+                </fieldset>
+
+            </div>
+
+            <!-- hidden part of form -->
+              <input class="hidden" id="leavingDate_day" name="leaving.leavingDate.day" value="@revaluationForm("leaving.leavingDate.day").value"/>
+              <input class="hidden" id="leavingDate_month" name="leaving.leavingDate.month" value="@revaluationForm("leaving.leavingDate.month").value"/>
+              <input class="hidden" id="leavingDate_year" name="leaving.leavingDate.year" value="@revaluationForm("leaving.leavingDate.year").value"/>
+              <input class="hidden" id="leavingText" name="leaving.leaving" value="@revaluationForm("leaving.leaving").value"/>
+            <!-- hidden part of form -->
+
+            <div class="continue-button">
+                <button class="button" type="submit" id="submit-button">@Messages.get("gmp.continue.button")</button>
+            </div>
+
+        }
+
+        <div class="custom-back-link">
+            <a href="@routes.RevaluationController.back" id="back-link">@Messages.get("gmp.back.link")</a>
+        </div>
+    </div>
+</div>
+}

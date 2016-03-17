@@ -1,0 +1,70 @@
+@*
+* Copyright 2016 HM Revenue & Customs
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*     http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*@
+
+@(bulkReferenceForm: Form[models.BulkReference])(implicit request: Request[_])
+
+@import uk.gov.hmrc.play.views.html._
+@import uk.gov.hmrc.play.views.html.helpers._
+@import views.html.helpers._
+@import play.i18n._
+
+@gmp_main(title = Messages.get("gmp.bulk_reference.title"),supportLinkEnabled = true) {
+
+  @views.html.helpers.errorSummary(bulkReferenceForm)
+
+  <div class="grid">
+      <div class="grid-2-3">
+
+        <h1>@Messages.get("gmp.bulk_reference.header")</h1>
+
+        <p class="text">@Messages.get("gmp.bulk_reference.subheader")</p>
+
+        @form(action = routes.BulkReferenceController.post) {
+
+          <div class="form-group">
+            @gmpInput(bulkReferenceForm("email"),
+            '_label -> Html(Messages.get("gmp.email")),
+            '_labelClass -> "form-label-bold",
+            '_id -> "email",
+            '_hintText -> Messages.get("gmp.bulk_reference.email_text"),
+            '_showConstraints -> false)
+
+
+            @gmpInput(bulkReferenceForm("reference"),
+            '_label -> Html(Messages.get("gmp.reference")),
+            '_labelClass -> "form-label-bold",
+            '_id -> "email",
+            '_maxLength -> 40,
+            '_hintText -> Messages.get("gmp.bulk_reference.reference_text"),
+            '_showConstraints -> false)
+          </div>
+
+          <div>
+            <button class="button" type="submit" id="submit-button">@Messages.get("gmp.bulk_reference.button")</button>
+          </div>
+        }
+
+        <br>
+        <div>
+          <a href="@routes.InflationProofController.back" id="back-link">@Messages.get("gmp.back.link")</a>
+        </div>
+
+      </div><br>
+
+  </div>
+
+
+}

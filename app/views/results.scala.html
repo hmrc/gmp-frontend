@@ -1,0 +1,61 @@
+@*
+* Copyright 2016 HM Revenue & Customs
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*     http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*@
+
+@(applicationConfig: config.ApplicationConfig = config.ApplicationConfig, calculationResponse:CalculationResponse, sameTaxYear:Boolean)(implicit request: Request[_])
+
+@import uk.gov.hmrc.play.views.html._
+@import uk.gov.hmrc.play.views.html.helpers._
+@import play.i18n._
+@import config.ApplicationConfig.globalErrors
+
+
+@gmp_main(applicationConfig = applicationConfig, title = Messages.get("gmp.results.title"),supportLinkEnabled = false) {
+
+  @if(calculationResponse.globalErrorCode > 0){
+    @includes.global_error(calculationResponse.globalErrorCode)
+  } else {
+    @if(calculationResponse.calculationPeriods.length > 1){
+      @if(calculationResponse.hasErrors) {
+        @includes.multi_error(calculationResponse)
+      } else {
+        @includes.multi_results(calculationResponse, sameTaxYear)
+      }
+    } else {
+      @if(calculationResponse.calculationPeriods.head.errorCode == 0){
+        @includes.single_result(calculationResponse, sameTaxYear)
+      }else{
+        @includes.global_error(calculationResponse.calculationPeriods.head.errorCode)
+      }
+    }
+  }
+
+  @includes.member_details_result(calculationResponse)
+
+  @if(!calculationResponse.hasErrors){
+    <div class="grid">
+      <div class="grid-2-3">
+        <span id="queryhandling">@Html(Messages.get("gmp.queryhandling.resultsmessage"))</span>
+        <br/>
+        <br/>
+      </div>
+    </div>
+  }
+
+  @includes.request_another_button()
+
+  @includes.what_did_you_think_link()
+
+}

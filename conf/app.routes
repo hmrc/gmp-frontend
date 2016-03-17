@@ -1,0 +1,61 @@
+# microservice specific routes
+
+->          /template                                     template.Routes
+
+GET         /assets/*file                                 controllers.AssetsController.at(path="/public", file)
+
+GET         /pension-details                              controllers.PensionDetailsController.get
+POST        /pension-details                              controllers.PensionDetailsController.post
+
+GET         /relevant-date                                controllers.RevaluationController.get
+POST        /relevant-date                                controllers.RevaluationController.post
+GET         /relevant-date/back                           controllers.RevaluationController.back
+
+GET         /inflation-proof                              controllers.InflationProofController.get
+POST        /inflation-proof                              controllers.InflationProofController.post
+GET         /inflation-proof/back                         controllers.InflationProofController.back
+
+GET         /left-scheme                                  controllers.DateOfLeavingController.get
+POST        /left-scheme                                  controllers.DateOfLeavingController.post
+GET         /left-scheme/back                             controllers.DateOfLeavingController.back
+
+GET         /revaluation-rate                             controllers.RevaluationRateController.get
+POST        /revaluation-rate                             controllers.RevaluationRateController.post
+GET         /revaluation-rate/back                        controllers.RevaluationRateController.back
+
+GET         /calculation-reason                           controllers.ScenarioController.get
+POST        /calculation-reason                           controllers.ScenarioController.post
+GET         /calculation-reason/back                      controllers.ScenarioController.back
+
+GET         /unauthorised                                 controllers.ApplicationController.unauthorised
+
+GET         /member-details                               controllers.MemberDetailsController.get
+POST        /member-details                               controllers.MemberDetailsController.post
+GET         /member-details/back                          controllers.MemberDetailsController.back
+
+GET         /results                                      controllers.ResultsController.get
+
+GET         /new-calculation                              controllers.SessionCacheController.newCalculation
+GET         /new-bulk-calculation                         controllers.SessionCacheController.newBulkCalculation
+
+GET         /questionnaire                                controllers.ExitQuestionnaireController.get
+POST        /questionnaire                                controllers.ExitQuestionnaireController.post
+GET         /questionnaire/thankyou                       controllers.ExitQuestionnaireController.showThankYou
+
+GET         /                                             controllers.StartController.get
+GET         /service-unavailable                          controllers.ServiceUnavailableController.get
+
+GET         /contributions-earnings                       controllers.ResultsController.getContributionsAndEarnings
+
+GET         /equalise                                     controllers.EqualiseController.get
+POST        /equalise                                     controllers.EqualiseController.post
+GET         /equalise/back                                controllers.EqualiseController.back
+
+GET         /upload-csv                                   controllers.FileUploadController.get
+GET         /upload-csv/failure                           controllers.FileUploadController.failure
+POST        /upload-csv/callback                          controllers.FileUploadController.callback
+
+GET         /getting-results                              controllers.BulkReferenceController.get
+POST        /getting-results                              controllers.BulkReferenceController.post
+
+GET         /request-received                             controllers.BulkRequestReceivedController.get

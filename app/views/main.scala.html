@@ -1,0 +1,98 @@
+@*
+* Copyright 2016 HM Revenue & Customs
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*     http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*@
+
+@(applicationConfig: config.ApplicationConfig = config.ApplicationConfig,
+    title: String,
+    contentHeader: Option[Html] = None,
+    userLoggedIn: Boolean = false,
+    getHelpForm: Html  = HtmlFormat.empty,
+    linkElement : Option[Html] = None,
+    scriptElement : Option[Html] = None,
+    signOutEnabled:Boolean)(mainContent: Html = HtmlFormat.empty)(implicit request: Request[_])
+
+@import layouts.{govuk_template => hmrcGovUkTemplate}
+@import uk.gov.hmrc.play.views.html.{layouts => uiLayouts}
+@import controllers.auth.ExternalUrls
+
+@head = {
+    @uiLayouts.head(
+        assetsPrefix = applicationConfig.assetsPrefix,
+        linkElem = linkElement,
+        headScripts = None)
+    <meta name="format-detection" content="telephone=no"/>
+}
+
+@signOutLink = {
+    <li><a id="logOutStatusHref" href="@ExternalUrls.signOut">@Messages("gmp.signout")</a></li>
+}
+
+@insideHeader = {
+    @uiLayouts.header_nav(
+        navTitle = Some(Messages("gmp.title")),
+        navTitleLink = None,
+        showBetaLink = false,
+        navLinks = if(signOutEnabled) Some(signOutLink) else None
+    )
+}
+
+@afterHeader = {}
+
+@bodyEnd = {
+    @uiLayouts.footer(
+        analyticsToken = applicationConfig.analyticsToken,
+        analyticsHost = applicationConfig.analyticsHost,
+        assetsPrefix = applicationConfig.assetsPrefix,
+        ssoUrl = None,
+        scriptElem = scriptElement,
+        gaCalls = None
+    )
+}
+
+@footerTop = {}
+@footerLinks = {}
+
+@betaBanner = {
+    @uiLayouts.betaBanner(
+        userLoggedIn = userLoggedIn,
+        betaFeedbackUrl = applicationConfig.betaFeedbackUrl,
+        betaFeedbackUnauthenticatedUrl = applicationConfig.betaFeedbackUnauthenticatedUrl,
+        showFeedbackLinkInBetaBanner = true)
+}
+
+@serviceInfo = {
+    @uiLayouts.serviceInfo(
+        betaBanner = betaBanner,
+        includeGridWrapper = false,
+        serviceInfoContent = None,
+        includeHMRCBranding = false
+    )
+}
+
+@mainContentHeader = {
+    @contentHeader.map { contentHeaderVal =>
+        @uiLayouts.main_content_header(contentHeader = contentHeaderVal)
+    }
+}
+
+@content = {
+    @uiLayouts.main_content(
+        article = mainContent,
+        mainContentHeader = mainContentHeader,
+        serviceInfo = serviceInfo,
+        getHelpForm = getHelpForm)
+}
+
+@hmrcGovUkTemplate(Some(title), None)(head, bodyEnd, insideHeader, afterHeader, footerTop, Some(uiLayouts.footer_links()), true)(content)

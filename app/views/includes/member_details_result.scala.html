@@ -1,0 +1,81 @@
+@*
+* Copyright 2016 HM Revenue & Customs
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*     http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*@
+
+@(calculationResponse:CalculationResponse)(implicit request: Request[_])
+
+@import play.i18n._
+@import org.joda.time.LocalDate
+
+<div class="grid">
+  <div class="grid-2-3"><br>
+
+    @if(calculationResponse.calculationPeriods.length <= 1 && !calculationResponse.hasErrors) {
+
+      <table id="gmp-period-table">
+        <caption id="gmp-period-table-header">
+          @Messages.get("gmp.period_table_header")
+        </caption>
+        <tbody>
+
+        @if(calculationResponse.calculationPeriods.head.startDate.isDefined){
+          <tr>
+            <td class="width-53">@Messages.get("gmp.date.start"):</td>
+            <td class="width-47" id="start-date">@{(new LocalDate(calculationResponse.calculationPeriods.head.startDate.get)).toString("dd/MM/yyyy")}</td>
+          </tr>
+          <tr>
+            <td class="width-53">@Messages.get("gmp.date.dol"):</td>
+            <td class="width-47" id="end-date">@{(new
+              LocalDate(calculationResponse.calculationPeriods.head.endDate)).toString("dd/MM/yyyy")}
+            </td>
+          </tr>
+        }
+
+
+        </tbody>
+
+      </table>
+    }
+
+    <table id="member-details">
+      <caption>
+        @if(calculationResponse.calcType == CalculationType.SURVIVOR.toInt){
+        @Messages.get("gmp.entered_details.title.survivor")
+        } else{
+        @Messages.get("gmp.entered_details.title")
+        }
+      </caption>
+      <tbody>
+        <tr>
+          <td class="width-53">@Messages.get("gmp.name"):</td>
+          <td class="width-47" id="full-name">@calculationResponse.name</td>
+        </tr>
+        <tr>
+          <td class="width-53">@Messages.get("gmp.scon"):</td>
+          <td class="width-47" id="scon">@calculationResponse.scon</td>
+        </tr>
+        <tr>
+          <td class="width-53">@Messages.get("gmp.nino"):</td>
+          <td class="width-47" id="nino">@calculationResponse.nino</td>
+        </tr>
+
+      </tbody>
+
+    </table>
+
+  </div>
+</div>
+
+

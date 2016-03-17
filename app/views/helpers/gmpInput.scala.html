@@ -1,0 +1,85 @@
+@*
+* Copyright 2016 HM Revenue & Customs
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*     http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*@
+
+@(field: Field, args: (Symbol,Any)*)(implicit lang: Lang, formInstance: Option[Form[_]] = None)
+
+@import play.api.i18n._
+@import views.html.helper._
+@import views.helpers._
+
+@elements = @{ new FieldElements(field.id, field, null, args.toMap, lang) }
+@parentField = @{args.toMap.get('parentField).asInstanceOf[Option[Field]]}
+@errors = @{ FormHelpers.getErrors(field, parentField) }
+@parentElements = @{parentField.map(pf => new FieldElements(pf.id, pf, null, Map(), lang) )}
+@value = @{ field.value match { case Some(x) => x case None => "" case x => x }}
+@labelAfter = @{ elements.args.get('_labelAfter).getOrElse(false).asInstanceOf[Boolean] }
+@labelHighlight = @{ elements.args.get('_labelHighlight).getOrElse(false).asInstanceOf[Boolean] }
+
+@labelFor = @{elements.args.get('_id)}
+
+@labelClass = @{
+                    elements.args.get('_divClass)
+                    if(elements.args.get('_labelClass)){
+                        elements.args.get('_labelClass)
+                    }
+}
+
+@labelId = {@if(elements.args.get('_id)){@elements.args.get('_id)_field}else{@elements.field.name.replaceAll("""[\.\[\]]""", "-")}}
+@hintId = {@if(elements.args.get('_id)){@elements.args.get('_id)_hint}}
+
+
+<div class="form-group">
+
+    @if(errors.nonEmpty) {
+        <div class="@if(errors.nonEmpty|| (parentElements.isDefined && parentElements.get.hasErrors)) {form-field--error}">
+    }
+
+    @commonHelper(field,errors)
+    @if(labelHighlight) {<strong>}
+    <label for="@labelFor" class="@labelClass" id="@labelId">@if(elements.args.contains('_label)) {@elements.label}</label>
+    @if(labelHighlight) {</strong>}
+    @if(elements.args.contains('_hintText)) {<span class="form-hint" id="@hintId">@elements.args.get('_hintText)</span>}
+
+    @if(elements.args.contains('_symbol)) { <span class="inline-fields">@elements.args.get('_symbol)</span> }
+
+    <input @if(elements.args.contains('_type)){type="@elements.args.get('_type)"}else{type="text"}
+    @if(elements.args.contains('_maxLength)){
+          maxlength="@elements.args.get('_maxLength)"
+    }else{}
+
+    class="@if( elements.args.get('_inputClass)){@elements.args.get('_inputClass)}else{form-control}"
+
+    @if(elements.args.contains('_dataAttributes) ){
+        @elements.args.get('_dataAttributes)
+    }
+
+    @if(elements.args.contains('_hintText)) { aria-describedby="@hintId" }
+
+    name="@elements.field.name"
+
+    id="@elements.args.get('_id)"
+
+    value="@value"/>
+
+    @if(elements.args.contains('_nested)) {
+        @elements.args.get('_nested)
+    }
+
+    @if(errors.nonEmpty) {
+
+  </div>
+    }
+</div>

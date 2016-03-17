@@ -1,0 +1,46 @@
+@*
+* Copyright 2016 HM Revenue & Customs
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*     http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*@
+
+@(form: Form[_])
+
+@if(form.hasGlobalErrors || form.hasErrors) {
+
+<div id="errors" class="validation-summary">
+    <h1 class="heading-small" id="errorMessageHeadingText">@Messages("gmp.generic.errors_heading")</h1>
+    <ul>
+        @form.errors.map { error =>
+            @defining(
+                error.args.nonEmpty match {
+                    case true => {
+                        if (error.key.nonEmpty) {
+                            error.key + (error.args.fold("") { _ + "." + _ })
+                        } else {
+                            error.args.head
+                        }
+                    }
+                    case _ => { error.key }
+                }
+            ) { anchor =>
+            <li role="tooltip" data-journey="search-page:error:@error.key">
+                <a href="#@anchor" class="error-list" data-focuses="@error.key">
+                    @Messages(error.message)
+                </a>
+            </li>
+            }
+        }
+    </ul>
+</div>
+}

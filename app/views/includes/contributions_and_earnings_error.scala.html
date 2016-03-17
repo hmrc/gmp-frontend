@@ -1,0 +1,45 @@
+@*
+* Copyright 2016 HM Revenue & Customs
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*     http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*@
+
+@(calculationResponse:CalculationResponse)(implicit request: Request[_])
+
+@import play.i18n._
+@import config.ApplicationConfig.globalErrors
+
+<div class="grid">
+    <div class="grid-2-3">
+
+        <div class="global-error">
+
+            <h2 id="conts-and-earnings-error-header">@{Messages.get("gmp.only_part_problem")}</h2>
+
+            <div id="conts-and-earnings-error-message">
+                @for((period, count) <- calculationResponse.calculationPeriods.zipWithIndex){
+                    @if(period.errorCode != 0){
+                        <a class="error-message" href="#period-row-in-error-@count">@{Messages.get("gmp.contracted_out_period_error" ,s"${period.startTaxYear} to ${period.endTaxYear}")}</a><br/>
+                    }
+                }
+            </div>
+
+            <p id="conts-and-earnings-error-reason">@Messages.get("gmp.error.no_conts_and_earnings").</p>
+
+        </div>
+
+    </div>
+</div>
+
+<br/>
+

@@ -1,0 +1,56 @@
+@*
+* Copyright 2016 HM Revenue & Customs
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*     http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*@
+
+@(calculationResponse:CalculationResponse)(implicit request: Request[_])
+
+@import play.i18n._
+@import config.ApplicationConfig.globalErrors
+@import org.joda.time.LocalDate
+
+<div class="grid">
+    <div class="grid-2-3">
+        <div class="global-error">
+
+            <h1 id="part-problem">@{ Messages.get("gmp.part_problem") }</h1>
+            <br/>
+
+            <ul>
+                @for((period, count) <- calculationResponse.calculationPeriods.zipWithIndex) {
+                <li>
+                    @if(period.errorCode > 0) {
+                    <div class="bold-small" id="from-to-date-@count">@{ new LocalDate(period.startDate.get).toString("dd/MM/yyyy") } to @{ new LocalDate(period.endDate).toString("dd/MM/yyyy") }:</div>
+                      @if(globalErrors.hasPath(s"${period.errorCode}.reason")){
+                        <p id="reason-@count">@Messages.get(globalErrors.getString(s"${period.errorCode}.reason"))</p>
+                      } else {
+                        <p id="unavailable-@count">@Messages.get("gmp.unavailable")</p>
+                      }
+                    }
+                </li>
+                }
+            </ul>
+            @includes.multi_results_table(calculationResponse)
+            <div class="panel-indent">
+
+
+                <h3 id="what-now">@Messages.get("gmp.what_now")</h3>
+
+                <p id="multi-solution">@Html(Messages.get("gmp.multi.solution"))</p>
+            </div>
+        </div>
+
+        @includes.conts_and_earnings_link(calculationResponse)
+    </div>
+</div>

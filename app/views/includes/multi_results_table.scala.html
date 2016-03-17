@@ -1,0 +1,90 @@
+@*
+* Copyright 2016 HM Revenue & Customs
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*     http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*@
+
+@(calculationResponse:CalculationResponse)(implicit request: Request[_])
+
+@import play.i18n._
+@import org.joda.time.LocalDate
+@import config.ApplicationConfig.globalErrors
+
+<table id="periods">
+    <caption id="results-table-subheader">@Messages.get("gmp.results.table.subheading")</caption>
+    <thead>
+        <tr id="table-column-names">
+            <th class="numeric" colspan="2" ><span class="hidden">hidden text for empty th</span></th>
+            <th class="numeric" id="per-week">@Messages.get("gmp.per.week")</th>
+            <th class="numeric" id ="post-1988">@Messages.get("gmp.post.1988")</th>
+            @if(calculationResponse.dualCalc) {
+                <th class="numeric" id="true-table-column-header">@Messages.get("gmp.true")</th>
+                <th class="numeric" id="opposite-table-column-header">@Messages.get("gmp.opposite")</th>
+            }
+            @if(!calculationResponse.revaluationDate.isEmpty && calculationResponse.revaluationRate == Some("0")) {
+                <th class="numeric" id="hmrc-held-rate">@Messages.get("gmp.rate_hmrc_holds")</th>
+            }
+        </tr>
+    </thead>
+    <tbody>
+    @for((period, count) <- calculationResponse.calculationPeriods.zipWithIndex){
+
+    <tr @{if(period.errorCode> 0 )"class=error-row"}>
+        <td width="12%" class="table-background" colspan="2">
+            <span class="bold-xsmall" id="from-date-@count">From:</span> @{ new LocalDate(period.startDate.get).toString("dd/MM/yyyy") } <br/>
+            <span class="bold-xsmall" id="to-date-@count">To:  </span> @{ new LocalDate(period.endDate).toString("dd/MM/yyyy") }
+        </td>
+        @if(period.errorCode == 0) {
+            <td width="10%" id="gmp-total-@count" class="numeric">
+                <span class="bold-small">£@{ period.gmpTotal }</span>
+            </td>
+            <td width="15%" id="post-88-@count" class="numeric">
+                <span class="bold-small">£@{ period.post88GMPTotal }</span>
+            </td>
+
+            @if(calculationResponse.dualCalc) {
+                <td id="true-@count" class="numeric">
+                    <span class="bold-small">
+                      @if(period.dualCalcPost90TrueTotal != Some("0.00")) {
+                        £@{ period.dualCalcPost90TrueTotal }
+                      } else {
+                        --
+                      }
+                    </span>
+                </td>
+                <td id="opposite-@count" class="numeric">
+                    <span class="bold-small">
+                      @if(period.dualCalcPost90OppositeTotal != Some("0.00")) {
+                        £@{ period.dualCalcPost90OppositeTotal }
+                      } else {
+                        --
+                      }
+                    </span>
+                </td>
+            }
+            @if(!calculationResponse.revaluationDate.isEmpty && calculationResponse.revaluationRate == Some("0")) {
+                <td width ="14%" id="rate-@count" class="numeric">
+                    <span class="bold-small">
+                        @{ Messages.get(s"gmp.revaluation_rate.type_${period.revaluationRate}") }
+                    </span>
+                </td>
+            }
+        } else {
+            <td id="error-@count" colspan="4" class="error-message">
+                @{ Messages.get("gmp.unavailable") }
+            </td>
+        }
+    </tr>
+    }
+    </tbody>
+</table>

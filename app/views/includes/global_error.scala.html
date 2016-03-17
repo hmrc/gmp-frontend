@@ -1,0 +1,62 @@
+@*
+* Copyright 2016 HM Revenue & Customs
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*     http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*@
+
+@(globalErrorCode: Integer)(implicit request: Request[_])
+
+@import play.i18n._
+@import config.ApplicationConfig.globalErrors
+
+<div class="grid">
+    <div class="grid-2-3">
+
+        <div class="global-error">
+            @if(globalErrors.hasPath(s"$globalErrorCode.cannot_calculate")){
+                <h2 id="cannot-calculate-header">@{ Messages.get(globalErrors.getString(s"$globalErrorCode.cannot_calculate")) }</h2>
+            }
+
+            @if(globalErrors.hasPath(s"$globalErrorCode.reason")){
+                <div class="panel-indent" id="global-error-reason">@Messages.get(globalErrors.getString(s"$globalErrorCode.reason"))</div>
+            }
+
+          @if(globalErrors.hasPath(s"$globalErrorCode.solution")){
+            <div>
+
+                <h3 id="global-what-now">@Messages.get("gmp.what_now")</h3>
+
+                @Html(Messages.get(globalErrors.getString(s"$globalErrorCode.solution")))
+
+                @if(globalErrors.hasPath(s"$globalErrorCode.link_text")){
+                    <br/>
+                    <a type="button" class="button" id="global-error-link" href='@globalErrors.getString(s"$globalErrorCode.link_destination")'>@Messages.get(globalErrors.getString(s"$globalErrorCode.link_text"))</a>
+                }
+            </div>
+          }
+        </div>
+
+        @if(globalErrors.hasPath(s"$globalErrorCode.also")){
+            <br/>
+            <span id="query-handling">@Html(Messages.get(globalErrors.getString(s"$globalErrorCode.also")))</span>
+        }
+        @if(globalErrors.hasPath(s"$globalErrorCode.help_link")){
+            <br/>
+            <span id="query-handling-link">@Html(Messages.get(globalErrors.getString(s"$globalErrorCode.help_link")))</span>
+        }
+
+    </div>
+</div>
+
+<br/>
+

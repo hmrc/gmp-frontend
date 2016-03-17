@@ -1,0 +1,293 @@
+# titles
+gmp.entered_details.title = Entered details
+gmp.entered_details.title.survivor = Deceased member''s entered details
+gmp.member_details.title = Member details
+gmp.pension_details.title = Pension scheme details
+gmp.revaluation.title = Calculation date
+gmp.leaving.title = Left scheme
+gmp.results.title = GMP Calculation Result
+gmp.revaluation_rate.title = Revaluation rate
+gmp.calculation_type.title = Calculation Types
+gmp.equalise.title = Opposite calculation
+gmp.start_date = Start date
+gmp.leaving_date = Leaving date
+gmp.questionnaire.title = Feedback
+gmp.thank_you.title = Feedback Submitted
+gmp.title = Guaranteed Minimum Pension Checker
+gmp.contributions_earnings.title = Contributions and earnings
+gmp.fileupload.title = Upload your file
+gmp.bulk_reference.title = Getting your results
+gmp.bulk_request_received.title = Request Received
+gmp.signout = Sign out
+
+# headers
+gmp.revaluation.question = At which date would you like the calculation to apply?
+gmp.revaluation.info = This could be a transfer date, date of divorce, or any other date relevant to the member''s circumstances.
+gmp.inflation_proof.title = Inflation proof
+gmp.inflation_proof.question = Would you like a calculation for a date after the date of death?
+gmp.inflation_proof.info = The GMP value will increase based on the rate of inflation.
+gmp.leaving.question = Do you have a date of leaving?
+gmp.leaving.dol.question = Did the member leave the scheme before 6 April 2016?
+gmp.other.dol.left.question = Has the member left the scheme?
+gmp.survivor.dol.question = Had the member already left the scheme at date of death?
+gmp.fileupload.header = Upload your file
+
+gmp.results.banner = Calculation complete
+gmp.bulk_request_received.banner = Your request has been received
+gmp.revaluation_rate.header = Which revaluation rate would you like to use?
+gmp.revaluation_rate_spa.header = If HMRC needs to revalue this calculation which rate would you like to use?
+gmp.questionnaire.header = Send your feedback
+gmp.thank_you.header = Thank you
+gmp.thank_you.what_now = What do you want to do now?
+gmp.contracted_out_period_table_header = Contracted-out period {0}
+gmp.contracted_out_period_error = Contracted out period {0}:
+gmp.tax_year_table_column_header = Tax year
+gmp.contracted_out_period_table_column_header = Contributions and earnings
+gmp.equalise_header = Do you also want an opposite gender calculation?
+
+gmp.results.survivor.header = Surviving partner''s GMP entitlement at date of death ({0})
+gmp.results.survivor.revaluation.header = Surviving partner''s GMP entitlement at {0}
+
+gmp.bulk_reference.header = Get your results
+gmp.bulk_reference.subheader = We will email you when your calculation is ready to download. it will also be available from the GMP checker dashboard.
+
+gmp.bulk_request_received.header = What next
+
+gmp.no_inflation.subheader = This GMP has not been inflation proofed as you entered a date in the same tax year as the date of death.
+
+# Buttons
+gmp.continue.button = Continue
+gmp.back.link = Back
+gmp.button.request-another = Request another
+gmp.button.check_another = Check another GMP
+gmp.print = Print this page
+gmp.link.contributions-earnings = View contributions and earnings
+gmp.bulk_reference.button = Confirm and submit
+gmp.bulk_request_received.button = Upload another file
+gmp.bulk_request_received_dashboard_link = Go to dashboard
+
+# fields
+gmp.date.start = Start date
+gmp.date.dol = Date of leaving
+gmp.day = Day
+gmp.firstname = First name or initial
+gmp.lastname = Last name
+gmp.lowercase.firstname = first name
+gmp.lowercase.lastname = last name
+gmp.month = Month
+gmp.name = Name
+gmp.nino = National Insurance number
+gmp.nino.hint = For example, QQ123456D
+gmp.scon = Scheme Contracted Out Number
+gmp.scon.hint = For example, S2730011Z
+gmp.submit = Submit
+gmp.continue = Continue
+gmp.date.example = Use numbers and enter the year in full.
+gmp.year = Year
+gmp.revaluation_date = Enter the date for revaluation
+gmp.inflation_proofed = Enter the date.
+gmp.revaluation.date = Revaluation date
+gmp.revaluation.rate = Revaluation rate
+gmp.revaluation_rate.rate_held_by_hmrc = The rate held by HMRC
+gmp.revaluation_rate.fixed = Fixed rate
+gmp.revaluation_rate.s148 = S148 or full rate revaluation
+gmp.revaluation_rate.limited = Limited rate
+gmp.revaluation_rate_short.fixed = Fixed
+gmp.revaluation_rate_short.s148 = S148 or full rate revaluation
+gmp.revaluation_rate_short.limited = Limited
+gmp.total = Total GMP:
+gmp.frequency.weekly = a week
+gmp.post88 = Post-1988 GMP:
+gmp.post90 = Post-1990 GMP
+gmp.questionnaire.how_easy = How easy was it to use this service?
+gmp.questionnaire.how_satisfied = How satisfied were you with this service?
+gmp.questionnaire.very_satisfied = Very satisfied
+gmp.questionnaire.satisfied = Satisfied
+gmp.questionnaire.neither_su = Neither satisfied nor dissatisfied
+gmp.questionnaire.unsatisfied = Unsatisfied
+gmp.questionnaire.very_unsatisfied = Very unsatisfied
+gmp.questionnaire.very_easy = Very easy
+gmp.questionnaire.easy = Easy
+gmp.questionnaire.neither_ed = Neither easy nor difficult
+gmp.questionnaire.difficult = Difficult
+gmp.questionnaire.very_difficult = Very difficult
+gmp.questionnaire.comments = What could we change to this service that would increase your satisfaction?
+gmp.what_did_you_think = What did you think of this service?
+gmp.what_did_you_think.seconds = (takes 30 seconds)
+gmp.or.go.to = or go to the
+gmp.gov.uk.homepage = GOV.UK homepage
+gmp.post_1990 = Post 1990
+gmp.true = True
+gmp.opposite = Opposite
+gmp.true_calculation = True calculation:
+gmp.opposite_calculation = Opposite calculation:
+gmp.equalise_subheader = This may help pension schemes provide equal benefits to male and female members.
+gmp.dol.threequestions.before2016 = Yes, before 6 April 2016
+gmp.dol.threequestions.after2016 = Yes, on or after 6 April 2016
+gmp.dol.threequestions.no = No, member is still in the scheme
+gmp.dol.threequestions.no.survivor = No, member was still in the scheme
+gmp.period_table_header = GMP period
+gmp.date.header_text = Enter a leaving date.
+gmp.inflationproof.date_header_text = This will be inflation proofed.
+gmp.inflationproof.subtext = The GMP will be inflation proofed and its value will increase based on the rate of inflation.
+gmp.total.entitlement = Total GMP entitlement:
+gmp.post88.entitlement = Post-1988 GMP entitlement:
+gmp.email = Email
+gmp.bulk_reference.email_text = We will email you about this calculation and nothing else.
+gmp.reference = Calculation name
+gmp.bulk_reference.reference_text = You can change the filename to help to recognise your returned results from others in your organisation.
+gmp.bulk_request_received.text = <ul class="list-bullet"><li>Your calculation should be complete in less than XX hours</li><li>It will then appear on the Guaranteed Minimum Pension checker dashboard with the reference {0}</li><li>We will also email you when it is ready for download</li></ul>
+
+
+# errors
+gmp.error.revaluation_before_leaving = Enter a date on or after {0}
+gmp.error.revaluation_pre2016_not_left = Enter a date on or after 6 April 2016
+gmp.error.email.invalid = Enter a valid email address
+gmp.error.date.invalid = Enter a valid date
+gmp.error.date.thistaxyear = Enter a date in this tax year or the next
+gmp.error.day.invalid = Enter a day between 1 and 31
+gmp.error.length = {0} is too long (>{1})
+gmp.error.mandatory = Enter a {0}
+gmp.error.month.invalid = Enter a month between 1 and 12
+gmp.error.reval_date.from = The calculation can only be revalued from 5 April 1978
+gmp.error.reval_date.to = The calculation can only be revalued up until 4 April 2046
+gmp.error.year.invalid.format = Enter the year in full (4 numbers)
+gmp.error.date.nonnumber = Enter a date using numbers only
+gmp.error.reason.mandatory = Select an option
+gmp.generic.errors_heading= There is a problem with the form
+gmp.error.name.invalid = Enter a {0} using only letters, hyphens, apostrophes and spaces
+
+gmp.error.scon.invalid = Enter a Scheme Contracted Out Number in the same format as the given example
+gmp.error.scon.nps_invalid = This SCON does not exist. Check and try again.
+gmp.error.nino.invalid = The National Insurance number you have entered is not valid. Check it and try again.
+gmp.error.nino.temporary = This is a temporary National Insurance number. You need a permanent one to calculate a GMP.
+gmp.error.reval_date.mandatory = Enter a revaluation date
+gmp.error.leaving_date.mandatory = Enter a leaving date
+
+gmp.error.member_previous_names = If we still can''t calculate a GMP, ask if the member has any previous names that may not have been updated with HM Revenue and Customs.
+gmp.error.contact_hmrc_shared_workspace = Contact HM Revenue and Customs through the GMP Service Queries database in the LIVE shared workspace e-room.
+gmp.error.contact.scon = If you believe the member''s SCON is correct, contact HM Revenue and Customs SCON helpline on 0300 200 3507. You will need the member''s National Insurance number, contracted-out dates and scheme name.
+gmp.error.also.contact = If you still can’t get a calculation, contact HM Revenue and Customs through the GMP Service Queries database in the LIVE shared workspace e-room.
+gmp.error.also.death = If you think the date of death we hold on record is incorrect, contact HM Revenue and Customs through the GMP Service Queries database in the LIVE shared workspace e-room.
+
+gmp.error.reason.63119 = This is because the member''s name or National Insurance number are either incorrect or do not match our records.
+gmp.error.reason.63121 = This is because our records show this member is deceased.
+gmp.error.reason.63123 = This is because our records show the member was still in the scheme on the date you would like it to be revalued.
+gmp.error.reason.check_scon = This is because our records show that the Scheme Contracted Out Number is not shown on the member''s account.
+gmp.error.reason.56067 = This is because we believe the member has no pre-1997 GMP liability under this Scheme Contracted Out Number.
+gmp.error.reason.56010 = This is because we need the member to confirm their date of birth.
+gmp.error.reason.56018 = This is because the member has a Married Woman''s Reduced Rate Election for the contracted-out period therefore there is no GMP liability.
+gmp.error.reason.56002 = This is because the S148 Orders are not yet available.
+gmp.error.reason.56013 = This is because this scheme has no Guaranteed Minimum Pension liability.
+gmp.error.reason.generic = But HM Revenue and Customs can still do a calculation for you.
+gmp.error.reason.valid_contributions = This is because we do not hold any valid contributions or earnings for some of the time the member was contracted out.
+gmp.error.reason.63151 = This is because you entered a leaving date that is after the date of death.
+gmp.error.reason.63149 = This is because you entered a leaving date that is after the State Pension age.
+gmp.error.reason.63148 = This is because you entered a calculation date that is before the date of death we hold on record.
+gmp.error.reason.63147 = This is because we do not have a date of death for this member.
+gmp.error.reason.63150 = You asked for an opposite gender calculation. However, one is not available as there are no post-1990 contributions and earnings.
+gmp.error.reason.63167 = This is because you asked for it to be revalued using Limited Rate. This is not available to leavers after 5 April 1997.
+
+gmp.error.solution.contact = If you think our records are incorrect, contact HM Revenue and Customs through the GMP Service Queries database in the LIVE shared workspace e-room.
+gmp.error.solution.bullets = <ul class="list-number"><li>Check you have spelled the name correctly</li><li>Check you have entered the correct National Insurance number</li><li><a href="/guaranteed-minimum-pension/member-details">Try the calculation again</a></li></ul>
+gmp.error.solution.63121 = If you still need a GMP, choose the survivor calculation option and <a href="/guaranteed-minimum-pension/calculation-reason">try again</a>.
+gmp.error.solution.63123 = <a href="/guaranteed-minimum-pension/revaluation">Change the revaluation date</a> to one after the member left the scheme and try the calculation again.
+gmp.error.solution.check_scon = Check you have entered the correct SCON and <a href="/guaranteed-minimum-pension/pension-details">try the calculation again</a>.
+gmp.error.solution.56010 = Ask the member to visit their local Department of Work and Pensions or HM Revenue and Customs office with a copy of their birth certificate so we can update their records.
+gmp.error.solution.56018 = Ask the member to contact us if they disagree with the information we hold.
+gmp.error.solution.56002 = Submit a new request once the orders are published.<br/>
+gmp.error.solution.try_again = Check your records and <a href="/guaranteed-minimum-pension/pension-details">try the calculation again</a>.
+gmp.error.solution.leaving_date = Check you have entered the correct leaving date and <a href="/guaranteed-minimum-pension/left-scheme">try again</a>.
+gmp.error.solution.63148 = Check the date up to which you would like the calculation to apply and <a href="/guaranteed-minimum-pension/inflation-proof">try again</a>.
+gmp.error.solution.63150 = <a href="/guaranteed-minimum-pension/equalise">Go back</a> and choose ''No'' for an opposite gender calculation.
+gmp.error.solution.63167 = Choose another <a href="/guaranteed-minimum-pension/revaluation-rate">revaluation rate</a>.
+
+gmp.error.member_details = Change member details
+gmp.error.revaluation_date = Change revaluation date
+gmp.error.scheme_details = Change scheme details
+gmp.error.download_CA1604 = Download CA1604 (PDF)
+gmp.error.no_conts_and_earnings = No contributions and earnings available
+
+# calculation results
+gmp.transfer.scheme.header = GMP at date of transfer
+gmp.divorce.scheme.header = GMP at date of divorce
+gmp.payable_age.header = GMP value at GMP payable age ({0})
+gmp.spa.header = GMP value at State Pension age ({0})
+gmp.leaving.scheme.header = GMP value at {0}
+gmp.leaving.revalued.header = GMP revalued to {0} using {1} rate
+gmp.per.week = GMP a week
+gmp.post.1988 = Post 1988
+gmp.rate = Rate
+gmp.rate_hmrc_holds = Rate
+gmp.revaluation_rate.type_0 = HMRC held
+gmp.revaluation_rate.type_1 = S148
+gmp.revaluation_rate.type_2 = Fixed
+gmp.revaluation_rate.type_3 = Limited
+gmp.transfer.scheme.subheader = GMP revalued to the date of transfer
+gmp.divorce.scheme.subheader = GMP revalued to the date of divorce
+gmp.transfer.dol.subheader = This GMP is not revalued up to the date of transfer
+gmp.divorce.dol.subheader = This GMP is not revalued up to the date of divorce
+gmp.results.table.subheading = GMP value per period
+gmp.notrevalued.subheader = This GMP is not revalued.
+gmp.revalued.reason = GMP revalued to {0}
+gmp.nonrevalued.header = GMP at {0}
+gmp.nonrevalued.message = This GMP is not revalued up to the {0}
+gmp.revaluation.dateoftransfer = date of transfer
+gmp.revaluation.dateofdivorce = date of divorce
+
+# Scenarios
+gmp.scenarios.title = Choose what type of calculation you need for this member
+gmp.scenarios.payable_age = <span class="bold-small">GMP payable age</span>
+gmp.scenarios.spa = <span class="bold-small">State Pension age</span>
+gmp.scenarios.survivor = <span class="bold-small">Survivor</span>
+gmp.scenarios.leaving = <span class="bold-small">Leaving</span>
+gmp.scenarios.specific_date = <span class="bold-small">GMP value on a specific date:</span><br/>For example, transferring to another scheme, divorce or any other date of your choice
+
+
+
+gmp.revaluation_multiple_subheader = All periods have been revalued using
+gmp.to = to
+gmp.date_of_divorce = Date of divorce
+gmp.date_of_transfer = Date of transfer
+gmp.generic.yes=Yes
+gmp.generic.no=No
+
+# Global Errors
+gmp.cannot_calculate = We can''t calculate a Guaranteed Minimum Pension
+gmp.cannot_calculate_online = We can''t calculate a Guaranteed Minimum Pension online
+gmp.cannot_calculate_online_service = We can''t calculate a Guaranteed Minimum Pension with this service
+gmp.cannot_calculate.entitlement = We can''t calculate a Guaranteed Minimum Pension entitlement
+
+gmp.what_now = What to do now:
+
+gmp.only_part_problem = There is a problem with part of the calculation
+gmp.part_problem = There is a problem with all or part of the calculation
+gmp.unavailable = No GMP available
+gmp.multi.solution = Contact HM Revenue and Customs through the GMP Service Queries database in the LIVE shared workspace e-room.
+
+gmp.you_can_also = You can also:
+
+#Start page
+gmp.start.service.downtime = This service is unavailable from 2am to 5am GMT due to regular maintenance. Please finish using the service before then or you will be unable to finish your tasks.
+gmp.start.subtitle = Use this service to request Guaranteed Minimum Pension calculations.
+gmp.start.gg-needed = You need a Government Gateway account in order to access the service.
+gmp.start.gg-enrol-message= You will need to enrol for the Guaranteed Minimum Pensions service on your Government Gateway account.  Enrolling can be done the first time you use the service.
+gmp.start.calculation.text = You will receive an instant result one member at a time and you can do as many calculations as you like. To query any calculation or information we may hold, you will need to sign up to Shared Workspace.
+gmp.start.calculation.heading = Requesting a Guaranteed Minimum Pension calculation
+gmp.start.requirements.heading = What you will need
+gmp.start.requirements.text = For each calculation HM Revenue and Customs will need the member''s:
+gmp.start.requirements.nino = The member''s National Insurance number (NINO)
+gmp.start.requirements.scon = The member''s Scheme number (SCON)
+gmp.start.requirements.firstname = The member''s First name
+gmp.start.requirements.lastname = The member''s Last name
+gmp.start.button = Start now
+
+#Query Handling
+gmp.queryhandling.resultsmessage = If you disagree with this calculation, contact HM Revenue and Customs through the GMP Service Queries database in the LIVE shared workspace e-room.<br/>
+gmp.queryhandling.contsandearnings = If you disagree with this information, contact HM Revenue and Customs through the GMP Service Queries database in the LIVE shared workspace e-room.
+gmp.queryhandling.changedetails.link = <a href='https://www.gov.uk/tell-hmrc-change-of-details' rel="external">How the member can tell HMRC their personal details have changed</a>
+
+#Service unavailable
+gmp.serviceunavailable.title = Service unavailable
+gmp.serviceunavailable.message = Sorry, we are experiencing technical problems. <br><p><a href="/guaranteed-minimum-pension">Try again</a> later or go to <a href="https://www.gov.uk">GOV.UK homepage</a>.
+

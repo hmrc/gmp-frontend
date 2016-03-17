@@ -1,0 +1,172 @@
+.bottom-blue-border {
+  border-bottom: 5px solid #005ea5;
+}
+
+.top-blue-border {
+  border-top: 5px solid #005ea5;
+}
+
+.grid-1-2{
+  float: left;
+  padding-right: 20px;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.grid-2-3{
+  display: inline-block;
+}
+
+.print-style{
+  float: right;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  margin-top: 120px;
+  padding-top: 15px;
+  width: 30%;
+}
+
+.confirmation {
+  background-color: #28A197;
+  text-align: center;
+  color: #FFF;
+  padding: 2px 80px 20px;
+  height: 100px;
+}
+.panel-indent {
+  clear: both;
+  border-left: 4px solid #bfc1c3;
+  padding: 10px 0 10px 15px;
+  margin: 30px 15px 45px 0;
+}
+
+.panel-indent-red {
+  clear: both;
+  border-left: 4px solid #df3034;
+  padding: 10px 0 10px 15px;
+  margin: 30px 15px 45px 0;
+}
+
+.gmp-js-hidden {
+  display: none;
+}
+#subheader {
+  margin-bottom: 20px;
+}
+
+.global-error {
+  border: 5px solid #df3034;
+  padding: 15px 30px;
+  margin-bottom: 30px;
+  margin-top: 30px;
+}
+
+.red {
+  color: #df3034;
+}
+
+.panel-indent-info {
+  clear: both;
+  background-image: url("../images/icon-information.png");
+  background-repeat: no-repeat;
+  background-position: 0% 0%;
+  font-weight: bold;
+  margin: 30px 15px 45px 0;
+  padding-left: 45px;
+}
+
+.button-get-started {
+  font-size: 24px;
+  font-weight: 700;
+  padding: 0.4em 2.2em 0.2em 0.8em;
+}
+
+.year-input {
+  width: 130% !important;
+}
+
+.numeric {
+  text-align: right;
+  padding-right: 0;
+}
+
+.error-row {
+  border-left: 5px solid #B10E1E;
+}
+
+tr.error-row td {
+  padding-left: 10px;
+}
+
+.error-message {
+  text-align: center;
+  color: #B10E1E;
+  font-weight: bold;
+}
+
+#link-to-gov{
+  padding-top:20px;
+}
+
+.custom-back-link{
+  padding-top:20px;
+}
+
+.continue-button {
+  padding-top:20px;
+}
+
+.conts-and-earnings-table-col{
+  text-align: right;
+}
+
+.table-background {
+  background-color: #DEE0E2;
+  padding-left: 20px;
+}
+
+.noborder{
+  border-bottom: none;
+}
+
+#post-1990-table-header {
+  text-align: center;
+  font-style: italic;
+  font-weight: normal;
+}
+
+#request-another-div{
+  margin-bottom: 20px;
+}
+
+#results-header{
+  margin-top: 0;
+}
+
+.width-53 {
+  width:53%
+}
+
+.width-47 {
+  width:47%
+}
+
+.hidden {
+  display: none
+}
+
+caption {
+  text-align: left;
+}
+
+@media print {
+  a[href]:after {
+    content: none !important;
+  }
+}
+
+#global-what-now {
+  margin-bottom: 20px;
+}

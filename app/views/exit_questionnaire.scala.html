@@ -1,0 +1,92 @@
+@*
+* Copyright 2016 HM Revenue & Customs
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*     http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*@
+
+@(exitQuestionnaireForm: Form[models.ExitQuestionnaire])(implicit request: Request[_])
+
+@import uk.gov.hmrc.play.views.html._
+@import uk.gov.hmrc.play.views.html.helpers._
+@import views.html.helpers._
+@import play.i18n._
+
+@gmp_main(title = Messages.get("gmp.questionnaire.title"),supportLinkEnabled = false) {
+
+  <div class="grid">
+      <div class="grid-2-3">
+
+          <h1>@Messages.get("gmp.questionnaire.header")</h1>
+
+          @form(action = routes.ExitQuestionnaireController.post) {
+
+            <div class="form-group">
+              @gmpRadioGroup(
+                exitQuestionnaireForm("serviceDifficulty"),
+                Seq(
+                  ExitQuestionnaire.VERY_EASY  -> ExitQuestionnaire.VERY_EASY -> Messages.get("gmp.questionnaire.very_easy"),
+                  ExitQuestionnaire.EASY  ->   ExitQuestionnaire.EASY     -> Messages.get("gmp.questionnaire.easy"),
+                  ExitQuestionnaire.NEITHER_ED  ->   ExitQuestionnaire.NEITHER_ED     -> Messages.get("gmp.questionnaire.neither_ed"),
+                  ExitQuestionnaire.DIFFICULT  -> ExitQuestionnaire.DIFFICULT    -> Messages.get("gmp.questionnaire.difficult"),
+                  ExitQuestionnaire.VERY_DIFFICULT -> ExitQuestionnaire.VERY_DIFFICULT -> Messages.get("gmp.questionnaire.very_difficult")
+                ),
+                '_legend -> Html(Messages.get("gmp.questionnaire.how_easy")),
+                '_legendClass -> "form-label-bold",
+                '_labelAfter -> true,
+                '_labelClass -> "block-label",
+                '_groupClass -> "inline-block",
+                '_showConstraints -> false
+              )
+
+              <br/><br/>
+
+              @gmpRadioGroup(
+                exitQuestionnaireForm("serviceFeel"),
+                Seq(
+                  ExitQuestionnaire.VERY_SATISFIED  -> ExitQuestionnaire.VERY_SATISFIED -> Messages.get("gmp.questionnaire.very_satisfied"),
+                  ExitQuestionnaire.SATISFIED  ->   ExitQuestionnaire.SATISFIED     -> Messages.get("gmp.questionnaire.satisfied"),
+                  ExitQuestionnaire.NEITHER_SU  ->   ExitQuestionnaire.NEITHER_SU     -> Messages.get("gmp.questionnaire.neither_su"),
+                  ExitQuestionnaire.UNSATISFIED  -> ExitQuestionnaire.UNSATISFIED    -> Messages.get("gmp.questionnaire.unsatisfied"),
+                  ExitQuestionnaire.VERY_UNSATISFIED -> ExitQuestionnaire.VERY_UNSATISFIED -> Messages.get("gmp.questionnaire.very_unsatisfied")
+                ),
+                '_legend -> Html(Messages.get("gmp.questionnaire.how_satisfied")),
+                '_legendClass -> "form-label-bold",
+                '_labelAfter -> true,
+                '_labelClass -> "block-label",
+                '_groupClass -> "inline-block",
+                '_showConstraints -> false
+              )
+
+              @gmpTextArea(
+                exitQuestionnaireForm("comments"),
+                  args =
+                  'rows -> 10,
+                  'cols -> 30,
+                  '_label -> Messages.get("gmp.questionnaire.comments"),
+                  '_labelClass -> "heading-medium",
+                  'id -> "comments",
+                  'name -> "comments"
+              )
+            </div>
+
+            <div>
+                <button class="button" type="submit" id="submit-button">@Messages.get("gmp.continue")</button>
+            </div>
+          }
+
+      </div><br>
+
+  </div>
+
+
+}

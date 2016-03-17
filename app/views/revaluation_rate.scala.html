@@ -1,0 +1,92 @@
+@*
+* Copyright 2016 HM Revenue & Customs
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*     http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*@
+
+@(revaluationRateForm: Form[models.RevaluationRate], session: GmpSession)(implicit request: Request[_])
+
+@import uk.gov.hmrc.play.views.html._
+@import uk.gov.hmrc.play.views.html.helpers._
+@import views.html.helpers._
+@import play.i18n._
+@import models.CalculationType
+
+@gmp_main(title = Messages.get("gmp.revaluation_rate.title")) {
+
+@views.html.helpers.errorSummary(revaluationRateForm)
+
+  <div class="grid">
+      <div class="grid-2-3">
+          <h1>@{session.scenario match {
+              case CalculationType.PAYABLE_AGE | CalculationType.SPA | CalculationType.SURVIVOR => Messages.get("gmp.revaluation_rate_spa.header")
+              case CalculationType.REVALUATION => {
+                session.revaluationDate match {
+                    case Some(rd) if(!rd.isOnOrAfter06042016) => Messages.get("gmp.revaluation_rate_spa.header")
+                    case _ => Messages.get("gmp.revaluation_rate.header")
+                }
+              }
+              case _ => Messages.get("gmp.revaluation_rate.header")
+              }}
+          </h1>
+      </div>
+  </div>
+
+  <div class="grid">
+      <div class="grid-2-3">
+
+          @form(action = routes.RevaluationRateController.post) {
+
+
+            <div class="form-group" id="rateType">
+              @gmpRadioGroup(
+              revaluationRateForm("rateType"),
+                session.leaving.leaving match{
+                case Some(Leaving.YES_AFTER) | Some(Leaving.NO) =>
+                Seq(
+                "hmrc"  -> "hmrc"  -> Messages.get("gmp.revaluation_rate.rate_held_by_hmrc"),
+                "fixed" -> "fixed"  -> Messages.get("gmp.revaluation_rate.fixed"),
+                "s148"  -> "s148"  -> Messages.get("gmp.revaluation_rate.s148")
+                )
+                case _ =>
+              Seq(
+                "hmrc"  -> "hmrc"  -> Messages.get("gmp.revaluation_rate.rate_held_by_hmrc"),
+                "fixed" -> "fixed"  -> Messages.get("gmp.revaluation_rate.fixed"),
+                "s148"  -> "s148"  -> Messages.get("gmp.revaluation_rate.s148"),
+                "limited" -> "limited" -> Messages.get("gmp.revaluation_rate.limited")
+              )},
+              '_legend -> "",
+              '_legendClass -> "form-label-bold",
+              '_labelAfter -> true,
+              '_labelClass -> "block-label",
+              '_groupClass -> "inline-block",
+              '_showConstraints -> false,
+              '_isRequired -> true
+              )
+            </div>
+
+            <div>
+                <button class="button" type="submit" id="submit-button">@Messages.get("gmp.continue")</button>
+            </div>
+          }
+
+      </div>
+
+      <div class="grid-2-3 custom-back-link">
+          <a href="@routes.RevaluationRateController.back" id="back-link">@Messages.get("gmp.back.link")</a>
+      </div>
+
+  </div>
+
+
+}

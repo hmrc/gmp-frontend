@@ -1,0 +1,80 @@
+@*
+* Copyright 2016 HM Revenue & Customs
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*     http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*@
+
+@(memberDetailsForm: Form[models.MemberDetails])(implicit request: Request[_])
+
+@import uk.gov.hmrc.play.views.html._
+@import uk.gov.hmrc.play.views.html.helpers._
+@import views.html.helpers._
+@import play.i18n._
+
+@implicitFormInstance = @{ Some(memberDetailsForm) }
+
+@gmp_main(title = Messages.get("gmp.member_details.title")) {
+
+  @views.html.helpers.errorSummary(memberDetailsForm)
+
+  <div class="grid">
+      <div class="grid-2-3">
+          <h1>@Messages.get("gmp.member_details.title")</h1>
+      </div>
+  </div>
+
+  <div class="grid">
+      <div class="grid-2-3">
+
+          @form(action = routes.MemberDetailsController.post) {
+
+              <div class="form-group">
+
+                  @gmpInput(memberDetailsForm("nino"),
+                  '_label -> Html(Messages.get("gmp.nino")),
+                  '_labelClass -> "form-label-bold",
+                  '_id -> "nino",
+                  '_maxLength -> 13,
+                  '_hintText -> Messages.get("gmp.nino.hint"),
+                  '_showConstraints -> false)
+
+                  @gmpInput(memberDetailsForm("firstForename"),
+                  '_label -> Html(Messages.get("gmp.firstname")),
+                  '_labelClass -> "form-label-bold",
+                  '_id -> "firstForename",
+                  '_maxLength -> 99,
+                  '_showConstraints -> false)
+
+                  @gmpInput(memberDetailsForm("surname"),
+                  '_label -> Html(Messages.get("gmp.lastname")),
+                  '_labelClass -> "form-label-bold",
+                  '_id -> "surname",
+                  '_maxLength -> 99,
+                  '_showConstraints -> false)
+
+              </div>
+
+              <div>
+                  <button class="button" type="submit" id="submit-button">@Messages.get("gmp.continue.button")</button>
+              </div>
+          }
+
+      </div><br>
+
+      <div class="grid-2-3 custom-back-link">
+        <a href="@routes.MemberDetailsController.back" id="back-link">@Messages.get("gmp.back.link")</a>
+      </div>
+
+  </div>
+
+}
