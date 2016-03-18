@@ -22,7 +22,7 @@ import uk.gov.hmrc.play.frontend.auth.{AuthenticationProvider, TaxRegime}
 object GmpRegime extends TaxRegime {
 
   override def isAuthorised(accounts: Accounts): Boolean = {
-    accounts.gmp.isDefined
+    (accounts.psa.isDefined || accounts.psp.isDefined)
   }
 
   override def authenticationType: AuthenticationProvider = GmpGovernmentGateway
