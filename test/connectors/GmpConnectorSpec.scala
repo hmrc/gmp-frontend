@@ -246,6 +246,35 @@ class GmpConnectorSpec extends PlaySpec with OneServerPerSuite with MockitoSugar
       }
     }
 
+    "performing scon validation on practitioner" must {
+      "return a validateScon response" in {
+        implicit val user = AuthContext(authority = Authority("1234", Accounts(psp = Some(PspAccount("link", PspId(pspId)))), None, None, CredentialStrength.None, ConfidenceLevel.L50))
+
+        val validateSconResponseJson = Json.parse(
+          """{
+             "sconExists":false
+             }"""
+        )
+
+        val validateSconRequest: ValidateSconRequest = ValidateSconRequest(scon = "S1401234Z")
+        when(mockHttpPost.POST[ValidateSconRequest, ValidateSconResponse](Matchers.any(), Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful((validateSconResponseJson.as[ValidateSconResponse])))
+
+        val result = TestGmpConnector.validateScon(validateSconRequest)
+        val validateSconResponse = await(result)
+
+        validateSconResponse.sconExists must be(false)
+      }
+
+      "throw an exception with invalid user" in {
+        implicit val user = AuthContext(authority = Authority("1234", Accounts(psa = None), None, None, CredentialStrength.None, ConfidenceLevel.L200))
+        val validateSconRequest: ValidateSconRequest = ValidateSconRequest(scon = "S1401234Z")
+
+        intercept[RuntimeException] {
+          val result = TestGmpConnector.validateScon(validateSconRequest)
+        }
+      }
+    }
+
     "DualCalc" must {
       "return dualCalc indicated in request" in {
         implicit val user = AuthContext(authority = Authority("1234", Accounts(psa = Some(PsaAccount("link", PsaId(psaId)))), None, None, CredentialStrength.None, ConfidenceLevel.L50))
