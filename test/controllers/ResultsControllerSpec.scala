@@ -45,13 +45,11 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
   val mockSessionService = mock[SessionService]
   val mockCalculationConnector = mock[GmpConnector]
   val mockApplicationConfig = mock[ApplicationConfig]
-  val mockAuditConnector = mock[AuditConnector]
 
   object TestResultsController extends ResultsController {
     val authConnector = mockAuthConnector
     override val sessionService = mockSessionService
     override val calculationConnector = mockCalculationConnector
-    override val auditConnector = mockAuditConnector
 
     override def resultsView(response: CalculationResponse, sameTaxYear: Boolean)(implicit request: Request[_]): HtmlFormat.Appendable = {
       views.html.results(applicationConfig = mockApplicationConfig, response, sameTaxYear)
@@ -239,7 +237,6 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
       "when authorised" must {
 
         "respond with a status of OK" in {
-          when(mockAuditConnector.sendEvent(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(AuditResult.Success))
           when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
           when(mockCalculationConnector.calculateSingle(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(validCalculationResponse))
           withAuthorisedUser { request =>
@@ -250,7 +247,6 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
         }
 
         "load the results page" in {
-          when(mockAuditConnector.sendEvent(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(AuditResult.Success))
           when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
           when(mockCalculationConnector.calculateSingle(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(validCalculationResponse))
           withAuthorisedUser { request =>
@@ -260,7 +256,6 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
         }
 
         "load the results page without revalrate when dol" in {
-          when(mockAuditConnector.sendEvent(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(AuditResult.Success))
           when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
           when(mockCalculationConnector.calculateSingle(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(validCalculationResponse))
           withAuthorisedUser { request =>
@@ -271,7 +266,6 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
         }
 
         "load the results page when revaluation date has been wiped" in {
-          when(mockAuditConnector.sendEvent(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(AuditResult.Success))
           when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
           when(mockCalculationConnector.calculateSingle(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(validCalculationResponse))
           withAuthorisedUser { request =>
@@ -281,7 +275,6 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
         }
 
         "load the results page when revaluation date exists with revaluation S148" in {
-          when(mockAuditConnector.sendEvent(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(AuditResult.Success))
           when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession.copy(rate = Some(RevaluationRate
             .S148)))))
           when(mockCalculationConnector.calculateSingle(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(validCalculationResponse))
@@ -293,7 +286,6 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
         }
 
         "load the results page when revaluation date exists with revaluation fixed" in {
-          when(mockAuditConnector.sendEvent(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(AuditResult.Success))
           when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession.copy(rate = Some(RevaluationRate
             .FIXED)))))
           when(mockCalculationConnector.calculateSingle(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(validCalculationResponse))
@@ -304,7 +296,6 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
         }
 
         "load the results page when revaluation date exists with revaluation limited" in {
-          when(mockAuditConnector.sendEvent(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(AuditResult.Success))
           when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession.copy(rate = Some(RevaluationRate
             .LIMITED)))))
           when(mockCalculationConnector.calculateSingle(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(validCalculationResponse))
@@ -315,7 +306,6 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
         }
 
         "load the results page when revaluation date exists with revaluation hmrc held" in {
-          when(mockAuditConnector.sendEvent(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(AuditResult.Success))
           when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession.copy(rate = Some(RevaluationRate
             .HMRC)))))
           when(mockCalculationConnector.calculateSingle(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(validCalculationResponse))
@@ -329,7 +319,6 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
         //spa calculation
 
         "load the results page for spa" in {
-          when(mockAuditConnector.sendEvent(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(AuditResult.Success))
           when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
           when(mockCalculationConnector.calculateSingle(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(validCalculationSpaResponse))
           withAuthorisedUser { request =>
@@ -341,7 +330,6 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
         //payable age calculation
 
         "load the results page for payable age" in {
-          when(mockAuditConnector.sendEvent(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(AuditResult.Success))
           when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
           when(mockCalculationConnector.calculateSingle(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(validCalculationPayableAgeResponse))
           withAuthorisedUser { request =>
@@ -353,7 +341,6 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
         //survivor
 
         "show the correct header when survivor and not revaluing" in {
-          when(mockAuditConnector.sendEvent(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(AuditResult.Success))
           when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
           when(mockCalculationConnector.calculateSingle(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(survivorCalculationResponse))
           withAuthorisedUser { request =>
@@ -365,7 +352,6 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
         }
 
         "show the correct header when survivor and revaluing" in {
-          when(mockAuditConnector.sendEvent(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(AuditResult.Success))
           when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
           when(mockCalculationConnector.calculateSingle(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(survivorRevaluationCalculationResponse))
           withAuthorisedUser { request =>
@@ -375,7 +361,6 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
         }
 
         "show the correct subheader when survivor and no inflation proof" in {
-          when(mockAuditConnector.sendEvent(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(AuditResult.Success))
           when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
           when(mockCalculationConnector.calculateSingle(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(survivorRevaluationCalculationResponse))
           withAuthorisedUser { request =>
@@ -385,7 +370,6 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
         }
 
         "show the correct subheader when survivor and inflation proof" in {
-          when(mockAuditConnector.sendEvent(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(AuditResult.Success))
           when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
           when(mockCalculationConnector.calculateSingle(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(survivorRevaluationCalculationResponseNoInflation))
           withAuthorisedUser { request =>
@@ -395,7 +379,6 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
         }
 
         "show the returned date of death and the correct header when survivor and no inflation proof" in {
-          when(mockAuditConnector.sendEvent(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(AuditResult.Success))
           when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
           when(mockCalculationConnector.calculateSingle(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(
             survivorRevaluationCalculationResponseNoInflation.copy(dateOfDeath = Some(new LocalDate("2017-01-01")), revaluationDate = None)))
@@ -409,7 +392,6 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
         // Single/Multiple DOL
 
         "show the correct header and subheader when leaving the scheme with single result" in {
-          when(mockAuditConnector.sendEvent(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(AuditResult.Success))
           when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
           when(mockCalculationConnector.calculateSingle(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(validCalculationResponse.copy(calcType = 0)))
           withAuthorisedUser { request =>
@@ -419,7 +401,6 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
         }
 
         "show the correct header and subheader when leaving the scheme with multiple results" in {
-          when(mockAuditConnector.sendEvent(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(AuditResult.Success))
           when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
           when(mockCalculationConnector.calculateSingle(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful
           (validNonRevalMultipleCalculationResponse.copy(calcType = 0)))
@@ -434,7 +415,6 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
         // Non revaluation single transfer/divorce (DOL)
 
         "show the non-revalued header and subheader correctly when transferring with single result" in {
-          when(mockAuditConnector.sendEvent(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(AuditResult.Success))
           when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
           when(mockCalculationConnector.calculateSingle(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful
           (revaluationNotRevaluedSingleResponse))
@@ -448,7 +428,6 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
         // Non revaluation multiple transfer/divorce (DOL)
 
         "show the non-revalued header and subheader correctly when transferring with multiple result" in {
-          when(mockAuditConnector.sendEvent(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(AuditResult.Success))
           when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
           when(mockCalculationConnector.calculateSingle(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful
           (validNonRevalMultipleCalculationResponse.copy(revaluationRate = None)))
@@ -462,7 +441,6 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
         // Revaluation single transfer/divorce
 
         "show the revalued header correctly when transferring with single result" in {
-          when(mockAuditConnector.sendEvent(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(AuditResult.Success))
           when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
           when(mockCalculationConnector.calculateSingle(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful
           (validCalculationResponse.copy(revaluationDate = Some(new LocalDate(2000, 11, 11)), revaluationRate = Some("1"))))
@@ -473,7 +451,6 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
         }
 
         "show the dol header correctly when transferring with single result that was not revalued" in {
-          when(mockAuditConnector.sendEvent(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(AuditResult.Success))
           when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
           when(mockCalculationConnector.calculateSingle(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful
           (revaluationNotRevaluedSingleResponse))
@@ -485,7 +462,6 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
         }
 
         "not show the returned rate on member details table when transferring with single result" in {
-          when(mockAuditConnector.sendEvent(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(AuditResult.Success))
           when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
           when(mockCalculationConnector.calculateSingle(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful
           (validCalculationResponse.copy(revaluationDate = Some(new LocalDate(2000, 11, 11)), revaluationRate = Some("1"))))
@@ -497,7 +473,6 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
         }
 
         "show the revalued header correctly when divorcing with single result" in {
-          when(mockAuditConnector.sendEvent(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(AuditResult.Success))
           when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
           when(mockCalculationConnector.calculateSingle(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful
           (validCalculationResponse.copy(revaluationDate = Some(new LocalDate(2000, 11, 11)), revaluationRate = Some("1"))))
@@ -510,7 +485,6 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
         // Revaluation multiple transfer/divorce
 
         "show the revalued header correctly when transferring with multiple result" in {
-          when(mockAuditConnector.sendEvent(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(AuditResult.Success))
           when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
           when(mockCalculationConnector.calculateSingle(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful
           (validNonRevalMultipleCalculationResponse.copy(revaluationDate = Some(new LocalDate(2000, 11, 11)), revaluationRate = Some("0"))))
@@ -521,7 +495,6 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
         }
 
         "show the revalued header correctly when divorcing with multiple result" in {
-          when(mockAuditConnector.sendEvent(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(AuditResult.Success))
           when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
           when(mockCalculationConnector.calculateSingle(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful
           (validNonRevalMultipleCalculationResponse.copy(revaluationDate = Some(new LocalDate(2000, 11, 11)), revaluationRate = Some("3"))))
@@ -532,7 +505,6 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
         }
 
         "show non revalued sub-header when revaluation in the same tax year" in {
-          when(mockAuditConnector.sendEvent(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(AuditResult.Success))
           when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSessionSameTaxYear)))
           when(mockCalculationConnector.calculateSingle(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(revaluationNotRevaluedSingleResponse))
 
@@ -544,7 +516,6 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
         }
 
         "not show non revalued sub-header when revaluation not in the same tax year" in {
-          when(mockAuditConnector.sendEvent(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(AuditResult.Success))
           when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSessionDifferentTaxYear)))
           when(mockCalculationConnector.calculateSingle(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(nonDualCalcResponse))
 
@@ -555,7 +526,6 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
         }
 
         "show the rate column in the multiple results table, when hmrc held rate" in {
-          when(mockAuditConnector.sendEvent(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(AuditResult.Success))
           when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
           when(mockCalculationConnector.calculateSingle(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful
             (validRevalCalculationResponseMultiplePeriod.copy(revaluationRate = Some("0"))))
@@ -566,7 +536,6 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
         }
 
         "not show the rate column in the multiple results table, when not hmrc held rate" in {
-          when(mockAuditConnector.sendEvent(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(AuditResult.Success))
           when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
           when(mockCalculationConnector.calculateSingle(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful
             (validRevalCalculationResponseMultiplePeriod.copy(revaluationRate = Some("1"))))
@@ -577,7 +546,6 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
         }
 
         "show the actual rate in the single period results header, when hmrc held rate" in {
-          when(mockAuditConnector.sendEvent(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(AuditResult.Success))
           when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession.copy(rate = Some("0")))))
           when(mockCalculationConnector.calculateSingle(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(validRevalCalculationResponseSinglePeriod))
           withAuthorisedUser { request =>
@@ -587,7 +555,6 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
         }
 
         "show error box with member details single period" in {
-          when(mockAuditConnector.sendEvent(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(AuditResult.Success))
           when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
           when(mockCalculationConnector.calculateSingle(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(single63123ErrorResponse))
           withAuthorisedUser { request =>
@@ -603,7 +570,6 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
         }
 
         "show error single period for 58161" in {
-          when(mockAuditConnector.sendEvent(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(AuditResult.Success))
           when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
           when(mockCalculationConnector.calculateSingle(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(single58161CalculationResponse))
           withAuthorisedUser { request =>
@@ -619,7 +585,6 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
         }
 
         "show error single period for 63151" in {
-          when(mockAuditConnector.sendEvent(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(AuditResult.Success))
           when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
           when(mockCalculationConnector.calculateSingle(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(single63151CalculationResponse))
           withAuthorisedUser { request =>
@@ -633,7 +598,6 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
         }
 
         "show error single period for 63149" in {
-          when(mockAuditConnector.sendEvent(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(AuditResult.Success))
           when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
           when(mockCalculationConnector.calculateSingle(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(single63149CalculationResponse))
           withAuthorisedUser { request =>
@@ -647,7 +611,6 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
         }
 
         "show error single period for 63148" in {
-          when(mockAuditConnector.sendEvent(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(AuditResult.Success))
           when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
           when(mockCalculationConnector.calculateSingle(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(single63148CalculationResponse))
           withAuthorisedUser { request =>
@@ -661,7 +624,6 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
         }
 
         "show error single period for 63147" in {
-          when(mockAuditConnector.sendEvent(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(AuditResult.Success))
           when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
           when(mockCalculationConnector.calculateSingle(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(single63147CalculationResponse))
           withAuthorisedUser { request =>
@@ -675,7 +637,6 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
         }
 
         "show error single period for 63150" in {
-          when(mockAuditConnector.sendEvent(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(AuditResult.Success))
           when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
           when(mockCalculationConnector.calculateSingle(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(single63150CalculationResponse))
           withAuthorisedUser { request =>
@@ -688,7 +649,6 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
         }
 
         "show error single period for 63167" in {
-          when(mockAuditConnector.sendEvent(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(AuditResult.Success))
           when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
           when(mockCalculationConnector.calculateSingle(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(single63167CalculationResponse))
           withAuthorisedUser { request =>
@@ -701,7 +661,6 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
         }
 
         "show error box with member details global" in {
-          when(mockAuditConnector.sendEvent(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(AuditResult.Success))
           when(mockCalculationConnector.calculateSingle(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(global63119ErrorResponse))
           withAuthorisedUser { request =>
             val result = TestResultsController.get.apply(request)
@@ -714,7 +673,6 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
         }
 
         "shows errors in multi results pages" in {
-          when(mockAuditConnector.sendEvent(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(AuditResult.Success))
           when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
           when(mockCalculationConnector.calculateSingle(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(multiErrorResponse))
           withAuthorisedUser { request =>
@@ -728,7 +686,6 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
         }
 
         "show the query handling message" in {
-          when(mockAuditConnector.sendEvent(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(AuditResult.Success))
           when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
           when(mockCalculationConnector.calculateSingle(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(validCalculationResponse))
           withAuthorisedUser { request =>
@@ -740,7 +697,6 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
         "when returns global error" must {
 
           "display global error message page" in {
-            when(mockAuditConnector.sendEvent(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.failed(new Exception()))
             when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
             when(mockCalculationConnector.calculateSingle(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful
             (dobNotFoundCalculationResponse))
@@ -758,7 +714,6 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
           }
 
           "display a different global error message page" in {
-            when(mockAuditConnector.sendEvent(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(AuditResult.Success))
             when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
             when(mockCalculationConnector.calculateSingle(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful
             (transLinkErrorCalculationResponse))
@@ -775,7 +730,6 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
         }
 
         "throw exception when session not returned" in {
-          when(mockAuditConnector.sendEvent(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(AuditResult.Success))
           when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(None))
 
 
@@ -829,7 +783,6 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
         }
 
         "throw exception when session not returned" in {
-          when(mockAuditConnector.sendEvent(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(AuditResult.Success))
           when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(None))
 
 

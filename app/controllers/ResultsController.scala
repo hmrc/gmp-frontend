@@ -19,15 +19,12 @@ package controllers
 import config.{ApplicationGlobal, GmpFrontendAuthConnector}
 import connectors.GmpConnector
 import controllers.auth.GmpRegime
-import events.ResultsEvent
 import metrics.Metrics
 import models._
 import org.joda.time.LocalDate
-import play.api.Logger
 import play.api.mvc.Request
 import play.twirl.api.HtmlFormat
 import services.SessionService
-import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 
 trait ResultsController extends GmpPageFlow {
 
@@ -35,8 +32,6 @@ trait ResultsController extends GmpPageFlow {
   val calculationConnector: GmpConnector
 
   def resultsView(response: CalculationResponse, isSameTaxYear: Boolean)(implicit request: Request[_]): HtmlFormat.Appendable
-
-  val auditConnector: AuditConnector = ApplicationGlobal.auditConnector
 
   def metrics: Metrics
 
@@ -55,10 +50,6 @@ trait ResultsController extends GmpPageFlow {
                       if (period.errorCode != 0) metrics.countNpsError(period.errorCode.toString)
                     }
 
-                    val resultsEventResult = auditConnector.sendEvent(new ResultsEvent(!response.hasErrors, response.errorCodes))
-                    resultsEventResult.onFailure {
-                      case e: Throwable => Logger.warn("[ResultsController][get] : resultsEventResult: " + e.getMessage(), e)
-                    }
                     Ok(resultsView(response, sameTaxYear(session)))
                   }
                 }
