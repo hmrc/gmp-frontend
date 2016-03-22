@@ -25,14 +25,14 @@
     <thead>
         <tr id="table-column-names">
             <th class="numeric" colspan="2" ><span class="hidden">hidden text for empty th</span></th>
-            <th class="numeric" id="per-week">@Messages.get("gmp.per.week")</th>
-            <th class="numeric" id ="post-1988">@Messages.get("gmp.post.1988")</th>
+            <th width="15%" class="numeric" id="per-week">@Messages.get("gmp.per.week")</th>
+            <th width="20%" class="numeric" id ="post-1988">@Messages.get("gmp.post.1988")</th>
             @if(calculationResponse.dualCalc) {
                 <th class="numeric" id="true-table-column-header">@Messages.get("gmp.true")</th>
                 <th class="numeric" id="opposite-table-column-header">@Messages.get("gmp.opposite")</th>
             }
             @if(!calculationResponse.revaluationDate.isEmpty && calculationResponse.revaluationRate == Some("0")) {
-                <th class="numeric" id="hmrc-held-rate">@Messages.get("gmp.rate_hmrc_holds")</th>
+                <th width="18%" class="numeric" id="hmrc-held-rate">@Messages.get("gmp.rate_hmrc_holds")</th>
             }
         </tr>
     </thead>
@@ -40,15 +40,15 @@
     @for((period, count) <- calculationResponse.calculationPeriods.zipWithIndex){
 
     <tr @{if(period.errorCode> 0 )"class=error-row"}>
-        <td width="23%" class="table-background" colspan="2">
+        <td width="12%" class="table-background" colspan="2">
             <span class="bold-xsmall" id="from-date-@count">From:</span> @{ new LocalDate(period.startDate.get).toString("dd/MM/yyyy") } <br/>
             <span class="bold-xsmall" id="to-date-@count">To:  </span> @{ new LocalDate(period.endDate).toString("dd/MM/yyyy") }
         </td>
         @if(period.errorCode == 0) {
-            <td width="14%" id="gmp-total-@count" class="numeric">
+            <td width="10%" id="gmp-total-@count" class="numeric">
                 <span class="bold-small">£@{ period.gmpTotal }</span>
             </td>
-            <td width="15%" id="post-88-@count" class="numeric">
+            <td width="10%" id="post-88-@count" class="numeric">
                 <span class="bold-small">£@{ period.post88GMPTotal }</span>
             </td>
 
