@@ -29,7 +29,7 @@
             <div id="conts-and-earnings-error-message">
                 @for((period, count) <- calculationResponse.calculationPeriods.zipWithIndex){
                     @if(period.errorCode != 0){
-                        <a class="error-message" href="#period-row-in-error-@count">@{Messages.get("gmp.contracted_out_period_error" ,s"${period.startTaxYear} to ${period.endTaxYear}")}</a><br/>
+                        <a class="error-message" href="#period-row-in-error-@count">@{Messages.get("gmp.contracted_out_period_error" ,s"${period.startDate.get.toString("dd/MM/yyyy")} to ${period.endDate.toString("dd/MM/yyyy")}")}</a><br/>
                     }
                 }
             </div>
