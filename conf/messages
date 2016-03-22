@@ -157,7 +157,7 @@ gmp.error.reason.mandatory = Select an option
 gmp.generic.errors_heading= There is a problem with the form
 gmp.error.name.invalid = Enter a {0} using only letters, hyphens, apostrophes and spaces
 
-gmp.error.scon.invalid = Enter a Scheme Contracted Out Number in the same format as the given example
+gmp.error.scon.invalid = Enter a Scheme Contracted Out Number in the same format as the example given
 gmp.error.scon.nps_invalid = This SCON does not exist. Check and try again.
 gmp.error.nino.invalid = The National Insurance number you have entered is not valid. Check it and try again.
 gmp.error.nino.temporary = This is a temporary National Insurance number. You need a permanent one to calculate a GMP.
