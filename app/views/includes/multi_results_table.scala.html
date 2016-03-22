@@ -40,12 +40,12 @@
     @for((period, count) <- calculationResponse.calculationPeriods.zipWithIndex){
 
     <tr @{if(period.errorCode> 0 )"class=error-row"}>
-        <td width="12%" class="table-background" colspan="2">
+        <td width="23%" class="table-background" colspan="2">
             <span class="bold-xsmall" id="from-date-@count">From:</span> @{ new LocalDate(period.startDate.get).toString("dd/MM/yyyy") } <br/>
             <span class="bold-xsmall" id="to-date-@count">To:  </span> @{ new LocalDate(period.endDate).toString("dd/MM/yyyy") }
         </td>
         @if(period.errorCode == 0) {
-            <td width="10%" id="gmp-total-@count" class="numeric">
+            <td width="14%" id="gmp-total-@count" class="numeric">
                 <span class="bold-small">£@{ period.gmpTotal }</span>
             </td>
             <td width="15%" id="post-88-@count" class="numeric">
@@ -53,7 +53,7 @@
             </td>
 
             @if(calculationResponse.dualCalc) {
-                <td id="true-@count" class="numeric">
+                <td width="14%" id="true-@count" class="numeric">
                     <span class="bold-small">
                       @if(period.dualCalcPost90TrueTotal != Some("0.00")) {
                         £@{ period.dualCalcPost90TrueTotal }
@@ -62,7 +62,7 @@
                       }
                     </span>
                 </td>
-                <td id="opposite-@count" class="numeric">
+                <td width="15%" id="opposite-@count" class="numeric">
                     <span class="bold-small">
                       @if(period.dualCalcPost90OppositeTotal != Some("0.00")) {
                         £@{ period.dualCalcPost90OppositeTotal }
