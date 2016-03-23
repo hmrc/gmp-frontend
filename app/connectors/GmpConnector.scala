@@ -38,11 +38,15 @@ trait GmpConnector extends ServicesConfig {
   lazy val serviceURL = baseUrl("gmp")
 
   def calculateSingle(calculationRequest: CalculationRequest)(implicit user: AuthContext, headerCarrier: HeaderCarrier): Future[CalculationResponse] = {
-    val link = user.principal.accounts.gmp.map(_.link).getOrElse(
-      throw new RuntimeException("User Authorisation failed")
-    )
+
+    val link = user.principal.accounts.psa.map(_.link).getOrElse(
+                user.principal.accounts.psp.map(_.link).getOrElse(
+                  throw new RuntimeException("User Authorisation failed")))
+
+    val gmpLink = "/gmp" + link.substring(4)
+
     val baseURI = "gmp/calculate"
-    val calculateUri = s"$serviceURL$link/$baseURI"
+    val calculateUri = s"$serviceURL$gmpLink/$baseURI"
 
     val timer = metrics.gmpConnectorTimer.time()
     val result = httpPost.POST[CalculationRequest, CalculationResponse](calculateUri, calculationRequest)
@@ -62,12 +66,14 @@ trait GmpConnector extends ServicesConfig {
 
   def validateScon(validateSconRequest: ValidateSconRequest)(implicit user: AuthContext, headerCarrier: HeaderCarrier): Future[ValidateSconResponse] = {
 
-    val link = user.principal.accounts.gmp.map(_.link).getOrElse(
-      throw new RuntimeException("User Authorisation failed")
-    )
+    val link = user.principal.accounts.psa.map(_.link).getOrElse(
+                user.principal.accounts.psp.map(_.link).getOrElse(
+                  throw new RuntimeException("User Authorisation failed")))
+
+    val gmpLink = "/gmp" + link.substring(4)
 
     val baseURI = "gmp/validateScon"
-    val validateSconUri = s"$serviceURL$link/$baseURI"
+    val validateSconUri = s"$serviceURL$gmpLink/$baseURI"
 
     val timer = metrics.gmpConnectorTimer.time()
     val result = httpPost.POST[ValidateSconRequest, ValidateSconResponse](validateSconUri, validateSconRequest)

@@ -45,12 +45,12 @@ class GmpRegimeSpec extends PlaySpec with OneServerPerSuite with MockitoSugar wi
       val accounts = mock[Accounts](RETURNS_DEEP_STUBS)
 
       "return true when gmp is defined" in {
-        when(accounts.gmp.isDefined).thenReturn(true)
+        when(accounts.psa.isDefined || accounts.psp.isDefined).thenReturn(true)
         GmpRegime.isAuthorised(accounts) must be(true)
       }
 
       "return false when gmp is not defined" in {
-        when(accounts.gmp.isDefined).thenReturn(false)
+        when(accounts.psa.isDefined || accounts.psp.isDefined).thenReturn(false)
         GmpRegime.isAuthorised(accounts) must be(false)
       }
 
@@ -92,7 +92,7 @@ class GmpRegimeSpec extends PlaySpec with OneServerPerSuite with MockitoSugar wi
             SessionKeys.userId -> userId)
 
           when(mockAuthConnector.currentAuthority(Matchers.any())) thenReturn {
-            Future.successful(Some(Authority(userId, Accounts(gmp = Some(GmpAccount("gmp/B1234567", PsaId("B1234567")))), None, None, CredentialStrength.None, ConfidenceLevel.L50)))
+            Future.successful(Some(Authority(userId, Accounts(psa = Some(PsaAccount("gmp/B1234567", PsaId("B1234567")))), None, None, CredentialStrength.None, ConfidenceLevel.L50)))
           }
 
           val result = TestController.testRoute.apply(request)
