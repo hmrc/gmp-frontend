@@ -43,8 +43,10 @@ trait GmpConnector extends ServicesConfig {
                 user.principal.accounts.psp.map(_.link).getOrElse(
                   throw new RuntimeException("User Authorisation failed")))
 
+    val gmpLink = "/gmp" + link.substring(4)
+
     val baseURI = "gmp/calculate"
-    val calculateUri = s"$serviceURL$link/$baseURI"
+    val calculateUri = s"$serviceURL$gmpLink/$baseURI"
 
     val timer = metrics.gmpConnectorTimer.time()
     val result = httpPost.POST[CalculationRequest, CalculationResponse](calculateUri, calculationRequest)
@@ -68,8 +70,10 @@ trait GmpConnector extends ServicesConfig {
                 user.principal.accounts.psp.map(_.link).getOrElse(
                   throw new RuntimeException("User Authorisation failed")))
 
+    val gmpLink = "/gmp" + link.substring(4)
+
     val baseURI = "gmp/validateScon"
-    val validateSconUri = s"$serviceURL$link/$baseURI"
+    val validateSconUri = s"$serviceURL$gmpLink/$baseURI"
 
     val timer = metrics.gmpConnectorTimer.time()
     val result = httpPost.POST[ValidateSconRequest, ValidateSconResponse](validateSconUri, validateSconRequest)
