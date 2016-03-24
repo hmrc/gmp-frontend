@@ -60,9 +60,7 @@
                     '_labelAfter -> true,
                     '_labelClass -> "block-label",
                     '_groupClass -> "inline-block",
-                    '_showConstraints -> false,
-                    '_isRequired -> true
-                )
+                    '_trackGA -> true)
 
             </div>
 
@@ -92,23 +90,20 @@
                             @gmpInput(inflationProofForm("revaluationDate.day"),
                             '_label -> Html(Messages.get("gmp.day")),
                             '_id -> "revaluationDate_day",
-                            '_maxLength -> 2,
-                            '_showConstraints -> false)
+                            '_maxLength -> 2)
                         </div>
                         <div class="form-group">
                             @gmpInput(inflationProofForm("revaluationDate.month"),
                             '_label -> Html(Messages.get("gmp.month")),
                             '_id -> "revaluationDate_month",
-                            '_maxLength -> 2,
-                            '_showConstraints -> false)
+                            '_maxLength -> 2)
                         </div>
                         <div class="form-group">
                             @gmpInput(inflationProofForm("revaluationDate.year"),
                             '_label -> Html(Messages.get("gmp.year")),
                             '_id -> "revaluationDate_year",
                             '_maxLength ->4,
-                            '_inputClass -> "form-control year-input",
-                            '_showConstraints -> false)
+                            '_inputClass -> "form-control year-input")
                         </div>
                         <br/>
                         <br/>
