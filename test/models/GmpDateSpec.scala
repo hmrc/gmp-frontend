@@ -52,7 +52,7 @@ class GmpDateSpec extends PlaySpec with MockitoSugar{
   "getAsText" must {
     "return the date in the correct format" in {
       val date = GmpDate(Some("06"),Some("04"),Some("2016"))
-      date.getAsText must be("6 April 2016")
+      date.getAsText must be("06 April 2016")
     }
 
     "return empty string if no gmpdate" in {
