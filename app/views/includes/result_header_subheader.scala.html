@@ -44,9 +44,11 @@
 
 @subheader = @{
 
-  if (calculationResponse.calcType == CalculationType.DOL.toInt ||
-     (calculationResponse.calcType == CalculationType.REVALUATION.toInt && (calculationResponse.revaluationUnsuccessful || sameTaxYear))) {
-          Messages.get("gmp.notrevalued.subheader")
+  if (calculationResponse.calcType == CalculationType.DOL.toInt && calculationResponse.calculationPeriods.length > 1) {
+        Messages.get("gmp.notrevalued.multi.subheader")
+  } else if (calculationResponse.calcType == CalculationType.DOL.toInt ||
+            (calculationResponse.calcType == CalculationType.REVALUATION.toInt && (calculationResponse.revaluationUnsuccessful || sameTaxYear))) {
+                Messages.get("gmp.notrevalued.subheader")
   } else if(calculationResponse.calcType == CalculationType.SURVIVOR.toInt &&
             calculationResponse.calculationPeriods.head.inflationProofBeyondDod == Some(0) &&
             calculationResponse.dodInSameTaxYearAsRevaluationDate) {
