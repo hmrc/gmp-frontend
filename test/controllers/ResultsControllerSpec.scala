@@ -403,11 +403,11 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
         "show the correct header and subheader when leaving the scheme with multiple results" in {
           when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
           when(mockCalculationConnector.calculateSingle(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful
-          (validNonRevalMultipleCalculationResponse.copy(calcType = 0)))
+          (validNonRevalMultipleCalculationResponse))
           withAuthorisedUser { request =>
             val result = TestResultsController.get.apply(request)
             contentAsString(result) must include(Messages("gmp.leaving.scheme.header", formatDate(validNonRevalMultipleCalculationResponse.leavingDate)))
-            contentAsString(result) must include(Messages("gmp.notrevalued.subheader"))
+            contentAsString(result) must include(Messages("gmp.notrevalued.multi.subheader"))
             contentAsString(result) must not include ("<td id=\"rate-@count\" class=\"numeric\">")
           }
         }
@@ -434,7 +434,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
           withAuthorisedUser { request =>
             val result = TestResultsController.get.apply(request)
             contentAsString(result) must include(Messages("gmp.leaving.scheme.header", formatDate(validNonRevalMultipleCalculationResponse.leavingDate)))
-            contentAsString(result) must include(Messages("gmp.notrevalued.subheader"))
+            contentAsString(result) must include(Messages("gmp.notrevalued.multi.subheader"))
           }
         }
 
