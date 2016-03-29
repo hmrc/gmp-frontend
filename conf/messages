@@ -180,6 +180,7 @@ gmp.error.reason.56018 = This is because the member has a Married Woman''s Reduc
 gmp.error.reason.56002 = This is because the S148 Orders are not yet available.
 gmp.error.reason.56013 = This is because this scheme has no Guaranteed Minimum Pension liability.
 gmp.error.reason.generic = But HM Revenue and Customs can still do a calculation for you.
+gmp.error.reason.48160 = But HM Revenue and Customs may still do a calculation for you.
 gmp.error.reason.valid_contributions = This is because we do not hold any valid contributions or earnings for some of the time the member was contracted out.
 gmp.error.reason.63151 = This is because you entered a leaving date that is after the date of death.
 gmp.error.reason.63149 = This is because you entered a leaving date that is after the State Pension age.
