@@ -21,7 +21,7 @@
 <div class="grid" id="request-another-div">
   <div class="grid-1-3">
     <form action="@routes.SessionCacheController.newCalculation">
-      <button class="button" type="submit" id="request-another">@Messages.get("gmp.button.request-another")</button>
+      <button class="button" type="submit" id="request-another" onclick="ga('send', 'event', 'button', 'click', 'request_another');">@Messages.get("gmp.button.request-another")</button>
     </form>
   </div>
 </div>
