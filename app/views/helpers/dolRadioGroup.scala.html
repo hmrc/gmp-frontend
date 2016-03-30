@@ -81,7 +81,7 @@
           value="@value"
           @elements.args.get('_inputClass).map{inputClass => class="@inputClass"}
           @if(elements.args.contains('_dataAttributes) ){ @elements.args.get('_dataAttributes)}
-          @if(trackGA){onClick="ga('send', 'event', 'radio', 'click', '@inputId');"}
+          @if(trackGA){data-journey-click="gmp:click:@inputId"}
           @field.value.filter( _ == value).map{_ => checked="checked"}/>@if(labelAfter){@if(elements.args.get('_stackedLabel)){@if(label.split(" ").length < 2){<br>@label}else{@for((l, index) <- label.split(" ").zipWithIndex){@if(index != 0){<br>}@l}}}else{@Html(label)}}</label>
   }
 }
