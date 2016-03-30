@@ -177,17 +177,17 @@ gmp.error.reason.check_scon = This is because our records show that the Scheme C
 gmp.error.reason.56067 = This is because we believe the member has no pre-1997 GMP liability under this Scheme Contracted Out Number.
 gmp.error.reason.56010 = This is because we need the member to confirm their date of birth.
 gmp.error.reason.56018 = This is because the member has a Married Woman''s Reduced Rate Election for the contracted-out period therefore there is no GMP liability.
-gmp.error.reason.56002 = This is because the S148 Orders are not yet available.
+gmp.error.reason.56002 = This is because the S148/S37a orders are not yet available.
 gmp.error.reason.56013 = This is because this scheme has no Guaranteed Minimum Pension liability.
 gmp.error.reason.generic = But HM Revenue and Customs can still do a calculation for you.
-gmp.error.reason.48160 = But HM Revenue and Customs may still do a calculation for you.
+gmp.error.reason.48160 = But HM Revenue and Customs may still be able to do a calculation for you.
 gmp.error.reason.valid_contributions = This is because we do not hold any valid contributions or earnings for some of the time the member was contracted out.
 gmp.error.reason.63151 = This is because you entered a leaving date that is after the date of death.
-gmp.error.reason.63149 = This is because you entered a leaving date that is after the State Pension age.
+gmp.error.reason.63149 = This is because you entered a leaving date that is after the Final Relevant Year (FRY).
 gmp.error.reason.63148 = This is because you entered a calculation date that is before the date of death we hold on record.
 gmp.error.reason.63147 = This is because we do not have a date of death for this member.
 gmp.error.reason.63150 = You asked for an opposite gender calculation. However, one is not available as there are no post-1990 contributions and earnings.
-gmp.error.reason.63167 = This is because you asked for it to be revalued using Limited Rate. This is not available to leavers after 5 April 1997.
+gmp.error.reason.63167 = This is because you asked for the GMP to be revalued using Limited rate. This is not available to leavers after 5 April 1997.
 
 gmp.error.solution.contact = If you think our records are incorrect, contact HM Revenue and Customs through the GMP Service Queries database in the LIVE shared workspace e-room.
 gmp.error.solution.bullets = <ul class="list-number"><li>Check you have spelled the name correctly</li><li>Check you have entered the correct National Insurance number</li><li><a href="/guaranteed-minimum-pension/member-details">Try the calculation again</a></li></ul>

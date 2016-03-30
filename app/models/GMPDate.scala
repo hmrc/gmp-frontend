@@ -41,7 +41,7 @@ case class GmpDate(day: Option[String], month: Option[String], year: Option[Stri
 
   def getAsText: String = {
     getAsLocalDate match {
-      case Some(date) => date.getDayOfMonth() + " " + date.monthOfYear().getAsText() + " " + date.getYear()
+      case Some(date) => date.toString("dd MMMM yyyy")
       case _ => ""
     }
   }
