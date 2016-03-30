@@ -14,7 +14,7 @@ private object AppDependencies {
   import play.core.PlayVersion
 
   private val playHealthVersion = "1.1.0"
-  private val frontendBootstrapVersion = "6.2.0"
+  private val frontendBootstrapVersion = "6.3.0"
   private val govukTemplateVersion = "4.0.0"
   private val playUiVersion = "4.10.0"
   private val playAuthFrontendVersion = "4.7.0"

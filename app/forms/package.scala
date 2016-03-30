@@ -49,7 +49,11 @@ package object forms {
 
   def checkYearLength(year: Option[String]): Boolean = {
     year match {
-      case Some(value) => value.length == YEAR_FIELD_LENGTH
+      case Some(value) =>  if (value forall Character.isDigit) {
+        value.length == YEAR_FIELD_LENGTH
+      }else{
+        true
+      }
       case None => true
     }
   }

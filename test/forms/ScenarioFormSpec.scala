@@ -43,6 +43,13 @@ class ScenarioFormSpec extends PlaySpec with MockitoSugar{
       assert(calculationReasonResult.errors.size == 1)
       assert(calculationReasonResult.errors.contains(FormError("calcType",List("gmp.error.reason.mandatory"))))
     }
+
+    "does not accept invalid format" in  {
+      val calculationReason = Json.toJson(CalculationType(Some("%&20!")))
+      val calculationReasonResult = scenarioForm.bind(calculationReason)
+      assert(calculationReasonResult.errors.size == 1)
+      assert(calculationReasonResult.errors.contains(FormError("calcType",List("gmp.error.reason.mandatory"))))
+    }
   }
 
 

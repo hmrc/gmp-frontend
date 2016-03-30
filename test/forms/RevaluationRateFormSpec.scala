@@ -26,7 +26,7 @@ class RevaluationRateFormSpec extends PlaySpec with MockitoSugar {
   "Revaluation Rate Form" must {
     "return no errors when valid values are entered" in {
 
-      val revaluationFormResults = revaluationRateForm.bind(Json.toJson(RevaluationRate(Some("hmrc"))))
+      val revaluationFormResults = revaluationRateForm.bind(Json.toJson(RevaluationRate(Some(RevaluationRate.HMRC))))
 
       assert(revaluationFormResults.errors.size == 0)
 
@@ -38,6 +38,12 @@ class RevaluationRateFormSpec extends PlaySpec with MockitoSugar {
 
       assert(revaluationFormResults.errors.size == 1)
 
+    }
+
+    "return error when not allowed type" in {
+      val revaluationFormResults = revaluationRateForm.bind(Json.toJson(RevaluationRate(Some("~@"))))
+
+      assert(revaluationFormResults.errors.size == 1)
     }
 
   }
