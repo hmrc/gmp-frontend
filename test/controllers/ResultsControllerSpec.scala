@@ -45,8 +45,10 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
   val mockSessionService = mock[SessionService]
   val mockCalculationConnector = mock[GmpConnector]
   val mockApplicationConfig = mock[ApplicationConfig]
+  val mockAuditConnector = mock[AuditConnector]
 
   object TestResultsController extends ResultsController {
+    override val auditConnector = mockAuditConnector
     val authConnector = mockAuthConnector
     override val sessionService = mockSessionService
     override val calculationConnector = mockCalculationConnector
@@ -765,6 +767,18 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
         "respond with a status of OK" in {
           when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
           when(mockCalculationConnector.calculateSingle(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(validCalculationWithContsAndEarningsResponse))
+          when(mockAuditConnector.sendEvent(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(AuditResult.Success))
+          withAuthorisedUser { request =>
+            val result = TestResultsController.getContributionsAndEarnings.apply(request)
+            status(result) must equal(OK)
+            contentAsString(result) must include(Messages("gmp.contributions_earnings.title"))
+          }
+        }
+
+        "respond with a status of OK when auditconnector fails" in {
+          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
+          when(mockCalculationConnector.calculateSingle(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(validCalculationWithContsAndEarningsResponse))
+          when(mockAuditConnector.sendEvent(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.failed(new Exception()))
           withAuthorisedUser { request =>
             val result = TestResultsController.getContributionsAndEarnings.apply(request)
             status(result) must equal(OK)
@@ -775,6 +789,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
         "respond with a status of OK when response contains global error" in {
           when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
           when(mockCalculationConnector.calculateSingle(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(validCalculationWithContsAndEarningsResponse.copy(globalErrorCode = 1)))
+          when(mockAuditConnector.sendEvent(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(AuditResult.Success))
           withAuthorisedUser { request =>
             val result = TestResultsController.getContributionsAndEarnings.apply(request)
             status(result) must equal(OK)
@@ -797,6 +812,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
         "contain contributions and earnings" in {
           when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession2)))
           when(mockCalculationConnector.calculateSingle(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(validCalculationWithContsAndEarningsResponse))
+          when(mockAuditConnector.sendEvent(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(AuditResult.Success))
           withAuthorisedUser { request =>
             val result = TestResultsController.getContributionsAndEarnings.apply(request)
             status(result) must equal(OK)
@@ -815,6 +831,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
         "contain contributions and earnings with periods in error present" in {
           when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession2)))
           when(mockCalculationConnector.calculateSingle(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(validCalculationWithContsAndEarningsErroredResponse))
+          when(mockAuditConnector.sendEvent(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(AuditResult.Success))
           withAuthorisedUser { request =>
             val result = TestResultsController.getContributionsAndEarnings.apply(request)
             status(result) must equal(OK)

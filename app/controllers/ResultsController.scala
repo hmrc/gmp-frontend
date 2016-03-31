@@ -19,17 +19,21 @@ package controllers
 import config.{ApplicationGlobal, GmpFrontendAuthConnector}
 import connectors.GmpConnector
 import controllers.auth.GmpRegime
+import events.{ContributionsAndEarningsEvent, ExitQuestionnaireEvent}
 import metrics.Metrics
 import models._
 import org.joda.time.LocalDate
+import play.api.Logger
 import play.api.mvc.Request
 import play.twirl.api.HtmlFormat
 import services.SessionService
+import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 
 trait ResultsController extends GmpPageFlow {
 
   val sessionService: SessionService
   val calculationConnector: GmpConnector
+  val auditConnector : AuditConnector = ApplicationGlobal.auditConnector
 
   def resultsView(response: CalculationResponse, isSameTaxYear: Boolean)(implicit request: Request[_]): HtmlFormat.Appendable
 
@@ -73,6 +77,12 @@ trait ResultsController extends GmpPageFlow {
                     for (period <- response.calculationPeriods) {
                       if (period.errorCode != 0) metrics.countNpsError(period.errorCode.toString)
                     }
+
+                    val contsAndEarningsResult = auditConnector.sendEvent(new ContributionsAndEarningsEvent(calculationConnector.getUser(user), response.nino))
+                    contsAndEarningsResult.onFailure {
+                      case e: Throwable => Logger.warn("[ResultsController][post] : contsAndEarningsResult: " + e.getMessage(), e)
+                    }
+
                     Ok(views.html.contributions_earnings(response))
                   }
                 }
