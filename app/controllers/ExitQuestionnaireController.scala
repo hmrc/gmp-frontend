@@ -45,10 +45,10 @@ trait ExitQuestionnaireController extends GmpController {
         ExitQuestionnaireForm.exitQuestionnaireForm.bindFromRequest().fold(
           formWithErrors => {Future.successful(BadRequest(views.html.exit_questionnaire(formWithErrors)))},
           value => {
-            val auditResult = auditConnector.sendEvent(new ExitQuestionnaireEvent(value.serviceDifficulty.getOrElse(""), value.serviceFeel.getOrElse(""),
+            val questionnaireResult = auditConnector.sendEvent(new ExitQuestionnaireEvent(value.serviceDifficulty.getOrElse(""), value.serviceFeel.getOrElse(""),
               value.comments.getOrElse("")))
-            auditResult.onFailure {
-              case e: Throwable => Logger.warn("[ExitQuestionnaireController][post] : auditResult: " + e.getMessage(), e)
+            questionnaireResult.onFailure {
+              case e: Throwable => Logger.warn("[ExitQuestionnaireController][post] : questionnaireResult: " + e.getMessage(), e)
             }
             Future.successful(Redirect(controllers.routes.ExitQuestionnaireController.showThankYou()))
           }

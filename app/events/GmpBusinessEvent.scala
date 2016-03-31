@@ -18,14 +18,7 @@ package events
 
 import uk.gov.hmrc.play.audit.model.DataEvent
 import uk.gov.hmrc.play.http.HeaderCarrier
-import uk.gov.hmrc.play.http.logging.ForwardedFor
-import scala.util.Try
+import uk.gov.hmrc.play.audit.AuditExtensions._
 
 abstract class GmpBusinessEvent(auditType: String, detail: Map[String, String])(implicit hc: HeaderCarrier)
-  extends DataEvent(auditSource = "gmp-frontend", auditType = auditType, detail = detail, tags =
-    Map(
-      "clientIP" -> (hc.forwarded match {
-        case Some(ForwardedFor(someVal)) => Try(someVal.split(',').head).getOrElse("")
-        case None => ""
-      })
-    ))
+  extends DataEvent(auditSource = "gmp-frontend", auditType = auditType, detail = detail, tags = hc.toAuditTags("", "N/A"))
