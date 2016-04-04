@@ -61,8 +61,8 @@
                                   (Leaving.YES_AFTER, "leaving-date", Leaving.YES_AFTER) -> Messages.get("gmp.generic.no")
                                 ),
                                 '_fieldsetAttributesLegend -> "leaving",
-                                '_legend -> "",
-                                '_legendClass -> "form-label-bold",
+                                '_legend -> Messages.get("gmp.leaving.dol.question"),
+                                '_legendClass -> "hidden",
                                 '_labelAfter -> true,
                                 '_labelClass -> "block-label",
                                 '_groupClass -> "inline-block",
@@ -87,8 +87,11 @@
                             )
                             },
                             '_fieldsetAttributesLegend -> "leaving",
-                            '_legend -> "",
-                            '_legendClass -> "form-label-bold",
+                            session.scenario match {
+                                case CalculationType.SURVIVOR => '_legend -> Messages.get("gmp.survivor.dol.question")
+                                case _ => '_legend -> Messages.get("gmp.other.dol.left.question")
+                            },
+                            '_legendClass -> "hidden",
                             '_labelAfter -> true,
                             '_labelClass -> "block-label",
                             '_groupClass -> "inline-block",

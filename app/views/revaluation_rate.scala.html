@@ -46,8 +46,6 @@
       <div class="grid-2-3">
 
           @form(action = routes.RevaluationRateController.post) {
-
-
             <div class="form-group" id="rateType">
               @gmpRadioGroup(
                   revaluationRateForm("rateType"),
@@ -65,8 +63,17 @@
                     "s148"  -> "s148"  -> Messages.get("gmp.revaluation_rate.s148"),
                     "limited" -> "limited" -> Messages.get("gmp.revaluation_rate.limited")
                   )},
-                  '_legend -> "",
-                  '_legendClass -> "form-label-bold",
+                  session.scenario match {
+                    case CalculationType.PAYABLE_AGE | CalculationType.SPA | CalculationType.SURVIVOR => '_legend -> Messages.get("gmp.revaluation_rate_spa.header")
+                    case CalculationType.REVALUATION => {
+                        session.revaluationDate match {
+                            case Some(rd) if(!rd.isOnOrAfter06042016) => '_legend -> Messages.get("gmp.revaluation_rate_spa.header")
+                            case _ => '_legend -> Messages.get("gmp.revaluation_rate.header")
+                        }
+                    }
+                    case _ => '_legend -> Messages.get("gmp.revaluation_rate.header")
+                  },
+                  '_legendClass -> "hidden",
                   '_labelAfter -> true,
                   '_labelClass -> "block-label",
                   '_groupClass -> "inline-block",
