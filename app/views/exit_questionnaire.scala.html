@@ -30,6 +30,13 @@
 
           @form(action = routes.ExitQuestionnaireController.post) {
 
+            <div class="grid">
+              <div class="grid-2-3">
+                <h2>@Messages.get("gmp.questionnaire.how_easy")</h2><br>
+              </div>
+            </div>
+            <br>
+
             <div class="form-group">
               @gmpRadioGroup(
                 exitQuestionnaireForm("serviceDifficulty"),
@@ -48,6 +55,13 @@
               )
 
               <br/><br/>
+
+              <div class="grid">
+                <div class="grid-2-3">
+                  <h2>@Messages.get("gmp.questionnaire.how_satisfied")</h2><br>
+                </div>
+              </div>
+              <br>
 
               @gmpRadioGroup(
                 exitQuestionnaireForm("serviceFeel"),
