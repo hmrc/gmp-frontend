@@ -17,7 +17,7 @@
 package services
 
 import helpers.RandomNino
-import models.{CalculationRequestLine, BulkCalculationRequest}
+import models.{BulkCalculationRequestLine, CalculationRequestLine, BulkCalculationRequest}
 import org.joda.time.LocalDate
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.mock.MockitoSugar
@@ -29,11 +29,10 @@ class BulkRequestCreationServiceSpec extends PlaySpec with ScalaFutures with Moc
   val nino1 = RandomNino.generate
   val nino2 = RandomNino.generate
 
-  val calcLine1 = CalculationRequestLine(1, "S1301234T", nino1, "Isambard", "Brunell", Some("IB"), Some(1), Some("2010-02-02"), Some("2010-01-01"), Some(1), Some(0))
-  val calcLine2 = CalculationRequestLine(1, "S1301234T", nino2, "George", "Stephenson", Some("GS"), Some(1), Some("2010-02-02"), Some("2010-01-01"), Some(1), Some(0))
-  val calcLine3 = CalculationRequestLine(1, "S1301234T", nino2, "George", "Stephenson", Some("GS"), Some(1), None, None, Some(1), Some(0))
-  val calcLine4 = CalculationRequestLine(1, "S1301234T", nino2, "George", "Stephenson", None, None, None, None, None, None)
-
+  val calcLine1 = BulkCalculationRequestLine(1, Some(CalculationRequestLine("S1301234T", nino1, "Isambard", "Brunell", Some("IB"), Some(1), Some("2010-02-02"), Some("2010-01-01"), Some(1), Some(0))),None)
+  val calcLine2 = BulkCalculationRequestLine(1, Some(CalculationRequestLine("S1301234T", nino2, "George", "Stephenson", Some("GS"), Some(1), Some("2010-02-02"), Some("2010-01-01"), Some(1), Some(0))),None)
+  val calcLine3 = BulkCalculationRequestLine(1, Some(CalculationRequestLine("S1301234T", nino2, "George", "Stephenson", Some("GS"), Some(1), None, None, Some(1), Some(0))),None)
+  val calcLine4 = BulkCalculationRequestLine(1, Some(CalculationRequestLine("S1301234T", nino2, "George", "Stephenson", None, None, None, None, None, None)),None)
 
   val inputLine1 = lineListFromCalculationRequestLine(calcLine1)
   val inputLine2 = lineListFromCalculationRequestLine(calcLine2)
@@ -60,10 +59,10 @@ class BulkRequestCreationServiceSpec extends PlaySpec with ScalaFutures with Moc
 
     val collection = "gmp"
 
-    val bulkRequest1 = BulkCalculationRequest("1", "bill@bixby.com", "uploadRef1", List(calcLine1), Nil)
-    val bulkRequest2 = BulkCalculationRequest("2", "timburton@scary.com", "uploadRef2", List(calcLine2), Nil)
-    val bulkRequest3 = BulkCalculationRequest("3", "lou@ferrigno.com", "uploadRef3", List(calcLine1, calcLine2.copy(lineId = 2)), Nil)
-    val bulkRequest4 = BulkCalculationRequest("4", "bill@bixby.com", "uploadRef1", List(calcLine3), Nil)
+    val bulkRequest1 = BulkCalculationRequest("1", "bill@bixby.com", "uploadRef1", List(calcLine1))
+    val bulkRequest2 = BulkCalculationRequest("2", "timburton@scary.com", "uploadRef2", List(calcLine2))
+    val bulkRequest3 = BulkCalculationRequest("3", "lou@ferrigno.com", "uploadRef3", List(calcLine1, calcLine2.copy(lineId = 2)))
+    val bulkRequest4 = BulkCalculationRequest("4", "bill@bixby.com", "uploadRef1", List(calcLine3))
 
     "return Bulk Request 1" in {
 
@@ -91,33 +90,33 @@ class BulkRequestCreationServiceSpec extends PlaySpec with ScalaFutures with Moc
 
       val bulkRequest: BulkCalculationRequest = TestBulkRequestCreationService.createBulkRequest(collection, "4", bulkRequest4.email, bulkRequest4.reference)
 
-      bulkRequest.validCalculations.head.revaluationDate mustBe None
-      bulkRequest.validCalculations.head.terminationDate mustBe None
+      bulkRequest.calculationRequests.head.calculationRequestLine.get.revaluationDate mustBe None
+      bulkRequest.calculationRequests.head.calculationRequestLine.get.terminationDate mustBe None
     }
 
     "contain Nones for other options" in {
 
       val bulkRequest: BulkCalculationRequest = TestBulkRequestCreationService.createBulkRequest(collection, "5", bulkRequest4.email, bulkRequest4.reference)
 
-      bulkRequest.validCalculations.head.revaluationDate mustBe None
-      bulkRequest.validCalculations.head.terminationDate mustBe None
-      bulkRequest.validCalculations.head.calctype mustBe None
-      bulkRequest.validCalculations.head.dualCalc mustBe None
-      bulkRequest.validCalculations.head.memberRef mustBe None
-      bulkRequest.validCalculations.head.revaluationRate mustBe None
+      bulkRequest.calculationRequests.head.calculationRequestLine.get.revaluationDate mustBe None
+      bulkRequest.calculationRequests.head.calculationRequestLine.get.terminationDate mustBe None
+      bulkRequest.calculationRequests.head.calculationRequestLine.get.calctype mustBe None
+      bulkRequest.calculationRequests.head.calculationRequestLine.get.dualCalc mustBe None
+      bulkRequest.calculationRequests.head.calculationRequestLine.get.memberRef mustBe None
+      bulkRequest.calculationRequests.head.calculationRequestLine.get.revaluationRate mustBe None
     }
 
     "return Bulk Request with correct line numbers" in {
       val bulkRequest: BulkCalculationRequest = TestBulkRequestCreationService.createBulkRequest(collection, "3", bulkRequest3.email, bulkRequest3.reference)
 
-      bulkRequest.validCalculations.head.lineId mustBe 1
-      bulkRequest.validCalculations.tail.head.lineId mustBe 2
+      bulkRequest.calculationRequests.head.lineId mustBe 1
+      bulkRequest.calculationRequests.tail.head.lineId mustBe 2
     }
 
   }
 
-  def lineListFromCalculationRequestLine(line: CalculationRequestLine): List[Char] = {
-    val l = line.productIterator.toList
+  def lineListFromCalculationRequestLine(line: BulkCalculationRequestLine): List[Char] = {
+    val l = line.calculationRequestLine.get.productIterator.toList
 
     def process(item: Any) = {
       val dateRegEx = """([0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9])""".r
@@ -129,7 +128,7 @@ class BulkRequestCreationServiceSpec extends PlaySpec with ScalaFutures with Moc
       }
     }
     {
-      for (p <- l.tail) yield process(p)
+      for (p <- l) yield process(p)
     }.flatten :+ 10.toByte.toChar
   }
 }

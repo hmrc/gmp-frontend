@@ -16,12 +16,12 @@
 
 package services
 
-import models.{CalculationRequestLine, BulkCalculationRequest}
+import models.{BulkCalculationRequestLine, CalculationRequestLine, BulkCalculationRequest}
 import org.joda.time.LocalDate
 import org.joda.time.format.{DateTimeFormat, DateTimeFormatter}
 import uk.gov.hmrc.stream.{BulkEntityProcessor, BulkEntityProcessing}
 
-trait BulkRequestCreationService extends BulkEntityProcessor[CalculationRequestLine] {
+trait BulkRequestCreationService extends BulkEntityProcessor[BulkCalculationRequestLine] {
 
   val LINE_FEED: Int = 10
 
@@ -40,8 +40,8 @@ trait BulkRequestCreationService extends BulkEntityProcessor[CalculationRequestL
 
   val inputDateFormatter = DateTimeFormat.forPattern("dd/MM/yyyy")
 
-  def enterLineNumbers(calculationRequestLines: List[CalculationRequestLine]): List[CalculationRequestLine] = {
-    for ((x, i) <- calculationRequestLines.zipWithIndex) yield x.copy(lineId = i + 1)
+  def enterLineNumbers(bulkCalculationRequestLines: List[BulkCalculationRequestLine]): List[BulkCalculationRequestLine] = {
+    for ((x, i) <- bulkCalculationRequestLines.zipWithIndex) yield x.copy(lineId = i + 1)
   }
 
   def createBulkRequest(collection: String, id: String, email: String, reference: String): BulkCalculationRequest = {
@@ -49,9 +49,9 @@ trait BulkRequestCreationService extends BulkEntityProcessor[CalculationRequestL
 
     val attachmentUrl = s"/$collection/$id"
 
-    val calculationRequestLines = list(sourceData(attachmentUrl), LINE_FEED.toByte.toChar, constructCalculationRequestLine _)
+    val bulkCalculationRequestLines: List[BulkCalculationRequestLine] = list(sourceData(attachmentUrl), LINE_FEED.toByte.toChar, constructBulkCalculationRequestLine _)
 
-    BulkCalculationRequest(id, email, reference, enterLineNumbers(calculationRequestLines), Nil)
+    BulkCalculationRequest(id, email, reference, enterLineNumbers(bulkCalculationRequestLines))
 
   }
 
@@ -60,7 +60,7 @@ trait BulkRequestCreationService extends BulkEntityProcessor[CalculationRequestL
 
     val lineArray = line.split(",", -1)
 
-    CalculationRequestLine(1, lineArray(SCON), lineArray(NINO), lineArray(FORENAME), lineArray(SURNAME),
+    CalculationRequestLine(lineArray(SCON), lineArray(NINO), lineArray(FORENAME), lineArray(SURNAME),
       emptyStringsToNone(lineArray(MEMBER_REF), { e: String => Some(e) }),
       emptyStringsToNone(lineArray(CALC_TYPE), { e: String => Some(e.toInt) }),
       emptyStringsToNone(lineArray(TERMINATION_DATE), { e: String => Some(LocalDate.parse(e, inputDateFormatter).toString(DATE_FORMAT)) }),
@@ -68,6 +68,10 @@ trait BulkRequestCreationService extends BulkEntityProcessor[CalculationRequestL
       emptyStringsToNone(lineArray(REVAL_RATE), { e: String => Some(e.toInt) }),
       emptyStringsToNone(lineArray(DUAL_CALC), { e: String => Some(e.toInt) })
     )
+  }
+
+  def constructBulkCalculationRequestLine(line: String): BulkCalculationRequestLine = {
+    BulkCalculationRequestLine(1, Some(constructCalculationRequestLine(line)),None)
   }
 
   def emptyStringsToNone[T](entry: String, s: (String => Option[T])): Option[T] = {
