@@ -18,8 +18,7 @@ package models
 
 import play.api.libs.json.Json
 
-case class CalculationRequestLine(lineId: Int,
-                                  scon: String,
+case class CalculationRequestLine(scon: String,
                                   nino: String,
                                   firstForename: String,
                                   surname: String,
@@ -35,18 +34,22 @@ object CalculationRequestLine {
   implicit val formats = Json.format[CalculationRequestLine]
 }
 
-object ValidationError {
-  implicit val formats = Json.format[ValidationError]
-}
+case class BulkCalculationRequestLine(lineId: Int,
+                                      calculationRequestLine: Option[CalculationRequestLine],
+                                      validationError: Option[String]
+                                     )
 
-case class ValidationError(lineId: Int, error: String)
+object BulkCalculationRequestLine {
+  implicit val formats = Json.format[BulkCalculationRequestLine]
+}
 
 case class BulkCalculationRequest(uploadReference: String,
                                   email: String,
                                   reference: String,
-                                  validCalculations: List[CalculationRequestLine],
-                                  errors: List[ValidationError])
+                                  calculationRequests: List[BulkCalculationRequestLine]
+                                 )
 
 object BulkCalculationRequest {
   implicit val formats = Json.format[BulkCalculationRequest]
 }
+
