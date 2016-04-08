@@ -22,18 +22,17 @@ import config.ApplicationConfig
 import helpers.RandomNino
 import metrics.Metrics
 import models._
-import org.mockito.{ArgumentCaptor, Matchers}
+import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfter
 import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
 import play.api.libs.json.{JsValue, Json}
 import play.api.test.Helpers._
-import uk.gov.hmrc.domain.{PsaId,PspId}
-import uk.gov.hmrc.play.http.HeaderCarrier
+import uk.gov.hmrc.domain.{PsaId, PspId}
 import uk.gov.hmrc.play.frontend.auth.AuthContext
 import uk.gov.hmrc.play.frontend.auth.connectors.domain._
-import uk.gov.hmrc.play.http._
+import uk.gov.hmrc.play.http.{HeaderCarrier, _}
 import uk.gov.hmrc.play.http.logging.SessionId
 
 import scala.concurrent.Future

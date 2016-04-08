@@ -17,13 +17,18 @@
 package controllers
 
 import java.util.UUID
+
+import connectors.GmpBulkConnector
+import models.{CallBackData, GmpBulkSession}
+import org.mockito.Matchers
+import org.mockito.Mockito._
 import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
 import play.api.i18n.Messages
-import play.api.mvc.{Result, AnyContentAsEmpty}
+import play.api.mvc.{AnyContentAsEmpty, Result}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import services.SessionService
+import services.{BulkRequestCreationService, SessionService}
 import uk.gov.hmrc.domain.PsaId
 import uk.gov.hmrc.play.frontend.auth.AuthContext
 import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
@@ -33,9 +38,11 @@ import uk.gov.hmrc.play.http.logging.SessionId
 
 import scala.concurrent.Future
 
-class BulkRequestReceivedControllerSpec extends PlaySpec with OneServerPerSuite with MockitoSugar with GmpUsers{
+class BulkRequestReceivedControllerSpec extends PlaySpec with OneServerPerSuite with MockitoSugar with GmpUsers {
   val mockAuthConnector = mock[AuthConnector]
   val mockSessionService = mock[SessionService]
+  val mockBulkRequestCreationService = mock[BulkRequestCreationService]
+  val mockGmpBulkConnector = mock[GmpBulkConnector]
 
   implicit val user = AuthContext(authority = Authority("1234", Accounts(psa = Some(PsaAccount("link", PsaId("B1234567")))), None, None, CredentialStrength.None, ConfidenceLevel.L50))
   implicit val hc = new HeaderCarrier(sessionId = Some(SessionId(s"session-${UUID.randomUUID}")))
@@ -43,6 +50,8 @@ class BulkRequestReceivedControllerSpec extends PlaySpec with OneServerPerSuite 
   object TestBulkRequestReceivedController extends BulkRequestReceivedController {
     val authConnector = mockAuthConnector
     override val sessionService = mockSessionService
+    override val bulkRequestCreationService = mockBulkRequestCreationService
+    override val gmpBulkConnector = mockGmpBulkConnector
   }
 
   "BulkRequestReceivedController" must {
@@ -76,6 +85,7 @@ class BulkRequestReceivedControllerSpec extends PlaySpec with OneServerPerSuite 
             }
           }
         }
+        
       }
     }
   }

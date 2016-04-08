@@ -17,22 +17,39 @@
 package controllers
 
 import config.GmpFrontendAuthConnector
+import connectors.GmpBulkConnector
 import controllers.auth.GmpRegime
-import services.SessionService
+import services.{BulkRequestCreationService, SessionService}
 
 import scala.concurrent.Future
 
 trait BulkRequestReceivedController extends GmpController {
 
   val sessionService: SessionService
+  val bulkRequestCreationService: BulkRequestCreationService
+  val gmpBulkConnector: GmpBulkConnector
 
   def get = AuthorisedFor(GmpRegime, pageVisibilityPredicate).async {
     implicit user =>
-      implicit request => Future.successful(Ok(views.html.bulk_request_received()))
+      implicit request => {
+        sessionService.fetchGmpBulkSession().map{
+          case Some(returnedSession) if(returnedSession.callBackData.isDefined) => {
+            val callbackData = returnedSession.callBackData.get
+            val bulkRequest = bulkRequestCreationService.createBulkRequest(callbackData.collection,callbackData.id,returnedSession.emailAddress.getOrElse(""),
+              returnedSession.reference.getOrElse(""))
+            gmpBulkConnector.sendBulkRequest(bulkRequest)
+          }
+          case None => throw new RuntimeException
+        }
+
+        Future.successful(Ok(views.html.bulk_request_received()))
+      }
   }
 }
 
 object BulkRequestReceivedController extends BulkRequestReceivedController {
   val authConnector = GmpFrontendAuthConnector
   override val sessionService = SessionService
+  override val bulkRequestCreationService = BulkRequestCreationService
+  override val gmpBulkConnector = GmpBulkConnector
 }
