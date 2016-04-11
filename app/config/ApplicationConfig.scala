@@ -36,7 +36,7 @@ object ApplicationConfig extends ApplicationConfig with ServicesConfig {
 
   private def loadConfig(key: String) = configuration.getString(key).getOrElse(throw new Exception(s"Missing key: $key"))
 
-  private val contactHost = configuration.getString("microservice.services.contact-frontend.host").getOrElse("")
+  private val contactHost = configuration.getString("microservice.contact-frontend.host").getOrElse("")
   private val contactFrontendService = baseUrl("contact-frontend")
 
   override lazy val assetsPrefix: String = loadConfig("assets.url") + loadConfig("assets.version")

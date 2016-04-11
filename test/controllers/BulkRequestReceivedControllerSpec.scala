@@ -85,7 +85,7 @@ class BulkRequestReceivedControllerSpec extends PlaySpec with OneServerPerSuite 
             }
           }
         }
-        
+
       }
     }
   }
