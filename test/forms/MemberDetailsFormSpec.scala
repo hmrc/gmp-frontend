@@ -186,7 +186,7 @@ class MemberDetailsFormSpec extends PlaySpec {
         )
         val validatedForm = form.bind(postData)
 
-        assert(validatedForm.errors.contains(FormError("firstForename", List("gmp.error.mandatory"))))
+        assert(validatedForm.errors.contains(FormError("firstForename", List("gmp.error.firstnameorinitial"))))
         assert(validatedForm.errors.length == 1)
       }
 

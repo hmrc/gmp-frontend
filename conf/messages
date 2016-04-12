@@ -148,6 +148,7 @@ gmp.error.date.thistaxyear = Enter a date in this tax year or the next
 gmp.error.day.invalid = Enter a day between 1 and 31
 gmp.error.length = {0} is too long (>{1})
 gmp.error.mandatory = Enter a {0}
+gmp.error.firstnameorinitial = Enter a first name or initial
 gmp.error.month.invalid = Enter a month between 1 and 12
 gmp.error.reval_date.from = The calculation can only be revalued from 5 April 1978
 gmp.error.reval_date.to = The calculation can only be revalued up until 4 April 2046
