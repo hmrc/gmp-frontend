@@ -19,6 +19,7 @@ package controllers
 import config.GmpFrontendAuthConnector
 import connectors.GmpBulkConnector
 import controllers.auth.GmpRegime
+import play.api.Logger
 import services.{BulkRequestCreationService, SessionService}
 
 import scala.concurrent.Future
@@ -32,6 +33,7 @@ trait BulkRequestReceivedController extends GmpController {
   def get = AuthorisedFor(GmpRegime, pageVisibilityPredicate).async {
     implicit user =>
       implicit request => {
+        Logger.debug(s"[BulkRequestReceivedController][get][GET] : ${request.body}")
         sessionService.fetchGmpBulkSession().map{
           case Some(returnedSession) if(returnedSession.callBackData.isDefined) => {
             val callbackData = returnedSession.callBackData.get

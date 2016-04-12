@@ -19,7 +19,9 @@ package controllers
 import java.util.UUID
 
 import connectors.GmpBulkConnector
-import models.{CallBackData, GmpBulkSession}
+import helpers.RandomNino
+import models._
+import org.joda.time.LocalDate
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.mock.MockitoSugar
@@ -30,10 +32,11 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.{BulkRequestCreationService, SessionService}
 import uk.gov.hmrc.domain.PsaId
+import uk.gov.hmrc.emailaddress.EmailAddress
 import uk.gov.hmrc.play.frontend.auth.AuthContext
 import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
 import uk.gov.hmrc.play.frontend.auth.connectors.domain._
-import uk.gov.hmrc.play.http.HeaderCarrier
+import uk.gov.hmrc.play.http.{HttpResponse, HeaderCarrier}
 import uk.gov.hmrc.play.http.logging.SessionId
 
 import scala.concurrent.Future
@@ -46,6 +49,15 @@ class BulkRequestReceivedControllerSpec extends PlaySpec with OneServerPerSuite 
 
   implicit val user = AuthContext(authority = Authority("1234", Accounts(psa = Some(PsaAccount("link", PsaId("B1234567")))), None, None, CredentialStrength.None, ConfidenceLevel.L50))
   implicit val hc = new HeaderCarrier(sessionId = Some(SessionId(s"session-${UUID.randomUUID}")))
+
+  val callBackData = CallBackData("AAAAA", "11111", 1L, Some("Ted"), Some("application/json"), "YYYYYYY", None)
+  val gmpBulkSession = GmpBulkSession(Some(callBackData), Some(EmailAddress("somebody@somewhere.com")), Some("reference"))
+
+  val calcLine1 = BulkCalculationRequestLine(1, Some(CalculationRequestLine("S1301234T", RandomNino.generate, "Isambard", "Brunell", Some("IB"), Some(1), Some("2010-02-02"), Some("2010-01-01"), Some(1), Some(0))),None)
+
+
+  val inputLine1 = lineListFromCalculationRequestLine(calcLine1)
+  val bulkRequest1 = BulkCalculationRequest("1", "bill@bixby.com", "uploadRef1", List(calcLine1))
 
   object TestBulkRequestReceivedController extends BulkRequestReceivedController {
     val authConnector = mockAuthConnector
@@ -73,6 +85,10 @@ class BulkRequestReceivedControllerSpec extends PlaySpec with OneServerPerSuite 
       "authenticated users" must {
 
         "respond with ok" in {
+
+          when(mockSessionService.fetchGmpBulkSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpBulkSession)))
+          when(mockBulkRequestCreationService.createBulkRequest(Matchers.any(),Matchers.any(),Matchers.any(),Matchers.any())).thenReturn(bulkRequest1)
+          when(mockGmpBulkConnector.sendBulkRequest(Matchers.any())(Matchers.any(),Matchers.any())).thenReturn(Future.successful(HttpResponse(200)))
           withAuthorisedUser { user =>
             getBulkRequestReceived(user) { result =>
               status(result) must equal(OK)
@@ -92,5 +108,22 @@ class BulkRequestReceivedControllerSpec extends PlaySpec with OneServerPerSuite 
 
   def getBulkRequestReceived(request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest())(handler: Future[Result] => Any): Unit = {
     handler(TestBulkRequestReceivedController.get.apply(request))
+  }
+
+  def lineListFromCalculationRequestLine(line: BulkCalculationRequestLine): List[Char] = {
+    val l = line.calculationRequestLine.get.productIterator.toList
+
+    def process(item: Any) = {
+      val dateRegEx = """([0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9])""".r
+      item match {
+        case None => ","
+        case Some(dateRegEx(s)) => new LocalDate(s).toString("dd/MM/yyyy") + ","
+        case Some(x) => s"$x,"
+        case x: String => x + ","
+      }
+    }
+    {
+      for (p <- l) yield process(p)
+    }.flatten :+ 10.toByte.toChar
   }
 }

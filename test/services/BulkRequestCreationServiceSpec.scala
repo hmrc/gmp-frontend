@@ -21,9 +21,9 @@ import models.{BulkCalculationRequestLine, CalculationRequestLine, BulkCalculati
 import org.joda.time.LocalDate
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.mock.MockitoSugar
-import org.scalatestplus.play.PlaySpec
+import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
 
-class BulkRequestCreationServiceSpec extends PlaySpec with ScalaFutures with MockitoSugar {
+class BulkRequestCreationServiceSpec extends PlaySpec with ScalaFutures with MockitoSugar with OneServerPerSuite {
 
 
   val nino1 = RandomNino.generate

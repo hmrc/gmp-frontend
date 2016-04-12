@@ -26,6 +26,9 @@ import org.scalatest.BeforeAndAfter
 import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
 import play.api.test.Helpers._
+import uk.gov.hmrc.domain.PsaId
+import uk.gov.hmrc.play.frontend.auth.AuthContext
+import uk.gov.hmrc.play.frontend.auth.connectors.domain._
 import uk.gov.hmrc.play.http.{HttpResponse, HttpPost, HeaderCarrier}
 import uk.gov.hmrc.play.http.logging.SessionId
 
@@ -34,6 +37,7 @@ import scala.concurrent.Future
 class GmpBulkConnectorSpec extends PlaySpec with OneServerPerSuite with MockitoSugar with BeforeAndAfter {
 
   val mockHttpPost = mock[HttpPost]
+  val psaId = "B1234567"
 
   object testGmpBulkConnector extends GmpBulkConnector {
     override val httpPost: HttpPost = mockHttpPost
@@ -46,6 +50,7 @@ class GmpBulkConnectorSpec extends PlaySpec with OneServerPerSuite with MockitoS
     implicit val hc = new HeaderCarrier(sessionId = Some(SessionId(s"session-${UUID.randomUUID}")))
 
     "send a bulk request with valid data" in {
+      implicit val user = AuthContext(authority = Authority("1234", Accounts(psa = Some(PsaAccount("link", PsaId(psaId)))), None, None, CredentialStrength.None, ConfidenceLevel.L50))
       when(mockHttpPost.POST[BulkCalculationRequest, HttpResponse](Matchers.any(), Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any()))
         .thenReturn(Future.successful((HttpResponse(responseStatus = OK))))
 
