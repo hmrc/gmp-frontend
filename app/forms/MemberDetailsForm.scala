@@ -56,7 +56,7 @@ object MemberDetailsForm {
       "nino" -> text
         .verifying(ninoConstraint),
       "firstForename" -> text
-        .verifying(Messages("gmp.error.mandatory", Messages("gmp.lowercase.firstname")), _.length > 0)
+        .verifying(Messages("gmp.error.firstnameorinitial", Messages("gmp.firstname")), _.length > 0)
         .verifying(Messages("gmp.error.length", Messages("gmp.firstname"), MAX_LENGTH), _.length <= MAX_LENGTH)
         .verifying(Messages("gmp.error.name.invalid", Messages("gmp.lowercase.firstname")), x => x.length == 0 || x.matches(NAME_REGEX)),
       "surname" -> text
