@@ -39,13 +39,13 @@ trait BulkRequestReceivedController extends GmpController {
           case _ => throw new RuntimeException
         }
 
-        bulkSession.flatMap {
+        bulkSession.map {
           session => {
             val callbackData = session.callBackData.get
             val bulkRequest = bulkRequestCreationService.createBulkRequest(callbackData.collection, callbackData.id, session.emailAddress.getOrElse(""),
               session.reference.getOrElse(""))
             gmpBulkConnector.sendBulkRequest(bulkRequest)
-            Future.successful(Ok(views.html.bulk_request_received()))
+            Ok(views.html.bulk_request_received())
           }
         }
       }
