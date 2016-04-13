@@ -32,7 +32,6 @@
 
 }
 
-<br/>
 <div class="grid">
 
     @if(calculationResponse.hasErrors){
@@ -42,7 +41,7 @@
 </div>
 
 <div class="grid">
-  <div class="grid-2-3"><br/>
+  <div class="grid-2-3">
 
     @for((period, count) <- calculationResponse.calculationPeriods.zipWithIndex){
 
@@ -55,7 +54,9 @@
               </h2>
 
               <table id="contributions-earnings-table-@count">
-
+              <caption id="gmp-conts-and-earnings-header">
+                @Messages.get("gmp.conts_and_earnings_header")
+              </caption>
 
                 <thead>
                   <tr>
@@ -68,6 +69,7 @@
                   </tr>
                 </thead>
 
+                <br>
                 <tbody>
                     @if(period.errorCode == 0){
                       @for((contsAndEarnings, count) <- contList.reverse.zipWithIndex){

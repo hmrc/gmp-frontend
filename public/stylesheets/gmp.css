@@ -46,6 +46,10 @@
   margin: 30px 15px 45px 0;
 }
 
+.conts-earnings-period-@count{
+  margin-top: 0.5px;
+}
+
 .panel-indent-red {
   clear: both;
   border-left: 4px solid #df3034;
@@ -163,6 +167,8 @@ tr.error-row td {
 
 caption {
   text-align: left;
+  display: table-caption;
+  margin-bottom: 5px;
 }
 
 @media print {
