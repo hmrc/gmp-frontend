@@ -18,6 +18,11 @@
   display: inline-block;
 }
 
+.form-group{
+  display: inline-block;
+  padding-top: 0px;
+}
+
 .print-style{
   float: right;
   -webkit-box-sizing: border-box;
@@ -170,4 +175,5 @@ caption {
 #global-what-now {
   margin-bottom: 20px;
 }
+
 
