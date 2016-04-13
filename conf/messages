@@ -127,6 +127,7 @@ gmp.dol.threequestions.after2016 = Yes, on or after 6 April 2016
 gmp.dol.threequestions.no = No, member is still in the scheme
 gmp.dol.threequestions.no.survivor = No, member was still in the scheme
 gmp.period_table_header = GMP period
+gmp.conts_and_earnings_header = List of contributions and earnings
 gmp.date.header_text = Enter a leaving date.
 gmp.inflationproof.date_header_text = This will be inflation proofed.
 gmp.inflationproof.subtext = The GMP will be inflation proofed and its value will increase based on the rate of inflation.
