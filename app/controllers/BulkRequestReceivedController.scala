@@ -34,17 +34,20 @@ trait BulkRequestReceivedController extends GmpController {
     implicit user =>
       implicit request => {
         Logger.debug(s"[BulkRequestReceivedController][get][GET] : ${request.body}")
-        sessionService.fetchGmpBulkSession().map{
-          case Some(returnedSession) if(returnedSession.callBackData.isDefined) => {
-            val callbackData = returnedSession.callBackData.get
-            val bulkRequest = bulkRequestCreationService.createBulkRequest(callbackData.collection,callbackData.id,returnedSession.emailAddress.getOrElse(""),
-              returnedSession.reference.getOrElse(""))
-            gmpBulkConnector.sendBulkRequest(bulkRequest)
-          }
-          case None => throw new RuntimeException
+        val bulkSession = sessionService.fetchGmpBulkSession().map {
+          case Some(returnedSession) if (returnedSession.callBackData.isDefined) => returnedSession
+          case _ => throw new RuntimeException
         }
 
-        Future.successful(Ok(views.html.bulk_request_received()))
+        bulkSession.flatMap {
+          session => {
+            val callbackData = session.callBackData.get
+            val bulkRequest = bulkRequestCreationService.createBulkRequest(callbackData.collection, callbackData.id, session.emailAddress.getOrElse(""),
+              session.reference.getOrElse(""))
+            gmpBulkConnector.sendBulkRequest(bulkRequest)
+            Future.successful(Ok(views.html.bulk_request_received()))
+          }
+        }
       }
   }
 }

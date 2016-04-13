@@ -102,6 +102,20 @@ class BulkRequestReceivedControllerSpec extends PlaySpec with OneServerPerSuite 
           }
         }
 
+        "throw exception when fails to get session" in {
+
+          when(mockSessionService.fetchGmpBulkSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(None))
+
+          withAuthorisedUser { user =>
+            getBulkRequestReceived(user) { result =>
+              intercept[RuntimeException] {
+                status(result) must equal(OK)
+              }
+
+            }
+          }
+        }
+
       }
     }
   }
