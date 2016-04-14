@@ -58,7 +58,7 @@ gmp.no_inflation.subheader = This GMP has not been inflation proofed as you ente
 # Buttons
 gmp.continue.button = Continue
 gmp.back.link = Back
-gmp.button.request-another = Request another
+gmp.button.request-another = Get another calculation
 gmp.button.check_another = Check another GMP
 gmp.print = Print this page
 gmp.link.contributions-earnings = View contributions and earnings
