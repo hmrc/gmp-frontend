@@ -24,7 +24,7 @@
 
         <div class="global-error">
             @if(globalErrors.hasPath(s"$globalErrorCode.cannot_calculate")){
-                <h2 id="cannot-calculate-header">@{ Messages.get(globalErrors.getString(s"$globalErrorCode.cannot_calculate")) }</h2>
+                <h1 class="error-h1" id="cannot-calculate-header">@{ Messages.get(globalErrors.getString(s"$globalErrorCode.cannot_calculate")) }</h1>
             }
 
             @if(globalErrors.hasPath(s"$globalErrorCode.reason")){
@@ -34,7 +34,7 @@
           @if(globalErrors.hasPath(s"$globalErrorCode.solution")){
             <div>
 
-                <h3 id="global-what-now">@Messages.get("gmp.what_now")</h3>
+                <h2 class="error-h2" id="global-what-now">@Messages.get("gmp.what_now")</h2>
 
                 @Html(Messages.get(globalErrors.getString(s"$globalErrorCode.solution")))
 
