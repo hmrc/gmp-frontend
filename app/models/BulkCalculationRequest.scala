@@ -22,7 +22,7 @@ case class CalculationRequestLine(scon: String,
                                   nino: String,
                                   firstForename: String,
                                   surname: String,
-                                  memberRef: Option[String],
+                                  memberReference: Option[String],
                                   calctype: Option[Int],
                                   terminationDate: Option[String] = None,
                                   revaluationDate: Option[String] = None,
@@ -35,7 +35,7 @@ object CalculationRequestLine {
 }
 
 case class BulkCalculationRequestLine(lineId: Int,
-                                      calculationRequestLine: Option[CalculationRequestLine],
+                                      validCalculationRequest: Option[CalculationRequestLine],
                                       validationError: Option[String]
                                      )
 

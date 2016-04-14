@@ -18,7 +18,8 @@ package models
 
 import play.api.libs.json.{JsObject, Json}
 
-case class CallBackData(collection: String, id: String, length: Long, name: Option[String], contentType: Option[String], sessionId: String, customMetadata: Option[JsObject])
+case class CallBackData(collection: String, id: String, length: Long, name: Option[String], contentType: Option[String], sessionId: String,
+                        customMetadata: Option[JsObject])
 
 object CallBackData {
   implicit val format = Json.format[CallBackData]
