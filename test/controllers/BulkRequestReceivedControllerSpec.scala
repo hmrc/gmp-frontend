@@ -125,7 +125,7 @@ class BulkRequestReceivedControllerSpec extends PlaySpec with OneServerPerSuite 
   }
 
   def lineListFromCalculationRequestLine(line: BulkCalculationRequestLine): List[Char] = {
-    val l = line.calculationRequestLine.get.productIterator.toList
+    val l = line.validCalculationRequest.get.productIterator.toList
 
     def process(item: Any) = {
       val dateRegEx = """([0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9])""".r

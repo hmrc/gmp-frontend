@@ -90,20 +90,20 @@ class BulkRequestCreationServiceSpec extends PlaySpec with ScalaFutures with Moc
 
       val bulkRequest: BulkCalculationRequest = TestBulkRequestCreationService.createBulkRequest(collection, "4", bulkRequest4.email, bulkRequest4.reference)
 
-      bulkRequest.calculationRequests.head.calculationRequestLine.get.revaluationDate mustBe None
-      bulkRequest.calculationRequests.head.calculationRequestLine.get.terminationDate mustBe None
+      bulkRequest.calculationRequests.head.validCalculationRequest.get.revaluationDate mustBe None
+      bulkRequest.calculationRequests.head.validCalculationRequest.get.terminationDate mustBe None
     }
 
     "contain Nones for other options" in {
 
       val bulkRequest: BulkCalculationRequest = TestBulkRequestCreationService.createBulkRequest(collection, "5", bulkRequest4.email, bulkRequest4.reference)
 
-      bulkRequest.calculationRequests.head.calculationRequestLine.get.revaluationDate mustBe None
-      bulkRequest.calculationRequests.head.calculationRequestLine.get.terminationDate mustBe None
-      bulkRequest.calculationRequests.head.calculationRequestLine.get.calctype mustBe None
-      bulkRequest.calculationRequests.head.calculationRequestLine.get.dualCalc mustBe None
-      bulkRequest.calculationRequests.head.calculationRequestLine.get.memberRef mustBe None
-      bulkRequest.calculationRequests.head.calculationRequestLine.get.revaluationRate mustBe None
+      bulkRequest.calculationRequests.head.validCalculationRequest.get.revaluationDate mustBe None
+      bulkRequest.calculationRequests.head.validCalculationRequest.get.terminationDate mustBe None
+      bulkRequest.calculationRequests.head.validCalculationRequest.get.calctype mustBe None
+      bulkRequest.calculationRequests.head.validCalculationRequest.get.dualCalc mustBe None
+      bulkRequest.calculationRequests.head.validCalculationRequest.get.memberReference mustBe None
+      bulkRequest.calculationRequests.head.validCalculationRequest.get.revaluationRate mustBe None
     }
 
     "return Bulk Request with correct line numbers" in {
@@ -116,7 +116,7 @@ class BulkRequestCreationServiceSpec extends PlaySpec with ScalaFutures with Moc
   }
 
   def lineListFromCalculationRequestLine(line: BulkCalculationRequestLine): List[Char] = {
-    val l = line.calculationRequestLine.get.productIterator.toList
+    val l = line.validCalculationRequest.get.productIterator.toList
 
     def process(item: Any) = {
       val dateRegEx = """([0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9])""".r

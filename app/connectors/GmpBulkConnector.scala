@@ -41,7 +41,6 @@ trait GmpBulkConnector extends ServicesConfig{
 
     val baseURI = s"gmp${getUser(user)}/gmp/bulk-data"
     val bulkUri = s"$serviceURL/$baseURI/"
-    println(bulkUri)
     val result = httpPost.POST[BulkCalculationRequest, HttpResponse](bulkUri,bcr)
 
     Logger.debug(s"[GmpBulkConnector][sendBulkRequest][POST] : $bcr")
