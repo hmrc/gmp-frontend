@@ -49,14 +49,10 @@
 
           case Some(contList: List[ContributionsAndEarnings]) => {
 
-              <h2 id="conts-earnings-period-@count">
-                @{Messages.get("gmp.contracted_out_period_table_header" ,s"${period.startDate.get.toString("dd/MM/yyyy")} to ${period.endDate.toString("dd/MM/yyyy")}")}
-              </h2>
-
-              <table id="contributions-earnings-table-@count">
-              <caption id="gmp-conts-and-earnings-header">
-                @Messages.get("gmp.conts_and_earnings_header")
-              </caption>
+      <table id="contributions-earnings-table-@count">
+          <caption id="gmp-conts-and-earnings-header-@count">
+              @{Messages.get("gmp.contracted_out_period_table_header" ,s"${period.startDate.get.toString("dd/MM/yyyy")} to ${period.endDate.toString("dd/MM/yyyy")}")}
+          </caption>
 
                 <thead>
                   <tr>
@@ -69,7 +65,7 @@
                   </tr>
                 </thead>
 
-                <br>
+          <br>
                 <tbody>
                     @if(period.errorCode == 0){
                       @for((contsAndEarnings, count) <- contList.reverse.zipWithIndex){
