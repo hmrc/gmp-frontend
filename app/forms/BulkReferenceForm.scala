@@ -27,7 +27,7 @@ object BulkReferenceForm {
   val MAX_REFERENCE_LENGTH: Int = 40
   val CHARS_ALLOWED = "^[a-zA-Z0-9_-]*$"
 
-  val emailConstaint : Constraint[String] = Constraint("constraints.email") ({
+  val emailConstraint : Constraint[String] = Constraint("constraints.email") ({
     text =>
       if (text.length == 0){
         Invalid(Seq(ValidationError(Messages("gmp.error.mandatory", Messages("gmp.email")))))
@@ -43,7 +43,7 @@ object BulkReferenceForm {
   val bulkReferenceForm = Form(
     mapping(
       "email" -> text
-        .verifying(emailConstaint),
+        .verifying(emailConstraint),
       "reference" -> text
         .verifying(Messages("gmp.error.mandatory", Messages("gmp.reference")), x => x.length != 0)
         .verifying(Messages("gmp.error.invalid", Messages("gmp.reference")), x => x.length < MAX_REFERENCE_LENGTH)
