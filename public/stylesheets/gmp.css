@@ -168,7 +168,7 @@ tr.error-row td {
 caption {
   text-align: left;
   display: table-caption;
-  margin-bottom: 5px;
+  margin-bottom: 15px
 }
 
 @media print {
