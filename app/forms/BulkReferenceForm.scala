@@ -19,6 +19,7 @@ package forms
 import models.BulkReference
 import play.api.data.Form
 import play.api.data.Forms._
+import play.api.data.validation.{Valid, ValidationError, Invalid, Constraint}
 import play.api.i18n.Messages
 import uk.gov.hmrc.emailaddress.EmailAddress
 
@@ -26,11 +27,23 @@ object BulkReferenceForm {
   val MAX_REFERENCE_LENGTH: Int = 40
   val CHARS_ALLOWED = "^[a-zA-Z0-9_-]*$"
 
+  val emailConstaint : Constraint[String] = Constraint("constraints.email") ({
+    text =>
+      if (text.length == 0){
+        Invalid(Seq(ValidationError(Messages("gmp.error.mandatory", Messages("gmp.email")))))
+      }
+      else if (!EmailAddress.isValid(text.toUpperCase())){
+        Invalid(Seq(ValidationError(Messages("gmp.error.email.invalid"))))
+      }
+      else {
+        Valid
+      }
+  })
+
   val bulkReferenceForm = Form(
     mapping(
       "email" -> text
-        .verifying(Messages("gmp.error.mandatory", Messages("gmp.email")), x => x.length != 0)
-        .verifying(Messages("gmp.error.email.invalid", Messages("gmp.email")), x => EmailAddress.isValid(x)),
+        .verifying(emailConstaint),
       "reference" -> text
         .verifying(Messages("gmp.error.mandatory", Messages("gmp.reference")), x => x.length != 0)
         .verifying(Messages("gmp.error.invalid", Messages("gmp.reference")), x => x.length < MAX_REFERENCE_LENGTH)
