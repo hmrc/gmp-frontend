@@ -225,7 +225,7 @@ trait SessionService extends SessionCacheWiring {
         currentSession match {
           case Some(returnedSession) => {
             (returnedSession.scenario, returnedSession.leaving.leaving) match {
-              case (CalculationType.REVALUATION, Some(Leaving.NO)) => returnedSession.copy(leaving = Leaving(date.get, Some(Leaving.NO)))
+              case (CalculationType.REVALUATION, Some(Leaving.NO)) => returnedSession.copy(revaluationDate = date, leaving = Leaving(date.get, Some(Leaving.NO)))
               case _ => returnedSession.copy(revaluationDate = date)
             }
           }
