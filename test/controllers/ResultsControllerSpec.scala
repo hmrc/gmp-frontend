@@ -53,8 +53,8 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
     override val sessionService = mockSessionService
     override val calculationConnector = mockCalculationConnector
 
-    override def resultsView(response: CalculationResponse, sameTaxYear: Boolean)(implicit request: Request[_]): HtmlFormat.Appendable = {
-      views.html.results(applicationConfig = mockApplicationConfig, response, sameTaxYear)
+    override def resultsView(response: CalculationResponse, sameTaxYear: Boolean, stillInScheme:Boolean)(implicit request: Request[_]): HtmlFormat.Appendable = {
+      views.html.results(applicationConfig = mockApplicationConfig, response, sameTaxYear, stillInScheme)
     }
 
     override def metrics = Metrics
@@ -188,7 +188,11 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
       CalculationPeriod(Some(new LocalDate(2014, 11, 9)), new LocalDate(2014, 11, 10), "1.11", "2.22", 1, 0, Some(0), None, None)
     ), 0, None, None, None, false, 1)
 
-
+  val validRevaluationMultipleSameTaxYear = CalculationResponse("John Johnson", nino, "S1234567T", Some("0"), Some(new LocalDate(2016,8,24)),
+    List(
+      CalculationPeriod(Some(new LocalDate(2015, 11, 10)), new LocalDate(2016, 8, 24), "1.11", "2.22", 1, 0, Some(0), None, None),
+      CalculationPeriod(Some(new LocalDate(2014, 11, 9)), new LocalDate(2014, 11, 10), "1.11", "2.22", 1, 0, Some(0), None, None)
+    ), 0, None, None, None, false, 1)
 
   val single58161CalculationResponse = CalculationResponse("John Johnson", nino, "S1234567T", None, None, List(CalculationPeriod(Some(new
       LocalDate(2015, 11, 10)), new LocalDate(2015, 11, 10), "1.11", "2.22", 0, 58161, Some(0))), 0, None, None, None, false, 1)
@@ -317,6 +321,21 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
           }
         }
 
+        "load the results page when revaluation date and termiantion date are the same and with member still in the scheme" in {
+
+          val date = GmpDate(day = Some("24"), month = Some("08"), year = Some("2016"))
+
+          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(
+            Future.successful(Some(gmpSession.copy(revaluationDate = Some(date), rate = Some(RevaluationRate.HMRC),leaving = Leaving(date, Some(Leaving.NO))))))
+
+          when(mockCalculationConnector.calculateSingle(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(validRevaluationMultipleSameTaxYear))
+            withAuthorisedUser { request =>
+            val result = TestResultsController.get.apply(request)
+            contentAsString(result) must not include(Messages("gmp.notrevalued.subheader"))
+
+          }
+
+        }
 
         //spa calculation
 
@@ -555,6 +574,9 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
             contentAsString(result) must include(Messages("gmp.revaluation_rate.type_1"))
           }
         }
+
+//        ************
+
 
         "show error box with member details single period" in {
           when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
