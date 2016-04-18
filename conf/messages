@@ -65,8 +65,6 @@ gmp.bulk_reference.button = Confirm and submit
 gmp.bulk_request_received.button = Upload another file
 gmp.bulk_request_received_dashboard_link = Go to the <a href="/guaranteed-minimum-pension">Guaranteed Minimum Pension checker main page</a>
 
-
-
 # fields
 gmp.date.start = Start date
 gmp.date.dol = Date of leaving
@@ -139,7 +137,6 @@ gmp.bulk_reference.email_text = We will email you about this calculation and not
 gmp.reference = Calculation name
 gmp.bulk_reference.reference_text = You can change the filename to help you recognise your results when they are returned (40 characters)
 gmp.bulk_request_received.text = <ul class="list-bullet"><li>Your calculation should be complete in less than XX hours</li><li>It will then appear on the Guaranteed Minimum Pension checker dashboard with the reference {0}</li><li>We will also email you when it is ready for download</li></ul>
-
 
 # errors
 gmp.error.revaluation_before_leaving = Enter a date on or after {0}
