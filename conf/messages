@@ -63,7 +63,9 @@ gmp.print = Print this page
 gmp.link.contributions-earnings = View contributions and earnings
 gmp.bulk_reference.button = Confirm and submit
 gmp.bulk_request_received.button = Upload another file
-gmp.bulk_request_received_dashboard_link = Go to dashboard
+gmp.bulk_request_received_dashboard_link = Go to the <a href="/guaranteed-minimum-pension">Guaranteed Minimum Pension checker main page</a>
+
+
 
 # fields
 gmp.date.start = Start date
