@@ -49,7 +49,6 @@ gmp.results.survivor.header = Surviving partner''s GMP entitlement at date of de
 gmp.results.survivor.revaluation.header = Surviving partner''s GMP entitlement at {0}
 
 gmp.bulk_reference.header = Get your results
-gmp.bulk_reference.subheader = We will email you when your calculation is ready to download. it will also be available from the GMP checker dashboard.
 
 gmp.bulk_request_received.header = What next
 
@@ -136,7 +135,7 @@ gmp.post88.entitlement = Post-1988 GMP entitlement:
 gmp.email = Email
 gmp.bulk_reference.email_text = We will email you about this calculation and nothing else.
 gmp.reference = Calculation name
-gmp.bulk_reference.reference_text = You can change the filename to help to recognise your returned results from others in your organisation.
+gmp.bulk_reference.reference_text = You can change the filename to help you recognise your results when they are returned (40 characters)
 gmp.bulk_request_received.text = <ul class="list-bullet"><li>Your calculation should be complete in less than XX hours</li><li>It will then appear on the Guaranteed Minimum Pension checker dashboard with the reference {0}</li><li>We will also email you when it is ready for download</li></ul>
 
 
