@@ -22,6 +22,11 @@
   display: inline-block;
 }
 
+.form-group-leaving-options{
+ display: inline-block;
+ margin-bottom: 0px;
+ }
+
 .print-style{
   float: right;
   -webkit-box-sizing: border-box;
@@ -42,8 +47,16 @@
 .panel-indent {
   clear: both;
   border-left: 4px solid #bfc1c3;
-  padding: 10px 0 10px 15px;
-  margin: 30px 15px 45px 0;
+  padding: 2px 0px 10px 15px;
+  margin: 2px 15px 45px 0px;
+}
+
+.panel-indent-leaving-date{
+ clear: both;
+   border-left: 4px solid #bfc1c3;
+   padding: 10px 15px;
+   margin-bottom: 0;
+   height: 140px;
 }
 
 .conts-earnings-period-@count{
@@ -60,6 +73,7 @@
 .gmp-js-hidden {
   display: none;
 }
+
 #subheader {
   margin-bottom: 20px;
 }
@@ -189,3 +203,6 @@ caption {
  font-size: 19px;
 }
 
+#leavingDate{
+ margin-bottom: 0;
+}

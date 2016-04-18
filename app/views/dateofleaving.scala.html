@@ -51,9 +51,9 @@
 
             @form(action = routes.DateOfLeavingController.post) {
 
-                <div class="form-group">
+                <div class="form-group-leaving-options">
                     @if(session.scenario == CalculationType.DOL){
-                        <div class="form-group inline">
+                        <div class="form-group-leaving-options inline">
                             @dolRadioGroup(
                                 dateOfLeavingForm("leaving"),
                                 Seq(
@@ -69,7 +69,7 @@
                                 '_trackGA -> true)
                         </div>
                     } else{
-                        <div class="form-group">
+                        <div class="form-group-leaving-options">
                             @dolRadioGroup(
                             dateOfLeavingForm("leaving"),
                             session.scenario match {
@@ -104,7 +104,7 @@
                 @if(dateOfLeavingForm.hasErrors || dateOfLeavingForm.hasGlobalErrors) {
                   <div class="form-field--error gmp-js-hidden form-date" id="leaving-date">
                 } else {
-                  <div class="panel-indent gmp-js-hidden form-date" id="leaving-date">
+                  <div class="panel-indent-leaving-date gmp-js-hidden form-date" id="leaving-date">
                 }
 
                     <fieldset id="termination-date">
@@ -123,19 +123,19 @@
                                 }
                             }
 
-                            <div class="form-group">
+                            <div class="form-group-leaving-options">
                               @gmpInput(dateOfLeavingForm("leavingDate.day"),
                               '_label -> Html(Messages.get("gmp.day")),
                               '_id -> "leavingDate_day",
                               '_maxLength -> 2)
                             </div>
-                            <div class="form-group">
+                            <div class="form-group-leaving-options">
                               @gmpInput(dateOfLeavingForm("leavingDate.month"),
                               '_label -> Html(Messages.get("gmp.month")),
                               '_id -> "leavingDate_month",
                               '_maxLength -> 2)
                             </div>
-                            <div class="form-group">
+                            <div class="form-group-leaving-options">
                               @gmpInput(dateOfLeavingForm("leavingDate.year"),
                               '_label -> Html(Messages.get("gmp.year")),
                               '_id -> "leavingDate_year",
