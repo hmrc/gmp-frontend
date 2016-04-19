@@ -30,7 +30,7 @@ object BulkReferenceForm {
   val emailConstraint : Constraint[String] = Constraint("constraints.email") ({
     text =>
       if (text.length == 0){
-        Invalid(Seq(ValidationError(Messages("gmp.error.mandatory", Messages("gmp.email")))))
+        Invalid(Seq(ValidationError(Messages("gmp.error.mandatory.an", Messages("gmp.email")))))
       }
       else if (!EmailAddress.isValid(text.toUpperCase())){
         Invalid(Seq(ValidationError(Messages("gmp.error.email.invalid"))))
