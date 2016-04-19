@@ -44,7 +44,7 @@ class BulkReferenceFormSpec extends PlaySpec {
         )
         val validatedForm = bulkReferenceForm.bind(postData)
 
-        assert(validatedForm.errors.contains(FormError("email", List("gmp.error.mandatory"))))
+        assert(validatedForm.errors.contains(FormError("email", List("gmp.error.mandatory.an"))))
       }
 
       "return an error if email invalid" in {
