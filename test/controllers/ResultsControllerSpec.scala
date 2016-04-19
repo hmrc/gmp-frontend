@@ -332,6 +332,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
             withAuthorisedUser { request =>
             val result = TestResultsController.get.apply(request)
             contentAsString(result) must not include(Messages("gmp.notrevalued.subheader"))
+            contentAsString(result) must include(Messages("gmp.leaving.revalued.header", "24/08/2016", "HMRC"))
 
           }
 
@@ -574,9 +575,6 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
             contentAsString(result) must include(Messages("gmp.revaluation_rate.type_1"))
           }
         }
-
-//        ************
-
 
         "show error box with member details single period" in {
           when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))

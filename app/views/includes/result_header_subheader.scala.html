@@ -33,7 +33,7 @@
     }else if(calculationResponse.calcType == CalculationType.PAYABLE_AGE.toInt && calculationResponse.payableAgeDate.isDefined) {
         Messages.get("gmp.payable_age.header", formatDate(calculationResponse.payableAgeDate.get))
     }else if(calculationResponse.revaluationDate.isEmpty || calculationResponse.revaluationUnsuccessful || sameTaxYear){
-        Messages.get("gmp.leaving.scheme.header", formatDate(calculationResponse.leavingDate))
+       Messages.get("gmp.leaving.scheme.header", formatDate(calculationResponse.leavingDate))
     }else {
         if(calculationResponse.calculationPeriods.length <= 1)
             Messages.get("gmp.leaving.revalued.header", formatDate(calculationResponse.leavingDate), Messages.get(s"gmp.revaluation_rate.type_${calculationResponse.calculationPeriods.head.revaluationRate}"))
