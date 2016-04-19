@@ -34,13 +34,13 @@
 
           <div class="form-group">
             @gmpInput(bulkReferenceForm("email"),
-            '_label -> Html(Messages.get("gmp.email")),
+            '_label -> Html(Messages.get("gmp.email.address")),
             '_labelClass -> "form-label-bold",
             '_id -> "email",
             '_hintText -> Messages.get("gmp.bulk_reference.email_text"))
 
             @gmpInput(bulkReferenceForm("reference"),
-            '_label -> Html(Messages.get("gmp.reference")),
+            '_label -> Html(Messages.get("gmp.reference.calcname")),
             '_labelClass -> "form-label-bold",
             '_id -> "reference",
             '_maxLength -> 40,
