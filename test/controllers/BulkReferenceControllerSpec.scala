@@ -79,8 +79,8 @@ class BulkReferenceControllerSpec extends PlaySpec with OneServerPerSuite with M
             getBulkReference(user) { result =>
               status(result) must equal(OK)
               contentAsString(result) must include(Messages("gmp.bulk_reference.title"))
-              contentAsString(result) must include(Messages("gmp.email"))
-              contentAsString(result) must include(Messages("gmp.reference"))
+              contentAsString(result) must include(Messages("gmp.email.address"))
+              contentAsString(result) must include(Messages("gmp.reference.calcname"))
             }
           }
         }
@@ -104,7 +104,7 @@ class BulkReferenceControllerSpec extends PlaySpec with OneServerPerSuite with M
         withAuthorisedUser { request =>
           val result = TestBulkReferenceController.post()(request.withJsonBody(Json.toJson(emptyRequest)))
           status(result) must equal(BAD_REQUEST)
-          contentAsString(result) must include(Messages("gmp.error.mandatory", Messages("gmp.email")))
+          contentAsString(result) must include(Messages("gmp.error.mandatory.an", Messages("gmp.email")))
           contentAsString(result) must include(Messages("gmp.error.mandatory", Messages("gmp.reference")))
         }
       }
