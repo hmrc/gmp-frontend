@@ -90,5 +90,17 @@ class BulkReferenceFormSpec extends PlaySpec {
       }
     }
 
+    "email and reference" must {
+      "return 2 errors if both missing" in {
+        val postData = Json.obj(
+          "email" -> "",
+          "reference" -> ""
+        )
+        val validatedForm = bulkReferenceForm.bind(postData)
+
+        assert(validatedForm.errors.size == 2)
+      }
+    }
+
   }
 }
