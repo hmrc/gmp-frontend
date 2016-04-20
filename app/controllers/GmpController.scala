@@ -35,7 +35,6 @@ trait GmpController extends FrontendController with Actions{
 
 object PageType {
   val REVALUATION = "RevaluationController"
-  val EQUALISE = "EqualiseController"
   val REVALUATION_RATE = "RevaluationRateController"
   val PENSION_DETAILS = "PensionDetailsController"
   val MEMBER_DETAILS = "MemberDetailsController"
@@ -51,19 +50,18 @@ trait GmpPageFlow extends GmpController {
     PageType.INFLATION_PROOF -> { (session: GmpSession) => Redirect(routes.ResultsController.get) },
     PageType.REVALUATION -> { (session: GmpSession) =>
       if (session.leaving.leaving.isDefined && session.leaving.leaving.get.equals(Leaving.NO))
-        Redirect(controllers.routes.EqualiseController.get)
+        Redirect(controllers.routes.ResultsController.get)
       else if (session.leaving.leaving.isDefined && session.leaving.leaving.get.equals(Leaving.YES_BEFORE))
         Redirect(controllers.routes.RevaluationRateController.get)
       else if (sameTaxYear(session))
-        Redirect(routes.EqualiseController.get)
+        Redirect(routes.ResultsController.get)
       else
         Redirect(routes.RevaluationRateController.get)
     },
-    PageType.EQUALISE -> { (session: GmpSession) => Redirect(routes.ResultsController.get) },
 
     PageType.REVALUATION_RATE -> { (session: GmpSession) => {
       session.scenario match {
-        case (CalculationType.PAYABLE_AGE | CalculationType.SPA | CalculationType.REVALUATION) => Redirect(routes.EqualiseController.get)
+        case (CalculationType.PAYABLE_AGE | CalculationType.SPA | CalculationType.REVALUATION) => Redirect(routes.ResultsController.get)
         case CalculationType.SURVIVOR => Redirect(controllers.routes.InflationProofController.get())
       }
     }
@@ -73,11 +71,11 @@ trait GmpPageFlow extends GmpController {
     PageType.SCENARIO -> { (session: GmpSession) => Redirect(routes.DateOfLeavingController.get) },
     PageType.DATE_OF_LEAVING -> { (session: GmpSession) => {
       session.scenario match {
-        case CalculationType.DOL => Redirect(controllers.routes.EqualiseController.get())
+        case CalculationType.DOL => Redirect(controllers.routes.ResultsController.get())
         case CalculationType.PAYABLE_AGE | CalculationType.SPA => {
           session.leaving.leaving match {
             case Some(Leaving.YES_AFTER) | Some(Leaving.YES_BEFORE) => Redirect(controllers.routes.RevaluationRateController.get())
-            case _ => Redirect(controllers.routes.EqualiseController.get())
+            case _ => Redirect(controllers.routes.ResultsController.get())
           }
         }
         case CalculationType.REVALUATION => Redirect(controllers.routes.RevaluationController.get())
@@ -116,27 +114,6 @@ trait GmpPageFlow extends GmpController {
         case Some(Leaving.YES_AFTER) | Some(Leaving.YES_BEFORE) => Redirect(routes.RevaluationRateController.get)
         case _ => Redirect(routes.DateOfLeavingController.get)
       }
-    },
-    PageType.EQUALISE -> { (session: GmpSession) => {
-      session.scenario match {
-        case (CalculationType.REVALUATION) => {
-
-          if (sameTaxYear(session) || (session.leaving.leaving.isDefined && session.leaving.leaving.get.equals(Leaving.NO)))
-            Redirect(routes.RevaluationController.get)
-          else
-            Redirect(routes.RevaluationRateController.get)
-
-        }
-        case (CalculationType.SPA | CalculationType.PAYABLE_AGE) =>
-          session.leaving.leaving match {
-            case Some(Leaving.YES_AFTER) | Some(Leaving.YES_BEFORE) => Redirect(routes.RevaluationRateController.get)
-            case _ => Redirect(routes.DateOfLeavingController.get)
-          }
-
-        case (CalculationType.DOL) => Redirect(routes.DateOfLeavingController.get)
-
-      }
-    }
     },
     PageType.DATE_OF_LEAVING -> {
       (session: GmpSession) => Redirect(routes.ScenarioController.get())

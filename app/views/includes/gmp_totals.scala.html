@@ -45,25 +45,3 @@
 </div>
 
 
-<div class="grid">
-  <br/>
-  @if(calculationResponse.dualCalc) {
-    <div class="grid-2-3">
-      <h2>@{ Messages.get("gmp.post90") }</h2>
-
-      <div class="grid-1-2">
-        <h3 class="heading-small" id="true-calculation-header">@{ Messages.get("gmp.true_calculation") }</h3>
-        <div class="bold-xlarge" id="true-calculation">£@{ calculationResponse.trueCalculation }</div>
-        <div class="bold-small" id="true-calculation-weekly">@Messages.get("gmp.frequency.weekly")</div>
-      </div>
-
-      <div class="grid-1-2">
-        <h3 class="heading-small" id="opposite-calculation-header">@{ Messages.get("gmp.opposite_calculation") }</h3>
-        <div class="bold-xlarge" id="opposite-calculation">£@{ calculationResponse.oppositeCalculation }</div>
-        <div class="bold-small" id="opposite-calculation-weekly">@Messages.get("gmp.frequency.weekly")</div>
-      </div>
-    </div>
-    <br/>
-    <br/>
-  }
-</div>

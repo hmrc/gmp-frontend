@@ -99,12 +99,6 @@ case class CalculationResponse(
   }
 
 
-  def trueCalculation: BigDecimal = calculationPeriods.foldLeft(BigDecimal(0)){ (sum, period) => sum +
-    BigDecimal(period.dualCalcPost90TrueTotal.getOrElse("0.00"))}
-
-  def oppositeCalculation: BigDecimal = calculationPeriods.foldLeft(BigDecimal(0)){ (sum, period) => sum +
-    BigDecimal(period.dualCalcPost90OppositeTotal.getOrElse("0.00"))}
-
   def dodInSameTaxYearAsRevaluationDate: Boolean = {
 
     if(CalculationResponse.getTaxYear(dateOfDeath) != 0 &&

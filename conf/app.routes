@@ -45,12 +45,6 @@ GET         /questionnaire/thankyou                       controllers.ExitQuesti
 GET         /                                             controllers.StartController.get
 GET         /service-unavailable                          controllers.ServiceUnavailableController.get
 
-GET         /contributions-earnings                       controllers.ResultsController.getContributionsAndEarnings
-
-GET         /equalise                                     controllers.EqualiseController.get
-POST        /equalise                                     controllers.EqualiseController.post
-GET         /equalise/back                                controllers.EqualiseController.back
-
 GET         /upload-csv                                   controllers.FileUploadController.get
 GET         /upload-csv/failure                           controllers.FileUploadController.failure
 POST        /upload-csv/callback                          controllers.FileUploadController.callback

@@ -312,7 +312,7 @@ class DateOfLeavingControllerSpec extends PlaySpec with OneServerPerSuite with M
           }
         }
 
-        "redirect to equalisation when payable age and has not left" in {
+        "redirect to results page when payable age and has not left" in {
           when(mockSessionService.cacheLeaving(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession.copy(scenario = CalculationType.PAYABLE_AGE))))
           val validReason = Json.toJson(Leaving(baseValidDate.copy(day = None, month = None, year = None), Some(Leaving.YES_BEFORE)))
           withAuthorisedUser { request =>
@@ -320,11 +320,11 @@ class DateOfLeavingControllerSpec extends PlaySpec with OneServerPerSuite with M
             println(contentAsString(result))
             status(result) must equal(SEE_OTHER)
 
-            redirectLocation(result).get must include("/equalise")
+            redirectLocation(result).get must include("/results")
           }
         }
 
-        "redirect to equalise when dol" in {
+        "redirect to results when dol" in {
           when(mockSessionService.cacheLeaving(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession.copy(leaving = Leaving(GmpDate(Some(""), Some(""), Some("")), leaving = None)))))
           withAuthorisedUser { request =>
             val postData = Json.toJson(
@@ -332,7 +332,7 @@ class DateOfLeavingControllerSpec extends PlaySpec with OneServerPerSuite with M
             )
             val result = TestDateOfLeavingController.post.apply(request.withJsonBody(postData))
             status(result) must equal(SEE_OTHER)
-            redirectLocation(result).get must include("/equalise")
+            redirectLocation(result).get must include("/results")
           }
         }
 

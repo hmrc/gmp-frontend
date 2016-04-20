@@ -64,33 +64,6 @@ trait ResultsController extends GmpPageFlow {
   }
 
 
-  def getContributionsAndEarnings = AuthorisedFor(GmpRegime, pageVisibilityPredicate).async {
-    implicit user =>
-      implicit request => {
-        sessionService.fetchGmpSession() flatMap {
-          sessionOpt: Option[GmpSession] =>
-            sessionOpt match {
-              case Some(session) =>
-                calculationConnector.calculateSingle(createCalculationRequest(session)).map {
-                  response: CalculationResponse => {
-                    if (response.globalErrorCode != 0) metrics.countNpsError(response.globalErrorCode.toString)
-                    for (period <- response.calculationPeriods) {
-                      if (period.errorCode != 0) metrics.countNpsError(period.errorCode.toString)
-                    }
-
-                    val contsAndEarningsResult = auditConnector.sendEvent(new ContributionsAndEarningsEvent(calculationConnector.getUser(user), response.nino))
-                    contsAndEarningsResult.onFailure {
-                      case e: Throwable => Logger.warn("[ResultsController][post] : contsAndEarningsResult: " + e.getMessage(), e)
-                    }
-
-                    Ok(views.html.contributions_earnings(response))
-                  }
-                }
-              case _ => throw new RuntimeException
-            }
-        }
-      }
-  }
 
   def createCalculationRequest(gmpSession: GmpSession): CalculationRequest = {
 
