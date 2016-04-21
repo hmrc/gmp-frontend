@@ -342,22 +342,22 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
 
         }
 
-        "load the single period results page when revaluation date and termiantion date are the same and with member still in the scheme" in {
-
-          val date = GmpDate(day = Some("24"), month = Some("08"), year = Some("2016"))
-
-          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(
-            Future.successful(Some(gmpSession.copy(revaluationDate = Some(date), leaving = Leaving(date, Some(Leaving.NO))))))
-
-          when(mockCalculationConnector.calculateSingle(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(validDolSingleSameTaxYear))
-          withAuthorisedUser { request =>
-            val result = TestResultsController.get.apply(request)
-            contentAsString(result) must include(Messages("gmp.notrevalued.subheader"))
-            contentAsString(result) must include(Messages("gmp.leaving.scheme.header", "24/08/2016"))
-
-          }
-
-        }
+//        "load the single period results page when revaluation date and termiantion date are the same and with member still in the scheme" in {
+//
+//          val date = GmpDate(day = Some("24"), month = Some("08"), year = Some("2016"))
+//
+//          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(
+//            Future.successful(Some(gmpSession.copy(revaluationDate = Some(date), leaving = Leaving(date, Some(Leaving.NO))))))
+//
+//          when(mockCalculationConnector.calculateSingle(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(validDolSingleSameTaxYear))
+//          withAuthorisedUser { request =>
+//            val result = TestResultsController.get.apply(request)
+//            contentAsString(result) must include(Messages("gmp.notrevalued.subheader"))
+//            contentAsString(result) must include(Messages("gmp.leaving.scheme.header", "24/08/2016"))
+//
+//          }
+//
+//        }
 
         //spa calculation
 
