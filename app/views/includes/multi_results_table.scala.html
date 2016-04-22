@@ -77,7 +77,11 @@
             @if(!calculationResponse.revaluationDate.isEmpty && calculationResponse.revaluationRate == Some("0")) {
                 <td id="rate-@count" class="numeric">
                     <span class="bold-small">
+                      @if(count == 0) {
+                        --
+                      } else {
                         @{ Messages.get(s"gmp.revaluation_rate.type_${period.revaluationRate}") }
+                      }
                     </span>
                 </td>
             }

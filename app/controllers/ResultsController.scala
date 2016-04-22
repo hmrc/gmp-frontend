@@ -35,7 +35,7 @@ trait ResultsController extends GmpPageFlow {
   val calculationConnector: GmpConnector
   val auditConnector : AuditConnector = ApplicationGlobal.auditConnector
 
-  def resultsView(response: CalculationResponse, isSameTaxYear: Boolean, stillInScheme: Boolean)(implicit request: Request[_]): HtmlFormat.Appendable
+  def resultsView(response: CalculationResponse, isSameTaxYear: Boolean)(implicit request: Request[_]): HtmlFormat.Appendable
 
   def metrics: Metrics
 
@@ -54,7 +54,7 @@ trait ResultsController extends GmpPageFlow {
                       if (period.errorCode != 0) metrics.countNpsError(period.errorCode.toString)
                     }
 
-                    Ok(resultsView(response, sameTaxYear(session), stillInScheme(session)))
+                    Ok(resultsView(response, sameTaxYear(session)))
                   }
                 }
               case _ => throw new RuntimeException
@@ -119,13 +119,6 @@ trait ResultsController extends GmpPageFlow {
       })
   }
 
-  def stillInScheme(session: GmpSession) = {
-    session.leaving.leaving match {
-      case Some(Leaving.NO) => true
-      case _ => false
-    }
-  }
-
 }
 
 
@@ -136,9 +129,8 @@ object ResultsController extends ResultsController {
   // $COVERAGE-OFF$Trivial and never going to be called by a test that uses it's own object implementation
   override def metrics = Metrics
 
-  override def resultsView(response: CalculationResponse, isSameTaxYear: Boolean, stillInScheme:Boolean)(implicit request: Request[_]): HtmlFormat.Appendable = {
-    views.html.results(applicationConfig = config.ApplicationConfig, response, isSameTaxYear, stillInScheme)
-
+  override def resultsView(response: CalculationResponse, isSameTaxYear: Boolean)(implicit request: Request[_]): HtmlFormat.Appendable = {
+    views.html.results(applicationConfig = config.ApplicationConfig, response, isSameTaxYear)
   }
 
   // $COVERAGE-ON$

@@ -14,10 +14,10 @@
 * limitations under the License.
 *@
 
-@(calculationResponse:CalculationResponse, sameTaxYear:Boolean, stillInScheme:Boolean)(implicit request: Request[_])
+@(calculationResponse:CalculationResponse, sameTaxYear:Boolean)(implicit request: Request[_])
 
 @import play.i18n._
 
-@includes.result_header_subheader(calculationResponse, sameTaxYear, stillInScheme)
+@includes.result_header_subheader(calculationResponse, sameTaxYear)
 @includes.gmp_totals(calculationResponse)
 @includes.conts_and_earnings_link(calculationResponse)
