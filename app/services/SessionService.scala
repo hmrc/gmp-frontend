@@ -40,7 +40,7 @@ trait SessionService extends SessionCacheWiring {
   def metrics: Metrics
 
   val GMP_SESSION_KEY = "gmp_session"
-  val cleanSession = GmpSession(MemberDetails("", "", ""), "", "", None, None, Leaving(GmpDate(None,None,None), None), None)
+  val cleanSession = GmpSession(MemberDetails("", "", ""), "", "", None, None, Leaving(GmpDate(None,None,None), None), None, Dashboard(List()))
 
   val GMP_BULK_SESSION_KEY = "gmp_bulk_session"
   val cleanBulkSession = GmpBulkSession(None, None, None)
@@ -283,4 +283,16 @@ trait SessionService extends SessionCacheWiring {
       cacheMap.getEntry[GmpSession](GMP_SESSION_KEY)
     })
   }
+
+  def fetchDashboard()(implicit request: Request[_], hc: HeaderCarrier): Future[Option[Dashboard]] = {
+    val timer = metrics.keystoreStoreTimer.time()
+    Logger.debug(s"[SessionService][fetchDashboard]")
+    sessionCache.fetchAndGetEntry[GmpSession](GMP_SESSION_KEY).map { currentSession =>
+      currentSession.map {
+        timer.stop()
+        _.dashboard
+      }
+    }
+  }
+
 }

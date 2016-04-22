@@ -19,6 +19,7 @@ package controllers
 import config.GmpFrontendAuthConnector
 import connectors.GmpConnector
 import controllers.auth.GmpRegime
+import play.api.Logger
 
 object DashboardController extends DashboardController{
   val authConnector = GmpFrontendAuthConnector
@@ -30,6 +31,12 @@ trait DashboardController extends GmpPageFlow {
   def get = AuthorisedFor(GmpRegime, pageVisibilityPredicate).async {
     implicit user =>
       implicit request => {
-
-        ???
-}}}
+        sessionService.fetchDashboard() map { dashboardOpt =>
+           dashboardOpt match {
+            case Some(dash) => Ok(views.html.dashboard())
+            case _ => ???
+          }
+        }
+      }
+  }
+}

@@ -16,12 +16,18 @@
 
 package controllers
 
+import org.mockito.Matchers
+import org.mockito.Mockito._
 import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
+import play.api.i18n.Messages
+import play.api.mvc.{AnyContentAsEmpty, Result}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.SessionService
 import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
+
+import scala.concurrent.Future
 
 class DashboardControllerSpec extends PlaySpec with OneServerPerSuite with MockitoSugar with GmpUsers {
 
@@ -29,12 +35,45 @@ class DashboardControllerSpec extends PlaySpec with OneServerPerSuite with Mocki
   val mockSessionService = mock[SessionService]
 
 
+  object TestDashboardController extends DashboardController {
+    val authConnector = mockAuthConnector
+    override val sessionService = mockSessionService
+  }
+
   "DashboardController" must {
 
     "respond to GET /guaranteed-minimum-pension/dashboard" in {
       val result = route(FakeRequest(GET, "/guaranteed-minimum-pension/dashboard"))
       status(result.get) must not equal (NOT_FOUND)
     }
+  }
+
+  "dashboard GET " must {
+
+    "be authorised" in {
+      getDashboard() { result =>
+        status(result) must equal(SEE_OTHER)
+        redirectLocation(result).get must include("/account/sign-in")
+      }
+    }
+
+    "authenticated users" must {
+
+      "respond with ok" in {
+        when(mockSessionService.fetchDashboard()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(None))
+        withAuthorisedUser { user =>
+          getDashboard(user) { result =>
+            status(result) must equal(OK)
+            contentAsString(result) must include(Messages("gmp.dashboard.title"))
+            contentAsString(result) must include(Messages("gmp.signout"))
+          }
+        }
+      }
+    }
+  }
+
+  def getDashboard(request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest())(handler: Future[Result] => Any): Unit = {
+    handler(TestDashboardController.get.apply(request))
   }
 
 }
