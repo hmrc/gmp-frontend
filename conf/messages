@@ -132,11 +132,14 @@ gmp.inflationproof.date_header_text = This will be inflation proofed.
 gmp.inflationproof.subtext = The GMP will be inflation proofed and its value will increase based on the rate of inflation.
 gmp.total.entitlement = Total GMP entitlement:
 gmp.post88.entitlement = Post-1988 GMP entitlement:
-gmp.email = Email
+gmp.email = email address
+gmp.email.address = Email address
 gmp.bulk_reference.email_text = We will email you about this calculation and nothing else.
-gmp.reference = Calculation name
+gmp.reference = calculation name
+gmp.reference.calcname = Calculation name
 gmp.bulk_reference.reference_text = You can change the filename to help you recognise your results when they are returned (40 characters)
 gmp.bulk_request_received.text = <ul class="list-bullet"><li>Your calculation should be complete in less than XX hours</li><li>It will then appear on the Guaranteed Minimum Pension checker dashboard with the reference {0}</li><li>We will also email you when it is ready for download</li></ul>
+gmp.fileupload.hint = The file must contain mandatory information and in a specific format. You can <a href=" "> download a template and instructions (2 files)</a> on how to create your file first.
 
 # errors
 gmp.error.revaluation_before_leaving = Enter a date on or after {0}
@@ -147,6 +150,7 @@ gmp.error.date.thistaxyear = Enter a date in this tax year or the next
 gmp.error.day.invalid = Enter a day between 1 and 31
 gmp.error.length = {0} is too long (>{1})
 gmp.error.mandatory = Enter a {0}
+gmp.error.mandatory.an = Enter an {0}
 gmp.error.firstnameorinitial = Enter a first name or initial
 gmp.error.month.invalid = Enter a month between 1 and 12
 gmp.error.reval_date.from = The calculation can only be revalued from 5 April 1978
@@ -156,6 +160,8 @@ gmp.error.date.nonnumber = Enter a date using numbers only
 gmp.error.reason.mandatory = Select an option
 gmp.generic.errors_heading= There is a problem with the form
 gmp.error.name.invalid = Enter a {0} using only letters, hyphens, apostrophes and spaces
+gmp.error.email.invalid = Enter a valid email address
+gmp.error.invalid = Enter a valid calculation name
 
 gmp.error.scon.invalid = Enter a Scheme Contracted Out Number in the same format as the example given
 gmp.error.scon.nps_invalid = This SCON does not exist. Check and try again.
