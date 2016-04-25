@@ -147,6 +147,9 @@ gmp.bulk_calculation_link = Bulk calculation
 gmp.download_templates_link = Download a template and instructions(2 files)
 gmp.more_bulk_calculations_link = More bulk calculations
 gmp.previous_calculations = Previous bulk calculations
+gmp.single_calculation_text = Use the checker to input member details and get an instant result one member at a time.
+gmp.bulk_calculation_text = Upload the details of many members at once and we will email you when the calculation is done.
+gmp.previous_calculations_text = Results for the last three bulk requests made in the previous 30 days.
 
 # errors
 gmp.error.revaluation_before_leaving = Enter a date on or after {0}

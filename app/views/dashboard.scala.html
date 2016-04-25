@@ -29,9 +29,11 @@
     <h1 id="choose-calculation-type">@Messages.get("gmp.dashboard_header")</h1>
   </div>
 
-  <div class="grid-2-3">
-    <a id="single-calculation-link" href="@routes.PensionDetailsController.get">@Messages.get("gmp.single_calculation_link")</a>
-    <a id="bulk-calculation-link" href="@routes.FileUploadController.get">@Messages.get("gmp.bulk_calculation_link")</a>
+  <br class="grid-2-3">
+    <a id="single-calculation-link" href="@routes.PensionDetailsController.get">@Messages.get("gmp.single_calculation_link")</a></br>
+    <p id="single-calculation-description">@Messages.get("gmp.single_calculation_text")</p>
+    <a id="bulk-calculation-link" href="@routes.FileUploadController.get">@Messages.get("gmp.bulk_calculation_link")</a></br>
+    <p id="bulk-calculation-description">@Messages.get("gmp.bulk_calculation_text")</p>
   </div>
 
   <div class="grid-2-3">
@@ -40,6 +42,7 @@
 
   <div class="grid-2-3">
     <h2 id="previous-calculations" href="">@Messages.get("gmp.previous_calculations")</h2>
+    <p id="previous-calculations-description">@Messages.get("gmp.previous_calculations_text")</p>
   </div>
 
   <div class="grid-2-3">
