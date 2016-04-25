@@ -14,7 +14,7 @@
 * limitations under the License.
 *@
 
-@()(implicit request: Request[_])
+@(dashboard: Dashboard)(implicit request: Request[_])
 
 @import uk.gov.hmrc.play.views.html._
 @import uk.gov.hmrc.play.views.html.helpers._
@@ -24,17 +24,29 @@
 @gmp_main(title = Messages.get("gmp.dashboard.title")) {
 
 <div class="grid">
+
   <div class="grid-2-3">
-    <h1>@Messages.get("gmp.dashboard.title")</h1>
+    <h1 id="choose-calculation-type">@Messages.get("gmp.dashboard_header")</h1>
   </div>
-</div>
 
-<div class="grid">
   <div class="grid-2-3">
-
-
-
+    <a id="single-calculation-link" href="@routes.PensionDetailsController.get">@Messages.get("gmp.single_calculation_link")</a>
+    <a id="bulk-calculation-link" href="@routes.FileUploadController.get">@Messages.get("gmp.bulk_calculation_link")</a>
   </div>
+
+  <div class="grid-2-3">
+    <a id="download-template-link" href="">@Messages.get("gmp.download_templates_link")</a>
+  </div>
+
+  <div class="grid-2-3">
+    <h2 id="previous-calculations" href="">@Messages.get("gmp.previous_calculations")</h2>
+  </div>
+
+  <div class="grid-2-3">
+    <a id="more-calculations" href="">@Messages.get("gmp.more_bulk_calculations_link")</a>
+  </div>
+
+
 </div>
 
 }

@@ -141,6 +141,12 @@ gmp.reference.calcname = Calculation name
 gmp.bulk_reference.reference_text = You can change the filename to help you recognise your results when they are returned (40 characters)
 gmp.bulk_request_received.text = <ul class="list-bullet"><li>Your calculation should be complete in less than XX hours</li><li>It will then appear on the Guaranteed Minimum Pension checker dashboard with the reference {0}</li><li>We will also email you when it is ready for download</li></ul>
 gmp.fileupload.hint = The file must contain mandatory information and in a specific format. You can <a href=" "> download a template and instructions (2 files)</a> on how to create your file first.
+gmp.dashboard_header = Choose a calculation type
+gmp.single_calculation_link = Single calculation
+gmp.bulk_calculation_link = Bulk calculation
+gmp.download_templates_link = Download a template and instructions(2 files)
+gmp.more_bulk_calculations_link = More bulk calculations
+gmp.previous_calculations = Previous bulk calculations
 
 # errors
 gmp.error.revaluation_before_leaving = Enter a date on or after {0}

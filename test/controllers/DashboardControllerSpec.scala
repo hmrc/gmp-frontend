@@ -16,6 +16,7 @@
 
 package controllers
 
+import models.{BulkReference, Dashboard}
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.mock.MockitoSugar
@@ -60,7 +61,6 @@ class DashboardControllerSpec extends PlaySpec with OneServerPerSuite with Mocki
     "authenticated users" must {
 
       "respond with ok" in {
-        when(mockSessionService.fetchDashboard()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(None))
         withAuthorisedUser { user =>
           getDashboard(user) { result =>
             status(result) must equal(OK)
@@ -69,8 +69,30 @@ class DashboardControllerSpec extends PlaySpec with OneServerPerSuite with Mocki
           }
         }
       }
+
+      "contain required links to single/bulk calculation, the template file download link and more bulk calculations link" in {
+        withAuthorisedUser { user =>
+          getDashboard(user) { result =>
+            status(result) must equal(OK)
+            contentAsString(result) must include(Messages("gmp.dashboard_header"))
+            contentAsString(result) must include(Messages("gmp.single_calculation_link"))
+            contentAsString(result) must include(Messages("gmp.bulk_calculation_link"))
+            contentAsString(result) must include(Messages("gmp.download_templates_link"))
+            contentAsString(result) must include(Messages("gmp.more_bulk_calculations_link"))
+          }
+        }
+      }
+
+      "load the dashboard from the bulk service if present but empty" in {
+        val dashboard = new Dashboard(Nil)
+        withAuthorisedUser { request =>
+          val result = TestDashboardController.get.apply(request)
+          contentAsString(result) must include(Messages("gmp.previous_calculations"))
+        }
+      }
     }
   }
+
 
   def getDashboard(request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest())(handler: Future[Result] => Any): Unit = {
     handler(TestDashboardController.get.apply(request))
