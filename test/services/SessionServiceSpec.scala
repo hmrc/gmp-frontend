@@ -183,6 +183,20 @@ class SessionServiceSpec extends PlaySpec with OneServerPerSuite with ScalaFutur
           val result = Await.result(TestSessionService.cacheRevaluationDate(Some(revalDate))(request, hc), 10 seconds)
           result must be(Some(gmpSession.copy(revaluationDate = Some(revalDate))))
         }
+
+        "set revaluation date to termination date and cache it when member has not left the scheme" in {
+
+          val dol = GmpDate(Some("24"), Some("08"), Some("2016"))
+          when(mockSessionCache.fetchAndGetEntry[GmpSession](any())(any(), any())).thenReturn(
+            Future.successful(Some(gmpSession.copy(scenario = CalculationType.REVALUATION, leaving = Leaving(dol, Some(Leaving.NO))))))
+
+          val json = Json.toJson[GmpSession](gmpSession.copy(scenario = CalculationType.REVALUATION,revaluationDate = Some(dol) ,leaving = Leaving(dol, Some(Leaving.NO))))
+          when(mockSessionCache.cache[GmpSession](any(), any())(any(), any())).thenReturn(Future.successful(CacheMap("sessionValue", Map("gmp_session" -> json))))
+
+          val result = Await.result(TestSessionService.cacheRevaluationDate(Some(dol))(request, hc), 10 seconds)
+          result must be(Some(gmpSession.copy(scenario = CalculationType.REVALUATION , revaluationDate = Some(dol), leaving = Leaving(dol, Some(Leaving.NO)))))
+
+        }
       }
 
       "cache leaving" in {

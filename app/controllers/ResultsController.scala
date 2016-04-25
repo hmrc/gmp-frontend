@@ -121,6 +121,7 @@ trait ResultsController extends GmpPageFlow {
 
 }
 
+
 object ResultsController extends ResultsController {
   val authConnector = GmpFrontendAuthConnector
   override val calculationConnector = GmpConnector
@@ -130,7 +131,6 @@ object ResultsController extends ResultsController {
 
   override def resultsView(response: CalculationResponse, isSameTaxYear: Boolean)(implicit request: Request[_]): HtmlFormat.Appendable = {
     views.html.results(applicationConfig = config.ApplicationConfig, response, isSameTaxYear)
-
   }
 
   // $COVERAGE-ON$

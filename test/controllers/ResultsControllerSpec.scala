@@ -188,7 +188,15 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
       CalculationPeriod(Some(new LocalDate(2014, 11, 9)), new LocalDate(2014, 11, 10), "1.11", "2.22", 1, 0, Some(0), None, None)
     ), 0, None, None, None, false, 1)
 
+  val validRevaluationMultipleSameTaxYear = CalculationResponse("John Johnson", nino, "S1234567T", Some("0"), Some(new LocalDate(2016,8,24)),
+    List(
+      CalculationPeriod(Some(new LocalDate(2015, 11, 10)), new LocalDate(2016, 8, 24), "1.11", "2.22", 1, 0, Some(1), None, None),
+      CalculationPeriod(Some(new LocalDate(2014, 11, 9)), new LocalDate(2014, 11, 10), "1.11", "2.22", 1, 0, Some(0), None, None)
+    ), 0, None, None, None, false, 1)
 
+  val validRevalSingleSameTaxYear = CalculationResponse("John Johnson", nino, "S1234567T", Some("0"), Some(new LocalDate(2016,8,24)),
+    List(
+      CalculationPeriod(Some(new LocalDate(2015, 11, 10)), new LocalDate(2016, 8, 24), "1.11", "2.22", 1, 0, Some(1), None, None)), 0, None, None, None, false, 1)
 
   val single58161CalculationResponse = CalculationResponse("John Johnson", nino, "S1234567T", None, None, List(CalculationPeriod(Some(new
       LocalDate(2015, 11, 10)), new LocalDate(2015, 11, 10), "1.11", "2.22", 0, 58161, Some(0))), 0, None, None, None, false, 1)
@@ -317,6 +325,39 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
           }
         }
 
+        "load the multiple period results page when revaluation date and termiantion date are the same and with member still in the scheme" in {
+
+          val date = GmpDate(day = Some("24"), month = Some("08"), year = Some("2016"))
+
+          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(
+            Future.successful(Some(gmpSession.copy(revaluationDate = Some(date), rate = Some(RevaluationRate.HMRC),leaving = Leaving(date, Some(Leaving.NO))))))
+
+          when(mockCalculationConnector.calculateSingle(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(validRevaluationMultipleSameTaxYear))
+            withAuthorisedUser { request =>
+            val result = TestResultsController.get.apply(request)
+            contentAsString(result) must not include(Messages("gmp.notrevalued.subheader"))
+            contentAsString(result) must include(Messages("gmp.leaving.revalued.header", "24/08/2016", "HMRC held"))
+            contentAsString(result) must include(Messages("--"))
+          }
+
+        }
+
+        "load the single period results page when revaluation date and termiantion date are the same and with member still in the scheme" in {
+
+          val date = GmpDate(day = Some("24"), month = Some("08"), year = Some("2016"))
+
+          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(
+            Future.successful(Some(gmpSession.copy(revaluationDate = Some(date), leaving = Leaving(date, Some(Leaving.NO))))))
+
+          when(mockCalculationConnector.calculateSingle(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(validRevalSingleSameTaxYear))
+          withAuthorisedUser { request =>
+            val result = TestResultsController.get.apply(request)
+            contentAsString(result) must include(Messages("gmp.notrevalued.subheader"))
+            contentAsString(result) must include(Messages("gmp.leaving.scheme.header", "24/08/2016"))
+
+          }
+
+        }
 
         //spa calculation
 
