@@ -17,7 +17,7 @@
 package controllers
 
 import helpers.RandomNino
-import models.{GmpDate, Leaving, GmpSession, MemberDetails}
+import models._
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.mock.MockitoSugar
@@ -114,7 +114,7 @@ class MemberDetailsControllerSpec extends PlaySpec with OneServerPerSuite with M
     "authorised users redirect" in {
 
       val memberDetails = MemberDetails("", "", "")
-      val session = GmpSession(memberDetails, "", "", None, None, Leaving(GmpDate(None, None, None), None), None)
+      val session = GmpSession(memberDetails, "", "", None, None, Leaving(GmpDate(None, None, None), None), None, Dashboard(List()))
 
       withAuthorisedUser { request =>
         when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(session)))
@@ -138,7 +138,7 @@ class MemberDetailsControllerSpec extends PlaySpec with OneServerPerSuite with M
       "with valid data" must {
 
         val memberDetails = MemberDetails(RandomNino.generate, "Bob", "Jones")
-        val session = GmpSession(memberDetails, "SCON1234", "", None, None, Leaving(GmpDate(None, None, None), None), None)
+        val session = GmpSession(memberDetails, "SCON1234", "", None, None, Leaving(GmpDate(None, None, None), None), None, Dashboard(List()))
 
         "redirect" in {
           when(mockSessionService.cacheMemberDetails(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(session)))

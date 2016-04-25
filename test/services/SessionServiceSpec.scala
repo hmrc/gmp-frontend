@@ -39,7 +39,7 @@ class SessionServiceSpec extends PlaySpec with OneServerPerSuite with ScalaFutur
 
   val memberDetails = MemberDetails(RandomNino.generate, "John", "Johnson")
   val scon = "S3123456A"
-  val gmpSession = GmpSession(memberDetails, scon, CalculationType.DOL, None, None, Leaving(GmpDate(None,None,None),None), None)
+  val gmpSession = GmpSession(memberDetails, scon, CalculationType.DOL, None, None, Leaving(GmpDate(None,None,None),None), None, Dashboard(List()))
   val json = Json.toJson[GmpSession](gmpSession)
   val mockSessionCache = mock[SessionCache]
 

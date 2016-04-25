@@ -59,3 +59,5 @@ GET         /getting-results                              controllers.BulkRefere
 POST        /getting-results                              controllers.BulkReferenceController.post
 
 GET         /request-received                             controllers.BulkRequestReceivedController.get
+
+GET         /dashboard                                    controllers.DashboardController.get

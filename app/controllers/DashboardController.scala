@@ -14,14 +14,27 @@
  * limitations under the License.
  */
 
-package models
+package controllers
 
-import play.api.libs.json.Json
+import config.GmpFrontendAuthConnector
+import connectors.GmpConnector
+import controllers.auth.GmpRegime
+import models.Dashboard
+import play.api.Logger
 
-case class GmpSession(memberDetails: MemberDetails, scon: String, scenario: String, revaluationDate: Option[GmpDate], rate: Option[String],
-                      leaving: Leaving, equalise: Option[Int], dashboard: Dashboard)
+import scala.concurrent.Future
 
+object DashboardController extends DashboardController{
+  val authConnector = GmpFrontendAuthConnector
+  val gmpConnector = GmpConnector
+}
 
-object GmpSession {
-  implicit val formats = Json.format[GmpSession]
+trait DashboardController extends GmpPageFlow {
+
+  def get = AuthorisedFor(GmpRegime, pageVisibilityPredicate).async {
+    implicit user =>
+      implicit request => {
+        Future.successful(Ok(views.html.dashboard(new Dashboard(Nil))))
+      }
+  }
 }

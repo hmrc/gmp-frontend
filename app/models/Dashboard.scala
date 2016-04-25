@@ -18,10 +18,9 @@ package models
 
 import play.api.libs.json.Json
 
-case class GmpSession(memberDetails: MemberDetails, scon: String, scenario: String, revaluationDate: Option[GmpDate], rate: Option[String],
-                      leaving: Leaving, equalise: Option[Int], dashboard: Dashboard)
+case class Dashboard (recentBulkCalculations: List[BulkReference])
 
+object Dashboard {
+  implicit val formats = Json.format[Dashboard]
 
-object GmpSession {
-  implicit val formats = Json.format[GmpSession]
 }
