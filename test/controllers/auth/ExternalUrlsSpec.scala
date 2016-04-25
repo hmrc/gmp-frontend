@@ -27,7 +27,7 @@ class ExternalUrlsSpec extends PlaySpec with OneServerPerSuite {
     }
 
     "have loginCallback " in {
-      ExternalUrls.loginCallback must be("http://localhost:9941/guaranteed-minimum-pension/pension-details")
+      ExternalUrls.loginCallback must be("http://localhost:9941/guaranteed-minimum-pension/dashboard")
     }
 
     "have signOutCallback " in {
@@ -39,7 +39,7 @@ class ExternalUrlsSpec extends PlaySpec with OneServerPerSuite {
     }
 
     "have signIn " in {
-      ExternalUrls.signIn must be(s"""http://localhost:9025/account/sign-in?continue=http://localhost:9941/guaranteed-minimum-pension/pension-details""")
+      ExternalUrls.signIn must be(s"""http://localhost:9025/account/sign-in?continue=http://localhost:9941/guaranteed-minimum-pension/dashboard""")
     }
 
     "have signoutPath" in {
