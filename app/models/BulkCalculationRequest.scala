@@ -48,8 +48,9 @@ case class BulkCalculationRequest(uploadReference: String,
                                   email: String,
                                   reference: String,
                                   calculationRequests: List[BulkCalculationRequestLine],
-                                  userId: String,
-                                  timestamp: LocalDate = LocalDate.now()
+                                  userId: String = "",
+                                  timestamp: LocalDate = LocalDate.now(),
+                                  complete: Boolean = false
                                  )
 
 object BulkCalculationRequest {
