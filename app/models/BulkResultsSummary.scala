@@ -14,27 +14,14 @@
  * limitations under the License.
  */
 
-package controllers
+package models
 
-import config.GmpFrontendAuthConnector
-import connectors.GmpConnector
-import controllers.auth.GmpRegime
-import models.Dashboard
-import play.api.Logger
+import play.api.libs.json.Json
 
-import scala.concurrent.Future
+case class BulkResultsSummary(reference: String, total: Int, failed: Int) {
 
-object DashboardController extends DashboardController{
-  val authConnector = GmpFrontendAuthConnector
-  val gmpConnector = GmpConnector
 }
 
-trait DashboardController extends GmpPageFlow {
-
-  def get = AuthorisedFor(GmpRegime, pageVisibilityPredicate).async {
-    implicit user =>
-      implicit request => {
-        Future.successful(Ok(views.html.dashboard(new Dashboard(Nil))))
-      }
-  }
+object BulkResultsSummary {
+  implicit val formats = Json.format[BulkResultsSummary]
 }

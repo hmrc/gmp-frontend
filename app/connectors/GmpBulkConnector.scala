@@ -17,7 +17,7 @@
 package connectors
 
 import config.WSHttp
-import models.BulkCalculationRequest
+import models.{BulkResultsSummary, BulkCalculationRequest}
 import play.api.Logger
 import uk.gov.hmrc.play.config.ServicesConfig
 import uk.gov.hmrc.play.frontend.auth.AuthContext
@@ -26,12 +26,12 @@ import uk.gov.hmrc.play.http.{HeaderCarrier, HttpPost, HttpResponse}
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-trait GmpBulkConnector extends ServicesConfig{
+trait GmpBulkConnector extends ServicesConfig {
 
   val httpPost: HttpPost = WSHttp
   lazy val serviceURL = baseUrl("gmp-bulk")
 
-  def getUser(user: AuthContext) : String = {
+  def getUser(user: AuthContext): String = {
     user.principal.accounts.psa.map(_.link).getOrElse(
       user.principal.accounts.psp.map(_.link).getOrElse(
         throw new RuntimeException("User Authorisation failed"))).substring(4)
@@ -41,7 +41,7 @@ trait GmpBulkConnector extends ServicesConfig{
 
     val baseURI = s"gmp${getUser(user)}/gmp/bulk-data"
     val bulkUri = s"$serviceURL/$baseURI/"
-    val result = httpPost.POST[BulkCalculationRequest, HttpResponse](bulkUri,bcr)
+    val result = httpPost.POST[BulkCalculationRequest, HttpResponse](bulkUri, bcr)
 
     Logger.debug(s"[GmpBulkConnector][sendBulkRequest][POST] : $bcr")
 
@@ -50,6 +50,10 @@ trait GmpBulkConnector extends ServicesConfig{
     }
 
     result
+  }
+
+  def getBulkResultsSummary(uploadReference: String)(implicit user: AuthContext, headerCarrier: HeaderCarrier): Future[BulkResultsSummary] = {
+    Future.successful(BulkResultsSummary("", 0, 0))
   }
 
 }

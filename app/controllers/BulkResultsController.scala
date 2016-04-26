@@ -17,24 +17,33 @@
 package controllers
 
 import config.GmpFrontendAuthConnector
-import connectors.GmpConnector
+import connectors.GmpBulkConnector
 import controllers.auth.GmpRegime
-import models.Dashboard
-import play.api.Logger
+import models.{BulkResultsSummary}
+
 
 import scala.concurrent.Future
 
-object DashboardController extends DashboardController{
-  val authConnector = GmpFrontendAuthConnector
-  val gmpConnector = GmpConnector
-}
+trait BulkResultsController extends GmpController {
 
-trait DashboardController extends GmpPageFlow {
+  val gmpBulkConnector: GmpBulkConnector
 
-  def get = AuthorisedFor(GmpRegime, pageVisibilityPredicate).async {
+  def get(uploadReference: String) = AuthorisedFor(GmpRegime, pageVisibilityPredicate).async {
+
     implicit user =>
       implicit request => {
-        Future.successful(Ok(views.html.dashboard(new Dashboard(Nil))))
+
+        gmpBulkConnector.getBulkResultsSummary(uploadReference).map{
+          bulkResultsSummary => Ok(views.html.bulk_results(bulkResultsSummary))
+        }
       }
   }
+
+
+}
+
+
+object BulkResultsController extends BulkResultsController {
+  val authConnector = GmpFrontendAuthConnector
+  val gmpBulkConnector = GmpBulkConnector
 }

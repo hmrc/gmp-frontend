@@ -1,0 +1,90 @@
+@*
+* Copyright 2016 HM Revenue & Customs
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*     http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*@
+
+@(bulkResultsSummary: BulkResultsSummary)(implicit request: Request[_])
+
+@import uk.gov.hmrc.play.views.html._
+@import uk.gov.hmrc.play.views.html.helpers._
+@import play.i18n._
+@import config.ApplicationConfig.globalErrors
+
+
+@gmp_main(title = Messages.get("gmp.bulk.results.title")) {
+
+
+<div class="grid-2-3 form-title">
+    <div class="confirmation-bulk">
+        <h1 class="heading-large">
+            @Messages.get("gmp.bulk.results.banner")
+        </h1>
+        <h2>Reference @bulkResultsSummary.reference</h2>
+    </div>
+</div>
+
+<div class="grid grid-2-3">
+    <div class="grid grid-3-4">Results</div>
+    <div class="grid grid-1-4 text--right">CSV</div>
+
+</div>
+<div class="grid grid-2-3 divider--top">
+    <h3>@Messages.get("gmp.bulk.subheaders.allcalculations") (@bulkResultsSummary.total)</h3>
+    <div class="grid grid-3-4">
+        <ul class="bullets font-xsmall">
+            <li class="font-xsmall">@Messages.get("gmp.bulk.explanations.calculations.1")</li>
+            <li class="font-xsmall">@Messages.get("gmp.bulk.explanations.calculations.2")</li>
+        </ul>
+    </div>
+    <div class="grid grid-1-4 text--right"><a href="#">Download</a></div>
+
+</div>
+
+<div class="grid grid-2-3 divider--top">
+    <h3>@Messages.get("gmp.bulk.subheaders.successfulcalculations") (@{bulkResultsSummary.total-bulkResultsSummary.failed})</h3>
+    <div class="grid grid-3-4">
+        <ul class="bullets font-xsmall">
+            <li class="font-xsmall">@Messages.get("gmp.bulk.explanations.calculations.1")</li>
+            <li class="font-xsmall">@Messages.get("gmp.bulk.explanations.calculations.2")</li>
+        </ul>
+    </div>
+    <div class="grid grid-1-4 text--right"><a href="#">Download</a></div>
+
+</div>
+
+<div class="grid grid-2-3 divider--top">
+    <h3>@Messages.get("gmp.bulk.subheaders.failedcalculations") (@bulkResultsSummary.failed)</h3>
+    <div class="grid grid-3-4">
+        <ul class="bullets font-xsmall">
+            <li class="font-xsmall">@Messages.get("gmp.bulk.explanations.failed.1")</li>
+            <li class="font-xsmall">@Messages.get("gmp.bulk.explanations.failed.2")</li>
+        </ul>
+    </div>
+    <div class="grid grid-1-4 text--right"><a href="#">Download</a></div>
+
+</div>
+
+<div class="grid grid-2-3 divider--top">
+    <h3>@Messages.get("gmp.bulk.subheaders.contsandearnings")</h3>
+    <div class="grid grid-3-4">
+        <ul class="bullets font-xsmall">
+            <li class="font-xsmall">@Messages.get("gmp.bulk.explanations.contsandearnings")</li>
+        </ul>
+    </div>
+    <div class="grid grid-1-4 text--right"><a href="#">Download</a></div>
+
+</div>
+
+
+}
