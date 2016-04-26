@@ -16,6 +16,7 @@
 
 package models
 
+import org.joda.time.LocalDate
 import play.api.libs.json.Json
 
 case class CalculationRequestLine(scon: String,
@@ -46,7 +47,9 @@ object BulkCalculationRequestLine {
 case class BulkCalculationRequest(uploadReference: String,
                                   email: String,
                                   reference: String,
-                                  calculationRequests: List[BulkCalculationRequestLine]
+                                  calculationRequests: List[BulkCalculationRequestLine],
+                                  userId: String,
+                                  timestamp: LocalDate = LocalDate.now()
                                  )
 
 object BulkCalculationRequest {
