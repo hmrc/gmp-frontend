@@ -20,6 +20,7 @@ gmp.fileupload.title = Upload your file
 gmp.bulk_reference.title = Getting your results
 gmp.bulk_request_received.title = Request Received
 gmp.signout = Sign out
+gmp.bulk.results.title = GMP calculation available
 
 # headers
 gmp.revaluation.question = At which date would you like the calculation to apply?
@@ -34,6 +35,7 @@ gmp.survivor.dol.question = Had the member already left the scheme at date of de
 gmp.fileupload.header = Upload your file
 
 gmp.results.banner = Calculation complete
+gmp.bulk.results.banner = Calculation ready
 gmp.bulk_request_received.banner = Your request has been received
 gmp.revaluation_rate.header = Which revaluation rate would you like to use?
 gmp.revaluation_rate_spa.header = If HMRC needs to revalue this calculation which rate would you like to use?
@@ -54,6 +56,17 @@ gmp.bulk_reference.header = Get your results
 gmp.bulk_request_received.header = What next
 
 gmp.no_inflation.subheader = This GMP has not been inflation proofed as you entered a date in the same tax year as the date of death.
+
+gmp.bulk.subheaders.allcalculations=All Calculations
+gmp.bulk.subheaders.successfulcalculations=Successful calculations
+gmp.bulk.subheaders.failedcalculations=Failed calculations
+gmp.bulk.subheaders.contsandearnings=Contributions and earnings
+
+gmp.bulk.explanations.calculations.1=All GMP figures are weekly and in pounds.
+gmp.bulk.explanations.calculations.2=Periods refer to GMP values where there is more than one contracted-out period.
+gmp.bulk.explanations.failed.1=For failed calculations see ''Reason for error'' and ''What to do''.
+gmp.bulk.explanations.failed.2=if you need further help, contact HM Revenue and Customs through the GMP Service Queries database in the LIVE shared workspace e-room.
+gmp.bulk.explanations.contsandearnings=A separate contributions and earnings file for successful calculations.
 
 # Buttons
 gmp.continue.button = Continue

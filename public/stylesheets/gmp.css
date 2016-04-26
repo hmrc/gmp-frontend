@@ -44,6 +44,15 @@
   padding: 2px 80px 20px;
   height: 100px;
 }
+
+.confirmation-bulk {
+  background-color: #28A197;
+  text-align: center;
+  color: #FFF;
+  padding: 2px 80px 20px;
+  height: 150px;
+}
+
 .panel-indent {
   clear: both;
   border-left: 4px solid #bfc1c3;
@@ -214,6 +223,7 @@ caption {
 .upload-file-button{
  margin-top: 20px
 }
+
 
 
 
