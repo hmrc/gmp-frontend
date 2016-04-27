@@ -224,6 +224,16 @@ caption {
  margin-top: 20px
 }
 
+#download-template-link {
+  margin-left: 50%;
+}
 
+.large-underlined-link {
+  font-size: 25px;
+  text-decoration: underline;
+  font-weight: bold;
+}
 
-
+ #more-calculations {
+  float:right;
+ }
