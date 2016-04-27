@@ -16,7 +16,11 @@
 
 package controllers
 
-import models.Dashboard
+import connectors.GmpBulkConnector
+import models.{BulkPreviousRequest, Dashboard}
+import org.joda.time.LocalDate
+import org.mockito.Matchers
+import org.mockito.Mockito._
 import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
 import play.api.i18n.Messages
@@ -32,11 +36,12 @@ class DashboardControllerSpec extends PlaySpec with OneServerPerSuite with Mocki
 
   val mockAuthConnector = mock[AuthConnector]
   val mockSessionService = mock[SessionService]
-
+  val mockGmpBulkConnector = mock[GmpBulkConnector]
 
   object TestDashboardController extends DashboardController {
     val authConnector = mockAuthConnector
     override val sessionService = mockSessionService
+    override val gmpBulkConnector = mockGmpBulkConnector
   }
 
   "DashboardController" must {
@@ -46,6 +51,10 @@ class DashboardControllerSpec extends PlaySpec with OneServerPerSuite with Mocki
       status(result.get) must not equal (NOT_FOUND)
     }
   }
+
+  val recentBulkCalculations = List(new BulkPreviousRequest("1234","abcd",LocalDate.now()), new BulkPreviousRequest("5678","efgh", LocalDate.now()))
+
+  when(mockGmpBulkConnector.getPreviousBulkRequests()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(recentBulkCalculations))
 
   "dashboard GET " must {
 
@@ -95,10 +104,11 @@ class DashboardControllerSpec extends PlaySpec with OneServerPerSuite with Mocki
 
       "load the dashboard from the bulk service if present and complete" in {
 
-        val dashboard = new Dashboard(Nil)
         withAuthorisedUser { request =>
           val result = TestDashboardController.get.apply(request)
           contentAsString(result) must include(Messages("gmp.previous_calculations"))
+          contentAsString(result) must include("1234")
+          contentAsString(result) must include("5678")
         }
       }
     }

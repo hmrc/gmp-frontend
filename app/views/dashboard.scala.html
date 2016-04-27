@@ -14,7 +14,7 @@
 * limitations under the License.
 *@
 
-@(dashboard: Dashboard)(implicit request: Request[_])
+@(previousBulkCalculations: List[BulkPreviousRequest])(implicit request: Request[_])
 
 @import uk.gov.hmrc.play.views.html._
 @import uk.gov.hmrc.play.views.html.helpers._
@@ -43,6 +43,33 @@
   <div class="grid-2-3">
     <h2 id="previous-calculations" href="">@Messages.get("gmp.previous_calculations")</h2>
     <p id="previous-calculations-description">@Messages.get("gmp.previous_calculations_text")</p>
+  </div>
+
+  <div class="grid-2-3">
+
+    <table id="recent-calculations-table">
+      <caption id="recent-calcualtions-caption">Table caption goes here</caption>
+
+      <thead>
+        <tr id="table-row">
+          <th><span>Reference</span></th>
+          <th><span>Upload date</span></th>
+          <th><span>Time left</span></th>
+        </tr>
+      </thead>
+
+      <tbody>
+
+        @for((calculation, count) <- previousBulkCalculations.zipWithIndex){
+          <tr class="error-row">
+            <td>@{calculation.uploadReference}</td>
+            <td>@{calculation.timestamp}</td>
+            <td>10 days left</td>
+          </tr>
+        }
+
+      </tbody>
+    </table>
   </div>
 
   <div class="grid-2-3">

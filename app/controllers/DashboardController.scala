@@ -26,16 +26,20 @@ import scala.concurrent.Future
 
 object DashboardController extends DashboardController{
   val authConnector = GmpFrontendAuthConnector
-  val gmpConnector = GmpConnector
+  val gmpBulkConnector = GmpBulkConnector
 }
 
 trait DashboardController extends GmpPageFlow {
 
+  val gmpBulkConnector: GmpBulkConnector
+
   def get = AuthorisedFor(GmpRegime, pageVisibilityPredicate).async {
     implicit user =>
       implicit request => {
-        val previousBulkRequests = GmpBulkConnector.getPreviousBulkRequests()
-        Future.successful(Ok(views.html.dashboard(new Dashboard(Nil))))
+        gmpBulkConnector.getPreviousBulkRequests().map {
+          bulkPreviousRequests =>
+            Ok(views.html.dashboard(bulkPreviousRequests))
+        }
       }
   }
 }
