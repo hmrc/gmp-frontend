@@ -57,7 +57,7 @@ gmp.bulk_request_received.header = What next
 
 gmp.no_inflation.subheader = This GMP has not been inflation proofed as you entered a date in the same tax year as the date of death.
 
-gmp.bulk.subheaders.allcalculations=All Calculations
+gmp.bulk.subheaders.allcalculations=All calculations
 gmp.bulk.subheaders.successfulcalculations=Successful calculations
 gmp.bulk.subheaders.failedcalculations=Failed calculations
 gmp.bulk.subheaders.contsandearnings=Contributions and earnings
