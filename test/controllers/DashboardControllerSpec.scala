@@ -16,9 +16,7 @@
 
 package controllers
 
-import models.{BulkReference, Dashboard}
-import org.mockito.Matchers
-import org.mockito.Mockito._
+import models.Dashboard
 import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
 import play.api.i18n.Messages
@@ -88,6 +86,15 @@ class DashboardControllerSpec extends PlaySpec with OneServerPerSuite with Mocki
       }
 
       "load the dashboard from the bulk service if present but empty" in {
+        val dashboard = new Dashboard(Nil)
+        withAuthorisedUser { request =>
+          val result = TestDashboardController.get.apply(request)
+          contentAsString(result) must include(Messages("gmp.previous_calculations"))
+        }
+      }
+
+      "load the dashboard from the bulk service if present and complete" in {
+
         val dashboard = new Dashboard(Nil)
         withAuthorisedUser { request =>
           val result = TestDashboardController.get.apply(request)

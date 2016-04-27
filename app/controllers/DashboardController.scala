@@ -17,7 +17,7 @@
 package controllers
 
 import config.GmpFrontendAuthConnector
-import connectors.GmpConnector
+import connectors.{GmpBulkConnector, GmpConnector}
 import controllers.auth.GmpRegime
 import models.Dashboard
 import play.api.Logger
@@ -34,6 +34,7 @@ trait DashboardController extends GmpPageFlow {
   def get = AuthorisedFor(GmpRegime, pageVisibilityPredicate).async {
     implicit user =>
       implicit request => {
+        val previousBulkRequests = GmpBulkConnector.getPreviousBulkRequests()
         Future.successful(Ok(views.html.dashboard(new Dashboard(Nil))))
       }
   }
