@@ -27,7 +27,7 @@
 
 <div class="grid-2-3 form-title">
     <div class="confirmation-bulk">
-        <h1 class="heading-large">
+        <h1 id="calc-ready" class="heading-large">
             @Messages.get("gmp.bulk.results.banner")
         </h1>
         <h2 id="reference">Reference @bulkResultsSummary.reference</h2>
@@ -52,7 +52,7 @@
 </div>
 
 <div class="grid grid-2-3 divider--top">
-    <h3>@Messages.get("gmp.bulk.subheaders.successfulcalculations") (@{bulkResultsSummary.total-bulkResultsSummary.failed})</h3>
+    <h3 id="successful-calculations">@Messages.get("gmp.bulk.subheaders.successfulcalculations") (@{bulkResultsSummary.total-bulkResultsSummary.failed})</h3>
     <div class="grid grid-3-4">
         <ul class="bullets font-xsmall">
             <li id="exp-success-1" class="font-xsmall">@Messages.get("gmp.bulk.explanations.calculations.1")</li>
@@ -64,7 +64,7 @@
 </div>
 
 <div class="grid grid-2-3 divider--top">
-    <h3>@Messages.get("gmp.bulk.subheaders.failedcalculations") (@bulkResultsSummary.failed)</h3>
+    <h3 id="failed-calculations">@Messages.get("gmp.bulk.subheaders.failedcalculations") (@bulkResultsSummary.failed)</h3>
     <div class="grid grid-3-4">
         <ul class="bullets font-xsmall">
             <li id="exp-failed-1" class="font-xsmall">@Messages.get("gmp.bulk.explanations.failed.1")</li>
@@ -75,8 +75,8 @@
 
 </div>
 
-<div class="grid grid-2-3 divider--top">
-    <h3>@Messages.get("gmp.bulk.subheaders.contsandearnings")</h3>
+<div class="grid grid-2-3 divider--top divider--bottom">
+    <h3 id="conts-and-earnings">@Messages.get("gmp.bulk.subheaders.contsandearnings")</h3>
     <div class="grid grid-3-4">
         <ul class="bullets font-xsmall">
             <li id="exp-conts" class="font-xsmall">@Messages.get("gmp.bulk.explanations.contsandearnings")</li>
@@ -86,5 +86,7 @@
 
 </div>
 
-
+<div class="grid-2-3 custom-back-link">
+    <a href="@routes.DashboardController.get" id="back-link">@Messages.get("gmp.back.link")</a>
+</div>
 }
