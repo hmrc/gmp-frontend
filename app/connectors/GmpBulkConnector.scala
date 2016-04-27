@@ -58,8 +58,8 @@ trait GmpBulkConnector extends ServicesConfig {
 
   def getPreviousBulkRequests()(implicit user: AuthContext, headerCarrier: HeaderCarrier): Future[List[BulkPreviousRequest]] = {
 
-    val baseURI = s"gmp${getUser(user)}/gmp/retrieve-request"
-    val bulkUri = s"$serviceURL/$baseURI/"
+    val baseURI = s"gmp${getUser(user)}/gmp/retrieve-previous-requests"
+    val bulkUri = s"$serviceURL/$baseURI"
     val result = httpGet.GET[List[BulkPreviousRequest]](bulkUri)
 
     Logger.debug(s"[GmpBulkConnector][getPreviousBulkRequests][GET]")
