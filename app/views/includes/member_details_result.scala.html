@@ -24,7 +24,7 @@
 
     @if(calculationResponse.calculationPeriods.length <= 1 && !calculationResponse.hasErrors) {
 
-      <table id="gmp-period-table">
+      <table role="presentation" id="gmp-period-table">
         <caption id="gmp-period-table-header">
           @Messages.get("gmp.period_table_header")
         </caption>
@@ -49,7 +49,7 @@
       </table>
     }
 
-    <table id="member-details">
+    <table role="presentation" id="member-details">
       <caption>
         @if(calculationResponse.calcType == CalculationType.SURVIVOR.toInt){
         @Messages.get("gmp.entered_details.title.survivor")
