@@ -83,6 +83,12 @@ class GmpBulkConnectorSpec extends PlaySpec with OneServerPerSuite with MockitoS
       resolvedResult.head.uploadReference must be("uploadRef")
 
     }
+
+    "return a bulk results summary" in {
+      implicit val user = AuthContext(authority = Authority("1234", Accounts(psa = Some(PsaAccount("link", PsaId(psaId)))), None, None, CredentialStrength.None, ConfidenceLevel.L50))
+      val result = testGmpBulkConnector.getBulkResultsSummary("")
+      (await(result))
+    }
   }
 
 }
