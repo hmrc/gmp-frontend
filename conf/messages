@@ -68,6 +68,11 @@ gmp.bulk.explanations.failed.1=For failed calculations see ''Reason for error'' 
 gmp.bulk.explanations.failed.2=if you need further help, contact HM Revenue and Customs through the GMP Service Queries database in the LIVE shared workspace e-room.
 gmp.bulk.explanations.contsandearnings=A separate contributions and earnings file for successful calculations.
 
+gmp.th.reference = Reference
+gmp.th.upload_date = Upload date
+gmp.th.time_left = Time left
+gmp.days_left = {0} days
+
 # Buttons
 gmp.continue.button = Continue
 gmp.back.link = Back
@@ -159,10 +164,11 @@ gmp.single_calculation_link = Single calculation
 gmp.bulk_calculation_link = Bulk calculation
 gmp.download_templates_link = Download a template and instructions(2 files)
 gmp.more_results_link = More results
-gmp.previous_calculations = Previous bulk calculations
+gmp.previous_calculations = Recent bulk calculations
 gmp.single_calculation_text = Use the checker to input member details and get an instant result one member at a time.
 gmp.bulk_calculation_text = Upload the details of many members at once and we will email you when the calculation is done.
-gmp.previous_calculations_text = Results for the last three bulk requests made in the previous 30 days.
+gmp.previous_calculations_text = You have 30 days from the upload date to view the results.
+gmp.no_previous_calculations_text = We keep the results of previous calculations for 30 days. You have none to view.
 
 # errors
 gmp.error.revaluation_before_leaving = Enter a date on or after {0}

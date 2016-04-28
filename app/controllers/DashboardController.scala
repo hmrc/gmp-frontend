@@ -17,12 +17,9 @@
 package controllers
 
 import config.GmpFrontendAuthConnector
-import connectors.{GmpBulkConnector, GmpConnector}
+import connectors.GmpBulkConnector
 import controllers.auth.GmpRegime
-import models.Dashboard
-import play.api.Logger
 
-import scala.concurrent.Future
 
 object DashboardController extends DashboardController{
   val authConnector = GmpFrontendAuthConnector
@@ -37,8 +34,9 @@ trait DashboardController extends GmpPageFlow {
     implicit user =>
       implicit request => {
         gmpBulkConnector.getPreviousBulkRequests().map {
-          bulkPreviousRequests =>
+          bulkPreviousRequests => {
             Ok(views.html.dashboard(bulkPreviousRequests))
+          }
         }
       }
   }

@@ -20,6 +20,7 @@
 @import uk.gov.hmrc.play.views.html.helpers._
 @import views.html.helpers._
 @import play.i18n._
+@import org.joda.time.{Days, LocalDate}
 
 @gmp_main(title = Messages.get("gmp.dashboard.title")) {
 
@@ -50,32 +51,40 @@
   </br>
 </div>
 
+@if(previousBulkCalculations.size > 0) {
 
   <div class="grid">
-    <h1 id="previous-calculations" href="">@Messages.get("gmp.previous_calculations")</h1>
+    <h1 id="previous-calculations">@Messages.get("gmp.previous_calculations")</h1>
     <p id="previous-calculations-description">@Messages.get("gmp.previous_calculations_text")</p>
   </div>
 
   <div class="grid">
 
     <table id="recent-calculations-table">
-      <caption class="hidden" id="recent-calcualtions-caption">Table caption goes here</caption>
+
+      <colgroup>
+        <col width="2%">
+        <col width="2%">
+        <col width="2%">
+      </colgroup>
+
+      <caption class="hidden" id="recent-calcualtions-caption">Recent calculations</caption>
 
       <thead>
         <tr id="table-row">
-          <th><span>Reference</span></th>
-          <th class="numeric"><span>Upload date</span></th>
-          <th class="numeric"><span>Time left</span></th>
+          <th><span>@Messages.get("gmp.th.reference")</span></th>
+          <th id="upload-date-table-header" class="r-padding numeric"><span>@Messages.get("gmp.th.upload_date")</span></th>
+          <th id="time-left-table-header" class="r-padding numeric"><span>@Messages.get("gmp.th.time_left")</span></th>
         </tr>
       </thead>
 
       <tbody>
 
-        @for((calculation, count) <- previousBulkCalculations.zipWithIndex){
-          <tr class="error-row">
-            <td>@{calculation.uploadReference}</td>
-            <td>@{calculation.timestamp}</td>
-            <td>10 days left</td>
+        @for((calculation, count) <- previousBulkCalculations.zipWithIndex if(count < 3)){
+          <tr>
+            <td class="r-padding" id="reference-@count"><a href="">@{calculation.uploadReference}</a></td>
+            <td class="r-padding numeric" id="upload-date-@count">@{ new LocalDate(calculation.timestamp).toString("dd MMMM yyyy") }</td>
+            <td class="r-padding numeric" id="days-left-@count">@{Messages.get("gmp.days_left", (30 - Days.daysBetween(calculation.timestamp, LocalDate.now()).getDays).toString)}</td>
           </tr>
         }
 
@@ -83,10 +92,21 @@
     </table>
   </div>
 
-  <div class="grid">
-    </br>
+  @if(previousBulkCalculations.size > 3) {
+    <div class="grid">
+      </br>
       <a id="more-calculations" href="">@Messages.get("gmp.more_results_link")</a>
-    </br>
-  </div>
+      </br>
+    </div>
+  }
+
+} else {
+    <div class="grid">
+      <h1 id="no-previous-calculations">@Messages.get("gmp.previous_calculations")</h1>
+      <p id="no-previous-calculations-description">@Messages.get("gmp.no_previous_calculations_text")</p>
+    </div>
+}
+
+
 
 }
