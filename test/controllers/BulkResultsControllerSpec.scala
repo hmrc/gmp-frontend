@@ -26,6 +26,7 @@ import play.api.i18n.Messages
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
+import uk.gov.hmrc.play.http.Upstream4xxResponse
 
 import scala.concurrent.Future
 
@@ -88,6 +89,15 @@ class BulkResultsControllerSpec extends PlaySpec with OneServerPerSuite with Moc
             contentAsString(result) must include(Messages("gmp.bulk.subheaders.successfulcalculations") + " (" + (bulkResultsSummary.total - bulkResultsSummary.failed) + ")")
           }
 
+        }
+
+        "show the incorrect user page" in {
+          when(mockGmpBulkConnector.getBulkResultsSummary(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.failed(new Upstream4xxResponse("", FORBIDDEN, 0, Map())))
+          withAuthorisedUser { request =>
+            val result = TestBulkResultsController.get("").apply(request)
+
+            contentAsString(result) must include(Messages("gmp.bulk.wrong_user.login_text"))
+          }
         }
       }
     }

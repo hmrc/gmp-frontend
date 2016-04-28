@@ -20,6 +20,7 @@ import config.GmpFrontendAuthConnector
 import connectors.GmpBulkConnector
 import controllers.auth.GmpRegime
 import models.{BulkResultsSummary}
+import uk.gov.hmrc.play.http.Upstream4xxResponse
 
 
 import scala.concurrent.Future
@@ -34,6 +35,10 @@ trait BulkResultsController extends GmpController {
       implicit request => {
         gmpBulkConnector.getBulkResultsSummary(uploadReference).map{
           bulkResultsSummary => Ok(views.html.bulk_results(bulkResultsSummary))
+        }.recover {
+          case e: Upstream4xxResponse if e.upstreamResponseCode == FORBIDDEN => {
+            Ok(views.html.bulk_wrong_user(request))
+          }
         }
       }
   }
