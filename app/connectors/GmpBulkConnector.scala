@@ -73,7 +73,18 @@ trait GmpBulkConnector extends ServicesConfig {
   }
 
   def getBulkResultsSummary(uploadReference: String)(implicit user: AuthContext, headerCarrier: HeaderCarrier): Future[BulkResultsSummary] = {
-    Future.successful(BulkResultsSummary("", 0, 0))
+
+    val baseURI = s"gmp${getUser(user)}/gmp/get-results-summary"
+    val bulkUri = s"$serviceURL/$baseURI/$uploadReference"
+
+    val result = httpGet.GET[BulkResultsSummary](bulkUri)
+
+    Logger.debug(s"[GmpBulkConnector][getBulkResultsSummary][GET] reference : $uploadReference")
+
+    result onSuccess {
+      case response => Logger.debug(s"[GmpBulkConnector][getBulkResultsSummary][response] : $response")
+    }
+    result
   }
 
 }
