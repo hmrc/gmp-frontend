@@ -21,6 +21,7 @@ gmp.bulk_reference.title = Getting your results
 gmp.bulk_request_received.title = Request Received
 gmp.signout = Sign out
 gmp.bulk.results.title = GMP calculation available
+gmp.bulk.wrong_user.title = GMP Wrong User
 
 # headers
 gmp.revaluation.question = At which date would you like the calculation to apply?
@@ -67,6 +68,7 @@ gmp.bulk.explanations.calculations.2=Periods refer to GMP values where there is 
 gmp.bulk.explanations.failed.1=For failed calculations see ''Reason for error'' and ''What to do''.
 gmp.bulk.explanations.failed.2=if you need further help, contact HM Revenue and Customs through the GMP Service Queries database in the LIVE shared workspace e-room.
 gmp.bulk.explanations.contsandearnings=A separate contributions and earnings file for successful calculations.
+gmp.bulk.wrong_user.header = There is a problem
 
 # Buttons
 gmp.continue.button = Continue
@@ -163,6 +165,9 @@ gmp.previous_calculations = Previous bulk calculations
 gmp.single_calculation_text = Use the checker to input member details and get an instant result one member at a time.
 gmp.bulk_calculation_text = Upload the details of many members at once and we will email you when the calculation is done.
 gmp.previous_calculations_text = Results for the last three bulk requests made in the previous 30 days.
+gmp.bulk.wrong_user.login_text = You need to login with the same Government Gateway account that was used to submit the file.
+gmp.bulk.wrong_user.signout_text = <a href"@ExternalUrls.signOut">Sign out</a> and log in with right account.
+gmp.bulk.wrong_user.dashboard_text = Go to your <a href"/guaranteed-minimum-pension/dashboard">Guaranteed Minimum Pension checker</a> main page.
 
 # errors
 gmp.error.revaluation_before_leaving = Enter a date on or after {0}

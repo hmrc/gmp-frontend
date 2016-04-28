@@ -38,7 +38,7 @@ trait BulkResultsController extends GmpController {
           bulkResultsSummary => Ok(views.html.bulk_results(bulkResultsSummary))
         }.recover {
           case e: Upstream4xxResponse if e.upstreamResponseCode == FORBIDDEN => {
-            Ok(views.html.bulk_results(null))
+            Ok(views.html.bulk_wrong_user(request))
           }
         }
       }
