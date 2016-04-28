@@ -29,7 +29,7 @@ import play.api.test.Helpers._
 import uk.gov.hmrc.domain.PsaId
 import uk.gov.hmrc.play.frontend.auth.AuthContext
 import uk.gov.hmrc.play.frontend.auth.connectors.domain._
-import uk.gov.hmrc.play.http.{HttpResponse, HttpPost, HeaderCarrier}
+import uk.gov.hmrc.play.http.{HttpGet, HttpResponse, HttpPost, HeaderCarrier}
 import uk.gov.hmrc.play.http.logging.SessionId
 
 import scala.concurrent.Future
@@ -37,10 +37,12 @@ import scala.concurrent.Future
 class GmpBulkConnectorSpec extends PlaySpec with OneServerPerSuite with MockitoSugar with BeforeAndAfter {
 
   val mockHttpPost = mock[HttpPost]
+  val mockHttpGet = mock[HttpGet]
   val psaId = "B1234567"
 
   object testGmpBulkConnector extends GmpBulkConnector {
     override val httpPost: HttpPost = mockHttpPost
+    override val httpGet: HttpGet = mockHttpGet
 
   }
 
@@ -65,8 +67,10 @@ class GmpBulkConnectorSpec extends PlaySpec with OneServerPerSuite with MockitoS
 
     "return a bulk results summary" in {
       implicit val user = AuthContext(authority = Authority("1234", Accounts(psa = Some(PsaAccount("link", PsaId(psaId)))), None, None, CredentialStrength.None, ConfidenceLevel.L50))
+      when(mockHttpGet.GET[BulkResultsSummary](Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(BulkResultsSummary("test",1,1)))
+
       val result = testGmpBulkConnector.getBulkResultsSummary("")
-      (await(result))
+      (await(result)).reference must be("test")
     }
   }
 
