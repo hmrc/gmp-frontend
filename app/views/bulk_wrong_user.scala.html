@@ -15,7 +15,10 @@
 *@
 
 @(implicit request: Request[_])
-@import play.i18n.Messages
+@import uk.gov.hmrc.play.views.html._
+@import uk.gov.hmrc.play.views.html.helpers._
+@import play.i18n._
+@import views.html.helpers._
 
 @gmp_main(title = Messages.get("gmp.bulk.wrong_user.title"),supportLinkEnabled = false) {
 
@@ -23,12 +26,8 @@
     <div class="grid-2-3">
 
         <h1 class="heading-xlarge">@Messages.get("gmp.bulk.wrong_user.header")</h1>
-        <br/>
-        <br/>
         <p>@Html(Messages.get("gmp.bulk.wrong_user.login_text"))</p>
-        <br/>
         <p>@Html(Messages.get("gmp.bulk.wrong_user.signout_text"))</p>
-        <br/>
         <p>@Html(Messages.get("gmp.bulk.wrong_user.dashboard_text"))</p>
 
     </div>
