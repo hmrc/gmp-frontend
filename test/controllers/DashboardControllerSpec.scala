@@ -85,7 +85,6 @@ class DashboardControllerSpec extends PlaySpec with OneServerPerSuite with Mocki
             contentAsString(result) must include(Messages("gmp.single_calculation_link"))
             contentAsString(result) must include(Messages("gmp.bulk_calculation_link"))
             contentAsString(result) must include(Messages("gmp.download_templates_link"))
-            contentAsString(result) must include(Messages("gmp.more_bulk_calculations_link"))
             contentAsString(result) must include(Messages("gmp.single_calculation_text"))
             contentAsString(result) must include(Messages("gmp.bulk_calculation_text"))
             contentAsString(result) must include(Messages("gmp.previous_calculations_text"))
