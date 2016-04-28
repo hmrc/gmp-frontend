@@ -33,8 +33,7 @@ trait BulkResultsController extends GmpController {
 
     implicit user =>
       implicit request => {
-
-        gmpBulkConnector.getBulkResultsSummary(uploadReference).map {
+        gmpBulkConnector.getBulkResultsSummary(uploadReference).map{
           bulkResultsSummary => Ok(views.html.bulk_results(bulkResultsSummary))
         }.recover {
           case e: Upstream4xxResponse if e.upstreamResponseCode == FORBIDDEN => {

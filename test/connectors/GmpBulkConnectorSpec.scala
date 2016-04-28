@@ -25,6 +25,7 @@ import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfter
 import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
+import play.api.libs.json.Json
 import play.api.test.Helpers._
 import uk.gov.hmrc.domain.PsaId
 import uk.gov.hmrc.play.frontend.auth.AuthContext
@@ -43,7 +44,6 @@ class GmpBulkConnectorSpec extends PlaySpec with OneServerPerSuite with MockitoS
   object testGmpBulkConnector extends GmpBulkConnector {
     override val httpPost: HttpPost = mockHttpPost
     override val httpGet: HttpGet = mockHttpGet
-
   }
 
 
@@ -62,6 +62,25 @@ class GmpBulkConnectorSpec extends PlaySpec with OneServerPerSuite with MockitoS
           None)))
       val result = testGmpBulkConnector.sendBulkRequest(bcr)
       (await(result)).status must be(OK)
+
+    }
+
+    "retrieve bulk requests associated with the user " in {
+
+      implicit val user = AuthContext(authority = Authority("1234", Accounts(psa =
+        Some(PsaAccount("link", PsaId(psaId)))), None, None, CredentialStrength.None, ConfidenceLevel.L50))
+
+      val bulkPreviousRequest = Json.parse(
+        """[{"uploadReference":"uploadRef","reference":"ref","timestamp":"2016-04-27"}]"""
+      )
+
+      when(mockHttpGet.GET[List[BulkPreviousRequest]]( Matchers.any())(Matchers.any(), Matchers.any()))
+        .thenReturn(Future.successful(bulkPreviousRequest.as[List[BulkPreviousRequest]]))
+
+      val result = testGmpBulkConnector.getPreviousBulkRequests
+      val resolvedResult = await(result)
+
+      resolvedResult.head.uploadReference must be("uploadRef")
 
     }
 

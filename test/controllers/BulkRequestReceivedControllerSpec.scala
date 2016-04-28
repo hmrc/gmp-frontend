@@ -57,7 +57,7 @@ class BulkRequestReceivedControllerSpec extends PlaySpec with OneServerPerSuite 
 
 
   val inputLine1 = lineListFromCalculationRequestLine(calcLine1)
-  val bulkRequest1 = BulkCalculationRequest("1", "bill@bixby.com", "uploadRef1", List(calcLine1))
+  val bulkRequest1 = BulkCalculationRequest("1", "bill@bixby.com", "uploadRef1", List(calcLine1), "userid", LocalDate.now() )
 
   object TestBulkRequestReceivedController extends BulkRequestReceivedController {
     val authConnector = mockAuthConnector

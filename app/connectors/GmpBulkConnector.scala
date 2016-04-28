@@ -17,6 +17,8 @@
 package connectors
 
 import config.WSHttp
+import models.{BulkPreviousRequest, BulkCalculationRequest}
+import org.joda.time.LocalDate
 import models.{BulkResultsSummary, BulkCalculationRequest}
 import play.api.Logger
 import uk.gov.hmrc.play.config.ServicesConfig
@@ -30,6 +32,7 @@ trait GmpBulkConnector extends ServicesConfig {
 
   val httpPost: HttpPost = WSHttp
   val httpGet: HttpGet = WSHttp
+
   lazy val serviceURL = baseUrl("gmp-bulk")
 
   def getUser(user: AuthContext): String = {
@@ -42,7 +45,7 @@ trait GmpBulkConnector extends ServicesConfig {
 
     val baseURI = s"gmp${getUser(user)}/gmp/bulk-data"
     val bulkUri = s"$serviceURL/$baseURI/"
-    val result = httpPost.POST[BulkCalculationRequest, HttpResponse](bulkUri, bcr)
+    val result = httpPost.POST[BulkCalculationRequest, HttpResponse](bulkUri,bcr.copy(timestamp = LocalDate.now(),userId = getUser(user)))
 
     Logger.debug(s"[GmpBulkConnector][sendBulkRequest][POST] : $bcr")
 
@@ -51,6 +54,22 @@ trait GmpBulkConnector extends ServicesConfig {
     }
 
     result
+  }
+
+  def getPreviousBulkRequests()(implicit user: AuthContext, headerCarrier: HeaderCarrier): Future[List[BulkPreviousRequest]] = {
+
+    val baseURI = s"gmp${getUser(user)}/gmp/retrieve-previous-requests"
+    val bulkUri = s"$serviceURL/$baseURI"
+    val result = httpGet.GET[List[BulkPreviousRequest]](bulkUri)
+
+    Logger.debug(s"[GmpBulkConnector][getPreviousBulkRequests][GET]")
+
+    result onSuccess {
+      case response => Logger.debug(s"[GmpBulkConnector][getPreviousBulkRequests][response] : $response")
+    }
+
+    result
+
   }
 
   def getBulkResultsSummary(uploadReference: String)(implicit user: AuthContext, headerCarrier: HeaderCarrier): Future[BulkResultsSummary] = {
