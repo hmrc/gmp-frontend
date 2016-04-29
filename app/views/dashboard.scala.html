@@ -95,7 +95,7 @@
   @if(previousBulkCalculations.size > 3) {
     <div class="grid">
       </br>
-      <a id="more-calculations" href="">@Messages.get("gmp.more_results_link")</a>
+      <a id="more-calculations" href="@routes.MoreBulkResultsController.retrieveMoreBulkResults">@Messages.get("gmp.more_results_link")</a>
       </br>
     </div>
   }
