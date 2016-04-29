@@ -22,41 +22,14 @@
 @import play.i18n._
 @import org.joda.time.{Days, LocalDate}
 
-@gmp_main(title = Messages.get("gmp.dashboard.title")) {
+@gmp_main(title = Messages.get("gmp.more_bulk_results.title")) {
 
 </br>
 <div class="grid">
   <div class="grid grid-2-3">
-    <h1 id="choose-calculation-type">@Messages.get("gmp.dashboard_header")</h1>
+    <h1 id="recent-bulk-calculations-header">@Messages.get("gmp.more_bulk_results.header")</h1>
   </div>
 </div>
-
-
-<div class="grid">
-  </br>
-  <div class="grid-1-2">
-    <a class ="large-underlined-link" id="single-calculation-link" href="@routes.PensionDetailsController.get">@Messages.get("gmp.single_calculation_link")</a></br></br>
-    <p id="single-calculation-description">@Messages.get("gmp.single_calculation_text")</p>
-  </div>
-
-  <div class="grid-1-2">
-    <a class ="large-underlined-link" id="bulk-calculation-link" href="@routes.FileUploadController.get">@Messages.get("gmp.bulk_calculation_link")</a></br></br>
-    <p id="bulk-calculation-description">@Messages.get("gmp.bulk_calculation_text")</p>
-  </div>
-</div>
-
-<div class="grid">
-  </br>
-    <a id="download-template-link" href="@routes.AssetsController.at("csv/GMP_template_and_instructions.zip")">@Messages.get("gmp.download_templates_link")</a>
-  </br>
-</div>
-
-@if(previousBulkCalculations.size > 0) {
-
-  <div class="grid">
-    <h1 id="previous-calculations">@Messages.get("gmp.previous_calculations")</h1>
-    <p id="previous-calculations-description">@Messages.get("gmp.previous_calculations_text")</p>
-  </div>
 
   <div class="grid">
 
@@ -80,7 +53,7 @@
 
       <tbody>
 
-        @for((calculation, count) <- previousBulkCalculations.zipWithIndex if(count < 3)){
+        @for((calculation, count) <- previousBulkCalculations.drop(3).zipWithIndex){
           <tr>
             <td class="r-padding" id="reference-@count"><a href="@routes.BulkResultsController.get(calculation.uploadReference)">@{calculation.reference}</a></td>
             <td class="r-padding numeric" id="upload-date-@count">@{ new LocalDate(calculation.timestamp).toString("dd MMMM yyyy") }</td>
@@ -92,21 +65,8 @@
     </table>
   </div>
 
-  @if(previousBulkCalculations.size > 3) {
-    <div class="grid">
-      </br>
-      <a id="more-calculations" href="@routes.MoreBulkResultsController.retrieveMoreBulkResults">@Messages.get("gmp.more_results_link")</a>
-      </br>
-    </div>
-  }
-
-} else {
-    <div class="grid">
-      <h1 id="no-previous-calculations">@Messages.get("gmp.previous_calculations")</h1>
-      <p id="no-previous-calculations-description">@Messages.get("gmp.no_previous_calculations_text")</p>
-    </div>
-}
-
-
-
+</br>
+<div class="grid-2-3 custom-back-link">
+  <a href="@routes.DashboardController.get" id="back-link">@Messages.get("gmp.back.link")</a>
+</div>
 }

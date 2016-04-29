@@ -20,21 +20,22 @@ import config.GmpFrontendAuthConnector
 import connectors.GmpBulkConnector
 import controllers.auth.GmpRegime
 
-object DashboardController extends DashboardController{
+
+object MoreBulkResultsController extends MoreBulkResultsController{
   val authConnector = GmpFrontendAuthConnector
   val gmpBulkConnector = GmpBulkConnector
 }
 
-trait DashboardController extends GmpPageFlow {
+trait MoreBulkResultsController extends GmpPageFlow {
 
   val gmpBulkConnector: GmpBulkConnector
 
-  def get = AuthorisedFor(GmpRegime, pageVisibilityPredicate).async {
+  def retrieveMoreBulkResults = AuthorisedFor(GmpRegime, pageVisibilityPredicate).async {
     implicit user =>
       implicit request => {
         gmpBulkConnector.getPreviousBulkRequests().map {
           bulkPreviousRequests => {
-            Ok(views.html.dashboard(bulkPreviousRequests.sorted))
+            Ok(views.html.more_bulk_results(bulkPreviousRequests.sorted))
           }
         }
       }
