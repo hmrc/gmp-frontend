@@ -63,3 +63,5 @@ GET         /request-received                             controllers.BulkReques
 GET         /dashboard                                    controllers.DashboardController.get
 
 GET         /bulk/results/:uploadReference                controllers.BulkResultsController.get(uploadReference:String)
+
+GET         /more-bulk-results                            controllers.MoreBulkResultsController.retrieveMoreBulkResults

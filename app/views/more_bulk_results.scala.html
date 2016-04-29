@@ -1,0 +1,68 @@
+@*
+* Copyright 2016 HM Revenue & Customs
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*     http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*@
+
+@(previousBulkCalculations: List[BulkPreviousRequest])(implicit request: Request[_])
+
+@import uk.gov.hmrc.play.views.html._
+@import uk.gov.hmrc.play.views.html.helpers._
+@import views.html.helpers._
+@import play.i18n._
+@import org.joda.time.{Days, LocalDate}
+
+@gmp_main(title = Messages.get("gmp.more_bulk_results.title")) {
+
+</br>
+<div class="grid">
+  <div class="grid grid-2-3">
+    <h1 id="recent-bulk-calculations-header">@Messages.get("gmp.more_bulk_results.header")</h1>
+  </div>
+</div>
+
+  <div class="grid">
+
+    <table id="recent-calculations-table">
+
+      <colgroup>
+        <col width="2%">
+        <col width="2%">
+        <col width="2%">
+      </colgroup>
+
+      <caption class="hidden" id="recent-calcualtions-caption">Recent calculations</caption>
+
+      <thead>
+        <tr id="table-row">
+          <th><span>@Messages.get("gmp.th.reference")</span></th>
+          <th id="upload-date-table-header" class="r-padding numeric"><span>@Messages.get("gmp.th.upload_date")</span></th>
+          <th id="time-left-table-header" class="r-padding numeric"><span>@Messages.get("gmp.th.time_left")</span></th>
+        </tr>
+      </thead>
+
+      <tbody>
+
+        @for((calculation, count) <- previousBulkCalculations.drop(3).zipWithIndex){
+          <tr>
+            <td class="r-padding" id="reference-@count"><a href="@routes.BulkResultsController.get(calculation.uploadReference)">@{calculation.reference}</a></td>
+            <td class="r-padding numeric" id="upload-date-@count">@{ new LocalDate(calculation.timestamp).toString("dd MMMM yyyy") }</td>
+            <td class="r-padding numeric" id="days-left-@count">@{Messages.get("gmp.days_left", (30 - Days.daysBetween(calculation.timestamp, LocalDate.now()).getDays).toString)}</td>
+          </tr>
+        }
+
+      </tbody>
+    </table>
+  </div>
+
+}

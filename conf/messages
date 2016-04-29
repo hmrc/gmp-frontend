@@ -1,5 +1,6 @@
 # titles
 gmp.dashboard.title = GMP dashboard
+gmp.more_bulk_results.title = Recent bulk calculations
 gmp.entered_details.title = Entered details
 gmp.entered_details.title.survivor = Deceased member''s entered details
 gmp.member_details.title = Member details
@@ -74,6 +75,7 @@ gmp.th.reference = Reference
 gmp.th.upload_date = Upload date
 gmp.th.time_left = Time left
 gmp.days_left = {0} days
+gmp.more_bulk_results.header = Recent bulk calculations
 
 # Buttons
 gmp.continue.button = Continue
