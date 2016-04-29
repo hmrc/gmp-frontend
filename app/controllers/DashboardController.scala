@@ -20,7 +20,6 @@ import config.GmpFrontendAuthConnector
 import connectors.GmpBulkConnector
 import controllers.auth.GmpRegime
 
-
 object DashboardController extends DashboardController{
   val authConnector = GmpFrontendAuthConnector
   val gmpBulkConnector = GmpBulkConnector
@@ -35,9 +34,10 @@ trait DashboardController extends GmpPageFlow {
       implicit request => {
         gmpBulkConnector.getPreviousBulkRequests().map {
           bulkPreviousRequests => {
-            Ok(views.html.dashboard(bulkPreviousRequests))
+            Ok(views.html.dashboard(bulkPreviousRequests.sorted))
           }
         }
       }
   }
+
 }

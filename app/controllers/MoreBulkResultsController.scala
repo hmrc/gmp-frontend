@@ -35,7 +35,7 @@ trait MoreBulkResultsController extends GmpPageFlow {
       implicit request => {
         gmpBulkConnector.getPreviousBulkRequests().map {
           bulkPreviousRequests => {
-            Ok(views.html.more_bulk_results(bulkPreviousRequests))
+            Ok(views.html.more_bulk_results(bulkPreviousRequests.sorted))
           }
         }
       }

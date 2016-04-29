@@ -14,14 +14,10 @@
  * limitations under the License.
  */
 
-package models
+package controllers.helpers
 
 import org.joda.time.LocalDate
-import play.api.libs.json.Json
 
-case class BulkPreviousRequest(uploadReference: String, reference: String, timestamp: LocalDate)
-
-object BulkPreviousRequest {
-  implicit val formats = Json.format[BulkPreviousRequest]
-  implicit def defaultOrdering: Ordering[BulkPreviousRequest] = Ordering.fromLessThan(_.timestamp isAfter _.timestamp)
+object Joda {
+  implicit def localDateOrdering: Ordering[LocalDate] = Ordering.fromLessThan(_ isAfter _)
 }
