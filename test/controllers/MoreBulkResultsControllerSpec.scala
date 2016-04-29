@@ -17,7 +17,7 @@
 package controllers
 
 import connectors.GmpBulkConnector
-import models.{BulkPreviousRequest, Dashboard}
+import models._
 import org.joda.time.LocalDate
 import org.mockito.Matchers
 import org.mockito.Mockito._
@@ -85,24 +85,6 @@ class MoreBulkResultsControllerSpec extends PlaySpec with OneServerPerSuite with
           }
         }
       }
-
-//      "load the dashboard from the bulk service if present but empty" in {
-//        val dashboard = new Dashboard(Nil)
-//        withAuthorisedUser { request =>
-//          val result = TestDashboardController.get.apply(request)
-//          contentAsString(result) must include(Messages("gmp.previous_calculations"))
-//        }
-//      }
-//
-//      "load the dashboard from the bulk service if present and complete" in {
-//
-//        withAuthorisedUser { request =>
-//          val result = TestDashboardController.get.apply(request)
-//          contentAsString(result) must include(Messages("gmp.previous_calculations"))
-//          contentAsString(result) must include("1234")
-//          contentAsString(result) must include("5678")
-//        }
-//      }
     }
   }
 

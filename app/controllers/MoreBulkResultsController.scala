@@ -40,4 +40,5 @@ trait MoreBulkResultsController extends GmpPageFlow {
         }
       }
   }
+
 }
