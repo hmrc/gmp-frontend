@@ -22,7 +22,7 @@ gmp.bulk_reference.title = Getting your results
 gmp.bulk_request_received.title = Request Received
 gmp.signout = Sign out
 gmp.bulk.results.title = GMP calculation available
-gmp.bulk.wrong_user.title = GMP Wrong User
+gmp.bulk.wrong_user.title = Not authorised
 
 # headers
 gmp.revaluation.question = At which date would you like the calculation to apply?
