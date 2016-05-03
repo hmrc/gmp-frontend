@@ -173,7 +173,7 @@ gmp.single_calculation_text = Use the checker to input member details and get an
 gmp.bulk_calculation_text = Upload the details of many members at once and we will email you when the calculation is done.
 gmp.previous_calculations_text = Results for the last three bulk requests made in the previous 30 days.
 gmp.bulk.wrong_user.login_text = You need to login with the same Government Gateway account that was used to submit the file.
-gmp.bulk.wrong_user.signout_text = <a id="bulk_wrong_user_sign_out" data-journey-click="gmp-bulk:click:bulk_wrong_user_sign_out" href="@ExternalUrls.signOut">Sign out</a> and login with right account.
+gmp.bulk.wrong_user.signout_text = and login with right account.
 gmp.bulk.wrong_user.dashboard_text = Go to your <a id="bulk_wrong_user_dashboard" data-journey-click="gmp-bulk:click:bulk_wrong_user_dashboard" href="/guaranteed-minimum-pension/dashboard">Guaranteed Minimum Pension checker</a> main page.
 gmp.previous_calculations_text = You have 30 days from the upload date to view the results.
 gmp.no_previous_calculations_text = We keep the results of previous calculations for 30 days. You have none to view.
