@@ -57,7 +57,11 @@
           <tr>
             <td class="r-padding" id="reference-@count"><a href="@routes.BulkResultsController.get(calculation.uploadReference)">@{calculation.reference}</a></td>
             <td class="r-padding numeric" id="upload-date-@count">@{ new LocalDate(calculation.timestamp).toString("dd MMMM yyyy") }</td>
-            <td class="r-padding numeric" id="days-left-@count">@{Messages.get("gmp.days_left", (30 - Days.daysBetween(calculation.timestamp, LocalDate.now()).getDays).toString)}</td>
+            @if((30 - Days.daysBetween(calculation.timestamp, LocalDate.now()).getDays) == 1) {
+              <td class="r-padding numeric" id="days-left-one">@{Messages.get("gmp.one_day_left")}</td>
+            } else {
+              <td class="r-padding numeric" id="days-left-@count">@{Messages.get("gmp.days_left", (30 - Days.daysBetween(calculation.timestamp, LocalDate.now()).getDays).toString)}</td>
+            }
           </tr>
         }
 
