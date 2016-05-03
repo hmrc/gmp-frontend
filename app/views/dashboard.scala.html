@@ -85,7 +85,7 @@
             <tr>
               <td class="r-padding" id="reference-@count"><a href="@routes.BulkResultsController.get(calculation.uploadReference)">@{calculation.reference}</a></td>
               <td class="r-padding numeric" id="upload-date-@count">@{ new LocalDate(calculation.timestamp).toString("dd MMMM yyyy") }</td>
-              <td class="r-padding numeric" id="days-left-@count">@{Messages.get("gmp.days_left", days.toString)}</td>
+              <td class="r-padding numeric" id="days-left-@count">@{Messages.get("gmp.days_left", days.toString, days match {case 1 => "";case _ => "s";})}</td>
             </tr>
           }
         }
