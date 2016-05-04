@@ -14,7 +14,7 @@
 * limitations under the License.
 *@
 
-@(applicationConfig: config.ApplicationConfig = config.ApplicationConfig, calculationResponse:CalculationResponse, sameTaxYear:Boolean)(implicit request: Request[_])
+@(applicationConfig: config.ApplicationConfig = config.ApplicationConfig, calculationResponse:CalculationResponse)(implicit request: Request[_])
 
 @import uk.gov.hmrc.play.views.html._
 @import uk.gov.hmrc.play.views.html.helpers._
@@ -31,11 +31,11 @@
       @if(calculationResponse.hasErrors) {
         @includes.multi_error(calculationResponse)
       } else {
-        @includes.multi_results(calculationResponse, sameTaxYear)
+        @includes.multi_results(calculationResponse)
       }
     } else {
       @if(calculationResponse.calculationPeriods.head.errorCode == 0){
-        @includes.single_result(calculationResponse, sameTaxYear)
+        @includes.single_result(calculationResponse)
       }else{
         @includes.global_error(calculationResponse.calculationPeriods.head.errorCode)
       }

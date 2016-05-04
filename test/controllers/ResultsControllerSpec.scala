@@ -53,8 +53,8 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
     override val sessionService = mockSessionService
     override val calculationConnector = mockCalculationConnector
 
-    override def resultsView(response: CalculationResponse, sameTaxYear: Boolean)(implicit request: Request[_]): HtmlFormat.Appendable = {
-      views.html.results(applicationConfig = mockApplicationConfig, response, sameTaxYear)
+    override def resultsView(response: CalculationResponse)(implicit request: Request[_]): HtmlFormat.Appendable = {
+      views.html.results(applicationConfig = mockApplicationConfig, response)
     }
 
     override def metrics = Metrics

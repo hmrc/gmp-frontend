@@ -198,6 +198,20 @@ class GmpControllerSpec extends PlaySpec with OneServerPerSuite with MockitoSuga
           }
         }
 
+        "when revaluation calculation and no leaving date" must {
+
+          val revaluationSession = GmpSession(MemberDetails("", "", ""), "", CalculationType.REVALUATION,
+            revaluationDate = Some(GmpDate(Some("06"), Some("04"), Some("2010"))), None,
+            leaving = Leaving(GmpDate(None, None, None), leaving = Some("Yes")), None, Dashboard(List()))
+
+          "redirect to the revaluation rate page" in {
+
+            val result = TestGmpController.previousPage(PageType.EQUALISE, revaluationSession)
+            result.header.status must be(SEE_OTHER)
+            result.header.headers.get("LOCATION").get must be(routes.RevaluationRateController.get().url)
+          }
+        }
+
         "when spa calculation and has not left the scheme" must {
 
           val spaSession = GmpSession(MemberDetails("", "", ""), "", CalculationType.SPA, None, None, Leaving(GmpDate(None, None, None), None), None, Dashboard(List()))
