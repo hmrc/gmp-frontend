@@ -74,7 +74,7 @@ gmp.bulk.wrong_user.header = There is a problem
 gmp.th.reference = Reference
 gmp.th.upload_date = Upload date
 gmp.th.time_left = Time left
-gmp.days_left = {0} Days
+gmp.days_left = {0} day{1}
 gmp.more_bulk_results.header = Recent bulk calculations
 
 # Buttons
