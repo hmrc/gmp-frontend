@@ -91,14 +91,17 @@ trait GmpBulkConnector extends ServicesConfig {
     val baseURI = s"gmp${getUser(user)}/gmp/get-results-as-csv"
     val bulkUri = s"$serviceURL/$baseURI/$uploadReference"
 
-    val result = httpGet.GET[String](bulkUri)
+    val result = httpGet.GET(bulkUri)
 
     Logger.debug(s"[GmpBulkConnector][getResultsAsCsv][GET] reference : $uploadReference")
 
     result onSuccess {
       case response => Logger.debug(s"[GmpBulkConnector][getResultsAsCsv][response] : $response")
     }
-    result
+
+    result.map {
+      response => response.body
+    }
   }
 
 }
