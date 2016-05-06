@@ -14,7 +14,7 @@
 * limitations under the License.
 *@
 
-@(bulkResultsSummary: BulkResultsSummary)(implicit request: Request[_])
+@(bulkResultsSummary: BulkResultsSummary, uploadReference: String)(implicit request: Request[_])
 
 @import uk.gov.hmrc.play.views.html._
 @import uk.gov.hmrc.play.views.html.helpers._
@@ -47,7 +47,7 @@
             <li id="exp-all-2" class="font-xsmall">@Messages.get("gmp.bulk.explanations.calculations.2")</li>
         </ul>
     </div>
-    <div class="grid grid-1-4 text--right"><a id="download-all" href="@routes.BulkResultsController.getResultsAsCsv(bulkResultsSummary.reference)">Download</a></div>
+    <div class="grid grid-1-4 text--right"><a id="download-all" href="@routes.BulkResultsController.getResultsAsCsv(uploadReference)">Download</a></div>
 
 </div>
 
