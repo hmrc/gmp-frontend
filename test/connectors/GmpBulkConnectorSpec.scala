@@ -95,7 +95,7 @@ class GmpBulkConnectorSpec extends PlaySpec with OneServerPerSuite with MockitoS
     "return bulk request as csv" in {
 
       implicit val user = AuthContext(authority = Authority("1234", Accounts(psa = Some(PsaAccount("link", PsaId(psaId)))), None, None, CredentialStrength.None, ConfidenceLevel.L50))
-      when(mockHttpGet.GET[String](Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful("THIS IS A CSV STRING"))
+      when(mockHttpGet.GET[HttpResponse](Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(HttpResponse(responseStatus = OK,responseString = Some("THIS IS A CSV STRING"))))
 
       val result = testGmpBulkConnector.getResultsAsCsv("")
       val resolvedResult = await(result)
