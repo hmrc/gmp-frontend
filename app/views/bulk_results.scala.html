@@ -22,7 +22,7 @@
 @import config.ApplicationConfig.globalErrors
 
 @all = @{"all"}
-@successful = @{"failed"}
+@successful = @{"successful"}
 @failed = @{"failed"}
 
 @gmp_main(title = Messages.get("gmp.bulk.results.title")) {
@@ -55,7 +55,7 @@
 </div>
 
 <div class="grid grid-2-3 divider--top">
-    <h3 id="successful-calculations">@Messages.get("gmp.bulk.subheaders.successfulcalculations") (@{bulkResultsSummary.total-bulkResultsSummary.failed})</h3>
+    <h3 id="successful-calculations">@Messages.get("gmp.bulk.subheaders.successfulcalculations") (@{bulkResultsSummary.getNumberOfSuccessfulCalculations})</h3>
     <div class="grid grid-3-4">
         <ul class="bullets font-xsmall">
             <li id="exp-success-1" class="font-xsmall">@Messages.get("gmp.bulk.explanations.calculations.1")</li>
