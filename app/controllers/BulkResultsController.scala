@@ -43,10 +43,10 @@ trait BulkResultsController extends GmpController {
       }
   }
 
-  def getResultsAsCsv(uploadReference: String) = AuthorisedFor(GmpRegime, pageVisibilityPredicate).async {
+  def getResultsAsCsv(uploadReference: String, filter: String) = AuthorisedFor(GmpRegime, pageVisibilityPredicate).async {
     implicit user =>
       implicit request => {
-        gmpBulkConnector.getResultsAsCsv(uploadReference).map {
+        gmpBulkConnector.getResultsAsCsv(uploadReference, filter).map {
           csv => Ok(csv).as("text/csv")
         }
       }

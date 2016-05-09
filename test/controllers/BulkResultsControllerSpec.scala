@@ -106,17 +106,17 @@ class BulkResultsControllerSpec extends PlaySpec with OneServerPerSuite with Moc
 
       "require authorisation" in {
 
-        val result = TestBulkResultsController.getResultsAsCsv("").apply(FakeRequest())
+        val result = TestBulkResultsController.getResultsAsCsv("","").apply(FakeRequest())
         status(result) must equal(SEE_OTHER)
         redirectLocation(result).get must include("/account/sign-in")
       }
 
       "download the results summary in csv format" in {
 
-        when(mockGmpBulkConnector.getResultsAsCsv(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful("CSV STRING"))
+        when(mockGmpBulkConnector.getResultsAsCsv(Matchers.any(),Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful("CSV STRING"))
 
         withAuthorisedUser { request =>
-          val result = TestBulkResultsController.getResultsAsCsv("").apply(request)
+          val result = TestBulkResultsController.getResultsAsCsv("","").apply(request)
 
           contentAsString(result) must be("CSV STRING")
         }
