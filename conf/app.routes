@@ -66,4 +66,6 @@ GET         /bulk/results/:uploadReference                controllers.BulkResult
 
 GET         /bulk/results/csv/:uploadReference/:filter    controllers.BulkResultsController.getResultsAsCsv(uploadReference: String, filter: String)
 
+GET         /bulk/results/csv/:uploadReference            controllers.BulkResultsController.getContributionsAndEarningsAsCsv(uploadReference: String)
+
 GET         /more-bulk-results                            controllers.MoreBulkResultsController.retrieveMoreBulkResults
