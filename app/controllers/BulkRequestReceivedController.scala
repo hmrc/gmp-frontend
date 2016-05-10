@@ -44,6 +44,7 @@ trait BulkRequestReceivedController extends GmpController {
             val callbackData = session.callBackData.get
             val bulkRequest = bulkRequestCreationService.createBulkRequest(callbackData.collection, callbackData.id, session.emailAddress.getOrElse(""),
               session.reference.getOrElse(""))
+
             gmpBulkConnector.sendBulkRequest(bulkRequest)
             Ok(views.html.bulk_request_received())
           }
