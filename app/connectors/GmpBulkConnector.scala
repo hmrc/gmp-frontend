@@ -104,6 +104,23 @@ trait GmpBulkConnector extends ServicesConfig {
     }
   }
 
+  def getContributionsAndEarningsAsCsv(uploadReference: String)(implicit user: AuthContext, headerCarrier: HeaderCarrier): Future[String] = {
+    val baseURI = s"gmp${getUser(user)}/gmp/get-contributions-as-csv"
+    val bulkUri = s"$serviceURL/$baseURI/$uploadReference"
+
+    val result = httpGet.GET(bulkUri)
+
+    Logger.debug(s"[GmpBulkConnector][getContributionsAndEarningsAsCsv][GET] reference : $uploadReference")
+
+    result onSuccess {
+      case response => Logger.debug(s"[GmpBulkConnector][getContributionsAndEarningsAsCsv][response] : $response")
+    }
+
+    result.map {
+      response => response.body
+    }
+  }
+
 }
 
 object GmpBulkConnector extends GmpBulkConnector

@@ -52,6 +52,15 @@ trait BulkResultsController extends GmpController {
       }
   }
 
+
+  def getContributionsAndEarningsAsCsv(uploadReference: String) = AuthorisedFor(GmpRegime, pageVisibilityPredicate).async {
+    implicit user =>
+      implicit request => {
+        gmpBulkConnector.getContributionsAndEarningsAsCsv(uploadReference).map {
+          csv => Ok(csv).as("text/csv")
+        }
+      }
+  }
 }
 
 
