@@ -34,7 +34,7 @@ trait BulkResultsController extends GmpController {
     implicit user =>
       implicit request => {
         gmpBulkConnector.getBulkResultsSummary(uploadReference).map{
-          bulkResultsSummary => Ok(views.html.bulk_results(bulkResultsSummary))
+          bulkResultsSummary => Ok(views.html.bulk_results(bulkResultsSummary, uploadReference))
         }.recover {
           case e: Upstream4xxResponse if e.upstreamResponseCode == FORBIDDEN => {
             Ok(views.html.bulk_wrong_user(request))
@@ -43,6 +43,14 @@ trait BulkResultsController extends GmpController {
       }
   }
 
+  def getResultsAsCsv(uploadReference: String, filter: String) = AuthorisedFor(GmpRegime, pageVisibilityPredicate).async {
+    implicit user =>
+      implicit request => {
+        gmpBulkConnector.getResultsAsCsv(uploadReference, filter).map {
+          csv => Ok(csv).as("text/csv")
+        }
+      }
+  }
 
 }
 

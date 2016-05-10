@@ -64,4 +64,6 @@ GET         /dashboard                                    controllers.DashboardC
 
 GET         /bulk/results/:uploadReference                controllers.BulkResultsController.get(uploadReference:String)
 
+GET         /bulk/results/csv/:uploadReference/:filter    controllers.BulkResultsController.getResultsAsCsv(uploadReference: String, filter: String)
+
 GET         /more-bulk-results                            controllers.MoreBulkResultsController.retrieveMoreBulkResults

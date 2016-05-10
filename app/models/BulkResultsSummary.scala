@@ -20,8 +20,11 @@ import play.api.libs.json.Json
 
 case class BulkResultsSummary(reference: String, total: Int, failed: Int) {
 
+  def getNumberOfSuccessfulCalculations = total - failed
+
 }
 
 object BulkResultsSummary {
   implicit val formats = Json.format[BulkResultsSummary]
+
 }
