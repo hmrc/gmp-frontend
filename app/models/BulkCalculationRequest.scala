@@ -37,7 +37,8 @@ object CalculationRequestLine {
 
 case class BulkCalculationRequestLine(lineId: Int,
                                       validCalculationRequest: Option[CalculationRequestLine],
-                                      validationError: Option[String]
+                                      globalError: Option[String],
+                                      validationErrors: Option[Map[String,String]]
                                      )
 
 object BulkCalculationRequestLine {
