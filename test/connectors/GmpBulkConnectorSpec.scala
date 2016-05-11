@@ -59,7 +59,7 @@ class GmpBulkConnectorSpec extends PlaySpec with OneServerPerSuite with MockitoS
       val bcr = BulkCalculationRequest("upload1", "jim@jarmusch.com", "idreference",
         List(BulkCalculationRequestLine(1, Some(CalculationRequestLine("S1234567C", RandomNino.generate,
           "bob", "bobbleton", Some("bobby"), Some(0), Some("2012-02-02"), None, None, None)),
-          None)))
+          None, None)))
       val result = testGmpBulkConnector.sendBulkRequest(bcr)
       (await(result)).status must be(OK)
 
@@ -101,6 +101,18 @@ class GmpBulkConnectorSpec extends PlaySpec with OneServerPerSuite with MockitoS
       val resolvedResult = await(result)
 
       resolvedResult must be("THIS IS A CSV STRING")
+    }
+
+    "return all contributions and earnings as a csv" in {
+
+      implicit val user = AuthContext(authority = Authority("1234", Accounts(psa = Some(PsaAccount("link", PsaId(psaId)))), None, None, CredentialStrength.None, ConfidenceLevel.L50))
+      when(mockHttpGet.GET[HttpResponse](Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(HttpResponse(responseStatus = OK,responseString = Some("THIS IS A CSV STRING"))))
+
+      val result = testGmpBulkConnector.getContributionsAndEarningsAsCsv("")
+      val resolvedResult = await(result)
+
+      resolvedResult must be("THIS IS A CSV STRING")
+
     }
 
   }

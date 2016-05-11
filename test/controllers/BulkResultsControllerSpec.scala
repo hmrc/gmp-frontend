@@ -123,6 +123,29 @@ class BulkResultsControllerSpec extends PlaySpec with OneServerPerSuite with Moc
       }
 
     }
+
+
+    "getContributionsAsCsv" must {
+
+      "require authorisation" in {
+
+        val result = TestBulkResultsController.getContributionsAndEarningsAsCsv("").apply(FakeRequest())
+        status(result) must equal(SEE_OTHER)
+        redirectLocation(result).get must include("/account/sign-in")
+      }
+
+      "download the contributions and earnings in csv format" in {
+
+        when(mockGmpBulkConnector.getContributionsAndEarningsAsCsv(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful("CSV STRING"))
+
+        withAuthorisedUser { request =>
+          val result = TestBulkResultsController.getContributionsAndEarningsAsCsv("").apply(request)
+
+          contentAsString(result) must be("CSV STRING")
+        }
+      }
+
+    }
   }
 
 }
