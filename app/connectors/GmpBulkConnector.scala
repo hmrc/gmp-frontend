@@ -17,13 +17,12 @@
 package connectors
 
 import config.WSHttp
-import models.{BulkPreviousRequest, BulkCalculationRequest}
+import models.{BulkCalculationRequest, BulkPreviousRequest, BulkResultsSummary}
 import org.joda.time.LocalDate
-import models.{BulkResultsSummary, BulkCalculationRequest}
 import play.api.Logger
 import uk.gov.hmrc.play.config.ServicesConfig
 import uk.gov.hmrc.play.frontend.auth.AuthContext
-import uk.gov.hmrc.play.http.{HttpGet, HeaderCarrier, HttpPost, HttpResponse}
+import uk.gov.hmrc.play.http.{HeaderCarrier, HttpGet, HttpPost, HttpResponse}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -47,7 +46,7 @@ trait GmpBulkConnector extends ServicesConfig {
     val bulkUri = s"$serviceURL/$baseURI/"
     val result = httpPost.POST[BulkCalculationRequest, HttpResponse](bulkUri,bcr.copy(timestamp = LocalDate.now(),userId = getUser(user)))
 
-    Logger.debug(s"[GmpBulkConnector][sendBulkRequest][POST] : $bcr")
+    Logger.debug(s"[GmpBulkConnector][sendBulkRequest][POST] size : ${bcr.calculationRequests.size}")
 
     result onSuccess {
       case response => Logger.debug(s"[GmpBulkConnector][sendBulkRequest][response] : $response")

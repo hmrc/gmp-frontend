@@ -16,12 +16,12 @@
 
 package services
 
-import models.{BulkCalculationRequestLine, CalculationRequestLine, BulkCalculationRequest}
+import models.{BulkCalculationRequest, BulkCalculationRequestLine, CalculationRequestLine}
 import org.joda.time.LocalDate
-import org.joda.time.format.{DateTimeFormat, DateTimeFormatter}
+import org.joda.time.format.DateTimeFormat
 import play.api.Logger
 import uk.gov.hmrc.play.config.ServicesConfig
-import uk.gov.hmrc.stream.{BulkEntityProcessor, BulkEntityProcessing}
+import uk.gov.hmrc.stream.BulkEntityProcessor
 
 trait BulkRequestCreationService extends BulkEntityProcessor[BulkCalculationRequestLine] with ServicesConfig {
 
@@ -55,7 +55,7 @@ trait BulkRequestCreationService extends BulkEntityProcessor[BulkCalculationRequ
 
     val req = BulkCalculationRequest(id, email, reference, enterLineNumbers(bulkCalculationRequestLines))
 
-    Logger.debug(s"[BulkRequestCreationService][createBulkRequest] : $req")
+    Logger.debug(s"[BulkRequestCreationService][createBulkRequest] size : ${req.calculationRequests.size}")
 
     req
 
