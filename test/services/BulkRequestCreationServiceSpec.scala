@@ -22,6 +22,7 @@ import org.joda.time.LocalDate
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
+import play.api.i18n.Messages
 
 class BulkRequestCreationServiceSpec extends PlaySpec with ScalaFutures with MockitoSugar with OneServerPerSuite {
 
@@ -34,10 +35,11 @@ class BulkRequestCreationServiceSpec extends PlaySpec with ScalaFutures with Moc
   val calcLine3 = BulkCalculationRequestLine(1, Some(CalculationRequestLine("S1301234T", nino2, "George", "Stephenson", Some("GS"), Some(1), None, None, Some(1), Some(0))),None,None)
   val calcLine4 = BulkCalculationRequestLine(1, Some(CalculationRequestLine("S1301234T", nino2, "George", "Stephenson", None, None, None, None, None, None)),None,None)
 
-  val inputLine1 = lineListFromCalculationRequestLine(calcLine1)
-  val inputLine2 = lineListFromCalculationRequestLine(calcLine2)
-  val inputLine3 = lineListFromCalculationRequestLine(calcLine3)
-  val inputLine4 = lineListFromCalculationRequestLine(calcLine4)
+  val inputLine1 = (Messages("gmp.upload_csv_column_headers") + "\n" + lineListFromCalculationRequestLine(calcLine1).mkString).toList
+  val inputLine2 = (Messages("gmp.upload_csv_column_headers") + "\n" + lineListFromCalculationRequestLine(calcLine2).mkString).toList
+  val inputLine3 = (Messages("gmp.upload_csv_column_headers") + "\n" + lineListFromCalculationRequestLine(calcLine3).mkString).toList
+  val inputLine4 = (Messages("gmp.upload_csv_column_headers") + "\n" + lineListFromCalculationRequestLine(calcLine4).mkString).toList
+  val inputLineWithoutHeader = lineListFromCalculationRequestLine(calcLine2)
 
   object TestBulkRequestCreationService extends BulkRequestCreationService {
 
@@ -46,10 +48,9 @@ class BulkRequestCreationServiceSpec extends PlaySpec with ScalaFutures with Moc
       resourceLocation.substring(resourceLocation.lastIndexOf('/') + 1) match {
         case "1" => inputLine1.iterator
         case "2" => inputLine2.iterator
-        case "3" => (inputLine1 ::: inputLine2).iterator
+        case "3" => (inputLine1 ::: inputLineWithoutHeader).iterator
         case "4" => inputLine3.iterator
         case "5" => inputLine4.iterator
-
       }
     }
 

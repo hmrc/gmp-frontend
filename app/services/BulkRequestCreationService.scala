@@ -20,7 +20,6 @@ import models.{BulkCalculationRequest, BulkCalculationRequestLine, CalculationRe
 import org.joda.time.LocalDate
 import org.joda.time.format.DateTimeFormat
 import play.api.Logger
-import play.api.i18n.Messages
 import uk.gov.hmrc.play.config.ServicesConfig
 import uk.gov.hmrc.stream.BulkEntityProcessor
 
@@ -67,6 +66,8 @@ trait BulkRequestCreationService extends BulkEntityProcessor[BulkCalculationRequ
   }
 
   private def constructCalculationRequestLine(line: String): CalculationRequestLine = {
+
+    println("*****" + line)
 
     val lineArray = line.split(",", -1)
 
