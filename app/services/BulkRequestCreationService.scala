@@ -20,6 +20,7 @@ import models.{BulkCalculationRequest, BulkCalculationRequestLine, CalculationRe
 import org.joda.time.LocalDate
 import org.joda.time.format.DateTimeFormat
 import play.api.Logger
+import play.api.i18n.Messages
 import uk.gov.hmrc.play.config.ServicesConfig
 import uk.gov.hmrc.stream.BulkEntityProcessor
 
@@ -51,7 +52,7 @@ trait BulkRequestCreationService extends BulkEntityProcessor[BulkCalculationRequ
 
     val attachmentUrl = s"${baseUrl("attachments")}/attachments-internal/$collection/$id"
 
-    val bulkCalculationRequestLines: List[BulkCalculationRequestLine] = list(sourceData(attachmentUrl), LINE_FEED.toByte.toChar, constructBulkCalculationRequestLine _)
+    val bulkCalculationRequestLines: List[BulkCalculationRequestLine] = generateBulkCalculationRequestList(sourceData(attachmentUrl))
 
     val req = BulkCalculationRequest(id, email, reference, enterLineNumbers(bulkCalculationRequestLines))
 
@@ -61,6 +62,9 @@ trait BulkRequestCreationService extends BulkEntityProcessor[BulkCalculationRequ
 
   }
 
+  private def generateBulkCalculationRequestList(data: Iterator[Char]): List[BulkCalculationRequestLine] = {
+    data.mkString.split(LINE_FEED.toByte.toChar).drop(1).map {constructBulkCalculationRequestLine _}.toList
+  }
 
   private def constructCalculationRequestLine(line: String): CalculationRequestLine = {
 
@@ -72,12 +76,15 @@ trait BulkRequestCreationService extends BulkEntityProcessor[BulkCalculationRequ
       emptyStringsToNone(lineArray(TERMINATION_DATE), { e: String => Some(LocalDate.parse(e, inputDateFormatter).toString(DATE_FORMAT)) }),
       emptyStringsToNone(lineArray(REVAL_DATE), { e: String => Some(LocalDate.parse(e, inputDateFormatter).toString(DATE_FORMAT)) }),
       emptyStringsToNone(lineArray(REVAL_RATE), { e: String => Some(e.toInt) }),
-      emptyStringsToNone(lineArray(DUAL_CALC), { e: String => Some(e.toInt) })
+      emptyStringsToNone(lineArray(DUAL_CALC), { e: String => Some(e match{
+        case "Y" => 1
+        case _ => 0
+      })})
     )
   }
 
   private def constructBulkCalculationRequestLine(line: String): BulkCalculationRequestLine = {
-    BulkCalculationRequestLine(1, Some(constructCalculationRequestLine(line)),None,None)
+      BulkCalculationRequestLine(1, Some(constructCalculationRequestLine(line)),None,None)
   }
 
   private def emptyStringsToNone[T](entry: String, s: (String => Option[T])): Option[T] = {
