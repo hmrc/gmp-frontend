@@ -77,7 +77,7 @@ trait BulkRequestCreationService extends BulkEntityProcessor[BulkCalculationRequ
   }
 
   private def constructBulkCalculationRequestLine(line: String): BulkCalculationRequestLine = {
-    BulkCalculationRequestLine(1, Some(constructCalculationRequestLine(line)),None,None)
+    BulkCalculationRequestLine(1, Some(constructCalculationRequestLine(line)),None)
   }
 
   private def emptyStringsToNone[T](entry: String, s: (String => Option[T])): Option[T] = {
