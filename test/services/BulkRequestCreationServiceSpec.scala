@@ -34,11 +34,14 @@ class BulkRequestCreationServiceSpec extends PlaySpec with ScalaFutures with Moc
   val calcLine2 = BulkCalculationRequestLine(1, Some(CalculationRequestLine("S1301234T", nino2, "George", "Stephenson", Some("GS"), Some(1), Some("2010-02-02"), Some("2010-01-01"), Some(1), Some(0))),None,None)
   val calcLine3 = BulkCalculationRequestLine(1, Some(CalculationRequestLine("S1301234T", nino2, "George", "Stephenson", Some("GS"), Some(1), None, None, Some(1), Some(0))),None,None)
   val calcLine4 = BulkCalculationRequestLine(1, Some(CalculationRequestLine("S1301234T", nino2, "George", "Stephenson", None, None, None, None, None, None)),None,None)
+  val calcLine6 = BulkCalculationRequestLine(1, Some(CalculationRequestLine("S1301234T", nino1, "Isambard", "Brunell", Some("IB"), Some(1), Some("2010-02-02"), Some("2010-01-01"), Some(1), Some(1))),None,None)
 
   val inputLine1 = (Messages("gmp.upload_csv_column_headers") + "\n" + lineListFromCalculationRequestLine(calcLine1).mkString).toList
   val inputLine2 = (Messages("gmp.upload_csv_column_headers") + "\n" + lineListFromCalculationRequestLine(calcLine2).mkString).toList
   val inputLine3 = (Messages("gmp.upload_csv_column_headers") + "\n" + lineListFromCalculationRequestLine(calcLine3).mkString).toList
   val inputLine4 = (Messages("gmp.upload_csv_column_headers") + "\n" + lineListFromCalculationRequestLine(calcLine4).mkString).toList
+  val inputLine6 = (Messages("gmp.upload_csv_column_headers") + "\n" + lineListFromCalculationRequestLine(calcLine6).mkString).toList
+
   val inputLineWithoutHeader = lineListFromCalculationRequestLine(calcLine2)
 
   object TestBulkRequestCreationService extends BulkRequestCreationService {
@@ -51,6 +54,7 @@ class BulkRequestCreationServiceSpec extends PlaySpec with ScalaFutures with Moc
         case "3" => (inputLine1 ::: inputLineWithoutHeader).iterator
         case "4" => inputLine3.iterator
         case "5" => inputLine4.iterator
+        case "6" => println("***** " + inputLine6);inputLine6.iterator
       }
     }
 
@@ -64,6 +68,7 @@ class BulkRequestCreationServiceSpec extends PlaySpec with ScalaFutures with Moc
     val bulkRequest2 = BulkCalculationRequest("2", "timburton@scary.com", "uploadRef2", List(calcLine2))
     val bulkRequest3 = BulkCalculationRequest("3", "lou@ferrigno.com", "uploadRef3", List(calcLine1, calcLine2.copy(lineId = 2)))
     val bulkRequest4 = BulkCalculationRequest("4", "bill@bixby.com", "uploadRef1", List(calcLine3))
+    val bulkRequest6 = BulkCalculationRequest("6", "bill@bixby.com", "uploadRef1", List(calcLine6))
 
     "return Bulk Request 1" in {
 
@@ -114,18 +119,27 @@ class BulkRequestCreationServiceSpec extends PlaySpec with ScalaFutures with Moc
       bulkRequest.calculationRequests.tail.head.lineId mustBe 2
     }
 
+    "return Bulk Request 6" in {
+
+      val bulkRequest: BulkCalculationRequest = TestBulkRequestCreationService.createBulkRequest(collection, "6", bulkRequest6.email, bulkRequest6.reference)
+
+      bulkRequest mustBe bulkRequest6
+
+    }
+
   }
 
   def lineListFromCalculationRequestLine(line: BulkCalculationRequestLine): List[Char] = {
-    val l = line.validCalculationRequest.get.productIterator.toList
+    val l = line.validCalculationRequest.get.productIterator.toList.zipWithIndex
 
     def process(item: Any) = {
       val dateRegEx = """([0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9])""".r
       item match {
-        case None => ","
-        case Some(dateRegEx(s)) => new LocalDate(s).toString("dd/MM/yyyy") + ","
-        case Some(x) => s"$x,"
-        case x: String => x + ","
+        case (None,i) => ","
+        case (Some(dateRegEx(s)),i) => new LocalDate(s).toString("dd/MM/yyyy") + ","
+        case (Some(x:Int),9) => x match {case 1 => "Y, ";case _ => "N, "}
+        case (Some(x),i) => s"$x,"
+        case (x: String,i) => x + ","
       }
     }
     {

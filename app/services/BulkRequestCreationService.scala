@@ -67,8 +67,6 @@ trait BulkRequestCreationService extends BulkEntityProcessor[BulkCalculationRequ
 
   private def constructCalculationRequestLine(line: String): CalculationRequestLine = {
 
-    println("*****" + line)
-
     val lineArray = line.split(",", -1)
 
     CalculationRequestLine(lineArray(SCON), lineArray(NINO), lineArray(FORENAME), lineArray(SURNAME),
