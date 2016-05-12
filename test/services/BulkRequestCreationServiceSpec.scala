@@ -54,7 +54,7 @@ class BulkRequestCreationServiceSpec extends PlaySpec with ScalaFutures with Moc
         case "3" => (inputLine1 ::: inputLineWithoutHeader).iterator
         case "4" => inputLine3.iterator
         case "5" => inputLine4.iterator
-        case "6" => println("***** " + inputLine6);inputLine6.iterator
+        case "6" => inputLine6.iterator
       }
     }
 
