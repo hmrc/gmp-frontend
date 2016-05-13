@@ -139,4 +139,10 @@ class CsvLineValidatorSpec extends FlatSpec with Matchers with OneAppPerSuite {
     errors.get should contain(BulkRequestCsvColumn.SURNAME -> Messages("gmp.error.name.invalid", Messages("gmp.lowercase.lastname")))
   }
 
+  it should "not report a missing member reference" in {
+    val errors = CsvLineValidator.validateLine(CsvLine.copy(memberReference = Some("")).toString)
+
+    errors shouldBe empty
+  }
+
 }
