@@ -317,7 +317,6 @@ class DateOfLeavingControllerSpec extends PlaySpec with OneServerPerSuite with M
           val validReason = Json.toJson(Leaving(baseValidDate.copy(day = None, month = None, year = None), Some(Leaving.YES_BEFORE)))
           withAuthorisedUser { request =>
             val result = TestDateOfLeavingController.post()(request.withJsonBody(validReason))
-            println(contentAsString(result))
             status(result) must equal(SEE_OTHER)
 
             redirectLocation(result).get must include("/equalise")
