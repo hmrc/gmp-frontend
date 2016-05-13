@@ -19,12 +19,13 @@ package validation
 import helpers.RandomNino
 import models.CalculationRequestLine
 import org.scalatest.{Entry, Matchers, FlatSpec}
+import org.scalatestplus.play.OneAppPerSuite
 import play.api.i18n.Messages
 
 /**
   * Created by stevenhobbs on 12/05/2016.
   */
-class CsvLineValidatorSpec extends FlatSpec with Matchers {
+class CsvLineValidatorSpec extends FlatSpec with Matchers with OneAppPerSuite {
 
    object CsvLine extends CalculationRequestLine(
     "S1301234T",            // SCON
