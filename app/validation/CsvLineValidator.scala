@@ -21,7 +21,8 @@ import play.api.i18n.Messages
 object CsvLineValidator {
 
   def validateLine(line: String) = line.split(",").zipWithIndex.map {
-      case (value, 0) if value == "" => (0, Some(Messages("gmp.error.mandatory", Messages("gmp.scon"))))
+      case (value, 0) => (0, validateScon(value))
+      case (value, 1) => (1, validateNino(value))
       case (value, key) => (key, None)
     }.toMap.filter {
       _._2.isDefined
@@ -31,4 +32,20 @@ object CsvLineValidator {
       case map if map.nonEmpty => Some(map)
       case _ => None
     }
+
+  private def validateScon(scon: String): Option[String] = {
+    scon match {
+      case "" => Some(Messages("gmp.error.mandatory", Messages("gmp.scon")))
+      case x if !SconValidate.isValid(x) => Some(Messages("gmp.error.scon.invalid"))
+      case _ => None
+    }
+  }
+
+  private def validateNino(nino: String) = {
+    nino match {
+      case "" => Some(Messages("gmp.error.mandatory", Messages("gmp.nino")))
+      case x if !NinoValidate.isValid(x) => Some(Messages("gmp.error.nino.invalid"))
+      case _ => None
+    }
+  }
 }

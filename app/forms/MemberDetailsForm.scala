@@ -21,6 +21,7 @@ import play.api.data.Form
 import play.api.data.Forms._
 import play.api.data.validation.{ValidationError, Invalid, Valid, Constraint}
 import play.api.i18n.Messages
+import validation.NinoValidate
 
 
 object MemberDetailsForm {
@@ -39,7 +40,7 @@ object MemberDetailsForm {
       else if (ninoText.toUpperCase().startsWith(TEMP_NINO)){
         Invalid(Seq(ValidationError(Messages("gmp.error.nino.temporary"))))
       }
-      else if (!Nino.isValid(ninoText.toUpperCase())){
+      else if (!NinoValidate.isValid(ninoText.toUpperCase())){
         Invalid(Seq(ValidationError(Messages("gmp.error.nino.invalid"))))
       }
       else if (!ninoText.takeRight(1).toUpperCase().matches(NINO_SUFFIX_REGEX)){

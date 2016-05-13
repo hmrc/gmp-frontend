@@ -55,4 +55,27 @@ class CsvLineValidatorSpec extends FlatSpec with Matchers with OneAppPerSuite {
     errors.get should contain(0 -> Messages("gmp.error.mandatory", Messages("gmp.scon")))
   }
 
+  it should "report an invalid SCON" in {
+
+    val errors = CsvLineValidator.validateLine(CsvLine.copy(scon = "S24300 12").toString)
+
+    errors shouldBe defined
+    errors.get should contain(0 -> Messages("gmp.error.scon.invalid"))
+  }
+
+  it should "report a missing NINO" in {
+
+    val errors = CsvLineValidator.validateLine(CsvLine.copy(nino = "").toString)
+
+    errors shouldBe defined
+    errors.get should contain(1 -> Messages("gmp.error.mandatory", Messages("gmp.nino")))
+  }
+
+  it should "report an invalid NINO" in {
+    val errors = CsvLineValidator.validateLine(CsvLine.copy(nino = "C E0 00 00 -A").toString)
+
+    errors shouldBe defined
+    errors.get should contain(1 -> Messages("gmp.error.nino.invalid"))
+  }
+
 }

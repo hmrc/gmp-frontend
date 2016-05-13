@@ -19,7 +19,7 @@ package models
 import org.joda.time.LocalDate
 import play.api.libs.json.Json
 
-case class CalculationRequestLine(scon: String,
+case class CalculationRequestLine (scon: String,
                                   nino: String,
                                   firstForename: String,
                                   surname: String,
