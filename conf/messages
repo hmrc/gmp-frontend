@@ -336,3 +336,5 @@ gmp.queryhandling.changedetails.link = <a href='https://www.gov.uk/tell-hmrc-cha
 gmp.serviceunavailable.title = Service unavailable
 gmp.serviceunavailable.message = Sorry, we are experiencing technical problems. <br><p><a href="/guaranteed-minimum-pension">Try again</a> later or go to <a href="https://www.gov.uk">GOV.UK homepage</a>.
 
+#CSV
+gmp.upload_csv_column_headers = SCON,NINO,First name or initial,Last name,"Member Reference number",Calculation type. Enter a figure,"Date of leaving(DD/MM/YYYY)",GMP relevant date,Revaluation rate. Enter a figure,Opposite gender calculation
