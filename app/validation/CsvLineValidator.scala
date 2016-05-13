@@ -57,23 +57,37 @@ trait FieldValidator {
       case _ => None
     }
   }
+
+  def validateCalcType(calcType: String) = {
+    println(s"Calc type: $calcType")
+    calcType match {
+      case "" => Some(Messages("gmp.error.mandatory", Messages("gmp.calctype")))
+      case x if !(x matches """\d+""") => Some(Messages("gmp.error.calctype.invalid"))
+      case x if x.toInt > 4 => Some(Messages("gmp.error.calctype.oob"))
+      case _ => None
+    }
+  }
 }
 
 object FieldValidator extends FieldValidator
 
 object CsvLineValidator extends FieldValidator {
 
-  def validateLine(line: String) = line.split(",").zipWithIndex.map {
-    case (value, BulkRequestCsvColumn.SCON) => (BulkRequestCsvColumn.SCON, validateScon(value))
-    case (value, BulkRequestCsvColumn.NINO) => (BulkRequestCsvColumn.NINO, validateNino(value))
-    case (value, BulkRequestCsvColumn.FORENAME) => (BulkRequestCsvColumn.FORENAME, validateFirstName(value))
-    case (value, BulkRequestCsvColumn.SURNAME) => (BulkRequestCsvColumn.SURNAME, validateLastName(value))
-    case (value, key) => (key, None)
-  }.collect {
-    case v if v._2.isDefined => (v._1, v._2.get)
-  } match {
-    case map if map.nonEmpty => Some(map)
-    case _ => None
+  def validateLine(line: String) = {
+
+    line.split(",").zipWithIndex.map {
+      case (value, BulkRequestCsvColumn.SCON) => (BulkRequestCsvColumn.SCON, validateScon(value))
+      case (value, BulkRequestCsvColumn.NINO) => (BulkRequestCsvColumn.NINO, validateNino(value))
+      case (value, BulkRequestCsvColumn.FORENAME) => (BulkRequestCsvColumn.FORENAME, validateFirstName(value))
+      case (value, BulkRequestCsvColumn.SURNAME) => (BulkRequestCsvColumn.SURNAME, validateLastName(value))
+      case (value, BulkRequestCsvColumn.CALC_TYPE) => (BulkRequestCsvColumn.CALC_TYPE, validateCalcType(value))
+      case (value, key) => (key, None)
+    }.toMap.collect {
+      case v if v._2.isDefined => (v._1, v._2.get)
+    } match {
+      case map if map.nonEmpty => Some(map)
+      case _ => None
+    }
   }
 }
 

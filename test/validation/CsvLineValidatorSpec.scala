@@ -28,16 +28,16 @@ import services.BulkRequestCsvColumn
   */
 class CsvLineValidatorSpec extends FlatSpec with Matchers with OneAppPerSuite {
 
-   object CsvLine extends CalculationRequestLine(
-    "S1301234T",            // SCON
-    RandomNino.generate,    // NINO
-    "Joe",                  // Forename
-    "Bloggs",               // Surname
-    Some("Ref1"),                 // Member reference
-    Some(0),                      // Calc type - Date of leaving
-    Some("20/01/2012"),           // Termination date
-    Some("20/01/2014"),           // Revaluation date
-    Some(1),                      // Revaluation rate - between 0 and 3
+  object CsvLine extends CalculationRequestLine(
+    "S1301234T", // SCON
+    RandomNino.generate, // NINO
+    "Joe", // Forename
+    "Bloggs", // Surname
+    Some("Ref1"), // Member reference
+    Some(0), // Calc type - Date of leaving
+    Some("20/01/2012"), // Termination date
+    Some("20/01/2014"), // Revaluation date
+    Some(1), // Revaluation rate - between 0 and 3
     Some(1)) {
   }
 
@@ -140,9 +140,30 @@ class CsvLineValidatorSpec extends FlatSpec with Matchers with OneAppPerSuite {
   }
 
   it should "not report a missing member reference" in {
-    val errors = CsvLineValidator.validateLine(CsvLine.copy(memberReference = Some("")).toString)
+    val errors = CsvLineValidator.validateLine(CsvLine.copy(memberReference = None).toString)
 
     errors shouldBe empty
   }
 
+  it should "report a missing calculation type" in {
+    val errors = CsvLineValidator.validateLine(CsvLine.copy(calctype = None).toString)
+
+    errors shouldBe defined
+    errors.get should contain(BulkRequestCsvColumn.CALC_TYPE -> Messages("gmp.error.mandatory", Messages("gmp.calctype")))
+  }
+
+  it should "report calculation types that are not numbers" in {
+    val line = CsvLine.copy(calctype = Some(-99)).toString replace("-99", "invalid calc type")
+    val errors = CsvLineValidator.validateLine(line)
+
+    errors shouldBe defined
+    errors.get should contain(BulkRequestCsvColumn.CALC_TYPE -> Messages("gmp.error.calctype.invalid"))
+  }
+
+  it should "report a calculation type that is out of bounds" in {
+    val errors = CsvLineValidator.validateLine(CsvLine.copy(calctype = Some(5)).toString)
+
+    errors shouldBe defined
+    errors.get should contain(BulkRequestCsvColumn.CALC_TYPE -> Messages("gmp.error.calctype.oob"))
+  }
 }

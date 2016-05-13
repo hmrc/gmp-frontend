@@ -102,6 +102,7 @@ gmp.nino = National Insurance number
 gmp.nino.hint = For example, QQ123456D
 gmp.scon = Scheme Contracted Out Number
 gmp.scon.hint = For example, S2730011Z
+gmp.calctype = Calculation type
 gmp.submit = Submit
 gmp.continue = Continue
 gmp.date.example = Use numbers and enter the year in full.
@@ -202,6 +203,8 @@ gmp.error.name.invalid = Enter a {0} using only letters, hyphens, apostrophes an
 gmp.error.surname.invalid = Enter a last name with more than 1 character
 gmp.error.email.invalid = Enter a valid email address
 gmp.error.invalid = Enter a valid calculation name
+gmp.error.calctype.invalid = Enter a valid Calculation type
+gmp.error.calctype.oob = Calc type should be between 0 and 4
 
 gmp.error.scon.invalid = Enter a Scheme Contracted Out Number in the same format as the example given
 gmp.error.scon.nps_invalid = This SCON does not exist. Check and try again.
