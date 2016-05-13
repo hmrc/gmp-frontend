@@ -62,7 +62,8 @@ object MemberDetailsForm {
       "surname" -> text
         .verifying(Messages("gmp.error.mandatory", Messages("gmp.lowercase.lastname")), x => x.length > 0)
         .verifying(Messages("gmp.error.length", Messages("gmp.lastname"), MAX_LENGTH), x => x.length <= MAX_LENGTH)
-        .verifying(Messages("gmp.error.name.invalid", Messages("gmp.lowercase.lastname")), x => x.length == 0 || (x.length > 1 && x.matches(NAME_REGEX))))
+        .verifying(Messages("gmp.error.name.invalid", Messages("gmp.lowercase.lastname")), x => x.length == 0 || x.matches(NAME_REGEX))
+        .verifying(Messages("gmp.error.surname.invalid", Messages("gmp.lowercase.lastname")), x => x.length != 1))
     (MemberDetails.apply)(MemberDetails.unapply)
   )
 
