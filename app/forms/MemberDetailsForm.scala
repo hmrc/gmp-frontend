@@ -21,7 +21,7 @@ import play.api.data.Form
 import play.api.data.Forms._
 import play.api.data.validation.{ValidationError, Invalid, Valid, Constraint}
 import play.api.i18n.Messages
-import validation.NinoValidate
+import validation.{FieldValidator, NinoValidate}
 
 
 object MemberDetailsForm {
@@ -49,8 +49,8 @@ object MemberDetailsForm {
       else {
         Valid
       }
-  })
 
+  })
 
   val form = Form(
     mapping(

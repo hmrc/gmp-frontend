@@ -50,6 +50,12 @@ object NinoValidate extends Validator {
   override def isValid(nino: String) = nino != null && nino.matches(validNinoFormat)
 }
 
+object NameValidate extends Validator {
+  private val pattern = """[a-zA-Z\- ']+"""
+
+  override def isValid(name: String) = name != null && name.matches(pattern)
+}
+
 object DateValidate extends Validator {
 
   private val validFormat = "^(0?[1-9]|[12][0-9]|3[01])[/](0?[1-9]|1[012])[/](19|20)\\d\\d$"

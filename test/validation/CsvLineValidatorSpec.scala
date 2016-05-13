@@ -21,6 +21,7 @@ import models.CalculationRequestLine
 import org.scalatest.{Entry, Matchers, FlatSpec}
 import org.scalatestplus.play.OneAppPerSuite
 import play.api.i18n.Messages
+import services.BulkRequestCsvColumn
 
 /**
   * Created by stevenhobbs on 12/05/2016.
@@ -52,7 +53,7 @@ class CsvLineValidatorSpec extends FlatSpec with Matchers with OneAppPerSuite {
     val errors = CsvLineValidator.validateLine(CsvLine.copy(scon = "").toString)
 
     errors shouldBe defined
-    errors.get should contain(0 -> Messages("gmp.error.mandatory", Messages("gmp.scon")))
+    errors.get should contain(BulkRequestCsvColumn.SCON -> Messages("gmp.error.mandatory", Messages("gmp.scon")))
   }
 
   it should "report an invalid SCON" in {
@@ -60,7 +61,7 @@ class CsvLineValidatorSpec extends FlatSpec with Matchers with OneAppPerSuite {
     val errors = CsvLineValidator.validateLine(CsvLine.copy(scon = "S24300 12").toString)
 
     errors shouldBe defined
-    errors.get should contain(0 -> Messages("gmp.error.scon.invalid"))
+    errors.get should contain(BulkRequestCsvColumn.SCON -> Messages("gmp.error.scon.invalid"))
   }
 
   it should "report a missing NINO" in {
@@ -68,14 +69,74 @@ class CsvLineValidatorSpec extends FlatSpec with Matchers with OneAppPerSuite {
     val errors = CsvLineValidator.validateLine(CsvLine.copy(nino = "").toString)
 
     errors shouldBe defined
-    errors.get should contain(1 -> Messages("gmp.error.mandatory", Messages("gmp.nino")))
+    errors.get should contain(BulkRequestCsvColumn.NINO -> Messages("gmp.error.mandatory", Messages("gmp.nino")))
   }
 
   it should "report an invalid NINO" in {
     val errors = CsvLineValidator.validateLine(CsvLine.copy(nino = "C E0 00 00 -A").toString)
 
     errors shouldBe defined
-    errors.get should contain(1 -> Messages("gmp.error.nino.invalid"))
+    errors.get should contain(BulkRequestCsvColumn.NINO -> Messages("gmp.error.nino.invalid"))
+  }
+
+  it should "report a missing first name" in {
+    val errors = CsvLineValidator.validateLine(CsvLine.copy(firstForename = "").toString)
+
+    errors shouldBe defined
+    errors.get should contain(BulkRequestCsvColumn.FORENAME -> Messages("gmp.error.firstnameorinitial"))
+  }
+
+  it should "report a first name that is longer than 98 characters" in {
+    val errors = CsvLineValidator.validateLine(CsvLine.copy(firstForename = "A" * 99).toString)
+
+    errors shouldBe defined
+    errors.get should contain(BulkRequestCsvColumn.FORENAME -> Messages("gmp.error.firstname.toolong"))
+  }
+
+  it should "not report a first name that contains valid characters" in {
+    val errors = CsvLineValidator.validateLine(CsvLine.copy(firstForename = "This should be a 'valid-name'").toString)
+
+    errors shouldBe empty
+  }
+
+  it should "report a first name that contains invalid characters" in {
+    val errors = CsvLineValidator.validateLine(CsvLine.copy(firstForename = "Joe Bloggs 123%^&{}").toString)
+
+    errors shouldBe defined
+    errors.get should contain(BulkRequestCsvColumn.FORENAME -> Messages("gmp.error.name.invalid", Messages("gmp.lowercase.firstname")))
+  }
+
+  it should "report a missing last name" in {
+    val errors = CsvLineValidator.validateLine(CsvLine.copy(surname = "").toString)
+
+    errors shouldBe defined
+    errors.get should contain(BulkRequestCsvColumn.SURNAME -> Messages("gmp.error.mandatory", Messages("gmp.lowercase.lastname")))
+  }
+
+  it should "report a last name that is too long" in {
+    val errors = CsvLineValidator.validateLine(CsvLine.copy(surname = "A" * 99).toString)
+
+    errors shouldBe defined
+    errors.get should contain(BulkRequestCsvColumn.SURNAME -> Messages("gmp.error.lastname.toolong"))
+  }
+
+  it should "report a last name that only has one character" in {
+    val errors = CsvLineValidator.validateLine(CsvLine.copy(surname = "A").toString)
+
+    errors shouldBe defined
+    errors.get should contain(BulkRequestCsvColumn.SURNAME -> Messages("gmp.error.surname.invalid"))
+  }
+
+  it should "not report a last name that contains valid characters" in {
+    val errors = CsvLineValidator.validateLine(CsvLine.copy(surname = "Jerry 'one shot' McJerry-Face").toString)
+
+    errors shouldBe empty
+  }
+
+  it should "report a last name that contains invalid characters" in {
+    val errors = CsvLineValidator.validateLine(CsvLine.copy(surname = "Jerry Bloggs $$%34839 4").toString)
+
+    errors.get should contain(BulkRequestCsvColumn.SURNAME -> Messages("gmp.error.name.invalid", Messages("gmp.lowercase.lastname")))
   }
 
 }
