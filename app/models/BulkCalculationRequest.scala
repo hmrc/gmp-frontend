@@ -29,7 +29,11 @@ case class CalculationRequestLine(scon: String,
                                   revaluationDate: Option[String] = None,
                                   revaluationRate: Option[Int] = None,
                                   dualCalc: Option[Int] = None
-                                  )
+                                  ) {
+  override def toString = {
+    s"$scon,$nino,$firstForename,$surname,${memberReference.get},${calctype.get},${terminationDate.get},${revaluationDate.get},${revaluationRate.get},${dualCalc.get}"
+  }
+}
 
 object CalculationRequestLine {
   implicit val formats = Json.format[CalculationRequestLine]
