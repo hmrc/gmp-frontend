@@ -43,6 +43,7 @@ class GmpConnectorSpec extends PlaySpec with OneServerPerSuite with MockitoSugar
   val email = "Bill@Gill.com"
   val reference = "Smith's Reference"
   val groupId = "S1401234A"
+  val link = "some-link"
   val psaId = "B1234567"
   val pspId = "11111111"
   val nino = RandomNino.generate
@@ -74,7 +75,7 @@ class GmpConnectorSpec extends PlaySpec with OneServerPerSuite with MockitoSugar
     "performing a single calculation" must {
 
       "return a calculation response" in {
-        implicit val user = AuthContext(authority = Authority("1234", Accounts(psa = Some(PsaAccount("link", PsaId(psaId)))), None, None, CredentialStrength.None, ConfidenceLevel.L50))
+        implicit val user = AuthContext(authority = Authority("1234", Accounts(psa = Some(PsaAccount(link, PsaId(psaId)))), None, None, CredentialStrength.None, ConfidenceLevel.L50))
 
         val calcResponseJson = Json.parse(
           s"""
@@ -110,7 +111,7 @@ class GmpConnectorSpec extends PlaySpec with OneServerPerSuite with MockitoSugar
       }
 
       "return a calculation response when practitioner" in {
-        implicit val user = AuthContext(authority = Authority("1234", Accounts(psp = Some(PspAccount("link", PspId(pspId)))), None, None, CredentialStrength.None, ConfidenceLevel.L50))
+        implicit val user = AuthContext(authority = Authority("1234", Accounts(psp = Some(PspAccount(link, PspId(pspId)))), None, None, CredentialStrength.None, ConfidenceLevel.L50))
 
         val calcResponseJson = Json.parse(
           """
@@ -146,7 +147,7 @@ class GmpConnectorSpec extends PlaySpec with OneServerPerSuite with MockitoSugar
       }
 
       "return a calculation response when start date is null" in {
-        implicit val user = AuthContext(authority = Authority("1234", Accounts(psa = Some(PsaAccount("link", PsaId(psaId)))), None, None, CredentialStrength.None, ConfidenceLevel.L50))
+        implicit val user = AuthContext(authority = Authority("1234", Accounts(psa = Some(PsaAccount(link, PsaId(psaId)))), None, None, CredentialStrength.None, ConfidenceLevel.L50))
 
         val calcResponseJson = Json.parse(
           s"""
@@ -182,7 +183,7 @@ class GmpConnectorSpec extends PlaySpec with OneServerPerSuite with MockitoSugar
       }
 
       "return an error when scon incorrect" in {
-        implicit val user = AuthContext(authority = Authority("1234", Accounts(psa = Some(PsaAccount("link", PsaId(psaId)))), None, None, CredentialStrength.None, ConfidenceLevel.L50))
+        implicit val user = AuthContext(authority = Authority("1234", Accounts(psa = Some(PsaAccount(link, PsaId(psaId)))), None, None, CredentialStrength.None, ConfidenceLevel.L50))
 
         val calcRequestBody =
           s"""{
@@ -218,7 +219,7 @@ class GmpConnectorSpec extends PlaySpec with OneServerPerSuite with MockitoSugar
 
     "performing scon validation" must {
       "return a validateScon response" in {
-        implicit val user = AuthContext(authority = Authority("1234", Accounts(psa = Some(PsaAccount("link", PsaId(psaId)))), None, None, CredentialStrength.None, ConfidenceLevel.L50))
+        implicit val user = AuthContext(authority = Authority("1234", Accounts(psa = Some(PsaAccount(link, PsaId(psaId)))), None, None, CredentialStrength.None, ConfidenceLevel.L50))
 
         val validateSconResponseJson = Json.parse(
           """{
@@ -247,7 +248,7 @@ class GmpConnectorSpec extends PlaySpec with OneServerPerSuite with MockitoSugar
 
     "performing scon validation on practitioner" must {
       "return a validateScon response" in {
-        implicit val user = AuthContext(authority = Authority("1234", Accounts(psp = Some(PspAccount("link", PspId(pspId)))), None, None, CredentialStrength.None, ConfidenceLevel.L50))
+        implicit val user = AuthContext(authority = Authority("1234", Accounts(psp = Some(PspAccount(link, PspId(pspId)))), None, None, CredentialStrength.None, ConfidenceLevel.L50))
 
         val validateSconResponseJson = Json.parse(
           """{
@@ -276,7 +277,7 @@ class GmpConnectorSpec extends PlaySpec with OneServerPerSuite with MockitoSugar
 
     "DualCalc" must {
       "return dualCalc indicated in request" in {
-        implicit val user = AuthContext(authority = Authority("1234", Accounts(psa = Some(PsaAccount("link", PsaId(psaId)))), None, None, CredentialStrength.None, ConfidenceLevel.L50))
+        implicit val user = AuthContext(authority = Authority("1234", Accounts(psa = Some(PsaAccount(link, PsaId(psaId)))), None, None, CredentialStrength.None, ConfidenceLevel.L50))
 
         val calcResponseJson = Json.parse(
           s"""

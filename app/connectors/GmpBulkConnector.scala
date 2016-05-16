@@ -37,12 +37,12 @@ trait GmpBulkConnector extends ServicesConfig {
   def getUser(user: AuthContext): String = {
     user.principal.accounts.psa.map(_.link).getOrElse(
       user.principal.accounts.psp.map(_.link).getOrElse(
-        throw new RuntimeException("User Authorisation failed"))).substring(4)
+        throw new RuntimeException("User Authorisation failed"))).substring(5)
   }
 
   def sendBulkRequest(bcr: BulkCalculationRequest)(implicit user: AuthContext, headerCarrier: HeaderCarrier): Future[HttpResponse] = {
 
-    val baseURI = s"gmp${getUser(user)}/gmp/bulk-data"
+    val baseURI = s"gmp/${getUser(user)}/gmp/bulk-data"
     val bulkUri = s"$serviceURL/$baseURI/"
     val result = httpPost.POST[BulkCalculationRequest, HttpResponse](bulkUri,bcr.copy(timestamp = LocalDate.now(),userId = getUser(user)))
 
@@ -57,7 +57,7 @@ trait GmpBulkConnector extends ServicesConfig {
 
   def getPreviousBulkRequests()(implicit user: AuthContext, headerCarrier: HeaderCarrier): Future[List[BulkPreviousRequest]] = {
 
-    val baseURI = s"gmp${getUser(user)}/gmp/retrieve-previous-requests"
+    val baseURI = s"gmp/${getUser(user)}/gmp/retrieve-previous-requests"
     val bulkUri = s"$serviceURL/$baseURI"
     val result = httpGet.GET[List[BulkPreviousRequest]](bulkUri)
 
@@ -73,7 +73,7 @@ trait GmpBulkConnector extends ServicesConfig {
 
   def getBulkResultsSummary(uploadReference: String)(implicit user: AuthContext, headerCarrier: HeaderCarrier): Future[BulkResultsSummary] = {
 
-    val baseURI = s"gmp${getUser(user)}/gmp/get-results-summary"
+    val baseURI = s"gmp/${getUser(user)}/gmp/get-results-summary"
     val bulkUri = s"$serviceURL/$baseURI/$uploadReference"
 
     val result = httpGet.GET[BulkResultsSummary](bulkUri)
@@ -87,7 +87,7 @@ trait GmpBulkConnector extends ServicesConfig {
   }
 
   def getResultsAsCsv(uploadReference: String, filter: String)(implicit user: AuthContext, headerCarrier: HeaderCarrier): Future[String] = {
-    val baseURI = s"gmp${getUser(user)}/gmp/get-results-as-csv"
+    val baseURI = s"gmp/${getUser(user)}/gmp/get-results-as-csv"
     val bulkUri = s"$serviceURL/$baseURI/$uploadReference/$filter"
 
     val result = httpGet.GET(bulkUri)
@@ -104,7 +104,7 @@ trait GmpBulkConnector extends ServicesConfig {
   }
 
   def getContributionsAndEarningsAsCsv(uploadReference: String)(implicit user: AuthContext, headerCarrier: HeaderCarrier): Future[String] = {
-    val baseURI = s"gmp${getUser(user)}/gmp/get-contributions-as-csv"
+    val baseURI = s"gmp/${getUser(user)}/gmp/get-contributions-as-csv"
     val bulkUri = s"$serviceURL/$baseURI/$uploadReference"
 
     val result = httpGet.GET(bulkUri)
