@@ -24,8 +24,6 @@ import uk.gov.hmrc.play.config.ServicesConfig
 import uk.gov.hmrc.stream.BulkEntityProcessor
 import validation.CsvLineValidator
 
-import scala.collection.immutable.Map
-
 object BulkRequestCsvColumn {
   val SCON = 0
   val NINO = 1
@@ -68,7 +66,9 @@ trait BulkRequestCreationService extends BulkEntityProcessor[BulkCalculationRequ
   }
 
   private def generateBulkCalculationRequestList(data: Iterator[Char]): List[BulkCalculationRequestLine] = {
-    data.mkString.split(LINE_FEED.toByte.toChar).drop(1).map {constructBulkCalculationRequestLine _}.toList
+    data.mkString.split(LINE_FEED.toByte.toChar).drop(1).map {
+      constructBulkCalculationRequestLine
+    }.toList
   }
 
   private def constructCalculationRequestLine(line: String): CalculationRequestLine = {
@@ -85,23 +85,23 @@ trait BulkRequestCreationService extends BulkEntityProcessor[BulkCalculationRequ
       emptyStringsToNone(lineArray(BulkRequestCsvColumn.TERMINATION_DATE), { e: String => Some(LocalDate.parse(e, inputDateFormatter).toString(DATE_FORMAT)) }),
       emptyStringsToNone(lineArray(BulkRequestCsvColumn.REVAL_DATE), { e: String => Some(LocalDate.parse(e, inputDateFormatter).toString(DATE_FORMAT)) }),
       emptyStringsToNone(lineArray(BulkRequestCsvColumn.REVAL_RATE), { e: String => Some(e.toInt) }),
-      emptyStringsToNone(lineArray(BulkRequestCsvColumn.DUAL_CALC), { e: String => Some(e match{
-        case "Y" => 1
-        case _ => 0
-      })})
+      lineArray(BulkRequestCsvColumn.DUAL_CALC) match {
+        case "Y" => Some(1)
+        case _ => None
+      }
     )
   }
 
   private def constructBulkCalculationRequestLine(line: String): BulkCalculationRequestLine = {
 
-      val validationErrors = CsvLineValidator.validateLine(line) match {
-        case Some(m) => Some(m.collect {
-          case (k, v) => (k.toString, v)
-        })
-        case _ => None
-      }
+    val validationErrors = CsvLineValidator.validateLine(line) match {
+      case Some(m) => Some(m.collect {
+        case (k, v) => (k.toString, v)
+      })
+      case _ => None
+    }
 
-      BulkCalculationRequestLine(1, Some(constructCalculationRequestLine(line)), None, validationErrors)
+    BulkCalculationRequestLine(1, Some(constructCalculationRequestLine(line)), None, validationErrors)
   }
 
   private def emptyStringsToNone[T](entry: String, s: (String => Option[T])): Option[T] = {
