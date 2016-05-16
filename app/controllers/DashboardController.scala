@@ -19,8 +19,9 @@ package controllers
 import config.GmpFrontendAuthConnector
 import connectors.GmpBulkConnector
 import controllers.auth.GmpRegime
+import play.api.Logger
 
-object DashboardController extends DashboardController{
+object DashboardController extends DashboardController {
   val authConnector = GmpFrontendAuthConnector
   val gmpBulkConnector = GmpBulkConnector
 }
@@ -35,6 +36,11 @@ trait DashboardController extends GmpPageFlow {
         gmpBulkConnector.getPreviousBulkRequests().map {
           bulkPreviousRequests => {
             Ok(views.html.dashboard(bulkPreviousRequests.sorted))
+          }
+        }.recover {
+          case f => {
+            Logger.error(s"[DashboardController][getPreviousBulkRequests returned {error : ${f.getMessage}")
+            Ok(views.html.dashboard(Nil))
           }
         }
       }
