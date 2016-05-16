@@ -149,7 +149,7 @@ class CsvLineValidatorSpec extends FlatSpec with Matchers with OneAppPerSuite {
     val errors = CsvLineValidator.validateLine(CsvLine.copy(calctype = None).toString)
 
     errors shouldBe defined
-    errors.get should contain(BulkRequestCsvColumn.CALC_TYPE -> Messages("gmp.error.mandatory", Messages("gmp.calctype")))
+    errors.get should contain(BulkRequestCsvColumn.CALC_TYPE -> Messages("gmp.error.calctype.invalid"))
   }
 
   it should "report calculation types that are not numbers" in {
@@ -164,6 +164,67 @@ class CsvLineValidatorSpec extends FlatSpec with Matchers with OneAppPerSuite {
     val errors = CsvLineValidator.validateLine(CsvLine.copy(calctype = Some(5)).toString)
 
     errors shouldBe defined
-    errors.get should contain(BulkRequestCsvColumn.CALC_TYPE -> Messages("gmp.error.calctype.oob"))
+    errors.get should contain(BulkRequestCsvColumn.CALC_TYPE -> Messages("gmp.error.calctype.invalid"))
+  }
+
+  it should "not report a missing termination date" in {
+    val errors = CsvLineValidator.validateLine(CsvLine.copy(terminationDate = None).toString)
+
+    errors shouldBe empty
+  }
+
+  it should "report a termination date that is not in the correct format" in {
+    val errors = CsvLineValidator.validateLine(CsvLine.copy(terminationDate = Some("07 07 2016")).toString)
+
+    errors shouldBe defined
+    errors.get should contain(BulkRequestCsvColumn.TERMINATION_DATE -> Messages("gmp.error.csv.date.invalid"))
+  }
+
+  it should "not report a missing GMP relevant date" in {
+    val errors = CsvLineValidator.validateLine(CsvLine.copy(revaluationDate = None).toString)
+
+    errors shouldBe empty
+  }
+
+  it should "report an invalid GMP relevant date" in {
+    val errors = CsvLineValidator.validateLine(CsvLine.copy(revaluationDate = Some("09384'3094'3249")).toString)
+
+    errors shouldBe defined
+    errors.get should contain(BulkRequestCsvColumn.REVAL_DATE -> Messages("gmp.error.csv.date.invalid"))
+  }
+
+  it should "report a missing revaluation rate" in {
+    val errors = CsvLineValidator.validateLine(CsvLine.copy(revaluationRate = None).toString)
+
+    errors shouldBe defined
+    errors.get should contain(BulkRequestCsvColumn.REVAL_RATE -> Messages("gmp.error.revaluation_rate.invalid"))
+  }
+
+  it should "report a revaluation rate that is not a number" in {
+    val line = CsvLine.copy(revaluationRate = Some(-99)).toString replace("-99", "87erewrkjkdf£$389")
+    val errors = CsvLineValidator.validateLine(line)
+
+    errors shouldBe defined
+    errors.get should contain(BulkRequestCsvColumn.REVAL_RATE -> Messages("gmp.error.revaluation_rate.invalid"))
+  }
+
+  it should "report a revaluation rate that is out of bounds" in {
+    val errors = CsvLineValidator.validateLine(CsvLine.copy(revaluationRate = Some(10)).toString)
+
+    errors shouldBe defined
+    errors.get should contain(BulkRequestCsvColumn.REVAL_RATE -> Messages("gmp.error.revaluation_rate.invalid"))
+  }
+
+  it should "not report a missing dual calculation value" in {
+    val errors = CsvLineValidator.validateLine(CsvLine.copy(dualCalc = None).toString)
+
+    errors shouldBe empty
+  }
+
+  it should "report an invalid dual calculation value" in {
+    val errors = CsvLineValidator.validateLine(CsvLine.copy(dualCalc = Some(-999)).toString replace("-999", "ifdugh"))
+
+    errors shouldBe defined
+    errors.get should contain(BulkRequestCsvColumn.DUAL_CALC -> Messages("gmp.error.csv.dual_calc.invalid"))
   }
 }
