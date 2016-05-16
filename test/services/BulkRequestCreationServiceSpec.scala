@@ -30,8 +30,8 @@ class BulkRequestCreationServiceSpec extends PlaySpec with ScalaFutures with Moc
   val nino1 = RandomNino.generate
   val nino2 = RandomNino.generate
 
-  val calcLine1 = BulkCalculationRequestLine(1, Some(CalculationRequestLine("S1301234T", nino1, "Isambard", "Brunell", Some("IB"), Some(1), Some("2010-02-02"), Some("2010-01-01"), Some(1), Some(0))),None,None)
-  val calcLine2 = BulkCalculationRequestLine(1, Some(CalculationRequestLine("S1301234T", nino2, "George", "Stephenson", Some("GS"), Some(1), Some("2010-02-02"), Some("2010-01-01"), Some(1), Some(0))),None,None)
+  val calcLine1 = BulkCalculationRequestLine(1, Some(CalculationRequestLine("S1301234T", nino1, "Isambard", "Brunell", Some("IB"), Some(1), Some("2010-02-02"), Some("2010-01-01"), Some(1), None)),None,None)
+  val calcLine2 = BulkCalculationRequestLine(1, Some(CalculationRequestLine("S1301234T", nino2, "George", "Stephenson", Some("GS"), Some(1), Some("2010-02-02"), Some("2010-01-01"), Some(1), None)),None,None)
   val calcLine3 = BulkCalculationRequestLine(1, Some(CalculationRequestLine("S1301234T", nino2, "George", "Stephenson", Some("GS"), Some(1), None, None, Some(1), Some(0))),None,None)
   val calcLine4 = BulkCalculationRequestLine(1, Some(CalculationRequestLine("S1301234T", nino2, "George", "Stephenson", None, None, None, None, None, None)),None,None)
   val calcLine6 = BulkCalculationRequestLine(1, Some(CalculationRequestLine("S1301234T", nino1, "Isambard", "Brunell", Some("IB"), Some(1), Some("2010-02-02"), Some("2010-01-01"), Some(1), Some(1))),None,None)
@@ -137,7 +137,7 @@ class BulkRequestCreationServiceSpec extends PlaySpec with ScalaFutures with Moc
       item match {
         case (None,i) => ","
         case (Some(dateRegEx(s)),i) => new LocalDate(s).toString("dd/MM/yyyy") + ","
-        case (Some(x:Int),9) => x match {case 1 => "Y, ";case _ => "N, "}
+        case (Some(x:Int), BulkRequestCsvColumn.DUAL_CALC) => x match {case 1 => "Y, ";case _ => ", "}
         case (Some(x),i) => s"$x,"
         case (x: String,i) => x + ","
       }

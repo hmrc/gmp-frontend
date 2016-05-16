@@ -22,21 +22,27 @@ import org.joda.time.format.DateTimeFormat
 import play.api.Logger
 import uk.gov.hmrc.play.config.ServicesConfig
 import uk.gov.hmrc.stream.BulkEntityProcessor
+import validation.CsvLineValidator
+
+import scala.collection.immutable.Map
+
+object BulkRequestCsvColumn {
+  val SCON = 0
+  val NINO = 1
+  val FORENAME = 2
+  val SURNAME = 3
+  val MEMBER_REF = 4
+  val CALC_TYPE = 5
+  val TERMINATION_DATE = 6
+  val REVAL_DATE = 7
+  val REVAL_RATE = 8
+  val DUAL_CALC = 9
+}
 
 trait BulkRequestCreationService extends BulkEntityProcessor[BulkCalculationRequestLine] with ServicesConfig {
 
   val LINE_FEED: Int = 10
 
-  private val SCON: Int = 0
-  private val NINO: Int = 1
-  private val FORENAME: Int = 2
-  private val SURNAME: Int = 3
-  private val MEMBER_REF: Int = 4
-  private val CALC_TYPE: Int = 5
-  private val TERMINATION_DATE: Int = 6
-  private val REVAL_DATE: Int = 7
-  private val REVAL_RATE: Int = 8
-  private val DUAL_CALC: Int = 9
 
   private val DATE_FORMAT: String = "yyyy-MM-dd"
 
@@ -69,13 +75,17 @@ trait BulkRequestCreationService extends BulkEntityProcessor[BulkCalculationRequ
 
     val lineArray = line.split(",", -1)
 
-    CalculationRequestLine(lineArray(SCON), lineArray(NINO), lineArray(FORENAME), lineArray(SURNAME),
-      emptyStringsToNone(lineArray(MEMBER_REF), { e: String => Some(e) }),
-      emptyStringsToNone(lineArray(CALC_TYPE), { e: String => Some(e.toInt) }),
-      emptyStringsToNone(lineArray(TERMINATION_DATE), { e: String => Some(LocalDate.parse(e, inputDateFormatter).toString(DATE_FORMAT)) }),
-      emptyStringsToNone(lineArray(REVAL_DATE), { e: String => Some(LocalDate.parse(e, inputDateFormatter).toString(DATE_FORMAT)) }),
-      emptyStringsToNone(lineArray(REVAL_RATE), { e: String => Some(e.toInt) }),
-      emptyStringsToNone(lineArray(DUAL_CALC), { e: String => Some(e match{
+    CalculationRequestLine(
+      lineArray(BulkRequestCsvColumn.SCON),
+      lineArray(BulkRequestCsvColumn.NINO),
+      lineArray(BulkRequestCsvColumn.FORENAME),
+      lineArray(BulkRequestCsvColumn.SURNAME),
+      emptyStringsToNone(lineArray(BulkRequestCsvColumn.MEMBER_REF), { e: String => Some(e) }),
+      emptyStringsToNone(lineArray(BulkRequestCsvColumn.CALC_TYPE), { e: String => Some(e.toInt) }),
+      emptyStringsToNone(lineArray(BulkRequestCsvColumn.TERMINATION_DATE), { e: String => Some(LocalDate.parse(e, inputDateFormatter).toString(DATE_FORMAT)) }),
+      emptyStringsToNone(lineArray(BulkRequestCsvColumn.REVAL_DATE), { e: String => Some(LocalDate.parse(e, inputDateFormatter).toString(DATE_FORMAT)) }),
+      emptyStringsToNone(lineArray(BulkRequestCsvColumn.REVAL_RATE), { e: String => Some(e.toInt) }),
+      emptyStringsToNone(lineArray(BulkRequestCsvColumn.DUAL_CALC), { e: String => Some(e match{
         case "Y" => 1
         case _ => 0
       })})
@@ -83,7 +93,15 @@ trait BulkRequestCreationService extends BulkEntityProcessor[BulkCalculationRequ
   }
 
   private def constructBulkCalculationRequestLine(line: String): BulkCalculationRequestLine = {
-      BulkCalculationRequestLine(1, Some(constructCalculationRequestLine(line)),None,None)
+
+      val validationErrors = CsvLineValidator.validateLine(line) match {
+        case Some(m) => Some(m.collect {
+          case (k, v) => (k.toString, v)
+        })
+        case _ => None
+      }
+
+      BulkCalculationRequestLine(1, Some(constructCalculationRequestLine(line)), None, validationErrors)
   }
 
   private def emptyStringsToNone[T](entry: String, s: (String => Option[T])): Option[T] = {
