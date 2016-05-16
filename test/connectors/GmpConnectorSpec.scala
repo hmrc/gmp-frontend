@@ -77,10 +77,6 @@ class GmpConnectorSpec extends PlaySpec with OneServerPerSuite with MockitoSugar
       "return a calculation response" in {
         implicit val user = AuthContext(authority = Authority("1234", Accounts(psa = Some(PsaAccount(link, PsaId(psaId)))), None, None, CredentialStrength.None, ConfidenceLevel.L50))
 
-        val te = user.principal.accounts.psa.map(_.link).getOrElse("")
-
-        println("***** print ****** " + te)
-
         val calcResponseJson = Json.parse(
           s"""
              {"name":"Bill Smith",
