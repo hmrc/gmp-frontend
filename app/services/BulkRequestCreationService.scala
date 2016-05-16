@@ -22,6 +22,9 @@ import org.joda.time.format.DateTimeFormat
 import play.api.Logger
 import uk.gov.hmrc.play.config.ServicesConfig
 import uk.gov.hmrc.stream.BulkEntityProcessor
+import validation.CsvLineValidator
+
+import scala.collection.immutable.Map
 
 object BulkRequestCsvColumn {
   val SCON = 0
@@ -90,7 +93,15 @@ trait BulkRequestCreationService extends BulkEntityProcessor[BulkCalculationRequ
   }
 
   private def constructBulkCalculationRequestLine(line: String): BulkCalculationRequestLine = {
-      BulkCalculationRequestLine(1, Some(constructCalculationRequestLine(line)),None,None)
+
+      val validationErrors = CsvLineValidator.validateLine(line) match {
+        case Some(m) => Some(m.collect {
+          case (k, v) => (k.toString, v)
+        })
+        case _ => None
+      }
+
+      BulkCalculationRequestLine(1, Some(constructCalculationRequestLine(line)), None, validationErrors)
   }
 
   private def emptyStringsToNone[T](entry: String, s: (String => Option[T])): Option[T] = {
