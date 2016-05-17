@@ -20,11 +20,13 @@ import java.net.URLEncoder
 
 import config.WSHttp
 import controllers.routes
+import play.api.Logger
 import play.api.mvc.Request
 import uk.gov.hmrc.play.config.ServicesConfig
 import uk.gov.hmrc.play.frontend.filters.SessionCookieCryptoFilter
 import uk.gov.hmrc.play.http._
 import uk.gov.hmrc.play.partials.{HeaderCarrierForPartialsConverter, HtmlPartial}
+import scala.concurrent.ExecutionContext.Implicits.global
 
 import scala.concurrent.Future
 
@@ -32,9 +34,11 @@ trait UploadConfig extends ServicesConfig {
 
   def apply(implicit request: Request[_]): String = {
     lazy val url = s"${baseUrl("attachments")}/attachments-internal/uploader"
-    val onSuccess = routes.BulkReferenceController.get().absoluteURL()(request)
-    val onFailure = routes.FileUploadController.failure().absoluteURL()(request)
-    val callback = routes.FileUploadController.callback().absoluteURL()(request)
+    val onSuccess = s"${baseUrl("gmp-frontend")}${routes.BulkReferenceController.get()}"
+    val onFailure = s"${baseUrl("gmp-frontend")}${routes.FileUploadController.failure()}"
+    val callback = s"${baseUrl("gmp-frontend")}${routes.FileUploadController.callback()}"
+
+    Logger.debug(s"[UploadConfig][onSuccessUrl : $onSuccess]")
     s"$url?" +
       s"callbackUrl=${encode(callback)}" +
       s"&onSuccess=${encode(onSuccess)}" +
@@ -58,7 +62,13 @@ trait AttachmentsConnector extends HeaderCarrierForPartialsConverter{
 
   def getFileUploadPartial()(implicit request: Request[_]): Future[HtmlPartial] = {
 
-    http.GET[HtmlPartial](UploadConfig(request))
+    val partial = http.GET[HtmlPartial](UploadConfig(request))
+
+    partial onSuccess {
+      case response => Logger.debug(s"[AttachmentsConnector[[getFileUploadPartial : $response]")
+    }
+
+    partial
   }
 
 }
