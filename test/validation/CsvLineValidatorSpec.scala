@@ -207,11 +207,10 @@ class CsvLineValidatorSpec extends FlatSpec with Matchers with OneAppPerSuite {
     errors.get should contain(BulkRequestCsvColumn.REVAL_DATE -> Messages("gmp.error.csv.date.invalid"))
   }
 
-  it should "report a missing revaluation rate" in {
+  it should "not report a missing revaluation rate" in {
     val errors = CsvLineValidator.validateLine(CsvLine.copy(revaluationRate = None).toString)
 
-    errors shouldBe defined
-    errors.get should contain(BulkRequestCsvColumn.REVAL_RATE -> Messages("gmp.error.revaluation_rate.invalid"))
+    errors shouldBe empty
   }
 
   it should "report a revaluation rate that is not a number" in {
