@@ -20,6 +20,7 @@ import java.net.URLEncoder
 
 import config.WSHttp
 import controllers.routes
+import play.api.Logger
 import play.api.mvc.Request
 import uk.gov.hmrc.play.config.ServicesConfig
 import uk.gov.hmrc.play.frontend.filters.SessionCookieCryptoFilter
@@ -35,6 +36,8 @@ trait UploadConfig extends ServicesConfig {
     val onSuccess = s"${baseUrl("gmp-frontend")}${routes.BulkReferenceController.get()}"
     val onFailure = s"${baseUrl("gmp-frontend")}${routes.FileUploadController.failure()}"
     val callback = s"${baseUrl("gmp-frontend")}${routes.FileUploadController.callback()}"
+
+    Logger.debug(s"[UploadConfig][onSuccessUrl : $onSuccess]")
     s"$url?" +
       s"callbackUrl=${encode(callback)}" +
       s"&onSuccess=${encode(onSuccess)}" +
