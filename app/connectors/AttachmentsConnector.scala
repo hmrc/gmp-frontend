@@ -26,6 +26,7 @@ import uk.gov.hmrc.play.config.ServicesConfig
 import uk.gov.hmrc.play.frontend.filters.SessionCookieCryptoFilter
 import uk.gov.hmrc.play.http._
 import uk.gov.hmrc.play.partials.{HeaderCarrierForPartialsConverter, HtmlPartial}
+import scala.concurrent.ExecutionContext.Implicits.global
 
 import scala.concurrent.Future
 
@@ -61,7 +62,15 @@ trait AttachmentsConnector extends HeaderCarrierForPartialsConverter{
 
   def getFileUploadPartial()(implicit request: Request[_]): Future[HtmlPartial] = {
 
-    http.GET[HtmlPartial](UploadConfig(request))
+    val partial = http.GET[HtmlPartial](UploadConfig(request))
+
+    // $COVERAGE-OFF$
+    partial onSuccess {
+      case response => Logger.debug(s"[AttachmentsConnector[[getFileUploadPartial : $response]")
+    }
+    // $COVERAGE-ON$
+
+    partial
   }
 
 }
