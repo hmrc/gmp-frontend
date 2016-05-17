@@ -102,6 +102,7 @@ gmp.nino = National Insurance number
 gmp.nino.hint = For example, QQ123456D
 gmp.scon = Scheme Contracted Out Number
 gmp.scon.hint = For example, S2730011Z
+gmp.calctype = Calculation type
 gmp.submit = Submit
 gmp.continue = Continue
 gmp.date.example = Use numbers and enter the year in full.
@@ -177,6 +178,7 @@ gmp.bulk.wrong_user.signout_text = and login with right account.
 gmp.bulk.wrong_user.dashboard_text = Go to your <a id="bulk_wrong_user_dashboard" data-journey-click="gmp-bulk:click:bulk_wrong_user_dashboard" href="/guaranteed-minimum-pension/dashboard">Guaranteed Minimum Pension checker</a> main page.
 gmp.previous_calculations_text = You have 30 days from the upload date to view the results.
 gmp.no_previous_calculations_text = We keep the results of previous calculations for 30 days. You have none to view.
+gmp.revaluation_rate = Revaluation rate
 
 # errors
 gmp.error.revaluation_before_leaving = Enter a date on or after {0}
@@ -189,6 +191,8 @@ gmp.error.length = {0} is too long (>{1})
 gmp.error.mandatory = Enter a {0}
 gmp.error.mandatory.an = Enter an {0}
 gmp.error.firstnameorinitial = Enter a first name or initial
+gmp.error.firstname.toolong = Enter a first name that is fewer than 99 characters
+gmp.error.lastname.toolong = Enter a last name that is fewer than 99 characters
 gmp.error.month.invalid = Enter a month between 1 and 12
 gmp.error.reval_date.from = The calculation can only be revalued from 5 April 1978
 gmp.error.reval_date.to = The calculation can only be revalued up until 4 April 2046
@@ -197,9 +201,12 @@ gmp.error.date.nonnumber = Enter a date using numbers only
 gmp.error.reason.mandatory = Select an option
 gmp.generic.errors_heading= There is a problem with the form
 gmp.error.name.invalid = Enter a {0} using only letters, hyphens, apostrophes and spaces
-gmp.error.surname.invalid = Enter a last name with more than 1 character
+gmp.error.surname.invalid = Enter a last name with more than 1 letter
 gmp.error.email.invalid = Enter a valid email address
 gmp.error.invalid = Enter a valid calculation name
+gmp.error.calctype.invalid = Enter a calculation type between 0 and 4. See instructions file
+gmp.error.calctype.oob = Calc type should be between 0 and 4
+gmp.error.revaluation_rate.invalid = Enter a revaluation rate between 0 and 3. See instructions file
 
 gmp.error.scon.invalid = Enter a Scheme Contracted Out Number in the same format as the example given
 gmp.error.scon.nps_invalid = This SCON does not exist. Check and try again.
@@ -207,6 +214,8 @@ gmp.error.nino.invalid = The National Insurance number you have entered is not v
 gmp.error.nino.temporary = This is a temporary National Insurance number. You need a permanent one to calculate a GMP.
 gmp.error.reval_date.mandatory = Enter a revaluation date
 gmp.error.leaving_date.mandatory = Enter a leaving date
+gmp.error.csv.date.invalid = Enter a date in the same format as the example given in the instructions file
+gmp.error.csv.dual_calc.invalid = Enter ‘Y’ or ‘Yes’ if you want an opposite gender calculation
 
 gmp.error.member_previous_names = If we still can''t calculate a GMP, ask if the member has any previous names that may not have been updated with HM Revenue and Customs.
 gmp.error.contact_hmrc_shared_workspace = Contact HM Revenue and Customs through the GMP Service Queries database in the LIVE shared workspace e-room.

@@ -29,6 +29,7 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.SessionService
 import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
+import uk.gov.hmrc.play.http.Upstream5xxResponse
 
 import scala.concurrent.Future
 
@@ -97,6 +98,24 @@ class DashboardControllerSpec extends PlaySpec with OneServerPerSuite with Mocki
         val dashboard = new Dashboard(Nil)
         withAuthorisedUser { request =>
           val result = TestDashboardController.get.apply(request)
+          contentAsString(result) must include(Messages("gmp.previous_calculations"))
+        }
+      }
+
+      "load the dashboard if the bulk service throws an exception" in {
+
+        val brokenGmpBulkConnector = mock[GmpBulkConnector]
+
+        object BrokenDashboardController extends DashboardController {
+          val authConnector = mockAuthConnector
+          override val sessionService = mockSessionService
+          override val gmpBulkConnector = brokenGmpBulkConnector
+        }
+
+        when(brokenGmpBulkConnector.getPreviousBulkRequests()(Matchers.any(), Matchers.any())).thenReturn(Future.failed(new Upstream5xxResponse("failed",503,503)))
+        val dashboard = new Dashboard(Nil)
+        withAuthorisedUser { request =>
+          val result = BrokenDashboardController.get.apply(request)
           contentAsString(result) must include(Messages("gmp.previous_calculations"))
         }
       }

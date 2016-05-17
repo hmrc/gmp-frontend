@@ -19,7 +19,7 @@ package models
 import org.joda.time.LocalDate
 import play.api.libs.json.Json
 
-case class CalculationRequestLine(scon: String,
+case class CalculationRequestLine (scon: String,
                                   nino: String,
                                   firstForename: String,
                                   surname: String,
@@ -29,7 +29,16 @@ case class CalculationRequestLine(scon: String,
                                   revaluationDate: Option[String] = None,
                                   revaluationRate: Option[Int] = None,
                                   dualCalc: Option[Int] = None
-                                  )
+                                  ) {
+  override def toString = {
+    val dc = dualCalc match {
+      case Some(1) => "Y"
+      case _ => dualCalc.getOrElse("")
+    }
+
+    s"$scon,$nino,$firstForename,$surname,${memberReference.getOrElse("")},${calctype.getOrElse("")},${terminationDate.getOrElse("")},${revaluationDate.getOrElse("")},${revaluationRate.getOrElse("")},$dc"
+  }
+}
 
 object CalculationRequestLine {
   implicit val formats = Json.format[CalculationRequestLine]
