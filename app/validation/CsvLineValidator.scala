@@ -99,9 +99,7 @@ object CsvLineValidator extends FieldValidator {
 
   def validateLine(line: String) = {
 
-    val columns = line.split(",", -1) map {
-      _.trim
-    }
+    val columns = line.split(",", -1).map { _.trim }.toList
 
     columns.length match {
       case x if x != 10 => Some(Map(BulkRequestCsvColumn.LINE_ERROR -> Messages("gmp.error.parse_error")))

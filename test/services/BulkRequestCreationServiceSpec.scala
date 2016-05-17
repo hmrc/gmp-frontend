@@ -48,6 +48,8 @@ class BulkRequestCreationServiceSpec extends PlaySpec with ScalaFutures with Moc
 
   val inputLineWithoutHeader = lineListFromCalculationRequestLine(calcLine2)
 
+  println(s"** INPUT 1: ${inputLine1.mkString}")
+
   object TestBulkRequestCreationService extends BulkRequestCreationService {
 
     override def sourceData(resourceLocation: String): Iterator[Char] = {
@@ -147,7 +149,6 @@ class BulkRequestCreationServiceSpec extends PlaySpec with ScalaFutures with Moc
       val bulkRequest = TestBulkRequestCreationService.createBulkRequest(collection, "8", anotherBulkRequest.email, anotherBulkRequest.reference)
       bulkRequest.calculationRequests.head.validCalculationRequest.head.dualCalc must be (Some(1))
     }
-
   }
 
   def lineListFromCalculationRequestLine(line: BulkCalculationRequestLine): List[Char] = {
@@ -155,16 +156,20 @@ class BulkRequestCreationServiceSpec extends PlaySpec with ScalaFutures with Moc
 
     def process(item: Any) = {
       val dateRegEx = """([0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9])""".r
+
       item match {
-        case (None,i) => ","
-        case (Some(dateRegEx(s)),i) => new LocalDate(s).toString("dd/MM/yyyy") + ","
-        case (Some(x:Int), BulkRequestCsvColumn.DUAL_CALC) => x match {case 1 => "Y, ";case _ => ", "}
-        case (Some(x),i) => s"$x,"
-        case (x: String,i) => x + ","
+        case (None, i) => ""
+        case (Some(dateRegEx(s)), i) => new LocalDate(s).toString("dd/MM/yyyy")
+        case (Some(x: Int), BulkRequestCsvColumn.DUAL_CALC) => x match {
+          case 1 => "Y";
+          case _ => ""
+        }
+        case (Some(x), i) => s"$x"
+        case (x: String, i) => x
       }
     }
-    {
-      for (p <- l) yield process(p)
-    }.flatten :+ 10.toByte.toChar
+
+    { (l map process).mkString(",") + "\n" }.toCharArray.toList
+
   }
 }
