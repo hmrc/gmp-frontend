@@ -21,11 +21,7 @@
 @import play.i18n._
 @import config.ApplicationConfig.globalErrors
 
-
-
-
 @gmp_main(title = Messages.get("gmp.bulk.results.title")) {
-
 
 <div class="grid-2-3 form-title">
     <div class="confirmation-bulk">
@@ -39,7 +35,6 @@
 <div class="grid grid-2-3">
     <div id="results-heading" class="grid grid-3-4">Results</div>
     <div id="csv-heading" class="grid grid-1-4 text--right">CSV</div>
-
 </div>
 
 @if(bulkResultsSummary.total == bulkResultsSummary.getNumberOfSuccessfulCalculations) {
@@ -51,8 +46,8 @@
 }
 
 @if(bulkResultsSummary.total == (bulkResultsSummary.failed + bulkResultsSummary.getNumberOfSuccessfulCalculations) &&
-                                bulkResultsSummary.failed != 0 &&
-                                bulkResultsSummary.getNumberOfSuccessfulCalculations != 0) {
+                                 bulkResultsSummary.failed != 0 &&
+                                 bulkResultsSummary.getNumberOfSuccessfulCalculations != 0) {
   @includes.bulk_results_all(bulkResultsSummary, uploadReference)
 }
 
