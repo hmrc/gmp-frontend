@@ -32,9 +32,9 @@ trait UploadConfig extends ServicesConfig {
 
   def apply(implicit request: Request[_]): String = {
     lazy val url = s"${baseUrl("attachments")}/attachments-internal/uploader"
-    val onSuccess = routes.BulkReferenceController.get().absoluteURL()(request)
-    val onFailure = routes.FileUploadController.failure().absoluteURL()(request)
-    val callback = routes.FileUploadController.callback().absoluteURL()(request)
+    val onSuccess = s"${baseUrl("gmp-frontend")}${routes.BulkReferenceController.get()}"
+    val onFailure = s"${baseUrl("gmp-frontend")}${routes.FileUploadController.failure()}"
+    val callback = s"${baseUrl("gmp-frontend")}${routes.FileUploadController.callback()}"
     s"$url?" +
       s"callbackUrl=${encode(callback)}" +
       s"&onSuccess=${encode(onSuccess)}" +
