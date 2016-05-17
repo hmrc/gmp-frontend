@@ -64,9 +64,11 @@ trait AttachmentsConnector extends HeaderCarrierForPartialsConverter{
 
     val partial = http.GET[HtmlPartial](UploadConfig(request))
 
+    // $COVERAGE-OFF$
     partial onSuccess {
       case response => Logger.debug(s"[AttachmentsConnector[[getFileUploadPartial : $response]")
     }
+    // $COVERAGE-ON$
 
     partial
   }
