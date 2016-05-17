@@ -61,7 +61,13 @@ trait AttachmentsConnector extends HeaderCarrierForPartialsConverter{
 
   def getFileUploadPartial()(implicit request: Request[_]): Future[HtmlPartial] = {
 
-    http.GET[HtmlPartial](UploadConfig(request))
+    val partial = http.GET[HtmlPartial](UploadConfig(request))
+
+    partial onSuccess {
+      case response => Logger.debug(s"[AttachmentsConnector[[getFileUploadPartial : $response]")
+    }
+
+    partial
   }
 
 }
