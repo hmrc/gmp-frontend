@@ -30,9 +30,13 @@ trait ApplicationConfig {
   val contactFrontendPartialBaseUrl: String
   val reportAProblemPartialUrl: String
   val reportAProblemNonJSUrl: String
+  val frontendHost: String
+
 }
 
 object ApplicationConfig extends ApplicationConfig with ServicesConfig {
+
+  override lazy val frontendHost = loadConfig("platform.frontend.host")
 
   private def loadConfig(key: String) = configuration.getString(key).getOrElse(throw new Exception(s"Missing key: $key"))
 
