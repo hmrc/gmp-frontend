@@ -77,7 +77,7 @@ trait FieldValidator {
 
   def validateRevalRate(value: String) = {
     value match {
-      case "" => Some(Messages("gmp.error.revaluation_rate.invalid"))
+      case "" => None
       case x if !(x matches """\d+""") => Some(Messages("gmp.error.revaluation_rate.invalid"))
       case x if x.toInt > 3 => Some(Messages("gmp.error.revaluation_rate.invalid"))
       case _ => None
