@@ -18,7 +18,7 @@ package connectors
 
 import java.net.URLEncoder
 
-import config.WSHttp
+import config.{ApplicationConfig, WSHttp}
 import controllers.routes
 import play.api.Logger
 import play.api.mvc.Request
@@ -34,8 +34,8 @@ trait UploadConfig extends ServicesConfig {
 
   def apply(implicit request: Request[_]): String = {
     lazy val url = s"${baseUrl("attachments")}/attachments-internal/uploader"
-    val onSuccess = s"${baseUrl("gmp-frontend")}${routes.BulkReferenceController.get()}"
-    val onFailure = s"${baseUrl("gmp-frontend")}${routes.FileUploadController.failure()}"
+    val onSuccess = ApplicationConfig.frontendHost+routes.BulkReferenceController.get()
+    val onFailure = ApplicationConfig.frontendHost+routes.FileUploadController.failure()
     val callback = s"${baseUrl("gmp-frontend")}${routes.FileUploadController.callback()}"
 
     Logger.debug(s"[UploadConfig][onSuccessUrl : $onSuccess]")
