@@ -35,6 +35,7 @@ object BulkRequestCsvColumn {
   val REVAL_DATE = 7
   val REVAL_RATE = 8
   val DUAL_CALC = 9
+  val LINE_ERROR = -1
 }
 
 trait BulkRequestCreationService extends BulkEntityProcessor[BulkCalculationRequestLine] with ServicesConfig {

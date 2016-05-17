@@ -36,7 +36,7 @@ case class CalculationRequestLine (scon: String,
       case _ => dualCalc.getOrElse("")
     }
 
-    s"$scon,$nino,$firstForename,$surname,${memberReference.getOrElse("")},${calctype.getOrElse("")},${terminationDate.getOrElse("")},${revaluationDate.getOrElse("")},${revaluationRate.getOrElse("")},$dc"
+    s"""$scon,$nino,$firstForename,$surname,${memberReference.getOrElse("")},${calctype.getOrElse("")},${terminationDate.getOrElse("")},${revaluationDate.getOrElse("")},${revaluationRate.getOrElse("")},$dc"""
   }
 }
 
