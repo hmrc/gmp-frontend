@@ -79,6 +79,7 @@ class DashboardControllerSpec extends PlaySpec with OneServerPerSuite with Mocki
       }
 
       "contain required links to single/bulk calculation, the template file download link and more bulk calculations link" in {
+
         withAuthorisedUser { user =>
           getDashboard(user) { result =>
             status(result) must equal(OK)

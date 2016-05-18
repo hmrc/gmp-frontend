@@ -18,7 +18,7 @@ package models
 
 import org.joda.time.format.ISODateTimeFormat
 import org.joda.time.{LocalDateTime, LocalDate}
-import play.api.libs.json.{Writes, Reads, Json}
+import play.api.libs.json.{JsString, Writes, Reads, Json}
 
 case class CalculationRequestLine (scon: String,
                                   nino: String,
@@ -64,17 +64,17 @@ case class BulkCalculationRequest(uploadReference: String,
                                  )
 
 object BulkCalculationRequest {
-  implicit val readsJodaLocalDateTime = Reads[LocalDateTime](js =>
+
+  implicit val timestampReads = Reads[LocalDateTime](js =>
     js.validate[String].map[LocalDateTime](dtString =>
-      LocalDateTime.parse(dtString, ISODateTimeFormat.basicDateTime())
+      LocalDateTime.parse(dtString)
     )
   )
 
-  implicit val writesJodaLocalDateTime = new Writes[LocalDateTime]{
-    def writes(localDateTime: LocalDateTime) = Json.obj(
-      "localDateTime" -> localDateTime.toString
-    )
+  implicit val timestampWrites = new Writes[LocalDateTime]{
+    def writes(localDateTime: LocalDateTime) = JsString(localDateTime.toString)
   }
+
   implicit val formats = Json.format[BulkCalculationRequest]
 }
 
