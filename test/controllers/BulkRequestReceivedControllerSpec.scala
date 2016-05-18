@@ -21,7 +21,7 @@ import java.util.UUID
 import connectors.GmpBulkConnector
 import helpers.RandomNino
 import models._
-import org.joda.time.LocalDate
+import org.joda.time.{LocalDateTime, LocalDate}
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.mock.MockitoSugar
@@ -57,7 +57,7 @@ class BulkRequestReceivedControllerSpec extends PlaySpec with OneServerPerSuite 
 
 
   val inputLine1 = lineListFromCalculationRequestLine(calcLine1)
-  val bulkRequest1 = BulkCalculationRequest("1", "bill@bixby.com", "uploadRef1", List(calcLine1), "userid", LocalDate.now() )
+  val bulkRequest1 = BulkCalculationRequest("1", "bill@bixby.com", "uploadRef1", List(calcLine1), "userid", LocalDateTime.now() )
 
   object TestBulkRequestReceivedController extends BulkRequestReceivedController {
     val authConnector = mockAuthConnector

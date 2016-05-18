@@ -16,12 +16,26 @@
 
 package models
 
-import org.joda.time.LocalDate
-import play.api.libs.json.Json
+import org.joda.time.format.ISODateTimeFormat
+import org.joda.time.LocalDateTime
+import play.api.libs.json.{Writes, Reads, Json}
 
-case class BulkPreviousRequest(uploadReference: String, reference: String, timestamp: LocalDate)
+case class BulkPreviousRequest(uploadReference: String, reference: String, timestamp: LocalDateTime)
 
 object BulkPreviousRequest {
+
+  implicit val readsJodaLocalDateTime = Reads[LocalDateTime](js =>
+    js.validate[String].map[LocalDateTime](dtString =>
+      LocalDateTime.parse(dtString, ISODateTimeFormat.basicDateTime())
+    )
+  )
+
+  implicit val writesJodaLocalDateTime = new Writes[LocalDateTime]{
+    def writes(localDateTime: LocalDateTime) = Json.obj(
+      "localDateTime" -> localDateTime.toString
+    )
+  }
+
   implicit val formats = Json.format[BulkPreviousRequest]
   implicit def defaultOrdering: Ordering[BulkPreviousRequest] = Ordering.fromLessThan(_.timestamp isAfter _.timestamp)
 }
