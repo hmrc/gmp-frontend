@@ -30,13 +30,13 @@ object BulkReferenceForm {
 
   val emailConstraint : Constraint[String] = Constraint("constraints.email") ({
     text =>
-      if (text.length == 0){
+      if (text.trim.length == 0){
         Invalid(Seq(ValidationError(Messages("gmp.error.mandatory.an", Messages("gmp.email")))))
       }
-      else if (!EmailAddress.isValid(text.toUpperCase())){
+      else if (!EmailAddress.isValid(text.trim.toUpperCase())){
         Invalid(Seq(ValidationError(Messages("gmp.error.email.invalid"))))
       }
-      else if(text matches emailConstraintRegex){
+      else if(text.trim matches emailConstraintRegex){
         Invalid(Seq(ValidationError(Messages("gmp.error.email.invalid"))))
       }
       else {
@@ -49,9 +49,9 @@ object BulkReferenceForm {
       "email" -> text
         .verifying(emailConstraint),
       "reference" -> text
-        .verifying(Messages("gmp.error.mandatory", Messages("gmp.reference")), x => x.length != 0)
-        .verifying(Messages("gmp.error.invalid", Messages("gmp.reference")), x => x.length < MAX_REFERENCE_LENGTH)
-        .verifying(Messages("gmp.error.invalid", Messages("gmp.reference")), x => x.matches(CHARS_ALLOWED))
+        .verifying(Messages("gmp.error.mandatory", Messages("gmp.reference")), x => x.trim.length != 0)
+        .verifying(Messages("gmp.error.invalid", Messages("gmp.reference")), x => x.trim.length < MAX_REFERENCE_LENGTH)
+        .verifying(Messages("gmp.error.invalid", Messages("gmp.reference")), x => x.trim.matches(CHARS_ALLOWED))
     )(BulkReference.apply)(BulkReference.unapply)
   )
 }
