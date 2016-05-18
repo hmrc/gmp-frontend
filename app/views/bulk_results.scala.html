@@ -28,13 +28,13 @@
         <h1 id="calc-ready" class="heading-large">
             @Messages.get("gmp.bulk.results.banner")
         </h1>
-        <h2 id="reference">Reference @bulkResultsSummary.reference</h2>
+        <h2 id="reference">@Messages.get("gmp.bulk.results.reference", bulkResultsSummary.reference)</h2>
     </div>
 </div>
 
 <div class="grid grid-2-3">
-    <div id="results-heading" class="grid grid-3-4">Results</div>
-    <div id="csv-heading" class="grid grid-1-4 text--right">CSV</div>
+    <div id="results-heading" class="grid grid-3-4">@Messages.get("gmp.bulk.results")</div>
+    <div id="csv-heading" class="grid grid-1-4 text--right">@Messages.get("gmp.bulk.results.csv")</div>
 </div>
 
 @if(bulkResultsSummary.total == bulkResultsSummary.getNumberOfSuccessfulCalculations) {
