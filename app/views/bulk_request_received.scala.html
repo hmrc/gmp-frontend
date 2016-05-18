@@ -14,7 +14,7 @@
 * limitations under the License.
 *@
 
-@()(implicit request: Request[_])
+@(reference: String)(implicit request: Request[_])
 
 @import uk.gov.hmrc.play.views.html._
 @import uk.gov.hmrc.play.views.html.helpers._
@@ -35,7 +35,7 @@
 
         <h1>@Messages.get("gmp.bulk_request_received.header")</h1>
 
-        @Html(Messages.get("gmp.bulk_request_received.text"))
+        @Html(Messages.get("gmp.bulk_request_received.text", reference))
 
         <form action="@routes.SessionCacheController.newBulkCalculation">
           <button class="upload-file-button" type="submit" id="submit-button">@Messages.get("gmp.bulk_request_received.button")</button>
