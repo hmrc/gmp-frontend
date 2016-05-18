@@ -63,7 +63,6 @@ trait BulkRequestCreationService extends BulkEntityProcessor[BulkCalculationRequ
     Logger.debug(s"[BulkRequestCreationService][createBulkRequest] size : ${req.calculationRequests.size}")
 
     req
-
   }
 
   private def generateBulkCalculationRequestList(data: Iterator[Char]): List[BulkCalculationRequestLine] = {
@@ -87,9 +86,9 @@ trait BulkRequestCreationService extends BulkEntityProcessor[BulkCalculationRequ
       emptyStringsToNone(lineArray(BulkRequestCsvColumn.REVAL_DATE).trim, { e: String => Some(LocalDate.parse(e, inputDateFormatter).toString(DATE_FORMAT)) }),
       emptyStringsToNone(lineArray(BulkRequestCsvColumn.REVAL_RATE).trim, { e: String => Some(e.toInt) }),
       lineArray(BulkRequestCsvColumn.DUAL_CALC).trim.toUpperCase match {
-        case "Y" => Some(1)
-        case "YES" => Some(1)
-        case _ => None
+        case "Y" => 1
+        case "YES" => 1
+        case _ => 0
       }
     )
   }

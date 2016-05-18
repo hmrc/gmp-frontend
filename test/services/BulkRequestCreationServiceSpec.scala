@@ -30,13 +30,13 @@ class BulkRequestCreationServiceSpec extends PlaySpec with ScalaFutures with Moc
   val nino1 = RandomNino.generate
   val nino2 = RandomNino.generate
 
-  val calcLine1 = BulkCalculationRequestLine(1, Some(CalculationRequestLine("S1301234T", nino1, "Isambard", "Brunell", Some("IB"), Some(1), Some("2010-02-02"), Some("2010-01-01"), Some(1), None)),None,None)
-  val calcLine2 = BulkCalculationRequestLine(1, Some(CalculationRequestLine("S1301234T", nino2, "George", "Stephenson", Some("GS"), Some(1), Some("2010-02-02"), Some("2010-01-01"), Some(1), None)),None,None)
-  val calcLine3 = BulkCalculationRequestLine(1, Some(CalculationRequestLine("S1301234T", nino2, "George", "Stephenson", Some("GS"), Some(1), None, None, Some(1), Some(0))),None,None)
-  val calcLine4 = BulkCalculationRequestLine(1, Some(CalculationRequestLine("S1301234T", nino2, "George", "Stephenson", None, None, None, None, None, None)),None,None)
-  val calcLine6 = BulkCalculationRequestLine(1, Some(CalculationRequestLine("S1301234T", nino1, "Isambard", "Brunell", Some("IB"), Some(1), Some("2010-02-02"), Some("2010-01-01"), Some(1), Some(1))),None,None)
-  val invalidCalcLine = BulkCalculationRequestLine(1, Some(CalculationRequestLine("invalid_scon", nino1, "Isambard", "Brunell", Some("IB"), Some(1), Some("2010-02-02"), Some("2010-01-01"), Some(1), Some(1))),None,None)
-  val anotherCalcLine = BulkCalculationRequestLine(1, Some(CalculationRequestLine("S2730012K", "GY000002A", "PARIS", "HILTON", Some("THISISATEST SCENARIO"), Some(0), Some("2016-07-07"), None, None, Some(1))),None,None)
+  val calcLine1 = BulkCalculationRequestLine(1, Some(CalculationRequestLine("S1301234T", nino1, "Isambard", "Brunell", Some("IB"), Some(1), Some("2010-02-02"), Some("2010-01-01"), Some(1), 1)),None,None)
+  val calcLine2 = BulkCalculationRequestLine(1, Some(CalculationRequestLine("S1301234T", nino2, "George", "Stephenson", Some("GS"), Some(1), Some("2010-02-02"), Some("2010-01-01"), Some(1), 1)),None,None)
+  val calcLine3 = BulkCalculationRequestLine(1, Some(CalculationRequestLine("S1301234T", nino2, "George", "Stephenson", Some("GS"), Some(1), None, None, Some(1), 0)),None,None)
+  val calcLine4 = BulkCalculationRequestLine(1, Some(CalculationRequestLine("S1301234T", nino2, "George", "Stephenson", None, None, None, None, None, 0)),None,None)
+  val calcLine6 = BulkCalculationRequestLine(1, Some(CalculationRequestLine("S1301234T", nino1, "Isambard", "Brunell", Some("IB"), Some(1), Some("2010-02-02"), Some("2010-01-01"), Some(1), 1)),None,None)
+  val invalidCalcLine = BulkCalculationRequestLine(1, Some(CalculationRequestLine("invalid_scon", nino1, "Isambard", "Brunell", Some("IB"), Some(1), Some("2010-02-02"), Some("2010-01-01"), Some(1), 1)),None,None)
+  val anotherCalcLine = BulkCalculationRequestLine(1, Some(CalculationRequestLine("S2730012K", "GY000002A", "PARIS", "HILTON", Some("THISISATEST SCENARIO"), Some(0), Some("2016-07-07"), None, None, 1)),None,None)
 
   val inputLine1 = (Messages("gmp.upload_csv_column_headers") + "\n" + lineListFromCalculationRequestLine(calcLine1).mkString).toList
   val inputLine2 = (Messages("gmp.upload_csv_column_headers") + "\n" + lineListFromCalculationRequestLine(calcLine2).mkString).toList
@@ -45,6 +45,7 @@ class BulkRequestCreationServiceSpec extends PlaySpec with ScalaFutures with Moc
   val inputLine6 = (Messages("gmp.upload_csv_column_headers") + "\n" + lineListFromCalculationRequestLine(calcLine6).mkString).toList
   val invalidInputLine = (Messages("gmp.upload_csv_column_headers") + "\n" + lineListFromCalculationRequestLine(invalidCalcLine).mkString).toList
   val anotherInputLine = (Messages("gmp.upload_csv_column_headers") + "\n" + "S2730012K,GY000002A,PARIS,HILTON,THISISATEST SCENARIO1,0,07/07/2016,,,Yes").toList
+  val anotherInputLineNoDualCalc = (Messages("gmp.upload_csv_column_headers") + "\n" + "S2730012K,GY000002A,PARIS,HILTON,THISISATEST SCENARIO1,0,07/07/2016,,,No").toList
 
   val inputLineWithoutHeader = lineListFromCalculationRequestLine(calcLine2)
 
@@ -63,6 +64,7 @@ class BulkRequestCreationServiceSpec extends PlaySpec with ScalaFutures with Moc
         case "6" => inputLine6.iterator
         case "7" => invalidInputLine.iterator
         case "8" => anotherInputLine.iterator
+        case "9" => anotherInputLineNoDualCalc.iterator
       }
     }
 
@@ -117,7 +119,6 @@ class BulkRequestCreationServiceSpec extends PlaySpec with ScalaFutures with Moc
       bulkRequest.calculationRequests.head.validCalculationRequest.get.revaluationDate mustBe None
       bulkRequest.calculationRequests.head.validCalculationRequest.get.terminationDate mustBe None
       bulkRequest.calculationRequests.head.validCalculationRequest.get.calctype mustBe None
-      bulkRequest.calculationRequests.head.validCalculationRequest.get.dualCalc mustBe None
       bulkRequest.calculationRequests.head.validCalculationRequest.get.memberReference mustBe None
       bulkRequest.calculationRequests.head.validCalculationRequest.get.revaluationRate mustBe None
     }
@@ -147,7 +148,12 @@ class BulkRequestCreationServiceSpec extends PlaySpec with ScalaFutures with Moc
 
     "return bulk request with dual calc Yes" in {
       val bulkRequest = TestBulkRequestCreationService.createBulkRequest(collection, "8", anotherBulkRequest.email, anotherBulkRequest.reference)
-      bulkRequest.calculationRequests.head.validCalculationRequest.head.dualCalc must be (Some(1))
+      bulkRequest.calculationRequests.head.validCalculationRequest.head.dualCalc must be (1)
+    }
+
+    "return bulk request with dual calc No" in {
+      val bulkRequest = TestBulkRequestCreationService.createBulkRequest(collection, "9", "somebody@email.com", "a-ref-123")
+      bulkRequest.calculationRequests.head.validCalculationRequest.head.dualCalc must be (0)
     }
   }
 
@@ -160,9 +166,9 @@ class BulkRequestCreationServiceSpec extends PlaySpec with ScalaFutures with Moc
       item match {
         case (None, i) => ""
         case (Some(dateRegEx(s)), i) => new LocalDate(s).toString("dd/MM/yyyy")
-        case (Some(x: Int), BulkRequestCsvColumn.DUAL_CALC) => x match {
+        case (x: Int, BulkRequestCsvColumn.DUAL_CALC) => x match {
           case 1 => "Y";
-          case _ => ""
+          case _ => "N"
         }
         case (Some(x), i) => s"$x"
         case (x: String, i) => x
