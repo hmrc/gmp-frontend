@@ -35,6 +35,7 @@ object BulkRequestCsvColumn {
   val REVAL_DATE = 7
   val REVAL_RATE = 8
   val DUAL_CALC = 9
+  val LINE_ERROR = -1
 }
 
 trait BulkRequestCreationService extends BulkEntityProcessor[BulkCalculationRequestLine] with ServicesConfig {
@@ -76,17 +77,18 @@ trait BulkRequestCreationService extends BulkEntityProcessor[BulkCalculationRequ
     val lineArray = line.split(",", -1)
 
     CalculationRequestLine(
-      lineArray(BulkRequestCsvColumn.SCON),
-      lineArray(BulkRequestCsvColumn.NINO),
+      lineArray(BulkRequestCsvColumn.SCON).trim,
+      lineArray(BulkRequestCsvColumn.NINO).trim,
       lineArray(BulkRequestCsvColumn.FORENAME),
       lineArray(BulkRequestCsvColumn.SURNAME),
       emptyStringsToNone(lineArray(BulkRequestCsvColumn.MEMBER_REF), { e: String => Some(e) }),
-      emptyStringsToNone(lineArray(BulkRequestCsvColumn.CALC_TYPE), { e: String => Some(e.toInt) }),
+      emptyStringsToNone(lineArray(BulkRequestCsvColumn.CALC_TYPE).trim, { e: String => Some(e.toInt) }),
       emptyStringsToNone(lineArray(BulkRequestCsvColumn.TERMINATION_DATE), { e: String => Some(LocalDate.parse(e, inputDateFormatter).toString(DATE_FORMAT)) }),
-      emptyStringsToNone(lineArray(BulkRequestCsvColumn.REVAL_DATE), { e: String => Some(LocalDate.parse(e, inputDateFormatter).toString(DATE_FORMAT)) }),
-      emptyStringsToNone(lineArray(BulkRequestCsvColumn.REVAL_RATE), { e: String => Some(e.toInt) }),
-      lineArray(BulkRequestCsvColumn.DUAL_CALC) match {
+      emptyStringsToNone(lineArray(BulkRequestCsvColumn.REVAL_DATE).trim, { e: String => Some(LocalDate.parse(e, inputDateFormatter).toString(DATE_FORMAT)) }),
+      emptyStringsToNone(lineArray(BulkRequestCsvColumn.REVAL_RATE).trim, { e: String => Some(e.toInt) }),
+      lineArray(BulkRequestCsvColumn.DUAL_CALC).trim.toUpperCase match {
         case "Y" => Some(1)
+        case "YES" => Some(1)
         case _ => None
       }
     )

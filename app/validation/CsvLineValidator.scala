@@ -77,7 +77,7 @@ trait FieldValidator {
 
   def validateRevalRate(value: String) = {
     value match {
-      case "" => Some(Messages("gmp.error.revaluation_rate.invalid"))
+      case "" => None
       case x if !(x matches """\d+""") => Some(Messages("gmp.error.revaluation_rate.invalid"))
       case x if x.toInt > 3 => Some(Messages("gmp.error.revaluation_rate.invalid"))
       case _ => None
@@ -99,22 +99,29 @@ object CsvLineValidator extends FieldValidator {
 
   def validateLine(line: String) = {
 
-    line.split(",").zipWithIndex.map {
-      case (value, BulkRequestCsvColumn.SCON) => (BulkRequestCsvColumn.SCON, validateScon(value))
-      case (value, BulkRequestCsvColumn.NINO) => (BulkRequestCsvColumn.NINO, validateNino(value))
-      case (value, BulkRequestCsvColumn.FORENAME) => (BulkRequestCsvColumn.FORENAME, validateFirstName(value))
-      case (value, BulkRequestCsvColumn.SURNAME) => (BulkRequestCsvColumn.SURNAME, validateLastName(value))
-      case (value, BulkRequestCsvColumn.CALC_TYPE) => (BulkRequestCsvColumn.CALC_TYPE, validateCalcType(value))
-      case (value, BulkRequestCsvColumn.TERMINATION_DATE) => (BulkRequestCsvColumn.TERMINATION_DATE, validateDate(value))
-      case (value, BulkRequestCsvColumn.REVAL_DATE) => (BulkRequestCsvColumn.REVAL_DATE, validateDate(value))
-      case (value, BulkRequestCsvColumn.REVAL_RATE) => (BulkRequestCsvColumn.REVAL_RATE, validateRevalRate(value))
-      case (value, BulkRequestCsvColumn.DUAL_CALC) => (BulkRequestCsvColumn.DUAL_CALC, validateDualCalc(value))
-      case (value, key) => (key, None)
-    }.toMap.collect {
-      case v if v._2.isDefined => (v._1, v._2.get)
-    } match {
-      case map if map.nonEmpty => Some(map)
-      case _ => None
+    val columns = line.split(",", -1).map { _.trim }.toList
+
+    columns.length match {
+      case x if x != 10 => Some(Map(BulkRequestCsvColumn.LINE_ERROR -> Messages("gmp.error.parse_error")))
+      case _ => {
+        columns.zipWithIndex.map {
+          case (value, BulkRequestCsvColumn.SCON) => (BulkRequestCsvColumn.SCON, validateScon(value))
+          case (value, BulkRequestCsvColumn.NINO) => (BulkRequestCsvColumn.NINO, validateNino(value))
+          case (value, BulkRequestCsvColumn.FORENAME) => (BulkRequestCsvColumn.FORENAME, validateFirstName(value))
+          case (value, BulkRequestCsvColumn.SURNAME) => (BulkRequestCsvColumn.SURNAME, validateLastName(value))
+          case (value, BulkRequestCsvColumn.CALC_TYPE) => (BulkRequestCsvColumn.CALC_TYPE, validateCalcType(value))
+          case (value, BulkRequestCsvColumn.TERMINATION_DATE) => (BulkRequestCsvColumn.TERMINATION_DATE, validateDate(value))
+          case (value, BulkRequestCsvColumn.REVAL_DATE) => (BulkRequestCsvColumn.REVAL_DATE, validateDate(value))
+          case (value, BulkRequestCsvColumn.REVAL_RATE) => (BulkRequestCsvColumn.REVAL_RATE, validateRevalRate(value))
+          case (value, BulkRequestCsvColumn.DUAL_CALC) => (BulkRequestCsvColumn.DUAL_CALC, validateDualCalc(value))
+          case (value, key) => (key, None)
+        }.toMap.collect {
+          case v if v._2.isDefined => (v._1, v._2.get)
+        } match {
+          case map if map.nonEmpty => Some(map)
+          case _ => None
+        }
+      }
     }
   }
 }
