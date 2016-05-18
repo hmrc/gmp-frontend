@@ -37,5 +37,6 @@ object BulkPreviousRequest {
   }
 
   implicit val formats = Json.format[BulkPreviousRequest]
+  
   implicit def defaultOrdering: Ordering[BulkPreviousRequest] = Ordering.fromLessThan(_.timestamp isAfter _.timestamp)
 }
