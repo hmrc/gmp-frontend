@@ -59,7 +59,7 @@ class GmpBulkConnectorSpec extends PlaySpec with OneServerPerSuite with MockitoS
 
       val bcr = BulkCalculationRequest("upload1", "jim@jarmusch.com", "idreference",
         List(BulkCalculationRequestLine(1, Some(CalculationRequestLine("S1234567C", RandomNino.generate,
-          "bob", "bobbleton", Some("bobby"), Some(0), Some("2012-02-02"), None, None, None)),
+          "bob", "bobbleton", Some("bobby"), Some(0), Some("2012-02-02"), None, None, 0)),
           None, None)))
       val result = testGmpBulkConnector.sendBulkRequest(bcr)
       (await(result)).status must be(OK)

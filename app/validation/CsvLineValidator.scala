@@ -86,8 +86,8 @@ trait FieldValidator {
 
   def validateDualCalc(value: String) = {
     value match {
-      case "" => None
-      case x if !(x matches "[yY](es)?") => Some(Messages("gmp.error.csv.dual_calc.invalid"))
+      case "" => Some(Messages("gmp.error.csv.dual_calc.invalid"))
+      case x if !(x matches "[yY](es)?|[nN]o?") => Some(Messages("gmp.error.csv.dual_calc.invalid"))
       case _ => None
     }
   }

@@ -53,7 +53,7 @@ class BulkRequestReceivedControllerSpec extends PlaySpec with OneServerPerSuite 
   val callBackData = CallBackData("AAAAA", "11111", 1L, Some("Ted"), Some("application/json"), "YYYYYYY", None)
   val gmpBulkSession = GmpBulkSession(Some(callBackData), Some(EmailAddress("somebody@somewhere.com")), Some("reference"))
 
-  val calcLine1 = BulkCalculationRequestLine(1, Some(CalculationRequestLine("S1301234T", RandomNino.generate, "Isambard", "Brunell", Some("IB"), Some(1), Some("2010-02-02"), Some("2010-01-01"), Some(1), Some(0))),None, None)
+  val calcLine1 = BulkCalculationRequestLine(1, Some(CalculationRequestLine("S1301234T", RandomNino.generate, "Isambard", "Brunell", Some("IB"), Some(1), Some("2010-02-02"), Some("2010-01-01"), Some(1), 0)),None, None)
 
 
   val inputLine1 = lineListFromCalculationRequestLine(calcLine1)
@@ -134,6 +134,7 @@ class BulkRequestReceivedControllerSpec extends PlaySpec with OneServerPerSuite 
         case Some(dateRegEx(s)) => new LocalDate(s).toString("dd/MM/yyyy") + ","
         case Some(x) => s"$x,"
         case x: String => x + ","
+        case x: Int => x.toString + ","
       }
     }
     {
