@@ -48,8 +48,6 @@ class BulkRequestCreationServiceSpec extends PlaySpec with ScalaFutures with Moc
 
   val inputLineWithoutHeader = lineListFromCalculationRequestLine(calcLine2)
 
-  println(s"** INPUT 1: ${inputLine1.mkString}")
-
   object TestBulkRequestCreationService extends BulkRequestCreationService {
 
     override def sourceData(resourceLocation: String): Iterator[Char] = {
