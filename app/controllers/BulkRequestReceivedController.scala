@@ -46,7 +46,7 @@ trait BulkRequestReceivedController extends GmpController {
               session.reference.getOrElse(""))
 
             gmpBulkConnector.sendBulkRequest(bulkRequest)
-            Ok(views.html.bulk_request_received())
+            Ok(views.html.bulk_request_received(bulkRequest.reference))
           }
         }
       }
