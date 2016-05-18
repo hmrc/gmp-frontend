@@ -43,7 +43,7 @@ trait BulkReferenceController extends GmpController {
           formWithErrors => {Future.successful(BadRequest(views.html.bulk_reference(formWithErrors)))},
           value => {
 
-            sessionService.cacheEmailAndReference(Some(value.email), Some(value.reference)).map { sessionOpt =>
+            sessionService.cacheEmailAndReference(Some(value.email.trim), Some(value.reference.trim)).map { sessionOpt =>
               sessionOpt match {
                 case Some(session) => Redirect(controllers.routes.BulkRequestReceivedController.get)
                 case _ => throw new RuntimeException
