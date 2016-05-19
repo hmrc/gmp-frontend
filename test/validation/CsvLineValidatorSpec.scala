@@ -56,7 +56,7 @@ class CsvLineValidatorSpec extends FlatSpec with Matchers with OneAppPerSuite {
   }
 
   it should "report a line error if there are too many columns" in {
-    val errors = CsvLineValidator.validateLine("," * 11)
+    val errors = CsvLineValidator.validateLine("," * CsvLineValidator.CSV_COLUMN_COUNT + 1)
 
     errors shouldBe defined
     errors.get should contain(BulkRequestCsvColumn.LINE_ERROR -> Messages("gmp.error.parsing.too_many_columns"))
