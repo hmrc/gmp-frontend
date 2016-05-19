@@ -29,12 +29,13 @@ case class CalculationRequestLine (scon: String,
                                   terminationDate: Option[String] = None,
                                   revaluationDate: Option[String] = None,
                                   revaluationRate: Option[Int] = None,
-                                  dualCalc: Option[Int] = None
+                                  dualCalc: Int
                                   ) {
   override def toString = {
     val dc = dualCalc match {
-      case Some(1) => "Y"
-      case _ => dualCalc.getOrElse("")
+      case 1 => "Y"
+      case 0 => "N"
+      case _ => ""
     }
 
     s"""$scon,$nino,$firstForename,$surname,${memberReference.getOrElse("")},${calctype.getOrElse("")},${terminationDate.getOrElse("")},${revaluationDate.getOrElse("")},${revaluationRate.getOrElse("")},$dc"""

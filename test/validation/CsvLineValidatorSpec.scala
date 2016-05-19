@@ -38,7 +38,7 @@ class CsvLineValidatorSpec extends FlatSpec with Matchers with OneAppPerSuite {
     Some("20/01/2012"), // Termination date
     Some("20/01/2014"), // Revaluation date
     Some(1), // Revaluation rate - between 0 and 3
-    Some(1)) {
+    1) {
   }
 
   "The CSV line validator should" should "report no errors in a valid line" in {
@@ -52,14 +52,14 @@ class CsvLineValidatorSpec extends FlatSpec with Matchers with OneAppPerSuite {
     val errors = CsvLineValidator.validateLine("column 1,column 2,column 3")
 
     errors shouldBe defined
-    errors.get should contain(BulkRequestCsvColumn.LINE_ERROR -> Messages("gmp.error.parse_error"))
+    errors.get should contain(BulkRequestCsvColumn.LINE_ERROR -> Messages("gmp.error.parsing.too_few_columns"))
   }
 
   it should "report a line error if there are too many columns" in {
-    val errors = CsvLineValidator.validateLine("," * 11)
+    val errors = CsvLineValidator.validateLine("," * CsvLineValidator.CSV_COLUMN_COUNT + 1)
 
     errors shouldBe defined
-    errors.get should contain(BulkRequestCsvColumn.LINE_ERROR -> Messages("gmp.error.parse_error"))
+    errors.get should contain(BulkRequestCsvColumn.LINE_ERROR -> Messages("gmp.error.parsing.too_many_columns"))
   }
 
   it should "report a missing SCON" in {
@@ -228,16 +228,29 @@ class CsvLineValidatorSpec extends FlatSpec with Matchers with OneAppPerSuite {
     errors.get should contain(BulkRequestCsvColumn.REVAL_RATE -> Messages("gmp.error.revaluation_rate.invalid"))
   }
 
-  it should "not report a missing dual calculation value" in {
-    val errors = CsvLineValidator.validateLine(CsvLine.copy(dualCalc = None).toString)
+  it should "report a missing dual calculation value" in {
+    val errors = CsvLineValidator.validateLine(CsvLine.copy(dualCalc = 10).toString)
+
+    errors shouldBe defined
+    errors.get should contain(BulkRequestCsvColumn.DUAL_CALC -> Messages("gmp.error.csv.dual_calc.invalid"))
+  }
+
+  it should "report an invalid dual calculation value" in {
+    val errors = CsvLineValidator.validateLine(CsvLine.copy().toString replace(",Y", ",ifdugh"))
+
+    errors shouldBe defined
+    errors.get should contain(BulkRequestCsvColumn.DUAL_CALC -> Messages("gmp.error.csv.dual_calc.invalid"))
+  }
+
+  it should "not report a value of Y" in {
+    val errors = CsvLineValidator.validateLine(CsvLine.copy(dualCalc = 1).toString)
 
     errors shouldBe empty
   }
 
-  it should "report an invalid dual calculation value" in {
-    val errors = CsvLineValidator.validateLine(CsvLine.copy(dualCalc = Some(-999)).toString replace("-999", "ifdugh"))
+  it should "not report a value of N" in {
+    val errors = CsvLineValidator.validateLine(CsvLine.copy(dualCalc = 0).toString)
 
-    errors shouldBe defined
-    errors.get should contain(BulkRequestCsvColumn.DUAL_CALC -> Messages("gmp.error.csv.dual_calc.invalid"))
+    errors shouldBe empty
   }
 }
