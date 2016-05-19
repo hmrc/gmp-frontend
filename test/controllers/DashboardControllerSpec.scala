@@ -17,13 +17,14 @@
 package controllers
 
 import connectors.GmpBulkConnector
-import models.{BulkPreviousRequest, Dashboard}
-import org.joda.time.LocalDate
+import models._
+import org.joda.time.{Chronology, LocalDateTime, LocalDate}
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
 import play.api.i18n.Messages
+import play.api.libs.json.Json
 import play.api.mvc.{AnyContentAsEmpty, Result}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -53,7 +54,7 @@ class DashboardControllerSpec extends PlaySpec with OneServerPerSuite with Mocki
     }
   }
 
-  val recentBulkCalculations = List(new BulkPreviousRequest("1234","abcd",LocalDate.now()), new BulkPreviousRequest("5678","efgh", LocalDate.now()))
+  val recentBulkCalculations = List(new BulkPreviousRequest("1234","abcd",LocalDateTime.now()), new BulkPreviousRequest("5678","efgh", LocalDateTime.now()))
 
   when(mockGmpBulkConnector.getPreviousBulkRequests()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(recentBulkCalculations))
 
@@ -79,6 +80,7 @@ class DashboardControllerSpec extends PlaySpec with OneServerPerSuite with Mocki
       }
 
       "contain required links to single/bulk calculation, the template file download link and more bulk calculations link" in {
+
         withAuthorisedUser { user =>
           getDashboard(user) { result =>
             status(result) must equal(OK)
@@ -129,6 +131,43 @@ class DashboardControllerSpec extends PlaySpec with OneServerPerSuite with Mocki
           contentAsString(result) must include("5678")
         }
       }
+
+      "handle timestamp conversion" in {
+        val localDateTime = new LocalDateTime(2016,5,18,17,50,55,511)
+
+        val bpr = new BulkPreviousRequest("","",localDateTime)
+        val bprJson = Json.parse(
+          """
+            {
+              "uploadReference":"",
+              "reference":"",
+              "timestamp":"2016-05-18T17:50:55.511"
+            }
+          """
+        )
+
+        val bcr = BulkCalculationRequest("","","",List(),"",localDateTime)
+        val bcrJson = Json.parse(
+          """
+            {
+              "uploadReference":"",
+              "email":"",
+              "reference":"",
+              "calculationRequests":[],
+              "userId":"",
+              "timestamp":"2016-05-18T17:50:55.511"
+            }
+          """
+        )
+
+        bprJson.as[BulkPreviousRequest] must equal(bpr)
+        Json.toJson(bpr) must equal(bprJson)
+
+        bcrJson.as[BulkCalculationRequest] must equal(bcr)
+        Json.toJson(bcr) must equal(bcrJson)
+
+      }
+
     }
   }
 

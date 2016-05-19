@@ -61,6 +61,7 @@ class GmpBulkConnectorSpec extends PlaySpec with OneServerPerSuite with MockitoS
         List(BulkCalculationRequestLine(1, Some(CalculationRequestLine("S1234567C", RandomNino.generate,
           "bob", "bobbleton", Some("bobby"), Some(0), Some("2012-02-02"), None, None, 0)),
           None, None)))
+
       val result = testGmpBulkConnector.sendBulkRequest(bcr)
       (await(result)).status must be(OK)
 
@@ -72,7 +73,7 @@ class GmpBulkConnectorSpec extends PlaySpec with OneServerPerSuite with MockitoS
         Some(PsaAccount(link, PsaId(psaId)))), None, None, CredentialStrength.None, ConfidenceLevel.L50))
 
       val bulkPreviousRequest = Json.parse(
-        """[{"uploadReference":"uploadRef","reference":"ref","timestamp":"2016-04-27"}]"""
+        """[{"uploadReference":"uploadRef","reference":"ref","timestamp":"2016-04-27T14:53:18.308"}]"""
       )
 
       when(mockHttpGet.GET[List[BulkPreviousRequest]]( Matchers.any())(Matchers.any(), Matchers.any()))

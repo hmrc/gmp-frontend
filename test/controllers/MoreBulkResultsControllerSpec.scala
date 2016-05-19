@@ -18,7 +18,7 @@ package controllers
 
 import connectors.GmpBulkConnector
 import models._
-import org.joda.time.LocalDate
+import org.joda.time.{LocalDateTime, LocalDate}
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.mock.MockitoSugar
@@ -52,7 +52,7 @@ class MoreBulkResultsControllerSpec extends PlaySpec with OneServerPerSuite with
     }
   }
 
-  val recentBulkCalculations = List(new BulkPreviousRequest("1234","abcd",LocalDate.now()), new BulkPreviousRequest("5678","efgh", LocalDate.now()))
+  val recentBulkCalculations = List(new BulkPreviousRequest("1234","abcd",LocalDateTime.now()), new BulkPreviousRequest("5678","efgh", LocalDateTime.now()))
 
   when(mockGmpBulkConnector.getPreviousBulkRequests()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(recentBulkCalculations))
 

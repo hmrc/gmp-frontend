@@ -53,7 +53,6 @@ trait BulkRequestCreationService extends BulkEntityProcessor[BulkCalculationRequ
 
   def createBulkRequest(collection: String, id: String, email: String, reference: String): BulkCalculationRequest = {
 
-
     val attachmentUrl = s"${baseUrl("attachments")}/attachments-internal/$collection/$id"
 
     val bulkCalculationRequestLines: List[BulkCalculationRequestLine] = generateBulkCalculationRequestList(sourceData(attachmentUrl))
