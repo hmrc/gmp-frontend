@@ -18,7 +18,7 @@ package services
 
 import helpers.RandomNino
 import models.{BulkCalculationRequestLine, CalculationRequestLine, BulkCalculationRequest}
-import org.joda.time.LocalDate
+import org.joda.time.{LocalDateTime, LocalDate}
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
@@ -70,9 +70,12 @@ class BulkRequestCreationServiceSpec extends PlaySpec with ScalaFutures with Moc
 
   "Bulk Request Creation Service" must {
 
+    val localDateTime = new LocalDateTime(2016,5,18,17,50,55,511)
+
+
     val collection = "gmp"
 
-    val bulkRequest1 = BulkCalculationRequest("1", "bill@bixby.com", "uploadRef1", List(calcLine1))
+    val bulkRequest1 = BulkCalculationRequest("1", "bill@bixby.com", "uploadRef1", List(calcLine1),"",localDateTime)
     val bulkRequest2 = BulkCalculationRequest("2", "timburton@scary.com", "uploadRef2", List(calcLine2))
     val bulkRequest3 = BulkCalculationRequest("3", "lou@ferrigno.com", "uploadRef3", List(calcLine1, calcLine2.copy(lineId = 2)))
     val bulkRequest4 = BulkCalculationRequest("4", "bill@bixby.com", "uploadRef1", List(calcLine3))
@@ -84,7 +87,7 @@ class BulkRequestCreationServiceSpec extends PlaySpec with ScalaFutures with Moc
 
       val bulkRequest: BulkCalculationRequest = TestBulkRequestCreationService.createBulkRequest(collection, "1", bulkRequest1.email, bulkRequest1.reference)
 
-      bulkRequest mustBe bulkRequest1
+      bulkRequest.copy(timestamp = localDateTime) mustBe bulkRequest1.copy(timestamp = localDateTime)
 
     }
 
@@ -92,14 +95,14 @@ class BulkRequestCreationServiceSpec extends PlaySpec with ScalaFutures with Moc
 
       val bulkRequest: BulkCalculationRequest = TestBulkRequestCreationService.createBulkRequest(collection, "2", bulkRequest2.email, bulkRequest2.reference)
 
-      bulkRequest mustBe bulkRequest2
+      bulkRequest.copy(timestamp = localDateTime) mustBe bulkRequest2.copy(timestamp = localDateTime)
 
     }
 
     "return Bulk Request with multiple calcs" in {
       val bulkRequest: BulkCalculationRequest = TestBulkRequestCreationService.createBulkRequest(collection, "3", bulkRequest3.email, bulkRequest3.reference)
 
-      bulkRequest mustBe bulkRequest3
+      bulkRequest.copy(timestamp = localDateTime) mustBe bulkRequest3.copy(timestamp = localDateTime)
     }
 
     "contain Nones when dates are left blank" in {
@@ -132,7 +135,7 @@ class BulkRequestCreationServiceSpec extends PlaySpec with ScalaFutures with Moc
 
       val bulkRequest: BulkCalculationRequest = TestBulkRequestCreationService.createBulkRequest(collection, "6", bulkRequest6.email, bulkRequest6.reference)
 
-      bulkRequest mustBe bulkRequest6
+      bulkRequest.copy(timestamp = localDateTime) mustBe bulkRequest6.copy(timestamp = localDateTime)
 
     }
 
