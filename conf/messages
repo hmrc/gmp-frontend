@@ -179,6 +179,9 @@ gmp.bulk.wrong_user.dashboard_text = Go to your <a id="bulk_wrong_user_dashboard
 gmp.previous_calculations_text = You have 30 days from the upload date to view the results.
 gmp.no_previous_calculations_text = We keep the results of previous calculations for 30 days. You have none to view.
 gmp.revaluation_rate = Revaluation rate
+gmp.bulk.results = Results
+gmp.bulk.results.csv = CSV
+gmp.bulk.results.reference = Reference {0}
 
 # errors
 gmp.error.revaluation_before_leaving = Enter a date on or after {0}
@@ -201,7 +204,7 @@ gmp.error.date.nonnumber = Enter a date using numbers only
 gmp.error.reason.mandatory = Select an option
 gmp.generic.errors_heading= There is a problem with the form
 gmp.error.name.invalid = Enter a {0} using only letters, hyphens, apostrophes and spaces
-gmp.error.surname.invalid = Enter a last name with more than 1 letter
+gmp.error.surname.invalid = Enter a last name with more than 1 character
 gmp.error.email.invalid = Enter a valid email address
 gmp.error.invalid = Enter a valid calculation name
 gmp.error.calctype.invalid = Enter a calculation type between 0 and 4. See instructions file
