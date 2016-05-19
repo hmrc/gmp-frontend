@@ -210,7 +210,8 @@ gmp.error.invalid = Enter a valid calculation name
 gmp.error.calctype.invalid = Enter a calculation type between 0 and 4. See instructions file
 gmp.error.calctype.oob = Calc type should be between 0 and 4
 gmp.error.revaluation_rate.invalid = Enter a revaluation rate between 0 and 3. See instructions file
-gmp.error.parse_error = Could not parse the line
+gmp.error.parsing.too_few_columns = The calculation request has fewer than ten fields
+gmp.error.parsing.too_many_columns = The calculation request has more than ten fields
 
 gmp.error.scon.invalid = Enter a Scheme Contracted Out Number in the same format as the example given
 gmp.error.scon.nps_invalid = This SCON does not exist. Check and try again.
