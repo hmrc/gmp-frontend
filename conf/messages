@@ -179,6 +179,9 @@ gmp.bulk.wrong_user.dashboard_text = Go to your <a id="bulk_wrong_user_dashboard
 gmp.previous_calculations_text = You have 30 days from the upload date to view the results.
 gmp.no_previous_calculations_text = We keep the results of previous calculations for 30 days. You have none to view.
 gmp.revaluation_rate = Revaluation rate
+gmp.bulk.results = Results
+gmp.bulk.results.csv = CSV
+gmp.bulk.results.reference = Reference {0}
 
 # errors
 gmp.error.revaluation_before_leaving = Enter a date on or after {0}
