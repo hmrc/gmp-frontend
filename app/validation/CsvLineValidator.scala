@@ -43,7 +43,10 @@ trait FieldValidator {
     name match {
       case "" => Some(Messages("gmp.error.firstnameorinitial"))
       case x if x.length >= MAX_NAME_LENGTH => Some(Messages("gmp.error.firstname.toolong"))
-      case x if !NameValidate.isValid(x) => Some(Messages("gmp.error.name.invalid", Messages("gmp.lowercase.firstname")))
+      case x if !NameValidate.isValid(x) => {
+        val message = Messages("gmp.error.name.invalid", Messages("gmp.lowercase.firstname"))
+        Some(s""""$message"""")
+      }
       case _ => None
     }
   }
@@ -53,7 +56,10 @@ trait FieldValidator {
       case "" => Some(Messages("gmp.error.mandatory", Messages("gmp.lowercase.lastname")))
       case x if x.length >= MAX_NAME_LENGTH => Some(Messages("gmp.error.lastname.toolong"))
       case x if x.length == 1 => Some(Messages("gmp.error.surname.invalid"))
-      case x if !NameValidate.isValid(x) => Some(Messages("gmp.error.name.invalid", Messages("gmp.lowercase.lastname")))
+      case x if !NameValidate.isValid(x) => {
+        val message = Messages("gmp.error.name.invalid", Messages("gmp.lowercase.lastname"))
+        Some(s""""$message"""")
+      }
       case _ => None
     }
   }
