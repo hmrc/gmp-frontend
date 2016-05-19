@@ -207,7 +207,8 @@ gmp.error.invalid = Enter a valid calculation name
 gmp.error.calctype.invalid = Enter a calculation type between 0 and 4. See instructions file
 gmp.error.calctype.oob = Calc type should be between 0 and 4
 gmp.error.revaluation_rate.invalid = Enter a revaluation rate between 0 and 3. See instructions file
-gmp.error.parse_error = Could not parse the line
+gmp.error.parsing.too_few_columns = The calculation request has fewer than ten fields
+gmp.error.parsing.too_many_columns = The calculation request has more than ten fields
 
 gmp.error.scon.invalid = Enter a Scheme Contracted Out Number in the same format as the example given
 gmp.error.scon.nps_invalid = This SCON does not exist. Check and try again.
@@ -221,7 +222,7 @@ gmp.error.csv.dual_calc.invalid = Enter ‘Y’ or ‘Yes’ if you want an oppo
 gmp.error.member_previous_names = If we still can''t calculate a GMP, ask if the member has any previous names that may not have been updated with HM Revenue and Customs.
 gmp.error.contact_hmrc_shared_workspace = Contact HM Revenue and Customs through the GMP Service Queries database in the LIVE shared workspace e-room.
 gmp.error.contact_us_shared_workspace = Contact us through the GMP Service Queries database in the LIVE shared workspace e-room.
-gmp.error.contact.scon = If you believe the member''s SCON is correct, contact HM Revenue and Customs on 0300 200 3507. You will need the member''s National Insurance number, contracted-out dates and scheme name.
+gmp.error.contact.scon = If you believe the member''s SCON is correct, contact HM Revenue and Customs on 0300 200 3gitsss507. You will need the member''s National Insurance number, contracted-out dates and scheme name.
 gmp.error.also.contact = If you still can’t get a calculation, contact HM Revenue and Customs through the GMP Service Queries database in the LIVE shared workspace e-room.
 gmp.error.also.death = If you think the date of death we hold on record is incorrect, contact HM Revenue and Customs through the GMP Service Queries database in the LIVE shared workspace e-room.
 

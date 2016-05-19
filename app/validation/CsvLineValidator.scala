@@ -102,7 +102,8 @@ object CsvLineValidator extends FieldValidator {
     val columns = line.split(",", -1).map { _.trim }.toList
 
     columns.length match {
-      case x if x != 10 => Some(Map(BulkRequestCsvColumn.LINE_ERROR -> Messages("gmp.error.parse_error")))
+      case x if x < 10 => Some(Map(BulkRequestCsvColumn.LINE_ERROR -> Messages("gmp.error.parsing.too_few_columns")))
+      case x if x > 10 => Some(Map(BulkRequestCsvColumn.LINE_ERROR -> Messages("gmp.error.parsing.too_many_columns")))
       case _ => {
         columns.zipWithIndex.map {
           case (value, BulkRequestCsvColumn.SCON) => (BulkRequestCsvColumn.SCON, validateScon(value))
