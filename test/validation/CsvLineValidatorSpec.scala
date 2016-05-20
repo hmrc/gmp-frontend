@@ -100,7 +100,7 @@ class CsvLineValidatorSpec extends FlatSpec with Matchers with OneAppPerSuite {
     errors.get should contain(BulkRequestCsvColumn.FORENAME -> Messages("gmp.error.firstnameorinitial"))
   }
 
-  it should "report a first name that is longer than 98 characters" in {
+  it should "report a first name that is longer than 99 characters" in {
     val errors = CsvLineValidator.validateLine(CsvLine.copy(firstForename = "A" * 99).toString)
 
     errors shouldBe defined
@@ -117,7 +117,8 @@ class CsvLineValidatorSpec extends FlatSpec with Matchers with OneAppPerSuite {
     val errors = CsvLineValidator.validateLine(CsvLine.copy(firstForename = "Joe Bloggs 123%^&{}").toString)
 
     errors shouldBe defined
-    errors.get should contain(BulkRequestCsvColumn.FORENAME -> Messages("gmp.error.name.invalid", Messages("gmp.lowercase.firstname")))
+    val message = Messages("gmp.error.name.invalid", Messages("gmp.lowercase.firstname"))
+    errors.get should contain(BulkRequestCsvColumn.FORENAME -> s""""$message"""")
   }
 
   it should "report a missing last name" in {
@@ -150,7 +151,9 @@ class CsvLineValidatorSpec extends FlatSpec with Matchers with OneAppPerSuite {
   it should "report a last name that contains invalid characters" in {
     val errors = CsvLineValidator.validateLine(CsvLine.copy(surname = "Jerry Bloggs $$%34839 4").toString)
 
-    errors.get should contain(BulkRequestCsvColumn.SURNAME -> Messages("gmp.error.name.invalid", Messages("gmp.lowercase.lastname")))
+    errors shouldBe defined
+    val message = Messages("gmp.error.name.invalid", Messages("gmp.lowercase.lastname"))
+    errors.get should contain(BulkRequestCsvColumn.SURNAME -> s""""$message"""")
   }
 
   it should "not report a missing member reference" in {

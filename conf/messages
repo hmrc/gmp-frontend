@@ -67,7 +67,7 @@ gmp.bulk.subheaders.contsandearnings=Contributions and earnings
 gmp.bulk.explanations.calculations.1=All GMP figures are weekly and in pounds.
 gmp.bulk.explanations.calculations.2=Periods refer to GMP values where there is more than one contracted-out period.
 gmp.bulk.explanations.failed.1=For failed calculations see ''Reason for error'' and ''What to do''.
-gmp.bulk.explanations.failed.2=if you need further help, contact HM Revenue and Customs through the GMP Service Queries database in the LIVE shared workspace e-room.
+gmp.bulk.explanations.failed.2=If you need further help, contact HM Revenue and Customs through the GMP Service Queries database in the LIVE shared workspace e-room.
 gmp.bulk.explanations.contsandearnings=A separate contributions and earnings file for successful calculations.
 gmp.bulk.wrong_user.header = There is a problem
 
@@ -202,7 +202,7 @@ gmp.error.reval_date.to = The calculation can only be revalued up until 4 April 
 gmp.error.year.invalid.format = Enter the year in full (4 numbers)
 gmp.error.date.nonnumber = Enter a date using numbers only
 gmp.error.reason.mandatory = Select an option
-gmp.generic.errors_heading= There is a problem with the form
+gmp.generic.errors_heading = There is a problem with the form
 gmp.error.name.invalid = Enter a {0} using only letters, hyphens, apostrophes and spaces
 gmp.error.surname.invalid = Enter a last name with more than 1 character
 gmp.error.email.invalid = Enter a valid email address
