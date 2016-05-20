@@ -102,7 +102,7 @@ class GmpBulkConnectorSpec extends PlaySpec with OneServerPerSuite with MockitoS
       val result = testGmpBulkConnector.getResultsAsCsv("","")
       val resolvedResult = await(result)
 
-      resolvedResult must be("THIS IS A CSV STRING")
+      resolvedResult.body must be("THIS IS A CSV STRING")
     }
 
     "return all contributions and earnings as a csv" in {
@@ -113,7 +113,7 @@ class GmpBulkConnectorSpec extends PlaySpec with OneServerPerSuite with MockitoS
       val result = testGmpBulkConnector.getContributionsAndEarningsAsCsv("")
       val resolvedResult = await(result)
 
-      resolvedResult must be("THIS IS A CSV STRING")
+      resolvedResult.body must be("THIS IS A CSV STRING")
 
     }
 

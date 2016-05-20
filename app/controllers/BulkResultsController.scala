@@ -47,7 +47,7 @@ trait BulkResultsController extends GmpController {
     implicit user =>
       implicit request => {
         gmpBulkConnector.getResultsAsCsv(uploadReference, filter).map {
-          csv => Ok(csv).as("text/csv")
+          csvResponse => Ok(csvResponse.body).as("text/csv").withHeaders(("Content-Disposition",csvResponse.header("Content-Disposition").getOrElse("")))
         }
       }
   }
@@ -57,7 +57,7 @@ trait BulkResultsController extends GmpController {
     implicit user =>
       implicit request => {
         gmpBulkConnector.getContributionsAndEarningsAsCsv(uploadReference).map {
-          csv => Ok(csv).as("text/csv")
+          csvResponse => Ok(csvResponse.body).as("text/csv").withHeaders(("Content-Disposition",csvResponse.header("Content-Disposition").getOrElse("")))
         }
       }
   }

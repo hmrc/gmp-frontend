@@ -87,7 +87,7 @@ trait GmpBulkConnector extends ServicesConfig {
     result
   }
 
-  def getResultsAsCsv(uploadReference: String, filter: String)(implicit user: AuthContext, headerCarrier: HeaderCarrier): Future[String] = {
+  def getResultsAsCsv(uploadReference: String, filter: String)(implicit user: AuthContext, headerCarrier: HeaderCarrier): Future[HttpResponse] = {
     val baseURI = s"gmp/${getUser(user)}/gmp/get-results-as-csv"
     val bulkUri = s"$serviceURL/$baseURI/$uploadReference/$filter"
 
@@ -100,11 +100,11 @@ trait GmpBulkConnector extends ServicesConfig {
     }
 
     result.map {
-      response => response.body
+      response => response
     }
   }
 
-  def getContributionsAndEarningsAsCsv(uploadReference: String)(implicit user: AuthContext, headerCarrier: HeaderCarrier): Future[String] = {
+  def getContributionsAndEarningsAsCsv(uploadReference: String)(implicit user: AuthContext, headerCarrier: HeaderCarrier): Future[HttpResponse] = {
     val baseURI = s"gmp/${getUser(user)}/gmp/get-contributions-as-csv"
     val bulkUri = s"$serviceURL/$baseURI/$uploadReference"
 
@@ -117,7 +117,7 @@ trait GmpBulkConnector extends ServicesConfig {
     }
 
     result.map {
-      response => response.body
+      response => response
     }
   }
 

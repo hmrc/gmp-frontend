@@ -26,7 +26,7 @@ import play.api.i18n.Messages
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
-import uk.gov.hmrc.play.http.Upstream4xxResponse
+import uk.gov.hmrc.play.http.{HttpResponse, Upstream4xxResponse}
 
 import scala.concurrent.Future
 
@@ -113,7 +113,7 @@ class BulkResultsControllerSpec extends PlaySpec with OneServerPerSuite with Moc
 
       "download the results summary in csv format" in {
 
-        when(mockGmpBulkConnector.getResultsAsCsv(Matchers.any(),Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful("CSV STRING"))
+        when(mockGmpBulkConnector.getResultsAsCsv(Matchers.any(),Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(HttpResponse(responseStatus = 200,responseString = Some("CSV STRING"))))
 
         withAuthorisedUser { request =>
           val result = TestBulkResultsController.getResultsAsCsv("","").apply(request)
@@ -136,7 +136,7 @@ class BulkResultsControllerSpec extends PlaySpec with OneServerPerSuite with Moc
 
       "download the contributions and earnings in csv format" in {
 
-        when(mockGmpBulkConnector.getContributionsAndEarningsAsCsv(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful("CSV STRING"))
+        when(mockGmpBulkConnector.getContributionsAndEarningsAsCsv(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(HttpResponse(responseStatus = 200,responseString = Some("CSV STRING"))))
 
         withAuthorisedUser { request =>
           val result = TestBulkResultsController.getContributionsAndEarningsAsCsv("").apply(request)
