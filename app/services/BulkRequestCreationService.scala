@@ -16,7 +16,7 @@
 
 package services
 
-import models.{BulkCalculationRequest, BulkCalculationRequestLine, CalculationRequestLine}
+import models.{GmpDate, BulkCalculationRequest, BulkCalculationRequestLine, CalculationRequestLine}
 import org.joda.time.LocalDate
 import org.joda.time.format.DateTimeFormat
 import play.api.Logger
@@ -81,7 +81,7 @@ trait BulkRequestCreationService extends BulkEntityProcessor[BulkCalculationRequ
       lineArray(BulkRequestCsvColumn.SURNAME),
       emptyStringsToNone(lineArray(BulkRequestCsvColumn.MEMBER_REF), { e: String => Some(e) }),
       emptyStringsToNone(lineArray(BulkRequestCsvColumn.CALC_TYPE).trim, { e: String => Some(e.toInt) }),
-      emptyStringsToNone(lineArray(BulkRequestCsvColumn.TERMINATION_DATE), { e: String => Some(LocalDate.parse(e, inputDateFormatter).toString(DATE_FORMAT)) }),
+      determineTerminationDate(lineArray(BulkRequestCsvColumn.TERMINATION_DATE), lineArray(BulkRequestCsvColumn.REVAL_DATE)),
       emptyStringsToNone(lineArray(BulkRequestCsvColumn.REVAL_DATE).trim, { e: String => Some(LocalDate.parse(e, inputDateFormatter).toString(DATE_FORMAT)) }),
       emptyStringsToNone(lineArray(BulkRequestCsvColumn.REVAL_RATE).trim, { e: String => Some(e.toInt) }),
       lineArray(BulkRequestCsvColumn.DUAL_CALC).trim.toUpperCase match {
@@ -90,6 +90,22 @@ trait BulkRequestCreationService extends BulkEntityProcessor[BulkCalculationRequ
         case _ => 0
       }
     )
+  }
+
+  private def determineTerminationDate(termDate: String, revalDate: String): Option[String] =
+  {
+    termDate match {
+      case "" => emptyStringsToNone(revalDate, { e: String => Some(LocalDate.parse(e, inputDateFormatter).toString(DATE_FORMAT)) })
+      case _ => {
+        val convertedDate = LocalDate.parse(termDate, inputDateFormatter)
+        val thatDate = new LocalDate(2016, 4, 5)
+        if (convertedDate.isAfter(thatDate))
+          Some(convertedDate.toString(DATE_FORMAT))
+        else
+          None
+      }
+    }
+
   }
 
   private def constructBulkCalculationRequestLine(line: String): BulkCalculationRequestLine = {
