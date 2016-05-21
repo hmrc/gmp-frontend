@@ -93,6 +93,13 @@ class CsvLineValidatorSpec extends FlatSpec with Matchers with OneAppPerSuite {
     errors.get should contain(BulkRequestCsvColumn.NINO -> Messages("gmp.error.nino.invalid"))
   }
 
+  it should "report a temp NINO" in {
+    val errors = CsvLineValidator.validateLine(CsvLine.copy(nino = "TN000000A").toString)
+
+    errors shouldBe defined
+    errors.get should contain(BulkRequestCsvColumn.NINO -> Messages("gmp.error.nino.temporary"))
+  }
+
   it should "report a missing first name" in {
     val errors = CsvLineValidator.validateLine(CsvLine.copy(firstForename = "").toString)
 

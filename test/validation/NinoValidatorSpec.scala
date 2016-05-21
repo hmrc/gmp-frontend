@@ -41,18 +41,20 @@ class NinoValidatorSpec extends WordSpec with Matchers {
       validateNino("ABC12345C") should equal (false)
       validateNino("ABC123456C") should equal (false)
     }
-    "fail with lowercase letters" in {
-      validateNino("ab123456c") should equal (false)
-    }
     "fail with less than 6 middle digits" in { validateNino("AB12345C") should equal (false) }
     "fail with more than 6 middle digits" in { validateNino("AB1234567C") should equal (false) }
 
     "fail if we start with invalid characters" in {
 
-      val invalidPrefixes = List("BG", "GB", "NK", "KN", "TN", "NT", "ZZ", "CC")
+      val invalidPrefixes = List("BG", "GB", "NK", "KN", "NT", "ZZ", "CC")
       for (v <- invalidPrefixes) {
         validateNino(v + "123456C") should equal (false)
       }
+    }
+
+    "pass if we have spaces" in {
+      validateNino("C E0 00 00 0A") shouldBe true
+
     }
 
     "fail if the second letter O" in {
