@@ -32,9 +32,11 @@ trait FieldValidator {
   }
 
   def validateNino(nino: String) = {
+    val TEMP_NINO = "TN"
     nino match {
       case "" => Some(Messages("gmp.error.mandatory", Messages("gmp.nino")))
       case x if !NinoValidate.isValid(x) => Some(Messages("gmp.error.nino.invalid"))
+      case x if x.toUpperCase().startsWith(TEMP_NINO) => Some(Messages("gmp.error.nino.temporary"))
       case _ => None
     }
   }
