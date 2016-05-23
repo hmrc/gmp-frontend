@@ -19,22 +19,18 @@ package controllers
 import config.GmpFrontendAuthConnector
 import connectors.GmpBulkConnector
 import controllers.auth.GmpRegime
-import models.{BulkResultsSummary}
 import uk.gov.hmrc.play.http.Upstream4xxResponse
-
-
-import scala.concurrent.Future
 
 trait BulkResultsController extends GmpController {
 
   val gmpBulkConnector: GmpBulkConnector
 
-  def get(uploadReference: String) = AuthorisedFor(GmpRegime, pageVisibilityPredicate).async {
+  def get(uploadReference: String, comingFromPage: Int) = AuthorisedFor(GmpRegime, pageVisibilityPredicate).async {
 
     implicit user =>
       implicit request => {
         gmpBulkConnector.getBulkResultsSummary(uploadReference).map{
-          bulkResultsSummary => Ok(views.html.bulk_results(bulkResultsSummary, uploadReference))
+          bulkResultsSummary => Ok(views.html.bulk_results(bulkResultsSummary, uploadReference,comingFromPage))
         }.recover {
           case e: Upstream4xxResponse if e.upstreamResponseCode == FORBIDDEN => {
             Ok(views.html.bulk_wrong_user(request))

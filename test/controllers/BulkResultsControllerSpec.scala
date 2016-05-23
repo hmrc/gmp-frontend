@@ -42,10 +42,12 @@ class BulkResultsControllerSpec extends PlaySpec with OneServerPerSuite with Moc
   }
 
   "Bulk Results Controller" must {
+    val comingFromDashboard = 0
+    val comingFromMoreBulkResults = 1
     val bulkResultsSummary = BulkResultsSummary("0001.csv", 50, 25)
 
     "respond to GET /guaranteed-minimum-pension/bulk/results" in {
-      val result = route(FakeRequest(GET, "/guaranteed-minimum-pension/bulk/results/athing"))
+      val result = route(FakeRequest(GET, "/guaranteed-minimum-pension/bulk/results/anything/0"))
       status(result.get) must not equal (NOT_FOUND)
     }
 
@@ -54,7 +56,7 @@ class BulkResultsControllerSpec extends PlaySpec with OneServerPerSuite with Moc
 
       "require authorisation" in {
 
-        val result = TestBulkResultsController.get("").apply(FakeRequest())
+        val result = TestBulkResultsController.get("",comingFromDashboard).apply(FakeRequest())
         status(result) must equal(SEE_OTHER)
         redirectLocation(result).get must include("/account/sign-in")
       }
@@ -64,7 +66,7 @@ class BulkResultsControllerSpec extends PlaySpec with OneServerPerSuite with Moc
         "respond with a status of OK" in {
           when(mockGmpBulkConnector.getBulkResultsSummary(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(bulkResultsSummary))
           withAuthorisedUser { request =>
-            val result = TestBulkResultsController.get("").apply(request)
+            val result = TestBulkResultsController.get("",comingFromDashboard).apply(request)
             status(result) must equal(OK)
           }
         }
@@ -72,7 +74,7 @@ class BulkResultsControllerSpec extends PlaySpec with OneServerPerSuite with Moc
         "load the results page" in {
           when(mockGmpBulkConnector.getBulkResultsSummary(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(bulkResultsSummary))
           withAuthorisedUser { request =>
-            val result = TestBulkResultsController.get("").apply(request)
+            val result = TestBulkResultsController.get("",comingFromDashboard).apply(request)
 
             contentAsString(result) must include(Messages("gmp.bulk.results.banner"))
           }
@@ -84,7 +86,7 @@ class BulkResultsControllerSpec extends PlaySpec with OneServerPerSuite with Moc
           when(mockGmpBulkConnector.getBulkResultsSummary(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(bulkResultsSummary))
 
           withAuthorisedUser { request =>
-            val result = TestBulkResultsController.get("").apply(request)
+            val result = TestBulkResultsController.get("",comingFromDashboard).apply(request)
 
             contentAsString(result) must include(Messages("gmp.bulk.subheaders.successfulcalculations") + " (" + (bulkResultsSummary.total - bulkResultsSummary.failed) + ")")
           }
@@ -94,7 +96,7 @@ class BulkResultsControllerSpec extends PlaySpec with OneServerPerSuite with Moc
         "show the incorrect user page" in {
           when(mockGmpBulkConnector.getBulkResultsSummary(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.failed(new Upstream4xxResponse("", FORBIDDEN, 0, Map())))
           withAuthorisedUser { request =>
-            val result = TestBulkResultsController.get("").apply(request)
+            val result = TestBulkResultsController.get("",comingFromDashboard).apply(request)
 
             contentAsString(result) must include(Messages("gmp.bulk.wrong_user.login_text"))
           }

@@ -14,7 +14,7 @@
 * limitations under the License.
 *@
 
-@(bulkResultsSummary: BulkResultsSummary, uploadReference: String)(implicit request: Request[_])
+@(bulkResultsSummary: BulkResultsSummary, uploadReference: String, comingFromPage: Int)(implicit request: Request[_])
 
 @import uk.gov.hmrc.play.views.html._
 @import uk.gov.hmrc.play.views.html.helpers._
@@ -52,6 +52,10 @@
 }
 
 <div class="grid-2-3 custom-back-link">
-    <a href="@routes.MoreBulkResultsController.retrieveMoreBulkResults" id="back-link">@Messages.get("gmp.back.link")</a>
+  @if(comingFromPage == 0){
+    <a href="@routes.DashboardController.get" id="back-link">@Messages.get("gmp.back.link")</a>
+  }else {
+    <a href="@routes.MoreBulkResultsController.retrieveMoreBulkResults" id="back-link-other">@Messages.get("gmp.back.link")</a>
+  }
 </div>
 }
