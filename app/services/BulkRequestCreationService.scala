@@ -77,8 +77,8 @@ trait BulkRequestCreationService extends BulkEntityProcessor[BulkCalculationRequ
     CalculationRequestLine(
       lineArray(BulkRequestCsvColumn.SCON).trim,
       lineArray(BulkRequestCsvColumn.NINO).replaceAll("\\s", "").toUpperCase,
-      lineArray(BulkRequestCsvColumn.FORENAME),
-      lineArray(BulkRequestCsvColumn.SURNAME),
+      lineArray(BulkRequestCsvColumn.FORENAME).replaceAll("’", "'").toUpperCase,
+      lineArray(BulkRequestCsvColumn.SURNAME).replaceAll("’", "'").toUpperCase,
       emptyStringsToNone(lineArray(BulkRequestCsvColumn.MEMBER_REF), { e: String => Some(e) }),
       emptyStringsToNone(lineArray(BulkRequestCsvColumn.CALC_TYPE).trim, { e: String => Some(e.toInt) }),
       determineTerminationDate(lineArray(BulkRequestCsvColumn.TERMINATION_DATE), lineArray(BulkRequestCsvColumn.REVAL_DATE)),
