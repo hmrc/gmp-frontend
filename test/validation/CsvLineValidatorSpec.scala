@@ -115,7 +115,7 @@ class CsvLineValidatorSpec extends FlatSpec with Matchers with OneAppPerSuite {
   }
 
   it should "not report a first name that contains valid characters" in {
-    val errors = CsvLineValidator.validateLine(CsvLine.copy(firstForename = "This should be a 'valid-name'").toString)
+    val errors = CsvLineValidator.validateLine(CsvLine.copy(firstForename = "This should be a ’valid-name'").toString)
 
     errors shouldBe empty
   }
