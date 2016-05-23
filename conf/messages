@@ -175,13 +175,17 @@ gmp.bulk_calculation_text = Upload the details of many members at once and we wi
 gmp.previous_calculations_text = Results for the last three bulk requests made in the previous 30 days.
 gmp.bulk.wrong_user.login_text = You need to login with the same Government Gateway account that was used to submit the file.
 gmp.bulk.wrong_user.signout_text = and login with right account.
-gmp.bulk.wrong_user.dashboard_text = Go to your <a id="bulk_wrong_user_dashboard" data-journey-click="gmp-bulk:click:bulk_wrong_user_dashboard" href="/guaranteed-minimum-pension/dashboard">Guaranteed Minimum Pension checker</a> main page.
+gmp.bulk.wrong_user.dashboard_text = Go to your <a id="bulk_wrong_user_dashboard" data-journey-click="gmp-bulk:click:bulk_wrong_user_dashboard" href="/guaranteed-minimum-pension/dashboard">Guaranteed Minimum Pension checker</a> dashboard.
 gmp.previous_calculations_text = You have 30 days from the upload date to view the results.
 gmp.no_previous_calculations_text = We keep the results of previous calculations for 30 days. You have none to view.
 gmp.revaluation_rate = Revaluation rate
 gmp.bulk.results = Results
 gmp.bulk.results.csv = CSV
 gmp.bulk.results.reference = Reference {0}
+gmp.bulk.failure.dashboard = <a id="bulk_failure_dashboard" data-journey-click="gmp-bulk:click:bulk_failure_dashboard" href="/guaranteed-minimum-pension/dashboard">Back to the dashboard</a>
+gmp.bulk.failure.antivirus = A virus was detected in the uploaded file. Create the file again and <a href="/guaranteed-minimum-pension/new-bulk-calculation" id="bulk-back-link">upload it</a>.
+gmp.bulk.failure.missing = You did not select a file to upload. Please go <a href="/guaranteed-minimum-pension/new-bulk-calculation">back</a>, browse for a file and try again.
+gmp.bulk.failure.generic = Something went wrong with uploading your file. <br/>There is probably a problem with the system so <a href="/guaranteed-minimum-pension/new-bulk-calculation">try again in a few moments</a>.
 
 # errors
 gmp.error.revaluation_before_leaving = Enter a date on or after {0}
