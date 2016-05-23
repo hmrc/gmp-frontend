@@ -213,7 +213,7 @@ gmp.error.revaluation_rate.invalid = Enter a revaluation rate between 0 and 3. S
 gmp.error.parsing.too_few_columns = The calculation request has fewer than ten fields
 gmp.error.parsing.too_many_columns = The calculation request has more than ten fields
 
-gmp.error.scon.invalid = Enter a Scheme Contracted Out Number in the same format as the example given
+gmp.error.scon.invalid = Enter a SCON in the same format as the example given in the instructions file
 gmp.error.scon.nps_invalid = This SCON does not exist. Check and try again.
 gmp.error.nino.invalid = The National Insurance number you have entered is not valid. Check it and try again.
 gmp.error.nino.temporary = This is a temporary National Insurance number. You need a permanent one to calculate a GMP.
