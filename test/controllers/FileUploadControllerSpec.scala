@@ -18,7 +18,6 @@ package controllers
 
 import connectors.AttachmentsConnector
 import models._
-import org.joda.time.{DateTime, DateTimeUtils}
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.mock.MockitoSugar
@@ -26,15 +25,13 @@ import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
 import play.api.i18n.Messages
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.{AnyContentAsEmpty, Result}
-import play.api.test.{FakeHeaders, FakeRequest}
+import play.api.test.{FakeRequest, FakeHeaders}
 import play.api.test.Helpers._
 import play.twirl.api.Html
 import services.SessionService
 import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
-import uk.gov.hmrc.play.http.HttpResponse
 import uk.gov.hmrc.play.partials.HtmlPartial
-
-import scala.concurrent.{Await, Future}
+import scala.concurrent.Future
 
 class FileUploadControllerSpec extends PlaySpec with OneServerPerSuite with MockitoSugar with GmpUsers {
   val mockAuthConnector = mock[AuthConnector]
@@ -117,12 +114,31 @@ class FileUploadControllerSpec extends PlaySpec with OneServerPerSuite with Mock
       }
 
       "authorised users" must {
-        "have a status of OK" in {
+        "have a status of OK for generic error" in {
           withAuthorisedUser { user =>
             failure(user) { result =>
               status(result) must be(OK)
+              contentAsString(result) must include(Messages("gmp.bulk.failure.generic"))
             }
           }
+        }
+
+        "show correct message for virus error" in {
+          withAuthorisedUserAndPath ({ user =>
+            failure(user) { result =>
+              status(result) must be(OK)
+              contentAsString(result) must include(Messages("gmp.bulk.failure.antivirus"))
+            }
+          }, "GET", "/upload-csv/failure?error_message=VIRUS")
+        }
+
+        "show correct message for missing file error" in {
+          withAuthorisedUserAndPath ({ user =>
+            failure(user) { result =>
+              status(result) must be(OK)
+              contentAsString(result) must include(Messages("gmp.bulk.failure.missing"))
+            }
+          }, "GET", "/upload-csv/failure?error_message=SELECT")
         }
       }
     }
@@ -198,4 +214,5 @@ class FileUploadControllerSpec extends PlaySpec with OneServerPerSuite with Mock
   def failure(request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest())(handler: Future[Result] => Any): Unit = {
     handler(TestFileUploadController.failure().apply(request))
   }
+
 }
