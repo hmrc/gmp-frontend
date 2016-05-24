@@ -46,6 +46,19 @@ trait GmpUsers {
     test(request)
   }
 
+  def withAuthorisedUserAndPath(test: FakeRequest[AnyContentAsEmpty.type] => Any, method: String, path: String) {
+    val userId = s"user-${UUID.randomUUID}"
+    when(mockAuthConnector.currentAuthority(Matchers.any())) thenReturn {
+      Future.successful(Some(Authority(userId, Accounts(psa = Some(PsaAccount("gmp/B1234567", PsaId("B1234567")))), None, None, CredentialStrength.None, ConfidenceLevel.L50)))
+    }
+    val sessionId = s"session-${UUID.randomUUID}"
+    lazy val request = FakeRequest(method, path).withSession(
+      SessionKeys.sessionId -> sessionId,
+      SessionKeys.token -> "RANDOMTOKEN",
+      SessionKeys.userId -> userId)
+    test(request)
+  }
+
   def withAuthorisedUserLowConfidenceLevel(test: FakeRequest[AnyContentAsEmpty.type] => Any) {
     val userId = s"user-${UUID.randomUUID}"
     when(mockAuthConnector.currentAuthority(Matchers.any())) thenReturn {

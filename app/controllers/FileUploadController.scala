@@ -49,6 +49,7 @@ trait FileUploadController extends GmpController with Actions {
   def failure() = AuthorisedFor(GmpRegime, pageVisibilityPredicate) {
     implicit user =>
       implicit request =>
+        println("*****************************" + request.getQueryString("error_message"))
         request.getQueryString("error_message") match {
           case Some(x) if x.toUpperCase.contains("VIRUS") => Ok(views.html.bulk_failure(Messages("gmp.bulk.failure.antivirus")))
           case Some(x) if x.toUpperCase.contains("SELECT") => Ok(views.html.bulk_failure(Messages("gmp.bulk.failure.missing")))
