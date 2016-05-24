@@ -82,10 +82,10 @@ trait BulkRequestCreationService extends BulkEntityProcessor[BulkCalculationRequ
       lineArray(BulkRequestCsvColumn.FORENAME).replaceAll("’", "'").toUpperCase,
       lineArray(BulkRequestCsvColumn.SURNAME).replaceAll("’", "'").toUpperCase,
       emptyStringsToNone(lineArray(BulkRequestCsvColumn.MEMBER_REF), { e: String => Some(e) }),
-      emptyStringsToNone(lineArray(BulkRequestCsvColumn.CALC_TYPE).trim, { e: String => Some(protectedToInt(e)) }),
+      emptyStringsToNone(lineArray(BulkRequestCsvColumn.CALC_TYPE).trim, { e: String => Some(e.toInt) }),
       determineTerminationDate(lineArray(BulkRequestCsvColumn.TERMINATION_DATE), lineArray(BulkRequestCsvColumn.REVAL_DATE)),
-      emptyStringsToNone(lineArray(BulkRequestCsvColumn.REVAL_DATE).trim, { e: String => protectedDateConvert(e) }),
-      emptyStringsToNone(lineArray(BulkRequestCsvColumn.REVAL_RATE).trim, { e: String => Some(protectedToInt(e)) }),
+      emptyStringsToNone(lineArray(BulkRequestCsvColumn.REVAL_DATE).trim, { e: String => Some(LocalDate.parse(e, inputDateFormatter).toString(DATE_FORMAT)) }),
+      emptyStringsToNone(lineArray(BulkRequestCsvColumn.REVAL_RATE).trim, { e: String => Some(e.toInt) }),
       lineArray(BulkRequestCsvColumn.DUAL_CALC).trim.toUpperCase match {
         case "Y" => 1
         case "YES" => 1
