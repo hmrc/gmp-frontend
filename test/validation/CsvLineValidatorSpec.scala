@@ -263,4 +263,37 @@ class CsvLineValidatorSpec extends FlatSpec with Matchers with OneAppPerSuite {
 
     errors shouldBe empty
   }
+
+  "Dual-calc validation" should "not report NO as a validation error" in {
+    CsvLineValidator.validateDualCalc("NO") shouldBe empty
+  }
+
+  it should "not report no as a validation error" in {
+    CsvLineValidator.validateDualCalc("no") shouldBe empty
+  }
+
+  it should "not report N as a validation error" in {
+    CsvLineValidator.validateDualCalc("N") shouldBe empty
+  }
+
+  it should "not report n as a validation error" in {
+    CsvLineValidator.validateDualCalc("n") shouldBe empty
+  }
+
+  it should "not report YES as a validation error" in {
+   CsvLineValidator.validateDualCalc("YES") shouldBe empty
+  }
+
+  it should "not report yes as a validation error" in {
+    CsvLineValidator.validateDualCalc("yes") shouldBe empty
+  }
+
+  it should "not report Y as a validation error" in {
+    CsvLineValidator.validateDualCalc("Y") shouldBe empty
+  }
+
+  it should "not report y as a validation error" in {
+    CsvLineValidator.validateDualCalc("y") shouldBe empty
+  }
+
 }
