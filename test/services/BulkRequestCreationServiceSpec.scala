@@ -39,7 +39,7 @@ class BulkRequestCreationServiceSpec extends PlaySpec with ScalaFutures with Moc
   val calcLine10 = BulkCalculationRequestLine(1, Some(CalculationRequestLine("S2730012K", "GY000002A", "PARIS", "HILTON", Some("THISISATEST SCENARIO"), Some(0), Some("2015-07-07"), Some("2016-07-07"), None, 1)),None,None)
   val calcLine11 = BulkCalculationRequestLine(1, Some(CalculationRequestLine("S2730012K", "GY000002A", "PARIS", "HILTON", Some("THISISATEST SCENARIO"), Some(0), None, Some("2016-07-07"), None, 1)),None,None)
   val calcLine12 = BulkCalculationRequestLine(1, Some(CalculationRequestLine("S2730012K", "gy 00 00 02 a", "PARIS", "HILTON", Some("THISISATEST SCENARIO"), Some(0), Some("2016-07-07"), Some("2017-07-07"), None, 1)),None,None)
-  val calcLine14 = BulkCalculationRequestLine(1, Some(CalculationRequestLine("S1301234T", nino2, " Tim ", "O’Brien", Some("GS"), Some(1), Some("2017-02-02"), Some("2010-01-01"), Some(1), 1)),None,None)
+  val calcLine14 = BulkCalculationRequestLine(1, Some(CalculationRequestLine("S1301234T", " GY000002A ", " Tim ", " O’Brien ", Some(" GS "), Some(1), Some("2017-02-02"), Some("2010-01-01"), Some(1), 1)),None,None)
 
   val inputLine1 = (Messages("gmp.upload_csv_column_headers") + "\n" + lineListFromCalculationRequestLine(calcLine1).mkString).toList
   val inputLine2 = (Messages("gmp.upload_csv_column_headers") + "\n" + lineListFromCalculationRequestLine(calcLine2).mkString).toList
@@ -193,9 +193,14 @@ class BulkRequestCreationServiceSpec extends PlaySpec with ScalaFutures with Moc
       bulkRequest.calculationRequests.head.validCalculationRequest.head.dualCalc must be (0)
     }
 
-    "trim spaces around forename" in {
+    "trim spaces around fields" in {
       val bulkRequest = TestBulkRequestCreationService.createBulkRequest(collection, "14", bulkRequest14.email , bulkRequest14.reference)
       bulkRequest.calculationRequests.head.validCalculationRequest.get.firstForename mustBe "TIM"
+      bulkRequest.calculationRequests.head.validCalculationRequest.get.surname mustBe "O'BRIEN"
+      bulkRequest.calculationRequests.head.validCalculationRequest.get.nino mustBe "GY000002A"
+      bulkRequest.calculationRequests.head.validCalculationRequest.get.memberReference mustBe Some("GS")
+      bulkRequest.calculationRequests.head.validCalculationRequest.get.revaluationDate mustBe Some("2010-01-01")
+
     }
   }
 
