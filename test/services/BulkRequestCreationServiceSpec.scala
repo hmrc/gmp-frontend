@@ -54,6 +54,12 @@ class BulkRequestCreationServiceSpec extends PlaySpec with ScalaFutures with Moc
   val inputLine14 = (Messages("gmp.upload_csv_column_headers") + "\n" + lineListFromCalculationRequestLine(calcLine14).mkString).toList
   val inputLineWithoutData = (Messages("gmp.upload_csv_column_headers") + "\n" + ",,,").toList
 
+
+  val inputLineWithInvalidNumber = List('g', 'm', 'p', '.', 'u', 'p', 'l', 'o', 'a', 'd', '_', 'c', 's', 'v', '_', 'c', 'o', 'l', 'u', 'm', 'n', '_', 'h', 'e',
+    'a', 'd', 'e', 'r', 's', '\n', 'S', '2', '7', '3', '0', '0', '1', '2', 'K', ',', 'g', 'y', ' ', '0', '0', ' ', '0', '0', ' ', '0', '2', ' ', 'a', ',', 'P',
+    'A', 'R', 'I', 'S', ',', 'H', 'I', 'L', 'T', 'O', 'N', ',', 'T', 'H', 'I', 'S', 'I', 'S', 'A', 'T', 'E', 'S', 'T', ' ', 'S', 'C', 'E', 'N', 'A', 'R', 'I',
+    'O', ',', 'A', ',', '0', '7', '/', '0', '7', '/', '2', '0', '1', '6', ',', '0', '7', '/', '0', '7', '/', '2', '0', '1', 'A', ',', ',', 'Y')
+
   val inputLineWithoutHeader = lineListFromCalculationRequestLine(calcLine2)
 
   object TestBulkRequestCreationService extends BulkRequestCreationService {
@@ -74,7 +80,7 @@ class BulkRequestCreationServiceSpec extends PlaySpec with ScalaFutures with Moc
         case "12" => inputLine12.iterator
         case "13" => inputLineWithoutData.iterator
         case "14" => inputLine14.iterator
-        case "14" => inputLineWithInvalidNumber.iterator
+        case "15" => inputLineWithInvalidNumber.iterator
 
       }
     }
@@ -178,7 +184,7 @@ class BulkRequestCreationServiceSpec extends PlaySpec with ScalaFutures with Moc
     }
 
     "cope with invalid number and date" in {
-      val bulkRequest = TestBulkRequestCreationService.createBulkRequest(collection, "14", invalidBulkRequest.email, invalidBulkRequest.reference)
+      val bulkRequest = TestBulkRequestCreationService.createBulkRequest(collection, "15", invalidBulkRequest.email, invalidBulkRequest.reference)
       val errors = bulkRequest.calculationRequests.head.validationErrors
 
       errors mustBe defined

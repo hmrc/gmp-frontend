@@ -78,14 +78,14 @@ trait BulkRequestCreationService extends BulkEntityProcessor[BulkCalculationRequ
 
     CalculationRequestLine(
       lineArray(BulkRequestCsvColumn.SCON).trim,
-      lineArray(BulkRequestCsvColumn.NINO).replaceAll("\\s", "").toUpperCase,
-      lineArray(BulkRequestCsvColumn.FORENAME).replaceAll("’", "'").toUpperCase,
-      lineArray(BulkRequestCsvColumn.SURNAME).replaceAll("’", "'").toUpperCase,
-      emptyStringsToNone(lineArray(BulkRequestCsvColumn.MEMBER_REF), { e: String => Some(e) }),
-      emptyStringsToNone(lineArray(BulkRequestCsvColumn.CALC_TYPE).trim, { e: String => Some(e.toInt) }),
-      determineTerminationDate(lineArray(BulkRequestCsvColumn.TERMINATION_DATE), lineArray(BulkRequestCsvColumn.REVAL_DATE)),
-      emptyStringsToNone(lineArray(BulkRequestCsvColumn.REVAL_DATE).trim, { e: String => Some(LocalDate.parse(e, inputDateFormatter).toString(DATE_FORMAT)) }),
-      emptyStringsToNone(lineArray(BulkRequestCsvColumn.REVAL_RATE).trim, { e: String => Some(e.toInt) }),
+      lineArray(BulkRequestCsvColumn.NINO).replaceAll("\\s", "").toUpperCase.trim,
+      lineArray(BulkRequestCsvColumn.FORENAME).replaceAll("’", "'").toUpperCase.trim,
+      lineArray(BulkRequestCsvColumn.SURNAME).replaceAll("’", "'").toUpperCase.trim,
+      emptyStringsToNone(lineArray(BulkRequestCsvColumn.MEMBER_REF).trim, { e: String => Some(e) }),
+      emptyStringsToNone(lineArray(BulkRequestCsvColumn.CALC_TYPE).trim, { e: String => protectedToInt(e) }),
+      determineTerminationDate(lineArray(BulkRequestCsvColumn.TERMINATION_DATE).trim, lineArray(BulkRequestCsvColumn.REVAL_DATE)),
+      emptyStringsToNone(lineArray(BulkRequestCsvColumn.REVAL_DATE).trim, { e: String => protectedDateConvert(e) }),
+      emptyStringsToNone(lineArray(BulkRequestCsvColumn.REVAL_RATE).trim, { e: String => protectedToInt(e) }),
       lineArray(BulkRequestCsvColumn.DUAL_CALC).trim.toUpperCase match {
         case "Y" => 1
         case "YES" => 1
@@ -94,14 +94,14 @@ trait BulkRequestCreationService extends BulkEntityProcessor[BulkCalculationRequ
     )
   }
 
-  private def protectedToInt(number: String): Int ={
+  private def protectedToInt(number: String): Option[Int] ={
     val tryConverting = Try(number.toInt)
 
     tryConverting match {
-      case Success(number) => number
+      case Success(number) => Some(number)
       case Failure(f) =>
         Logger.debug(s"[BulkCreationService][protectedToInt : ${f.getMessage}]")
-        0
+        None
     }
   }
 
