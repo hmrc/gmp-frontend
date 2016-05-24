@@ -76,12 +76,12 @@ trait BulkRequestCreationService extends BulkEntityProcessor[BulkCalculationRequ
 
     CalculationRequestLine(
       lineArray(BulkRequestCsvColumn.SCON).trim,
-      lineArray(BulkRequestCsvColumn.NINO).replaceAll("\\s", "").toUpperCase,
-      lineArray(BulkRequestCsvColumn.FORENAME).replaceAll("’", "'").toUpperCase,
-      lineArray(BulkRequestCsvColumn.SURNAME).replaceAll("’", "'").toUpperCase,
-      emptyStringsToNone(lineArray(BulkRequestCsvColumn.MEMBER_REF), { e: String => Some(e) }),
+      lineArray(BulkRequestCsvColumn.NINO).replaceAll("\\s", "").toUpperCase.trim,
+      lineArray(BulkRequestCsvColumn.FORENAME).replaceAll("’", "'").toUpperCase.trim,
+      lineArray(BulkRequestCsvColumn.SURNAME).replaceAll("’", "'").toUpperCase.trim,
+      emptyStringsToNone(lineArray(BulkRequestCsvColumn.MEMBER_REF).trim, { e: String => Some(e) }),
       emptyStringsToNone(lineArray(BulkRequestCsvColumn.CALC_TYPE).trim, { e: String => Some(e.toInt) }),
-      determineTerminationDate(lineArray(BulkRequestCsvColumn.TERMINATION_DATE), lineArray(BulkRequestCsvColumn.REVAL_DATE)),
+      determineTerminationDate(lineArray(BulkRequestCsvColumn.TERMINATION_DATE).trim, lineArray(BulkRequestCsvColumn.REVAL_DATE)),
       emptyStringsToNone(lineArray(BulkRequestCsvColumn.REVAL_DATE).trim, { e: String => Some(LocalDate.parse(e, inputDateFormatter).toString(DATE_FORMAT)) }),
       emptyStringsToNone(lineArray(BulkRequestCsvColumn.REVAL_RATE).trim, { e: String => Some(e.toInt) }),
       lineArray(BulkRequestCsvColumn.DUAL_CALC).trim.toUpperCase match {
