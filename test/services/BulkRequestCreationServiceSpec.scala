@@ -50,6 +50,7 @@ class BulkRequestCreationServiceSpec extends PlaySpec with ScalaFutures with Moc
   val inputLine10 = (Messages("gmp.upload_csv_column_headers") + "\n" + lineListFromCalculationRequestLine(calcLine10).mkString).toList
   val inputLine11 = (Messages("gmp.upload_csv_column_headers") + "\n" + lineListFromCalculationRequestLine(calcLine11).mkString).toList
   val inputLine12 = (Messages("gmp.upload_csv_column_headers") + "\n" + lineListFromCalculationRequestLine(calcLine12).mkString).toList
+  val inputLineWithoutData = (Messages("gmp.upload_csv_column_headers") + "\n" + ",,,").toList
 
   val inputLineWithoutHeader = lineListFromCalculationRequestLine(calcLine2)
 
@@ -69,6 +70,7 @@ class BulkRequestCreationServiceSpec extends PlaySpec with ScalaFutures with Moc
         case "10" => inputLine10.iterator
         case "11" => inputLine11.iterator
         case "12" => inputLine12.iterator
+        case "13" => inputLineWithoutData.iterator
       }
     }
 
@@ -167,6 +169,14 @@ class BulkRequestCreationServiceSpec extends PlaySpec with ScalaFutures with Moc
 
       errors mustBe defined
       errors.get.isDefinedAt(BulkRequestCsvColumn.SCON.toString) mustBe true
+    }
+
+    "return bulk requests with general line error" in {
+      val bulkRequest = TestBulkRequestCreationService.createBulkRequest(collection, "13", invalidBulkRequest.email, invalidBulkRequest.reference)
+      val errors = bulkRequest.calculationRequests.head.validationErrors
+
+      errors mustBe defined
+      errors.get.isDefinedAt(BulkRequestCsvColumn.LINE_ERROR.toString) mustBe true
     }
 
     "return bulk request with dual calc Yes" in {
