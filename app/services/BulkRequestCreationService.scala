@@ -24,6 +24,8 @@ import uk.gov.hmrc.play.config.ServicesConfig
 import uk.gov.hmrc.stream.BulkEntityProcessor
 import validation.CsvLineValidator
 
+import scala.util.{Failure, Success, Try}
+
 object BulkRequestCsvColumn {
   val SCON = 0
   val NINO = 1
@@ -80,10 +82,10 @@ trait BulkRequestCreationService extends BulkEntityProcessor[BulkCalculationRequ
       lineArray(BulkRequestCsvColumn.FORENAME).replaceAll("’", "'").toUpperCase,
       lineArray(BulkRequestCsvColumn.SURNAME).replaceAll("’", "'").toUpperCase,
       emptyStringsToNone(lineArray(BulkRequestCsvColumn.MEMBER_REF), { e: String => Some(e) }),
-      emptyStringsToNone(lineArray(BulkRequestCsvColumn.CALC_TYPE).trim, { e: String => Some(e.toInt) }),
+      emptyStringsToNone(lineArray(BulkRequestCsvColumn.CALC_TYPE).trim, { e: String => Some(protectedToInt(e)) }),
       determineTerminationDate(lineArray(BulkRequestCsvColumn.TERMINATION_DATE), lineArray(BulkRequestCsvColumn.REVAL_DATE)),
-      emptyStringsToNone(lineArray(BulkRequestCsvColumn.REVAL_DATE).trim, { e: String => Some(LocalDate.parse(e, inputDateFormatter).toString(DATE_FORMAT)) }),
-      emptyStringsToNone(lineArray(BulkRequestCsvColumn.REVAL_RATE).trim, { e: String => Some(e.toInt) }),
+      emptyStringsToNone(lineArray(BulkRequestCsvColumn.REVAL_DATE).trim, { e: String => protectedDateConvert(e) }),
+      emptyStringsToNone(lineArray(BulkRequestCsvColumn.REVAL_RATE).trim, { e: String => Some(protectedToInt(e)) }),
       lineArray(BulkRequestCsvColumn.DUAL_CALC).trim.toUpperCase match {
         case "Y" => 1
         case "YES" => 1
@@ -91,6 +93,30 @@ trait BulkRequestCreationService extends BulkEntityProcessor[BulkCalculationRequ
       }
     )
   }
+
+  private def protectedToInt(number: String): Int ={
+    val tryConverting = Try(number.toInt)
+
+    tryConverting match {
+      case Success(number) => number
+      case Failure(f) =>
+        Logger.debug(s"[BulkCreationService][protectedToInt : ${f.getMessage}]")
+        0
+    }
+  }
+
+  private def protectedDateConvert(date: String): Option[String] ={
+    val tryConverting = Try(LocalDate.parse(date, inputDateFormatter).toString(DATE_FORMAT))
+
+    tryConverting match {
+      case Success(convertedDate) => Some(convertedDate)
+      case Failure(f) =>
+        Logger.debug(s"[BulkCreationService][protectedDateConvert : ${f.getMessage}]")
+        None
+    }
+  }
+
+
 
   private def determineTerminationDate(termDate: String, revalDate: String): Option[String] =
   {
