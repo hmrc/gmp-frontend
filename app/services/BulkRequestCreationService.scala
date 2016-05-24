@@ -117,7 +117,10 @@ trait BulkRequestCreationService extends BulkEntityProcessor[BulkCalculationRequ
       case _ => None
     }
 
-    BulkCalculationRequestLine(1, Some(constructCalculationRequestLine(line)), None, validationErrors)
+    validationErrors match {
+      case Some(x) if x.keySet.contains(BulkRequestCsvColumn.LINE_ERROR.toString) => BulkCalculationRequestLine(1, None, None, validationErrors)
+      case _ => BulkCalculationRequestLine(1, Some(constructCalculationRequestLine(line)), None, validationErrors)
+    }
   }
 
   private def emptyStringsToNone[T](entry: String, s: (String => Option[T])): Option[T] = {
