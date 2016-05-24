@@ -621,7 +621,6 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
             content must include(Messages("gmp.cannot_calculate"))
             content must include(Messages(globalErrors.getString("58161.reason")))
             content must include(Messages(globalErrors.getString("58161.solution")))
-            content must include(Messages(globalErrors.getString("58161.also")))
             content must include(Messages("gmp.entered_details.title"))
             content must not include (Messages("gmp.rate"))
           }

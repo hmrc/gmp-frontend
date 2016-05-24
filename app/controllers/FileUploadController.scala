@@ -19,14 +19,12 @@ package controllers
 import config.GmpFrontendAuthConnector
 import connectors.AttachmentsConnector
 import controllers.auth.GmpRegime
-import models.{GmpBulkSession, CallBackData}
-import play.api.libs.json.{JsString, Json}
+import models.{CallBackData, GmpBulkSession}
+import play.api.i18n.Messages
 import play.api.mvc.Action
 import services.SessionService
 import uk.gov.hmrc.play.frontend.auth.Actions
 import uk.gov.hmrc.play.http.logging.SessionId
-
-import scala.concurrent.Future
 
 object FileUploadController extends FileUploadController {
   val authConnector = GmpFrontendAuthConnector
@@ -46,13 +44,16 @@ trait FileUploadController extends GmpController with Actions {
           attachmentsConnector.getFileUploadPartial().map {
             partial => Ok(views.html.upload_file(partial.successfulContentOrEmpty))
           }
-
   }
 
   def failure() = AuthorisedFor(GmpRegime, pageVisibilityPredicate) {
     implicit user =>
       implicit request =>
-        Ok
+        request.getQueryString("error_message") match {
+          case Some(x) if x.toUpperCase.contains("VIRUS") => Ok(views.html.bulk_failure(Messages("gmp.bulk.failure.antivirus")))
+          case Some(x) if x.toUpperCase.contains("SELECT") => Ok(views.html.bulk_failure(Messages("gmp.bulk.failure.missing")))
+          case _ => Ok(views.html.bulk_failure(Messages("gmp.bulk.failure.generic")))
+        }
   }
 
   def callback() = Action.async(parse.json) {
