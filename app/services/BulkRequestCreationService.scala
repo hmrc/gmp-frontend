@@ -22,7 +22,7 @@ import org.joda.time.format.DateTimeFormat
 import play.api.Logger
 import uk.gov.hmrc.play.config.ServicesConfig
 import uk.gov.hmrc.stream.BulkEntityProcessor
-import validation.CsvLineValidator
+import validation.{DateValidate, CsvLineValidator}
 
 import scala.util.{Failure, Success, Try}
 
@@ -122,6 +122,7 @@ trait BulkRequestCreationService extends BulkEntityProcessor[BulkCalculationRequ
   {
     termDate match {
       case "" => emptyStringsToNone(revalDate, { e: String => Some(LocalDate.parse(e, inputDateFormatter).toString(DATE_FORMAT)) })
+      case d if(!DateValidate.isValid(d)) => None
       case _ => {
         val convertedDate = LocalDate.parse(termDate, inputDateFormatter)
         val thatDate = new LocalDate(2016, 4, 5)
