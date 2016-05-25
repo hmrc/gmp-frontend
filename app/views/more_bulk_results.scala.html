@@ -54,7 +54,7 @@
       <tbody>
 
         @for((calculation, count) <- previousBulkCalculations.drop(3).zipWithIndex){
-          @defining(30 - Days.daysBetween(calculation.timestamp, LocalDateTime.now()).getDays){ days =>
+          @defining(30 - Days.daysBetween(new LocalDate(calculation.timestamp), LocalDate.now()).getDays){ days =>
             <tr>
               <td class="r-padding" id="reference-@count"><a href="@routes.BulkResultsController.get(calculation.uploadReference, 1)">@{calculation.reference}</a></td>
               <td class="r-padding numeric" id="upload-date-@count">@{ new LocalDate(calculation.timestamp).toString("dd MMMM yyyy") }</td>
