@@ -60,4 +60,8 @@ class DateValidatorSpec extends FlatSpec with Matchers {
     DateValidate.isValid("aa/bb/cccc ") should be(false)
   }
 
+  it should "fail with a date with invalid characters 01 01 2018" in {
+    DateValidate.isValid("01 01 2018") should be(false)
+  }
+
 }
