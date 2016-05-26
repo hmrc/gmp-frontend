@@ -68,7 +68,12 @@ trait BulkRequestCreationService extends BulkEntityProcessor[BulkCalculationRequ
   }
 
   private def generateBulkCalculationRequestList(data: Iterator[Char]): List[BulkCalculationRequestLine] = {
-    data.mkString.split(LINE_FEED.toByte.toChar).drop(1).map {
+    data.map{ c =>
+      c match {
+        case '’' => '''
+        case _ => c
+      }
+    }.mkString.split(LINE_FEED.toByte.toChar).drop(1).map {
       constructBulkCalculationRequestLine
     }.toList
   }
@@ -80,8 +85,8 @@ trait BulkRequestCreationService extends BulkEntityProcessor[BulkCalculationRequ
     CalculationRequestLine(
       lineArray(BulkRequestCsvColumn.SCON).toUpperCase.trim,
       lineArray(BulkRequestCsvColumn.NINO).replaceAll("\\s", "").toUpperCase.trim,
-      lineArray(BulkRequestCsvColumn.FORENAME).replaceAll("’", "'").toUpperCase.trim,
-      lineArray(BulkRequestCsvColumn.SURNAME).replaceAll("’", "'").toUpperCase.trim,
+      lineArray(BulkRequestCsvColumn.FORENAME).toUpperCase.trim,
+      lineArray(BulkRequestCsvColumn.SURNAME).toUpperCase.trim,
       emptyStringsToNone(lineArray(BulkRequestCsvColumn.MEMBER_REF).trim, { e: String => Some(e) }),
       emptyStringsToNone(lineArray(BulkRequestCsvColumn.CALC_TYPE).trim, { e: String => protectedToInt(e) }),
       determineTerminationDate(lineArray(BulkRequestCsvColumn.TERMINATION_DATE).trim, lineArray(BulkRequestCsvColumn.REVAL_DATE)),
