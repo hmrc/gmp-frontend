@@ -77,7 +77,7 @@ trait BulkRequestCreationService extends BulkEntityProcessor[BulkCalculationRequ
     val lineArray = line.split(",", -1)
 
     CalculationRequestLine(
-      lineArray(BulkRequestCsvColumn.SCON).trim,
+      lineArray(BulkRequestCsvColumn.SCON).toUpperCase.trim,
       lineArray(BulkRequestCsvColumn.NINO).replaceAll("\\s", "").toUpperCase.trim,
       lineArray(BulkRequestCsvColumn.FORENAME).replaceAll("’", "'").toUpperCase.trim,
       lineArray(BulkRequestCsvColumn.SURNAME).replaceAll("’", "'").toUpperCase.trim,
