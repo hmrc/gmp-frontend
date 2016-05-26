@@ -41,6 +41,7 @@ class BulkRequestCreationServiceSpec extends PlaySpec with ScalaFutures with Moc
   val calcLine12 = BulkCalculationRequestLine(1, Some(CalculationRequestLine("S2730012K", "gy 00 00 02 a", "PARIS", "HILTON", Some("THISISATEST SCENARIO"), Some(0), Some("2016-07-07"), Some("2017-07-07"), None, 1)),None,None)
   val calcLine14 = BulkCalculationRequestLine(1, Some(CalculationRequestLine("S1301234T", " GY000002A ", " Tim ", " O’Brien ", Some(" GS "), Some(1), Some("2017-02-02"), Some("2010-01-01"), Some(1), 1)),None,None)
   val calcLine16 = BulkCalculationRequestLine(1, Some(CalculationRequestLine("S1301234T", " GY000002A ", " Tim ", " O’Brien ", Some(" GS "), Some(1), Some("02 02 2017"), Some("2010-01-01"), Some(1), 1)),None,None)
+  val calcLine17 = BulkCalculationRequestLine(1, Some(CalculationRequestLine("s1301234t", nino2, "Tim", "O’Brien", Some("GS"), Some(1), Some("2017-02-02"), Some("2010-01-01"), Some(1), 1)),None,None)
 
   val inputLine1 = (Messages("gmp.upload_csv_column_headers") + "\n" + lineListFromCalculationRequestLine(calcLine1).mkString).toList
   val inputLine2 = (Messages("gmp.upload_csv_column_headers") + "\n" + lineListFromCalculationRequestLine(calcLine2).mkString).toList
@@ -54,6 +55,7 @@ class BulkRequestCreationServiceSpec extends PlaySpec with ScalaFutures with Moc
   val inputLine12 = (Messages("gmp.upload_csv_column_headers") + "\n" + lineListFromCalculationRequestLine(calcLine12).mkString).toList
   val inputLine14 = (Messages("gmp.upload_csv_column_headers") + "\n" + lineListFromCalculationRequestLine(calcLine14).mkString).toList
   val inputLine16 = (Messages("gmp.upload_csv_column_headers") + "\n" + lineListFromCalculationRequestLine(calcLine16).mkString).toList
+  val inputLine17 = (Messages("gmp.upload_csv_column_headers") + "\n" + lineListFromCalculationRequestLine(calcLine17).mkString).toList
   val inputLineWithoutData = (Messages("gmp.upload_csv_column_headers") + "\n" + ",,,").toList
 
 
@@ -84,6 +86,7 @@ class BulkRequestCreationServiceSpec extends PlaySpec with ScalaFutures with Moc
         case "14" => inputLine14.iterator
         case "15" => inputLineWithInvalidNumber.iterator
         case "16" => inputLine16.iterator
+        case "17" => inputLine17.iterator
 
       }
     }
@@ -108,6 +111,7 @@ class BulkRequestCreationServiceSpec extends PlaySpec with ScalaFutures with Moc
     val bulkRequest12 = BulkCalculationRequest("12", "somebody@mail.com", "uploadRef22", List(calcLine12))
     val bulkRequest14 = BulkCalculationRequest("14", "timburton@scary.com", "uploadRef14", List(calcLine14))
     val bulkRequest16 = BulkCalculationRequest("16", "timburton@scary.com", "uploadRef16", List(calcLine16))
+    val bulkRequest17 = BulkCalculationRequest("2", "timburton@scary.com", "uploadRef2", List(calcLine17))
 
     "return Bulk Request 1" in {
 
@@ -226,6 +230,11 @@ class BulkRequestCreationServiceSpec extends PlaySpec with ScalaFutures with Moc
     "must cope with termination date with wrong format dd MM yyyy with no slashes" in {
       val bulkRequest = TestBulkRequestCreationService.createBulkRequest(collection, "16", bulkRequest16.email , bulkRequest16.reference)
       bulkRequest.calculationRequests.head.validCalculationRequest.get.firstForename mustBe "TIM"
+    }
+
+    "must convert scon to uppercase" in {
+      val bulkRequest = TestBulkRequestCreationService.createBulkRequest(collection, "17", bulkRequest17.email , bulkRequest17.reference)
+      bulkRequest.calculationRequests.head.validCalculationRequest.get.scon mustBe "S1301234T"
     }
   }
 
