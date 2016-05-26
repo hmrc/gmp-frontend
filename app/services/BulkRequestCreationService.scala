@@ -37,7 +37,8 @@ object BulkRequestCsvColumn {
   val REVAL_DATE = 7
   val REVAL_RATE = 8
   val DUAL_CALC = 9
-  val LINE_ERROR = -1
+  val LINE_ERROR_TOO_FEW = -1
+  val LINE_ERROR_TOO_MANY = -2
 }
 
 trait BulkRequestCreationService extends BulkEntityProcessor[BulkCalculationRequestLine] with ServicesConfig {
@@ -145,7 +146,7 @@ trait BulkRequestCreationService extends BulkEntityProcessor[BulkCalculationRequ
     }
 
     validationErrors match {
-      case Some(x) if x.keySet.contains(BulkRequestCsvColumn.LINE_ERROR.toString) => BulkCalculationRequestLine(1, None, None, validationErrors)
+      case Some(x) if (x.keySet.contains(BulkRequestCsvColumn.LINE_ERROR_TOO_FEW.toString) || x.keySet.contains(BulkRequestCsvColumn.LINE_ERROR_TOO_MANY.toString)) => BulkCalculationRequestLine(1, None, None, validationErrors)
       case _ => BulkCalculationRequestLine(1, Some(constructCalculationRequestLine(line)), None, validationErrors)
     }
   }

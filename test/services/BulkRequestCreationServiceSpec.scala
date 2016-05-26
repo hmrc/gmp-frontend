@@ -204,7 +204,7 @@ class BulkRequestCreationServiceSpec extends PlaySpec with ScalaFutures with Moc
       val errors = bulkRequest.calculationRequests.head.validationErrors
 
       errors mustBe defined
-      errors.get.isDefinedAt(BulkRequestCsvColumn.LINE_ERROR.toString) mustBe true
+      errors.get.isDefinedAt(BulkRequestCsvColumn.LINE_ERROR_TOO_FEW.toString) mustBe true
     }
 
     "return bulk request with dual calc Yes" in {
