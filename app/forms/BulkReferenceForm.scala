@@ -28,7 +28,7 @@ object BulkReferenceForm {
   val CHARS_ALLOWED = "^[a-zA-Z0-9_-]*$"
   val emailConstraintRegex = "^((?:[a-zA-Z][a-zA-Z0-9_]*))(.)((?:[a-zA-Z][a-zA-Z0-9_]*))*$"
 
-  val emailConstraint : Constraint[String] = Constraint("constraints.email") ({
+  /*val emailConstraint : Constraint[String] = Constraint("constraints.email") ({
     text =>
       if (text.trim.length == 0){
         Invalid(Seq(ValidationError(Messages("gmp.error.mandatory.an", Messages("gmp.email")))))
@@ -42,12 +42,19 @@ object BulkReferenceForm {
       else {
         Valid
       }
-  })
+  })*/
+
+  // Temporary constraint which requires the email address to be empty
+  val emailConstraint = Constraint[String]("constraints.email") { text =>
+    text.trim.length match {
+      case 0 => Valid
+      case _ => Invalid(Seq(ValidationError("The email address is currently ignored")))
+    }
+  }
 
   val bulkReferenceForm = Form(
     mapping(
-      "email" -> text
-        .verifying(emailConstraint),
+      "email" -> text.verifying(emailConstraint),
       "reference" -> text
         .verifying(Messages("gmp.error.mandatory", Messages("gmp.reference")), x => x.trim.length != 0)
         .verifying(Messages("gmp.error.invalid", Messages("gmp.reference")), x => x.trim.length < MAX_REFERENCE_LENGTH)
