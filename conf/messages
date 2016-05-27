@@ -86,7 +86,7 @@ gmp.print = Print this page
 gmp.link.contributions-earnings = View contributions and earnings
 gmp.bulk_reference.button = Confirm and submit
 gmp.bulk_request_received.button = Upload another file
-gmp.bulk_request_received_dashboard_link = Go to the <a data-journey-click="gmp-bulk:click:bulk_request_received_dashboard" href="/guaranteed-minimum-pension/dashboard">Guaranteed Minimum Pension checker main page</a>
+gmp.bulk_request_received_dashboard_link = Go to the <a data-journey-click="gmp-bulk:click:bulk_request_received_dashboard" href="/guaranteed-minimum-pension/dashboard">GMP checker dashboard</a>
 
 # fields
 gmp.date.start = Start date
@@ -162,7 +162,7 @@ gmp.bulk_reference.email_text = We will email you about this calculation and not
 gmp.reference = calculation name
 gmp.reference.calcname = Calculation name
 gmp.bulk_reference.reference_text = You can change the filename to help you recognise your results when they are returned (40 characters)
-gmp.bulk_request_received.text = <ul class="list-bullet"><li>Your calculation should be complete in less than 72 hours</li><li>It will then appear on the Guaranteed Minimum Pension checker dashboard with the reference {0}</li></ul>
+gmp.bulk_request_received.text = <ul class="list-bullet"><li>Your calculation should be complete in less than 72 hours</li><li>It will then appear on the GMP checker dashboard with the reference {0}</li></ul>
 gmp.fileupload.hint = The file must contain mandatory information and in a specific format. You can <a href=" "> download a template and instructions (2 files)</a> on how to create your file first.
 gmp.dashboard_header = Choose a calculation type
 gmp.single_calculation_link = Single calculation
