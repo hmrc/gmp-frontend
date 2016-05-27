@@ -173,7 +173,7 @@ class CsvLineValidatorSpec extends FlatSpec with Matchers with OneAppPerSuite {
     val errors = CsvLineValidator.validateLine(CsvLine.copy(calctype = None).toString)
 
     errors shouldBe defined
-    errors.get should contain(BulkRequestCsvColumn.CALC_TYPE -> Messages("gmp.error.calctype.invalid"))
+    errors.get should contain(BulkRequestCsvColumn.CALC_TYPE -> Messages("gmp.error.calctype.out_of_range"))
   }
 
   it should "report calculation types that are not numbers" in {
@@ -188,7 +188,7 @@ class CsvLineValidatorSpec extends FlatSpec with Matchers with OneAppPerSuite {
     val errors = CsvLineValidator.validateLine(CsvLine.copy(calctype = Some(5)).toString)
 
     errors shouldBe defined
-    errors.get should contain(BulkRequestCsvColumn.CALC_TYPE -> Messages("gmp.error.calctype.invalid"))
+    errors.get should contain(BulkRequestCsvColumn.CALC_TYPE -> Messages("gmp.error.calctype.out_of_range"))
   }
 
   it should "not report a missing termination date" in {

@@ -68,9 +68,9 @@ trait FieldValidator {
 
   def validateCalcType(calcType: String) = {
     calcType match {
-      case "" => Some(Messages("gmp.error.calctype.invalid"))
+      case "" => Some(Messages("gmp.error.calctype.out_of_range"))
       case x if !(x matches """\d+""") => Some(Messages("gmp.error.calctype.invalid"))
-      case x if x.toInt > 4 => Some(Messages("gmp.error.calctype.invalid"))
+      case x if x.toInt > 4 => Some(Messages("gmp.error.calctype.out_of_range"))
       case _ => None
     }
   }
