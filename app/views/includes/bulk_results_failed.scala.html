@@ -34,4 +34,13 @@
   <div class="grid grid-1-4 text--right"><a id="download-failed" href="@routes.BulkResultsController.getResultsAsCsv(uploadReference, failed)">Download</a></div>
 </div>
 
+<div class="grid grid-2-3 divider--top divider--bottom">
+  <h3 id="conts-and-earnings">@Messages.get("gmp.bulk.subheaders.contsandearnings")</h3>
+  <div class="grid grid-3-4">
+    <ul class="bullets font-xsmall">
+      <li id="exp-conts" class="font-xsmall">@Messages.get("gmp.bulk.explanations.contsandearnings")</li>
+    </ul>
+  </div>
+  <div class="grid grid-1-4 text--right"><a id="download-conts" href="@routes.BulkResultsController.getContributionsAndEarningsAsCsv(uploadReference)">Download</a></div>
+</div>
 
