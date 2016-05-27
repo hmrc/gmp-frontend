@@ -73,13 +73,11 @@ class BulkReferenceControllerSpec extends PlaySpec with OneServerPerSuite with M
       }
 
       "authenticated users" must {
-
         "respond with ok" in {
           withAuthorisedUser { user =>
             getBulkReference(user) { result =>
               status(result) must equal(OK)
               contentAsString(result) must include(Messages("gmp.bulk_reference.title"))
-              contentAsString(result) must include(Messages("gmp.email.address"))
               contentAsString(result) must include(Messages("gmp.reference.calcname"))
             }
           }
@@ -96,16 +94,17 @@ class BulkReferenceControllerSpec extends PlaySpec with OneServerPerSuite with M
         }
       }
 
-      val validRequest = BulkReference("dan@hmrc.com", "Reference")
+      //val validRequest = BulkReference("dan@hmrc.com", "Reference")
+      val validRequest = BulkReference("", "Reference")
       val validRequestWithSpaces = BulkReference("dan@hmrc.com   ", "Reference   ")
+      val validRequestWithSpacesNoEmail = BulkReference("", "Reference  ")
       val emptyRequest = BulkReference("", "")
       val gmpBulkSession = GmpBulkSession(None, None, None)
 
-      "respond with bad request missing email and reference" in {
+      "respond with bad request missing reference" in {
         withAuthorisedUser { request =>
           val result = TestBulkReferenceController.post()(request.withJsonBody(Json.toJson(emptyRequest)))
           status(result) must equal(BAD_REQUEST)
-          contentAsString(result) must include(Messages("gmp.error.mandatory.an", Messages("gmp.email")))
           contentAsString(result) must include(Messages("gmp.error.mandatory", Messages("gmp.reference")))
         }
       }
@@ -133,7 +132,7 @@ class BulkReferenceControllerSpec extends PlaySpec with OneServerPerSuite with M
       "validate email and reference with spaces, cache and redirect" in {
         when(mockSessionService.cacheEmailAndReference(Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpBulkSession)))
         withAuthorisedUser { request =>
-          val result = TestBulkReferenceController.post()(request.withJsonBody(Json.toJson(validRequestWithSpaces)))
+          val result = TestBulkReferenceController.post()(request.withJsonBody(Json.toJson(validRequestWithSpacesNoEmail)))
           status(result) must equal(SEE_OTHER)
           redirectLocation(result).get must include("/request-received")
         }
