@@ -26,7 +26,7 @@ trait FieldValidator {
   def validateScon(scon: String): Option[String] = {
     scon match {
       case "" => Some(Messages("gmp.error.mandatory", Messages("gmp.scon")))
-      case x if !SconValidate.isValid(x) => Some(Messages("gmp.error.scon.invalid"))
+      case x if !SconValidate.isValid(x) => Some(Messages("gmp.error.scon.bulk.invalid"))
       case _ => None
     }
   }
