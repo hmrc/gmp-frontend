@@ -20,6 +20,7 @@ import config.GmpFrontendAuthConnector
 import connectors.GmpBulkConnector
 import controllers.auth.GmpRegime
 import play.api.Logger
+import play.api.i18n.Messages
 import services.{BulkRequestCreationService, SessionService}
 
 import scala.concurrent.Future
@@ -39,14 +40,18 @@ trait BulkRequestReceivedController extends GmpController {
           case _ => throw new RuntimeException
         }
 
-        bulkSession.map {
+        bulkSession.flatMap {
           session => {
             val callbackData = session.callBackData.get
             val bulkRequest = bulkRequestCreationService.createBulkRequest(callbackData.collection, callbackData.id, session.emailAddress.getOrElse(""),
               session.reference.getOrElse(""))
 
-            gmpBulkConnector.sendBulkRequest(bulkRequest)
-            Ok(views.html.bulk_request_received(bulkRequest.reference))
+            gmpBulkConnector.sendBulkRequest(bulkRequest).map {
+              x => x match {
+                case true => Ok(views.html.bulk_request_received(bulkRequest.reference))
+                case false => Ok(views.html.bulk_failure(Messages("gmp.bulk.failure.generic")))
+              }
+            }
           }
         }
       }
