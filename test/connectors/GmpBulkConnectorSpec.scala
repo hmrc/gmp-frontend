@@ -32,7 +32,7 @@ import uk.gov.hmrc.play.frontend.auth.AuthContext
 import uk.gov.hmrc.play.frontend.auth.connectors.domain._
 import uk.gov.hmrc.play.http.{HttpGet, HttpResponse, HttpPost, HeaderCarrier}
 import uk.gov.hmrc.play.http.logging.SessionId
-
+import uk.gov.hmrc.play.http.BadRequestException
 import scala.concurrent.Future
 
 class GmpBulkConnectorSpec extends PlaySpec with OneServerPerSuite with MockitoSugar with BeforeAndAfter {
@@ -63,7 +63,22 @@ class GmpBulkConnectorSpec extends PlaySpec with OneServerPerSuite with MockitoS
           None, None)))
 
       val result = testGmpBulkConnector.sendBulkRequest(bcr)
-      (await(result)).status must be(OK)
+      (await(result)) must be(true)
+
+    }
+
+    "send a bulk request with valid data but there is a duplicate" in {
+      implicit val user = AuthContext(authority = Authority("1234", Accounts(psa = Some(PsaAccount(link, PsaId(psaId)))), None, None, CredentialStrength.None, ConfidenceLevel.L50))
+      when(mockHttpPost.POST[BulkCalculationRequest, HttpResponse](Matchers.any(), Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any()))
+        .thenReturn(Future.failed(new BadRequestException("")))
+
+      val bcr = BulkCalculationRequest("upload1", "jim@jarmusch.com", "idreference",
+        List(BulkCalculationRequestLine(1, Some(CalculationRequestLine("S1234567C", RandomNino.generate,
+          "bob", "bobbleton", Some("bobby"), Some(0), Some("2012-02-02"), None, None, 0)),
+          None, None)))
+
+      val result = testGmpBulkConnector.sendBulkRequest(bcr)
+      (await(result)) must be(false)
 
     }
 

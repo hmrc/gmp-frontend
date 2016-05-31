@@ -20,13 +20,13 @@ import config.WSHttp
 import models.{BulkCalculationRequest, BulkPreviousRequest, BulkResultsSummary}
 import org.joda.time.{LocalDateTime, LocalDate}
 import play.api.Logger
-import play.api.libs.json.Json
 import uk.gov.hmrc.play.config.ServicesConfig
 import uk.gov.hmrc.play.frontend.auth.AuthContext
 import uk.gov.hmrc.play.http.{HeaderCarrier, HttpGet, HttpPost, HttpResponse}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
+import scala.util.{Success, Failure}
 
 trait GmpBulkConnector extends ServicesConfig {
 
@@ -41,7 +41,7 @@ trait GmpBulkConnector extends ServicesConfig {
         throw new RuntimeException("User Authorisation failed"))).substring(5)
   }
 
-  def sendBulkRequest(bcr: BulkCalculationRequest)(implicit user: AuthContext, headerCarrier: HeaderCarrier): Future[HttpResponse] = {
+  def sendBulkRequest(bcr: BulkCalculationRequest)(implicit user: AuthContext, headerCarrier: HeaderCarrier): Future[Boolean] = {
 
     val baseURI = s"gmp/${getUser(user)}/gmp/bulk-data"
     val bulkUri = s"$serviceURL/$baseURI/"
@@ -49,11 +49,13 @@ trait GmpBulkConnector extends ServicesConfig {
 
     Logger.debug(s"[GmpBulkConnector][sendBulkRequest][POST] size : ${bcr.calculationRequests.size}")
 
-    result onSuccess {
-      case response => Logger.debug(s"[GmpBulkConnector][sendBulkRequest][response] : $response")
+    result.map { x =>
+      Logger.debug(s"[GmpBulkConnector][sendBulkRequest][success] : $x")
+        true
+    }.recover {
+      case e: Throwable => Logger.debug(s"[GmpBulkConnector][sendBulkRequest][failure] : $e")
+        false
     }
-
-    result
   }
 
   def getPreviousBulkRequests()(implicit user: AuthContext, headerCarrier: HeaderCarrier): Future[List[BulkPreviousRequest]] = {

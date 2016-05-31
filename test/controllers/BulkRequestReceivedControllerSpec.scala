@@ -88,7 +88,7 @@ class BulkRequestReceivedControllerSpec extends PlaySpec with OneServerPerSuite 
 
           when(mockSessionService.fetchGmpBulkSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpBulkSession)))
           when(mockBulkRequestCreationService.createBulkRequest(Matchers.any(),Matchers.any(),Matchers.any(),Matchers.any())).thenReturn(bulkRequest1)
-          when(mockGmpBulkConnector.sendBulkRequest(Matchers.any())(Matchers.any(),Matchers.any())).thenReturn(Future.successful(HttpResponse(200)))
+          when(mockGmpBulkConnector.sendBulkRequest(Matchers.any())(Matchers.any(),Matchers.any())).thenReturn(Future.successful(true))
           withAuthorisedUser { user =>
             getBulkRequestReceived(user) { result =>
               status(result) must equal(OK)
@@ -98,6 +98,19 @@ class BulkRequestReceivedControllerSpec extends PlaySpec with OneServerPerSuite 
               contentAsString(result) must include(Messages("gmp.bulk_request_received.text", bulkRequest1.reference))
               contentAsString(result) must include(Messages("gmp.bulk_request_received.button"))
               contentAsString(result) must include(Messages("gmp.bulk_request_received_dashboard_link"))
+            }
+          }
+        }
+
+        "respond with ok and failure page if bad request received" in {
+
+          when(mockSessionService.fetchGmpBulkSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpBulkSession)))
+          when(mockBulkRequestCreationService.createBulkRequest(Matchers.any(),Matchers.any(),Matchers.any(),Matchers.any())).thenReturn(bulkRequest1)
+          when(mockGmpBulkConnector.sendBulkRequest(Matchers.any())(Matchers.any(),Matchers.any())).thenReturn(Future.successful(false))
+          withAuthorisedUser { user =>
+            getBulkRequestReceived(user) { result =>
+              status(result) must equal(OK)
+              contentAsString(result) must include(Messages("gmp.bulk.failure.generic"))
             }
           }
         }
