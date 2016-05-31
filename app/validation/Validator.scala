@@ -26,7 +26,7 @@ trait Validator {
 
 object SconValidate extends Validator with Modulus19CheckDigit {
 
-  private val validFormat = "^[sS][012468]\\d{6}[abcdefhjklmnpqrtwxyABCDEFHJKLMNPQRTWXY]"
+  private val validFormat = "^[sS][012468]\\d{6}[abcdefhjklmnpqrtwxyABCDEFHJKLMNPQRTWXY]$"
   private val REFERENCE_NUMBER_START = 1
   private val REFERENCE_NUMBER_END = 8
   private val CHECK_DIGIT_START = 8
