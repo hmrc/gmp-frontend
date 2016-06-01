@@ -58,7 +58,12 @@ trait BulkRequestCreationService extends BulkEntityProcessor[BulkCalculationRequ
 
     val attachmentUrl = s"${baseUrl("attachments")}/attachments-internal/$collection/$id"
 
-    val bulkCalculationRequestLines: List[BulkCalculationRequestLine] = generateBulkCalculationRequestList(sourceData(attachmentUrl))
+    val data = sourceData(attachmentUrl).toList
+
+    Logger.debug(s"[BulkRequestCreationService][createBulkRequest] file data: $data")
+
+    val fileData = data.mkString
+    val bulkCalculationRequestLines: List[BulkCalculationRequestLine] = generateBulkCalculationRequestList(fileData)
 
     val req = BulkCalculationRequest(id, email, reference, enterLineNumbers(bulkCalculationRequestLines))
 
@@ -67,13 +72,11 @@ trait BulkRequestCreationService extends BulkEntityProcessor[BulkCalculationRequ
     req
   }
 
-  private def generateBulkCalculationRequestList(data: Iterator[Char]): List[BulkCalculationRequestLine] = {
-    data.map{ c =>
-      c match {
-        case '’' => '''
-        case _ => c
-      }
-    }.mkString.split(LINE_FEED.toByte.toChar).drop(1).map {
+  private def generateBulkCalculationRequestList(data: String): List[BulkCalculationRequestLine] = {
+    data.map {
+      case '’' => '''
+      case c => c
+    }.split(LINE_FEED.toByte.toChar).drop(1).map {
       constructBulkCalculationRequestLine
     }.toList
   }
