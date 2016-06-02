@@ -60,15 +60,7 @@ trait BulkRequestCreationService extends BulkEntityProcessor[BulkCalculationRequ
   def createBulkRequest(collection: String, id: String, email: String, reference: String): BulkCalculationRequest = {
 
     val attachmentUrl = s"${baseUrl("attachments")}/attachments-internal/$collection/$id"
-
-    val encodingInfo = s"File encoding: ${System.getProperty("file.encoding")}, Charset: ${Charset.defaultCharset()}"
-    Logger.debug(s"[BulkRequestCreationService][createBulkRequest]: $encodingInfo")
-
-    val data = sourceData(attachmentUrl).toList
-
-    Logger.debug(s"[BulkRequestCreationService][createBulkRequest] file data: $data")
-
-    val fileData = data.mkString
+    val fileData = sourceData(attachmentUrl).toList.mkString
     val bulkCalculationRequestLines: List[BulkCalculationRequestLine] = generateBulkCalculationRequestList(fileData)
 
     val req = BulkCalculationRequest(id, email, reference, enterLineNumbers(bulkCalculationRequestLines))
