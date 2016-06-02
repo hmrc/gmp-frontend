@@ -172,7 +172,7 @@ trait BulkRequestCreationService extends BulkEntityProcessor[BulkCalculationRequ
     }
   }
 
-  def sourceData(resourceLocation: String): Iterator[Char] = scala.io.Source.fromURL(resourceLocation).iter
+  def sourceData(resourceLocation: String): Iterator[Char] = scala.io.Source.fromURL(resourceLocation, "UTF-8").iter
 }
 
 object BulkRequestCreationService extends BulkRequestCreationService
