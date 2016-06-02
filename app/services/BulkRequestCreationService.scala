@@ -91,7 +91,7 @@ trait BulkRequestCreationService extends BulkEntityProcessor[BulkCalculationRequ
 
     val lineArray = line.split(",", -1)
 
-    CalculationRequestLine(
+    val calculationRequestLine = CalculationRequestLine(
       lineArray(BulkRequestCsvColumn.SCON).toUpperCase.trim,
       lineArray(BulkRequestCsvColumn.NINO).replaceAll("\\s", "").toUpperCase.trim,
       lineArray(BulkRequestCsvColumn.FORENAME).toUpperCase.trim,
@@ -107,6 +107,12 @@ trait BulkRequestCreationService extends BulkEntityProcessor[BulkCalculationRequ
         case _ => 0
       }
     )
+
+    calculationRequestLine.calctype match {
+      case Some(0) => calculationRequestLine.copy(revaluationDate = None, revaluationRate = None)
+      case Some(3) => calculationRequestLine.copy(dualCalc = 0)
+      case _ => calculationRequestLine
+    }
   }
 
   private def protectedToInt(number: String): Option[Int] ={
