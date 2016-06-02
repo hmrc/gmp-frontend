@@ -60,6 +60,7 @@ class ExitQuestionnaireControllerSpec extends PlaySpec with OneServerPerSuite wi
         contentAsString(result) must include(Messages("gmp.thank_you.header"))
         contentAsString(result) must include(Messages("gmp.thank_you.what_now"))
         contentAsString(result) must include(Messages("gmp.button.check_another"))
+        contentAsString(result) must not include(Messages("gmp.back_to_dashboard"))
       }
     }
   }
@@ -92,6 +93,7 @@ class ExitQuestionnaireControllerSpec extends PlaySpec with OneServerPerSuite wi
             contentAsString(result) must include(Messages("gmp.questionnaire.unsatisfied"))
             contentAsString(result) must include(Messages("gmp.questionnaire.very_unsatisfied"))
             contentAsString(result) must include(Messages("gmp.questionnaire.comments"))
+            contentAsString(result) must include(Messages("gmp.back_to_dashboard"))
           }
         }
       }

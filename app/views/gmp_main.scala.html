@@ -20,10 +20,12 @@ pageScripts: Option[Html] = None,
 scriptElem: Option[Html] = None,
 userLoggedIn: Boolean = false,
 supportLinkEnabled: Boolean = true,
-signOutEnabled: Boolean = true)(mainContent: Html)(implicit request: Request[_])
+signOutEnabled: Boolean = true,
+dashboardLinkEnabled:Boolean = true)(mainContent: Html)(implicit request: Request[_])
 
 @import uk.gov.hmrc.play.views.html.layouts
 @import uk.gov.hmrc.play.views.html.{helpers => uiHelpers}
+@import play.i18n._
 
 @getHelpForm = {
   @if(supportLinkEnabled) {
@@ -43,6 +45,9 @@ signOutEnabled: Boolean = true)(mainContent: Html)(implicit request: Request[_])
   linkElement = Some(linkElement),
   scriptElement = Some(scriptElement),
   signOutEnabled = signOutEnabled) {
+  @if(dashboardLinkEnabled) {
+    <a href="/guaranteed-minimum-pension/dashboard" class="dashboard-back">@Messages.get("gmp.back_to_dashboard")</a>
+  }
     @mainContent
 }
 

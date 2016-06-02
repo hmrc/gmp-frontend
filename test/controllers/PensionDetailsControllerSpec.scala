@@ -91,6 +91,7 @@ class PensionDetailsControllerSpec extends PlaySpec with OneServerPerSuite with 
             contentAsString(result) must include(Messages("gmp.pension_details.title"))
             contentAsString(result) must include(Messages("gmp.scon"))
             contentAsString(result) must include(Messages("gmp.signout"))
+            contentAsString(result) must include(Messages("gmp.back_to_dashboard"))
           }
         }
       }

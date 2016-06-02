@@ -77,6 +77,7 @@ class BulkResultsControllerSpec extends PlaySpec with OneServerPerSuite with Moc
             val result = TestBulkResultsController.get("",comingFromDashboard).apply(request)
 
             contentAsString(result) must include(Messages("gmp.bulk.results.banner"))
+            contentAsString(result) must include(Messages("gmp.back_to_dashboard"))
           }
         }
 

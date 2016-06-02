@@ -253,6 +253,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
             val result = TestResultsController.get.apply(request)
             status(result) must equal(OK)
             contentAsString(result) must include(Messages("gmp.button.request-another"))
+            contentAsString(result) must include(Messages("gmp.back_to_dashboard"))
           }
         }
 

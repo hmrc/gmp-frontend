@@ -81,6 +81,7 @@ class RevaluationControllerSpec extends PlaySpec with OneServerPerSuite with Moc
             status(result) must equal(OK)
             contentAsString(result) must include(Messages("gmp.revaluation.title"))
             contentAsString(result) must include(Messages("gmp.revaluation.question"))
+            contentAsString(result) must include(Messages("gmp.back_to_dashboard"))
           }
         }
       }

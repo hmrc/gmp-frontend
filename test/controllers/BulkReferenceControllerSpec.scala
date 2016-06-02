@@ -79,6 +79,7 @@ class BulkReferenceControllerSpec extends PlaySpec with OneServerPerSuite with M
               status(result) must equal(OK)
               contentAsString(result) must include(Messages("gmp.bulk_reference.title"))
               contentAsString(result) must include(Messages("gmp.reference.calcname"))
+              contentAsString(result) must include(Messages("gmp.back_to_dashboard"))
             }
           }
         }
