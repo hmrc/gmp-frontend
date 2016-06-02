@@ -23,39 +23,41 @@
 
 @gmp_main(title = Messages.get("gmp.bulk.results.title")) {
 
-<div class="grid-2-3 form-title">
-    <div class="confirmation-bulk">
-        <h1 id="calc-ready" class="heading-large">
-            @Messages.get("gmp.bulk.results.banner")
-        </h1>
-        <h2 id="reference">@Messages.get("gmp.bulk.results.reference", bulkResultsSummary.reference)</h2>
+<div class="grid">
+    <div class="grid-2-3">
+        <div class="confirmation-bulk">
+            <h1 id="calc-ready" class="heading-large">
+                @Messages.get("gmp.bulk.results.banner")
+            </h1>
+            <h2 id="reference">@Messages.get("gmp.bulk.results.reference", bulkResultsSummary.reference)</h2>
+        </div>
     </div>
-</div>
 
-<div class="grid grid-2-3">
-    <div id="results-heading" class="grid grid-3-4">@Messages.get("gmp.bulk.results")</div>
-    <div id="csv-heading" class="grid grid-1-4 text--right">@Messages.get("gmp.bulk.results.csv")</div>
-</div>
+    <div class="grid grid-2-3">
+        <div id="results-heading" class="grid grid-3-4">@Messages.get("gmp.bulk.results")</div>
+        <div id="csv-heading" class="grid grid-1-4 text--right">@Messages.get("gmp.bulk.results.csv")</div>
+    </div>
 
-@if(bulkResultsSummary.total == bulkResultsSummary.getNumberOfSuccessfulCalculations) {
-  @includes.bulk_results_successful(bulkResultsSummary, uploadReference)
-}
+    @if(bulkResultsSummary.total == bulkResultsSummary.getNumberOfSuccessfulCalculations) {
+      @includes.bulk_results_successful(bulkResultsSummary, uploadReference)
+    }
 
-@if(bulkResultsSummary.total == bulkResultsSummary.failed) {
-  @includes.bulk_results_failed(bulkResultsSummary, uploadReference)
-}
+    @if(bulkResultsSummary.total == bulkResultsSummary.failed) {
+      @includes.bulk_results_failed(bulkResultsSummary, uploadReference)
+    }
 
-@if(bulkResultsSummary.total == (bulkResultsSummary.failed + bulkResultsSummary.getNumberOfSuccessfulCalculations) &&
-                                 bulkResultsSummary.failed != 0 &&
-                                 bulkResultsSummary.getNumberOfSuccessfulCalculations != 0) {
-  @includes.bulk_results_all(bulkResultsSummary, uploadReference)
-}
+    @if(bulkResultsSummary.total == (bulkResultsSummary.failed + bulkResultsSummary.getNumberOfSuccessfulCalculations) &&
+                                     bulkResultsSummary.failed != 0 &&
+                                     bulkResultsSummary.getNumberOfSuccessfulCalculations != 0) {
+      @includes.bulk_results_all(bulkResultsSummary, uploadReference)
+    }
 
-<div class="grid-2-3 custom-back-link">
-  @if(comingFromPage == 0){
-    <a href="@routes.DashboardController.get" id="back-link">@Messages.get("gmp.back.link")</a>
-  }else {
-    <a href="@routes.MoreBulkResultsController.retrieveMoreBulkResults" id="back-link-other">@Messages.get("gmp.back.link")</a>
-  }
+    <div class="grid-2-3 custom-back-link">
+      @if(comingFromPage == 0){
+        <a href="@routes.DashboardController.get" id="back-link">@Messages.get("gmp.back.link")</a>
+      }else {
+        <a href="@routes.MoreBulkResultsController.retrieveMoreBulkResults" id="back-link-other">@Messages.get("gmp.back.link")</a>
+      }
+    </div>
 </div>
 }
