@@ -73,6 +73,7 @@ class MoreBulkResultsControllerSpec extends PlaySpec with OneServerPerSuite with
             status(result) must equal(OK)
             contentAsString(result) must include(Messages("gmp.more_bulk_results.title"))
             contentAsString(result) must include(Messages("gmp.signout"))
+            contentAsString(result) must include(Messages("gmp.back_to_dashboard"))
           }
         }
       }

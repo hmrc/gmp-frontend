@@ -86,7 +86,6 @@ gmp.print = Print this page
 gmp.link.contributions-earnings = View contributions and earnings
 gmp.bulk_reference.button = Confirm and submit
 gmp.bulk_request_received.button = Upload another file
-gmp.bulk_request_received_dashboard_link = Go to the <a data-journey-click="gmp-bulk:click:bulk_request_received_dashboard" href="/guaranteed-minimum-pension/dashboard">GMP checker dashboard</a>
 
 # fields
 gmp.date.start = Start date
@@ -182,10 +181,10 @@ gmp.revaluation_rate = Revaluation rate
 gmp.bulk.results = Results
 gmp.bulk.results.csv = CSV
 gmp.bulk.results.reference = Reference {0}
-gmp.bulk.failure.dashboard = <a id="bulk_failure_dashboard" data-journey-click="gmp-bulk:click:bulk_failure_dashboard" href="/guaranteed-minimum-pension/dashboard">Back to the dashboard</a>
 gmp.bulk.failure.antivirus = A virus was detected in the uploaded file. Create the file again and <a href="/guaranteed-minimum-pension/new-bulk-calculation" id="bulk-back-link">upload it</a>.
 gmp.bulk.failure.missing = You did not select a file to upload. Please go <a href="/guaranteed-minimum-pension/new-bulk-calculation">back</a>, browse for a file and try again.
 gmp.bulk.failure.generic = Something went wrong with uploading your file. <br/>There is probably a problem with the system so <a href="/guaranteed-minimum-pension/new-bulk-calculation">try again in a few moments</a>.
+gmp.back_to_dashboard = Back to GMP checker dashboard
 
 # errors
 gmp.error.revaluation_before_leaving = Enter a date on or after {0}

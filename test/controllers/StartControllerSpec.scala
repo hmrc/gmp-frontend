@@ -43,6 +43,7 @@ class StartControllerSpec extends PlaySpec with OneServerPerSuite with MockitoSu
       val result = controllers.StartController.get.apply(FakeRequest())
       contentAsString(result) must include(Messages("gmp.start.service.downtime"))
       contentAsString(result) must not include(Messages("gmp.signout"))
+      contentAsString(result) must not include(Messages("gmp.back_to_dashboard"))
     }
   }
 
