@@ -16,6 +16,9 @@
 
 package services
 
+import java.io.InputStreamReader
+import java.nio.charset.Charset
+
 import models.{GmpDate, BulkCalculationRequest, BulkCalculationRequestLine, CalculationRequestLine}
 import org.joda.time.LocalDate
 import org.joda.time.format.DateTimeFormat
@@ -57,6 +60,9 @@ trait BulkRequestCreationService extends BulkEntityProcessor[BulkCalculationRequ
   def createBulkRequest(collection: String, id: String, email: String, reference: String): BulkCalculationRequest = {
 
     val attachmentUrl = s"${baseUrl("attachments")}/attachments-internal/$collection/$id"
+
+    val encodingInfo = s"File encoding: ${System.getProperty("file.encoding")}, Charset: ${Charset.defaultCharset()}"
+    Logger.debug(s"[BulkRequestCreationService][createBulkRequest]: $encodingInfo")
 
     val data = sourceData(attachmentUrl).toList
 
