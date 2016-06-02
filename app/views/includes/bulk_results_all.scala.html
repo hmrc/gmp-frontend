@@ -33,7 +33,7 @@
       <li id="exp-all-2" class="font-xsmall">@Messages.get("gmp.bulk.explanations.calculations.2")</li>
     </ul>
   </div>
-  <div class="grid grid-1-4 text--right"><a id="download-all" href="@routes.BulkResultsController.getResultsAsCsv(uploadReference, all)">Download</a></div>
+  <div class="grid grid-1-4 text--right"><a id="download-all" data-journey-click="gmp-bulk:click:download_all" href="@routes.BulkResultsController.getResultsAsCsv(uploadReference, all)">Download</a></div>
 </div>
 
 <div class="grid grid-2-3 divider--top">
@@ -44,7 +44,7 @@
       <li id="exp-success-2" class="font-xsmall">@Messages.get("gmp.bulk.explanations.calculations.2")</li>
     </ul>
   </div>
-  <div class="grid grid-1-4 text--right"><a id="download-success" href="@routes.BulkResultsController.getResultsAsCsv(uploadReference, successful)">Download</a></div>
+  <div class="grid grid-1-4 text--right"><a id="download-success" data-journey-click="gmp-bulk:click:download_successful" href="@routes.BulkResultsController.getResultsAsCsv(uploadReference, successful)">Download</a></div>
 </div>
 
 <div class="grid grid-2-3 divider--top">
@@ -55,7 +55,7 @@
       <li id="exp-failed-2" class="font-xsmall">@Messages.get("gmp.bulk.explanations.failed.2")</li>
     </ul>
   </div>
-  <div class="grid grid-1-4 text--right"><a id="download-failed" href="@routes.BulkResultsController.getResultsAsCsv(uploadReference, failed)">Download</a></div>
+  <div class="grid grid-1-4 text--right"><a id="download-failed" data-journey-click="gmp-bulk:click:download_failed" href="@routes.BulkResultsController.getResultsAsCsv(uploadReference, failed)">Download</a></div>
 </div>
 
 <div class="grid grid-2-3 divider--top divider--bottom">
@@ -65,6 +65,6 @@
       <li id="exp-conts" class="font-xsmall">@Messages.get("gmp.bulk.explanations.contsandearnings")</li>
     </ul>
   </div>
-  <div class="grid grid-1-4 text--right"><a id="download-conts" href="@routes.BulkResultsController.getContributionsAndEarningsAsCsv(uploadReference)">Download</a></div>
+  <div class="grid grid-1-4 text--right"><a id="download-conts" data-journey-click="gmp-bulk:click:download_ce" href="@routes.BulkResultsController.getContributionsAndEarningsAsCsv(uploadReference)">Download</a></div>
 </div>
 
