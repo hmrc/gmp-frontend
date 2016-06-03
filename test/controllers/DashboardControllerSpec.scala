@@ -54,7 +54,7 @@ class DashboardControllerSpec extends PlaySpec with OneServerPerSuite with Mocki
     }
   }
 
-  val recentBulkCalculations = List(new BulkPreviousRequest("1234","abcd",LocalDateTime.now()), new BulkPreviousRequest("5678","efgh", LocalDateTime.now()))
+  val recentBulkCalculations = List(new BulkPreviousRequest("1234","abcd",LocalDateTime.now(),LocalDateTime.now()), new BulkPreviousRequest("5678","efgh", LocalDateTime.now(),LocalDateTime.now()))
 
   when(mockGmpBulkConnector.getPreviousBulkRequests()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(recentBulkCalculations))
 
@@ -136,13 +136,14 @@ class DashboardControllerSpec extends PlaySpec with OneServerPerSuite with Mocki
       "handle timestamp conversion" in {
         val localDateTime = new LocalDateTime(2016,5,18,17,50,55,511)
 
-        val bpr = new BulkPreviousRequest("","",localDateTime)
+        val bpr = new BulkPreviousRequest("","",localDateTime,localDateTime)
         val bprJson = Json.parse(
           """
             {
               "uploadReference":"",
               "reference":"",
-              "timestamp":"2016-05-18T17:50:55.511"
+              "timestamp":"2016-05-18T17:50:55.511",
+              "createdAt":"2016-05-18T17:50:55.511"
             }
           """
         )

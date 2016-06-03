@@ -19,7 +19,7 @@ package models
 import org.joda.time.LocalDateTime
 import play.api.libs.json.{JsString, Writes, Reads, Json}
 
-case class BulkPreviousRequest(uploadReference: String, reference: String, timestamp: LocalDateTime)
+case class BulkPreviousRequest(uploadReference: String, reference: String, timestamp: LocalDateTime, createdAt: LocalDateTime)
 
 object BulkPreviousRequest {
 
@@ -35,5 +35,5 @@ object BulkPreviousRequest {
 
   implicit val formats = Json.format[BulkPreviousRequest]
 
-  implicit def defaultOrdering: Ordering[BulkPreviousRequest] = Ordering.fromLessThan(_.timestamp isAfter _.timestamp)
+  implicit def defaultOrdering: Ordering[BulkPreviousRequest] = Ordering.fromLessThan(_.createdAt isAfter _.createdAt)
 }

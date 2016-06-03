@@ -52,7 +52,7 @@ class MoreBulkResultsControllerSpec extends PlaySpec with OneServerPerSuite with
     }
   }
 
-  val recentBulkCalculations = List(new BulkPreviousRequest("1234","abcd",LocalDateTime.now()), new BulkPreviousRequest("5678","efgh", LocalDateTime.now()))
+  val recentBulkCalculations = List(new BulkPreviousRequest("1234","abcd",LocalDateTime.now(),LocalDateTime.now()), new BulkPreviousRequest("5678","efgh", LocalDateTime.now(),LocalDateTime.now()))
 
   when(mockGmpBulkConnector.getPreviousBulkRequests()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(recentBulkCalculations))
 
