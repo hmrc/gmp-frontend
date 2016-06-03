@@ -102,6 +102,7 @@ trait BulkRequestCreationService extends BulkEntityProcessor[BulkCalculationRequ
 
     calculationRequestLine.calctype match {
       case Some(0) => calculationRequestLine.copy(revaluationDate = None, revaluationRate = None)
+      case Some(2) | Some(4) => calculationRequestLine.copy(revaluationDate = None)
       case Some(3) => calculationRequestLine.copy(dualCalc = 0)
       case _ => calculationRequestLine
     }
