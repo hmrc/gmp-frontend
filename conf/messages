@@ -250,6 +250,7 @@ gmp.error.reason.63148 = This is because you entered a calculation date that is 
 gmp.error.reason.63147 = This is because we do not have a date of death for this member.
 gmp.error.reason.63150 = You asked for an opposite gender calculation. However, one is not available as there are no post-1990 contributions and earnings.
 gmp.error.reason.63167 = This is because you asked for the GMP to be revalued using Limited rate. This is not available to leavers after 5 April 1997.
+gmp.error.reason.56016 = This is because you entered a leaving date that is after the date of death.
 
 gmp.error.solution.contact_hmrc = If you think our records are incorrect, contact HM Revenue and Customs through the GMP Service Queries database in the LIVE shared workspace e-room.
 gmp.error.solution.contact_us = If you think our records are incorrect, contact us through the GMP Service Queries database in the LIVE shared workspace e-room.
@@ -265,6 +266,7 @@ gmp.error.solution.leaving_date = Check you have entered the correct leaving dat
 gmp.error.solution.63148 = Check the date up to which you would like the calculation to apply and <a href="/guaranteed-minimum-pension/inflation-proof">try again</a>.
 gmp.error.solution.63150 = <a href="/guaranteed-minimum-pension/equalise">Go back</a> and choose ''No'' for an opposite gender calculation.
 gmp.error.solution.63167 = Choose another <a href="/guaranteed-minimum-pension/revaluation-rate">revaluation rate</a>.
+gmp.error.solution.56016 = Check you have entered the correct leaving date and try again.
 
 gmp.error.member_details = Change member details
 gmp.error.revaluation_date = Change revaluation date
