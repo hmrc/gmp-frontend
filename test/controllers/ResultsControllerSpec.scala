@@ -282,6 +282,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
           withAuthorisedUser { request =>
             val result = TestResultsController.get.apply(request)
             contentAsString(result) must include(Messages("gmp.results.banner"))
+            contentAsString(result) must include(Messages("gmp.back_to_dashboard"))
           }
         }
 
@@ -610,6 +611,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
             content must include(Messages(globalErrors.getString("63123.also")))
             content must include(Messages("gmp.entered_details.title"))
             content must not include (Messages("gmp.rate"))
+            content must not include(Messages("gmp.back_to_dashboard"))
           }
         }
 
@@ -725,6 +727,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
             content must include(Messages(globalErrors.getString(s"${multiErrorResponse.calculationPeriods.head.errorCode}.reason")))
             content must include(Messages(globalErrors.getString(s"${multiErrorResponse.calculationPeriods.tail.head.errorCode}.reason")))
             content must include(Messages("gmp.multi.solution"))
+            content must not include(Messages("gmp.back_to_dashboard"))
           }
         }
 
@@ -866,6 +869,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
             contentAsString(result) must include("234.00")
             contentAsString(result) must include("124.00")
             contentAsString(result) must include(Messages("gmp.queryhandling.contsandearnings"))
+            contentAsString(result) must include(Messages("gmp.back_to_dashboard"))
           }
         }
 
@@ -879,6 +883,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
             contentAsString(result) must include(Messages("gmp.error.no_conts_and_earnings"))
             contentAsString(result) must include(Messages("gmp.only_part_problem"))
             contentAsString(result) must include(Messages("gmp.contracted_out_period_error", "10/11/2014 to 10/11/2015"))
+            contentAsString(result) must not include(Messages("gmp.back_to_dashboard"))
           }
         }
       }
