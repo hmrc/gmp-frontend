@@ -22,7 +22,7 @@
 @import config.ApplicationConfig.globalErrors
 
 
-@gmp_main(applicationConfig = applicationConfig, title = Messages.get("gmp.results.title"),supportLinkEnabled = false) {
+@gmp_main(applicationConfig = applicationConfig, title = Messages.get("gmp.results.title"),supportLinkEnabled = false, dashboardLinkEnabled = !calculationResponse.hasErrors) {
 
   @if(calculationResponse.globalErrorCode > 0){
     @includes.global_error(calculationResponse.globalErrorCode)

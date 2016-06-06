@@ -21,7 +21,7 @@
 @import play.i18n._
 @import config.ApplicationConfig.globalErrors
 
-@gmp_main(title = Messages.get("gmp.contributions_earnings.title"),supportLinkEnabled = false) {
+@gmp_main(title = Messages.get("gmp.contributions_earnings.title"),supportLinkEnabled = false, dashboardLinkEnabled = !calculationResponse.hasErrors) {
 
   <div class="grid">
     <div class="grid-2-3">
