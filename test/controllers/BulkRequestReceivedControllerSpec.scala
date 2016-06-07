@@ -110,7 +110,7 @@ class BulkRequestReceivedControllerSpec extends PlaySpec with OneServerPerSuite 
           withAuthorisedUser { user =>
             getBulkRequestReceived(user) { result =>
               status(result) must equal(OK)
-              contentAsString(result) must include(Messages("gmp.bulk.failure.generic"))
+              contentAsString(result) must include(Messages("gmp.bulk.failure.duplicate_upload"))
             }
           }
         }
