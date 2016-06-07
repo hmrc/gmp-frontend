@@ -17,8 +17,8 @@
 package models
 
 import org.joda.time.LocalDate
-import uk.gov.hmrc.time.TaxYearResolver
 import play.api.libs.json.Json
+import uk.gov.hmrc.time.TaxYear
 
 case class ContributionsAndEarnings(taxYear: Int, contEarnings: String)
 
@@ -124,7 +124,7 @@ object CalculationResponse {
 
   def getTaxYear(date: Option[LocalDate]): Int = {
     date match {
-      case Some(d) => TaxYearResolver.taxYearFor(d)
+      case Some(d) => TaxYear.taxYearFor(d).startYear
       case _ => 0
     }
   }
