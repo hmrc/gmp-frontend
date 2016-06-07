@@ -18,12 +18,12 @@ package controllers
 
 
 import models.{CalculationType, GmpSession, Leaving}
-import play.api.mvc.{Request, Result}
+import play.api.mvc.Result
 import services.SessionService
 import uk.gov.hmrc.play.frontend.auth.connectors.domain.ConfidenceLevel
 import uk.gov.hmrc.play.frontend.auth.{Actions, IdentityConfidencePredicate}
 import uk.gov.hmrc.play.frontend.controller.FrontendController
-import uk.gov.hmrc.time.TaxYearResolver
+import uk.gov.hmrc.time.TaxYear
 
 import scala.concurrent.Future
 
@@ -158,7 +158,7 @@ trait GmpPageFlow extends GmpController {
       case Some(rDate) => {
         (rDate.getAsLocalDate, session.leaving.leavingDate.getAsLocalDate) match {
           case (Some(revDate), Some(lDate)) => {
-            TaxYearResolver.taxYearFor(revDate) == TaxYearResolver.taxYearFor(lDate)
+            TaxYear.taxYearFor(revDate) == TaxYear.taxYearFor(lDate)
           }
           case _ => false
         }

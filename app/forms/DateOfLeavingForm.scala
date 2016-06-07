@@ -16,13 +16,11 @@
 
 package forms
 
-import models.{Leaving, GmpDate}
-import org.joda.time.LocalDate
+import models.{GmpDate, Leaving}
 import play.api.data.Form
 import play.api.data.Forms._
-import play.api.data.validation.{Invalid, Valid, ValidationError, Constraint}
+import play.api.data.validation.{Constraint, Invalid, Valid, ValidationError}
 import play.api.i18n.Messages
-import uk.gov.hmrc.time.TaxYearResolver._
 
 object DateOfLeavingForm {
 

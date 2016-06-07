@@ -19,7 +19,6 @@
 @import play.i18n._
 @import org.joda.time.LocalDate
 @import views.helpers.GmpDateFormatter._
-@import uk.gov.hmrc.time.TaxYearResolver
 
 @header = @{
   if(calculationResponse.calcType == CalculationType.SURVIVOR.toInt && calculationResponse.revaluationDate.isDefined){
