@@ -54,17 +54,17 @@ class SessionCacheControllerSpec extends PlaySpec with OneServerPerSuite with Mo
       redirectLocation(result).get must include("/account/sign-in")
     }
 
-    "reset the cached calculation parameters" in {
+    "reset the cached calculation parameters except for scon" in {
       withAuthorisedUser { request =>
-        when(mockSessionService.resetGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(SessionService.cleanSession)))
+        when(mockSessionService.resetGmpSessionWithScon()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(SessionService.cleanSession)))
         await(TestSessionCacheController.newCalculation.apply(request))
-        verify(mockSessionService, atLeastOnce()).resetGmpSession()(Matchers.any(), Matchers.any())
+        verify(mockSessionService, atLeastOnce()).resetGmpSessionWithScon()(Matchers.any(), Matchers.any())
       }
     }
 
     "redirect to the pension details page" in {
       withAuthorisedUser { request =>
-        when(mockSessionService.resetGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(SessionService.cleanSession)))
+        when(mockSessionService.resetGmpSessionWithScon()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(SessionService.cleanSession)))
         val result = TestSessionCacheController.newCalculation.apply(request)
         status(result) must be(SEE_OTHER)
         redirectLocation(result).get must be("/guaranteed-minimum-pension/pension-details")
@@ -73,7 +73,7 @@ class SessionCacheControllerSpec extends PlaySpec with OneServerPerSuite with Mo
 
     "raise an error when the session service is unreachable" in {
       withAuthorisedUser { request =>
-        when(mockSessionService.resetGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(None))
+        when(mockSessionService.resetGmpSessionWithScon()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(None))
         intercept[RuntimeException]{
           await(TestSessionCacheController.newCalculation.apply(request))
         }
@@ -93,7 +93,7 @@ class SessionCacheControllerSpec extends PlaySpec with OneServerPerSuite with Mo
       withAuthorisedUser { request =>
         when(mockSessionService.resetGmpBulkSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(SessionService.cleanBulkSession)))
         await(TestSessionCacheController.newBulkCalculation.apply(request))
-        verify(mockSessionService, atLeastOnce()).resetGmpSession()(Matchers.any(), Matchers.any())
+        verify(mockSessionService, atLeastOnce()).resetGmpBulkSession()(Matchers.any(), Matchers.any())
       }
     }
 
@@ -115,4 +115,5 @@ class SessionCacheControllerSpec extends PlaySpec with OneServerPerSuite with Mo
       }
     }
   }
+
 }

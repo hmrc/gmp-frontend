@@ -40,7 +40,7 @@ trait SessionService extends SessionCacheWiring {
   def metrics: Metrics
 
   val GMP_SESSION_KEY = "gmp_session"
-  val cleanSession = GmpSession(MemberDetails("", "", ""), "", "", None, None, Leaving(GmpDate(None,None,None), None), None, Dashboard(List()))
+  val cleanSession = GmpSession(MemberDetails("", "", ""), "", "", None, None, Leaving(GmpDate(None, None, None), None), None, Dashboard(List()))
 
   val GMP_BULK_SESSION_KEY = "gmp_bulk_session"
   val cleanBulkSession = GmpBulkSession(None, None, None)
@@ -114,6 +114,18 @@ trait SessionService extends SessionCacheWiring {
       timer.stop()
       Some(cleanSession)
     })
+  }
+
+  def resetGmpSessionWithScon()(implicit request: Request[_], hc: HeaderCarrier): Future[Option[GmpSession]] = {
+    val timer = metrics.keystoreStoreTimer.time()
+    Logger.debug(s"[SessionService][fetchGmpSessionWithScon]")
+    fetchPensionDetails.flatMap { s =>
+      val session = cleanSession.copy(scon = s.getOrElse(""))
+      sessionCache.cache[GmpSession](GMP_SESSION_KEY, session) map (cacheMap => {
+        timer.stop()
+        Some(session)
+      })
+    }
   }
 
   def cacheMemberDetails(memberDetails: MemberDetails)(implicit request: Request[_], hc: HeaderCarrier): Future[Option[GmpSession]] = {
@@ -226,7 +238,7 @@ trait SessionService extends SessionCacheWiring {
           case Some(returnedSession) => {
             (returnedSession.scenario, returnedSession.leaving.leaving) match {
               case (CalculationType.REVALUATION, Some(Leaving.NO)) =>
-                returnedSession.copy(revaluationDate = date, rate = Some(RevaluationRate.HMRC),leaving = Leaving(date.get, Some(Leaving.NO)))
+                returnedSession.copy(revaluationDate = date, rate = Some(RevaluationRate.HMRC), leaving = Leaving(date.get, Some(Leaving.NO)))
               case _ => returnedSession.copy(revaluationDate = date)
             }
           }

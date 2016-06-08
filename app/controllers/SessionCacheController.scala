@@ -29,7 +29,7 @@ trait SessionCacheController extends GmpPageFlow {
     implicit user =>
       implicit request => {
         Logger.debug(s"[SessionCacheController][newCalculation][GET] : $request")
-        sessionService.resetGmpSession map {
+        sessionService.resetGmpSessionWithScon map {
           case Some(x) => Redirect(controllers.routes.PensionDetailsController.get)
           case None => throw new RuntimeException
         }
