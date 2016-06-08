@@ -280,6 +280,12 @@ class SessionServiceSpec extends PlaySpec with OneServerPerSuite with ScalaFutur
         result must be(Some(SessionService.cleanSession))
       }
 
+      "reset the session with scon" in {
+        when(mockSessionCache.fetchAndGetEntry[GmpSession](any())(any(), any())).thenReturn(Future.successful(Some(gmpSession.copy(scon = scon))))
+        val result = Await.result(TestSessionService.resetGmpSessionWithScon()(request, hc), 10 seconds)
+        result must be(Some(SessionService.cleanSession.copy(scon = scon)))
+      }
+
       "fetch the session" in {
         when(mockSessionCache.fetchAndGetEntry[GmpSession](any())(any(), any())).thenReturn(Future.successful(Some(gmpSession)))
         val result = Await.result(TestSessionService.fetchGmpSession()(request, hc), 10 seconds)
