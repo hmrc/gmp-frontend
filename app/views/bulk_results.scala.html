@@ -52,6 +52,8 @@
       @includes.bulk_results_all(bulkResultsSummary, uploadReference)
     }
 
+    @includes.what_did_you_think_link()
+
     <div class="grid-2-3 custom-back-link">
       @if(comingFromPage == 0){
         <a href="@routes.DashboardController.get" id="back-link">@Messages.get("gmp.back.link")</a>
@@ -61,3 +63,4 @@
     </div>
 </div>
 }
+
