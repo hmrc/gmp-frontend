@@ -276,3 +276,13 @@ caption {
     top: 50%;
     margin-top: -6px;
 }
+
+#query-handling-body{
+  font-size:16px;
+}
+
+#results-heading,
+#csv-heading{
+  font-size:16px;
+  font-weight:bold;
+}
