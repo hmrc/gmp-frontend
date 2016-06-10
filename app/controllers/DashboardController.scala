@@ -33,6 +33,9 @@ trait DashboardController extends GmpPageFlow {
   def get = AuthorisedFor(GmpRegime, pageVisibilityPredicate).async {
     implicit user =>
       implicit request => {
+
+        sessionService.resetGmpSessionWithScon()
+
         gmpBulkConnector.getPreviousBulkRequests().map {
           bulkPreviousRequests => {
             Ok(views.html.dashboard(bulkPreviousRequests.sorted))
