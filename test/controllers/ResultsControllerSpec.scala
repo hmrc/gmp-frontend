@@ -402,6 +402,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
           withAuthorisedUser { request =>
             val result = TestResultsController.get.apply(request)
             contentAsString(result) must include("Surviving partner&#x27;s GMP entitlement at 10/11/2010")
+            contentAsString(result) must include(Messages("gmp.results.survivior.disclaimer"))
           }
         }
 

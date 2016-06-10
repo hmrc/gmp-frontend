@@ -302,6 +302,7 @@ gmp.nonrevalued.header = GMP at {0}
 gmp.nonrevalued.message = This GMP is not revalued up to the {0}
 gmp.revaluation.dateoftransfer = date of transfer
 gmp.revaluation.dateofdivorce = date of divorce
+gmp.results.survivior.disclaimer = This amount is subject to qualifying conditions of the <a href="https://www.gov.uk/browse/benefits/bereavement">type of bereavement benefit</a> the surviving partner is entitled to.
 
 # Scenarios
 gmp.scenarios.title = Choose what type of calculation you need for this member
