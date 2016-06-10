@@ -34,6 +34,7 @@
     </div>
 
     <div class="grid grid-2-3">
+      <br>
         <div id="results-heading" class="grid grid-3-4">@Messages.get("gmp.bulk.results")</div>
         <div id="csv-heading" class="grid grid-1-4 text--right">@Messages.get("gmp.bulk.results.csv")</div>
     </div>
@@ -51,6 +52,8 @@
                                      bulkResultsSummary.getNumberOfSuccessfulCalculations != 0) {
       @includes.bulk_results_all(bulkResultsSummary, uploadReference)
     }
+
+    @includes.bulk_query_handling_message()
 
     @includes.what_did_you_think_link()
 
