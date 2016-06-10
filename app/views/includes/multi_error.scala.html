@@ -50,7 +50,9 @@
                 <p id="multi-solution">@Html(Messages.get("gmp.multi.solution"))</p>
             </div>
         </div>
-
-        @includes.conts_and_earnings_link(calculationResponse)
     </div>
 </div>
+
+@includes.survivor_disclaimer(calculationResponse.calcType == CalculationType.SURVIVOR.toInt)
+
+@includes.conts_and_earnings_link(calculationResponse)
