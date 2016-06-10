@@ -260,7 +260,7 @@ gmp.error.solution.63123 = <a href="/guaranteed-minimum-pension/revaluation">Cha
 gmp.error.solution.check_scon = Check you have entered the correct SCON and <a href="/guaranteed-minimum-pension/pension-details">try the calculation again</a>.
 gmp.error.solution.56010 = Ask the member to visit their local Department of Work and Pensions or HM Revenue and Customs office with a copy of their birth certificate so we can update their records.
 gmp.error.solution.56018 = Ask the member to contact us if they disagree with the information we hold.
-gmp.error.solution.56002 = Submit a new request once the orders are published.<br/>
+gmp.error.solution.56002 = Submit a new request once <a href="http://www.legislation.gov.uk/all?title=The%20Social%20Security%20Revaluation%20of%20Earnings%20Factors%20Order%20">the orders are published</a>.<br/>
 gmp.error.solution.try_again = Check your records and <a href="/guaranteed-minimum-pension/pension-details">try the calculation again</a>.
 gmp.error.solution.leaving_date = Check you have entered the correct leaving date and <a href="/guaranteed-minimum-pension/left-scheme">try again</a>.
 gmp.error.solution.63148 = Check the date up to which you would like the calculation to apply and <a href="/guaranteed-minimum-pension/inflation-proof">try again</a>.
