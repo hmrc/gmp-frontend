@@ -79,6 +79,7 @@ gmp.more_bulk_results.header = Recent bulk calculations
 
 # Buttons
 gmp.continue.button = Continue
+gmp.check_gmp.button = Check GMP
 gmp.back.link = Back
 gmp.button.request-another = Get another calculation
 gmp.button.check_another = Go to the GMP checker dashboard

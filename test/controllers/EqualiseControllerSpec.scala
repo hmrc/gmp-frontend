@@ -73,6 +73,7 @@ class EqualiseControllerSpec extends PlaySpec with OneServerPerSuite with Mockit
         contentAsString(result) must include(Messages("gmp.equalise_header"))
         contentAsString(result) must include(Messages("gmp.equalise_subheader"))
         contentAsString(result) must include(Messages("gmp.back_to_dashboard"))
+        contentAsString(result) must include(Messages("gmp.check_gmp.button"))
       }
     }
 
