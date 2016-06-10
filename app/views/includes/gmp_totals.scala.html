@@ -67,3 +67,13 @@
     <br/>
   }
 </div>
+
+<div class="grid">
+  <div class="grid-2-3">
+    <div class="panel-indent">
+      @if(calculationResponse.calcType == CalculationType.SURVIVOR.toInt){
+        <p id="survivor-disclaimer">@Html({Messages.get("gmp.results.survivior.disclaimer")})</p>
+      }
+    </div>
+  </div>
+</div>
