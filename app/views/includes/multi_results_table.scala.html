@@ -43,8 +43,8 @@
 
     <tr @{if(period.errorCode> 0 )"class=error-row"}>
         <td class="table-background" colspan="3">
-            <span class="bold-xsmall" id="from-date-@count">From:</span> @{ new LocalDate(period.startDate.get).toString("dd/MM/yyyy") } <br/>
-            <span class="bold-xsmall" id="to-date-@count">To:  </span> @{ new LocalDate(period.endDate).toString("dd/MM/yyyy") }
+            <span class="bold-xsmall" id="from-date-@count">@Messages.get("gmp.from")</span> @{ new LocalDate(period.startDate.get).toString("dd/MM/yyyy") } <br/>
+            <span class="bold-xsmall" id="to-date-@count">@Messages.get("gmp.to")</span> @{ new LocalDate(period.endDate).toString("dd/MM/yyyy") }
         </td>
         @if(period.errorCode == 0) {
             <td id="gmp-total-@count" class="numeric">
@@ -87,7 +87,11 @@
             }
         } else {
             <td id="error-@count" colspan="5" class="error-message">
-                @{ Messages.get("gmp.unavailable") }
+                @if(globalErrors.hasPath(s"${period.errorCode}.reason")){
+                    <p id="reason-@count">@Messages.get(globalErrors.getString(s"${period.errorCode}.reason"))</p>
+                } else {
+                    <p id="unavailable-@count">@Messages.get("gmp.unavailable")</p>
+                }
             </td>
         }
     </tr>

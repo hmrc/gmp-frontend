@@ -79,6 +79,13 @@ gmp.th.time_left = Time left
 gmp.days_left = {0} Day{1}
 gmp.more_bulk_results.header = Recent bulk calculations
 
+gmp.weekly_total = Weekly total
+gmp.date_from = From:
+gmp.date_to = To:
+gmp.multi.dual_calc.header = Post - 1990 GMP value per period
+gmp.post90.true = True gender
+gmp.post90.opposite = Opposite gender
+
 # Buttons
 gmp.continue.button = Continue
 gmp.check_gmp.button = Check GMP
@@ -120,7 +127,7 @@ gmp.revaluation_rate.limited = Limited rate
 gmp.revaluation_rate_short.fixed = Fixed
 gmp.revaluation_rate_short.s148 = S148 or full rate revaluation
 gmp.revaluation_rate_short.limited = Limited
-gmp.total = Total GMP:
+gmp.total = Total GMP
 gmp.frequency.weekly = a week
 gmp.post88 = Post-1988 GMP:
 gmp.post90 = Post-1990 GMP

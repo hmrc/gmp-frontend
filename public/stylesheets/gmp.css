@@ -32,7 +32,6 @@
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
-  margin-top: 120px;
   padding-top: 15px;
   width: 30%;
 }
@@ -284,5 +283,33 @@ caption {
 #results-heading,
 #csv-heading{
   font-size:16px;
+  font-weight:bold;
+}
+
+#table-column-names {
+  text-align: center;
+}
+
+.multi-results-header-text {
+  text-align: center;
+  font-size: 20px;
+  width:25%;
+}
+
+.multi-results-header-rate {
+  text-align: center;
+    font-size: 20px;
+    width:15%
+}
+
+.multi-results-header-value {
+  font-size: 26px;
+}
+
+.multi-table-value {
+  text-align: center;
+}
+
+.multi-post90-header td {
   font-weight:bold;
 }

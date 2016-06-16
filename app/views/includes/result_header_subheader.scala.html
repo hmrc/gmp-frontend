@@ -62,30 +62,6 @@
   else ""
 }
 
-
-@if(!calculationResponse.hasErrors) {
-  <div class="grid">
-
-    <div class="grid-2-3">
-        <div class="confirmation">
-          <h1 class="heading-large">
-            <image src='@routes.AssetsController.at("images/tick.png")' alt=""/>
-            @Messages.get("gmp.results.banner")
-          </h1>
-        </div>
-    </div>
-
-    <div class="grid-1-3 print-style top-blue-border">
-      <ul>
-        <li>
-          <a href="javascript:window.print();" id="print-link" data-journey-click="gmp:click:print">@Messages.get("gmp.print")</a>
-        </li>
-      </ul>
-    </div>
-
-  </div>
-}
-
 <div class="grid">
 
   <div class="grid-2-3">
@@ -95,5 +71,15 @@
       <div id="subheader" class="panel-indent">@subheader</div>
     }
   </div>
+  @if(!calculationResponse.hasErrors) {
+    <div class="grid-1-3 print-style top-blue-border">
+      <ul>
+        <li>
+          <a href="javascript:window.print();" id="print-link" data-journey-click="gmp:click:print">@Messages.get("gmp.print")</a>
+        </li>
+      </ul>
+    </div>
+  }
+
 
 </div>

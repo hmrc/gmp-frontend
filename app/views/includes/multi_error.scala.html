@@ -31,20 +31,16 @@
                 @for((period, count) <- calculationResponse.calculationPeriods.zipWithIndex) {
                 <li>
                     @if(period.errorCode > 0) {
-                    <div class="bold-small" id="from-to-date-@count">@{ new LocalDate(period.startDate.get).toString("dd/MM/yyyy") } to @{ new LocalDate(period.endDate).toString("dd/MM/yyyy") }:</div>
-                      @if(globalErrors.hasPath(s"${period.errorCode}.reason")){
-                        <p id="reason-@count">@Messages.get(globalErrors.getString(s"${period.errorCode}.reason"))</p>
-                      } else {
-                        <p id="unavailable-@count">@Messages.get("gmp.unavailable")</p>
-                      }
+                        <a href="#reason-@count" class="error-list" id="from-to-error-@count">
+                            @{ new LocalDate(period.startDate.get).toString("dd/MM/yyyy") } to @{ new LocalDate(period.endDate).toString("dd/MM/yyyy") }: @Messages.get("gmp.unavailable")
+                        </a>
                     }
                 </li>
                 }
             </ul>
+            <br/>
             @includes.multi_results_table(calculationResponse)
             <div>
-
-
                 <h3 id="what-now">@Messages.get("gmp.what_now")</h3>
 
                 <p id="multi-solution">@Html(Messages.get("gmp.multi.solution"))</p>
