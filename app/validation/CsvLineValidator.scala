@@ -16,8 +16,10 @@
 
 package validation
 
+import org.joda.time.LocalDate
 import play.api.i18n.Messages
 import services.BulkRequestCsvColumn
+import uk.gov.hmrc.time.TaxYear
 
 trait FieldValidator {
 
@@ -83,6 +85,15 @@ trait FieldValidator {
     }
   }
 
+  def validateTerminationDate(value: String) = {
+    value match {
+      case "" => None
+      case x if !DateValidate.isValid(value) => Some(Messages("gmp.error.csv.date.invalid"))
+      //case x if DateValidate.isValid(value) && LocalDate.parse(value).isBefore(TaxYear(2016).starts) => Some(Messages("gmp.error.csv.termination.obb"))
+      case _ => None
+    }
+  }
+
   def validateRevalRate(value: String) = {
     value match {
       case "" => None
@@ -121,7 +132,7 @@ object CsvLineValidator extends FieldValidator {
           case (value, BulkRequestCsvColumn.FORENAME) => (BulkRequestCsvColumn.FORENAME, validateFirstName(value))
           case (value, BulkRequestCsvColumn.SURNAME) => (BulkRequestCsvColumn.SURNAME, validateLastName(value))
           case (value, BulkRequestCsvColumn.CALC_TYPE) => (BulkRequestCsvColumn.CALC_TYPE, validateCalcType(value))
-          case (value, BulkRequestCsvColumn.TERMINATION_DATE) => (BulkRequestCsvColumn.TERMINATION_DATE, validateDate(value))
+          case (value, BulkRequestCsvColumn.TERMINATION_DATE) => (BulkRequestCsvColumn.TERMINATION_DATE, validateTerminationDate(value))
           case (value, BulkRequestCsvColumn.REVAL_DATE) => (BulkRequestCsvColumn.REVAL_DATE, validateDate(value))
           case (value, BulkRequestCsvColumn.REVAL_RATE) => (BulkRequestCsvColumn.REVAL_RATE, validateRevalRate(value))
           case (value, BulkRequestCsvColumn.DUAL_CALC) => (BulkRequestCsvColumn.DUAL_CALC, validateDualCalc(value))
