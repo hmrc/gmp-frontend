@@ -257,15 +257,6 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
           }
         }
 
-        "load the results page" in {
-          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
-          when(mockCalculationConnector.calculateSingle(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(validCalculationResponse))
-          withAuthorisedUser { request =>
-            val result = TestResultsController.get.apply(request)
-            contentAsString(result) must include(Messages("gmp.results.banner"))
-          }
-        }
-
         "load the results page without revalrate when dol" in {
           when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
           when(mockCalculationConnector.calculateSingle(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(validCalculationResponse))
@@ -281,7 +272,6 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
           when(mockCalculationConnector.calculateSingle(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(validCalculationResponse))
           withAuthorisedUser { request =>
             val result = TestResultsController.get.apply(request)
-            contentAsString(result) must include(Messages("gmp.results.banner"))
             contentAsString(result) must include(Messages("gmp.back_to_dashboard"))
           }
         }
@@ -292,38 +282,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
           when(mockCalculationConnector.calculateSingle(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(validCalculationResponse))
           withAuthorisedUser { request =>
             val result = TestResultsController.get.apply(request)
-            contentAsString(result) must include(Messages("gmp.results.banner"))
             contentAsString(result) must include(Messages("gmp.entered_details.title"))
-          }
-        }
-
-        "load the results page when revaluation date exists with revaluation fixed" in {
-          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession.copy(rate = Some(RevaluationRate
-            .FIXED)))))
-          when(mockCalculationConnector.calculateSingle(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(validCalculationResponse))
-          withAuthorisedUser { request =>
-            val result = TestResultsController.get.apply(request)
-            contentAsString(result) must include(Messages("gmp.results.banner"))
-          }
-        }
-
-        "load the results page when revaluation date exists with revaluation limited" in {
-          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession.copy(rate = Some(RevaluationRate
-            .LIMITED)))))
-          when(mockCalculationConnector.calculateSingle(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(validCalculationResponse))
-          withAuthorisedUser { request =>
-            val result = TestResultsController.get.apply(request)
-            contentAsString(result) must include(Messages("gmp.results.banner"))
-          }
-        }
-
-        "load the results page when revaluation date exists with revaluation hmrc held" in {
-          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession.copy(rate = Some(RevaluationRate
-            .HMRC)))))
-          when(mockCalculationConnector.calculateSingle(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(validCalculationResponse))
-          withAuthorisedUser { request =>
-            val result = TestResultsController.get.apply(request)
-            contentAsString(result) must include(Messages("gmp.results.banner"))
           }
         }
 
@@ -596,7 +555,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
           when(mockCalculationConnector.calculateSingle(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(validRevalCalculationResponseSinglePeriod))
           withAuthorisedUser { request =>
             val result = TestResultsController.get.apply(request)
-            contentAsString(result) must include(Messages("gmp.revaluation_rate.type_1"))
+            contentAsString(result) must include(Messages("gmp.revaluation_rate.type_2"))
           }
         }
 
@@ -973,10 +932,8 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
 
         withAuthorisedUser { request =>
           val result = TestResultsController.get.apply(request)
-          contentAsString(result) must include(Messages("gmp.true_calculation"))
-          contentAsString(result) must include(Messages("gmp.opposite_calculation"))
-          contentAsString(result) must include(Messages("gmp.true"))
-          contentAsString(result) must include(Messages("gmp.opposite"))
+          contentAsString(result) must include(Messages("gmp.post90.true"))
+          contentAsString(result) must include(Messages("gmp.post90.opposite"))
         }
       }
 

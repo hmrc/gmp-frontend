@@ -20,6 +20,8 @@ import helpers.RandomNino
 import org.joda.time.LocalDate
 import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.PlaySpec
+import play.api.i18n.Messages
+import views.helpers.GmpDateFormatter._
 
 class CalculationResponseSpec extends PlaySpec with MockitoSugar {
 
@@ -235,6 +237,33 @@ class CalculationResponseSpec extends PlaySpec with MockitoSugar {
       }
     }
 
+    "header" must {
+      "return correct header for survivor and revaluation" in {
+        val revalDate = new LocalDate(2010, 1, 1)
+        val response = CalculationResponse("John Johnson", nino, "S1234567T", None, Some(revalDate), Nil, 0, None, None, None, false, 3)
+        response.header must be(Messages("gmp.results.survivor.revaluation.header", formatDate(revalDate)))
+      }
+
+      "return correct header for survivor and date of death" in {
+        val dod = new LocalDate(2010, 1, 1)
+        val response = CalculationResponse("John Johnson", nino, "S1234567T", None, None, Nil, 0, None, None, Some(dod), false, 3)
+        response.header must be(Messages("gmp.results.survivor.header", formatDate(dod)))
+      }
+
+      "return correct header for survivor" in {
+        val response = CalculationResponse("John Johnson", nino, "S1234567T", None, None, Nil, 0, None, None, None, false, 3)
+        response.header must be(Messages("gmp.results.survivor.header"))
+      }
+
+      "return correct header for spa" in {
+        val spaDate = new LocalDate(2010, 1, 1)
+        val response = CalculationResponse("John Johnson", nino, "S1234567T", None, None, Nil, 0, Some(spaDate), None, None, false, 4)
+        response.header must be(Messages("gmp.spa.header", formatDate(spaDate)))
+      }
+
+
+
+    }
 
   }
 

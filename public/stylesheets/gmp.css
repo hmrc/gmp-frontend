@@ -296,10 +296,13 @@ caption {
   width:25%;
 }
 
+.multi-results-header-date {
+  width:25%;
+}
+
 .multi-results-header-rate {
   text-align: center;
-    font-size: 20px;
-    width:15%
+  font-size: 20px;
 }
 
 .multi-results-header-value {

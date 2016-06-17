@@ -20,13 +20,31 @@
 @import org.joda.time.LocalDate
 @import config.ApplicationConfig.globalErrors
 
+<div id="revaluation-subheader" style="font-weight: bold;">@calculationResponse.revaluationRateSubHeader</div>
+<br/>
+
 <table id="gmp-periods">
     <thead>
         <tr id="gmp-table-column-names">
-            <th><span class="hidden">hidden text for empty th</span></th>
-            <th class="multi-results-header-text table-background">@Messages.get("gmp.total")<br/><span class="multi-results-header-value">£@calculationResponse.totalGmp</span></th>
-            <th class="multi-results-header-text">@Messages.get("gmp.post.1988")<br/><span class="multi-results-header-value">£@calculationResponse.post88Gmp</span></th>
-            @if(true){
+            <th class="multi-results-header-date"><span class="hidden">hidden text for empty th</span></th>
+            <th class="multi-results-header-text table-background">
+                @if(calculationResponse.calcType == CalculationType.SURVIVOR.toInt) {
+                    @Messages.get("gmp.total.entitlement")
+                } else {
+                    @Messages.get("gmp.total")
+                }
+                <br/><span class="multi-results-header-value">£@calculationResponse.totalGmp</span>
+
+            </th>
+            <th class="multi-results-header-text">
+                @if(calculationResponse.calcType == CalculationType.SURVIVOR.toInt) {
+                    @Messages.get("gmp.post88.entitlement")
+                } else {
+                    @Messages.get("gmp.post.1988")
+                }
+                <br/><span class="multi-results-header-value">£@calculationResponse.post88Gmp</span>
+            </th>
+            @if(calculationResponse.showRateColumn){
                 <th class="multi-results-header-rate table-background">@Messages.get("gmp.rate")</th>
             }
         </tr>
@@ -41,10 +59,10 @@
             <td id="gmp-total-@count" class="multi-table-value table-background">
                 <span>£@{ period.gmpTotal }<br/>@Messages.get("gmp.frequency.weekly")</span>
             </td>
-            <td id="post-88-@count" class="multi-table-value">
+            <td id="post88-total-@count" class="multi-table-value">
                 <span>£@{ period.post88GMPTotal }<br/>@Messages.get("gmp.frequency.weekly")</span>
             </td>
-            @if(true) {
+            @if(calculationResponse.showRateColumn) {
                 <td id="gmp-rate-@count" class="multi-table-value table-background">
                     <span>@{ Messages.get(s"gmp.revaluation_rate.type_${period.revaluationRate}") }</span>
                 </td>
@@ -57,15 +75,16 @@
 @if(calculationResponse.dualCalc){
 
 <h2 id="post90-header">@Messages.get("gmp.multi.dual_calc.header")</h2>
+<nr/>
 
 <table id="post90-periods">
     <thead>
         <tr id="post90-table-column-names">
-            <th><span class="hidden">hidden text for empty th</span></th>
-            <th class="multi-results-header-text table-background">@Messages.get("gmp.post90.true")<br/><span class="multi-results-header-value">£@calculationResponse.totalGmp</span></th>
-            <th class="multi-results-header-text">@Messages.get("gmp.post90.opposite")<br/><span class="multi-results-header-value">£@calculationResponse.post88Gmp</span></th>
-            @if(true){
-            <th class="multi-results-header-rate table-background">@Messages.get("gmp.rate")</th>
+            <th class="multi-results-header-date"><span class="hidden">hidden text for empty th</span></th>
+            <th class="multi-results-header-text">@Messages.get("gmp.post90.true")<br/><span class="multi-results-header-value">£@calculationResponse.trueCalculation</span></th>
+            <th class="multi-results-header-text">@Messages.get("gmp.post90.opposite")<br/><span class="multi-results-header-value">£@calculationResponse.oppositeCalculation</span></th>
+            @if(calculationResponse.showRateColumn){
+            <th class="multi-results-header-rate">@Messages.get("gmp.rate")</th>
             }
         </tr>
     </thead>
@@ -76,16 +95,24 @@
                     <span class="bold-xsmall" id="post90-from-date-@count">@Messages.get("gmp.date_from")</span> @{ new LocalDate(period.startDate.get).toString("dd/MM/yyyy") } <br/>
                     <span class="bold-xsmall" id="post90-to-date-@count">@Messages.get("gmp.date_to")</span> @{ new LocalDate(period.endDate).toString("dd/MM/yyyy") }
                 </td>
-                <td id="post90-total-@count" class="multi-table-value table-background">
-                    <span>£@{ period.dualCalcPost90TrueTotal }<br/>@Messages.get("gmp.frequency.weekly")</span>
+                <td id="post90-total-@count" class="multi-table-value">
+                    @if(period.dualCalcPost90OppositeTotal != Some("0.00")) {
+                        <span>£@{ period.dualCalcPost90TrueTotal }<br/>@Messages.get("gmp.frequency.weekly")</span>
+                    } else {
+                        --
+                    }
                 </td>
-                <td id="post90-@count" class="multi-table-value">
-                    <span>£@{ period.dualCalcPost90OppositeTotal }<br/>@Messages.get("gmp.frequency.weekly")</span>
+                <td id="post90-opposite-@count" class="multi-table-value">
+                    @if(period.dualCalcPost90OppositeTotal != Some("0.00")) {
+                        <span>£@{ period.dualCalcPost90OppositeTotal }<br/>@Messages.get("gmp.frequency.weekly")</span>
+                    } else {
+                        --
+                    }
                 </td>
-                @if(true) {
-                <td id="post90-rate-@count" class="multi-table-value table-background">
-                    <span>@{ Messages.get(s"gmp.revaluation_rate.type_${period.revaluationRate}") }</span>
-                </td>
+                @if(calculationResponse.showRateColumn) {
+                    <td id="post90-rate-@count" class="multi-table-value">
+                        <span>@{ Messages.get(s"gmp.revaluation_rate.type_${period.revaluationRate}") }</span>
+                    </td>
                 }
             </tr>
         }

@@ -20,55 +20,13 @@
 @import org.joda.time.LocalDate
 @import views.helpers.GmpDateFormatter._
 
-@header = @{
-  if(calculationResponse.calcType == CalculationType.SURVIVOR.toInt && calculationResponse.revaluationDate.isDefined){
-    Messages.get("gmp.results.survivor.revaluation.header", formatDate(calculationResponse.revaluationDate.get))
-  }else if(calculationResponse.calcType == CalculationType.SURVIVOR.toInt && calculationResponse.dateOfDeath.isDefined){
-    Messages.get("gmp.results.survivor.header", formatDate(calculationResponse.dateOfDeath.get))
-  }else if(calculationResponse.calcType == CalculationType.SURVIVOR.toInt){
-    Messages.get("gmp.results.survivor.header")
-  }else if(calculationResponse.calcType == CalculationType.SPA.toInt && calculationResponse.spaDate.isDefined) {
-    Messages.get("gmp.spa.header", formatDate(calculationResponse.spaDate.get))
-  }else if(calculationResponse.calcType == CalculationType.PAYABLE_AGE.toInt && calculationResponse.payableAgeDate.isDefined) {
-    Messages.get("gmp.payable_age.header", formatDate(calculationResponse.payableAgeDate.get))
-  }else if(calculationResponse.revaluationDate.isEmpty || calculationResponse.revaluationUnsuccessful){
-    Messages.get("gmp.leaving.scheme.header", formatDate(calculationResponse.leavingDate))
-  }else {
-    if(calculationResponse.calculationPeriods.length <= 1)
-      Messages.get("gmp.leaving.revalued.header", formatDate(calculationResponse.leavingDate), Messages.get(s"gmp.revaluation_rate.type_${calculationResponse.calculationPeriods.head.revaluationRate}"))
-    else
-      Messages.get("gmp.leaving.revalued.header", formatDate(calculationResponse.leavingDate), Messages.get(s"gmp.revaluation_rate.type_${calculationResponse.revaluationRate.get}"))
-  }
-}
-
-
-
-@subheader = @{
-
-  if (calculationResponse.calcType == CalculationType.DOL.toInt && calculationResponse.calculationPeriods.length > 1) {
-        Messages.get("gmp.notrevalued.multi.subheader")
-  } else if (calculationResponse.calcType == CalculationType.DOL.toInt ||
-            (calculationResponse.calcType == CalculationType.REVALUATION.toInt && calculationResponse.revaluationUnsuccessful)) {
-                Messages.get("gmp.notrevalued.subheader")
-  } else if(calculationResponse.calcType == CalculationType.SURVIVOR.toInt &&
-            calculationResponse.calculationPeriods.head.inflationProofBeyondDod == Some(0) &&
-            calculationResponse.dodInSameTaxYearAsRevaluationDate) {
-                Messages.get("gmp.no_inflation.subheader")
-  } else if(calculationResponse.calcType == CalculationType.REVALUATION.toInt &&
-            calculationResponse.calculationPeriods.length == 1 &&
-            calculationResponse.calculationPeriods.head.revalued == Some(1)) {
-            Messages.get("gmp.notrevalued.subheader")
-  }
-  else ""
-}
-
 <div class="grid">
 
   <div class="grid-2-3">
-    <h2 id="results-header">@header</h2>
+    <h2 id="results-header">@calculationResponse.header</h2>
 
-    @if(!subheader.isEmpty) {
-      <div id="subheader" class="panel-indent">@subheader</div>
+    @if(calculationResponse.subheader.isDefined) {
+      <div id="subheader" class="panel-indent">@calculationResponse.subheader</div>
     }
   </div>
   @if(!calculationResponse.hasErrors) {
@@ -80,6 +38,5 @@
       </ul>
     </div>
   }
-
 
 </div>

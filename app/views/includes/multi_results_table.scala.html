@@ -21,7 +21,6 @@
 @import config.ApplicationConfig.globalErrors
 
 <table id="periods">
-    <caption id="results-table-subheader">@Messages.get("gmp.results.table.subheading")</caption>
     <thead>
         <tr id="table-column-names">
             <th class="numeric"><span class="hidden">hidden text for empty th</span></th>
@@ -43,8 +42,8 @@
 
     <tr @{if(period.errorCode> 0 )"class=error-row"}>
         <td class="table-background" colspan="3">
-            <span class="bold-xsmall" id="from-date-@count">@Messages.get("gmp.from")</span> @{ new LocalDate(period.startDate.get).toString("dd/MM/yyyy") } <br/>
-            <span class="bold-xsmall" id="to-date-@count">@Messages.get("gmp.to")</span> @{ new LocalDate(period.endDate).toString("dd/MM/yyyy") }
+            <span class="bold-xsmall" id="from-date-@count">@Messages.get("gmp.date_from")</span> @{ new LocalDate(period.startDate.get).toString("dd/MM/yyyy") } <br/>
+            <span class="bold-xsmall" id="to-date-@count">@Messages.get("gmp.date_to")</span> @{ new LocalDate(period.endDate).toString("dd/MM/yyyy") }
         </td>
         @if(period.errorCode == 0) {
             <td id="gmp-total-@count" class="numeric">
