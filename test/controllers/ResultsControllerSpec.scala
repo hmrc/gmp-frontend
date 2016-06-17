@@ -856,11 +856,8 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
         withAuthorisedUser { request =>
           val result = TestResultsController.createCalculationRequest(gmpSession)
           result.requestEarnings must be(Some(1))
-
         }
-
       }
-
     }
 
 
@@ -880,6 +877,20 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
         withAuthorisedUser { request =>
           val result = TestResultsController.createCalculationRequest(gmpSession4)
           result.nino must be(gmpSession4Nino)
+        }
+      }
+
+      "create request with fixed rate" in {
+        withAuthorisedUser { request =>
+          val result = TestResultsController.createCalculationRequest(gmpSession.copy(rate = Some(RevaluationRate.FIXED)))
+          result.revaluationRate must be(Some(2))
+        }
+      }
+
+      "create request with limited rate" in {
+        withAuthorisedUser { request =>
+          val result = TestResultsController.createCalculationRequest(gmpSession.copy(rate = Some(RevaluationRate.LIMITED)))
+          result.revaluationRate must be(Some(3))
         }
       }
     }

@@ -19,11 +19,11 @@ package models
 import helpers.RandomNino
 import org.joda.time.LocalDate
 import org.scalatest.mock.MockitoSugar
-import org.scalatestplus.play.PlaySpec
+import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
 import play.api.i18n.Messages
 import views.helpers.GmpDateFormatter._
 
-class CalculationResponseSpec extends PlaySpec with MockitoSugar {
+class CalculationResponseSpec extends PlaySpec with MockitoSugar with OneServerPerSuite {
 
   val nino = RandomNino.generate
 
@@ -261,10 +261,85 @@ class CalculationResponseSpec extends PlaySpec with MockitoSugar {
         response.header must be(Messages("gmp.spa.header", formatDate(spaDate)))
       }
 
+      "return correct header for pa" in {
+        val paDate = new LocalDate(2010, 1, 1)
+        val response = CalculationResponse("John Johnson", nino, "S1234567T", None, None, Nil, 0, None, Some(paDate), None, false, 2)
+        response.header must be(Messages("gmp.payable_age.header", formatDate(paDate)))
+      }
 
+      "return correct header with no revaluation" in {
+        val response = CalculationResponse("John Johnson", nino, "S1234567T", None, None, List(CalculationPeriod(Some(new LocalDate(2015, 11, 10)),new LocalDate(2015, 11, 10), "0.00", "0.00", 0, 0, None)), 0, None, None, None, false, 1)
+        response.header must be(Messages("gmp.leaving.scheme.header", formatDate(new LocalDate(2015, 11, 10))))
+      }
 
+      "return correct header with with revaluation date but revaluation unsuccessful" in {
+        val revalDate = new LocalDate(2010, 1, 1)
+        val response = CalculationResponse("John Johnson", nino, "S1234567T", None, Some(revalDate), List(CalculationPeriod(Some(new LocalDate(2015, 11, 10)),new LocalDate(2015, 11, 10), "0.00", "0.00", 0, 0, Some(1))), 0, None, None, None, false, 1)
+        response.header must be(Messages("gmp.leaving.scheme.header", formatDate(revalDate)))
+      }
+
+      "return correct header for revaluation" in {
+        val revalDate = new LocalDate(2010, 1, 1)
+        val response = CalculationResponse("John Johnson", nino, "S1234567T", None, Some(revalDate), List(CalculationPeriod(Some(new LocalDate(2015, 11, 10)),new LocalDate(2015, 11, 10), "0.00", "0.00", 0, 0, None)), 0, None, None, None, false, 1)
+        response.header must be(Messages("gmp.leaving.revalued.header", formatDate(revalDate)))
+      }
     }
 
+    "subheader" must {
+      "display correct subheader for DOL multi period" in {
+        val response = CalculationResponse("John Johnson", nino, "S1234567T", None, Some(new LocalDate(2000, 11, 11)),
+          List(CalculationPeriod(Some(new LocalDate(2015, 11, 10)),new LocalDate(2015, 11, 10), "0.00", "0.00", 0, 0, None),
+            CalculationPeriod(Some(new LocalDate(2010, 11, 10)),new LocalDate(2011, 11, 10), "0.00", "0.00", 0, 0, None)), 0, None, None, None, false, 0)
+        response.subheader must be(Some(Messages("gmp.notrevalued.multi.subheader")))
+      }
+
+      "display correct subheader for DOL single period" in {
+        val response = CalculationResponse("John Johnson", nino, "S1234567T", None, Some(new LocalDate(2000, 11, 11)), Nil, 0, None, None, None, false, 0)
+        response.subheader must be(Some(Messages("gmp.notrevalued.subheader")))
+      }
+
+      "display correct subheader for unsuccessful revaluation" in {
+        val response = CalculationResponse("John Johnson", nino, "S1234567T", None, Some(new LocalDate(2000, 11, 11)),
+          List(CalculationPeriod(Some(new LocalDate(2015, 11, 10)),new LocalDate(2015, 11, 10), "0.00", "0.00", 0, 0, Some(1)),
+            CalculationPeriod(Some(new LocalDate(2010, 11, 10)),new LocalDate(2011, 11, 10), "0.00", "0.00", 0, 0, Some(1))), 0, None, None, None, false, 1)
+        response.subheader must be(Some(Messages("gmp.notrevalued.subheader")))
+      }
+
+      "display correct subheader for survivor with inflation proof beyond dod and dod in same tax year" in {
+        val response = CalculationResponse("John Johnson", nino, "S1234567T", None, Some(new LocalDate(2010, 11, 11)),
+          List(CalculationPeriod(Some(new LocalDate(2015, 11, 10)),new LocalDate(2015, 11, 10), "0.00", "0.00", 0, 0, None, None, None, Some(0), None)), 0, None, None, Some(new LocalDate(2010, 6, 6)), false, 3)
+        response.subheader must be(Some(Messages("gmp.no_inflation.subheader")))
+      }
+
+      "no message in all other cases" in {
+        val response = CalculationResponse("John Johnson", nino, "S1234567T", None, Some(new LocalDate(2000, 11, 11)),
+          List(CalculationPeriod(Some(new LocalDate(2015, 11, 10)),new LocalDate(2015, 11, 10), "0.00", "0.00", 0, 0, Some(1))), 0, None, None, None, false, 2)
+        response.subheader must be(None)
+      }
+    }
+
+    "revaluationRateSubHeader" must {
+      "display correct rate in subheader for hmrc held rate" in {
+        val response = CalculationResponse("John Johnson", nino, "S1234567T", Some("0"), Some(new LocalDate(2010, 11, 11)),
+          List(CalculationPeriod(Some(new LocalDate(2015, 11, 10)),new LocalDate(2015, 11, 10), "0.00", "0.00", 1, 0, None)), 0, None, None, None, false, 2)
+
+        response.revaluationRateSubHeader must be(Some("Revaluation rate: HMRC held rate (S148)."))
+      }
+
+      "display correct rate in subheader for other rates" in {
+        val response = CalculationResponse("John Johnson", nino, "S1234567T", Some("1"), Some(new LocalDate(2010, 11, 11)),
+          List(CalculationPeriod(Some(new LocalDate(2015, 11, 10)),new LocalDate(2015, 11, 10), "0.00", "0.00", 1, 0, None)), 0, None, None, None, false, 2)
+
+        response.revaluationRateSubHeader must be(Some("Revaluation rate: S148."))
+      }
+
+      "display nothing when reval rate not selected" in {
+        val response = CalculationResponse("John Johnson", nino, "S1234567T", None, Some(new LocalDate(2010, 11, 11)),
+          List(CalculationPeriod(Some(new LocalDate(2015, 11, 10)),new LocalDate(2015, 11, 10), "0.00", "0.00", 1, 0, None)), 0, None, None, None, false, 2)
+
+        response.revaluationRateSubHeader must be(None)
+      }
+    }
   }
 
 }

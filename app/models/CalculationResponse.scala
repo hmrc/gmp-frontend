@@ -146,12 +146,9 @@ case class CalculationResponse(
               calculationPeriods.head.inflationProofBeyondDod == Some(0) &&
               dodInSameTaxYearAsRevaluationDate) {
       Some(Messages("gmp.no_inflation.subheader"))
-    } else if(calcType == CalculationType.REVALUATION.toInt &&
-              calculationPeriods.length == 1 &&
-              calculationPeriods.head.revalued == Some(1)) {
-      Some(Messages("gmp.notrevalued.subheader"))
     }
-    else None
+    else
+      None
   }
 
   def revaluationRateSubHeader: Option[String] = {
