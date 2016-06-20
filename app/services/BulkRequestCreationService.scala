@@ -25,6 +25,7 @@ import org.joda.time.format.DateTimeFormat
 import play.api.Logger
 import uk.gov.hmrc.play.config.ServicesConfig
 import uk.gov.hmrc.stream.BulkEntityProcessor
+import uk.gov.hmrc.time.TaxYear
 import validation.{DateValidate, CsvLineValidator}
 
 import scala.util.{Failure, Success, Try}
@@ -140,7 +141,7 @@ trait BulkRequestCreationService extends BulkEntityProcessor[BulkCalculationRequ
       case d if !DateValidate.isValid(d) => None
       case _ => {
         val convertedDate = LocalDate.parse(termDate, inputDateFormatter)
-        val thatDate = new LocalDate(2016, 4, 5)
+        val thatDate = TaxYear(2016).starts
         if (convertedDate.isAfter(thatDate))
           Some(convertedDate.toString(DATE_FORMAT))
         else
