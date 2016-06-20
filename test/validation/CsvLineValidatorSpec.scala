@@ -35,7 +35,7 @@ class CsvLineValidatorSpec extends FlatSpec with Matchers with OneAppPerSuite {
     "Bloggs", // Surname
     Some("Ref1"), // Member reference
     Some(0), // Calc type - Date of leaving
-    Some("01/05/2016"), // Termination date
+    None, // Termination date
     Some("20/01/2014"), // Revaluation date
     Some(1), // Revaluation rate - between 0 and 3
     1) {
@@ -213,6 +213,12 @@ class CsvLineValidatorSpec extends FlatSpec with Matchers with OneAppPerSuite {
 
   it should "not report a termination date of SM" in {
     val errors = CsvLineValidator.validateLine(CsvLine.copy(terminationDate = Some("SM")).toString)
+
+    errors should be(empty)
+  }
+
+  it should "not report a post-2016 termination date" in {
+    val errors = CsvLineValidator.validateLine(CsvLine.copy(terminationDate = Some("01/05/2016")).toString)
 
     errors should be(empty)
   }
