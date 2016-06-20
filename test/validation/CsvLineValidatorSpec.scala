@@ -35,7 +35,7 @@ class CsvLineValidatorSpec extends FlatSpec with Matchers with OneAppPerSuite {
     "Bloggs", // Surname
     Some("Ref1"), // Member reference
     Some(0), // Calc type - Date of leaving
-    Some("20/01/2012"), // Termination date
+    Some("01/05/2016"), // Termination date
     Some("20/01/2014"), // Revaluation date
     Some(1), // Revaluation rate - between 0 and 3
     1) {

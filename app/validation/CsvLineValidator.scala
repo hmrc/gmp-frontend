@@ -16,7 +16,11 @@
 
 package validation
 
+import java.text.SimpleDateFormat
+import java.util.Date
+
 import org.joda.time.LocalDate
+import org.joda.time.format.DateTimeFormat
 import play.api.i18n.Messages
 import services.BulkRequestCsvColumn
 import uk.gov.hmrc.time.TaxYear
@@ -24,6 +28,8 @@ import uk.gov.hmrc.time.TaxYear
 trait FieldValidator {
 
   val MAX_NAME_LENGTH = 99
+  val DATE_FORMAT_PATTERN = "dd/MM/yyyy"
+  val DATE_FORMAT = DateTimeFormat.forPattern(DATE_FORMAT_PATTERN)
 
   def validateScon(scon: String): Option[String] = {
     scon match {
@@ -86,10 +92,14 @@ trait FieldValidator {
   }
 
   def validateTerminationDate(value: String) = {
+
+    val validDate = tryParseDate(value)
+
     value match {
       case "" => None
-      case x if !DateValidate.isValid(value) => Some(Messages("gmp.error.csv.date.invalid"))
-      //case x if DateValidate.isValid(value) && LocalDate.parse(value).isBefore(TaxYear(2016).starts) => Some(Messages("gmp.error.csv.termination.obb"))
+      case invalidDate if validDate.isEmpty => Some(Messages("gmp.error.csv.date.invalid"))
+      case before2016 if validDate.isDefined && validDate.get.isBefore(TaxYear(2016).starts)
+        => Some(Messages("gmp.error.csv.termination.oob"))
       case _ => None
     }
   }
@@ -110,6 +120,16 @@ trait FieldValidator {
       case _ => None
     }
   }
+
+  private def tryParseDate(date: String): Option[LocalDate] =
+    if (!DateValidate.isValid(date))
+      None
+    else
+      try {
+        Some(LocalDate.parse(date, DATE_FORMAT))
+      } catch {
+        case e: IllegalArgumentException => None
+      }
 }
 
 object FieldValidator extends FieldValidator
