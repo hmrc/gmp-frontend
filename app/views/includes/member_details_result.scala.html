@@ -22,33 +22,6 @@
 <div class="grid">
   <div class="grid-2-3"><br>
 
-    @if(calculationResponse.calculationPeriods.length <= 1 && !calculationResponse.hasErrors) {
-
-      <table role="presentation" id="gmp-period-table">
-        <caption id="gmp-period-table-header">
-          @Messages.get("gmp.period_table_header")
-        </caption>
-        <tbody>
-
-        @if(calculationResponse.calculationPeriods.head.startDate.isDefined){
-          <tr>
-            <td class="width-53">@Messages.get("gmp.date.start"):</td>
-            <td class="width-47" id="start-date">@{(new LocalDate(calculationResponse.calculationPeriods.head.startDate.get)).toString("dd MMMM yyyy")}</td>
-          </tr>
-          <tr>
-            <td class="width-53">@Messages.get("gmp.date.dol"):</td>
-            <td class="width-47" id="end-date">@{(new
-              LocalDate(calculationResponse.calculationPeriods.head.endDate)).toString("dd MMMM yyyy")}
-            </td>
-          </tr>
-        }
-
-
-        </tbody>
-
-      </table>
-    }
-
     <table role="presentation" id="member-details">
       <caption>
         @if(calculationResponse.calcType == CalculationType.SURVIVOR.toInt){
