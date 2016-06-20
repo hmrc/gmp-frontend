@@ -238,30 +238,30 @@ gmp.error.csv.dual_calc.invalid = Enter 'Yes' or 'Y' if you want an opposite gen
 
 gmp.error.member_previous_names = If we still can''t calculate a GMP, ask if the member has any previous names that may not have been updated with HM Revenue and Customs.
 gmp.error.contact_hmrc_shared_workspace = Contact HM Revenue and Customs through the GMP Service Queries database in the LIVE shared workspace e-room.
-gmp.error.contact_us_shared_workspace = Contact us through the GMP Service Queries database in the LIVE shared workspace e-room.
-gmp.error.contact.scon = If you believe the member''s SCON is correct, <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pensions-helpline-contracted-out">contact HM Revenue and Customs</a>.
-gmp.error.also.contact = If you still can’t get a calculation, contact HM Revenue and Customs through the GMP Service Queries database in the LIVE shared workspace e-room.
-gmp.error.also.death = If you think the date of death we hold on record is incorrect, contact HM Revenue and Customs through the GMP Service Queries database in the LIVE shared workspace e-room.
+gmp.error.contact_us_shared_workspace = Contact us by creating a new entry in the single queries database in Shared Workspace's eRoom.
+gmp.error.contact.scon = If you believe the member''s SCON is correct, <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pensions-helpline-contracted-out">call HMRC</a>.
+gmp.error.also.contact = If you still can’t get a calculation result, contact HM Revenue and Customs by creating a new entry in the single queries database in Shared Workspace''s eRoom.
+gmp.error.also.death = If you think the date of death held on the member''s record is wrong, contact HM Revenue and Customs by creating a new entry in the single queries database in Shared Workspace's eRoom.
 
 gmp.error.reason.63119 = This is because the member''s name or National Insurance number are either incorrect or do not match our records.
 gmp.error.reason.63121 = This is because our records show this member is deceased.
 gmp.error.reason.63123 = This is because our records show the member was still in the scheme on the date you would like it to be revalued.
-gmp.error.reason.check_scon = This is because our records show that the Scheme Contracted Out Number is not shown on the member''s account.
+gmp.error.reason.check_scon = This is because we do not recognise the Scheme Contracted Out Number.
 gmp.error.reason.56067 = This is because we believe the member has no pre-1997 GMP liability under this Scheme Contracted Out Number.
 gmp.error.reason.56018 = This is because the member has a Married Woman''s Reduced Rate Election for the contracted-out period therefore there is no GMP liability.
 gmp.error.reason.56002 = This is because the S148/S37a orders are not yet available.
 gmp.error.reason.56013 = This is because this scheme has no Guaranteed Minimum Pension liability.
 gmp.error.reason.generic = But HM Revenue and Customs may still be able to do a calculation for you.
 gmp.error.reason.valid_contributions = This is because we do not hold any valid contributions or earnings for some of the time the member was contracted out.
-gmp.error.reason.63151 = This is because you entered a leaving date that is after the date of death.
-gmp.error.reason.63149 = This is because you entered a leaving date that is after the Final Relevant Year (FRY).
+gmp.error.reason.63149 = This is because you entered a leaving date that is after the final relevant year.
 gmp.error.reason.63148 = This is because you entered a calculation date that is before the date of death we hold on record.
 gmp.error.reason.63147 = This is because we do not have a date of death for this member.
 gmp.error.reason.63150 = You asked for an opposite gender calculation. However, one is not available as there are no post-1990 contributions and earnings.
 gmp.error.reason.63167 = This is because you asked for the GMP to be revalued using Limited rate. This is not available to leavers after 5 April 1997.
-gmp.error.reason.56016 = This is because you entered a leaving date that is after the date of death.
+gmp.error.reason.leaving_date = This is because you entered a leaving date that is after the date of death.
+gmp.error.reason.56010 = This is because we need the member to confirm their date of birth.
 
-gmp.error.solution.contact_hmrc = If you think our records are incorrect, contact HM Revenue and Customs through the GMP Service Queries database in the LIVE shared workspace e-room.
+gmp.error.solution.contact_hmrc = If you think our records are incorrect, contact us by creating a new entry in the single queries database in Shared Workspace''s eRoom.
 gmp.error.solution.contact_us = If you think our records are incorrect, contact us through the GMP Service Queries database in the LIVE shared workspace e-room.
 gmp.error.solution.bullets = <ul class="list-number"><li>Check you have spelled the name correctly</li><li>Check you have entered the correct National Insurance number</li><li><a href="/guaranteed-minimum-pension/member-details">Try the calculation again</a></li></ul>
 gmp.error.solution.63121 = If you still need a GMP, choose the survivor calculation option and <a href="/guaranteed-minimum-pension/calculation-reason">try again</a>.
@@ -273,9 +273,8 @@ gmp.error.solution.56002 = Submit a new request once <a href="http://www.legisla
 gmp.error.solution.try_again = Check your records and <a href="/guaranteed-minimum-pension/pension-details">try the calculation again</a>.
 gmp.error.solution.leaving_date = Check you have entered the correct leaving date and <a href="/guaranteed-minimum-pension/left-scheme">try again</a>.
 gmp.error.solution.63148 = Check the date up to which you would like the calculation to apply and <a href="/guaranteed-minimum-pension/inflation-proof">try again</a>.
-gmp.error.solution.63150 = <a href="/guaranteed-minimum-pension/equalise">Go back</a> and choose ''No'' for an opposite gender calculation.
+gmp.error.solution.63150 = <a href="/guaranteed-minimum-pension/equalise">Go back</a> and select ''No'' when asked if you want an opposite gender calculation.
 gmp.error.solution.63167 = Choose another <a href="/guaranteed-minimum-pension/revaluation-rate">revaluation rate</a>.
-gmp.error.solution.56016 = Check you have entered the correct leaving date and try again.
 
 gmp.error.member_details = Change member details
 gmp.error.revaluation_date = Change revaluation date
@@ -333,7 +332,6 @@ gmp.generic.no=No
 # Global Errors
 gmp.cannot_calculate = We can''t calculate a Guaranteed Minimum Pension
 gmp.cannot_calculate_online = We can''t calculate a Guaranteed Minimum Pension online
-gmp.cannot_calculate_online_service = We can''t calculate a Guaranteed Minimum Pension with this service
 gmp.cannot_calculate.entitlement = We can''t calculate a Guaranteed Minimum Pension entitlement
 
 gmp.what_now = What to do now:

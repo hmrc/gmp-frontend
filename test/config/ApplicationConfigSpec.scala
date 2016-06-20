@@ -24,7 +24,7 @@ class ApplicationConfigSpec extends PlaySpec with OneServerPerSuite{
   "Application Config" must {
     "load errors properties file" in {
 
-      (globalErrors.getString("56010.reason")) must be("gmp.error.reason.generic")
+      (globalErrors.getString("56010.reason")) must be("gmp.error.reason.56010")
     }
   }
 
