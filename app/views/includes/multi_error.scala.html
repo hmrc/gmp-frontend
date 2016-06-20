@@ -20,7 +20,7 @@
 @import config.ApplicationConfig.globalErrors
 @import org.joda.time.LocalDate
 
-<div class="grid">
+<div class="grid" id="multi-error-grid">
     <div class="grid-2-3">
         <div class="global-error">
 
@@ -47,6 +47,15 @@
             </div>
         </div>
     </div>
+
+    <div class="grid-1-3 print-style top-blue-border">
+        <ul>
+            <li>
+                <a href="javascript:window.print();" id="print-link" data-journey-click="gmp:click:print">@Messages.get("gmp.print")</a>
+            </li>
+        </ul>
+    </div>
+
 </div>
 
 @includes.survivor_disclaimer(calculationResponse.calcType == CalculationType.SURVIVOR.toInt)

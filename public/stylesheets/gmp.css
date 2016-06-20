@@ -36,6 +36,10 @@
   width: 30%;
 }
 
+#multi-error-grid .print-style {
+    margin-top: 30px;
+}
+
 .confirmation {
   background-color: #28A197;
   text-align: center;
