@@ -19,7 +19,7 @@
 @import play.i18n._
 @import config.ApplicationConfig.globalErrors
 
-<div class="grid">
+<div class="grid" id="global-results-grid">
     <div class="grid-2-3">
 
         <div class="global-error">
@@ -56,6 +56,9 @@
         }
 
     </div>
+
+    @includes.print_page()
+
 </div>
 
 <br/>
