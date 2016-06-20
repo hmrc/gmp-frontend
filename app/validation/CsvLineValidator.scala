@@ -91,19 +91,15 @@ trait FieldValidator {
     }
   }
 
-  def validateTerminationDate(value: String) = {
-
-    val validDate = tryParseDate(value)
-
-    value match {
+  def validateTerminationDate(value: String) = value match {
       case "" => None
       case "SM" => None
-      case invalidDate if validDate.isEmpty => Some(Messages("gmp.error.csv.termination.invalid"))
-      case before2016 if validDate.isDefined && validDate.get.isBefore(TaxYear(2016).starts)
-        => Some(Messages("gmp.error.csv.termination.oob"))
-      case _ => None
+      case x => tryParseDate(x) match {
+        case Some(validDate) if validDate.isBefore(TaxYear(2016).starts) => Some(Messages("gmp.error.csv.termination.oob"))
+        case None => Some(Messages("gmp.error.csv.termination.invalid"))
+        case _ => None
+      }
     }
-  }
 
   def validateRevalRate(value: String) = {
     value match {
