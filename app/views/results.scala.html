@@ -24,23 +24,19 @@
 
 @gmp_main(applicationConfig = applicationConfig, title = Messages.get("gmp.results.title"),supportLinkEnabled = false, dashboardLinkEnabled = !calculationResponse.hasErrors) {
 
-  @if(calculationResponse.globalErrorCode > 0){
-    @includes.global_error(calculationResponse.globalErrorCode)
+@{
+  if(calculationResponse.globalErrorCode > 0) {
+    includes.global_error(calculationResponse.globalErrorCode)
+  } else if (calculationResponse.calculationPeriods.length == 1 && calculationResponse.calculationPeriods.head.errorCode > 0) {
+    includes.global_error(calculationResponse.calculationPeriods.head.errorCode)
   } else {
-    @if(calculationResponse.calculationPeriods.length > 1){
-      @if(calculationResponse.hasErrors) {
-        @includes.multi_error(calculationResponse)
-      } else {
-        @includes.multi_results(calculationResponse)
-      }
+   if(calculationResponse.hasErrors) {
+      includes.multi_error(calculationResponse)
     } else {
-      @if(calculationResponse.calculationPeriods.head.errorCode == 0){
-        @includes.single_result(calculationResponse)
-      }else{
-        @includes.global_error(calculationResponse.calculationPeriods.head.errorCode)
-      }
+      includes.multi_results(calculationResponse)
     }
   }
+}
 
   @includes.member_details_result(calculationResponse)
 

@@ -36,7 +36,6 @@ gmp.other.dol.left.question = Has the member left the scheme?
 gmp.survivor.dol.question = Had the member already left the scheme at date of death?
 gmp.fileupload.header = Upload your file
 
-gmp.results.banner = Calculation complete
 gmp.bulk.results.banner = Calculation ready
 gmp.bulk_request_received.banner = Your request has been received
 gmp.revaluation_rate.header = Which revaluation rate would you like to use?
@@ -79,6 +78,13 @@ gmp.th.time_left = Time left
 gmp.days_left = {0} Day{1}
 gmp.more_bulk_results.header = Recent bulk calculations
 
+gmp.weekly_total = Weekly total
+gmp.date_from = From:
+gmp.date_to = To:
+gmp.multi.dual_calc.header = Post - 1990 GMP value per period
+gmp.post90.true = True gender
+gmp.post90.opposite = Opposite gender
+
 # Buttons
 gmp.continue.button = Continue
 gmp.check_gmp.button = Check GMP
@@ -120,7 +126,7 @@ gmp.revaluation_rate.limited = Limited rate
 gmp.revaluation_rate_short.fixed = Fixed
 gmp.revaluation_rate_short.s148 = S148 or full rate revaluation
 gmp.revaluation_rate_short.limited = Limited
-gmp.total = Total GMP:
+gmp.total = Total GMP
 gmp.frequency.weekly = a week
 gmp.post88 = Post-1988 GMP:
 gmp.post90 = Post-1990 GMP
@@ -283,12 +289,12 @@ gmp.divorce.scheme.header = GMP at date of divorce
 gmp.payable_age.header = GMP value at GMP payable age ({0})
 gmp.spa.header = GMP value at State Pension age ({0})
 gmp.leaving.scheme.header = GMP value at {0}
-gmp.leaving.revalued.header = GMP revalued to {0} using {1} rate
+gmp.leaving.revalued.header = GMP revalued to {0}
 gmp.per.week = GMP a week
 gmp.post.1988 = Post 1988
 gmp.rate = Rate
 gmp.rate_hmrc_holds = Rate
-gmp.revaluation_rate.type_0 = HMRC held
+gmp.revaluation_rate.type_0 = HMRC held rate
 gmp.revaluation_rate.type_1 = S148
 gmp.revaluation_rate.type_2 = Fixed
 gmp.revaluation_rate.type_3 = Limited
@@ -305,6 +311,7 @@ gmp.nonrevalued.message = This GMP is not revalued up to the {0}
 gmp.revaluation.dateoftransfer = date of transfer
 gmp.revaluation.dateofdivorce = date of divorce
 gmp.results.survivior.disclaimer = This amount is subject to qualifying conditions of the <a href="https://www.gov.uk/browse/benefits/bereavement">type of bereavement benefit</a> the surviving partner is entitled to.
+gmp.reval_rate.subheader = Revaluation rate: {0}
 
 # Scenarios
 gmp.scenarios.title = Choose what type of calculation you need for this member
