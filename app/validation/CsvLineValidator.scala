@@ -126,11 +126,7 @@ trait FieldValidator {
     if (!DateValidate.isValid(date))
       None
     else
-      try {
-        Some(LocalDate.parse(date, DATE_FORMAT))
-      } catch {
-        case e: IllegalArgumentException => None
-      }
+      Some(LocalDate.parse(date, DATE_FORMAT))
 }
 
 object FieldValidator extends FieldValidator
