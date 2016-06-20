@@ -19,7 +19,7 @@
 @import play.i18n._
 @import config.ApplicationConfig.globalErrors
 
-<div class="grid">
+<div class="grid" id="global-results-grid">
     <div class="grid-2-3">
 
         <div class="global-error">
@@ -56,6 +56,15 @@
         }
 
     </div>
+
+    <div class="grid-1-3 print-style top-blue-border">
+        <ul>
+            <li>
+                <a href="javascript:window.print();" id="print-link" data-journey-click="gmp:click:print">@Messages.get("gmp.print")</a>
+            </li>
+        </ul>
+    </div>
+
 </div>
 
 <br/>
