@@ -19,6 +19,8 @@ package models
 import org.joda.time.LocalDate
 import play.api.libs.json.Json
 import uk.gov.hmrc.time.TaxYear
+import play.api.i18n.Messages
+import views.helpers.GmpDateFormatter._
 
 case class ContributionsAndEarnings(taxYear: Int, contEarnings: String)
 
@@ -116,6 +118,53 @@ case class CalculationResponse(
 
   }
 
+  def header: String = {
+    if(calcType == CalculationType.SURVIVOR.toInt && revaluationDate.isDefined){
+      Messages("gmp.results.survivor.revaluation.header", formatDate(revaluationDate.get))
+    }else if(calcType == CalculationType.SURVIVOR.toInt && dateOfDeath.isDefined){
+      Messages("gmp.results.survivor.header", formatDate(dateOfDeath.get))
+    }else if(calcType == CalculationType.SURVIVOR.toInt){
+      Messages("gmp.results.survivor.header")
+    }else if(calcType == CalculationType.SPA.toInt && spaDate.isDefined) {
+      Messages("gmp.spa.header", formatDate(spaDate.get))
+    }else if(calcType == CalculationType.PAYABLE_AGE.toInt && payableAgeDate.isDefined) {
+      Messages("gmp.payable_age.header", formatDate(payableAgeDate.get))
+    }else if(revaluationDate.isEmpty || revaluationUnsuccessful){
+      Messages("gmp.leaving.scheme.header", formatDate(leavingDate))
+    }else {
+      Messages("gmp.leaving.revalued.header", formatDate(leavingDate))
+    }
+  }
+
+  def subheader: Option[String] = {
+    if (calcType == CalculationType.DOL.toInt && calculationPeriods.length > 1) {
+      Some(Messages("gmp.notrevalued.multi.subheader"))
+    } else if (calcType == CalculationType.DOL.toInt ||
+              (calcType == CalculationType.REVALUATION.toInt && revaluationUnsuccessful)) {
+      Some(Messages("gmp.notrevalued.subheader"))
+    } else if(calcType == CalculationType.SURVIVOR.toInt &&
+              calculationPeriods.head.inflationProofBeyondDod == Some(0) &&
+              dodInSameTaxYearAsRevaluationDate) {
+      Some(Messages("gmp.no_inflation.subheader"))
+    }
+    else
+      None
+  }
+
+  def revaluationRateSubHeader: Option[String] = {
+    if (revaluationRate.isDefined && !revaluationUnsuccessful) {
+      if (revaluationRate == Some("0")){
+        Some(Messages("gmp.reval_rate.subheader", Messages(s"gmp.revaluation_rate.type_${revaluationRate.get}")) + " (" + Messages(s"gmp.revaluation_rate.type_${calculationPeriods.head.revaluationRate}")+ ").")
+      }
+      else {
+        Some(Messages("gmp.reval_rate.subheader", Messages(s"gmp.revaluation_rate.type_${revaluationRate.get}")) + ".")
+      }
+    }
+    else
+      None
+  }
+
+  def showRateColumn: Boolean = calculationPeriods.size > 1 && revaluationRate == Some("0")
 
 }
 
