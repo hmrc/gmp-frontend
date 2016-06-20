@@ -19,7 +19,7 @@
 @import play.i18n._
 
 @if(calculationResponse.globalErrorCode == 0 && calculationResponse.numPeriodsInError < calculationResponse.calculationPeriods.size) {
-    <div class="grid">
+    <div class="grid" id="conts-earnings-link-div">
         <div class="grid-2-3">
             <a href="@routes.ResultsController.getContributionsAndEarnings" id="conts-earnings-link">
                 @Html(Messages.get("gmp.link.contributions-earnings"))
@@ -27,6 +27,4 @@
 
         </div>
     </div>
-    <br/>
-    <br/>
 }

@@ -17,10 +17,8 @@
 @(calculationResponse:CalculationResponse)(implicit request: Request[_])
 
 @import play.i18n._
-@import org.joda.time.LocalDate
-@import views.helpers.GmpDateFormatter._
 
-<div class="grid">
+<div class="grid" id="single-confirmation">
 
   <div class="grid-2-3">
     <h2 id="results-header">@calculationResponse.header</h2>
