@@ -135,7 +135,8 @@ trait BulkRequestCreationService extends BulkEntityProcessor[BulkCalculationRequ
   private def determineTerminationDate(termDate: String, revalDate: String): Option[String] =
   {
     termDate match {
-      case "" => emptyStringsToNone(revalDate, { e: String => protectedDateConvert(e) })
+      case "" => None
+      case "SM" => emptyStringsToNone(revalDate, { e: String => protectedDateConvert(e) })
       case d if !DateValidate.isValid(d) => None
       case _ => {
         val convertedDate = LocalDate.parse(termDate, inputDateFormatter)

@@ -36,8 +36,8 @@ class BulkRequestCreationServiceSpec extends PlaySpec with ScalaFutures with Moc
   val calcLine4 = BulkCalculationRequestLine(1, Some(CalculationRequestLine("S1301234T", nino2, "George", "Stephenson", None, None, None, None, None, 0)),None,None)
   val invalidCalcLine = BulkCalculationRequestLine(1, Some(CalculationRequestLine("invalid_scon", nino1, "Isambard", "Brunell", Some("IB"), Some(1), Some("2010-02-02"), Some("2010-01-01"), Some(1), 1)),None,None)
   val calcLine8 = BulkCalculationRequestLine(1, Some(CalculationRequestLine("S2730012K", "GY000002A", "PARIS", "HILTON", Some("THISISATEST SCENARIO"), Some(0), Some("2016-07-07"), None, None, 1)),None,None)
-  val calcLine10 = BulkCalculationRequestLine(1, Some(CalculationRequestLine("S2730012K", "GY000002A", "PARIS", "HILTON", Some("THISISATEST SCENARIO"), Some(0), Some("2015-07-07"), Some("2016-07-07"), None, 1)),None,None)
-  val calcLine11 = BulkCalculationRequestLine(1, Some(CalculationRequestLine("S2730012K", "GY000002A", "PARIS", "HILTON", Some("THISISATEST SCENARIO"), Some(1), None, Some("2016-07-07"), None, 1)),None,None)
+  val calcLine10 = BulkCalculationRequestLine(1, Some(CalculationRequestLine("S2730012K", "GY000002A", "PARIS", "HILTON", Some("THISISATEST SCENARIO"), Some(0), None, Some("2016-07-07"), None, 1)),None,None)
+  val calcLine11 = BulkCalculationRequestLine(1, Some(CalculationRequestLine("S2730012K", "GY000002A", "PARIS", "HILTON", Some("THISISATEST SCENARIO"), Some(1), Some("SM"), Some("2016-07-07"), None, 1)),None,None)
   val calcLine12 = BulkCalculationRequestLine(1, Some(CalculationRequestLine("S2730012K", "gy 00 00 02 a", "PARIS", "HILTON", Some("THISISATEST SCENARIO"), Some(1), Some("2016-07-07"), Some("2017-07-07"), None, 1)),None,None)
   val calcLine14 = BulkCalculationRequestLine(1, Some(CalculationRequestLine("S1301234T", " GY000002A ", " Tim ", " O’Brien ", Some(" GS "), Some(1), Some("2017-02-02"), Some("2010-01-01"), Some(1), 1)),None,None)
   val calcLine16 = BulkCalculationRequestLine(1, Some(CalculationRequestLine("S1301234T", " GY000002A ", " Tim ", " O’Brien ", Some(" GS "), Some(1), Some("02 02 2017"), Some("2010-01-01"), Some(1), 1)),None,None)
@@ -165,12 +165,11 @@ class BulkRequestCreationServiceSpec extends PlaySpec with ScalaFutures with Moc
     "termination date for person who is still in scheme should be same as reval date" in {
 
       val bulkRequest: BulkCalculationRequest = TestBulkRequestCreationService.createBulkRequest(collection, "11", bulkRequest11.email, bulkRequest11.reference)
-      val validRequest = bulkRequest.getFirstValid
 
-      validRequest.revaluationDate mustBe validRequest.terminationDate
+      bulkRequest.getFirstValid.revaluationDate mustBe bulkRequest.getFirstValid.terminationDate
     }
 
-    "termination date for person who left scheme pre-2016 should be None" in {
+    "termination date for person with blank input termination date should be None" in {
 
       val bulkRequest: BulkCalculationRequest = TestBulkRequestCreationService.createBulkRequest(collection, "10", bulkRequest10.email, bulkRequest10.reference)
 
