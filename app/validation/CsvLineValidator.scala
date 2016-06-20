@@ -97,6 +97,7 @@ trait FieldValidator {
 
     value match {
       case "" => None
+      case "SM" => None
       case invalidDate if validDate.isEmpty => Some(Messages("gmp.error.csv.date.invalid"))
       case before2016 if validDate.isDefined && validDate.get.isBefore(TaxYear(2016).starts)
         => Some(Messages("gmp.error.csv.termination.oob"))

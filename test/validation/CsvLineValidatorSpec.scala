@@ -204,11 +204,17 @@ class CsvLineValidatorSpec extends FlatSpec with Matchers with OneAppPerSuite {
     errors.get should contain(BulkRequestCsvColumn.TERMINATION_DATE -> Messages("gmp.error.csv.date.invalid"))
   }
 
-  it should "report a date that is pre 2016" in {
+  it should "report a termination date that is pre 2016" in {
     val errors = CsvLineValidator.validateLine(CsvLine.copy(terminationDate = Some("01/03/2016")).toString)
 
     errors shouldBe defined
     errors.get should contain(BulkRequestCsvColumn.TERMINATION_DATE -> Messages("gmp.error.csv.termination.oob"))
+  }
+
+  it should "not report a termination date of SM" in {
+    val errors = CsvLineValidator.validateLine(CsvLine.copy(terminationDate = Some("SM")).toString)
+
+    errors should be(empty)
   }
 
   it should "not report a missing GMP relevant date" in {
