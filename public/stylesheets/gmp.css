@@ -206,6 +206,9 @@ caption {
   .beta-banner {
     display: none;
   }
+  .service-info {
+      display: none;
+    }
   a.dashboard-back {
     display: none;
   }
@@ -224,6 +227,7 @@ caption {
   #conts-earnings-link-div {
     display: none;
   }
+
 }
 
 #global-what-now {
