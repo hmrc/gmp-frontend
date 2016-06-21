@@ -234,6 +234,8 @@ gmp.error.nino.temporary = This is a temporary National Insurance number. You ne
 gmp.error.reval_date.mandatory = Enter a revaluation date
 gmp.error.leaving_date.mandatory = Enter a leaving date
 gmp.error.csv.date.invalid = Enter a date in the same format as the example given in the instructions file
+gmp.error.csv.termination.invalid = Enter a date If the member left on or after 6/4/2016 or ''SM'' if the member is still in the scheme
+gmp.error.csv.termination.oob = Enter a date that is on or after 6/4/2016
 gmp.error.csv.dual_calc.invalid = Enter 'Yes' or 'Y' if you want an opposite gender calculation or 'No' or 'N' if you don't. This field can't be left blank.
 
 gmp.error.member_previous_names = If we still can''t calculate a GMP, ask if the member has any previous names that may not have been updated with HM Revenue and Customs.

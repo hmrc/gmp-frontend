@@ -16,12 +16,20 @@
 
 package validation
 
+import java.text.SimpleDateFormat
+import java.util.Date
+
+import org.joda.time.LocalDate
+import org.joda.time.format.DateTimeFormat
 import play.api.i18n.Messages
 import services.BulkRequestCsvColumn
+import uk.gov.hmrc.time.TaxYear
 
 trait FieldValidator {
 
   val MAX_NAME_LENGTH = 99
+  val DATE_FORMAT_PATTERN = "dd/MM/yyyy"
+  val DATE_FORMAT = DateTimeFormat.forPattern(DATE_FORMAT_PATTERN)
 
   def validateScon(scon: String): Option[String] = {
     scon match {
@@ -83,6 +91,16 @@ trait FieldValidator {
     }
   }
 
+  def validateTerminationDate(value: String) = value match {
+      case "" => None
+      case "SM" => None
+      case x => tryParseDate(x) match {
+        case Some(validDate) if validDate.isBefore(TaxYear(2016).starts) => Some(Messages("gmp.error.csv.termination.oob"))
+        case None => Some(Messages("gmp.error.csv.termination.invalid"))
+        case _ => None
+      }
+    }
+
   def validateRevalRate(value: String) = {
     value match {
       case "" => None
@@ -99,6 +117,12 @@ trait FieldValidator {
       case _ => None
     }
   }
+
+  private def tryParseDate(date: String): Option[LocalDate] =
+    if (!DateValidate.isValid(date))
+      None
+    else
+      Some(LocalDate.parse(date, DATE_FORMAT))
 }
 
 object FieldValidator extends FieldValidator
@@ -121,7 +145,7 @@ object CsvLineValidator extends FieldValidator {
           case (value, BulkRequestCsvColumn.FORENAME) => (BulkRequestCsvColumn.FORENAME, validateFirstName(value))
           case (value, BulkRequestCsvColumn.SURNAME) => (BulkRequestCsvColumn.SURNAME, validateLastName(value))
           case (value, BulkRequestCsvColumn.CALC_TYPE) => (BulkRequestCsvColumn.CALC_TYPE, validateCalcType(value))
-          case (value, BulkRequestCsvColumn.TERMINATION_DATE) => (BulkRequestCsvColumn.TERMINATION_DATE, validateDate(value))
+          case (value, BulkRequestCsvColumn.TERMINATION_DATE) => (BulkRequestCsvColumn.TERMINATION_DATE, validateTerminationDate(value))
           case (value, BulkRequestCsvColumn.REVAL_DATE) => (BulkRequestCsvColumn.REVAL_DATE, validateDate(value))
           case (value, BulkRequestCsvColumn.REVAL_RATE) => (BulkRequestCsvColumn.REVAL_RATE, validateRevalRate(value))
           case (value, BulkRequestCsvColumn.DUAL_CALC) => (BulkRequestCsvColumn.DUAL_CALC, validateDualCalc(value))
