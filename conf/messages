@@ -66,11 +66,11 @@ gmp.bulk.subheaders.contsandearnings=Contributions and earnings
 gmp.bulk.explanations.calculations.1=All GMP figures are weekly and in pounds.
 gmp.bulk.explanations.calculations.2=Periods refer to GMP values where there is more than one contracted-out period.
 gmp.bulk.explanations.failed.1=For failed calculations see ''Reason for error'' and ''What to do''.
-gmp.bulk.explanations.failed.2=If you need further help, contact HM Revenue and Customs through the GMP Service Queries database in the LIVE shared workspace e-room.
+gmp.bulk.explanations.failed.2=You can then submit the calculation again (either on its own or as part of another bulk file) or contact HM Revenue and Customs where advised. <a href="#query-handling-header">How do I do this?</a>
 gmp.bulk.explanations.contsandearnings = A separate contributions and earnings file for all queries.
 gmp.bulk.wrong_user.header = There is a problem
 gmp.bulk.query_handling_message.header = Contact HMRC about a calculation
-gmp.bulk.query_handling_message.body = If the instruction is to contact HMRC because we can''t calculate a GMP, or if you disagree with the result of a successful calculation, you can do so in the GMP checker eRoom in Shared Workspace.<br/><br/>To query several calculations at once, create a bulk query document from the template in the guidance and templates folder. Drag and drop the query document into a new entry in the bulk queries database. To query a small number of calculations, create a new entry in the single queries database for each calculation.
+gmp.bulk.query_handling_message.body = If the instruction is to contact HMRC because we can''t calculate a GMP, or if you disagree with the result of a successful calculation, you can do so in Shared Workspace''s eRoom.<br/><br/>To query several calculations at once, create a bulk query document from the template in the guidance and templates folder. Drag and drop the query document into a new entry in the bulk queries database. To query a small number of calculations, create a new entry in the single queries database for each calculation.
 
 gmp.th.reference = Reference
 gmp.th.upload_date = Date file returned
@@ -237,7 +237,6 @@ gmp.error.csv.date.invalid = Enter a date in the same format as the example give
 gmp.error.csv.dual_calc.invalid = Enter 'Yes' or 'Y' if you want an opposite gender calculation or 'No' or 'N' if you don't. This field can't be left blank.
 
 gmp.error.member_previous_names = If we still can''t calculate a GMP, ask if the member has any previous names that may not have been updated with HM Revenue and Customs.
-gmp.error.contact_hmrc_shared_workspace = Contact HM Revenue and Customs through the GMP Service Queries database in the LIVE shared workspace e-room.
 gmp.error.contact_us_shared_workspace = Contact us by creating a new entry in the single queries database in Shared Workspace''s eRoom.
 gmp.error.contact.scon = If you believe the member''s SCON is correct, <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pensions-helpline-contracted-out">call HMRC</a>.
 gmp.error.also.contact = If you still can''t get a calculation result, contact HM Revenue and Customs by creating a new entry in the single queries database in Shared Workspace''s eRoom.
@@ -262,7 +261,6 @@ gmp.error.reason.leaving_date = This is because you entered a leaving date that 
 gmp.error.reason.56010 = This is because we need the member to confirm their date of birth.
 
 gmp.error.solution.contact_hmrc = If you think our records are incorrect, contact us by creating a new entry in the single queries database in Shared Workspace''s eRoom.
-gmp.error.solution.contact_us = If you think our records are incorrect, contact us through the GMP Service Queries database in the LIVE shared workspace e-room.
 gmp.error.solution.bullets = <ul class="list-number"><li>Check you have spelled the name correctly</li><li>Check you have entered the correct National Insurance number</li><li><a href="/guaranteed-minimum-pension/member-details">Try the calculation again</a></li></ul>
 gmp.error.solution.63121 = If you still need a GMP, choose the survivor calculation option and <a href="/guaranteed-minimum-pension/calculation-reason">try again</a>.
 gmp.error.solution.63123 = <a href="/guaranteed-minimum-pension/revaluation">Change the revaluation date</a> to one after the member left the scheme and try the calculation again.
@@ -339,9 +337,6 @@ gmp.what_now = What to do now:
 gmp.only_part_problem = There is a problem with part of the calculation
 gmp.part_problem = There is a problem with all or part of the calculation
 gmp.unavailable = No GMP available
-gmp.multi.solution = Contact HM Revenue and Customs through the GMP Service Queries database in the LIVE shared workspace e-room.
-
-gmp.you_can_also = You can also:
 
 #Start page
 gmp.start.service.downtime = This service is unavailable from 2am to 5am GMT due to regular maintenance. Please finish using the service before then or you will be unable to finish your tasks.
@@ -359,8 +354,8 @@ gmp.start.requirements.lastname = The member''s Last name
 gmp.start.button = Start now
 
 #Query Handling
-gmp.queryhandling.resultsmessage = If you disagree with this calculation, contact HM Revenue and Customs through the GMP Service Queries database in the LIVE shared workspace e-room.<br/>
-gmp.queryhandling.contsandearnings = If you disagree with this information, contact HM Revenue and Customs through the GMP Service Queries database in the LIVE shared workspace e-room.
+gmp.queryhandling.resultsmessage = If you disagree with this calculation, contact HM Revenue and Customs by creating a new entry in the single queries database in Shared Workspace''s eRoom.
+gmp.queryhandling.contsandearnings = If you disagree with this information, contact HM Revenue and Customs by creating a new entry in the single queries database in Shared Workspace''s eRoom.
 gmp.queryhandling.changedetails.link = <a href='https://www.gov.uk/tell-hmrc-change-of-details' rel="external">How the member can tell HMRC their personal details have changed</a>
 
 #Service unavailable
