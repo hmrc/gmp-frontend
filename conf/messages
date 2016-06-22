@@ -332,7 +332,6 @@ gmp.generic.no=No
 # Global Errors
 gmp.cannot_calculate = We can''t calculate a Guaranteed Minimum Pension
 gmp.cannot_calculate_online = We can''t calculate a Guaranteed Minimum Pension online
-gmp.cannot_calculate.entitlement = We can''t calculate a Guaranteed Minimum Pension entitlement
 
 gmp.what_now = What to do now:
 

@@ -621,7 +621,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
           withAuthorisedUser { request =>
             val result = TestResultsController.get.apply(request)
             val content = contentAsString(result).replaceAll("&#x27;", "'")
-            content must include(Messages("gmp.cannot_calculate.entitlement"))
+            content must include(Messages("gmp.cannot_calculate"))
             content must include(Messages(globalErrors.getString("63148.reason")))
             content must include(Messages(globalErrors.getString("63148.solution")))
             content must include(Messages(globalErrors.getString("63148.also")))
