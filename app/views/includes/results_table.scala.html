@@ -64,7 +64,13 @@
             </td>
             @if(calculationResponse.showRateColumn) {
                 <td id="gmp-rate-@count" class="multi-table-value table-background">
-                    <span>@{ Messages.get(s"gmp.revaluation_rate.type_${period.revaluationRate}") }</span>
+                    <span>
+                      @if(count == 0 && !period.endDate.isBefore(LocalDate.now)) {
+                        --
+                      } else {
+                        @{ Messages.get(s"gmp.revaluation_rate.type_${period.revaluationRate}") }
+                      }
+                    </span>
                 </td>
             }
         </tr>

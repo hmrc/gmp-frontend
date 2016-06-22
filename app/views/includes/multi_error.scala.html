@@ -20,7 +20,7 @@
 @import config.ApplicationConfig.globalErrors
 @import org.joda.time.LocalDate
 
-<div class="grid">
+<div class="grid" id="multi-error-grid">
     <div class="grid-2-3">
         <div class="global-error">
 
@@ -43,10 +43,13 @@
             <div>
                 <h3 id="what-now">@Messages.get("gmp.what_now")</h3>
 
-                <p id="multi-solution">@Html(Messages.get("gmp.multi.solution"))</p>
+                <p id="multi-solution">@Messages.get("gmp.queryhandling.resultsmessage")</p>
             </div>
         </div>
     </div>
+
+    @includes.print_page()
+
 </div>
 
 @includes.survivor_disclaimer(calculationResponse.calcType == CalculationType.SURVIVOR.toInt)

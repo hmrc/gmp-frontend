@@ -19,7 +19,7 @@
 @import play.i18n._
 @import config.ApplicationConfig.globalErrors
 
-<div class="grid">
+<div class="grid" id="global-results-grid">
     <div class="grid-2-3">
 
         <div class="global-error">
@@ -38,10 +38,6 @@
 
                 @Html(Messages.get(globalErrors.getString(s"$globalErrorCode.solution")))
 
-                @if(globalErrors.hasPath(s"$globalErrorCode.link_text")){
-                    <br/>
-                    <a type="button" class="button" id="global-error-link" href='@globalErrors.getString(s"$globalErrorCode.link_destination")'>@Messages.get(globalErrors.getString(s"$globalErrorCode.link_text"))</a>
-                }
             </div>
           }
         </div>
@@ -56,6 +52,9 @@
         }
 
     </div>
+
+    @includes.print_page()
+
 </div>
 
 <br/>

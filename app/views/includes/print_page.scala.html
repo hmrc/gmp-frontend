@@ -14,17 +14,12 @@
 * limitations under the License.
 *@
 
-@(calculationResponse:CalculationResponse)(implicit request: Request[_])
+@()(implicit request: Request[_])
 
-@import play.i18n._
-
-@if(calculationResponse.globalErrorCode == 0 && calculationResponse.numPeriodsInError < calculationResponse.calculationPeriods.size) {
-    <div class="grid" id="conts-earnings-link-div">
-        <div class="grid-2-3">
-            <a href="@routes.ResultsController.getContributionsAndEarnings" id="conts-earnings-link">
-                @Html(Messages.get("gmp.link.contributions-earnings"))
-            </a>
-
-        </div>
-    </div>
-}
+<div class="grid-1-3 print-style top-blue-border">
+    <ul>
+        <li>
+            <a href="javascript:window.print();" id="print-link" data-journey-click="gmp:click:print">@Messages("gmp.print")</a>
+        </li>
+    </ul>
+</div>

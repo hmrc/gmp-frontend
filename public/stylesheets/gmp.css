@@ -36,6 +36,11 @@
   width: 30%;
 }
 
+#multi-error-grid .print-style,
+#global-results-grid .print-style {
+    margin-top: 30px;
+}
+
 .confirmation {
   background-color: #28A197;
   text-align: center;
@@ -197,6 +202,37 @@ caption {
   a[href]:after {
     content: none !important;
   }
+  header {
+    display: none;
+  }
+  .header-proposition {
+    display: none;
+  }
+  .beta-banner {
+    display: none;
+  }
+  .service-info {
+      display: none;
+    }
+  a.dashboard-back {
+    display: none;
+  }
+  #single-confirmation {
+    display: none;
+  }
+  #footer {
+    display: none
+  }
+  #request-another-div {
+    display: none
+  }
+  #what-did-you-think-div {
+    display: none
+  }
+  #conts-earnings-link-div {
+    display: none;
+  }
+
 }
 
 #global-what-now {
@@ -284,6 +320,10 @@ caption {
 #csv-heading{
   font-size:16px;
   font-weight:bold;
+}
+
+#conts-earnings-link-div {
+  margin-bottom: 20px;
 }
 
 #table-column-names {

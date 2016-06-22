@@ -25,6 +25,7 @@ import org.joda.time.format.DateTimeFormat
 import play.api.Logger
 import uk.gov.hmrc.play.config.ServicesConfig
 import uk.gov.hmrc.stream.BulkEntityProcessor
+import uk.gov.hmrc.time.TaxYear
 import validation.{DateValidate, CsvLineValidator}
 
 import scala.util.{Failure, Success, Try}
@@ -135,11 +136,12 @@ trait BulkRequestCreationService extends BulkEntityProcessor[BulkCalculationRequ
   private def determineTerminationDate(termDate: String, revalDate: String): Option[String] =
   {
     termDate match {
-      case "" => emptyStringsToNone(revalDate, { e: String => protectedDateConvert(e) })
+      case "" => None
+      case "SM" => emptyStringsToNone(revalDate, { e: String => protectedDateConvert(e) })
       case d if !DateValidate.isValid(d) => None
       case _ => {
         val convertedDate = LocalDate.parse(termDate, inputDateFormatter)
-        val thatDate = new LocalDate(2016, 4, 5)
+        val thatDate = TaxYear(2016).starts.minusDays(1)
         if (convertedDate.isAfter(thatDate))
           Some(convertedDate.toString(DATE_FORMAT))
         else
