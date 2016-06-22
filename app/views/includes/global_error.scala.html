@@ -38,10 +38,6 @@
 
                 @Html(Messages.get(globalErrors.getString(s"$globalErrorCode.solution")))
 
-                @if(globalErrors.hasPath(s"$globalErrorCode.link_text")){
-                    <br/>
-                    <a type="button" class="button" id="global-error-link" href='@globalErrors.getString(s"$globalErrorCode.link_destination")'>@Messages.get(globalErrors.getString(s"$globalErrorCode.link_text"))</a>
-                }
             </div>
           }
         </div>

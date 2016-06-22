@@ -473,7 +473,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
           withAuthorisedUser { request =>
             val result = TestResultsController.get.apply(request)
             contentAsString(result) must not include("<td id=\"gmp-rate\">")
-            contentAsString(result) must include(Messages("gmp.queryhandling.resultsmessage"))
+            contentAsString(result).replaceAll("&#x27;", "'") must include(Messages("gmp.queryhandling.resultsmessage"))
           }
         }
 
@@ -686,7 +686,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
             content must include(Messages("gmp.part_problem"))
             content must include(Messages(globalErrors.getString(s"${multiErrorResponse.calculationPeriods.head.errorCode}.reason")))
             content must include(Messages(globalErrors.getString(s"${multiErrorResponse.calculationPeriods.tail.head.errorCode}.reason")))
-            content must include(Messages("gmp.multi.solution"))
+            content must include(Messages("gmp.queryhandling.resultsmessage"))
             content must not include(Messages("gmp.back_to_dashboard"))
           }
         }
@@ -696,7 +696,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
           when(mockCalculationConnector.calculateSingle(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(validCalculationResponse))
           withAuthorisedUser { request =>
             val result = TestResultsController.get.apply(request)
-            contentAsString(result) must include(Messages("gmp.queryhandling.resultsmessage"))
+            contentAsString(result).replaceAll("&#x27;", "'") must include(Messages("gmp.queryhandling.resultsmessage"))
           }
         }
 
@@ -828,7 +828,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
             contentAsString(result) must include("2016")
             contentAsString(result) must include("234.00")
             contentAsString(result) must include("124.00")
-            contentAsString(result) must include(Messages("gmp.queryhandling.contsandearnings"))
+            contentAsString(result).replaceAll("&#x27;", "'") must include(Messages("gmp.queryhandling.contsandearnings"))
             contentAsString(result) must include(Messages("gmp.back_to_dashboard"))
           }
         }
