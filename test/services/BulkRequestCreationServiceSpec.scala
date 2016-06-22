@@ -46,6 +46,8 @@ class BulkRequestCreationServiceSpec extends PlaySpec with ScalaFutures with Moc
   val calcLine19 = BulkCalculationRequestLine(1, Some(CalculationRequestLine("S1301234T", nino1, "Isambard", "Brunell", Some("IB"), Some(3), Some("2017-02-02"), Some("2010-01-01"), Some(1), 1)),None,None)
   val calcLine20 = BulkCalculationRequestLine(1, Some(CalculationRequestLine("S1301234T", nino1, "Isambard", "Brunell", Some("IB"), Some(2), Some("2017-02-02"), Some("2010-01-01"), Some(1), 1)),None,None)
   val calcLine21 = BulkCalculationRequestLine(1, Some(CalculationRequestLine("S1301234T", nino1, "Isambard", "Brunell", Some("IB"), Some(4), Some("2017-02-02"), Some("2010-01-01"), Some(1), 1)),None,None)
+  val calcLine22 = BulkCalculationRequestLine(1, Some(CalculationRequestLine("S1301234T", nino1, "Isambard", "Brunell", Some("IB"), Some(3), Some("2016-04-06"), None, Some(1), 0)),None,None)
+  val calcLine23 = BulkCalculationRequestLine(1, Some(CalculationRequestLine("S1301234T", nino1, "Isambard", "Brunell", Some("IB"), Some(3), Some("2016-04-05"), None, Some(1), 0)),None,None)
 
   val inputLine1 = (Messages("gmp.upload_csv_column_headers") + "\n" + lineListFromCalculationRequestLine(calcLine1).mkString).toList
   val inputLine2 = (Messages("gmp.upload_csv_column_headers") + "\n" + lineListFromCalculationRequestLine(calcLine2).mkString).toList
@@ -64,6 +66,8 @@ class BulkRequestCreationServiceSpec extends PlaySpec with ScalaFutures with Moc
   val inputLine19 = (Messages("gmp.upload_csv_column_headers") + "\n" + lineListFromCalculationRequestLine(calcLine19).mkString).toList
   val inputLine20 = (Messages("gmp.upload_csv_column_headers") + "\n" + lineListFromCalculationRequestLine(calcLine20).mkString).toList
   val inputLine21 = (Messages("gmp.upload_csv_column_headers") + "\n" + lineListFromCalculationRequestLine(calcLine21).mkString).toList
+  val inputLine22 = (Messages("gmp.upload_csv_column_headers") + "\n" + lineListFromCalculationRequestLine(calcLine22).mkString).toList
+  val inputLine23 = (Messages("gmp.upload_csv_column_headers") + "\n" + lineListFromCalculationRequestLine(calcLine23).mkString).toList
 
   val inputLineWithoutData = (Messages("gmp.upload_csv_column_headers") + "\n" + ",,,").toList
 
@@ -104,6 +108,8 @@ class BulkRequestCreationServiceSpec extends PlaySpec with ScalaFutures with Moc
         case "19" => inputLine19.iterator
         case "20" => inputLine20.iterator
         case "21" => inputLine21.iterator
+        case "22" => inputLine22.iterator
+        case "23" => inputLine23.iterator
       }
     }
 
@@ -132,6 +138,8 @@ class BulkRequestCreationServiceSpec extends PlaySpec with ScalaFutures with Moc
     val bulkRequest19 = BulkCalculationRequest("19", "timburton@scary.com", "uploadRef2", List(calcLine19))
     val bulkRequest20 = BulkCalculationRequest("20", "timburton@scary.com", "uploadRef2", List(calcLine20))
     val bulkRequest21 = BulkCalculationRequest("21", "timburton@scary.com", "uploadRef2", List(calcLine21))
+    val bulkRequest22 = BulkCalculationRequest("22", "timburton@scary.com", "uploadRef2", List(calcLine22))
+    val bulkRequest23 = BulkCalculationRequest("23", "timburton@scary.com", "uploadRef2", List(calcLine23))
 
     "return Bulk Request 1" in {
 
@@ -276,6 +284,16 @@ class BulkRequestCreationServiceSpec extends PlaySpec with ScalaFutures with Moc
     "not send dual calc when calculation type is survivor" in {
       val bulkRequest = TestBulkRequestCreationService.createBulkRequest(collection, "19", bulkRequest19.email , bulkRequest19.reference)
       bulkRequest.getFirstValid.dualCalc mustBe 0
+    }
+
+    "send term date when term date is on or after 06/04/2016" in {
+      val bulkRequest = TestBulkRequestCreationService.createBulkRequest(collection, "22", bulkRequest22.email , bulkRequest22.reference)
+      bulkRequest.getFirstValid.terminationDate mustBe Some("2016-04-06")
+    }
+
+    "not send term date when term date is on or before 05/04/2016" in {
+      val bulkRequest = TestBulkRequestCreationService.createBulkRequest(collection, "23", bulkRequest23.email , bulkRequest23.reference)
+      bulkRequest.getFirstValid.terminationDate mustBe None
     }
   }
 

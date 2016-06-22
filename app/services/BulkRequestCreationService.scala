@@ -141,7 +141,7 @@ trait BulkRequestCreationService extends BulkEntityProcessor[BulkCalculationRequ
       case d if !DateValidate.isValid(d) => None
       case _ => {
         val convertedDate = LocalDate.parse(termDate, inputDateFormatter)
-        val thatDate = TaxYear(2016).starts
+        val thatDate = TaxYear(2016).starts.minusDays(1)
         if (convertedDate.isAfter(thatDate))
           Some(convertedDate.toString(DATE_FORMAT))
         else
