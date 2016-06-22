@@ -95,14 +95,13 @@ class BulkReferenceControllerSpec extends PlaySpec with OneServerPerSuite with M
         }
       }
 
-      //val validRequest = BulkReference("dan@hmrc.com", "Reference")
-      val validRequest = BulkReference("", "Reference")
+      val validRequest = BulkReference("dan@hmrc.com", "Reference")
       val validRequestWithSpaces = BulkReference("dan@hmrc.com   ", "Reference   ")
       val validRequestWithSpacesNoEmail = BulkReference("", "Reference  ")
       val emptyRequest = BulkReference("", "")
       val gmpBulkSession = GmpBulkSession(None, None, None)
 
-      "respond with bad request missing reference" in {
+      "respond with bad request missing email and reference" in {
         withAuthorisedUser { request =>
           val result = TestBulkReferenceController.post()(request.withJsonBody(Json.toJson(emptyRequest)))
           status(result) must equal(BAD_REQUEST)
@@ -133,7 +132,7 @@ class BulkReferenceControllerSpec extends PlaySpec with OneServerPerSuite with M
       "validate email and reference with spaces, cache and redirect" in {
         when(mockSessionService.cacheEmailAndReference(Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpBulkSession)))
         withAuthorisedUser { request =>
-          val result = TestBulkReferenceController.post()(request.withJsonBody(Json.toJson(validRequestWithSpacesNoEmail)))
+          val result = TestBulkReferenceController.post()(request.withJsonBody(Json.toJson(validRequestWithSpaces)))
           status(result) must equal(SEE_OTHER)
           redirectLocation(result).get must include("/request-received")
         }
