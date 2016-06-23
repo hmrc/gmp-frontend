@@ -202,33 +202,43 @@ caption {
   a[href]:after {
     content: none !important;
   }
+
   header {
     display: none;
   }
+
   .header-proposition {
     display: none;
   }
+
   .beta-banner {
     display: none;
   }
+
   .service-info {
       display: none;
     }
+
   a.dashboard-back {
     display: none;
   }
-  #single-confirmation {
-    display: none;
+
+  .print-style {
+    display: none
   }
+
   #footer {
     display: none
   }
+
   #request-another-div {
     display: none
   }
+
   #what-did-you-think-div {
     display: none
   }
+
   #conts-earnings-link-div {
     display: none;
   }
