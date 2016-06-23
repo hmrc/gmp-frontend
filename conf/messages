@@ -240,7 +240,7 @@ gmp.error.csv.dual_calc.invalid = Enter 'Yes' or 'Y' if you want an opposite gen
 
 gmp.error.member_previous_names = If we still can''t calculate a GMP, ask if the member has any previous names that may not have been updated with HM Revenue and Customs.
 gmp.error.contact_us_shared_workspace = Contact us by creating a new entry in the single queries database in Shared Workspace''s eRoom.
-gmp.error.contact.scon = If you believe the member''s SCON is correct, <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pensions-helpline-contracted-out">call HMRC</a>.
+gmp.error.contact.scon = If you think the member''s SCON is correct, <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pensions-helpline-contracted-out">call HMRC</a>.
 gmp.error.also.contact = If you still can''t get a calculation result, contact HM Revenue and Customs by creating a new entry in the single queries database in Shared Workspace''s eRoom.
 gmp.error.also.death = If you think the date of death held on the member''s record is wrong, contact HM Revenue and Customs by creating a new entry in the single queries database in Shared Workspace''s eRoom.
 
