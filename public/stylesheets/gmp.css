@@ -340,6 +340,10 @@ caption {
   text-align: center;
 }
 
+#gmp-periods th {
+    padding: 0.7em 0.5em;
+}
+
 .multi-results-header-text {
   text-align: center;
   font-size: 20px;
