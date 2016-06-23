@@ -56,6 +56,14 @@ object NameValidate extends Validator {
   override def isValid(name: String) = name != null && name.matches(pattern)
 }
 
+object SMValidate extends Validator {
+  private val pattern = "(?i)^\\s*sm\\s*$"
+
+  override def isValid(sm: String) = sm matches pattern
+
+  def matches(sm: String) = isValid(sm)
+}
+
 object DateValidate extends Validator {
 
   private val validFormat = "^(0?[1-9]|[12][0-9]|3[01])[/](0?[1-9]|1[012])[/](19|20)\\d\\d$"
