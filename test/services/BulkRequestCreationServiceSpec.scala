@@ -48,6 +48,7 @@ class BulkRequestCreationServiceSpec extends PlaySpec with ScalaFutures with Moc
   val calcLine21 = BulkCalculationRequestLine(1, Some(CalculationRequestLine("S1301234T", nino1, "Isambard", "Brunell", Some("IB"), Some(4), Some("2017-02-02"), Some("2010-01-01"), Some(1), 1)),None,None)
   val calcLine22 = BulkCalculationRequestLine(1, Some(CalculationRequestLine("S1301234T", nino1, "Isambard", "Brunell", Some("IB"), Some(3), Some("2016-04-06"), None, Some(1), 0)),None,None)
   val calcLine23 = BulkCalculationRequestLine(1, Some(CalculationRequestLine("S1301234T", nino1, "Isambard", "Brunell", Some("IB"), Some(3), Some("2016-04-05"), None, Some(1), 0)),None,None)
+  val calcLine24 = BulkCalculationRequestLine(1, Some(CalculationRequestLine("S2730012K", "GY000002A", "PARIS", "HILTON", Some("THISISATEST SCENARIO 2"), Some(3), Some("SM"), Some("2016-07-07"), None, 1)),None,None)
 
   val inputLine1 = (Messages("gmp.upload_csv_column_headers") + "\n" + lineListFromCalculationRequestLine(calcLine1).mkString).toList
   val inputLine2 = (Messages("gmp.upload_csv_column_headers") + "\n" + lineListFromCalculationRequestLine(calcLine2).mkString).toList
@@ -68,6 +69,7 @@ class BulkRequestCreationServiceSpec extends PlaySpec with ScalaFutures with Moc
   val inputLine21 = (Messages("gmp.upload_csv_column_headers") + "\n" + lineListFromCalculationRequestLine(calcLine21).mkString).toList
   val inputLine22 = (Messages("gmp.upload_csv_column_headers") + "\n" + lineListFromCalculationRequestLine(calcLine22).mkString).toList
   val inputLine23 = (Messages("gmp.upload_csv_column_headers") + "\n" + lineListFromCalculationRequestLine(calcLine23).mkString).toList
+  val inputLine24 = (Messages("gmp.upload_csv_column_headers") + "\n" + lineListFromCalculationRequestLine(calcLine24).mkString).toList
 
   val inputLineWithoutData = (Messages("gmp.upload_csv_column_headers") + "\n" + ",,,").toList
 
@@ -110,6 +112,7 @@ class BulkRequestCreationServiceSpec extends PlaySpec with ScalaFutures with Moc
         case "21" => inputLine21.iterator
         case "22" => inputLine22.iterator
         case "23" => inputLine23.iterator
+        case "24" => inputLine24.iterator
       }
     }
 
@@ -140,6 +143,7 @@ class BulkRequestCreationServiceSpec extends PlaySpec with ScalaFutures with Moc
     val bulkRequest21 = BulkCalculationRequest("21", "timburton@scary.com", "uploadRef2", List(calcLine21))
     val bulkRequest22 = BulkCalculationRequest("22", "timburton@scary.com", "uploadRef2", List(calcLine22))
     val bulkRequest23 = BulkCalculationRequest("23", "timburton@scary.com", "uploadRef2", List(calcLine23))
+    val bulkRequest24 = BulkCalculationRequest("24", "timburton@scary.com", "uploadRef", List(calcLine24))
 
     "return Bulk Request 1" in {
 
@@ -279,6 +283,11 @@ class BulkRequestCreationServiceSpec extends PlaySpec with ScalaFutures with Moc
     "not send the revaluation date if provided when calculation type is SPA" in {
       val bulkRequest = TestBulkRequestCreationService.createBulkRequest(collection, "21", bulkRequest21.email , bulkRequest21.reference)
       bulkRequest.getFirstValid.revaluationDate mustBe None
+    }
+
+    "not send the termination date if SM is provided, when calculation type is survivor" in {
+      val bulkRequest = TestBulkRequestCreationService.createBulkRequest(collection, "24", bulkRequest24.email, bulkRequest24.reference)
+      bulkRequest.getFirstValid.terminationDate mustBe None
     }
 
     "not send dual calc when calculation type is survivor" in {

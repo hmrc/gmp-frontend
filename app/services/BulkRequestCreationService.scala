@@ -26,7 +26,7 @@ import play.api.Logger
 import uk.gov.hmrc.play.config.ServicesConfig
 import uk.gov.hmrc.stream.BulkEntityProcessor
 import uk.gov.hmrc.time.TaxYear
-import validation.{DateValidate, CsvLineValidator}
+import validation.{SMValidate, DateValidate, CsvLineValidator}
 
 import scala.util.{Failure, Success, Try}
 
@@ -82,19 +82,19 @@ trait BulkRequestCreationService extends BulkEntityProcessor[BulkCalculationRequ
 
   private def constructCalculationRequestLine(line: String): CalculationRequestLine = {
 
-    val lineArray = line.split(",", -1)
+    val lineArray = line.split(",", -1) map { _.trim }
 
     val calculationRequestLine = CalculationRequestLine(
-      lineArray(BulkRequestCsvColumn.SCON).toUpperCase.trim,
-      lineArray(BulkRequestCsvColumn.NINO).replaceAll("\\s", "").toUpperCase.trim,
-      lineArray(BulkRequestCsvColumn.FORENAME).toUpperCase.trim,
-      lineArray(BulkRequestCsvColumn.SURNAME).toUpperCase.trim,
-      emptyStringsToNone(lineArray(BulkRequestCsvColumn.MEMBER_REF).trim, { e: String => Some(e) }),
-      emptyStringsToNone(lineArray(BulkRequestCsvColumn.CALC_TYPE).trim, { e: String => protectedToInt(e) }),
-      determineTerminationDate(lineArray(BulkRequestCsvColumn.TERMINATION_DATE).trim, lineArray(BulkRequestCsvColumn.REVAL_DATE)),
-      emptyStringsToNone(lineArray(BulkRequestCsvColumn.REVAL_DATE).trim, { e: String => protectedDateConvert(e) }),
-      emptyStringsToNone(lineArray(BulkRequestCsvColumn.REVAL_RATE).trim, { e: String => protectedToInt(e) }),
-      lineArray(BulkRequestCsvColumn.DUAL_CALC).trim.toUpperCase match {
+      lineArray(BulkRequestCsvColumn.SCON).toUpperCase,
+      lineArray(BulkRequestCsvColumn.NINO).replaceAll("\\s", "").toUpperCase,
+      lineArray(BulkRequestCsvColumn.FORENAME).toUpperCase,
+      lineArray(BulkRequestCsvColumn.SURNAME).toUpperCase,
+      emptyStringsToNone(lineArray(BulkRequestCsvColumn.MEMBER_REF), { e: String => Some(e) }),
+      emptyStringsToNone(lineArray(BulkRequestCsvColumn.CALC_TYPE), { e: String => protectedToInt(e) }),
+      determineTerminationDate(lineArray(BulkRequestCsvColumn.TERMINATION_DATE), lineArray(BulkRequestCsvColumn.REVAL_DATE), lineArray(BulkRequestCsvColumn.CALC_TYPE)),
+      emptyStringsToNone(lineArray(BulkRequestCsvColumn.REVAL_DATE), { e: String => protectedDateConvert(e) }),
+      emptyStringsToNone(lineArray(BulkRequestCsvColumn.REVAL_RATE), { e: String => protectedToInt(e) }),
+      lineArray(BulkRequestCsvColumn.DUAL_CALC).toUpperCase match {
         case "Y" => 1
         case "YES" => 1
         case _ => 0
@@ -133,11 +133,13 @@ trait BulkRequestCreationService extends BulkEntityProcessor[BulkCalculationRequ
 
 
 
-  private def determineTerminationDate(termDate: String, revalDate: String): Option[String] =
-  {
+  private def determineTerminationDate(termDate: String, revalDate: String, calcType: String): Option[String] = {
     termDate match {
       case "" => None
-      case "SM" => emptyStringsToNone(revalDate, { e: String => protectedDateConvert(e) })
+      case sm if SMValidate matches sm => calcType match {
+        case "3" => None
+        case _ => emptyStringsToNone(revalDate, { date: String => protectedDateConvert(date) })
+      }
       case d if !DateValidate.isValid(d) => None
       case _ => {
         val convertedDate = LocalDate.parse(termDate, inputDateFormatter)

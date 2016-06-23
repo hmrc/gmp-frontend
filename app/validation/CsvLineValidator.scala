@@ -93,7 +93,7 @@ trait FieldValidator {
 
   def validateTerminationDate(value: String) = value match {
       case "" => None
-      case sm if sm matches "(?i)^sm$" => None
+      case sm if SMValidate.isValid(sm) => None
       case x => tryParseDate(x) match {
         case Some(validDate) if validDate.isBefore(TaxYear(2016).starts) => Some(Messages("gmp.error.csv.termination.oob"))
         case None => Some(Messages("gmp.error.csv.termination.invalid"))
