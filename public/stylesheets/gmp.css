@@ -243,6 +243,9 @@ caption {
     display: none;
   }
 
+  .grid-2-3 {
+    width: 100%
+  }
 }
 
 #global-what-now {
