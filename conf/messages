@@ -81,7 +81,7 @@ gmp.more_bulk_results.header = Recent bulk calculations
 gmp.weekly_total = Weekly total
 gmp.date_from = From:
 gmp.date_to = To:
-gmp.multi.dual_calc.header = Post-1990 GMP value per period
+gmp.multi.dual_calc.header = Post-1990 GMP value
 gmp.post90.true = True gender
 gmp.post90.opposite = Opposite gender
 
@@ -303,7 +303,7 @@ gmp.transfer.dol.subheader = This GMP is not revalued up to the date of transfer
 gmp.divorce.dol.subheader = This GMP is not revalued up to the date of divorce
 gmp.results.table.subheading = GMP value by contracted-out period 
 gmp.notrevalued.subheader = This GMP is not revalued.
-gmp.notrevalued.multi.subheader = This GMP is not revalued and is the sum of the values per period shown below.
+gmp.notrevalued.multi.subheader = This GMP is not revalued and is the sum of the amounts per period shown below.
 gmp.revalued.reason = GMP revalued to {0}
 gmp.nonrevalued.header = GMP at {0}
 gmp.nonrevalued.message = This GMP is not revalued up to the {0}
