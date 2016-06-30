@@ -23,6 +23,8 @@
 
 @gmp_main(title = Messages.get("gmp.contributions_earnings.title"),supportLinkEnabled = false, dashboardLinkEnabled = !calculationResponse.hasErrors) {
 
+  @includes.print_page()
+
   <div class="grid">
     <div class="grid-2-3">
       <h1 id="contributions-earnings-title">@Html(Messages.get("gmp.contributions_earnings.title"))</h1>
@@ -30,5 +32,19 @@
   </div>
 
   @includes.contributions_earnings(calculationResponse)
+
+  @includes.member_details_result(calculationResponse)
+
+  <div class="grid">
+    <div class="grid-2-3">
+      <span id="queryhandling">@Html(Messages.get("gmp.queryhandling.resultsmessage"))</span>
+      <br/>
+      <br/>
+    </div>
+  </div>
+
+  @includes.request_another_button()
+
+  @includes.what_did_you_think_link()
 
 }
