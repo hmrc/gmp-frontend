@@ -42,7 +42,7 @@
 
           @form(action = routes.PensionDetailsController.post) {
 
-              <div class="form-group">
+              <div class="form-group" id="scon-form-group">
 
                   @gmpInput(pensionDetailsForm("scon"),
                   '_label -> Html(Messages.get("gmp.scon")),
@@ -53,7 +53,9 @@
 
               </div>
 
-              <button class="button" type="submit" id="submit-button">@Messages.get("gmp.continue.button")</button>
+              <p>@Messages.get("gmp.scon.message") <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pensions-helpline-contracted-out">@Messages.get("gmp.contact.hmrc")</a>.</p>
+
+          <button class="button" type="submit" id="submit-button">@Messages.get("gmp.continue.button")</button>
 
           }
 
