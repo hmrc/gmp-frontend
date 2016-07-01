@@ -18,17 +18,12 @@
 
 @import play.i18n._
 
-<div class="grid" id="single-confirmation">
+<div class="grid grid-2-3">
 
-  <div class="grid-2-3">
     <h2 id="results-header">@calculationResponse.header</h2>
 
     @if(calculationResponse.subheader.isDefined) {
       <div id="subheader" class="panel-indent">@calculationResponse.subheader</div>
     }
-  </div>
-  @if(!calculationResponse.hasErrors) {
-    @includes.print_page()
-  }
 
 </div>
