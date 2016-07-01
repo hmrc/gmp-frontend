@@ -31,7 +31,7 @@ import play.api.i18n.Messages
 import play.api.mvc.Request
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import play.twirl.api.HtmlFormat
+import play.twirl.api.{Html, HtmlFormat}
 import services.SessionService
 import uk.gov.hmrc.play.audit.http.connector.{AuditResult, AuditConnector}
 import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
@@ -844,6 +844,23 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
             contentAsString(result) must include(Messages("gmp.only_part_problem"))
             contentAsString(result) must include(Messages("gmp.contracted_out_period_error", "10/11/2014 to 10/11/2015"))
             contentAsString(result) must not include(Messages("gmp.back_to_dashboard"))
+          }
+        }
+
+        "contain memeber details, print and get another calculation button" in {
+          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
+          when(mockCalculationConnector.calculateSingle(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(validCalculationWithContsAndEarningsResponse))
+          when(mockAuditConnector.sendEvent(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(AuditResult.Success))
+          withAuthorisedUser { request =>
+            val result = TestResultsController.getContributionsAndEarnings.apply(request)
+            status(result) must equal(OK)
+            contentAsString(result) must include(Messages("gmp.print"))
+            contentAsString(result) must include(Messages("gmp.name"))
+            contentAsString(result) must include(Messages("gmp.nino"))
+            contentAsString(result) must include(Messages("gmp.scon"))
+            contentAsString(result) must include(Messages("gmp.queryhandling.contsandearnings"))
+            contentAsString(result) must include(Messages("gmp.button.request-another"))
+            contentAsString(result) must include(Messages("gmp.what_did_you_think"))
           }
         }
       }

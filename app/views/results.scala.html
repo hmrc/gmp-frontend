@@ -24,6 +24,10 @@
 
 @gmp_main(applicationConfig = applicationConfig, title = Messages.get("gmp.results.title"),supportLinkEnabled = false, dashboardLinkEnabled = !calculationResponse.hasErrors) {
 
+  @if(!calculationResponse.hasErrors) {
+    @includes.print_page()
+  }
+
 @{
   if(calculationResponse.globalErrorCode > 0) {
     includes.global_error(calculationResponse.globalErrorCode)
