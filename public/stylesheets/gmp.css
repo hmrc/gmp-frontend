@@ -203,42 +203,16 @@ caption {
     content: none !important;
   }
 
-  header {
-    display: none;
-  }
-
-  .header-proposition {
-    display: none;
-  }
-
-  .beta-banner {
-    display: none;
-  }
-
-  .service-info {
-      display: none;
-    }
-
-  a.dashboard-back {
-    display: none;
-  }
-
-  .print-style {
-    display: none
-  }
-
-  #footer {
-    display: none
-  }
-
-  #request-another-div {
-    display: none
-  }
-
-  #what-did-you-think-div {
-    display: none
-  }
-
+  header,
+  #earnings-back-link,
+  .header-proposition,
+  .beta-banner,
+  .service-info,
+  a.dashboard-back,
+  .print-style,
+  #footer,
+  #request-another-div,
+  #what-did-you-think-div,
   #conts-earnings-link-div {
     display: none;
   }
