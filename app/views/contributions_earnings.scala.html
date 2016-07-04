@@ -24,7 +24,7 @@
 @gmp_main(title = Messages.get("gmp.contributions_earnings.title"),supportLinkEnabled = false, dashboardLinkEnabled = !calculationResponse.hasErrors) {
 
 
-  @if(!calculationResponse.hasErrors) {
+  @if(calculationResponse.hasSuccessfulCalculations) {
     @includes.print_page()
   }
 
