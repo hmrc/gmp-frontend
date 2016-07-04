@@ -76,6 +76,8 @@ case class CalculationResponse(
 
   def hasErrors: Boolean = calculationPeriods.foldLeft(globalErrorCode){_ + _.errorCode} > 0
 
+  def hasSuccessfulCalculations = globalErrorCode == 0 || calculationPeriods.count { p => p.errorCode == 0 } > 0
+
   def revaluationUnsuccessful: Boolean = calculationPeriods.foldLeft(0){_ + _.revalued.getOrElse(0)} == calculationPeriods.length
 
   def totalGmp: BigDecimal = calculationPeriods.foldLeft(BigDecimal(0)){ (sum, period) => sum + BigDecimal(period.gmpTotal)}
