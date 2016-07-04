@@ -145,6 +145,37 @@ class CalculationResponseSpec extends PlaySpec with MockitoSugar with OneServerP
       }
     }
 
+    "hasSuccessfulCalculations" must {
+
+      "return true when global error = 0" in {
+        val response = CalculationResponse("David Dickinson", nino, "S1234567T", None, None, Nil, 0, None, None, None, false, 1)
+        response.hasSuccessfulCalculations must be(true)
+      }
+
+      "return true when there is at least one successful period" in {
+        val periods = List(
+          CalculationPeriod(Some(new LocalDate(2015, 11, 10)), new LocalDate(2015, 11, 10), "1.11", "2.22", 1, 10, Some(1)),
+          CalculationPeriod(Some(new LocalDate(2015, 11, 10)), new LocalDate(2015, 11, 10), "1.11", "2.22", 1, 0, Some(1))
+        )
+
+        val response = CalculationResponse("David Dickinson", nino, "S1234567T", None, None, periods, 1, None, None, None, false, 1)
+
+        response.hasSuccessfulCalculations must be(true)
+      }
+
+      "return false if all periods return an error code" in {
+        val periods = List(
+          CalculationPeriod(Some(new LocalDate(2015, 11, 10)), new LocalDate(2015, 11, 10), "1.11", "2.22", 1, 10, Some(1)),
+          CalculationPeriod(Some(new LocalDate(2015, 11, 10)), new LocalDate(2015, 11, 10), "1.11", "2.22", 1, 13, Some(1))
+        )
+
+        val response = CalculationResponse("David Dickinson", nino, "S1234567T", None, None, periods, 1, None, None, None, false, 1)
+
+        response.hasSuccessfulCalculations must be(false)
+      }
+
+    }
+
     "calculationUnsuccessful" must {
 
       "return false when no errors" in {
