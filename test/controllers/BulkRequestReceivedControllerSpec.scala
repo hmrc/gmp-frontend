@@ -148,6 +148,7 @@ class BulkRequestReceivedControllerSpec extends PlaySpec with OneServerPerSuite 
         case Some(x) => s"$x,"
         case x: String => x + ","
         case x: Int => x.toString + ","
+        case x: Boolean => x.toString + ","
       }
     }
     {

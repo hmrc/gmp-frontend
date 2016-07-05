@@ -29,7 +29,8 @@ case class CalculationRequestLine (scon: String,
                                   terminationDate: Option[String] = None,
                                   revaluationDate: Option[String] = None,
                                   revaluationRate: Option[Int] = None,
-                                  dualCalc: Int
+                                  dualCalc: Int,
+                                  memberIsInScheme: Boolean = false
                                   ) {
   override def toString = {
     val dc = dualCalc match {
