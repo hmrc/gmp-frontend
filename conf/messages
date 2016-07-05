@@ -58,15 +58,18 @@ gmp.bulk_request_received.header = What next
 
 gmp.no_inflation.subheader = This GMP has not been inflation proofed as you entered a date in the same tax year as the date of death.
 
-gmp.bulk.subheaders.allcalculations=All calculations
-gmp.bulk.subheaders.successfulcalculations=Successful calculations
-gmp.bulk.subheaders.failedcalculations=Failed calculations
+gmp.bulk.subheaders.allcalculations=All results
+gmp.bulk.subheaders.successfulcalculations=Total GMP calculated
+gmp.bulk.subheaders.failedcalculations=No total GMP calculated
 gmp.bulk.subheaders.contsandearnings=Contributions and earnings
 
-gmp.bulk.explanations.calculations.1=All GMP figures are weekly and in pounds.
-gmp.bulk.explanations.calculations.2=Periods refer to GMP values where there is more than one contracted-out period.
-gmp.bulk.explanations.failed.1=For failed calculations see ''Reason for error'' and ''What to do''.
-gmp.bulk.explanations.failed.2=You can then submit the calculation again (either on its own or as part of another bulk file) or contact HM Revenue and Customs where advised. <a href="#query-handling-header">How do I do this?</a>
+gmp.bulk.explanations.all.1=GMP figures are weekly and in pounds.
+gmp.bulk.explanations.all.2=Results of all calculation requests.
+gmp.bulk.explanations.successful.1=Results where a total GMP was successfully calculated
+gmp.bulk.explanations.successful.2=Includes GMP amounts per period if there is more than one contracted-out period.
+gmp.bulk.explanations.failed.1=Requests where we can't calculate a total GMP. GMPs per period are shown if they have been successfully calculated.
+gmp.bulk.explanations.failed.2=Where there is no GMP, see ''Reason for error'' and '''What to do''.
+gmp.bulk.explanations.failed.3=You can then submit the calculation again request (either on its own or as part of another bulk file) or contact HM Revenue and Customs where advised.
 gmp.bulk.explanations.contsandearnings = A separate contributions and earnings file for all queries.
 gmp.bulk.wrong_user.header = There is a problem
 gmp.bulk.query_handling_message.header = Contact HMRC about a calculation
