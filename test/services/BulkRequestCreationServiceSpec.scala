@@ -26,29 +26,28 @@ import play.api.i18n.Messages
 
 class BulkRequestCreationServiceSpec extends PlaySpec with ScalaFutures with MockitoSugar with OneServerPerSuite {
 
-
   val nino1 = RandomNino.generate
   val nino2 = RandomNino.generate
 
-  val calcLine1 = BulkCalculationRequestLine(1, Some(CalculationRequestLine("S1301234T", nino1, "Isambard", "Brunell", Some("IB"), Some(1), Some("2017-02-02"), Some("2010-01-01"), Some(1), 1)),None,None)
-  val calcLine2 = BulkCalculationRequestLine(1, Some(CalculationRequestLine("S1301234T", nino2, "Tim", "O’Brien", Some("GS"), Some(1), Some("2017-02-02"), Some("2010-01-01"), Some(1), 1)),None,None)
-  val calcLine3 = BulkCalculationRequestLine(1, Some(CalculationRequestLine("S1301234T", nino2, "George", "Stephenson", Some("GS"), Some(1), None, None, Some(1), 0)),None,None)
-  val calcLine4 = BulkCalculationRequestLine(1, Some(CalculationRequestLine("S1301234T", nino2, "George", "Stephenson", None, None, None, None, None, 0)),None,None)
-  val invalidCalcLine = BulkCalculationRequestLine(1, Some(CalculationRequestLine("invalid_scon", nino1, "Isambard", "Brunell", Some("IB"), Some(1), Some("2010-02-02"), Some("2010-01-01"), Some(1), 1)),None,None)
-  val calcLine8 = BulkCalculationRequestLine(1, Some(CalculationRequestLine("S2730012K", "GY000002A", "PARIS", "HILTON", Some("THISISATEST SCENARIO"), Some(0), Some("2016-07-07"), None, None, 1)),None,None)
-  val calcLine10 = BulkCalculationRequestLine(1, Some(CalculationRequestLine("S2730012K", "GY000002A", "PARIS", "HILTON", Some("THISISATEST SCENARIO"), Some(0), None, Some("2016-07-07"), None, 1)),None,None)
-  val calcLine11 = BulkCalculationRequestLine(1, Some(CalculationRequestLine("S2730012K", "GY000002A", "PARIS", "HILTON", Some("THISISATEST SCENARIO"), Some(1), Some("SM"), Some("2016-07-07"), None, 1)),None,None)
-  val calcLine12 = BulkCalculationRequestLine(1, Some(CalculationRequestLine("S2730012K", "gy 00 00 02 a", "PARIS", "HILTON", Some("THISISATEST SCENARIO"), Some(1), Some("2016-07-07"), Some("2017-07-07"), None, 1)),None,None)
-  val calcLine14 = BulkCalculationRequestLine(1, Some(CalculationRequestLine("S1301234T", " GY000002A ", " Tim ", " O’Brien ", Some(" GS "), Some(1), Some("2017-02-02"), Some("2010-01-01"), Some(1), 1)),None,None)
-  val calcLine16 = BulkCalculationRequestLine(1, Some(CalculationRequestLine("S1301234T", " GY000002A ", " Tim ", " O’Brien ", Some(" GS "), Some(1), Some("02 02 2017"), Some("2010-01-01"), Some(1), 1)),None,None)
-  val calcLine17 = BulkCalculationRequestLine(1, Some(CalculationRequestLine("s1301234t", nino2, "Tim", "O’Brien", Some("GS"), Some(1), Some("2017-02-02"), Some("2010-01-01"), Some(1), 1)),None,None)
-  val calcLine18 = BulkCalculationRequestLine(1, Some(CalculationRequestLine("S1301234T", nino1, "Isambard", "Brunell", Some("IB"), Some(0), Some("2017-02-02"), Some("2010-01-01"), Some(1), 1)),None,None)
-  val calcLine19 = BulkCalculationRequestLine(1, Some(CalculationRequestLine("S1301234T", nino1, "Isambard", "Brunell", Some("IB"), Some(3), Some("2017-02-02"), Some("2010-01-01"), Some(1), 1)),None,None)
-  val calcLine20 = BulkCalculationRequestLine(1, Some(CalculationRequestLine("S1301234T", nino1, "Isambard", "Brunell", Some("IB"), Some(2), Some("2017-02-02"), Some("2010-01-01"), Some(1), 1)),None,None)
-  val calcLine21 = BulkCalculationRequestLine(1, Some(CalculationRequestLine("S1301234T", nino1, "Isambard", "Brunell", Some("IB"), Some(4), Some("2017-02-02"), Some("2010-01-01"), Some(1), 1)),None,None)
-  val calcLine22 = BulkCalculationRequestLine(1, Some(CalculationRequestLine("S1301234T", nino1, "Isambard", "Brunell", Some("IB"), Some(3), Some("2016-04-06"), None, Some(1), 0)),None,None)
-  val calcLine23 = BulkCalculationRequestLine(1, Some(CalculationRequestLine("S1301234T", nino1, "Isambard", "Brunell", Some("IB"), Some(3), Some("2016-04-05"), None, Some(1), 0)),None,None)
-  val calcLine24 = BulkCalculationRequestLine(1, Some(CalculationRequestLine("S2730012K", "GY000002A", "PARIS", "HILTON", Some("THISISATEST SCENARIO 2"), Some(3), Some("SM"), Some("2016-07-07"), None, 1)),None,None)
+  val calcLine1 = BulkCalculationRequestLine(1, Some(CalculationRequestLine("S1301234T", nino1, "Isambard", "Brunell", Some("IB"), Some(1), Some("2017-02-02"), Some("2010-01-01"), Some(1), 1)), None, None)
+  val calcLine2 = BulkCalculationRequestLine(1, Some(CalculationRequestLine("S1301234T", nino2, "Tim", "O’Brien", Some("GS"), Some(1), Some("2017-02-02"), Some("2010-01-01"), Some(1), 1)), None, None)
+  val calcLine3 = BulkCalculationRequestLine(1, Some(CalculationRequestLine("S1301234T", nino2, "George", "Stephenson", Some("GS"), Some(1), None, None, Some(1), 0)), None, None)
+  val calcLine4 = BulkCalculationRequestLine(1, Some(CalculationRequestLine("S1301234T", nino2, "George", "Stephenson", None, None, None, None, None, 0)), None, None)
+  val invalidCalcLine = BulkCalculationRequestLine(1, Some(CalculationRequestLine("invalid_scon", nino1, "Isambard", "Brunell", Some("IB"), Some(1), Some("2010-02-02"), Some("2010-01-01"), Some(1), 1)), None, None)
+  val calcLine8 = BulkCalculationRequestLine(1, Some(CalculationRequestLine("S2730012K", "GY000002A", "PARIS", "HILTON", Some("THISISATEST SCENARIO"), Some(0), Some("2016-07-07"), None, None, 1)), None, None)
+  val calcLine10 = BulkCalculationRequestLine(1, Some(CalculationRequestLine("S2730012K", "GY000002A", "PARIS", "HILTON", Some("THISISATEST SCENARIO"), Some(0), None, Some("2016-07-07"), None, 1)), None, None)
+  val calcLine11 = BulkCalculationRequestLine(1, Some(CalculationRequestLine("S2730012K", "GY000002A", "PARIS", "HILTON", Some("THISISATEST SCENARIO"), Some(1), Some("SM"), Some("2016-07-07"), None, 1)), None, None)
+  val calcLine12 = BulkCalculationRequestLine(1, Some(CalculationRequestLine("S2730012K", "gy 00 00 02 a", "PARIS", "HILTON", Some("THISISATEST SCENARIO"), Some(1), Some("2016-07-07"), Some("2017-07-07"), None, 1)), None, None)
+  val calcLine14 = BulkCalculationRequestLine(1, Some(CalculationRequestLine("S1301234T", " GY000002A ", " Tim ", " O’Brien ", Some(" GS "), Some(1), Some("2017-02-02"), Some("2010-01-01"), Some(1), 1)), None, None)
+  val calcLine16 = BulkCalculationRequestLine(1, Some(CalculationRequestLine("S1301234T", " GY000002A ", " Tim ", " O’Brien ", Some(" GS "), Some(1), Some("02 02 2017"), Some("2010-01-01"), Some(1), 1)), None, None)
+  val calcLine17 = BulkCalculationRequestLine(1, Some(CalculationRequestLine("s1301234t", nino2, "Tim", "O’Brien", Some("GS"), Some(1), Some("2017-02-02"), Some("2010-01-01"), Some(1), 1)), None, None)
+  val calcLine18 = BulkCalculationRequestLine(1, Some(CalculationRequestLine("S1301234T", nino1, "Isambard", "Brunell", Some("IB"), Some(0), Some("2017-02-02"), Some("2010-01-01"), Some(1), 1)), None, None)
+  val calcLine19 = BulkCalculationRequestLine(1, Some(CalculationRequestLine("S1301234T", nino1, "Isambard", "Brunell", Some("IB"), Some(3), Some("2017-02-02"), Some("2010-01-01"), Some(1), 1)), None, None)
+  val calcLine20 = BulkCalculationRequestLine(1, Some(CalculationRequestLine("S1301234T", nino1, "Isambard", "Brunell", Some("IB"), Some(2), Some("2017-02-02"), Some("2010-01-01"), Some(1), 1)), None, None)
+  val calcLine21 = BulkCalculationRequestLine(1, Some(CalculationRequestLine("S1301234T", nino1, "Isambard", "Brunell", Some("IB"), Some(4), Some("2017-02-02"), Some("2010-01-01"), Some(1), 1)), None, None)
+  val calcLine22 = BulkCalculationRequestLine(1, Some(CalculationRequestLine("S1301234T", nino1, "Isambard", "Brunell", Some("IB"), Some(3), Some("2016-04-06"), None, Some(1), 0)), None, None)
+  val calcLine23 = BulkCalculationRequestLine(1, Some(CalculationRequestLine("S1301234T", nino1, "Isambard", "Brunell", Some("IB"), Some(3), Some("2016-04-05"), None, Some(1), 0)), None, None)
+  val calcLine24 = BulkCalculationRequestLine(1, Some(CalculationRequestLine("S2730012K", "GY000002A", "PARIS", "HILTON", Some("THISISATEST SCENARIO 2"), Some(3), Some("SM"), Some("2016-07-07"), None, 1)), None, None)
 
   val inputLine1 = (Messages("gmp.upload_csv_column_headers") + "\n" + lineListFromCalculationRequestLine(calcLine1).mkString).toList
   val inputLine2 = (Messages("gmp.upload_csv_column_headers") + "\n" + lineListFromCalculationRequestLine(calcLine2).mkString).toList
@@ -120,12 +119,12 @@ class BulkRequestCreationServiceSpec extends PlaySpec with ScalaFutures with Moc
 
   "Bulk Request Creation Service" must {
 
-    val localDateTime = new LocalDateTime(2016,5,18,17,50,55,511)
+    val localDateTime = new LocalDateTime(2016, 5, 18, 17, 50, 55, 511)
 
 
     val collection = "gmp"
 
-    val bulkRequest1 = BulkCalculationRequest("1", "bill@bixby.com", "uploadRef1", List(calcLine1),"",localDateTime)
+    val bulkRequest1 = BulkCalculationRequest("1", "bill@bixby.com", "uploadRef1", List(calcLine1), "", localDateTime)
     val bulkRequest2 = BulkCalculationRequest("2", "timburton@scary.com", "uploadRef2", List(calcLine2))
     val bulkRequest3 = BulkCalculationRequest("3", "lou@ferrigno.com", "uploadRef3", List(calcLine1, calcLine2.copy(lineId = 2)))
     val bulkRequest4 = BulkCalculationRequest("4", "bill@bixby.com", "uploadRef1", List(calcLine3))
@@ -151,6 +150,12 @@ class BulkRequestCreationServiceSpec extends PlaySpec with ScalaFutures with Moc
 
       bulkRequest.getFirstValid.firstForename mustBe "ISAMBARD"
       bulkRequest.getFirstValid.surname mustBe "BRUNELL"
+    }
+
+    "a request without SM as the termination date, should set memberIsInScheme to false" in {
+      val request = TestBulkRequestCreationService.createBulkRequest(collection, "1", bulkRequest1.email, bulkRequest1.reference)
+
+      request.getFirstValid.memberIsInScheme mustBe false
     }
 
     "return Bulk Request 2" in {
@@ -241,16 +246,16 @@ class BulkRequestCreationServiceSpec extends PlaySpec with ScalaFutures with Moc
 
     "return bulk request with dual calc Yes" in {
       val bulkRequest = TestBulkRequestCreationService.createBulkRequest(collection, "8", anotherBulkRequest.email, anotherBulkRequest.reference)
-      bulkRequest.calculationRequests.head.validCalculationRequest.head.dualCalc must be (1)
+      bulkRequest.calculationRequests.head.validCalculationRequest.head.dualCalc must be(1)
     }
 
     "return bulk request with dual calc No" in {
       val bulkRequest = TestBulkRequestCreationService.createBulkRequest(collection, "9", "somebody@email.com", "a-ref-123")
-      bulkRequest.calculationRequests.head.validCalculationRequest.head.dualCalc must be (0)
+      bulkRequest.calculationRequests.head.validCalculationRequest.head.dualCalc must be(0)
     }
 
     "trim spaces around fields" in {
-      val bulkRequest = TestBulkRequestCreationService.createBulkRequest(collection, "14", bulkRequest14.email , bulkRequest14.reference)
+      val bulkRequest = TestBulkRequestCreationService.createBulkRequest(collection, "14", bulkRequest14.email, bulkRequest14.reference)
       bulkRequest.getFirstValid.firstForename mustBe "TIM"
       bulkRequest.getFirstValid.surname mustBe "O'BRIEN"
       bulkRequest.getFirstValid.nino mustBe "GY000002A"
@@ -260,28 +265,28 @@ class BulkRequestCreationServiceSpec extends PlaySpec with ScalaFutures with Moc
     }
 
     "cope with termination date with wrong format dd MM yyyy with no slashes" in {
-      val bulkRequest = TestBulkRequestCreationService.createBulkRequest(collection, "16", bulkRequest16.email , bulkRequest16.reference)
+      val bulkRequest = TestBulkRequestCreationService.createBulkRequest(collection, "16", bulkRequest16.email, bulkRequest16.reference)
       bulkRequest.getFirstValid.firstForename mustBe "TIM"
     }
 
     "convert scon to uppercase" in {
-      val bulkRequest = TestBulkRequestCreationService.createBulkRequest(collection, "17", bulkRequest17.email , bulkRequest17.reference)
+      val bulkRequest = TestBulkRequestCreationService.createBulkRequest(collection, "17", bulkRequest17.email, bulkRequest17.reference)
       bulkRequest.getFirstValid.scon mustBe "S1301234T"
     }
 
     "not send the revaluation date if provided when calculation type is leaving" in {
-      val bulkRequest = TestBulkRequestCreationService.createBulkRequest(collection, "18", bulkRequest18.email , bulkRequest18.reference)
+      val bulkRequest = TestBulkRequestCreationService.createBulkRequest(collection, "18", bulkRequest18.email, bulkRequest18.reference)
       bulkRequest.getFirstValid.revaluationDate mustBe None
       bulkRequest.getFirstValid.revaluationRate mustBe None
     }
 
     "not send the revaluation date if provided when calculation type is PA" in {
-      val bulkRequest = TestBulkRequestCreationService.createBulkRequest(collection, "20", bulkRequest20.email , bulkRequest20.reference)
+      val bulkRequest = TestBulkRequestCreationService.createBulkRequest(collection, "20", bulkRequest20.email, bulkRequest20.reference)
       bulkRequest.getFirstValid.revaluationDate mustBe None
     }
 
     "not send the revaluation date if provided when calculation type is SPA" in {
-      val bulkRequest = TestBulkRequestCreationService.createBulkRequest(collection, "21", bulkRequest21.email , bulkRequest21.reference)
+      val bulkRequest = TestBulkRequestCreationService.createBulkRequest(collection, "21", bulkRequest21.email, bulkRequest21.reference)
       bulkRequest.getFirstValid.revaluationDate mustBe None
     }
 
@@ -290,29 +295,33 @@ class BulkRequestCreationServiceSpec extends PlaySpec with ScalaFutures with Moc
       bulkRequest.getFirstValid.terminationDate mustBe None
     }
 
+    "should set the schemeMember property to true" in {
+      val bulkRequest = TestBulkRequestCreationService.createBulkRequest(collection, "24", bulkRequest24.email, bulkRequest24.reference)
+      bulkRequest.getFirstValid.memberIsInScheme mustBe true
+    }
+
     "not send dual calc when calculation type is survivor" in {
-      val bulkRequest = TestBulkRequestCreationService.createBulkRequest(collection, "19", bulkRequest19.email , bulkRequest19.reference)
+      val bulkRequest = TestBulkRequestCreationService.createBulkRequest(collection, "19", bulkRequest19.email, bulkRequest19.reference)
       bulkRequest.getFirstValid.dualCalc mustBe 0
     }
 
     "send term date when term date is on or after 06/04/2016" in {
-      val bulkRequest = TestBulkRequestCreationService.createBulkRequest(collection, "22", bulkRequest22.email , bulkRequest22.reference)
+      val bulkRequest = TestBulkRequestCreationService.createBulkRequest(collection, "22", bulkRequest22.email, bulkRequest22.reference)
       bulkRequest.getFirstValid.terminationDate mustBe Some("2016-04-06")
     }
 
     "not send term date when term date is on or before 05/04/2016" in {
-      val bulkRequest = TestBulkRequestCreationService.createBulkRequest(collection, "23", bulkRequest23.email , bulkRequest23.reference)
+      val bulkRequest = TestBulkRequestCreationService.createBulkRequest(collection, "23", bulkRequest23.email, bulkRequest23.reference)
       bulkRequest.getFirstValid.terminationDate mustBe None
     }
   }
 
   def lineListFromCalculationRequestLine(line: BulkCalculationRequestLine): List[Char] = {
     val l = line.validCalculationRequest.get.productIterator.toList.zipWithIndex
+    val dateRegEx = """([0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9])""".r
 
-    def process(item: Any) = {
-      val dateRegEx = """([0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9])""".r
-
-      item match {
+    {
+      (l collect {
         case (None, i) => ""
         case (Some(dateRegEx(s)), i) => new LocalDate(s).toString("dd/MM/yyyy")
         case (x: Int, BulkRequestCsvColumn.DUAL_CALC) => x match {
@@ -321,10 +330,10 @@ class BulkRequestCreationServiceSpec extends PlaySpec with ScalaFutures with Moc
         }
         case (Some(x), i) => s"$x"
         case (x: String, i) => x
-      }
+      })
+        .mkString(",") + "\n"
     }
-
-    { (l map process).mkString(",") + "\n" }.toCharArray.toList
+      .toCharArray.toList
 
   }
 }

@@ -98,6 +98,10 @@ trait BulkRequestCreationService extends BulkEntityProcessor[BulkCalculationRequ
         case "Y" => 1
         case "YES" => 1
         case _ => 0
+      },
+      lineArray(BulkRequestCsvColumn.TERMINATION_DATE) match {
+        case sm if SMValidate.isValid(sm) => true
+        case _ => false
       }
     )
 
@@ -163,7 +167,9 @@ trait BulkRequestCreationService extends BulkEntityProcessor[BulkCalculationRequ
     }
 
     validationErrors match {
-      case Some(x) if (x.keySet.contains(BulkRequestCsvColumn.LINE_ERROR_TOO_FEW.toString) || x.keySet.contains(BulkRequestCsvColumn.LINE_ERROR_TOO_MANY.toString)) => BulkCalculationRequestLine(1, None, None, validationErrors)
+      case Some(x) if x.keySet.contains(BulkRequestCsvColumn.LINE_ERROR_TOO_FEW.toString)
+        || x.keySet.contains(BulkRequestCsvColumn.LINE_ERROR_TOO_MANY.toString)
+        => BulkCalculationRequestLine(1, None, None, validationErrors)
       case _ => BulkCalculationRequestLine(1, Some(constructCalculationRequestLine(line)), None, validationErrors)
     }
   }
