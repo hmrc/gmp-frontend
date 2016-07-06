@@ -23,15 +23,14 @@
 
 @gmp_main(title = Messages.get("gmp.contributions_earnings.title"),supportLinkEnabled = false, dashboardLinkEnabled = !calculationResponse.hasErrors) {
 
-
-  @if(calculationResponse.hasSuccessfulCalculations) {
-    @includes.print_page()
-  }
-
   <div class="grid">
     <div class="grid-2-3">
       <h1 id="contributions-earnings-title">@Html(Messages.get("gmp.contributions_earnings.title"))</h1>
     </div>
+
+    @if(calculationResponse.hasSuccessfulCalculations) {
+      @includes.print_page()
+    }
   </div>
 
   @includes.contributions_earnings(calculationResponse)
@@ -48,10 +47,12 @@
 
   @includes.request_another_button()
 
-  <div class="grid-2-3 custom-back-link">
+  <div class="grid custom-back-link">
     <a href="@routes.ResultsController.get" id="earnings-back-link">@Messages.get("gmp.back.link")</a>
   </div>
 
   @includes.what_did_you_think_link()
+
+
 
 }
