@@ -88,7 +88,7 @@ class GmpBulkConnectorSpec extends PlaySpec with OneServerPerSuite with MockitoS
         Some(PsaAccount(link, PsaId(psaId)))), None, None, CredentialStrength.None, ConfidenceLevel.L50))
 
       val bulkPreviousRequest = Json.parse(
-        """[{"uploadReference":"uploadRef","reference":"ref","timestamp":"2016-04-27T14:53:18.308","createdAt":"2016-05-18T17:50:55.511"}]"""
+        """[{"uploadReference":"uploadRef","reference":"ref","timestamp":"2016-04-27T14:53:18.308","processedDateTime":"2016-05-18T17:50:55.511"}]"""
       )
 
       when(mockHttpGet.GET[List[BulkPreviousRequest]]( Matchers.any())(Matchers.any(), Matchers.any()))
