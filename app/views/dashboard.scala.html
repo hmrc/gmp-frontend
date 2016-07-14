@@ -24,7 +24,7 @@
 
 @gmp_main(title = Messages.get("gmp.dashboard.title"), dashboardLinkEnabled = false) {
 
-</br>
+<br/>
 <div class="grid">
   <div class="grid grid-2-3">
     <h1 id="choose-calculation-type">@Messages.get("gmp.dashboard_header")</h1>
@@ -33,7 +33,7 @@
 
 
 <div class="grid">
-  </br>
+  <br/>
   <div class="grid-1-2">
     <a class ="large-underlined-link" id="single-calculation-link" href="@routes.PensionDetailsController.get">@Messages.get("gmp.single_calculation_link")</a></br></br>
     <p id="single-calculation-description">@Messages.get("gmp.single_calculation_text")</p>
@@ -46,9 +46,9 @@
 </div>
 
 <div class="grid">
-  </br>
+  <br/>
     <a id="download-template-link" href="@routes.AssetsController.at("csv/GMP_template_and_instructions.zip")">@Messages.get("gmp.download_templates_link")</a>
-  </br>
+  <br/>
 </div>
 
 @if(previousBulkCalculations.size > 0) {
@@ -96,9 +96,9 @@
 
   @if(previousBulkCalculations.size > 3) {
     <div class="grid">
-      </br>
+      <br/>
       <a id="more-calculations" href="@routes.MoreBulkResultsController.retrieveMoreBulkResults">@Messages.get("gmp.more_results_link")</a>
-      </br>
+      <br/>
     </div>
   }
 
