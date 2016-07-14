@@ -351,3 +351,7 @@ caption {
 #scon-form-group{
   margin-bottom: 0px;
 }
+
+.table-caption {
+    font-size: 19px;
+}
