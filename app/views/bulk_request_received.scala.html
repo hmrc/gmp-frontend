@@ -28,12 +28,12 @@
 
         <div class="confirmation">
           <h1>
-            <image src='@routes.AssetsController.at("images/tick.png")' alt=""/>
+            <img src='@routes.AssetsController.at("images/tick.png")' alt=""/>
             @Messages.get("gmp.bulk_request_received.banner")
           </h1>
         </div>
 
-        <h1>@Messages.get("gmp.bulk_request_received.header")</h1>
+        <h2>@Messages.get("gmp.bulk_request_received.header")</h2>
 
         @Html(Messages.get("gmp.bulk_request_received.text", reference))
 

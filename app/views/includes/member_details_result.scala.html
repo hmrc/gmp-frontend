@@ -22,14 +22,15 @@
 <div class="grid">
   <div class="grid-2-3"><br>
 
-    <table role="presentation" id="member-details">
-      <caption>
-        @if(calculationResponse.calcType == CalculationType.SURVIVOR.toInt){
+    <h2 id="details-table-caption" class="table-caption">
+      @if(calculationResponse.calcType == CalculationType.SURVIVOR.toInt){
         @Messages.get("gmp.entered_details.title.survivor")
-        } else{
+      } else{
         @Messages.get("gmp.entered_details.title")
-        }
-      </caption>
+      }
+    </h2>
+
+    <table role="presentation" id="member-details">
       <tbody>
         <tr>
           <td class="width-53">@Messages.get("gmp.name"):</td>
