@@ -352,11 +352,3 @@ caption {
   margin-bottom: 0px;
 }
 
-.visibly-hidden{
-  visibility: hidden;
-  line-height: 0px;
-}
-
-#calc-type{
-  margin-bottom: 0px;
-}
