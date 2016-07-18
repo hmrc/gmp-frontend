@@ -23,6 +23,7 @@ import models.{GmpDate, BulkCalculationRequest, BulkCalculationRequestLine, Calc
 import org.joda.time.LocalDate
 import org.joda.time.format.DateTimeFormat
 import play.api.Logger
+import play.api.i18n.Messages
 import uk.gov.hmrc.play.config.ServicesConfig
 import uk.gov.hmrc.stream.BulkEntityProcessor
 import uk.gov.hmrc.time.TaxYear
@@ -43,6 +44,7 @@ object BulkRequestCsvColumn {
   val DUAL_CALC = 9
   val LINE_ERROR_TOO_FEW = -1
   val LINE_ERROR_TOO_MANY = -2
+  val LINE_ERROR_EMPTY = -3
 }
 
 trait BulkRequestCreationService extends BulkEntityProcessor[BulkCalculationRequestLine] with ServicesConfig {
@@ -77,7 +79,11 @@ trait BulkRequestCreationService extends BulkEntityProcessor[BulkCalculationRequ
       case c => c
     }.split(LINE_FEED.toByte.toChar).drop(1).map {
       constructBulkCalculationRequestLine
-    }.toList
+    }.toList match {
+        // If there is nothing in the list, produce a failed calc in the response which shows this
+      case Nil => List(BulkCalculationRequestLine(1, None, None, Some(Map(BulkRequestCsvColumn.LINE_ERROR_EMPTY.toString -> Messages("gmp.error.parsing.empty_file")))))
+      case x => x
+    }
   }
 
   private def constructCalculationRequestLine(line: String): CalculationRequestLine = {

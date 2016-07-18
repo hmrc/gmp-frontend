@@ -19,7 +19,7 @@ package controllers
 import config.GmpFrontendAuthConnector
 import connectors.GmpBulkConnector
 import controllers.auth.GmpRegime
-import uk.gov.hmrc.play.http.Upstream4xxResponse
+import uk.gov.hmrc.play.http.{NotFoundException, Upstream4xxResponse}
 
 trait BulkResultsController extends GmpController {
 
@@ -30,10 +30,15 @@ trait BulkResultsController extends GmpController {
     implicit user =>
       implicit request => {
         gmpBulkConnector.getBulkResultsSummary(uploadReference).map{
-          bulkResultsSummary => Ok(views.html.bulk_results(bulkResultsSummary, uploadReference,comingFromPage))
+          bulkResultsSummary => {
+            Ok(views.html.bulk_results(bulkResultsSummary, uploadReference,comingFromPage))
+          }
         }.recover {
           case e: Upstream4xxResponse if e.upstreamResponseCode == FORBIDDEN => {
             Ok(views.html.bulk_wrong_user(request))
+          }
+          case x: NotFoundException => {
+            Ok(views.html.bulk_results_not_found())
           }
         }
       }

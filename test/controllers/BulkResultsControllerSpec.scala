@@ -26,7 +26,7 @@ import play.api.i18n.Messages
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
-import uk.gov.hmrc.play.http.{HttpResponse, Upstream4xxResponse}
+import uk.gov.hmrc.play.http.{HttpResponse, Upstream4xxResponse, NotFoundException}
 
 import scala.concurrent.Future
 
@@ -103,6 +103,15 @@ class BulkResultsControllerSpec extends PlaySpec with OneServerPerSuite with Moc
             val result = TestBulkResultsController.get("",comingFromDashboard).apply(request)
 
             contentAsString(result) must include(Messages("gmp.bulk.wrong_user.login_text"))
+          }
+        }
+
+        "show the calc not found page" in {
+          when(mockGmpBulkConnector.getBulkResultsSummary(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.failed(new NotFoundException("")))
+          withAuthorisedUser { request =>
+            val result = TestBulkResultsController.get("",comingFromDashboard).apply(request)
+
+            contentAsString(result) must include(Messages("gmp.bulk.results_not_found"))
           }
         }
       }
