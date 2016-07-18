@@ -25,7 +25,7 @@ import uk.gov.hmrc.emailaddress.EmailAddress
 
 object BulkReferenceForm {
   val MAX_REFERENCE_LENGTH: Int = 99
-  val CHARS_ALLOWED = "^[a-zA-Z0-9_-]*$"
+  val CHARS_ALLOWED = "^[\\s,a-zA-Z0-9_-]*$"
   val emailConstraintRegex = "^((?:[a-zA-Z][a-zA-Z0-9_]*))(.)((?:[a-zA-Z][a-zA-Z0-9_]*))*$"
   val WHITE_SPACES = ".*\\s.*"
 
