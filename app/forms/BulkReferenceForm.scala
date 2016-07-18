@@ -24,9 +24,10 @@ import play.api.i18n.Messages
 import uk.gov.hmrc.emailaddress.EmailAddress
 
 object BulkReferenceForm {
-  val MAX_REFERENCE_LENGTH: Int = 40
+  val MAX_REFERENCE_LENGTH: Int = 99
   val CHARS_ALLOWED = "^[a-zA-Z0-9_-]*$"
   val emailConstraintRegex = "^((?:[a-zA-Z][a-zA-Z0-9_]*))(.)((?:[a-zA-Z][a-zA-Z0-9_]*))*$"
+  val WHITE_SPACES = ".*\\s.*"
 
   val emailConstraint : Constraint[String] = Constraint("constraints.email") ({
     text =>
@@ -44,21 +45,14 @@ object BulkReferenceForm {
       }
   })
 
-  // Temporary constraint which requires the email address to be empty
-//  val emailConstraint = Constraint[String]("constraints.email") { text =>
-//    text.trim.length match {
-//      case 0 => Valid
-//      case _ => Invalid(Seq(ValidationError("The email address is currently ignored")))
-//    }
-//  }
-
   val bulkReferenceForm = Form(
     mapping(
       "email" -> text.verifying(emailConstraint),
       "reference" -> text
         .verifying(Messages("gmp.error.mandatory", Messages("gmp.reference")), x => x.trim.length != 0)
-        .verifying(Messages("gmp.error.invalid", Messages("gmp.reference")), x => x.trim.length < MAX_REFERENCE_LENGTH)
-        .verifying(Messages("gmp.error.invalid", Messages("gmp.reference")), x => x.trim.matches(CHARS_ALLOWED))
+        .verifying(Messages("gmp.error.csv.member_ref.length.invalid", Messages("gmp.reference")), x => x.trim.length <= MAX_REFERENCE_LENGTH)
+        .verifying(Messages("gmp.error.csv.member_ref.character.invalid", Messages("gmp.reference")), x => x.trim.matches(CHARS_ALLOWED))
+        .verifying(Messages("gmp.error.csv.member_ref.spaces.invalid", Messages("gmp.reference")), x => !(x.trim matches WHITE_SPACES))
     )(BulkReference.apply)(BulkReference.unapply)
   )
 }
