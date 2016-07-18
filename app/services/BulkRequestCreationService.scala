@@ -43,6 +43,7 @@ object BulkRequestCsvColumn {
   val DUAL_CALC = 9
   val LINE_ERROR_TOO_FEW = -1
   val LINE_ERROR_TOO_MANY = -2
+  val LINE_ERROR_EMPTY = -3
 }
 
 trait BulkRequestCreationService extends BulkEntityProcessor[BulkCalculationRequestLine] with ServicesConfig {
@@ -77,7 +78,10 @@ trait BulkRequestCreationService extends BulkEntityProcessor[BulkCalculationRequ
       case c => c
     }.split(LINE_FEED.toByte.toChar).drop(1).map {
       constructBulkCalculationRequestLine
-    }.toList
+    }.toList match {
+      case Nil => List(BulkCalculationRequestLine(1, None, None, Some(Map(BulkRequestCsvColumn.LINE_ERROR_EMPTY.toString -> "1"))))
+      case x => x
+    }
   }
 
   private def constructCalculationRequestLine(line: String): CalculationRequestLine = {
