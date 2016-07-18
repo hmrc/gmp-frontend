@@ -228,7 +228,6 @@ gmp.generic.errors_heading = There is a problem with the form
 gmp.error.name.invalid = Enter a {0} using only letters, hyphens, apostrophes and spaces
 gmp.error.surname.invalid = Enter a last name with more than 1 character
 gmp.error.email.invalid = Enter a valid email address
-gmp.error.invalid = Enter a valid calculation name
 gmp.error.calctype.out_of_range = Enter a calculation type between 0 and 4. See instructions file
 gmp.error.calctype.invalid = Enter a valid calculation type
 gmp.error.calctype.oob = Calc type should be between 0 and 4
@@ -248,6 +247,9 @@ gmp.error.csv.date.invalid = Enter a date in the same format as the example give
 gmp.error.csv.termination.invalid = Enter a date If the member left on or after 6/4/2016 or ''SM'' if the member is still in the scheme
 gmp.error.csv.termination.oob = Enter a date that is on or after 6/4/2016
 gmp.error.csv.dual_calc.invalid = Enter 'Yes' or 'Y' if you want an opposite gender calculation or 'No' or 'N' if you don't. This field can't be left blank.
+gmp.error.csv.member_ref.character.invalid = The calculation name can only contain letters or numbers
+gmp.error.csv.member_ref.spaces.invalid = The calculation name can''t have spaces
+gmp.error.csv.member_ref.length.invalid = The calculation name must have fewer than 99 letters or numbers
 
 gmp.error.member_previous_names = If we still can''t calculate a GMP, ask if the member has any previous names that may not have been updated with HM Revenue and Customs.
 gmp.error.contact_us_shared_workspace = Contact us by creating a new entry in the single queries database in Shared Workspace''s eRoom.

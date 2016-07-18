@@ -69,24 +69,34 @@ class BulkReferenceFormSpec extends PlaySpec {
         assert(validatedForm.errors.contains(FormError("reference", List("gmp.error.mandatory"))))
       }
 
-      "return an error if more than 40 chars" in {
+      "return an error if more than 99 chars" in {
         val postData = Json.obj(
           "email" -> "dan@hmrc.com",
-          "reference" -> "ABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZ"
+          "reference" -> "a" * 100
         )
         val validatedForm = bulkReferenceForm.bind(postData)
 
-        assert(validatedForm.errors.contains(FormError("reference", List("gmp.error.invalid"))))
+        assert(validatedForm.errors.contains(FormError("reference", List("gmp.error.csv.member_ref.length.invalid"))))
       }
 
-      "return an error if contains special chars" in {
+      "return an error if special characters" in {
         val postData = Json.obj(
           "email" -> "dan@hmrc.com",
-          "reference" -> "ABCDEFGHIJKLMNOPQRSTUVWXYZ*&^%$£"
+          "reference" -> "Calculation@ABCDEFGHIJKLMNOPQRSTUVWXYZ*&^%$£"
         )
         val validatedForm = bulkReferenceForm.bind(postData)
 
-        assert(validatedForm.errors.contains(FormError("reference", List("gmp.error.invalid"))))
+        assert(validatedForm.errors.contains(FormError("reference", List("gmp.error.csv.member_ref.character.invalid"))))
+      }
+
+      "return an error if white spaces" in {
+        val postData = Json.obj(
+          "email" -> "dan@hmrc.com",
+          "reference" -> "Calcu lation"
+        )
+        val validatedForm = bulkReferenceForm.bind(postData)
+
+        assert(validatedForm.errors.contains(FormError("reference", List("gmp.error.csv.member_ref.spaces.invalid"))))
       }
     }
 
