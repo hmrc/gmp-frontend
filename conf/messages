@@ -23,6 +23,7 @@ gmp.bulk_request_received.title = Request Received
 gmp.signout = Sign out
 gmp.bulk.results.title = GMP calculation available
 gmp.bulk.wrong_user.title = Not authorised
+gmp.bulk.results_not_found = Calculation no longer available
 
 # headers
 gmp.revaluation.question = At which date would you like the calculation to apply?
@@ -74,6 +75,10 @@ gmp.bulk.explanations.contsandearnings = A separate contributions and earnings f
 gmp.bulk.wrong_user.header = There is a problem
 gmp.bulk.query_handling_message.header = Contact HMRC about a calculation
 gmp.bulk.query_handling_message.body = If the instruction is to contact HMRC because we can''t calculate a GMP, or if you disagree with the result of a successful calculation, you can do so in Shared Workspace''s eRoom.<br/><br/>To query several calculations at once, create a bulk query document from the template in the guidance and templates folder. Drag and drop the query document into a new entry in the bulk queries database. To query a small number of calculations, create a new entry in the single queries database for each calculation.
+
+gmp.bulk.results_not_found.1 = We keep results for 30 days only. If you still need to see the results of this file, you will have to <a href="/guaranteed-minimum-pension/upload-csv">upload it again</a>.
+gmp.bulk.results_not_found.2 = If you need access to a calculation result for more than 30 days, you can save the file on your own computer or network after you have downloaded it.
+gmp.bulk.results_not_found.3 = To check other calculation results, <a href="/guaranteed-minimum-pension/dashboard">go to the GMP dashboard</a>.
 
 gmp.th.reference = Reference
 gmp.th.upload_date = Date file returned
