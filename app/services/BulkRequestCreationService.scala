@@ -23,6 +23,7 @@ import models.{GmpDate, BulkCalculationRequest, BulkCalculationRequestLine, Calc
 import org.joda.time.LocalDate
 import org.joda.time.format.DateTimeFormat
 import play.api.Logger
+import play.api.i18n.Messages
 import uk.gov.hmrc.play.config.ServicesConfig
 import uk.gov.hmrc.stream.BulkEntityProcessor
 import uk.gov.hmrc.time.TaxYear
@@ -79,7 +80,8 @@ trait BulkRequestCreationService extends BulkEntityProcessor[BulkCalculationRequ
     }.split(LINE_FEED.toByte.toChar).drop(1).map {
       constructBulkCalculationRequestLine
     }.toList match {
-      case Nil => List(BulkCalculationRequestLine(1, None, None, Some(Map(BulkRequestCsvColumn.LINE_ERROR_EMPTY.toString -> "1"))))
+        // If there is nothing in the list, produce a failed calc in the response which shows this
+      case Nil => List(BulkCalculationRequestLine(1, None, None, Some(Map(BulkRequestCsvColumn.LINE_ERROR_EMPTY.toString -> Messages("gmp.error.parsing.empty_file")))))
       case x => x
     }
   }
