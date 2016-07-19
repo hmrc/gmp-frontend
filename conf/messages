@@ -24,6 +24,7 @@ gmp.signout = Sign out
 gmp.bulk.results.title = GMP calculation available
 gmp.bulk.wrong_user.title = Not authorised
 gmp.bulk.results_not_found = Calculation no longer available
+gmp.results.table_caption = GMP calculation results per period
 
 # headers
 gmp.revaluation.question = At which date would you like the calculation to apply?
