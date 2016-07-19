@@ -63,7 +63,7 @@ class DashboardControllerSpec extends PlaySpec with OneServerPerSuite with Mocki
     "be authorised" in {
       getDashboard() { result =>
         status(result) must equal(SEE_OTHER)
-        redirectLocation(result).get must include("/account/sign-in")
+        redirectLocation(result).get must include("/gg/sign-in")
       }
     }
 

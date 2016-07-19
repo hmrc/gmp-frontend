@@ -64,7 +64,7 @@ class DateOfLeavingControllerSpec extends PlaySpec with OneServerPerSuite with M
     "be authorised" in {
       get() { result =>
         status(result) must equal(SEE_OTHER)
-        redirectLocation(result).get must include("/account/sign-in")
+        redirectLocation(result).get must include("/gg/sign-in")
       }
     }
 
@@ -187,7 +187,7 @@ class DateOfLeavingControllerSpec extends PlaySpec with OneServerPerSuite with M
     "be authorised" in {
       val result = TestDateOfLeavingController.back.apply(FakeRequest())
       status(result) must equal(SEE_OTHER)
-      redirectLocation(result).get must include("/account/sign-in")
+      redirectLocation(result).get must include("/gg/sign-in")
     }
 
     "authorised users redirect" in {
@@ -219,7 +219,7 @@ class DateOfLeavingControllerSpec extends PlaySpec with OneServerPerSuite with M
     "be authorised" in {
       val result = TestDateOfLeavingController.get.apply(FakeRequest())
       status(result) must equal(SEE_OTHER)
-      redirectLocation(result).get must include("/account/sign-in")
+      redirectLocation(result).get must include("/gg/sign-in")
     }
 
     "authenticated users" must {

@@ -241,7 +241,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
       "require authorisation" in {
         val result = TestResultsController.get.apply(FakeRequest())
         status(result) must equal(SEE_OTHER)
-        redirectLocation(result).get must include("/account/sign-in")
+        redirectLocation(result).get must include("/gg/sign-in")
       }
 
       "when authorised" must {
@@ -762,7 +762,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
       "require authorisation" in {
         val result = TestResultsController.get.apply(FakeRequest())
         status(result) must equal(SEE_OTHER)
-        redirectLocation(result).get must include("/account/sign-in")
+        redirectLocation(result).get must include("/gg/sign-in")
       }
 
       "when authorised" must {

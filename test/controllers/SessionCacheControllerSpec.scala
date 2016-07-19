@@ -51,7 +51,7 @@ class SessionCacheControllerSpec extends PlaySpec with OneServerPerSuite with Mo
     "be an authorised route" in {
       val result = TestSessionCacheController.newCalculation.apply(FakeRequest())
       status(result) must equal(SEE_OTHER)
-      redirectLocation(result).get must include("/account/sign-in")
+      redirectLocation(result).get must include("/gg/sign-in")
     }
 
     "reset the cached calculation parameters except for scon" in {
@@ -86,7 +86,7 @@ class SessionCacheControllerSpec extends PlaySpec with OneServerPerSuite with Mo
     "be an authorised route" in {
       val result = TestSessionCacheController.newBulkCalculation.apply(FakeRequest())
       status(result) must equal(SEE_OTHER)
-      redirectLocation(result).get must include("/account/sign-in")
+      redirectLocation(result).get must include("/gg/sign-in")
     }
 
     "reset the cached calculation parameters" in {
