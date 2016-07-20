@@ -30,17 +30,14 @@
             @if(globalErrors.hasPath(s"$globalErrorCode.reason")){
                 <div class="panel-indent" id="global-error-reason">@Messages.get(globalErrors.getString(s"$globalErrorCode.reason"))</div>
             }
-
-          @if(globalErrors.hasPath(s"$globalErrorCode.solution")){
-            <div>
-
-                <h2 class="error-h2" id="global-what-now">@Messages.get("gmp.what_now")</h2>
-
-                @Html(Messages.get(globalErrors.getString(s"$globalErrorCode.solution")))
-
-            </div>
-          }
         </div>
+
+        @if(globalErrors.hasPath(s"$globalErrorCode.solution")){
+            <div>
+                <h2 class="error-h2" id="global-what-now">@Messages.get("gmp.what_now")</h2>
+                @Html(Messages.get(globalErrors.getString(s"$globalErrorCode.solution")))
+            </div>
+        }
 
         @if(globalErrors.hasPath(s"$globalErrorCode.also")){
             <br/>
