@@ -75,7 +75,7 @@ class FileUploadControllerSpec extends PlaySpec with OneServerPerSuite with Mock
     "be authorised" in {
       getFileUploadPartial() { result =>
         status(result) must equal(SEE_OTHER)
-        redirectLocation(result).get must include("/account/sign-in")
+        redirectLocation(result).get must include("/gg/sign-in")
       }
     }
 
@@ -110,7 +110,7 @@ class FileUploadControllerSpec extends PlaySpec with OneServerPerSuite with Mock
       "be authorised" in {
         failure() { result =>
           status(result) must equal(SEE_OTHER)
-          redirectLocation(result).get must include("/account/sign-in")
+          redirectLocation(result).get must include("/gg/sign-in")
         }
       }
 

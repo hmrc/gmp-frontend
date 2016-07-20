@@ -68,7 +68,7 @@ class BulkReferenceControllerSpec extends PlaySpec with OneServerPerSuite with M
       "be authorised" in {
         getBulkReference() { result =>
           status(result) must equal(SEE_OTHER)
-          redirectLocation(result).get must include("/account/sign-in")
+          redirectLocation(result).get must include("/gg/sign-in")
         }
       }
 
@@ -91,7 +91,7 @@ class BulkReferenceControllerSpec extends PlaySpec with OneServerPerSuite with M
       "be authorised" in {
         postBulkReference() { result =>
           status(result) must equal(SEE_OTHER)
-          redirectLocation(result).get must include("/account/sign-in")
+          redirectLocation(result).get must include("/gg/sign-in")
         }
       }
 
@@ -144,7 +144,7 @@ class BulkReferenceControllerSpec extends PlaySpec with OneServerPerSuite with M
       "be authorised" in {
         val result = TestBulkReferenceController.back.apply(FakeRequest())
         status(result) must equal(SEE_OTHER)
-        redirectLocation(result).get must include("/account/sign-in")
+        redirectLocation(result).get must include("/gg/sign-in")
       }
 
 

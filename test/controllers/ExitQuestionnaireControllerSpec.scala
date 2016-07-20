@@ -70,7 +70,7 @@ class ExitQuestionnaireControllerSpec extends PlaySpec with OneServerPerSuite wi
     "be authorised" in {
       get() { result =>
         status(result) must equal(SEE_OTHER)
-        redirectLocation(result).get must include("/account/sign-in")
+        redirectLocation(result).get must include("/gg/sign-in")
       }
     }
 
@@ -104,7 +104,7 @@ class ExitQuestionnaireControllerSpec extends PlaySpec with OneServerPerSuite wi
     "be authorised" in {
       val result = TestExitQuestionnaireController.get.apply(FakeRequest())
       status(result) must equal(SEE_OTHER)
-      redirectLocation(result).get must include("/account/sign-in")
+      redirectLocation(result).get must include("/gg/sign-in")
     }
 
     "authenticated users" must {

@@ -52,7 +52,7 @@ class EqualiseControllerSpec extends PlaySpec with OneServerPerSuite with Mockit
     "be authorised" in {
       getEqualise() { result =>
         status(result) must equal(SEE_OTHER)
-        redirectLocation(result).get must include("/account/sign-in")
+        redirectLocation(result).get must include("/gg/sign-in")
       }
     }
 
@@ -85,7 +85,7 @@ class EqualiseControllerSpec extends PlaySpec with OneServerPerSuite with Mockit
     "be authorised" in {
       val result = TestEqualiseController.back.apply(FakeRequest())
       status(result) must equal(SEE_OTHER)
-      redirectLocation(result).get must include("/account/sign-in")
+      redirectLocation(result).get must include("/gg/sign-in")
     }
 
 
@@ -122,7 +122,7 @@ class EqualiseControllerSpec extends PlaySpec with OneServerPerSuite with Mockit
       "be authorised" in {
         val result = TestEqualiseController.post.apply(FakeRequest())
         status(result) must equal(SEE_OTHER)
-        redirectLocation(result).get must include("/account/sign-in")
+        redirectLocation(result).get must include("/gg/sign-in")
       }
 
       "authenticated users" must {
