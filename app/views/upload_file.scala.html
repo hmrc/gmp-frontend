@@ -30,7 +30,7 @@
         <h1>@Messages.get("gmp.fileupload.header")</h1>
 
         <br>
-        <p>@Html(Messages.get("gmp.fileupload.hint"))</p>
+        <p>@Html(Messages.get("gmp.fileupload.hint", routes.AssetsController.at("csv/GMP_template_and_instructions.zip")))</p>
 
     </div>
     <label for="fileToUpload" class="hidden">@Html(Messages.get("gmp.fileupload.header"))</label>
