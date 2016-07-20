@@ -28,7 +28,7 @@
             }
 
             @if(globalErrors.hasPath(s"$globalErrorCode.reason")){
-                <div class="panel-indent" id="global-error-reason">@Messages.get(globalErrors.getString(s"$globalErrorCode.reason"))</div>
+                <div id="global-error-reason">@Messages.get(globalErrors.getString(s"$globalErrorCode.reason"))</div>
             }
         </div>
 
