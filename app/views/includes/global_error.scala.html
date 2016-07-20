@@ -28,7 +28,7 @@
             }
 
             @if(globalErrors.hasPath(s"$globalErrorCode.reason")){
-                <div id="global-error-reason">@Messages.get(globalErrors.getString(s"$globalErrorCode.reason"))</div>
+                <div class="error-list" id="global-error-reason">@Messages.get(globalErrors.getString(s"$globalErrorCode.reason"))</div>
             }
         </div>
 

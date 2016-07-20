@@ -41,7 +41,7 @@
     margin-top: 30px;
 }
 
-#multi-error-grid a.error-list {
+.error-list {
     color: #B10E1E;
 }
 
