@@ -162,19 +162,27 @@ case class CalculationResponse(
       }
 
       case 2 | 4 => {
-        if(revaluationRate.isDefined)
-          Some(Messages("gmp.chosen_rate.subheader", Messages(s"gmp.revaluation_rate.type_${calculationPeriods.head.revaluationRate}")) + ".")
+        if(calculationPeriods.head.endDate.isBefore(LocalDate.now())){
+          if(revaluationRate.isDefined)
+            Some(Messages("gmp.chosen_rate.subheader", Messages(s"gmp.revaluation_rate.type_${calculationPeriods.head.revaluationRate}")) + ".")
+          else
+            Some(Messages("gmp.held_rate.subheader", Messages(s"gmp.revaluation_rate.type_${calculationPeriods.head.revaluationRate}")) + ".")
+        }
         else
-          Some(Messages("gmp.held_rate.subheader", Messages(s"gmp.revaluation_rate.type_${calculationPeriods.head.revaluationRate}")) + ".")
+          None
       }
 
       case 3 => {
         if(calculationPeriods.head.inflationProofBeyondDod == Some(0) && dodInSameTaxYearAsRevaluationDate)
           Some(Messages("gmp.no_inflation.subheader"))
-        else if (revaluationRate.isDefined)
-          Some(Messages("gmp.chosen_rate.subheader", Messages(s"gmp.revaluation_rate.type_${calculationPeriods.head.revaluationRate}")) + ".")
+        else if(calculationPeriods.head.endDate.isBefore(LocalDate.now())){
+          if(revaluationRate.isDefined)
+            Some(Messages("gmp.chosen_rate.subheader", Messages(s"gmp.revaluation_rate.type_${calculationPeriods.head.revaluationRate}")) + ".")
+          else
+            Some(Messages("gmp.held_rate.subheader", Messages(s"gmp.revaluation_rate.type_${calculationPeriods.head.revaluationRate}")) + ".")
+        }
         else
-          Some(Messages("gmp.held_rate.subheader", Messages(s"gmp.revaluation_rate.type_${calculationPeriods.head.revaluationRate}")) + ".")
+          None
       }
 
       case _ => None

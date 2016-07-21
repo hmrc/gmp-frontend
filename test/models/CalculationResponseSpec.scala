@@ -356,46 +356,76 @@ class CalculationResponseSpec extends PlaySpec with MockitoSugar with OneServerP
         response.subheader must be(Some("Revaluation rate: S148."))
       }
 
-      "display correct subheader for gmp payable age when revaluation rate not specified" in {
+      "display correct subheader for gmp payable age when revaluation rate not specified and member not in scheme" in {
         val response = CalculationResponse("John Johnson", nino, "S1234567T", None, Some(new LocalDate(2000, 11, 11)),
           List(CalculationPeriod(Some(new LocalDate(2015, 11, 10)),new LocalDate(2015, 11, 10), "0.00", "0.00", 1, 0, Some(1)),
             CalculationPeriod(Some(new LocalDate(2010, 11, 10)),new LocalDate(2011, 11, 10), "0.00", "0.00", 1, 0, Some(1))), 0, None, None, None, false, CalculationType.PAYABLE_AGE.toInt)
         response.subheader must be(Some(Messages("gmp.held_rate.subheader", RevaluationRate.S148.toUpperCase + ".")))
       }
 
-      "display correct subheader for state pension age when revaluation rate not specified" in {
+      "display correct subheader for state pension age when revaluation rate not specified and member not in scheme" in {
         val response = CalculationResponse("John Johnson", nino, "S1234567T", None, Some(new LocalDate(2000, 11, 11)),
           List(CalculationPeriod(Some(new LocalDate(2015, 11, 10)),new LocalDate(2015, 11, 10), "0.00", "0.00", 2, 0, Some(1)),
             CalculationPeriod(Some(new LocalDate(2010, 11, 10)),new LocalDate(2011, 11, 10), "0.00", "0.00", 2, 0, Some(1))), 0, None, None, None, false, CalculationType.SPA.toInt)
         response.subheader must be(Some(Messages("gmp.held_rate.subheader", RevaluationRate.FIXED.capitalize + ".")))
       }
 
-      "display correct subheader for survivor when revaluation rate not specified" in {
+      "display correct subheader for survivor when revaluation rate not specified and member not in scheme" in {
         val response = CalculationResponse("John Johnson", nino, "S1234567T", None, Some(new LocalDate(2000, 11, 11)),
           List(CalculationPeriod(Some(new LocalDate(2015, 11, 10)),new LocalDate(2015, 11, 10), "0.00", "0.00", 1, 0, Some(1)),
             CalculationPeriod(Some(new LocalDate(2010, 11, 10)),new LocalDate(2011, 11, 10), "0.00", "0.00", 1, 0, Some(1))), 0, None, None, None, false, CalculationType.SURVIVOR.toInt)
         response.subheader must be(Some(Messages("gmp.held_rate.subheader", RevaluationRate.S148.toUpperCase + ".")))
       }
 
-      "display correct subheader for gmp payable age when revaluation rate is specified" in {
+      "display correct subheader for gmp payable age when revaluation rate is specified and member not in scheme" in {
         val response = CalculationResponse("John Johnson", nino, "S1234567T", Some(RevaluationRate.HMRC), Some(new LocalDate(2000, 11, 11)),
           List(CalculationPeriod(Some(new LocalDate(2015, 11, 10)),new LocalDate(2015, 11, 10), "0.00", "0.00", 1, 0, Some(1)),
             CalculationPeriod(Some(new LocalDate(2010, 11, 10)),new LocalDate(2011, 11, 10), "0.00", "0.00", 1, 0, Some(1))), 0, None, None, None, false, CalculationType.PAYABLE_AGE.toInt)
         response.subheader must be(Some(Messages("gmp.chosen_rate.subheader", RevaluationRate.S148.toUpperCase + ".")))
       }
 
-      "display correct subheader for state pension age when revaluation rate is specified" in {
+      "display correct subheader for state pension age when revaluation rate is specified and member not in scheme" in {
         val response = CalculationResponse("John Johnson", nino, "S1234567T", Some(RevaluationRate.S148), Some(new LocalDate(2000, 11, 11)),
           List(CalculationPeriod(Some(new LocalDate(2015, 11, 10)),new LocalDate(2015, 11, 10), "0.00", "0.00", 1, 0, Some(1)),
             CalculationPeriod(Some(new LocalDate(2010, 11, 10)),new LocalDate(2011, 11, 10), "0.00", "0.00", 2, 0, Some(1))), 0, None, None, None, false, CalculationType.SPA.toInt)
         response.subheader must be(Some(Messages("gmp.chosen_rate.subheader", RevaluationRate.S148.toUpperCase + ".")))
       }
 
-      "display correct subheader for survivor when revaluation rate is specified" in {
+      "display correct subheader for survivor when revaluation rate is specified and member not in scheme" in {
         val response = CalculationResponse("John Johnson", nino, "S1234567T", Some(RevaluationRate.HMRC), Some(new LocalDate(2000, 11, 11)),
           List(CalculationPeriod(Some(new LocalDate(2015, 11, 10)),new LocalDate(2015, 11, 10), "0.00", "0.00", 1, 0, Some(1)),
             CalculationPeriod(Some(new LocalDate(2010, 11, 10)),new LocalDate(2011, 11, 10), "0.00", "0.00", 1, 0, Some(1))), 0, None, None, None, false, CalculationType.SURVIVOR.toInt)
         response.subheader must be(Some(Messages("gmp.chosen_rate.subheader", RevaluationRate.S148.toUpperCase + ".")))
+      }
+
+      "display correct subheader when gmp payable age and member still in scheme" in {
+        val response = CalculationResponse("John Johnson", nino, "S1234567T", None, Some(new LocalDate(2000, 11, 11)),
+          List(
+            CalculationPeriod(Some(new LocalDate(2015, 11, 10)),new LocalDate(2017, 11, 10), "0.00", "0.00", 1, 0, Some(1)),
+            CalculationPeriod(Some(new LocalDate(2010, 11, 10)),new LocalDate(2011, 11, 10), "0.00", "0.00", 1, 0, Some(1))
+          ), 0, None, None, None, false, CalculationType.PAYABLE_AGE.toInt)
+
+        response.subheader must be (None)
+      }
+
+      "display correct subheader when state age and member still in scheme" in {
+        val response = CalculationResponse("John Johnson", nino, "S1234567T", None, Some(new LocalDate(2000, 11, 11)),
+          List(
+            CalculationPeriod(Some(new LocalDate(2015, 11, 10)),new LocalDate(2017, 11, 10), "0.00", "0.00", 1, 0, Some(1)),
+            CalculationPeriod(Some(new LocalDate(2010, 11, 10)),new LocalDate(2011, 11, 10), "0.00", "0.00", 1, 0, Some(1))
+          ), 0, None, None, None, false, CalculationType.SPA.toInt)
+
+        response.subheader must be (None)
+      }
+
+      "display correct subheader when survivor and member still in scheme" in {
+        val response = CalculationResponse("John Johnson", nino, "S1234567T", None, Some(new LocalDate(2000, 11, 11)),
+          List(
+            CalculationPeriod(Some(new LocalDate(2015, 11, 10)),new LocalDate(2017, 11, 10), "0.00", "0.00", 1, 0, Some(1)),
+            CalculationPeriod(Some(new LocalDate(2010, 11, 10)),new LocalDate(2011, 11, 10), "0.00", "0.00", 1, 0, Some(1))
+          ), 0, None, None, None, false, CalculationType.SURVIVOR.toInt)
+
+        response.subheader must be (None)
       }
     }
 
