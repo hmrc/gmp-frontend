@@ -174,13 +174,17 @@ case class CalculationResponse(
           determineRevalRateSubheader
         else None
       }
-        
+
     }
   }
 
   private def determineRevalRateSubheader: Some[String] = {
-    if (revaluationRate.isDefined) Some(Messages("gmp.chosen_rate.subheader", Messages(s"gmp.revaluation_rate.type_${revaluationRate.get}")) + " (" + Messages(s"gmp.revaluation_rate.type_${calculationPeriods.head.revaluationRate}") + ").")
-    else Some(Messages("gmp.held_rate.subheader", Messages(s"gmp.revaluation_rate.type_${calculationPeriods.head.revaluationRate}")) + ".")
+    if (revaluationRate.isDefined && revaluationRate == Some("0"))
+      Some(Messages("gmp.chosen_rate.subheader", Messages(s"gmp.revaluation_rate.type_${revaluationRate.get}")) + " (" + Messages(s"gmp.revaluation_rate.type_${calculationPeriods.head.revaluationRate}") + ").")
+    else if(revaluationRate.isDefined)
+      Some(Messages("gmp.chosen_rate.subheader", Messages(s"gmp.revaluation_rate.type_${calculationPeriods.head.revaluationRate}")) + ".")
+    else
+      Some(Messages("gmp.held_rate.subheader", Messages(s"gmp.revaluation_rate.type_${calculationPeriods.head.revaluationRate}")) + ".")
   }
 
   def showRateColumn: Boolean = calculationPeriods.size > 1 && revaluationRate == Some("0")
