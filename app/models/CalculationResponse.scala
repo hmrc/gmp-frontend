@@ -139,31 +139,48 @@ case class CalculationResponse(
   }
 
   def subheader: Option[String] = {
-    if (calcType == CalculationType.DOL.toInt && calculationPeriods.length > 1) {
-      Some(Messages("gmp.notrevalued.multi.subheader"))
-    } else if (calcType == CalculationType.DOL.toInt ||
-              (calcType == CalculationType.REVALUATION.toInt && revaluationUnsuccessful)) {
-      Some(Messages("gmp.notrevalued.subheader"))
-    } else if(calcType == CalculationType.SURVIVOR.toInt &&
-              calculationPeriods.head.inflationProofBeyondDod == Some(0) &&
-              dodInSameTaxYearAsRevaluationDate) {
-      Some(Messages("gmp.no_inflation.subheader"))
+    calcType match {
+
+      case 0 => {
+        if(calculationPeriods.length > 1)
+          Some(Messages("gmp.notrevalued.multi.subheader"))
+        else
+          Some(Messages("gmp.notrevalued.subheader"))
+      }
+
+      case 1 => {
+        if(revaluationUnsuccessful)
+          Some(Messages("gmp.notrevalued.subheader"))
+        else if(revaluationRate.isDefined){
+          if (revaluationRate == Some("0"))
+            Some(Messages("gmp.reval_rate.subheader", Messages(s"gmp.revaluation_rate.type_${revaluationRate.get}")) + " (" + Messages(s"gmp.revaluation_rate.type_${calculationPeriods.head.revaluationRate}") + ").")
+          else
+            Some(Messages("gmp.reval_rate.subheader", Messages(s"gmp.revaluation_rate.type_${revaluationRate.get}")) + ".")
+        }
+        else None
+      }
+
+      case 2 | 4 => {
+        if(calculationPeriods.head.endDate.isBefore(LocalDate.now()))
+          determineRevalRateSubheader
+        else
+          None
+      }
+
+      case 3 => {
+        if(calculationPeriods.head.inflationProofBeyondDod == Some(0) && dodInSameTaxYearAsRevaluationDate)
+          Some(Messages("gmp.no_inflation.subheader"))
+        else if(calculationPeriods.head.endDate.isBefore(LocalDate.now()))
+          determineRevalRateSubheader
+        else None
+      }
+        
     }
-    else
-      None
   }
 
-  def revaluationRateSubHeader: Option[String] = {
-    if (revaluationRate.isDefined && !revaluationUnsuccessful) {
-      if (revaluationRate == Some("0")){
-        Some(Messages("gmp.reval_rate.subheader", Messages(s"gmp.revaluation_rate.type_${revaluationRate.get}")) + " (" + Messages(s"gmp.revaluation_rate.type_${calculationPeriods.head.revaluationRate}")+ ").")
-      }
-      else {
-        Some(Messages("gmp.reval_rate.subheader", Messages(s"gmp.revaluation_rate.type_${revaluationRate.get}")) + ".")
-      }
-    }
-    else
-      None
+  private def determineRevalRateSubheader: Some[String] = {
+    if (revaluationRate.isDefined) Some(Messages("gmp.chosen_rate.subheader", Messages(s"gmp.revaluation_rate.type_${revaluationRate.get}")) + " (" + Messages(s"gmp.revaluation_rate.type_${calculationPeriods.head.revaluationRate}") + ").")
+    else Some(Messages("gmp.held_rate.subheader", Messages(s"gmp.revaluation_rate.type_${calculationPeriods.head.revaluationRate}")) + ".")
   }
 
   def showRateColumn: Boolean = calculationPeriods.size > 1 && revaluationRate == Some("0")

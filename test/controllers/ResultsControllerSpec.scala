@@ -550,7 +550,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
           }
         }
 
-        "show the actual rate in the single period results header, when hmrc held rate" in {
+        "show the actual rate in the single period results, when hmrc held rate" in {
           when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession.copy(rate = Some("0")))))
           when(mockCalculationConnector.calculateSingle(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(validRevalCalculationResponseSinglePeriod))
           withAuthorisedUser { request =>

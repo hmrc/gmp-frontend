@@ -325,6 +325,8 @@ gmp.revaluation.dateoftransfer = date of transfer
 gmp.revaluation.dateofdivorce = date of divorce
 gmp.results.survivior.disclaimer = This amount is subject to qualifying conditions of the <a href="https://www.gov.uk/browse/benefits/bereavement">type of bereavement benefit</a> the surviving partner is entitled to.
 gmp.reval_rate.subheader = Revaluation rate: {0}
+gmp.held_rate.subheader = Revaluation rate held for this SCON: {0}
+gmp.chosen_rate.subheader = Revaluation rate chosen: {0}
 
 # Scenarios
 gmp.scenarios.title = Choose what type of calculation you need for this member
