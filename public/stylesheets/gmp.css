@@ -353,3 +353,11 @@ caption {
 .table-caption {
     font-size: 19px;
 }
+
+#global-results-grid .list-number {
+    margin: 0;
+}
+
+#global-results-grid .list-number li {
+    list-style-position: inside;
+}
