@@ -392,10 +392,10 @@ class CalculationResponseSpec extends PlaySpec with MockitoSugar with OneServerP
       }
 
       "display correct subheader for survivor when revaluation rate is specified and member not in scheme" in {
-        val response = CalculationResponse("John Johnson", nino, "S1234567T", Some(RevaluationRate.HMRC), Some(new LocalDate(2000, 11, 11)),
+        val response = CalculationResponse("John Johnson", nino, "S1234567T", Some("0"), Some(new LocalDate(2000, 11, 11)),
           List(CalculationPeriod(Some(new LocalDate(2015, 11, 10)),new LocalDate(2015, 11, 10), "0.00", "0.00", 1, 0, Some(1)),
             CalculationPeriod(Some(new LocalDate(2010, 11, 10)),new LocalDate(2011, 11, 10), "0.00", "0.00", 1, 0, Some(1))), 0, None, None, None, false, CalculationType.SURVIVOR.toInt)
-        response.subheader must be(Some(Messages("gmp.chosen_rate.subheader", RevaluationRate.S148.toUpperCase + ".")))
+        response.subheader must be(Some(Messages("gmp.chosen_rate.subheader", "HMRC held rate (S148).")))
       }
 
       "display correct subheader when gmp payable age and member still in scheme" in {

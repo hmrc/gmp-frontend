@@ -177,7 +177,7 @@ case class CalculationResponse(
           Some(Messages("gmp.no_inflation.subheader"))
         else if(calculationPeriods.head.endDate.isBefore(LocalDate.now())){
           if(revaluationRate.isDefined)
-            Some(Messages("gmp.chosen_rate.subheader", Messages(s"gmp.revaluation_rate.type_${calculationPeriods.head.revaluationRate}")) + ".")
+            Some(Messages("gmp.chosen_rate.subheader", Messages(s"gmp.revaluation_rate.type_${revaluationRate.get}")) + " (" + Messages(s"gmp.revaluation_rate.type_${calculationPeriods.head.revaluationRate}") + ").")
           else
             Some(Messages("gmp.held_rate.subheader", Messages(s"gmp.revaluation_rate.type_${calculationPeriods.head.revaluationRate}")) + ".")
         }
