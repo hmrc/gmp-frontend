@@ -165,14 +165,16 @@ case class CalculationResponse(
         if(revaluationRate.isDefined)
           Some(Messages("gmp.chosen_rate.subheader", Messages(s"gmp.revaluation_rate.type_${calculationPeriods.head.revaluationRate}")) + ".")
         else
-          Some(Messages("gmp.nonrevalued.nondol.nonnreval.subheader", Messages(s"gmp.revaluation_rate.type_${calculationPeriods.head.revaluationRate}")) + ".")
+          Some(Messages("gmp.held_rate.subheader", Messages(s"gmp.revaluation_rate.type_${calculationPeriods.head.revaluationRate}")) + ".")
       }
 
       case 3 => {
         if(calculationPeriods.head.inflationProofBeyondDod == Some(0) && dodInSameTaxYearAsRevaluationDate)
           Some(Messages("gmp.no_inflation.subheader"))
+        else if (revaluationRate.isDefined)
+          Some(Messages("gmp.chosen_rate.subheader", Messages(s"gmp.revaluation_rate.type_${calculationPeriods.head.revaluationRate}")) + ".")
         else
-          None
+          Some(Messages("gmp.held_rate.subheader", Messages(s"gmp.revaluation_rate.type_${calculationPeriods.head.revaluationRate}")) + ".")
       }
 
       case _ => None
