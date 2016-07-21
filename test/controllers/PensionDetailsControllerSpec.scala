@@ -77,7 +77,7 @@ class PensionDetailsControllerSpec extends PlaySpec with OneServerPerSuite with 
     "be authorised" in {
       getPensionDetails() { result =>
         status(result) must equal(SEE_OTHER)
-        redirectLocation(result).get must include("/account/sign-in")
+        redirectLocation(result).get must include("/gg/sign-in")
       }
     }
 
@@ -113,7 +113,7 @@ class PensionDetailsControllerSpec extends PlaySpec with OneServerPerSuite with 
     "be authorised" in {
       postPensionDetails() { result =>
         status(result) must equal(SEE_OTHER)
-        redirectLocation(result).get must include("/account/sign-in")
+        redirectLocation(result).get must include("/gg/sign-in")
       }
     }
 

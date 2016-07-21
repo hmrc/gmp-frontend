@@ -126,7 +126,7 @@ class GmpRegimeSpec extends PlaySpec with OneServerPerSuite with MockitoSugar wi
       "redirect to the gg sign-in page" in {
         val result = TestController.testRoute.apply(FakeRequest())
         status(result) must be(SEE_OTHER)
-        redirectLocation(result).get must include("/account/sign-in")
+        redirectLocation(result).get must include("/gg/sign-in")
       }
     }
   }

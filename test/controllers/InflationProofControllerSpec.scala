@@ -62,7 +62,7 @@ class InflationProofControllerSpec extends PlaySpec with OneServerPerSuite with 
       "be authorised" in {
         val result = TestInflationProofController.get.apply(FakeRequest())
         status(result) must equal(SEE_OTHER)
-        redirectLocation(result).get must include("/account/sign-in")
+        redirectLocation(result).get must include("/gg/sign-in")
       }
 
       "authorised users" must {
@@ -84,7 +84,7 @@ class InflationProofControllerSpec extends PlaySpec with OneServerPerSuite with 
       "be authorised" in {
         val result = TestInflationProofController.post.apply(FakeRequest())
         status(result) must equal(SEE_OTHER)
-        redirectLocation(result).get must include("/account/sign-in")
+        redirectLocation(result).get must include("/gg/sign-in")
       }
 
       "authorised users" must {
@@ -159,7 +159,7 @@ class InflationProofControllerSpec extends PlaySpec with OneServerPerSuite with 
       "be authorised" in {
         val result = TestInflationProofController.back.apply(FakeRequest())
         status(result) must equal(SEE_OTHER)
-        redirectLocation(result).get must include("/account/sign-in")
+        redirectLocation(result).get must include("/gg/sign-in")
       }
 
       "throw an exception when session not fetched" in {

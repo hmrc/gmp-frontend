@@ -64,7 +64,7 @@ class MemberDetailsControllerSpec extends PlaySpec with OneServerPerSuite with M
     "be authorised" in {
       val result = TestMemberDetailsController.get.apply(FakeRequest())
       status(result) must equal(SEE_OTHER)
-      redirectLocation(result).get must include("/account/sign-in")
+      redirectLocation(result).get must include("/gg/sign-in")
     }
 
     "authenticated users" must {
@@ -108,7 +108,7 @@ class MemberDetailsControllerSpec extends PlaySpec with OneServerPerSuite with M
     "be authorised" in {
       val result = TestMemberDetailsController.back.apply(FakeRequest())
       status(result) must equal(SEE_OTHER)
-      redirectLocation(result).get must include("/account/sign-in")
+      redirectLocation(result).get must include("/gg/sign-in")
     }
 
 
@@ -131,7 +131,7 @@ class MemberDetailsControllerSpec extends PlaySpec with OneServerPerSuite with M
     "be authorised" in {
       val result = TestMemberDetailsController.post.apply(FakeRequest())
       status(result) must equal(SEE_OTHER)
-      redirectLocation(result).get must include("/account/sign-in")
+      redirectLocation(result).get must include("/gg/sign-in")
     }
 
     "authenticated users" must {

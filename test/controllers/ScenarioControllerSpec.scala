@@ -54,7 +54,7 @@ class ScenarioControllerSpec extends PlaySpec with OneServerPerSuite with Mockit
     "be authorised" in {
       getCalculationReason() { result =>
         status(result) must equal(SEE_OTHER)
-        redirectLocation(result).get must include("/account/sign-in")
+        redirectLocation(result).get must include("/gg/sign-in")
       }
     }
 
@@ -101,7 +101,7 @@ class ScenarioControllerSpec extends PlaySpec with OneServerPerSuite with Mockit
     "be authorised" in {
       val result = TestScenarioController.back.apply(FakeRequest())
       status(result) must equal(SEE_OTHER)
-      redirectLocation(result).get must include("/account/sign-in")
+      redirectLocation(result).get must include("/gg/sign-in")
     }
 
     "redirect when authorised" in {
@@ -134,7 +134,7 @@ class ScenarioControllerSpec extends PlaySpec with OneServerPerSuite with Mockit
     "be authorised" in {
       postCalculationReason() { result =>
         status(result) must equal(SEE_OTHER)
-        redirectLocation(result).get must include("/account/sign-in")
+        redirectLocation(result).get must include("/gg/sign-in")
       }
     }
 

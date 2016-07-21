@@ -39,7 +39,7 @@ class ExternalUrlsSpec extends PlaySpec with OneServerPerSuite {
     }
 
     "have signIn " in {
-      ExternalUrls.signIn must be(s"""http://localhost:9025/account/sign-in?continue=http://localhost:9941/guaranteed-minimum-pension/dashboard""")
+      ExternalUrls.signIn must be(s"""http://localhost:9025/gg/sign-in?continue=http://localhost:9941/guaranteed-minimum-pension/dashboard""")
     }
 
     "have signoutPath" in {
@@ -47,7 +47,7 @@ class ExternalUrlsSpec extends PlaySpec with OneServerPerSuite {
     }
 
     "have signout" in {
-      ExternalUrls.signOut must be(s"""http://localhost:9025/account/sign-out?continue=http://localhost:9941/guaranteed-minimum-pension""")
+      ExternalUrls.signOut must be(s"""http://localhost:9025/gg/sign-out?continue=http://localhost:9941/guaranteed-minimum-pension""")
     }
   }
   

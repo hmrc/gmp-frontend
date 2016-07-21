@@ -25,7 +25,6 @@
         <div class="global-error">
 
             <h1 id="part-problem">@{ Messages.get("gmp.part_problem") }</h1>
-            <br/>
 
             <ul>
                 @for((period, count) <- calculationResponse.calculationPeriods.zipWithIndex) {
@@ -38,13 +37,13 @@
                 </li>
                 }
             </ul>
-            <br/>
-            @includes.multi_results_table(calculationResponse)
-            <div>
-                <h2 id="what-now">@Messages.get("gmp.what_now")</h2>
+        </div>
+        <br/>
+        @includes.multi_results_table(calculationResponse)
+        <div>
+            <h2 id="what-now">@Messages.get("gmp.what_now")</h2>
 
-                <p id="multi-solution">@Messages.get("gmp.queryhandling.resultsmessage")</p>
-            </div>
+            <p id="multi-solution">@Messages.get("gmp.queryhandling.resultsmessage")</p>
         </div>
     </div>
 

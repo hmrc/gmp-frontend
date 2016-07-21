@@ -67,7 +67,7 @@ class RevaluationControllerSpec extends PlaySpec with OneServerPerSuite with Moc
     "be authorised" in {
       get() { result =>
         status(result) must equal(SEE_OTHER)
-        redirectLocation(result).get must include("/account/sign-in")
+        redirectLocation(result).get must include("/gg/sign-in")
       }
     }
 
@@ -105,7 +105,7 @@ class RevaluationControllerSpec extends PlaySpec with OneServerPerSuite with Moc
     "be authorised" in {
       val result = TestRevaluationController.get.apply(FakeRequest())
       status(result) must equal(SEE_OTHER)
-      redirectLocation(result).get must include("/account/sign-in")
+      redirectLocation(result).get must include("/gg/sign-in")
     }
 
     "authenticated users" must {
@@ -140,7 +140,7 @@ class RevaluationControllerSpec extends PlaySpec with OneServerPerSuite with Moc
     "be authorised" in {
       val result = TestRevaluationController.get.apply(FakeRequest())
       status(result) must equal(SEE_OTHER)
-      redirectLocation(result).get must include("/account/sign-in")
+      redirectLocation(result).get must include("/gg/sign-in")
     }
 
     "authenticated users" must {

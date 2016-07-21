@@ -19,6 +19,12 @@
 @import play.i18n._
 @import config.ApplicationConfig.globalErrors
 
+@queryHandlingHeader = {
+    @if(globalErrors.hasPath(s"$globalErrorCode.solution")){
+        <h2 class="error-h2" id="global-query-handling-header">@{ Messages.get("gmp.errors.query_handling.header") }</h2>
+    }
+}
+
 <div class="grid" id="global-results-grid">
     <div class="grid-2-3">
 
@@ -28,27 +34,25 @@
             }
 
             @if(globalErrors.hasPath(s"$globalErrorCode.reason")){
-                <div class="panel-indent" id="global-error-reason">@Messages.get(globalErrors.getString(s"$globalErrorCode.reason"))</div>
+                <div class="error-list" id="global-error-reason">@Messages.get(globalErrors.getString(s"$globalErrorCode.reason"))</div>
             }
-
-          @if(globalErrors.hasPath(s"$globalErrorCode.solution")){
-            <div>
-
-                <h2 class="error-h2" id="global-what-now">@Messages.get("gmp.what_now")</h2>
-
-                @Html(Messages.get(globalErrors.getString(s"$globalErrorCode.solution")))
-
-            </div>
-          }
         </div>
+
+        @if(globalErrors.hasPath(s"$globalErrorCode.solution")){
+            <div>
+                <h2 class="error-h2" id="global-what-now">@Messages.get("gmp.what_now")</h2>
+                @Html(Messages.get(globalErrors.getString(s"$globalErrorCode.solution")))
+            </div>
+        }
 
         @if(globalErrors.hasPath(s"$globalErrorCode.also")){
             <br/>
-            <span id="query-handling">@Html(Messages.get(globalErrors.getString(s"$globalErrorCode.also")))</span>
+            @queryHandlingHeader
+            <p id="query-handling">@Html(Messages.get(globalErrors.getString(s"$globalErrorCode.also")))</p>
         }
         @if(globalErrors.hasPath(s"$globalErrorCode.help_link")){
             <br/>
-            <span id="query-handling-link">@Html(Messages.get(globalErrors.getString(s"$globalErrorCode.help_link")))</span>
+            <p id="query-handling-link">@Html(Messages.get(globalErrors.getString(s"$globalErrorCode.help_link")))</p>
         }
 
     </div>

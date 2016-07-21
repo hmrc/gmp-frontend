@@ -58,7 +58,7 @@ class BulkResultsControllerSpec extends PlaySpec with OneServerPerSuite with Moc
 
         val result = TestBulkResultsController.get("",comingFromDashboard).apply(FakeRequest())
         status(result) must equal(SEE_OTHER)
-        redirectLocation(result).get must include("/account/sign-in")
+        redirectLocation(result).get must include("/gg/sign-in")
       }
 
       "when authorised" must {
@@ -123,7 +123,7 @@ class BulkResultsControllerSpec extends PlaySpec with OneServerPerSuite with Moc
 
         val result = TestBulkResultsController.getResultsAsCsv("","").apply(FakeRequest())
         status(result) must equal(SEE_OTHER)
-        redirectLocation(result).get must include("/account/sign-in")
+        redirectLocation(result).get must include("/gg/sign-in")
       }
 
       "download the results summary in csv format" in {
@@ -146,7 +146,7 @@ class BulkResultsControllerSpec extends PlaySpec with OneServerPerSuite with Moc
 
         val result = TestBulkResultsController.getContributionsAndEarningsAsCsv("").apply(FakeRequest())
         status(result) must equal(SEE_OTHER)
-        redirectLocation(result).get must include("/account/sign-in")
+        redirectLocation(result).get must include("/gg/sign-in")
       }
 
       "download the contributions and earnings in csv format" in {
