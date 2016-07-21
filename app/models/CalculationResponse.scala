@@ -157,17 +157,12 @@ case class CalculationResponse(
           else
             Some(Messages("gmp.reval_rate.subheader", Messages(s"gmp.revaluation_rate.type_${revaluationRate.get}")) + ".")
         }
-        else
-          None
+        else None
       }
 
       case 2 | 4 => {
-        if(calculationPeriods.head.endDate.isBefore(LocalDate.now())){
-          if(revaluationRate.isDefined)
-            Some(Messages("gmp.chosen_rate.subheader", Messages(s"gmp.revaluation_rate.type_${revaluationRate.get}")) + " (" + Messages(s"gmp.revaluation_rate.type_${calculationPeriods.head.revaluationRate}") + ").")
-          else
-            Some(Messages("gmp.held_rate.subheader", Messages(s"gmp.revaluation_rate.type_${calculationPeriods.head.revaluationRate}")) + ".")
-        }
+        if(calculationPeriods.head.endDate.isBefore(LocalDate.now()))
+          determineRevalRateSubheader
         else
           None
       }
@@ -175,17 +170,17 @@ case class CalculationResponse(
       case 3 => {
         if(calculationPeriods.head.inflationProofBeyondDod == Some(0) && dodInSameTaxYearAsRevaluationDate)
           Some(Messages("gmp.no_inflation.subheader"))
-        else if(calculationPeriods.head.endDate.isBefore(LocalDate.now())){
-          if(revaluationRate.isDefined)
-            Some(Messages("gmp.chosen_rate.subheader", Messages(s"gmp.revaluation_rate.type_${revaluationRate.get}")) + " (" + Messages(s"gmp.revaluation_rate.type_${calculationPeriods.head.revaluationRate}") + ").")
-          else
-            Some(Messages("gmp.held_rate.subheader", Messages(s"gmp.revaluation_rate.type_${calculationPeriods.head.revaluationRate}")) + ".")
-        }
-        else
-          None
+        else if(calculationPeriods.head.endDate.isBefore(LocalDate.now()))
+          determineRevalRateSubheader
+        else None
       }
-
+        
     }
+  }
+
+  private def determineRevalRateSubheader: Some[String] = {
+    if (revaluationRate.isDefined) Some(Messages("gmp.chosen_rate.subheader", Messages(s"gmp.revaluation_rate.type_${revaluationRate.get}")) + " (" + Messages(s"gmp.revaluation_rate.type_${calculationPeriods.head.revaluationRate}") + ").")
+    else Some(Messages("gmp.held_rate.subheader", Messages(s"gmp.revaluation_rate.type_${calculationPeriods.head.revaluationRate}")) + ".")
   }
 
   def showRateColumn: Boolean = calculationPeriods.size > 1 && revaluationRate == Some("0")
