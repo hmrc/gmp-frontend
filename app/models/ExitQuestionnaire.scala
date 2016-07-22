@@ -20,7 +20,10 @@ import play.api.libs.json.Json
 
 case class ExitQuestionnaire (serviceDifficulty: Option[String],
                               serviceFeel: Option[String],
-                              comments: Option[String])
+                              comments: Option[String],
+                              fullName: Option[String],
+                              email: Option[String],
+                              phoneNumber: Option[String])
 
 object ExitQuestionnaire {
   val VERY_SATISFIED = "very_satisfied"

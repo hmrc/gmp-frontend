@@ -361,3 +361,7 @@ caption {
 #global-results-grid .list-number li {
     list-style-position: inside;
 }
+
+div.noMarginBottom {
+  margin-bottom: 0px;
+}

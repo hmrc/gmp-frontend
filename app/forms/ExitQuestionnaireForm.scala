@@ -27,7 +27,10 @@ object ExitQuestionnaireForm {
     mapping(
       "serviceDifficulty" -> optional(text),
       "serviceFeel" -> optional(text),
-      "comments" -> optional(text(maxLength = MAX_COMMENT_LENGTH))
+      "comments" -> optional(text(maxLength = MAX_COMMENT_LENGTH)),
+      "fullName" -> optional(text),
+      "email" -> optional(text),
+      "phoneNumber" -> optional(text)
     )(ExitQuestionnaire.apply)(ExitQuestionnaire.unapply)
   )
 }
