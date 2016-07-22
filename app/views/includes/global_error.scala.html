@@ -48,10 +48,9 @@
         @if(globalErrors.hasPath(s"$globalErrorCode.also")){
             <br/>
             @queryHandlingHeader
-            <p id="query-handling">@Html(Messages.get(globalErrors.getString(s"$globalErrorCode.also")))</p>
+            <div id="query-handling">@Html(Messages.get(globalErrors.getString(s"$globalErrorCode.also")))</div>
         }
         @if(globalErrors.hasPath(s"$globalErrorCode.help_link")){
-            <br/>
             <p id="query-handling-link">@Html(Messages.get(globalErrors.getString(s"$globalErrorCode.help_link")))</p>
         }
 
