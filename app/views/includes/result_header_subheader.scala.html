@@ -14,7 +14,7 @@
 * limitations under the License.
 *@
 
-@(calculationResponse:CalculationResponse)(implicit request: Request[_])
+@(calculationResponse:CalculationResponse, subheader: Option[String])(implicit request: Request[_])
 
 @import play.i18n._
 
@@ -22,9 +22,9 @@
 
     <h1 id="results-header">@calculationResponse.header</h1>
 
-    @if(calculationResponse.subheader.isDefined) {
+    @if(subheader.isDefined) {
       <br/>
-      <div id="subheader" class="panel-indent">@calculationResponse.subheader</div>
+      <div id="subheader" class="panel-indent">@subheader</div>
     }
 
 </div>

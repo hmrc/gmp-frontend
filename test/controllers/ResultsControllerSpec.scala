@@ -53,8 +53,8 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
     override val sessionService = mockSessionService
     override val calculationConnector = mockCalculationConnector
 
-    override def resultsView(response: CalculationResponse)(implicit request: Request[_]): HtmlFormat.Appendable = {
-      views.html.results(applicationConfig = mockApplicationConfig, response)
+    override def resultsView(response: CalculationResponse, subheader: Option[String])(implicit request: Request[_]): HtmlFormat.Appendable = {
+      views.html.results(applicationConfig = mockApplicationConfig, response, subheader)
     }
 
     override def metrics = Metrics
@@ -65,6 +65,8 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
   val gmpSession = GmpSession(MemberDetails(nino, "John", "Johnson"), "S1234567T", CalculationType.REVALUATION, None, None, Leaving(GmpDate(None, None, None), None), None, Dashboard(List()))
   val gmpSession2 = GmpSession(MemberDetails(nino, "John", "Johnson"), "S1234567T", CalculationType.REVALUATION, Some(GmpDate(Some("12"), Some("12"), Some("1999"))), None, Leaving(GmpDate(None, None, None), None), None, Dashboard(List()))
   val gmpSession3 = GmpSession(MemberDetails(nino, "John", "Johnson"), "S1234567T", CalculationType.REVALUATION, Some(GmpDate(Some("12"), Some("12"), Some("1999"))), None, Leaving(GmpDate(None, None, None), None), equalise = Some(1), Dashboard(List()))
+
+  val gmpSessionWithRate = GmpSession(MemberDetails(nino, "John", "Johnson"), "S1234567T", CalculationType.REVALUATION, None, Some("1"), Leaving(GmpDate(None, None, None), None), None, Dashboard(List()))
 
   val gmpSession4Nino = RandomNino.generate
   val gmpSession4NinoSpaced = gmpSession4Nino.grouped(2).foldLeft(new StringBuilder){
@@ -291,12 +293,12 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
           val date = GmpDate(day = Some("24"), month = Some("08"), year = Some("2016"))
 
           when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(
-            Future.successful(Some(gmpSession.copy(revaluationDate = Some(date), rate = Some(RevaluationRate.HMRC),leaving = Leaving(date, Some(Leaving.NO))))))
+            Future.successful(Some(gmpSession.copy(revaluationDate = Some(date), rate = Some(RevaluationRate.HMRC), leaving = Leaving(date, Some(Leaving.NO))))))
 
           when(mockCalculationConnector.calculateSingle(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(validRevaluationMultipleSameTaxYear))
-            withAuthorisedUser { request =>
+          withAuthorisedUser { request =>
             val result = TestResultsController.get.apply(request)
-            contentAsString(result) must not include(Messages("gmp.notrevalued.subheader"))
+            contentAsString(result) must not include (Messages("gmp.notrevalued.subheader"))
             contentAsString(result) must include(Messages("gmp.leaving.revalued.header", "24/08/2016", "HMRC held"))
             contentAsString(result) must include(Messages("--"))
           }
@@ -370,7 +372,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
           when(mockCalculationConnector.calculateSingle(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(survivorRevaluationCalculationResponse))
           withAuthorisedUser { request =>
             val result = TestResultsController.get.apply(request)
-            contentAsString(result) must not include(Messages("gmp.no_inflation.subheader"))
+            contentAsString(result) must not include (Messages("gmp.no_inflation.subheader"))
           }
         }
 
@@ -390,7 +392,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
           withAuthorisedUser { request =>
             val result = TestResultsController.get.apply(request)
             contentAsString(result) must include("Surviving partner&#x27;s GMP entitlement at date of death (01/01/2017)")
-            contentAsString(result) must not include(Messages("gmp.no_inflation.subheader"))
+            contentAsString(result) must not include (Messages("gmp.no_inflation.subheader"))
           }
         }
 
@@ -472,7 +474,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
           (validCalculationResponse.copy(revaluationDate = Some(new LocalDate(2000, 11, 11)), revaluationRate = Some("1"))))
           withAuthorisedUser { request =>
             val result = TestResultsController.get.apply(request)
-            contentAsString(result) must not include("<td id=\"gmp-rate\">")
+            contentAsString(result) must not include ("<td id=\"gmp-rate\">")
             contentAsString(result).replaceAll("&#x27;", "'") must include(Messages("gmp.queryhandling.resultsmessage"))
           }
         }
@@ -515,8 +517,8 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
 
           withAuthorisedUser { request =>
             val result = TestResultsController.get.apply(request)
-            contentAsString(result) must include (Messages("gmp.leaving.scheme.header", formatDate(new LocalDate(2015,7,7))))
-            contentAsString(result) must include (Messages("gmp.notrevalued.subheader"))
+            contentAsString(result) must include(Messages("gmp.leaving.scheme.header", formatDate(new LocalDate(2015, 7, 7))))
+            contentAsString(result) must include(Messages("gmp.notrevalued.subheader"))
           }
         }
 
@@ -533,7 +535,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
         "show the rate column in the multiple results table, when hmrc held rate" in {
           when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
           when(mockCalculationConnector.calculateSingle(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful
-            (validRevalCalculationResponseMultiplePeriod.copy(revaluationRate = Some("0"))))
+          (validRevalCalculationResponseMultiplePeriod.copy(revaluationRate = Some("0"))))
           withAuthorisedUser { request =>
             val result = TestResultsController.get.apply(request)
             contentAsString(result) must include(Messages("gmp.rate"))
@@ -543,10 +545,10 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
         "not show the rate column in the multiple results table, when not hmrc held rate" in {
           when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
           when(mockCalculationConnector.calculateSingle(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful
-            (validRevalCalculationResponseMultiplePeriod.copy(revaluationRate = Some("1"))))
+          (validRevalCalculationResponseMultiplePeriod.copy(revaluationRate = Some("1"))))
           withAuthorisedUser { request =>
             val result = TestResultsController.get.apply(request)
-            contentAsString(result) must not include(Messages("gmp.rate"))
+            contentAsString(result) must not include (Messages("gmp.rate"))
           }
         }
 
@@ -571,7 +573,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
             content must include(Messages(globalErrors.getString("63123.also")))
             content must include(Messages("gmp.entered_details.title"))
             content must not include (Messages("gmp.rate"))
-            content must not include(Messages("gmp.back_to_dashboard"))
+            content must not include (Messages("gmp.back_to_dashboard"))
           }
         }
 
@@ -687,7 +689,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
             content must include(Messages(globalErrors.getString(s"${multiErrorResponse.calculationPeriods.head.errorCode}.reason")))
             content must include(Messages(globalErrors.getString(s"${multiErrorResponse.calculationPeriods.tail.head.errorCode}.reason")))
             content must include(Messages("gmp.queryhandling.resultsmessage"))
-            content must not include(Messages("gmp.back_to_dashboard"))
+            content must not include (Messages("gmp.back_to_dashboard"))
           }
         }
 
@@ -749,6 +751,168 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
 
       }
 
+
+      "subheader" must {
+
+        "show the correct subheader when gmp payable age and member left scheme and rate entered" in {
+          val date = GmpDate(day = Some("24"), month = Some("08"), year = Some("2016"))
+          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSessionWithRate.copy(leaving = Leaving(date, Some(Leaving.YES_AFTER))))))
+          when(mockCalculationConnector.calculateSingle(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(validCalculationResponse.copy(revaluationRate = Some("1"),calcType = 2)))
+          withAuthorisedUser { request =>
+            val result = TestResultsController.get.apply(request)
+            contentAsString(result) must include(Messages("gmp.chosen_rate.subheader", "S148."))
+          }
+        }
+
+        "show the correct subheader when gmp payable age and member left scheme and rate not entered" in {
+          val date = GmpDate(day = Some("24"), month = Some("08"), year = Some("2016"))
+          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSessionWithRate.copy(leaving = Leaving(date, Some(Leaving.YES_AFTER))))))
+          when(mockCalculationConnector.calculateSingle(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(validCalculationResponse.copy(calcType = 2)))
+          withAuthorisedUser { request =>
+            val result = TestResultsController.get.apply(request)
+            contentAsString(result) must include(Messages("gmp.held_rate.subheader", "S148."))
+          }
+        }
+
+        "show no subheader when gmp payable age and member still in scheme" in {
+          val date = GmpDate(day = Some("24"), month = Some("08"), year = Some("2016"))
+          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSessionWithRate.copy(leaving = Leaving(date, Some(Leaving.NO))))))
+          when(mockCalculationConnector.calculateSingle(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(validCalculationResponse.copy(calcType = 2)))
+          withAuthorisedUser { request =>
+            val result = TestResultsController.get.apply(request)
+            contentAsString(result) must not include(Messages("gmp.held_rate.subheader", "S148."))
+          }
+        }
+
+      }
+      //        "display correct subheader for DOL multi period" in {
+      //          val response = CalculationResponse("John Johnson", nino, "S1234567T", None, Some(new LocalDate(2000, 11, 11)),
+      //            List(CalculationPeriod(Some(new LocalDate(2015, 11, 10)),new LocalDate(2015, 11, 10), "0.00", "0.00", 0, 0, None),
+      //              CalculationPeriod(Some(new LocalDate(2010, 11, 10)),new LocalDate(2011, 11, 10), "0.00", "0.00", 0, 0, None)), 0, None, None, None, false, 0)
+      //          contentAsString(result) must include(Messages("gmp.notrevalued.multi.subheader"))
+      //        }
+      //
+      //        "display correct subheader for DOL single period" in {
+      //          val response = CalculationResponse("John Johnson", nino, "S1234567T", None, Some(new LocalDate(2000, 11, 11)), Nil, 0, None, None, None, false, 0)
+      //          response.subheader must be(Some(Messages("gmp.notrevalued.subheader")))
+      //        }
+      //
+      //        "display correct subheader for unsuccessful revaluation" in {
+      //          val response = CalculationResponse("John Johnson", nino, "S1234567T", None, Some(new LocalDate(2000, 11, 11)),
+      //            List(CalculationPeriod(Some(new LocalDate(2015, 11, 10)),new LocalDate(2015, 11, 10), "0.00", "0.00", 0, 0, Some(1)),
+      //              CalculationPeriod(Some(new LocalDate(2010, 11, 10)),new LocalDate(2011, 11, 10), "0.00", "0.00", 0, 0, Some(1))), 0, None, None, None, false, 1)
+      //          response.subheader must be(Some(Messages("gmp.notrevalued.subheader")))
+      //        }
+      //
+      //        "display correct subheader for survivor with inflation proof beyond dod and dod in same tax year" in {
+      //          val response = CalculationResponse("John Johnson", nino, "S1234567T", None, Some(new LocalDate(2010, 11, 11)),
+      //            List(CalculationPeriod(Some(new LocalDate(2015, 11, 10)),new LocalDate(2015, 11, 10), "0.00", "0.00", 0, 0, None, None, None, Some(0), None)), 0, None, None, Some(new LocalDate(2010, 6, 6)), false, 3)
+      //          response.subheader must be(Some(Messages("gmp.no_inflation.subheader")))
+      //        }
+      //
+      //        "display correct rate in subheader for hmrc held rate" in {
+      //          val response = CalculationResponse("John Johnson", nino, "S1234567T", Some("0"), Some(new LocalDate(2010, 11, 11)),
+      //            List(CalculationPeriod(Some(new LocalDate(2015, 11, 10)),new LocalDate(2015, 11, 10), "0.00", "0.00", 1, 0, None)), 0, None, None, None, false, 1)
+      //
+      //          response.subheader must be(Some("Revaluation rate: HMRC held rate (S148)."))
+      //        }
+      //
+      //        "display correct rate in subheader for other rates" in {
+      //          val response = CalculationResponse("John Johnson", nino, "S1234567T", Some("1"), Some(new LocalDate(2010, 11, 11)),
+      //            List(CalculationPeriod(Some(new LocalDate(2015, 11, 10)),new LocalDate(2015, 11, 10), "0.00", "0.00", 1, 0, None)), 0, None, None, None, false, 1)
+      //
+      //          response.subheader must be(Some("Revaluation rate: S148."))
+      //        }
+      //
+      //        "display correct subheader for gmp payable age when revaluation rate not specified and member not in scheme" in {
+      //          val response = CalculationResponse("John Johnson", nino, "S1234567T", None, Some(new LocalDate(2000, 11, 11)),
+      //            List(CalculationPeriod(Some(new LocalDate(2015, 11, 10)),new LocalDate(2015, 11, 10), "0.00", "0.00", 1, 0, Some(1)),
+      //              CalculationPeriod(Some(new LocalDate(2010, 11, 10)),new LocalDate(2011, 11, 10), "0.00", "0.00", 1, 0, Some(1))), 0, None, None, None, false, CalculationType.PAYABLE_AGE.toInt)
+      //          response.subheader must be(Some(Messages("gmp.held_rate.subheader", RevaluationRate.S148.toUpperCase + ".")))
+      //        }
+      //
+      //        "display correct subheader for state pension age when revaluation rate not specified and member not in scheme" in {
+      //          val response = CalculationResponse("John Johnson", nino, "S1234567T", None, Some(new LocalDate(2000, 11, 11)),
+      //            List(CalculationPeriod(Some(new LocalDate(2015, 11, 10)),new LocalDate(2015, 11, 10), "0.00", "0.00", 2, 0, Some(1)),
+      //              CalculationPeriod(Some(new LocalDate(2010, 11, 10)),new LocalDate(2011, 11, 10), "0.00", "0.00", 2, 0, Some(1))), 0, None, None, None, false, CalculationType.SPA.toInt)
+      //          response.subheader must be(Some(Messages("gmp.held_rate.subheader", RevaluationRate.FIXED.capitalize + ".")))
+      //        }
+      //
+      //        "display correct subheader for survivor when revaluation rate not specified and member not in scheme" in {
+      //          val response = CalculationResponse("John Johnson", nino, "S1234567T", None, Some(new LocalDate(2000, 11, 11)),
+      //            List(CalculationPeriod(Some(new LocalDate(2015, 11, 10)),new LocalDate(2015, 11, 10), "0.00", "0.00", 1, 0, Some(1)),
+      //              CalculationPeriod(Some(new LocalDate(2010, 11, 10)),new LocalDate(2011, 11, 10), "0.00", "0.00", 1, 0, Some(1))), 0, None, None, None, false, CalculationType.SURVIVOR.toInt)
+      //          response.subheader must be(Some(Messages("gmp.held_rate.subheader", RevaluationRate.S148.toUpperCase + ".")))
+      //        }
+      //
+      //        "display correct subheader for gmp payable age when revaluation rate is specified and member not in scheme" in {
+      //          val response = CalculationResponse("John Johnson", nino, "S1234567T", Some("0"), Some(new LocalDate(2000, 11, 11)),
+      //            List(CalculationPeriod(Some(new LocalDate(2015, 11, 10)),new LocalDate(2015, 11, 10), "0.00", "0.00", 1, 0, Some(1)),
+      //              CalculationPeriod(Some(new LocalDate(2010, 11, 10)),new LocalDate(2011, 11, 10), "0.00", "0.00", 1, 0, Some(1))), 0, None, None, None, false, CalculationType.PAYABLE_AGE.toInt)
+      //          response.subheader must be(Some(Messages("gmp.chosen_rate.subheader", "HMRC held rate (S148).")))
+      //        }
+      //
+      //        "display correct subheader for state pension age when revaluation rate is specified and member not in scheme" in {
+      //          val response = CalculationResponse("John Johnson", nino, "S1234567T", Some("0"), Some(new LocalDate(2000, 11, 11)),
+      //            List(CalculationPeriod(Some(new LocalDate(2015, 11, 10)),new LocalDate(2015, 11, 10), "0.00", "0.00", 1, 0, Some(1)),
+      //              CalculationPeriod(Some(new LocalDate(2010, 11, 10)),new LocalDate(2011, 11, 10), "0.00", "0.00", 2, 0, Some(1))), 0, None, None, None, false, CalculationType.SPA.toInt)
+      //          response.subheader must be(Some(Messages("gmp.chosen_rate.subheader", "HMRC held rate (S148).")))
+      //        }
+      //
+      //        "display correct subheader for survivor when revaluation rate is specified and member not in scheme" in {
+      //          val response = CalculationResponse("John Johnson", nino, "S1234567T", Some("0"), Some(new LocalDate(2000, 11, 11)),
+      //            List(CalculationPeriod(Some(new LocalDate(2015, 11, 10)),new LocalDate(2015, 11, 10), "0.00", "0.00", 1, 0, Some(1)),
+      //              CalculationPeriod(Some(new LocalDate(2010, 11, 10)),new LocalDate(2011, 11, 10), "0.00", "0.00", 1, 0, Some(1))), 0, None, None, None, false, CalculationType.SURVIVOR.toInt)
+      //          response.subheader must be(Some(Messages("gmp.chosen_rate.subheader", "HMRC held rate (S148).")))
+      //        }
+      //
+      //        "display correct subheader for survivor when non hmrc revaluation rate is specified and member not in scheme" in {
+      //          val response = CalculationResponse("John Johnson", nino, "S1234567T", Some("1"), Some(new LocalDate(2000, 11, 11)),
+      //            List(CalculationPeriod(Some(new LocalDate(2015, 11, 10)),new LocalDate(2015, 11, 10), "0.00", "0.00", 1, 0, Some(1)),
+      //              CalculationPeriod(Some(new LocalDate(2010, 11, 10)),new LocalDate(2011, 11, 10), "0.00", "0.00", 1, 0, Some(1))), 0, None, None, None, false, CalculationType.SURVIVOR.toInt)
+      //          response.subheader must be(Some(Messages("gmp.chosen_rate.subheader", "S148.")))
+      //        }
+      //
+      //        "display correct subheader when gmp payable age and member still in scheme" in {
+      //          val response = CalculationResponse("John Johnson", nino, "S1234567T", None, Some(new LocalDate(2000, 11, 11)),
+      //            List(
+      //              CalculationPeriod(Some(new LocalDate(2015, 11, 10)),new LocalDate(2017, 11, 10), "0.00", "0.00", 1, 0, Some(1)),
+      //              CalculationPeriod(Some(new LocalDate(2010, 11, 10)),new LocalDate(2011, 11, 10), "0.00", "0.00", 1, 0, Some(1))
+      //            ), 0, None, None, None, false, CalculationType.PAYABLE_AGE.toInt)
+      //
+      //          response.subheader must be (None)
+      //        }
+      //
+      //        "display correct subheader when state age and member still in scheme" in {
+      //          val response = CalculationResponse("John Johnson", nino, "S1234567T", None, Some(new LocalDate(2000, 11, 11)),
+      //            List(
+      //              CalculationPeriod(Some(new LocalDate(2015, 11, 10)),new LocalDate(2017, 11, 10), "0.00", "0.00", 1, 0, Some(1)),
+      //              CalculationPeriod(Some(new LocalDate(2010, 11, 10)),new LocalDate(2011, 11, 10), "0.00", "0.00", 1, 0, Some(1))
+      //            ), 0, None, None, None, false, CalculationType.SPA.toInt)
+      //
+      //          response.subheader must be (None)
+      //        }
+      //
+      //        "display correct subheader when survivor and member still in scheme" in {
+      //          val response = CalculationResponse("John Johnson", nino, "S1234567T", None, Some(new LocalDate(2000, 11, 11)),
+      //            List(
+      //              CalculationPeriod(Some(new LocalDate(2015, 11, 10)),new LocalDate(2017, 11, 10), "0.00", "0.00", 1, 0, Some(1)),
+      //              CalculationPeriod(Some(new LocalDate(2010, 11, 10)),new LocalDate(2011, 11, 10), "0.00", "0.00", 1, 0, Some(1))
+      //            ), 0, None, None, None, false, CalculationType.SURVIVOR.toInt)
+      //
+      //          response.subheader must be (None)
+      //        }
+      //
+      //
+      //        "display correct subheader when state age and member not in scheme" in {
+      //          val response = CalculationResponse("John Johnson", nino, "S1234567T", None, Some(new LocalDate(2000, 11, 11)),
+      //            List(
+      //              CalculationPeriod(Some(new LocalDate(2015, 11, 10)),new LocalDate(2017, 11, 10), "0.00", "0.00", 1, 0, Some(1)),
+      //              CalculationPeriod(Some(new LocalDate(2010, 11, 10)),new LocalDate(2011, 11, 10), "0.00", "0.00", 1, 0, Some(1))
+      //            ), 0, None, None, None, false, CalculationType.SPA.toInt)
+      //
+      //          response.subheader must be (None)
+      //        }
 
     }
 
