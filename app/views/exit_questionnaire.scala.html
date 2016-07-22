@@ -91,6 +91,39 @@
               )
             </div>
 
+            <h2>@Messages.get("gmp.questionnaire.leave_details")</h2>
+            <br>
+
+            <div class="form-group" id="name-form-group">
+              @gmpInput(exitQuestionnaireForm("fullName"),
+              '_label -> Html(Messages.get("gmp.questionnaire.full_name")),
+              '_labelClass -> "form-label-bold",
+              '_id -> "fullName",
+              '_maxLength -> 99,
+              '_hintText -> Messages.get("gmp.questionnaire.optional"))
+            </div>
+
+            <div class="form-group noMarginBottom" id="email-form-group">
+              @gmpInput(exitQuestionnaireForm("email"),
+              '_label -> Html(Messages.get("gmp.email.address")),
+              '_labelClass -> "form-label-bold",
+              '_id -> "email",
+              '_maxLength -> 99,
+              '_hintText -> Messages.get("gmp.questionnaire.optional"))
+            </div>
+
+            <span class="form-label-bold">@Messages.get("gmp.questionnaire.or")</span>
+            <br/>
+
+            <div class="form-group" id="phone-form-group">
+              @gmpInput(exitQuestionnaireForm("phoneNumber"),
+              '_label -> Html(Messages.get("gmp.questionnaire.phone_number")),
+              '_labelClass -> "form-label-bold",
+              '_id -> "phoneNumber",
+              '_maxLength -> 20,
+              '_hintText -> Messages.get("gmp.questionnaire.optional"))
+            </div>
+
             <div>
                 <button class="button" type="submit" id="submit-button">@Messages.get("gmp.continue")</button>
             </div>
