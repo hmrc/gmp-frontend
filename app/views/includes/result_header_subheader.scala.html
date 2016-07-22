@@ -14,13 +14,17 @@
 * limitations under the License.
 *@
 
-@(calculationResponse:CalculationResponse, subheader: Option[String])(implicit request: Request[_])
+@(calculationResponse:CalculationResponse, subheader: Option[String], revalSubheader: Option[String])(implicit request: Request[_])
 
 @import play.i18n._
 
 <div class="grid grid-2-3">
 
     <h1 id="results-header">@calculationResponse.header</h1>
+
+    @if(revalSubheader.isDefined) {
+      <div id="revaluation-subheader">@revalSubheader</div>
+    }
 
     @if(subheader.isDefined) {
       <br/>

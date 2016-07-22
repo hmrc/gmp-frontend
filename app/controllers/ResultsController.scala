@@ -36,7 +36,7 @@ trait ResultsController extends GmpPageFlow {
   val calculationConnector: GmpConnector
   val auditConnector : AuditConnector = ApplicationGlobal.auditConnector
 
-  def resultsView(response: CalculationResponse, subheader: Option[String])(implicit request: Request[_]): HtmlFormat.Appendable
+  def resultsView(response: CalculationResponse, subheader: Option[String], revalSubheader: Option[String])(implicit request: Request[_]): HtmlFormat.Appendable
 
   def metrics: Metrics
 
@@ -56,8 +56,9 @@ trait ResultsController extends GmpPageFlow {
                     }
 
                     val subhead = subheader(response,session.leaving)
+                    val revalSubhead = revaluationRateSubHeader(response)
 
-                    Ok(resultsView(response, subhead))
+                    Ok(resultsView(response, subhead, revalSubhead))
                   }
                 }
               case _ => throw new RuntimeException
@@ -172,6 +173,14 @@ trait ResultsController extends GmpPageFlow {
       Some(Messages("gmp.held_rate.subheader", Messages(s"gmp.revaluation_rate.type_${response.calculationPeriods.head.revaluationRate}")) + ".")
   }
 
+  def revaluationRateSubHeader(response: CalculationResponse): Option[String] = {
+    if (response.calcType == 3 && response.revaluationRate.isDefined && !response.revaluationUnsuccessful) {
+      determineRevalRateSubheader(response)
+    }
+    else
+      None
+  }
+
 }
 
 
@@ -182,8 +191,8 @@ object ResultsController extends ResultsController {
   // $COVERAGE-OFF$Trivial and never going to be called by a test that uses it's own object implementation
   override def metrics = Metrics
 
-  override def resultsView(response: CalculationResponse, subheader: Option[String])(implicit request: Request[_]): HtmlFormat.Appendable = {
-    views.html.results(applicationConfig = config.ApplicationConfig, response, subheader)
+  override def resultsView(response: CalculationResponse, subheader: Option[String], revalSubheader: Option[String])(implicit request: Request[_]): HtmlFormat.Appendable = {
+    views.html.results(applicationConfig = config.ApplicationConfig, response, subheader, revalSubheader)
   }
 
   // $COVERAGE-ON$
