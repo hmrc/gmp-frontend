@@ -14,11 +14,11 @@
 * limitations under the License.
 *@
 
-@(calculationResponse:CalculationResponse, subheader: Option[String], secondSubhead: Option[String])(implicit request: Request[_])
+@(calculationResponse:CalculationResponse, revaluationSubheader: Option[String], survivorSubheader: Option[String])(implicit request: Request[_])
 
 @import play.i18n._
 
-@includes.result_header_subheader(calculationResponse, subheader, secondSubhead)
+@includes.result_header_subheader(calculationResponse, revaluationSubheader, survivorSubheader)
 
 <div class="grid grid-2-3">
     @includes.results_table(calculationResponse)

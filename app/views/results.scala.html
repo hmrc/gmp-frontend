@@ -14,7 +14,7 @@
 * limitations under the License.
 *@
 
-@(applicationConfig: config.ApplicationConfig = config.ApplicationConfig, calculationResponse:CalculationResponse, subheader: Option[String], revalSubheader: Option[String])(implicit request: Request[_])
+@(applicationConfig: config.ApplicationConfig = config.ApplicationConfig, calculationResponse:CalculationResponse, revaluationSubheader: Option[String], survivorSubheader: Option[String])(implicit request: Request[_])
 
 @import uk.gov.hmrc.play.views.html._
 @import uk.gov.hmrc.play.views.html.helpers._
@@ -37,7 +37,7 @@
    if(calculationResponse.hasErrors) {
       includes.multi_error(calculationResponse)
     } else {
-      includes.multi_results(calculationResponse, subheader, revalSubheader)
+      includes.multi_results(calculationResponse, revaluationSubheader, survivorSubheader)
     }
   }
 }

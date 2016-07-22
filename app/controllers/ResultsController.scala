@@ -36,7 +36,7 @@ trait ResultsController extends GmpPageFlow {
   val calculationConnector: GmpConnector
   val auditConnector : AuditConnector = ApplicationGlobal.auditConnector
 
-  def resultsView(response: CalculationResponse, subheader: Option[String], secondSubhead: Option[String])(implicit request: Request[_]): HtmlFormat.Appendable
+  def resultsView(response: CalculationResponse, revaluationSubheader: Option[String], survivorSubheader: Option[String])(implicit request: Request[_]): HtmlFormat.Appendable
 
   def metrics: Metrics
 
@@ -55,13 +55,7 @@ trait ResultsController extends GmpPageFlow {
                       if (period.errorCode != 0) metrics.countNpsError(period.errorCode.toString)
                     }
 
-                    val subhead = subheader(response,session.leaving)
-                    val secondSubhead = response.calcType match {
-                      case 3 => secondSubheader(response,session.leaving)
-                      case _ =>  None
-                    }
-
-                    Ok(resultsView(response, subhead, secondSubhead))
+                    Ok(resultsView(response, revalRateSubheader(response,session.leaving), survivorSubheader(session, response)))
                   }
                 }
               case _ => throw new RuntimeException
@@ -69,7 +63,6 @@ trait ResultsController extends GmpPageFlow {
         }
       }
   }
-
 
   def getContributionsAndEarnings = AuthorisedFor(GmpRegime, pageVisibilityPredicate).async {
     implicit user =>
@@ -126,7 +119,7 @@ trait ResultsController extends GmpPageFlow {
       })
   }
 
-  private def subheader(response: CalculationResponse, leaving:Leaving): Option[String] = {
+  private def revalRateSubheader(response: CalculationResponse, leaving:Leaving): Option[String] = {
     response.calcType match {
 
       case 0 => {
@@ -180,17 +173,21 @@ trait ResultsController extends GmpPageFlow {
     }
   }
 
-  def secondSubheader(response:CalculationResponse, leaving:Leaving): Option[String] = {
-    leaving.leaving match{
-      case Some(Leaving.NO) => None
-      case _ => {
-        if(response.calculationPeriods.head.inflationProofBeyondDod == Some(0) && response.dodInSameTaxYearAsRevaluationDate)
-          Some(Messages("gmp.no_inflation.subheader"))
-        else
-          None
+  private def survivorSubheader(session: GmpSession, response: CalculationResponse): Option[String] = {
+    response.calcType match {
+      case 3 => {
+        session.leaving.leaving match{
+          case Some(Leaving.NO) => None
+          case _ => {
+            if(response.calculationPeriods.head.inflationProofBeyondDod == Some(0) && response.dodInSameTaxYearAsRevaluationDate)
+              Some(Messages("gmp.no_inflation.subheader"))
+            else
+              None
+          }
+        }
       }
+      case _ => None
     }
-
   }
 
 }
@@ -203,8 +200,8 @@ object ResultsController extends ResultsController {
   // $COVERAGE-OFF$Trivial and never going to be called by a test that uses it's own object implementation
   override def metrics = Metrics
 
-  override def resultsView(response: CalculationResponse, subheader: Option[String], secondSubhead: Option[String])(implicit request: Request[_]): HtmlFormat.Appendable = {
-    views.html.results(applicationConfig = config.ApplicationConfig, response, subheader, secondSubhead)
+  override def resultsView(response: CalculationResponse, revaluationSubheader: Option[String], survivorSubheader: Option[String])(implicit request: Request[_]): HtmlFormat.Appendable = {
+    views.html.results(applicationConfig = config.ApplicationConfig, response, revaluationSubheader, survivorSubheader)
   }
 
   // $COVERAGE-ON$

@@ -14,7 +14,7 @@
 * limitations under the License.
 *@
 
-@(calculationResponse:CalculationResponse, subheader: Option[String], secondSubhead: Option[String])(implicit request: Request[_])
+@(calculationResponse:CalculationResponse, revaluationSubheader: Option[String], survivorSubheader: Option[String])(implicit request: Request[_])
 
 @import play.i18n._
 
@@ -22,12 +22,12 @@
 
     <h1 id="results-header">@calculationResponse.header</h1>
 
-    @if(subheader.isDefined) {
-      <div id="subheader">@subheader</div>
+    @if(revaluationSubheader.isDefined) {
+      <div id="revaluation-subheader">@revaluationSubheader</div>
     }
 
-    @if(secondSubhead.isDefined) {
-      <div id="second-subheader" class="panel-indent">@secondSubhead</div>
+    @if(survivorSubheader.isDefined) {
+      <div id="survivor-subheader" class="panel-indent">@survivorSubheader</div>
     }
 
     <br/>
