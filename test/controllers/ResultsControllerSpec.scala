@@ -53,8 +53,8 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
     override val sessionService = mockSessionService
     override val calculationConnector = mockCalculationConnector
 
-    override def resultsView(response: CalculationResponse)(implicit request: Request[_]): HtmlFormat.Appendable = {
-      views.html.results(applicationConfig = mockApplicationConfig, response)
+    override def resultsView(response: CalculationResponse, subheader: Option[String], revalSubheader: Option[String])(implicit request: Request[_]): HtmlFormat.Appendable = {
+      views.html.results(applicationConfig = mockApplicationConfig, response, subheader, revalSubheader)
     }
 
     override def metrics = Metrics
@@ -65,6 +65,9 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
   val gmpSession = GmpSession(MemberDetails(nino, "John", "Johnson"), "S1234567T", CalculationType.REVALUATION, None, None, Leaving(GmpDate(None, None, None), None), None, Dashboard(List()))
   val gmpSession2 = GmpSession(MemberDetails(nino, "John", "Johnson"), "S1234567T", CalculationType.REVALUATION, Some(GmpDate(Some("12"), Some("12"), Some("1999"))), None, Leaving(GmpDate(None, None, None), None), None, Dashboard(List()))
   val gmpSession3 = GmpSession(MemberDetails(nino, "John", "Johnson"), "S1234567T", CalculationType.REVALUATION, Some(GmpDate(Some("12"), Some("12"), Some("1999"))), None, Leaving(GmpDate(None, None, None), None), equalise = Some(1), Dashboard(List()))
+
+  val gmpSessionWithRate = GmpSession(MemberDetails(nino, "John", "Johnson"), "S1234567T", CalculationType.REVALUATION, None, Some("1"), Leaving(GmpDate(None, None, None), None), None, Dashboard(List()))
+  val gmpSessionWithHMRCRate = GmpSession(MemberDetails(nino, "John", "Johnson"), "S1234567T", CalculationType.REVALUATION, None, Some("0"), Leaving(GmpDate(None, None, None), None), None, Dashboard(List()))
 
   val gmpSession4Nino = RandomNino.generate
   val gmpSession4NinoSpaced = gmpSession4Nino.grouped(2).foldLeft(new StringBuilder){
@@ -291,12 +294,12 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
           val date = GmpDate(day = Some("24"), month = Some("08"), year = Some("2016"))
 
           when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(
-            Future.successful(Some(gmpSession.copy(revaluationDate = Some(date), rate = Some(RevaluationRate.HMRC),leaving = Leaving(date, Some(Leaving.NO))))))
+            Future.successful(Some(gmpSession.copy(revaluationDate = Some(date), rate = Some(RevaluationRate.HMRC), leaving = Leaving(date, Some(Leaving.NO))))))
 
           when(mockCalculationConnector.calculateSingle(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(validRevaluationMultipleSameTaxYear))
-            withAuthorisedUser { request =>
+          withAuthorisedUser { request =>
             val result = TestResultsController.get.apply(request)
-            contentAsString(result) must not include(Messages("gmp.notrevalued.subheader"))
+            contentAsString(result) must not include (Messages("gmp.notrevalued.subheader"))
             contentAsString(result) must include(Messages("gmp.leaving.revalued.header", "24/08/2016", "HMRC held"))
             contentAsString(result) must include(Messages("--"))
           }
@@ -370,7 +373,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
           when(mockCalculationConnector.calculateSingle(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(survivorRevaluationCalculationResponse))
           withAuthorisedUser { request =>
             val result = TestResultsController.get.apply(request)
-            contentAsString(result) must not include(Messages("gmp.no_inflation.subheader"))
+            contentAsString(result) must not include (Messages("gmp.no_inflation.subheader"))
           }
         }
 
@@ -390,7 +393,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
           withAuthorisedUser { request =>
             val result = TestResultsController.get.apply(request)
             contentAsString(result) must include("Surviving partner&#x27;s GMP entitlement at date of death (01/01/2017)")
-            contentAsString(result) must not include(Messages("gmp.no_inflation.subheader"))
+            contentAsString(result) must not include (Messages("gmp.no_inflation.subheader"))
           }
         }
 
@@ -472,7 +475,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
           (validCalculationResponse.copy(revaluationDate = Some(new LocalDate(2000, 11, 11)), revaluationRate = Some("1"))))
           withAuthorisedUser { request =>
             val result = TestResultsController.get.apply(request)
-            contentAsString(result) must not include("<td id=\"gmp-rate\">")
+            contentAsString(result) must not include ("<td id=\"gmp-rate\">")
             contentAsString(result).replaceAll("&#x27;", "'") must include(Messages("gmp.queryhandling.resultsmessage"))
           }
         }
@@ -515,8 +518,8 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
 
           withAuthorisedUser { request =>
             val result = TestResultsController.get.apply(request)
-            contentAsString(result) must include (Messages("gmp.leaving.scheme.header", formatDate(new LocalDate(2015,7,7))))
-            contentAsString(result) must include (Messages("gmp.notrevalued.subheader"))
+            contentAsString(result) must include(Messages("gmp.leaving.scheme.header", formatDate(new LocalDate(2015, 7, 7))))
+            contentAsString(result) must include(Messages("gmp.notrevalued.subheader"))
           }
         }
 
@@ -533,7 +536,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
         "show the rate column in the multiple results table, when hmrc held rate" in {
           when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
           when(mockCalculationConnector.calculateSingle(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful
-            (validRevalCalculationResponseMultiplePeriod.copy(revaluationRate = Some("0"))))
+          (validRevalCalculationResponseMultiplePeriod.copy(revaluationRate = Some("0"))))
           withAuthorisedUser { request =>
             val result = TestResultsController.get.apply(request)
             contentAsString(result) must include(Messages("gmp.rate"))
@@ -543,10 +546,10 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
         "not show the rate column in the multiple results table, when not hmrc held rate" in {
           when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
           when(mockCalculationConnector.calculateSingle(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful
-            (validRevalCalculationResponseMultiplePeriod.copy(revaluationRate = Some("1"))))
+          (validRevalCalculationResponseMultiplePeriod.copy(revaluationRate = Some("1"))))
           withAuthorisedUser { request =>
             val result = TestResultsController.get.apply(request)
-            contentAsString(result) must not include(Messages("gmp.rate"))
+            contentAsString(result) must not include (Messages("gmp.rate"))
           }
         }
 
@@ -571,7 +574,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
             content must include(Messages(globalErrors.getString("63123.also")))
             content must include(Messages("gmp.entered_details.title"))
             content must not include (Messages("gmp.rate"))
-            content must not include(Messages("gmp.back_to_dashboard"))
+            content must not include (Messages("gmp.back_to_dashboard"))
           }
         }
 
@@ -687,7 +690,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
             content must include(Messages(globalErrors.getString(s"${multiErrorResponse.calculationPeriods.head.errorCode}.reason")))
             content must include(Messages(globalErrors.getString(s"${multiErrorResponse.calculationPeriods.tail.head.errorCode}.reason")))
             content must include(Messages("gmp.queryhandling.resultsmessage"))
-            content must not include(Messages("gmp.back_to_dashboard"))
+            content must not include (Messages("gmp.back_to_dashboard"))
           }
         }
 
@@ -750,6 +753,134 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
       }
 
 
+      "subheader" must {
+
+        "show the correct subheader when gmp payable age and member left scheme and hmrc rate entered" in {
+          val date = GmpDate(day = Some("24"), month = Some("08"), year = Some("2016"))
+          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSessionWithHMRCRate.copy(leaving = Leaving(date, Some(Leaving.YES_AFTER))))))
+          when(mockCalculationConnector.calculateSingle(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(validCalculationResponse.copy(revaluationRate = Some("0"), calcType = 2)))
+          withAuthorisedUser { request =>
+            val result = TestResultsController.get.apply(request)
+            contentAsString(result) must include("Revaluation rate chosen: HMRC held rate (S148).")
+          }
+        }
+
+        "show the correct subheader when gmp payable age and member left scheme and rate entered" in {
+          val date = GmpDate(day = Some("24"), month = Some("08"), year = Some("2016"))
+          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSessionWithRate.copy(leaving = Leaving(date, Some(Leaving.YES_AFTER))))))
+          when(mockCalculationConnector.calculateSingle(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(validCalculationResponse.copy(revaluationRate = Some("1"), calcType = 2)))
+          withAuthorisedUser { request =>
+            val result = TestResultsController.get.apply(request)
+            contentAsString(result) must include(Messages("gmp.chosen_rate.subheader", "S148."))
+          }
+        }
+
+        "show the correct subheader when gmp payable age and member left scheme and rate not entered" in {
+          val date = GmpDate(day = Some("24"), month = Some("08"), year = Some("2016"))
+          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSessionWithRate.copy(leaving = Leaving(date, Some(Leaving.YES_AFTER))))))
+          when(mockCalculationConnector.calculateSingle(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(validCalculationResponse.copy(calcType = 2)))
+          withAuthorisedUser { request =>
+            val result = TestResultsController.get.apply(request)
+            contentAsString(result) must include(Messages("gmp.held_rate.subheader", "S148."))
+          }
+        }
+
+        "show no subheader when gmp payable age and member still in scheme and rate" in {
+          val date = GmpDate(day = Some("24"), month = Some("08"), year = Some("2016"))
+          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSessionWithRate.copy(leaving = Leaving(date, Some(Leaving.NO))))))
+          when(mockCalculationConnector.calculateSingle(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(validCalculationResponse.copy(calcType = 2)))
+          withAuthorisedUser { request =>
+            val result = TestResultsController.get.apply(request)
+            contentAsString(result) must not include (Messages("gmp.held_rate.subheader", "S148."))
+          }
+        }
+
+        "show no subheader when gmp payable age and member still in scheme and no rate" in {
+          val date = GmpDate(day = Some("24"), month = Some("08"), year = Some("2016"))
+          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession.copy(leaving = Leaving(date, Some(Leaving.NO))))))
+          when(mockCalculationConnector.calculateSingle(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(validCalculationResponse.copy(calcType = 2)))
+          withAuthorisedUser { request =>
+            val result = TestResultsController.get.apply(request)
+            contentAsString(result) must not include (Messages("gmp.held_rate.subheader", "S148."))
+          }
+        }
+
+        "show the correct subheader when state pension age and member left scheme and rate entered" in {
+          val date = GmpDate(day = Some("24"), month = Some("08"), year = Some("2016"))
+          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSessionWithRate.copy(leaving = Leaving(date, Some(Leaving.YES_AFTER))))))
+          when(mockCalculationConnector.calculateSingle(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(validCalculationResponse.copy(revaluationRate = Some("1"), calcType = 4)))
+          withAuthorisedUser { request =>
+            val result = TestResultsController.get.apply(request)
+            contentAsString(result) must include(Messages("gmp.chosen_rate.subheader", "S148."))
+          }
+        }
+
+        "show the correct subheader when state pension age and member left scheme and rate not entered" in {
+          val date = GmpDate(day = Some("24"), month = Some("08"), year = Some("2016"))
+          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSessionWithRate.copy(leaving = Leaving(date, Some(Leaving.YES_AFTER))))))
+          when(mockCalculationConnector.calculateSingle(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(validCalculationResponse.copy(calcType = 4)))
+          withAuthorisedUser { request =>
+            val result = TestResultsController.get.apply(request)
+            contentAsString(result) must include(Messages("gmp.held_rate.subheader", "S148."))
+          }
+        }
+
+        "show no subheader when state pension age and member still in scheme" in {
+          val date = GmpDate(day = Some("24"), month = Some("08"), year = Some("2016"))
+          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSessionWithRate.copy(leaving = Leaving(date, Some(Leaving.NO))))))
+          when(mockCalculationConnector.calculateSingle(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(validCalculationResponse.copy(calcType = 4)))
+          withAuthorisedUser { request =>
+            val result = TestResultsController.get.apply(request)
+            contentAsString(result) must not include (Messages("gmp.held_rate.subheader", "S148."))
+          }
+        }
+
+        "show no subheader when state pension age and member still in scheme and no rate" in {
+          val date = GmpDate(day = Some("24"), month = Some("08"), year = Some("2016"))
+          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession.copy(leaving = Leaving(date, Some(Leaving.NO))))))
+          when(mockCalculationConnector.calculateSingle(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(validCalculationResponse.copy(calcType = 2)))
+          withAuthorisedUser { request =>
+            val result = TestResultsController.get.apply(request)
+            contentAsString(result) must not include (Messages("gmp.held_rate.subheader", "S148."))
+          }
+        }
+
+        "show the correct subheader when survivor and member left scheme and hmrc rate entered and no inflation proof" in {
+          val date = GmpDate(day = Some("24"), month = Some("08"), year = Some("2016"))
+          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSessionWithHMRCRate.copy(leaving = Leaving(date, Some(Leaving.YES_AFTER))))))
+          when(mockCalculationConnector.calculateSingle(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(survivorRevaluationCalculationResponseNoInflation.copy(revaluationRate = Some("0"),
+            calculationPeriods = List(CalculationPeriod(Some(new LocalDate(2015, 11, 10)), new LocalDate(2015, 11, 10), "1.11", "2.22", 1, 0, Some(0), inflationProofBeyondDod = Some(0))))))
+          withAuthorisedUser { request =>
+            val result = TestResultsController.get.apply(request)
+            contentAsString(result) must include("Revaluation rate chosen: HMRC held rate (S148).")
+            contentAsString(result) must include(Messages("gmp.no_inflation.subheader"))
+          }
+        }
+
+        "show the correct subheader when survivor and member left scheme, rate entered and inflation proof" in {
+          val date = GmpDate(day = Some("24"), month = Some("08"), year = Some("2016"))
+          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSessionWithHMRCRate.copy(leaving = Leaving(date, Some(Leaving.YES_AFTER))))))
+          when(mockCalculationConnector.calculateSingle(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(survivorRevaluationCalculationResponse.copy(revaluationRate = Some("1"), calculationPeriods = List(CalculationPeriod(Some(new
+              LocalDate(2015, 11, 10)), new LocalDate(2015, 11, 10), "1.11", "2.22", 1, 0, Some(0), inflationProofBeyondDod = Some(1))))))
+          withAuthorisedUser { request =>
+            val result = TestResultsController.get.apply(request)
+            contentAsString(result) must include(Messages("gmp.chosen_rate.subheader", "S148."))
+            contentAsString(result) must not include (Messages("gmp.no_inflation.subheader"))
+          }
+        }
+
+        "show no subheader when survivor and member still in scheme" in {
+          val date = GmpDate(day = Some("24"), month = Some("08"), year = Some("2016"))
+          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSessionWithRate.copy(leaving = Leaving(date, Some(Leaving.NO))))))
+          when(mockCalculationConnector.calculateSingle(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(survivorRevaluationCalculationResponseNoInflation.copy(revaluationRate = Some("0"),
+            calculationPeriods = List(CalculationPeriod(Some(new LocalDate(2015, 11, 10)), new LocalDate(2015, 11, 10), "1.11", "2.22", 1, 0, Some(0), inflationProofBeyondDod = Some(0))))))
+          withAuthorisedUser { request =>
+            val result = TestResultsController.get.apply(request)
+            contentAsString(result) must not include ("Revaluation rate chosen: HMRC held rate (S148).")
+            contentAsString(result) must not include (Messages("gmp.no_inflation.subheader"))
+          }
+        }
+      }
     }
 
     "respond to get contributions and earnings /guaranteed-minimum-pension/contributions-earnings" in {
@@ -1007,4 +1138,5 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
     }
 
   }
+
 }

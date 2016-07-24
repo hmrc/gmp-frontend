@@ -24,6 +24,7 @@ import metrics.Metrics
 import models._
 import org.joda.time.LocalDate
 import play.api.Logger
+import play.api.i18n.Messages
 import play.api.mvc.Request
 import play.twirl.api.HtmlFormat
 import services.SessionService
@@ -35,7 +36,7 @@ trait ResultsController extends GmpPageFlow {
   val calculationConnector: GmpConnector
   val auditConnector : AuditConnector = ApplicationGlobal.auditConnector
 
-  def resultsView(response: CalculationResponse)(implicit request: Request[_]): HtmlFormat.Appendable
+  def resultsView(response: CalculationResponse, revalRateSubheader: Option[String], survivorSubheader: Option[String])(implicit request: Request[_]): HtmlFormat.Appendable
 
   def metrics: Metrics
 
@@ -54,7 +55,7 @@ trait ResultsController extends GmpPageFlow {
                       if (period.errorCode != 0) metrics.countNpsError(period.errorCode.toString)
                     }
 
-                    Ok(resultsView(response))
+                    Ok(resultsView(response, revalRateSubheader(response,session.leaving), survivorSubheader(session, response)))
                   }
                 }
               case _ => throw new RuntimeException
@@ -62,7 +63,6 @@ trait ResultsController extends GmpPageFlow {
         }
       }
   }
-
 
   def getContributionsAndEarnings = AuthorisedFor(GmpRegime, pageVisibilityPredicate).async {
     implicit user =>
@@ -119,6 +119,77 @@ trait ResultsController extends GmpPageFlow {
       })
   }
 
+  private def revalRateSubheader(response: CalculationResponse, leaving:Leaving): Option[String] = {
+    response.calcType match {
+
+      case 0 => {
+        if(response.calculationPeriods.length > 1)
+          Some(Messages("gmp.notrevalued.multi.subheader"))
+        else
+          Some(Messages("gmp.notrevalued.subheader"))
+      }
+
+      case 1 => {
+        if(response.revaluationUnsuccessful)
+          Some(Messages("gmp.notrevalued.subheader"))
+        else if(response.revaluationRate.isDefined){
+          if (response.revaluationRate == Some("0"))
+            Some(Messages("gmp.reval_rate.subheader", Messages(s"gmp.revaluation_rate.type_${response.revaluationRate.get}")) + " (" + Messages(s"gmp.revaluation_rate.type_${response.calculationPeriods.head.revaluationRate}") + ").")
+          else
+            Some(Messages("gmp.reval_rate.subheader", Messages(s"gmp.revaluation_rate.type_${response.revaluationRate.get}")) + ".")
+        }
+        else None
+      }
+
+      case 2 | 4 => {
+        leaving.leaving match{
+          case Some(Leaving.NO) => None
+          case _ => {
+            if (response.revaluationRate.isDefined && response.revaluationRate == Some("0"))
+              Some(Messages("gmp.chosen_rate.subheader", Messages(s"gmp.revaluation_rate.type_${response.revaluationRate.get}")) + " (" + Messages(s"gmp.revaluation_rate.type_${response.calculationPeriods.head.revaluationRate}") + ").")
+            else if(response.revaluationRate.isDefined)
+              Some(Messages("gmp.chosen_rate.subheader", Messages(s"gmp.revaluation_rate.type_${response.calculationPeriods.head.revaluationRate}")) + ".")
+            else
+              Some(Messages("gmp.held_rate.subheader", Messages(s"gmp.revaluation_rate.type_${response.calculationPeriods.head.revaluationRate}")) + ".")
+          }
+        }
+      }
+
+      case 3 => {
+        leaving.leaving match{
+          case Some(Leaving.NO) => None
+          case _ => {
+            if (response.revaluationRate.isDefined && response.revaluationRate == Some("0"))
+              Some(Messages("gmp.chosen_rate.subheader", Messages(s"gmp.revaluation_rate.type_${response.revaluationRate.get}")) + " (" + Messages(s"gmp.revaluation_rate.type_${response.calculationPeriods.head.revaluationRate}") + ").")
+            else if(response.revaluationRate.isDefined)
+              Some(Messages("gmp.chosen_rate.subheader", Messages(s"gmp.revaluation_rate.type_${response.calculationPeriods.head.revaluationRate}")) + ".")
+            else
+              Some(Messages("gmp.held_rate.subheader", Messages(s"gmp.revaluation_rate.type_${response.calculationPeriods.head.revaluationRate}")) + ".")
+          }
+        }
+      }
+
+
+    }
+  }
+
+  private def survivorSubheader(session: GmpSession, response: CalculationResponse): Option[String] = {
+    response.calcType match {
+      case 3 => {
+        session.leaving.leaving match{
+          case Some(Leaving.NO) => None
+          case _ => {
+            if(response.calculationPeriods.head.inflationProofBeyondDod == Some(0) && response.dodInSameTaxYearAsRevaluationDate)
+              Some(Messages("gmp.no_inflation.subheader"))
+            else
+              None
+          }
+        }
+      }
+      case _ => None
+    }
+  }
+
 }
 
 
@@ -129,8 +200,8 @@ object ResultsController extends ResultsController {
   // $COVERAGE-OFF$Trivial and never going to be called by a test that uses it's own object implementation
   override def metrics = Metrics
 
-  override def resultsView(response: CalculationResponse)(implicit request: Request[_]): HtmlFormat.Appendable = {
-    views.html.results(applicationConfig = config.ApplicationConfig, response)
+  override def resultsView(response: CalculationResponse, revalRateSubheader: Option[String], survivorSubheader: Option[String])(implicit request: Request[_]): HtmlFormat.Appendable = {
+    views.html.results(applicationConfig = config.ApplicationConfig, response, revalRateSubheader, survivorSubheader)
   }
 
   // $COVERAGE-ON$
