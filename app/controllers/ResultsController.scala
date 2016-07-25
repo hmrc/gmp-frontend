@@ -120,74 +120,84 @@ trait ResultsController extends GmpPageFlow {
   }
 
   private def revalRateSubheader(response: CalculationResponse, leaving:Leaving): Option[String] = {
-    response.calcType match {
 
-      case 0 => {
-        if(response.calculationPeriods.length > 1)
-          Some(Messages("gmp.notrevalued.multi.subheader"))
-        else
-          Some(Messages("gmp.notrevalued.subheader"))
-      }
+    if(!response.calculationPeriods.isEmpty) {
 
-      case 1 => {
-        if(response.revaluationUnsuccessful)
-          Some(Messages("gmp.notrevalued.subheader"))
-        else if(response.revaluationRate.isDefined){
-          if (response.revaluationRate == Some("0"))
-            Some(Messages("gmp.reval_rate.subheader", Messages(s"gmp.revaluation_rate.type_${response.revaluationRate.get}")) + " (" + Messages(s"gmp.revaluation_rate.type_${response.calculationPeriods.head.revaluationRate}") + ").")
+      response.calcType match {
+        case 0 => {
+          if (response.calculationPeriods.length > 1)
+            Some(Messages("gmp.notrevalued.multi.subheader"))
           else
-            Some(Messages("gmp.reval_rate.subheader", Messages(s"gmp.revaluation_rate.type_${response.revaluationRate.get}")) + ".")
+            Some(Messages("gmp.notrevalued.subheader"))
         }
-        else None
-      }
 
-      case 2 | 4 => {
-        leaving.leaving match{
-          case Some(Leaving.NO) => None
-          case _ => {
-            if (response.revaluationRate.isDefined && response.revaluationRate == Some("0"))
-              Some(Messages("gmp.chosen_rate.subheader", Messages(s"gmp.revaluation_rate.type_${response.revaluationRate.get}")) + " (" + Messages(s"gmp.revaluation_rate.type_${response.calculationPeriods.head.revaluationRate}") + ").")
-            else if(response.revaluationRate.isDefined)
-              Some(Messages("gmp.chosen_rate.subheader", Messages(s"gmp.revaluation_rate.type_${response.calculationPeriods.head.revaluationRate}")) + ".")
+        case 1 => {
+          if (response.revaluationUnsuccessful)
+            Some(Messages("gmp.notrevalued.subheader"))
+          else if (response.revaluationRate.isDefined) {
+            if (response.revaluationRate == Some("0"))
+              Some(Messages("gmp.reval_rate.subheader", Messages(s"gmp.revaluation_rate.type_${response.revaluationRate.get}")) + " (" + Messages(s"gmp.revaluation_rate.type_${response.calculationPeriods.head.revaluationRate}") + ").")
             else
-              Some(Messages("gmp.held_rate.subheader", Messages(s"gmp.revaluation_rate.type_${response.calculationPeriods.head.revaluationRate}")) + ".")
+              Some(Messages("gmp.reval_rate.subheader", Messages(s"gmp.revaluation_rate.type_${response.revaluationRate.get}")) + ".")
+          }
+          else None
+        }
+
+        case 2 | 4 => {
+          leaving.leaving match {
+            case Some(Leaving.NO) => None
+            case _ => {
+              if (response.revaluationRate.isDefined && response.revaluationRate == Some("0"))
+                Some(Messages("gmp.chosen_rate.subheader", Messages(s"gmp.revaluation_rate.type_${response.revaluationRate.get}")) + " (" + Messages(s"gmp.revaluation_rate.type_${response.calculationPeriods.head.revaluationRate}") + ").")
+              else if (response.revaluationRate.isDefined)
+                Some(Messages("gmp.chosen_rate.subheader", Messages(s"gmp.revaluation_rate.type_${response.calculationPeriods.head.revaluationRate}")) + ".")
+              else
+                Some(Messages("gmp.held_rate.subheader", Messages(s"gmp.revaluation_rate.type_${response.calculationPeriods.head.revaluationRate}")) + ".")
+            }
           }
         }
-      }
 
-      case 3 => {
-        leaving.leaving match{
-          case Some(Leaving.NO) => None
-          case _ => {
-            if (response.revaluationRate.isDefined && response.revaluationRate == Some("0"))
-              Some(Messages("gmp.chosen_rate.subheader", Messages(s"gmp.revaluation_rate.type_${response.revaluationRate.get}")) + " (" + Messages(s"gmp.revaluation_rate.type_${response.calculationPeriods.head.revaluationRate}") + ").")
-            else if(response.revaluationRate.isDefined)
-              Some(Messages("gmp.chosen_rate.subheader", Messages(s"gmp.revaluation_rate.type_${response.calculationPeriods.head.revaluationRate}")) + ".")
-            else
-              Some(Messages("gmp.held_rate.subheader", Messages(s"gmp.revaluation_rate.type_${response.calculationPeriods.head.revaluationRate}")) + ".")
+        case 3 => {
+          leaving.leaving match {
+            case Some(Leaving.NO) => None
+            case _ => {
+              if (response.revaluationRate.isDefined && response.revaluationRate == Some("0"))
+                Some(Messages("gmp.chosen_rate.subheader", Messages(s"gmp.revaluation_rate.type_${response.revaluationRate.get}")) + " (" + Messages(s"gmp.revaluation_rate.type_${response.calculationPeriods.head.revaluationRate}") + ").")
+              else if (response.revaluationRate.isDefined)
+                Some(Messages("gmp.chosen_rate.subheader", Messages(s"gmp.revaluation_rate.type_${response.calculationPeriods.head.revaluationRate}")) + ".")
+              else
+                Some(Messages("gmp.held_rate.subheader", Messages(s"gmp.revaluation_rate.type_${response.calculationPeriods.head.revaluationRate}")) + ".")
+            }
           }
         }
+
+
       }
-
-
     }
+    else
+      None
   }
 
   private def survivorSubheader(session: GmpSession, response: CalculationResponse): Option[String] = {
-    response.calcType match {
-      case 3 => {
-        session.leaving.leaving match{
-          case Some(Leaving.NO) => None
-          case _ => {
-            if(response.calculationPeriods.head.inflationProofBeyondDod == Some(0) && response.dodInSameTaxYearAsRevaluationDate)
-              Some(Messages("gmp.no_inflation.subheader"))
-            else
-              None
+
+    if (!response.calculationPeriods.isEmpty) {
+      response.calcType match {
+        case 3 => {
+          session.leaving.leaving match {
+            case Some(Leaving.NO) => None
+            case _ => {
+              if (response.calculationPeriods.head.inflationProofBeyondDod == Some(0) && response.dodInSameTaxYearAsRevaluationDate)
+                Some(Messages("gmp.no_inflation.subheader"))
+              else
+                None
+            }
           }
         }
+        case _ => None
       }
-      case _ => None
     }
+    else
+      None
   }
 
 }
