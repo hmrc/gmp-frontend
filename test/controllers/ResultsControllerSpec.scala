@@ -231,6 +231,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
   val single63167CalculationResponse = CalculationResponse("John Johnson", nino, "S1234567T", None, None, List(CalculationPeriod(Some(new
       LocalDate(2015, 11, 10)), new LocalDate(2015, 11, 10), "1.11", "2.22", 0, 63167, Some(0))), 0, None, None, None, false, 1)
 
+  val survivor63167CalculationResponse = CalculationResponse("John Johnson", nino, "S1234567T", None, None, List(), 0, None, None, None, false, 3)
 
   "ResultsController" must {
 
@@ -754,6 +755,16 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
 
 
       "subheader" must {
+
+        "be non existent when errors are returned" in {
+          val date = GmpDate(day = Some("24"), month = Some("08"), year = Some("2016"))
+          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSessionWithHMRCRate.copy(leaving = Leaving(date, Some(Leaving.YES_AFTER))))))
+          when(mockCalculationConnector.calculateSingle(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(survivor63167CalculationResponse))
+          withAuthorisedUser { request =>
+            val result = TestResultsController.get.apply(request)
+            status(result) must equal(OK)
+          }
+        }
 
         "show the correct subheader when gmp payable age and member left scheme and hmrc rate entered" in {
           val date = GmpDate(day = Some("24"), month = Some("08"), year = Some("2016"))
