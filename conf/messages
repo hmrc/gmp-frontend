@@ -355,7 +355,7 @@ gmp.cannot_calculate = We can''t calculate a Guaranteed Minimum Pension
 gmp.cannot_calculate_online = We can''t calculate a Guaranteed Minimum Pension online
 
 gmp.what_now = What to do now:
-gmp.errors.query_handling.header = You can also:
+gmp.errors.query_handling.header = Alternatively:
 
 gmp.only_part_problem = There is a problem with part of the calculation
 gmp.part_problem = There is a problem with all or part of the calculation
