@@ -49,7 +49,7 @@ trait BulkRequestReceivedController extends GmpController {
             gmpBulkConnector.sendBulkRequest(bulkRequest).map {
               x => x match {
                 case true => Ok(views.html.bulk_request_received(bulkRequest.reference))
-                case false => Ok(views.html.bulk_failure(Messages("gmp.bulk.failure.duplicate_upload")))
+                case false => Ok(views.html.bulk_failure(Messages("gmp.bulk.failure.duplicate_upload"),Messages("gmp.bulk_failure_duplicate.title")))
               }
             }
           }

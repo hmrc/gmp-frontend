@@ -50,9 +50,9 @@ trait FileUploadController extends GmpController with Actions {
     implicit user =>
       implicit request =>
         request.getQueryString("error_message") match {
-          case Some(x) if x.toUpperCase.contains("VIRUS") => Ok(views.html.bulk_failure(Messages("gmp.bulk.failure.antivirus")))
-          case Some(x) if x.toUpperCase.contains("SELECT") => Ok(views.html.bulk_failure(Messages("gmp.bulk.failure.missing")))
-          case _ => Ok(views.html.bulk_failure(Messages("gmp.bulk.failure.generic")))
+          case Some(x) if x.toUpperCase.contains("VIRUS") => Ok(views.html.bulk_failure(Messages("gmp.bulk.failure.antivirus"),Messages("gmp.bulk_failure_antivirus.title")))
+          case Some(x) if x.toUpperCase.contains("SELECT") => Ok(views.html.bulk_failure(Messages("gmp.bulk.failure.missing"),Messages("gmp.bulk_failure_missing.title")))
+          case _ => Ok(views.html.bulk_failure(Messages("gmp.bulk.failure.generic"),Messages("gmp.bulk_failure_generic.title")))
         }
   }
 
