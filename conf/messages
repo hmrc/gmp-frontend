@@ -1,30 +1,38 @@
-# titles
-gmp.dashboard.title = GMP checker dashboard - GOV.UK
-gmp.more_bulk_results.title = Recent bulk calculations - GOV.UK
-gmp.member_details.title = Member details - GOV.UK
-gmp.pension_details.title = Pension scheme details - GOV.UK
-gmp.revaluation.title = GMP calculation at specific date - GOV.UK
-gmp.leaving.title = When did the member leave scheme? - GOV.UK
-gmp.results.title = GMP calculation result - GOV.UK
-gmp.revaluation_rate.title = GMP revaluation rate - GOV.UK
-gmp.calculation_type.title = GMP calculation type - GOV.UK
-gmp.equalise.title = GMP opposite gender - GOV.UK
-gmp.questionnaire.title = GMP checker survey - GOV.UK
-gmp.thank_you.title = GMP checker survey thanks - GOV.UK
-gmp.checker.title = GMP checker - GOV.UK
-gmp.contributions_earnings.title = Contributions and earnings - GOV.UK
-gmp.fileupload.title = Upload GMP file - GOV.UK
+############################################################################
+# page titles
+############################################################################
+gmp.bulk_failure_generic.title = GMP bulk file problem - GOV.UK
+gmp.bulk_failure_antivirus.title = GMP bulk file virus - GOV.UK
+gmp.bulk_failure_missing.title = GMP no bulk file - GOV.UK
+gmp.bulk_failure_duplicate.title = GMP duplicate file - GOV.UK
 gmp.bulk_reference.title = Name your GMP calculation - GOV.UK
 gmp.bulk_request_received.title = GMP bulk file received - GOV.UK
 gmp.bulk.results.title = Download GMP calculation - GOV.UK
+gmp.bulk.results_not_found.title = Calculation no longer available - GOV.UK
 gmp.bulk.wrong_user.title = Wrong GMP checker login - GOV.UK
-gmp.results.error = GMP checker error - GOV.UK
+gmp.contributions_earnings.title = Contributions and earnings - GOV.UK
+gmp.dashboard.title = GMP checker dashboard - GOV.UK
+gmp.leaving.title = When did the member leave scheme? - GOV.UK
+gmp.equalise.title = GMP opposite gender - GOV.UK
+gmp.questionnaire.title = GMP checker survey - GOV.UK
 gmp.inflation_proof.title = GMP inflation proofing - GOV.UK
-gmp.no_bulk_file.title = GMP no bulk file - GOV.UK
+gmp.member_details.title = Member details - GOV.UK
+gmp.more_bulk_results.title = Recent bulk calculations - GOV.UK
+gmp.pension_details.title = Pension scheme details - GOV.UK
+gmp.results.title = GMP calculation result - GOV.UK
+gmp.results.error = GMP checker error - GOV.UK
+gmp.revaluation.title = GMP calculation at specific date - GOV.UK
+gmp.revaluation_rate.title = GMP revaluation rate - GOV.UK
+gmp.calculation_type.title = GMP calculation type - GOV.UK
 gmp.offline.title = GMP checker offline - GOV.UK
-gmp.bulk_file_problem.title = GMP bulk file problem - GOV.UK
+gmp.checker.title = GMP checker - GOV.UK
+gmp.thank_you.title = GMP checker survey thanks - GOV.UK
+gmp.unauthorised.title = Unauthorised - GOV.UK
+gmp.fileupload.title = Upload GMP file - GOV.UK
 
+############################################################################
 # headers
+############################################################################
 gmp.results.table_caption = GMP calculation results per period
 gmp.bulk.results_not_found = Calculation no longer available
 gmp.signout = Sign out
@@ -81,7 +89,7 @@ gmp.bulk.explanations.failed.1=Requests where we can''t calculate a total GMP. G
 gmp.bulk.explanations.failed.2=Where there is no GMP, see ''Reason for error'' and '''What to do''.
 gmp.bulk.explanations.failed.3=You can then submit the calculation again request (either on its own or as part of another bulk file) or contact HM Revenue and Customs where advised.
 gmp.bulk.explanations.contsandearnings = A separate contributions and earnings file for all queries.
-gmp.bulk.wrong_user.header = There is a problem
+gmp.bulk.problem.header = There is a problem
 gmp.bulk.query_handling_message.header = Contact HMRC about a calculation
 gmp.bulk.query_handling_message.body = If the instruction is to contact HMRC because we can''t calculate a GMP, or if you disagree with the result of a successful calculation, you can do so in Shared Workspace''s eRoom.<br/><br/>To query several calculations at once, create a bulk query document from the template in the guidance and templates folder. Drag and drop the query document into a new entry in the bulk queries database. To query a small number of calculations, create a new entry in the single queries database for each calculation.
 
@@ -102,7 +110,9 @@ gmp.multi.dual_calc.header = Post-1990 GMP value
 gmp.post90.true = True gender
 gmp.post90.opposite = Opposite gender
 
+############################################################################
 # Buttons
+############################################################################
 gmp.continue.button = Continue
 gmp.check_gmp.button = Check GMP
 gmp.back.link = Back
@@ -113,7 +123,9 @@ gmp.link.contributions-earnings = View contributions and earnings
 gmp.bulk_reference.button = Confirm and submit
 gmp.bulk_request_received.button = Upload another file
 
+############################################################################
 # fields
+############################################################################
 gmp.date.start = Start date
 gmp.date.dol = Date of leaving
 gmp.day = Day
@@ -219,7 +231,9 @@ gmp.bulk.failure.generic = Something went wrong with uploading your file. <br/>T
 gmp.bulk.failure.duplicate_upload = <span class="lede">We think you have already uploaded this file.</span><br/><br/>We recommend you wait for the results to be ready and don''t duplicate file uploads. If you want to process the same file again, perhaps to give it a different name, <a href="/guaranteed-minimum-pension/upload-csv">resubmit it</a>.
 gmp.back_to_dashboard = Back to the GMP checker dashboard
 
+############################################################################
 # errors
+############################################################################
 gmp.error.revaluation_before_leaving = Enter a date on or after {0}
 gmp.error.revaluation_pre2016_not_left = Enter a date on or after 6 April 2016
 gmp.error.email.invalid = Enter a valid email address
@@ -309,7 +323,9 @@ gmp.error.scheme_details = Change scheme details
 gmp.error.download_CA1604 = Download CA1604 (PDF)
 gmp.error.no_conts_and_earnings = No contributions and earnings available
 
+############################################################################
 # calculation results
+############################################################################
 gmp.transfer.scheme.header = GMP at date of transfer
 gmp.divorce.scheme.header = GMP at date of divorce
 gmp.payable_age.header = GMP value at GMP payable age ({0})
@@ -341,7 +357,9 @@ gmp.reval_rate.subheader = Revaluation rate: {0}
 gmp.held_rate.subheader = Revaluation rate held for this SCON: {0}
 gmp.chosen_rate.subheader = Revaluation rate chosen: {0}
 
+############################################################################
 # Scenarios
+############################################################################
 gmp.scenarios.title = Choose what type of calculation you need for this member
 gmp.scenarios.payable_age = <span class="bold-small">GMP payable age</span>
 gmp.scenarios.spa = <span class="bold-small">State Pension age</span>
@@ -358,7 +376,9 @@ gmp.date_of_transfer = Date of transfer
 gmp.generic.yes=Yes
 gmp.generic.no=No
 
+############################################################################
 # Global Errors
+############################################################################
 gmp.cannot_calculate = We can''t calculate a Guaranteed Minimum Pension
 gmp.cannot_calculate_online = We can''t calculate a Guaranteed Minimum Pension online
 
@@ -369,7 +389,9 @@ gmp.only_part_problem = There is a problem with part of the calculation
 gmp.part_problem = There is a problem with all or part of the calculation
 gmp.unavailable = No GMP available
 
+############################################################################
 #Start page
+############################################################################
 gmp.start.service.downtime = This service is unavailable from 2am to 5am GMT due to regular maintenance. Please finish using the service before then or you will be unable to finish your tasks.
 gmp.start.subtitle = Use this service to request Guaranteed Minimum Pension calculations.
 gmp.start.gg-needed = You need a Government Gateway account in order to access the service.
@@ -384,14 +406,23 @@ gmp.start.requirements.firstname = The member''s First name
 gmp.start.requirements.lastname = The member''s Last name
 gmp.start.button = Start now
 
+############################################################################
 #Query Handling
+############################################################################
 gmp.queryhandling.resultsmessage = If you disagree with this calculation, contact HM Revenue and Customs by creating a new entry in the single queries database in Shared Workspace''s eRoom.
 gmp.queryhandling.contsandearnings = If you disagree with this information, contact HM Revenue and Customs by creating a new entry in the single queries database in Shared Workspace''s eRoom.
 gmp.queryhandling.changedetails.link = <a href='https://www.gov.uk/tell-hmrc-change-of-details' rel="external">How the member can tell HMRC their personal details have changed</a>
 
+############################################################################
 #Service unavailable
+############################################################################
 gmp.serviceunavailable.title = Service unavailable
 gmp.serviceunavailable.message = Sorry, we are experiencing technical problems. <br><p><a href="/guaranteed-minimum-pension">Try again</a> later or go to <a href="https://www.gov.uk">GOV.UK homepage</a>.
 
+############################################################################
 #CSV
+############################################################################
 gmp.upload_csv_column_headers = SCON,NINO,First name or initial,Last name,"Member Reference number",Calculation type. Enter a figure,"Date of leaving(DD/MM/YYYY)",GMP relevant date,Revaluation rate. Enter a figure,Opposite gender calculation
+
+
+gmp.unauthorised.message = You are not authorised to view this page

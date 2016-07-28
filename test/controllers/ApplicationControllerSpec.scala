@@ -17,6 +17,7 @@
 package controllers
 
 import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
+import play.api.i18n.Messages
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 
@@ -39,7 +40,7 @@ class ApplicationControllerSpec extends PlaySpec with OneServerPerSuite {
 
     "have a title of Unauthorised" in {
       val result = ApplicationController.unauthorised.apply(FakeRequest())
-      contentAsString(result) must include("<title>Unauthorised</title>")
+      contentAsString(result) must include(Messages("gmp.unauthorised.title"))
     }
 
     "have some text on the page" in {

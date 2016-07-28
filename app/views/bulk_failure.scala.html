@@ -14,14 +14,14 @@
 * limitations under the License.
 *@
 
-@(message: String)(implicit request: Request[_])
+@(message: String, title: String)(implicit request: Request[_])
 
 @import uk.gov.hmrc.play.views.html._
 @import uk.gov.hmrc.play.views.html.helpers._
 @import views.html.helpers._
 @import play.i18n._
 
-@gmp_main(title = Messages.get("gmp.bulk.wrong_user.header"),supportLinkEnabled = false) {
+@gmp_main(title = title,supportLinkEnabled = false) {
 
   <div class="grid">
       <div class="grid-2-3">

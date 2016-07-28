@@ -120,6 +120,7 @@ class FileUploadControllerSpec extends PlaySpec with OneServerPerSuite with Mock
             failure(user) { result =>
               status(result) must be(OK)
               contentAsString(result) must include(Messages("gmp.bulk.failure.generic"))
+              contentAsString(result) must include(Messages("gmp.bulk_failure_generic.title"))
             }
           }
         }
@@ -129,6 +130,7 @@ class FileUploadControllerSpec extends PlaySpec with OneServerPerSuite with Mock
             failure(user) { result =>
               status(result) must be(OK)
               contentAsString(result) must include(Messages("gmp.bulk.failure.antivirus"))
+              contentAsString(result) must include(Messages("gmp.bulk_failure_antivirus.title"))
             }
           }, "GET", "/upload-csv/failure?error_message=VIRUS")
         }
@@ -138,6 +140,7 @@ class FileUploadControllerSpec extends PlaySpec with OneServerPerSuite with Mock
             failure(user) { result =>
               status(result) must be(OK)
               contentAsString(result) must include(Messages("gmp.bulk.failure.missing"))
+              contentAsString(result) must include(Messages("gmp.bulk_failure_missing.title"))
             }
           }, "GET", "/upload-csv/failure?error_message=SELECT")
         }

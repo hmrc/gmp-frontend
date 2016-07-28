@@ -16,8 +16,10 @@
 
 @()(implicit request: Request[_])
 
-@gmp_main(title = "Unauthorised") {
+@import play.i18n._
 
-<h1>You are not authorised to view this page</h1>
+@gmp_main(title = Messages.get("gmp.unauthorised.title")) {
+
+<h1>@Messages.get("gmp.unauthorised.message")</h1>
 
 }
