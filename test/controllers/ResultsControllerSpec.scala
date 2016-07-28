@@ -563,6 +563,16 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
           }
         }
 
+        "show correct error page title" in {
+          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
+          when(mockCalculationConnector.calculateSingle(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(single63123ErrorResponse))
+          withAuthorisedUser { request =>
+            val result = TestResultsController.get.apply(request)
+            val content = contentAsString(result).replaceAll("&#x27;", "'")
+            content must include(Messages("gmp.results.error"))
+          }
+        }
+
         "show error box with member details single period" in {
           when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
           when(mockCalculationConnector.calculateSingle(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(single63123ErrorResponse))
