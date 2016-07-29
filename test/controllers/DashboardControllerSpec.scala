@@ -52,6 +52,11 @@ class DashboardControllerSpec extends PlaySpec with OneServerPerSuite with Mocki
       val result = route(FakeRequest(GET, "/guaranteed-minimum-pension/dashboard"))
       status(result.get) must not equal (NOT_FOUND)
     }
+
+    "respond to GET /guaranteed-minimum-pension" in {
+      val result = route(FakeRequest(GET, "/guaranteed-minimum-pension"))
+      status(result.get) must not equal (NOT_FOUND)
+    }
   }
 
   val recentBulkCalculations = List(new BulkPreviousRequest("1234","abcd",LocalDateTime.now(),LocalDateTime.now()), new BulkPreviousRequest("5678","efgh", LocalDateTime.now(),LocalDateTime.now()))
