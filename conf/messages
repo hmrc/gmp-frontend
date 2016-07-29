@@ -25,7 +25,6 @@ gmp.revaluation.title = GMP calculation at specific date - GOV.UK
 gmp.revaluation_rate.title = GMP revaluation rate - GOV.UK
 gmp.calculation_type.title = GMP calculation type - GOV.UK
 gmp.offline.title = GMP checker offline - GOV.UK
-gmp.checker.title = GMP checker - GOV.UK
 gmp.thank_you.title = GMP checker survey thanks - GOV.UK
 gmp.unauthorised.title = Unauthorised - GOV.UK
 gmp.fileupload.title = Upload GMP file - GOV.UK
@@ -388,23 +387,6 @@ gmp.errors.query_handling.header = Alternatively:
 gmp.only_part_problem = There is a problem with part of the calculation
 gmp.part_problem = There is a problem with all or part of the calculation
 gmp.unavailable = No GMP available
-
-############################################################################
-#Start page
-############################################################################
-gmp.start.service.downtime = This service is unavailable from 2am to 5am GMT due to regular maintenance. Please finish using the service before then or you will be unable to finish your tasks.
-gmp.start.subtitle = Use this service to request Guaranteed Minimum Pension calculations.
-gmp.start.gg-needed = You need a Government Gateway account in order to access the service.
-gmp.start.gg-enrol-message= You will need to enrol for the Guaranteed Minimum Pensions service on your Government Gateway account.  Enrolling can be done the first time you use the service.
-gmp.start.calculation.text = You will receive an instant result one member at a time and you can do as many calculations as you like. To query any calculation or information we may hold, you will need to sign up to Shared Workspace.
-gmp.start.calculation.heading = Requesting a Guaranteed Minimum Pension calculation
-gmp.start.requirements.heading = What you will need
-gmp.start.requirements.text = For each calculation HM Revenue and Customs will need the member''s:
-gmp.start.requirements.nino = The member''s National Insurance number (NINO)
-gmp.start.requirements.scon = The member''s Scheme number (SCON)
-gmp.start.requirements.firstname = The member''s First name
-gmp.start.requirements.lastname = The member''s Last name
-gmp.start.button = Start now
 
 ############################################################################
 #Query Handling
