@@ -5,6 +5,7 @@ gmp.bulk_failure_generic.title = GMP bulk file problem - GOV.UK
 gmp.bulk_failure_antivirus.title = GMP bulk file virus - GOV.UK
 gmp.bulk_failure_missing.title = GMP no bulk file - GOV.UK
 gmp.bulk_failure_duplicate.title = GMP duplicate file - GOV.UK
+gmp.bulk_failure_file_too_large.title = GMP file too large - GOV.UK
 gmp.bulk_reference.title = Name your GMP calculation - GOV.UK
 gmp.bulk_request_received.title = GMP bulk file received - GOV.UK
 gmp.bulk.results.title = Download GMP calculation - GOV.UK
@@ -215,7 +216,7 @@ gmp.download_templates_link = Download a template and instructions as a ZIP file
 gmp.more_results_link = More results
 gmp.previous_calculations = Recent bulk calculations
 gmp.single_calculation_text = Use the checker to input a member''s details and get an instant on-screen result.
-gmp.bulk_calculation_text = Upload the details of many members at once and we will email you when the calculation is done.
+gmp.bulk_calculation_text = Upload the details of up to XXXX members at once and we will email you when the calculations are done.
 gmp.previous_calculations_text = Results for the last three bulk requests made in the previous 30 days.
 gmp.bulk.wrong_user.login_text = You need to login with the same Government Gateway account that was used to submit the file.
 gmp.bulk.wrong_user.signout_text = and login with right account.
@@ -229,6 +230,7 @@ gmp.bulk.failure.antivirus = A virus was detected in the uploaded file. Create t
 gmp.bulk.failure.missing = You did not select a file to upload. Please go <a href="/guaranteed-minimum-pension/new-bulk-calculation">back</a>, browse for a file and try again.
 gmp.bulk.failure.generic = Something went wrong with uploading your file. <br/>There is probably a problem with the system so <a href="/guaranteed-minimum-pension/new-bulk-calculation">try again in a few moments</a>.
 gmp.bulk.failure.duplicate_upload = <span class="lede">We think you have already uploaded this file.</span><br/><br/>We recommend you wait for the results to be ready and don''t duplicate file uploads. If you want to process the same file again, perhaps to give it a different name, <a href="/guaranteed-minimum-pension/upload-csv">resubmit it</a>.
+gmp.bulk.failure.too_large = <span class="lede">The file is too large.</span><br/><br/>You should include the details of no more than x members in one file. Try splitting the calculation requests across two or more files and <a href="/guaranteed-minimum-pension/upload-csv">upload them</a> separately.
 gmp.back_to_dashboard = Back to the GMP checker dashboard
 
 ############################################################################
