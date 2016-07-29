@@ -42,7 +42,7 @@ GET         /questionnaire                                controllers.ExitQuesti
 POST        /questionnaire                                controllers.ExitQuestionnaireController.post
 GET         /questionnaire/thankyou                       controllers.ExitQuestionnaireController.showThankYou
 
-GET         /                                             controllers.StartController.get
+GET         /                                             controllers.DashboardController.get
 GET         /service-unavailable                          controllers.ServiceUnavailableController.get
 
 GET         /contributions-earnings                       controllers.ResultsController.getContributionsAndEarnings
