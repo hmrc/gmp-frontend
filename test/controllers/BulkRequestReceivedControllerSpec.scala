@@ -130,6 +130,20 @@ class BulkRequestReceivedControllerSpec extends PlaySpec with OneServerPerSuite 
           }
         }
 
+        "generic failure page if bulk fails for 5XX reason" in {
+
+          when(mockSessionService.fetchGmpBulkSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpBulkSession)))
+          when(mockBulkRequestCreationService.createBulkRequest(Matchers.any(),Matchers.any(),Matchers.any(),Matchers.any())).thenReturn(bulkRequest1)
+          when(mockGmpBulkConnector.sendBulkRequest(Matchers.any())(Matchers.any(),Matchers.any())).thenReturn(Future.successful(500))
+          withAuthorisedUser { user =>
+            getBulkRequestReceived(user) { result =>
+              status(result) must equal(OK)
+              contentAsString(result) must include(Messages("gmp.bulk.failure.generic"))
+              contentAsString(result) must include(Messages("gmp.bulk_failure_generic.title"))
+            }
+          }
+        }
+
         "throw exception when fails to get session" in {
 
           when(mockSessionService.fetchGmpBulkSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(None))
