@@ -88,7 +88,7 @@ class BulkRequestReceivedControllerSpec extends PlaySpec with OneServerPerSuite 
 
           when(mockSessionService.fetchGmpBulkSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpBulkSession)))
           when(mockBulkRequestCreationService.createBulkRequest(Matchers.any(),Matchers.any(),Matchers.any(),Matchers.any())).thenReturn(bulkRequest1)
-          when(mockGmpBulkConnector.sendBulkRequest(Matchers.any())(Matchers.any(),Matchers.any())).thenReturn(Future.successful(true))
+          when(mockGmpBulkConnector.sendBulkRequest(Matchers.any())(Matchers.any(),Matchers.any())).thenReturn(Future.successful(OK))
           withAuthorisedUser { user =>
             getBulkRequestReceived(user) { result =>
               status(result) must equal(OK)
@@ -102,16 +102,44 @@ class BulkRequestReceivedControllerSpec extends PlaySpec with OneServerPerSuite 
           }
         }
 
-        "respond with ok and failure page if bad request received" in {
+        "respond with ok and failure page if conflict received usually for a duplicate record trying to be inserted" in {
 
           when(mockSessionService.fetchGmpBulkSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpBulkSession)))
           when(mockBulkRequestCreationService.createBulkRequest(Matchers.any(),Matchers.any(),Matchers.any(),Matchers.any())).thenReturn(bulkRequest1)
-          when(mockGmpBulkConnector.sendBulkRequest(Matchers.any())(Matchers.any(),Matchers.any())).thenReturn(Future.successful(false))
+          when(mockGmpBulkConnector.sendBulkRequest(Matchers.any())(Matchers.any(),Matchers.any())).thenReturn(Future.successful(CONFLICT))
           withAuthorisedUser { user =>
             getBulkRequestReceived(user) { result =>
               status(result) must equal(OK)
               contentAsString(result) must include(Messages("gmp.bulk.failure.duplicate_upload"))
               contentAsString(result) must include(Messages("gmp.bulk_failure_duplicate.title"))
+            }
+          }
+        }
+
+        "respond with ok and failure page if file too large" in {
+
+          when(mockSessionService.fetchGmpBulkSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpBulkSession)))
+          when(mockBulkRequestCreationService.createBulkRequest(Matchers.any(),Matchers.any(),Matchers.any(),Matchers.any())).thenReturn(bulkRequest1)
+          when(mockGmpBulkConnector.sendBulkRequest(Matchers.any())(Matchers.any(),Matchers.any())).thenReturn(Future.successful(REQUEST_ENTITY_TOO_LARGE))
+          withAuthorisedUser { user =>
+            getBulkRequestReceived(user) { result =>
+              status(result) must equal(OK)
+              contentAsString(result) must include(Messages("gmp.bulk.failure.too_large"))
+              contentAsString(result) must include(Messages("gmp.bulk_failure_file_too_large.title"))
+            }
+          }
+        }
+
+        "generic failure page if bulk fails for 5XX reason" in {
+
+          when(mockSessionService.fetchGmpBulkSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpBulkSession)))
+          when(mockBulkRequestCreationService.createBulkRequest(Matchers.any(),Matchers.any(),Matchers.any(),Matchers.any())).thenReturn(bulkRequest1)
+          when(mockGmpBulkConnector.sendBulkRequest(Matchers.any())(Matchers.any(),Matchers.any())).thenReturn(Future.successful(500))
+          withAuthorisedUser { user =>
+            getBulkRequestReceived(user) { result =>
+              status(result) must equal(OK)
+              contentAsString(result) must include(Messages("gmp.bulk.failure.generic"))
+              contentAsString(result) must include(Messages("gmp.bulk_failure_generic.title"))
             }
           }
         }

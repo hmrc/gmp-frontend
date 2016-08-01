@@ -41,7 +41,7 @@ trait GmpBulkConnector extends ServicesConfig {
         throw new RuntimeException("User Authorisation failed"))).substring(5)
   }
 
-  def sendBulkRequest(bcr: BulkCalculationRequest)(implicit user: AuthContext, headerCarrier: HeaderCarrier): Future[Boolean] = {
+  def sendBulkRequest(bcr: BulkCalculationRequest)(implicit user: AuthContext, headerCarrier: HeaderCarrier): Future[Int] = {
 
     val baseURI = s"gmp/${getUser(user)}/gmp/bulk-data"
     val bulkUri = s"$serviceURL/$baseURI/"
@@ -51,10 +51,10 @@ trait GmpBulkConnector extends ServicesConfig {
 
     result.map { x =>
       Logger.debug(s"[GmpBulkConnector][sendBulkRequest][success] : $x")
-        true
+        x.status
     }.recover {
       case e: Throwable => Logger.debug(s"[GmpBulkConnector][sendBulkRequest][failure] : $e")
-        false
+        500
     }
   }
 
