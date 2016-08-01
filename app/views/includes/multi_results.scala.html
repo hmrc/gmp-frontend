@@ -24,6 +24,6 @@
     @includes.results_table(calculationResponse)
 </div>
 
-@includes.survivor_disclaimer(calculationResponse.calcType == CalculationType.SURVIVOR.toInt)
-
 @includes.conts_and_earnings_link(calculationResponse)
+
+@includes.survivor_disclaimer(calculationResponse.calcType == CalculationType.SURVIVOR.toInt)
