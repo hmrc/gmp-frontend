@@ -177,7 +177,6 @@ gmp.questionnaire.leave_details = Leave us your details if you would like to be 
 gmp.questionnaire.full_name = Full name
 gmp.questionnaire.phone_number = Phone number
 gmp.questionnaire.or = or
-gmp.questionnaire.optional = Optional
 gmp.what_did_you_think = What did you think of this service?
 gmp.what_did_you_think.seconds = (takes 30 seconds)
 gmp.or.go.to = or go to the
