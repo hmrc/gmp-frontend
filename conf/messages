@@ -90,6 +90,7 @@ gmp.bulk.explanations.failed.2=Where there is no GMP, see ''Reason for error'' a
 gmp.bulk.explanations.failed.3=You can then submit the calculation again request (either on its own or as part of another bulk file) or contact HM Revenue and Customs where advised.
 gmp.bulk.explanations.contsandearnings = A separate contributions and earnings file for all queries.
 gmp.bulk.problem.header = There is a problem
+gmp.bulk.file_too_large.header = The file is too large
 gmp.bulk.query_handling_message.header = Contact HMRC about a calculation
 gmp.bulk.query_handling_message.body = If the instruction is to contact HMRC because we can''t calculate a GMP, or if you disagree with the result of a successful calculation, you can do so in Shared Workspace''s eRoom.<br/><br/>To query several calculations at once, create a bulk query document from the template in the guidance and templates folder. Drag and drop the query document into a new entry in the bulk queries database. To query a small number of calculations, create a new entry in the single queries database for each calculation.
 
@@ -214,7 +215,7 @@ gmp.download_templates_link = Download a template and instructions as a ZIP file
 gmp.more_results_link = More results
 gmp.previous_calculations = Recent bulk calculations
 gmp.single_calculation_text = Use the checker to input a member''s details and get an instant on-screen result.
-gmp.bulk_calculation_text = Upload the details of up to XXXX members at once and we will email you when the calculations are done.
+gmp.bulk_calculation_text = Upload the details of up to 25000 members at once and we will email you when the calculations are done.
 gmp.previous_calculations_text = Results for the last three bulk requests made in the previous 30 days.
 gmp.bulk.wrong_user.login_text = You need to login with the same Government Gateway account that was used to submit the file.
 gmp.bulk.wrong_user.signout_text = and login with right account.
@@ -228,7 +229,7 @@ gmp.bulk.failure.antivirus = A virus was detected in the uploaded file. Create t
 gmp.bulk.failure.missing = You did not select a file to upload. Please go <a href="/guaranteed-minimum-pension/new-bulk-calculation">back</a>, browse for a file and try again.
 gmp.bulk.failure.generic = Something went wrong with uploading your file. <br/>There is probably a problem with the system so <a href="/guaranteed-minimum-pension/new-bulk-calculation">try again in a few moments</a>.
 gmp.bulk.failure.duplicate_upload = <span class="lede">We think you have already uploaded this file.</span><br/><br/>We recommend you wait for the results to be ready and don''t duplicate file uploads. If you want to process the same file again, perhaps to give it a different name, <a href="/guaranteed-minimum-pension/upload-csv">resubmit it</a>.
-gmp.bulk.failure.too_large = <span class="lede">The file is too large.</span><br/><br/>You should include the details of no more than x members in one file. Try splitting the calculation requests across two or more files and <a href="/guaranteed-minimum-pension/upload-csv">upload them</a> separately.
+gmp.bulk.failure.too_large = You should include the details of no more than 25000 members in one file. Try splitting the calculation requests across two or more files and <a href="/guaranteed-minimum-pension/upload-csv">upload them</a> separately.
 gmp.back_to_dashboard = Back to the GMP checker dashboard
 
 ############################################################################
