@@ -69,7 +69,7 @@ class GmpBulkConnectorSpec extends PlaySpec with OneServerPerSuite with MockitoS
     "send a bulk request with valid data but there is a duplicate" in {
       implicit val user = AuthContext(authority = Authority("1234", Accounts(psa = Some(PsaAccount(link, PsaId(psaId)))), None, None, CredentialStrength.None, ConfidenceLevel.L50))
       when(mockHttpPost.POST[BulkCalculationRequest, HttpResponse](Matchers.any(), Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any()))
-        .thenReturn(Future.successful(HttpResponse(responseStatus = CONFLICT)))
+        .thenReturn(Future.failed(new Upstream4xxResponse("Tried to insert duplicate", 409, 409)))
 
       val bcr = BulkCalculationRequest("upload1", "jim@jarmusch.com", "idreference",
         List(BulkCalculationRequestLine(1, Some(CalculationRequestLine("S1234567C", RandomNino.generate,
@@ -83,7 +83,7 @@ class GmpBulkConnectorSpec extends PlaySpec with OneServerPerSuite with MockitoS
     "send a bulk request with valid data but the file is too large" in {
       implicit val user = AuthContext(authority = Authority("1234", Accounts(psa = Some(PsaAccount(link, PsaId(psaId)))), None, None, CredentialStrength.None, ConfidenceLevel.L50))
       when(mockHttpPost.POST[BulkCalculationRequest, HttpResponse](Matchers.any(), Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any()))
-        .thenReturn(Future.successful(HttpResponse(responseStatus = REQUEST_ENTITY_TOO_LARGE)))
+        .thenReturn(Future.failed(new Upstream4xxResponse("File too large", 413, 413)))
 
       val bcr = BulkCalculationRequest("upload1", "jim@jarmusch.com", "idreference",
         List(BulkCalculationRequestLine(1, Some(CalculationRequestLine("S1234567C", RandomNino.generate,

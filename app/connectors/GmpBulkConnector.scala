@@ -18,15 +18,14 @@ package connectors
 
 import config.WSHttp
 import models.{BulkCalculationRequest, BulkPreviousRequest, BulkResultsSummary}
-import org.joda.time.{LocalDateTime, LocalDate}
+import org.joda.time.LocalDateTime
 import play.api.Logger
 import uk.gov.hmrc.play.config.ServicesConfig
 import uk.gov.hmrc.play.frontend.auth.AuthContext
-import uk.gov.hmrc.play.http.{HeaderCarrier, HttpGet, HttpPost, HttpResponse}
+import uk.gov.hmrc.play.http._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
-import scala.util.{Success, Failure}
 
 trait GmpBulkConnector extends ServicesConfig {
 
@@ -53,6 +52,12 @@ trait GmpBulkConnector extends ServicesConfig {
       Logger.debug(s"[GmpBulkConnector][sendBulkRequest][success] : $x")
         x.status
     }.recover {
+      case conflict: Upstream4xxResponse if (conflict.upstreamResponseCode == play.api.http.Status.CONFLICT) =>
+        Logger.debug(s"[GmpBulkConnector][sendBulkRequest][conflict]")
+        conflict.upstreamResponseCode
+      case large_file: Upstream4xxResponse if (large_file.upstreamResponseCode == play.api.http.Status.REQUEST_ENTITY_TOO_LARGE) =>
+        Logger.debug(s"[GmpBulkConnector][sendBulkRequest][file too large]")
+        large_file.upstreamResponseCode
       case e: Throwable => Logger.debug(s"[GmpBulkConnector][sendBulkRequest][failure] : $e")
         500
     }
