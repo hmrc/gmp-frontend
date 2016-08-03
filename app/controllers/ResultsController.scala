@@ -143,7 +143,7 @@ trait ResultsController extends GmpPageFlow {
           else None
         }
 
-        case 2 | 4 => {
+        case 2 | 3 | 4 => {
           leaving.leaving match {
             case Some(Leaving.NO) => None
             case _ => {
@@ -156,21 +156,6 @@ trait ResultsController extends GmpPageFlow {
             }
           }
         }
-
-        case 3 => {
-          leaving.leaving match {
-            case Some(Leaving.NO) => None
-            case _ => {
-              if (response.revaluationRate.isDefined && response.revaluationRate == Some("0"))
-                Some(Messages("gmp.chosen_rate.subheader", Messages(s"gmp.revaluation_rate.type_${response.revaluationRate.get}")) + " (" + Messages(s"gmp.revaluation_rate.type_${response.calculationPeriods.head.revaluationRate}") + ").")
-              else if (response.revaluationRate.isDefined)
-                Some(Messages("gmp.chosen_rate.subheader", Messages(s"gmp.revaluation_rate.type_${response.calculationPeriods.head.revaluationRate}")) + ".")
-              else
-                Some(Messages("gmp.held_rate.subheader", Messages(s"gmp.revaluation_rate.type_${response.calculationPeriods.head.revaluationRate}")) + ".")
-            }
-          }
-        }
-
 
       }
     }
