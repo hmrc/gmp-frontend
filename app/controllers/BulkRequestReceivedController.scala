@@ -48,9 +48,9 @@ trait BulkRequestReceivedController extends GmpController {
             gmpBulkConnector.sendBulkRequest(bulkRequest).map {
               x => x match {
                 case OK => Ok(views.html.bulk_request_received(bulkRequest.reference))
-                case CONFLICT => Ok(views.html.bulk_failure(Messages("gmp.bulk.failure.duplicate_upload"),Messages("gmp.bulk_failure_duplicate.title")))
-                case REQUEST_ENTITY_TOO_LARGE => Ok(views.html.bulk_failure(Messages("gmp.bulk.failure.too_large"),Messages("gmp.bulk_failure_file_too_large.title")))
-                case _ => Ok(views.html.bulk_failure(Messages("gmp.bulk.failure.generic"),Messages("gmp.bulk_failure_generic.title")))
+                case CONFLICT => Ok(views.html.bulk_failure(Messages("gmp.bulk.failure.duplicate_upload"),Messages("gmp.bulk.problem.header"), Messages("gmp.bulk_failure_duplicate.title")))
+                case REQUEST_ENTITY_TOO_LARGE => Ok(views.html.bulk_failure(Messages("gmp.bulk.failure.too_large"),Messages("gmp.bulk.file_too_large.header"),Messages("gmp.bulk_failure_file_too_large.title")))
+                case _ => Ok(views.html.bulk_failure(Messages("gmp.bulk.failure.generic"),Messages("gmp.bulk.problem.header"),Messages("gmp.bulk_failure_generic.title")))
               }
             }
           }
