@@ -23,7 +23,6 @@ import play.api.Logger
 import play.api.i18n.Messages
 import services.{BulkRequestCreationService, SessionService}
 
-import scala.concurrent.Future
 
 trait BulkRequestReceivedController extends GmpController {
 
