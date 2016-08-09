@@ -27,7 +27,7 @@ gmp.revaluation_rate.title = GMP revaluation rate - GOV.UK
 gmp.calculation_type.title = GMP calculation type - GOV.UK
 gmp.offline.title = GMP checker offline - GOV.UK
 gmp.thank_you.title = GMP checker survey thanks - GOV.UK
-gmp.unauthorised.title = Unauthorised - GOV.UK
+gmp.unauthorised.title = Wrong GMP checker login - GOV.UK
 gmp.fileupload.title = Upload GMP file - GOV.UK
 
 ############################################################################
