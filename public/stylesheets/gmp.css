@@ -366,3 +366,7 @@ caption {
 div.noMarginBottom {
   margin-bottom: 0px;
 }
+
+#choose-calculation-type{
+  font-weight: normal;
+}
