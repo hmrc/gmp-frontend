@@ -367,6 +367,15 @@ div.noMarginBottom {
   margin-bottom: 0px;
 }
 
+#thank-you-page h1 {
+    margin-bottom: 48px;
+}
+
+#thank-you-page h2 {
+    margin-bottom: 24px;
+    font-weight: normal;
+}
+
 #choose-calculation-type{
   font-weight: normal;
 }

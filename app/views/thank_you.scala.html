@@ -23,11 +23,11 @@
 
 @gmp_main(title = Messages.get("gmp.thank_you.title"),supportLinkEnabled = false, dashboardLinkEnabled = false) {
 
-  <div class="grid">
+  <div class="grid" id="thank-you-page">
       <div class="grid-2-3">
           <h1>@Messages.get("gmp.thank_you.header")</h1>
-          <br/>
-          <p class="lede">@Messages.get("gmp.thank_you.what_now")</p>
+
+          <h2>@Messages.get("gmp.thank_you.what_now")</h2>
 
           <form action="@routes.DashboardController.get">
               <button class="button" type="submit" id="request-another">@Messages.get("gmp.button.check_another")</button>
