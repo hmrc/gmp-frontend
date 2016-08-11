@@ -375,3 +375,7 @@ div.noMarginBottom {
     margin-bottom: 24px;
     font-weight: normal;
 }
+
+#choose-calculation-type{
+  font-weight: normal;
+}

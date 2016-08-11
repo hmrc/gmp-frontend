@@ -91,6 +91,7 @@ class DashboardControllerSpec extends PlaySpec with OneServerPerSuite with Mocki
           getDashboard(user) { result =>
             status(result) must equal(OK)
             contentAsString(result) must include(Messages("gmp.dashboard_header"))
+            contentAsString(result) must include(Messages("gmp.dashboard.choose_calculation_type"))
             contentAsString(result) must include(Messages("gmp.single_calculation_link"))
             contentAsString(result) must include(Messages("gmp.bulk_calculation_link"))
             contentAsString(result) must include(Messages("gmp.download_templates_link"))
