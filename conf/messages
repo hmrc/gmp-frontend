@@ -208,7 +208,8 @@ gmp.reference.calcname = Calculation name
 gmp.bulk_reference.reference_text = You can change the filename to help you recognise your results when they are returned (40 characters)
 gmp.bulk_request_received.text = <ul class="list-bullet"><li>Your calculation should be complete in less than 72 hours</li><li>It will then appear on the GMP checker dashboard with the reference {0}</li></ul>
 gmp.fileupload.hint = The file must contain mandatory information and in a specific format. You can <a href="{0}"> download a template and instructions as a ZIP file (3Kb)</a> on how to create your file first.
-gmp.dashboard_header = Choose a calculation type
+gmp.dashboard_header = GMP checker dashboard
+gmp.dashboard.choose_calculation_type = Choose the type of calculation you need.
 gmp.single_calculation_link = Single calculation
 gmp.bulk_calculation_link = Bulk calculation
 gmp.download_templates_link = Download a template and instructions as a ZIP file (3Kb)
