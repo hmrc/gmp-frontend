@@ -19,7 +19,7 @@ package models
 import play.api.libs.json.Json
 
 case class GmpSession(memberDetails: MemberDetails, scon: String, scenario: String, revaluationDate: Option[GmpDate], rate: Option[String],
-                      leaving: Leaving, equalise: Option[Int], dashboard: Dashboard)
+                      leaving: Leaving, equalise: Option[Int])
 
 
 object GmpSession {
