@@ -111,7 +111,7 @@ class RevaluationControllerSpec extends PlaySpec with OneServerPerSuite with Moc
     "authenticated users" must {
 
       val memberDetails = MemberDetails("", "", "")
-      val session = GmpSession(memberDetails, "", CalculationType.REVALUATION, None, None, Leaving(GmpDate(None, None, None), None), None)
+      val session = GmpSession(memberDetails, "", CalculationType.REVALUATION, None, None, Leaving(GmpDate(None, None, None), None), None, Dashboard(List()))
 
       "redirect to the date of leaving page" in {
         withAuthorisedUser { request =>
@@ -170,7 +170,7 @@ class RevaluationControllerSpec extends PlaySpec with OneServerPerSuite with Moc
 
       "with valid data" must {
 
-        val gmpSession = GmpSession(MemberDetails("", "", ""), "S1301234T", CalculationType.REVALUATION, None, Some(""), Leaving(GmpDate(None, None, None), None), None)
+        val gmpSession = GmpSession(MemberDetails("", "", ""), "S1301234T", CalculationType.REVALUATION, None, Some(""), Leaving(GmpDate(None, None, None), None), None, Dashboard(List()))
 
         "redirect" in {
 

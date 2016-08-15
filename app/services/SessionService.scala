@@ -40,7 +40,7 @@ trait SessionService extends SessionCacheWiring {
   def metrics: Metrics
 
   val GMP_SESSION_KEY = "gmp_session"
-  val cleanSession = GmpSession(MemberDetails("", "", ""), "", "", None, None, Leaving(GmpDate(None, None, None), None), None)
+  val cleanSession = GmpSession(MemberDetails("", "", ""), "", "", None, None, Leaving(GmpDate(None, None, None), None), None, Dashboard(List()))
 
   val GMP_BULK_SESSION_KEY = "gmp_bulk_session"
   val cleanBulkSession = GmpBulkSession(None, None, None)

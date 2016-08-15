@@ -121,7 +121,7 @@ class PensionDetailsControllerSpec extends PlaySpec with OneServerPerSuite with 
 
       val validGmpRequest = PensionDetails("S1301234T")
       val emptySconGmpRequest = PensionDetails("")
-      val gmpSession = GmpSession(MemberDetails("", "", ""), "S1301234T", "", None, None, Leaving(GmpDate(None, None, None), None), None)
+      val gmpSession = GmpSession(MemberDetails("", "", ""), "S1301234T", "", None, None, Leaving(GmpDate(None, None, None), None), None, Dashboard(List()))
 
       "validate scon and store scon and redirect" in {
         when(mockSessionService.cachePensionDetails(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))

@@ -106,7 +106,7 @@ class ScenarioControllerSpec extends PlaySpec with OneServerPerSuite with Mockit
 
     "redirect when authorised" in {
       val memberDetails = MemberDetails("", "", "")
-      val session = GmpSession(memberDetails, "", "", None, None, Leaving(GmpDate(None, None, None), None), None)
+      val session = GmpSession(memberDetails, "", "", None, None, Leaving(GmpDate(None, None, None), None), None, Dashboard(List()))
 
       withAuthorisedUser { request =>
         when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(session)))
@@ -150,7 +150,7 @@ class ScenarioControllerSpec extends PlaySpec with OneServerPerSuite with Mockit
     }
 
     "redirect when a choice is made" in {
-      val gmpSession = GmpSession(MemberDetails("", "", ""), "", CalculationType.DOL, None, None, Leaving(GmpDate(None, None, None), None), None)
+      val gmpSession = GmpSession(MemberDetails("", "", ""), "", CalculationType.DOL, None, None, Leaving(GmpDate(None, None, None), None), None, Dashboard(List()))
 
       when(mockSessionService.cacheScenario(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
 

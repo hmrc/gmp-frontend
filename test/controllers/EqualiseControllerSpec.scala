@@ -92,7 +92,7 @@ class EqualiseControllerSpec extends PlaySpec with OneServerPerSuite with Mockit
     "authorised users redirect" in {
 
       val memberDetails = MemberDetails("", "", "")
-      val session = GmpSession(memberDetails, "", CalculationType.REVALUATION, None, None, Leaving(GmpDate(None, None, None), None), None)
+      val session = GmpSession(memberDetails, "", CalculationType.REVALUATION, None, None, Leaving(GmpDate(None, None, None), None), None, Dashboard(List()))
 
       withAuthorisedUser { request =>
         when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(session)))
@@ -114,7 +114,7 @@ class EqualiseControllerSpec extends PlaySpec with OneServerPerSuite with Mockit
 
   }
 
-  val gmpSession = GmpSession(MemberDetails("", "", ""), "S1301234T", "", None, Some(""), Leaving(GmpDate(None, None, None), None), equalise = Some(1))
+  val gmpSession = GmpSession(MemberDetails("", "", ""), "S1301234T", "", None, Some(""), Leaving(GmpDate(None, None, None), None), equalise = Some(1), Dashboard(List()))
   "EqualiseController POST" must {
 
     "with invalid data" must {
@@ -142,7 +142,7 @@ class EqualiseControllerSpec extends PlaySpec with OneServerPerSuite with Mockit
 
         "with valid data" must {
 
-          val gmpSession = GmpSession(MemberDetails("", "", ""), "S1301234T", CalculationType.REVALUATION, None, Some(""), Leaving(GmpDate(None, None, None), None), None)
+          val gmpSession = GmpSession(MemberDetails("", "", ""), "S1301234T", CalculationType.REVALUATION, None, Some(""), Leaving(GmpDate(None, None, None), None), None, Dashboard(List()))
 
           "redirect" in {
 

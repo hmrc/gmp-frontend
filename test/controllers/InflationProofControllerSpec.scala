@@ -93,7 +93,7 @@ class InflationProofControllerSpec extends PlaySpec with OneServerPerSuite with 
 
           val revaluationDate = GmpDate(Some("1"), Some("1"), Some("2000"))
           val inflationProof = InflationProof(revaluationDate, Some("Yes"))
-          val session = GmpSession(MemberDetails("", "", ""), "", "3", Some(revaluationDate), None, Leaving(GmpDate(None, None, None), None), None)
+          val session = GmpSession(MemberDetails("", "", ""), "", "3", Some(revaluationDate), None, Leaving(GmpDate(None, None, None), None), None, Dashboard(List()))
 
           "redirect to the results" in {
             withAuthorisedUser { request =>
@@ -175,7 +175,7 @@ class InflationProofControllerSpec extends PlaySpec with OneServerPerSuite with 
 
       "redirect to the termination date page if the member has not left the scheme" in {
         val revaluationDate = GmpDate(Some("1"), Some("1"), Some("2000"))
-        val session = GmpSession(MemberDetails("", "", ""), "", "3", Some(revaluationDate), None, Leaving(GmpDate(None, None, None), Some(Leaving.NO)), None)
+        val session = GmpSession(MemberDetails("", "", ""), "", "3", Some(revaluationDate), None, Leaving(GmpDate(None, None, None), Some(Leaving.NO)), None, Dashboard(List()))
         withAuthorisedUser { request =>
           when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(session)))
           val result = TestInflationProofController.back.apply(request)
@@ -186,7 +186,7 @@ class InflationProofControllerSpec extends PlaySpec with OneServerPerSuite with 
 
       "redirect to the revaluation rate page if the member has left the scheme before 5/4/16" in {
         val revaluationDate = GmpDate(Some("1"), Some("1"), Some("2000"))
-        val session = GmpSession(MemberDetails("", "", ""), "", "3", Some(revaluationDate), None, Leaving(GmpDate(None, None, None), Some(Leaving.YES_BEFORE)), None)
+        val session = GmpSession(MemberDetails("", "", ""), "", "3", Some(revaluationDate), None, Leaving(GmpDate(None, None, None), Some(Leaving.YES_BEFORE)), None, Dashboard(List()))
         withAuthorisedUser { request =>
           when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(session)))
           val result = TestInflationProofController.back.apply(request)
@@ -197,7 +197,7 @@ class InflationProofControllerSpec extends PlaySpec with OneServerPerSuite with 
 
       "redirect to the revaluation rate page if the member has left the scheme after 5/4/16" in {
         val revaluationDate = GmpDate(Some("1"), Some("1"), Some("2000"))
-        val session = GmpSession(MemberDetails("", "", ""), "", "3", Some(revaluationDate), None, Leaving(GmpDate(None, None, None), Some(Leaving.YES_AFTER)), None)
+        val session = GmpSession(MemberDetails("", "", ""), "", "3", Some(revaluationDate), None, Leaving(GmpDate(None, None, None), Some(Leaving.YES_AFTER)), None, Dashboard(List()))
         withAuthorisedUser { request =>
           when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(session)))
           val result = TestInflationProofController.back.apply(request)
