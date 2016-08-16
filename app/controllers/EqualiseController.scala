@@ -44,7 +44,7 @@ trait EqualiseController extends GmpPageFlow {
     implicit user =>
       implicit request => {
 
-        Logger.debug(s"[EqualiseController][post][POST] : ${request.body}")
+        Logger.debug(s"[EqualiseController][POST] : ${request.body}")
 
         equaliseForm.bindFromRequest().fold(
 
@@ -52,9 +52,8 @@ trait EqualiseController extends GmpPageFlow {
 
           equalise => {
             sessionService.cacheEqualise(equalise.equalise) map {
-              sessionOpt => sessionOpt match {
-                case Some(session) => nextPage("EqualiseController",session)
-                case _ => throw new RuntimeException}
+              case Some(session) => nextPage("EqualiseController", session)
+              case _ => throw new RuntimeException
             }
           }
 
@@ -66,11 +65,9 @@ trait EqualiseController extends GmpPageFlow {
 
     implicit user =>
       implicit request => {
-        sessionService.fetchGmpSession() map { gmpSessionOpt =>
-          gmpSessionOpt match {
-            case Some(session) => previousPage("EqualiseController", session)
-            case _ => throw new RuntimeException
-          }
+        sessionService.fetchGmpSession() map {
+          case Some(session) => previousPage("EqualiseController", session)
+          case _ => throw new RuntimeException
         }
       }
   }

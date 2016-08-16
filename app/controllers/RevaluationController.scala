@@ -34,13 +34,11 @@ trait RevaluationController extends GmpPageFlow {
   def get = AuthorisedFor(GmpRegime, pageVisibilityPredicate).async {
     implicit user =>
       implicit request => sessionService.fetchLeaving.map {
-          leavingOpt => leavingOpt match {
-            case Some(leaving) => {
-              Ok(views.html.revaluation(revaluationForm.fill(RevaluationDate(GmpDate(None, None, None), leaving))))
-            }
-            case _ => Ok(views.html.revaluation(revaluationForm))
-          }
+        case Some(leaving) => {
+          Ok(views.html.revaluation(revaluationForm.fill(RevaluationDate(GmpDate(None, None, None), leaving))))
         }
+        case _ => Ok(views.html.revaluation(revaluationForm))
+      }
   }
 
   def post = AuthorisedFor(GmpRegime, pageVisibilityPredicate).async {
@@ -52,11 +50,9 @@ trait RevaluationController extends GmpPageFlow {
             Future.successful(BadRequest(views.html.revaluation(formWithErrors)))
           },
           revaluation => {
-            sessionService.cacheRevaluationDate(Some(revaluation.revaluationDate)).map { sessionOpt =>
-              sessionOpt match {
-                case Some(session) => nextPage("RevaluationController",session)
-                case _ => throw new RuntimeException
-              }
+            sessionService.cacheRevaluationDate(Some(revaluation.revaluationDate)).map {
+              case Some(session) => nextPage("RevaluationController", session)
+              case _ => throw new RuntimeException
             }
           }
         )
@@ -67,11 +63,9 @@ trait RevaluationController extends GmpPageFlow {
 
     implicit user =>
       implicit request =>{
-        sessionService.fetchGmpSession() map { gmpSessionOpt =>
-          gmpSessionOpt match {
-            case Some(session) => previousPage("RevaluationController", session)
-            case _ => throw new RuntimeException
-          }
+        sessionService.fetchGmpSession() map {
+          case Some(session) => previousPage("RevaluationController", session)
+          case _ => throw new RuntimeException
         }
       }
   }

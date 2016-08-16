@@ -35,10 +35,8 @@ trait DateOfLeavingController extends GmpPageFlow {
       implicit request =>
 
         sessionService.fetchGmpSession.map {
-          sessionOpt => sessionOpt match {
-            case Some(session) => Ok(views.html.dateofleaving(dateOfLeavingForm, session))
-            case _ => throw new RuntimeException
-          }
+          case Some(session) => Ok(views.html.dateofleaving(dateOfLeavingForm, session))
+          case _ => throw new RuntimeException
         }
 
 
@@ -51,18 +49,14 @@ trait DateOfLeavingController extends GmpPageFlow {
         dateOfLeavingForm.bindFromRequest.fold(
           formWithErrors => {
             sessionService.fetchGmpSession.map {
-              sessionOpt => sessionOpt match {
-                case Some(session) => BadRequest(views.html.dateofleaving(formWithErrors, session))
-                case _ => throw new RuntimeException
-              }
+              case Some(session) => BadRequest(views.html.dateofleaving(formWithErrors, session))
+              case _ => throw new RuntimeException
             }
           },
           leaving => {
             sessionService.cacheLeaving(leaving).map {
-              sessionOpt => sessionOpt match {
-                case Some(session) => nextPage("DateOfLeavingController", session)
-                case _ => throw new RuntimeException
-              }
+              case Some(session) => nextPage("DateOfLeavingController", session)
+              case _ => throw new RuntimeException
             }
           }
         )
@@ -73,11 +67,9 @@ trait DateOfLeavingController extends GmpPageFlow {
 
     implicit user =>
       implicit request => {
-        sessionService.fetchGmpSession() map { gmpSessionOpt =>
-          gmpSessionOpt match {
-            case Some(session) => previousPage("DateOfLeavingController", session)
-            case _ => throw new RuntimeException
-          }
+        sessionService.fetchGmpSession() map {
+          case Some(session) => previousPage("DateOfLeavingController", session)
+          case _ => throw new RuntimeException
         }
       }
   }

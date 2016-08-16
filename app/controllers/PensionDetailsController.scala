@@ -33,9 +33,8 @@ object PensionDetailsController extends PensionDetailsController {
   val authConnector = GmpFrontendAuthConnector
   val gmpConnector = GmpConnector
 
-  // $COVERAGE-OFF$Trivial and never going to be called by a test that uses it's own object implementation
+  // $COVERAGE-OFF$ Trivial and never going to be called by a test that uses it's own object implementation
   override def metrics = Metrics
-
   // $COVERAGE-ON$
 }
 
@@ -49,10 +48,8 @@ trait PensionDetailsController extends GmpPageFlow {
     implicit user =>
       implicit request => {
         sessionService.fetchPensionDetails.map {
-          sconOpt => sconOpt match {
-            case Some(scon) => Ok(views.html.pension_details(pensionDetailsForm.fill(PensionDetails(scon))))
-            case _ => Ok(views.html.pension_details(pensionDetailsForm))
-          }
+          case Some(scon) => Ok(views.html.pension_details(pensionDetailsForm.fill(PensionDetails(scon))))
+          case _ => Ok(views.html.pension_details(pensionDetailsForm))
         }
       }
   }
@@ -60,21 +57,23 @@ trait PensionDetailsController extends GmpPageFlow {
   def post = AuthorisedFor(GmpRegime, pageVisibilityPredicate).async {
     implicit user =>
       implicit request => {
+
         Logger.debug(s"[PensionDetailsController][post][POST] : ${request.body}")
+
         pensionDetailsForm.bindFromRequest().fold(
           formWithErrors => {
             Future.successful(BadRequest(views.html.pension_details(formWithErrors)))
           },
           pensionDetails => {
+
             val validateSconRequest = ValidateSconRequest(pensionDetails.scon.toUpperCase)
+
             gmpConnector.validateScon(validateSconRequest) flatMap {
               response => {
                 if (response.sconExists) {
-                  sessionService.cachePensionDetails(pensionDetails.scon.toUpperCase).map { sessionOpt =>
-                    sessionOpt match {
-                      case Some(session) => nextPage("PensionDetailsController", session)
-                      case _ => throw new RuntimeException
-                    }
+                  sessionService.cachePensionDetails(pensionDetails.scon.toUpperCase).map {
+                    case Some(session) => nextPage("PensionDetailsController", session)
+                    case _ => throw new RuntimeException
                   }
                 }
                 else {

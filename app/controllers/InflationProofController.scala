@@ -37,7 +37,9 @@ trait InflationProofController extends GmpPageFlow {
   def post = AuthorisedFor(GmpRegime, pageVisibilityPredicate).async {
     implicit user =>
       implicit request => {
+
         Logger.debug(s"[InflationProofController][POST] : ${request.body}")
+
         inflationProofForm.bindFromRequest.fold(
           formWithErrors => {
             Future.successful(BadRequest(views.html.inflation_proof(formWithErrors)))
@@ -47,11 +49,9 @@ trait InflationProofController extends GmpPageFlow {
               case Some("Yes") => Some(revaluation.revaluationDate)
               case _ => None
             }
-            sessionService.cacheRevaluationDate(dateToStore).map { gmpSessionOpt =>
-              gmpSessionOpt match {
-                case Some(session) => nextPage("InflationProofController", session)
-                case _ => throw new RuntimeException
-              }
+            sessionService.cacheRevaluationDate(dateToStore).map {
+              case Some(session) => nextPage("InflationProofController", session)
+              case _ => throw new RuntimeException
             }
           }
         )
@@ -62,11 +62,9 @@ trait InflationProofController extends GmpPageFlow {
 
     implicit user =>
       implicit request => {
-        sessionService.fetchGmpSession() map { gmpSessionOpt =>
-          gmpSessionOpt match {
-            case Some(session) => previousPage("InflationProofController", session)
-            case _ => throw new RuntimeException
-          }
+        sessionService.fetchGmpSession() map {
+          case Some(session) => previousPage("InflationProofController", session)
+          case _ => throw new RuntimeException
         }
       }
   }

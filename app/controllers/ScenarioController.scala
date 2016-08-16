@@ -42,16 +42,16 @@ trait ScenarioController extends GmpPageFlow {
 
     implicit user =>
       implicit request => {
+
         Logger.debug(s"[ScenarioController][post][POST] : ${request.body}")
+
         scenarioForm.bindFromRequest().fold(
           formWithErrors => {
             Future.successful(BadRequest(views.html.scenario(formWithErrors)))
           }, calculationType => {
-            sessionService.cacheScenario(calculationType.calcType.get) map { sessionOpt =>
-              sessionOpt match {
-                case Some(session) => nextPage("ScenarioController", session)
-                case _ => throw new RuntimeException
-              }
+            sessionService.cacheScenario(calculationType.calcType.get) map {
+              case Some(session) => nextPage("ScenarioController", session)
+              case _ => throw new RuntimeException
             }
           }
 
@@ -63,11 +63,9 @@ trait ScenarioController extends GmpPageFlow {
 
     implicit user =>
       implicit request => {
-        sessionService.fetchGmpSession() map { gmpSessionOpt =>
-          gmpSessionOpt match {
-            case Some(session) => previousPage("ScenarioController", session)
-            case _ => throw new RuntimeException
-          }
+        sessionService.fetchGmpSession() map {
+          case Some(session) => previousPage("ScenarioController", session)
+          case _ => throw new RuntimeException
         }
       }
   }
