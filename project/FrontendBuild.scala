@@ -26,7 +26,7 @@ private object AppDependencies {
   private val playJsonLogger = "2.1.1"
   private val httpVerbs = "3.3.0"
   private val taxyearVersion = "0.2.0"
-  private val playPartialsVersion = "4.4.0"
+  private val playPartialsVersion = "4.2.0"
   private val emailAddressVersion = "1.1.0"
   private val bulkEntityStreamingVersion = "1.0.0"
 
