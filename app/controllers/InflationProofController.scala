@@ -51,7 +51,9 @@ trait InflationProofController extends GmpPageFlow {
             }
             sessionService.cacheRevaluationDate(dateToStore).map {
               case Some(session) => nextPage("InflationProofController", session)
+                  // $COVERAGE-OFF$
               case _ => throw new RuntimeException
+                // $COVERAGE-ON$
             }
           }
         )

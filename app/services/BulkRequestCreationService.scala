@@ -51,7 +51,6 @@ trait BulkRequestCreationService extends BulkEntityProcessor[BulkCalculationRequ
 
   val LINE_FEED: Int = 10
 
-
   private val DATE_FORMAT: String = "yyyy-MM-dd"
 
   val inputDateFormatter = DateTimeFormat.forPattern("dd/MM/yyyy")
@@ -63,8 +62,6 @@ trait BulkRequestCreationService extends BulkEntityProcessor[BulkCalculationRequ
   def createBulkRequest(collection: String, id: String, email: String, reference: String): BulkCalculationRequest = {
 
     val attachmentUrl = s"${baseUrl("attachments")}/attachments-internal/$collection/$id"
-    //val fileData = sourceData(attachmentUrl).toList.mkString
-    //val bulkCalculationRequestLines: List[BulkCalculationRequestLine] = generateBulkCalculationRequestList(fileData)
     val bulkCalculationRequestLines: List[BulkCalculationRequestLine] = list(sourceData(attachmentUrl), LINE_FEED.toByte.toChar, constructBulkCalculationRequestLine _)
 
     if (bulkCalculationRequestLines.size == 1){
@@ -79,19 +76,6 @@ trait BulkRequestCreationService extends BulkEntityProcessor[BulkCalculationRequ
       req
     }
   }
-
-//  private def generateBulkCalculationRequestList(data: String): List[BulkCalculationRequestLine] = {
-//    data.map {
-//      case '’' => '''
-//      case c => c
-//    }.split(LINE_FEED.toByte.toChar).drop(1).map {
-//      constructBulkCalculationRequestLine
-//    }.toList match {
-//        // If there is nothing in the list, produce a failed calc in the response which shows this
-//      case Nil => List(BulkCalculationRequestLine(1, None, None, Some(Map(BulkRequestCsvColumn.LINE_ERROR_EMPTY.toString -> Messages("gmp.error.parsing.empty_file")))))
-//      case x => x
-//    }
-//  }
 
   private def constructCalculationRequestLine(line: String): CalculationRequestLine = {
 
@@ -130,9 +114,9 @@ trait BulkRequestCreationService extends BulkEntityProcessor[BulkCalculationRequ
     val tryConverting = Try(number.toInt)
 
     tryConverting match {
-      case Success(number) => Some(number)
-      case Failure(f) =>
-        Logger.debug(s"[BulkCreationService][protectedToInt : ${f.getMessage}]")
+      case Success(n) => Some(n)
+      case Failure(e) =>
+        Logger.warn(s"[BulkCreationService][protectedToInt] ${e.getMessage}", e)
         None
     }
   }
@@ -142,13 +126,11 @@ trait BulkRequestCreationService extends BulkEntityProcessor[BulkCalculationRequ
 
     tryConverting match {
       case Success(convertedDate) => Some(convertedDate)
-      case Failure(f) =>
-        Logger.debug(s"[BulkCreationService][protectedDateConvert : ${f.getMessage}]")
+      case Failure(e) =>
+        Logger.warn(s"[BulkCreationService][protectedDateConvert] ${e.getMessage}", e)
         None
     }
   }
-
-
 
   private def determineTerminationDate(termDate: String, revalDate: String, calcType: String): Option[String] = {
     termDate match {
