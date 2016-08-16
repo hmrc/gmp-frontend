@@ -150,10 +150,8 @@ class BulkRequestReceivedControllerSpec extends PlaySpec with OneServerPerSuite 
 
           withAuthorisedUser { user =>
             getBulkRequestReceived(user) { result =>
-              intercept[RuntimeException] {
-                status(result) must equal(OK)
-              }
-
+              contentAsString(result)replaceAll("&#x27;", "'") must include (Messages("gmp.cannot_calculate.gmp"))
+              contentAsString(result) must include (Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/upload-csv"))
             }
           }
         }

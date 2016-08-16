@@ -44,16 +44,14 @@ trait BulkRequestReceivedController extends GmpController {
 
             gmpBulkConnector.sendBulkRequest(bulkRequest).map {
               x => x match {
-                case OK => Future.successful(Ok(views.html.bulk_request_received(bulkRequest.reference)))
-                case CONFLICT => Future.successful(Ok(views.html.failure(Messages("gmp.bulk.failure.duplicate_upload"), Messages("gmp.bulk.problem.header"), Messages("gmp.bulk_failure_duplicate.title"))))
-                case REQUEST_ENTITY_TOO_LARGE => Future.successful(Ok(views.html.failure(Messages("gmp.bulk.failure.too_large"), Messages("gmp.bulk.file_too_large.header"), Messages("gmp.bulk_failure_file_too_large.title"))))
-                case _ => Future.successful(Ok(views.html.failure(Messages("gmp.bulk.failure.generic"), Messages("gmp.bulk.problem.header"), Messages("gmp.bulk_failure_generic.title"))))
+                case OK => Ok(views.html.bulk_request_received(bulkRequest.reference))
+                case CONFLICT => Ok(views.html.failure(Messages("gmp.bulk.failure.duplicate_upload"), Messages("gmp.bulk.problem.header"), Messages("gmp.bulk_failure_duplicate.title")))
+                case REQUEST_ENTITY_TOO_LARGE => Ok(views.html.failure(Messages("gmp.bulk.failure.too_large"), Messages("gmp.bulk.file_too_large.header"), Messages("gmp.bulk_failure_file_too_large.title")))
+                case _ => Ok(views.html.failure(Messages("gmp.bulk.failure.generic"), Messages("gmp.bulk.problem.header"), Messages("gmp.bulk_failure_generic.title")))
               }
             }
           }
-        }
-          }
-          case _ => Future.successful(Ok(views.html.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/dashboard"),Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title"))))
+          case _ => Future.successful(Ok(views.html.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/upload-csv"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title"))))
         }
       }
   }

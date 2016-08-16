@@ -101,10 +101,11 @@ trait ResultsController extends GmpPageFlow {
                       }
                     }
                   }
-                  case _ => session match {
-                    case _ if session.scon == "" => Future.successful(Ok(views.html.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/pension-details"),Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title"))))
-                    case _ if session.memberDetails.nino == "" || session.memberDetails.firstForename == "" || session.memberDetails.surname == ""  => Future.successful(Ok(views.html.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/member-details"),Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title"))))
-                  }
+//                  }
+//                  case _ => session match {
+//                    case _ if session.scon == "" => Future.successful(Ok(views.html.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/pension-details"),Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title"))))
+//                    case _ if session.memberDetails.nino == "" || session.memberDetails.firstForename == "" || session.memberDetails.surname == ""  => Future.successful(Ok(views.html.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/member-details"),Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title"))))
+//                  }
                 }
               case _ => Future.successful(Ok(views.html.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/dashboard"),Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title"))))
             }
