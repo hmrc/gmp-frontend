@@ -37,7 +37,7 @@ trait GmpConnector extends ServicesConfig {
 
   lazy val serviceURL = baseUrl("gmp")
 
-  def getUser(user: AuthContext) : String = {
+  def getUser(user: AuthContext): String = {
     user.principal.accounts.psa.map(_.link).getOrElse(
       user.principal.accounts.psp.map(_.link).getOrElse(
         throw new RuntimeException("User Authorisation failed"))).substring(5)
@@ -59,9 +59,15 @@ trait GmpConnector extends ServicesConfig {
       case _ => timer.stop()
     }
 
+    // $COVERAGE-OFF$
     result onSuccess {
       case response => Logger.debug(s"[GmpConnector][calculateSingle][response] : $response")
     }
+
+    result onFailure {
+      case e: Exception => Logger.error(s"[GmpConnector][calculateSingle] ${e.getMessage}", e)
+    }
+    // $COVERAGE-ON$
 
     result
   }
@@ -76,21 +82,26 @@ trait GmpConnector extends ServicesConfig {
     val timer = metrics.gmpConnectorTimer.time()
     val result = httpPost.POST[ValidateSconRequest, ValidateSconResponse](validateSconUri, validateSconRequest)
 
-    Logger.debug(s"[GmpConnector][validateScon][POST] : $validateSconRequest")
+    Logger.debug(s"[GmpConnector][validateScon][POST] $validateSconRequest")
 
-    result onComplete {
-      case _ => timer.stop()
-    }
+    result onComplete (_ => timer.stop())
 
+    // $COVERAGE-OFF$
     result onSuccess {
       case response => Logger.debug(s"[GmpConnector][validateScon][response] : $response")
     }
+
+    result onFailure {
+      case e: Exception => Logger.error(s"[GmpConnector][validateScon] ${e.getMessage}", e)
+    }
+    // $COVERAGE-ON$
+
     result
   }
 }
 
 object GmpConnector extends GmpConnector {
-  // $COVERAGE-OFF$Trivial and never going to be called by a test that uses it's own object implementation
+  // $COVERAGE-OFF$ Trivial and never going to be called by a test that uses it's own object implementation
   override def metrics = Metrics
 
   override val applicationConfig: ApplicationConfig = ApplicationConfig

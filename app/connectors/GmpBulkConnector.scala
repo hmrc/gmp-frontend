@@ -51,14 +51,16 @@ trait GmpBulkConnector extends ServicesConfig {
     result.map { x =>
       Logger.debug(s"[GmpBulkConnector][sendBulkRequest][success] : $x")
         x.status
-    }.recover {
-      case conflict: Upstream4xxResponse if (conflict.upstreamResponseCode == play.api.http.Status.CONFLICT) =>
-        Logger.debug(s"[GmpBulkConnector][sendBulkRequest][conflict]")
+    } recover {
+      case conflict: Upstream4xxResponse if conflict.upstreamResponseCode == play.api.http.Status.CONFLICT =>
+        Logger.warn(s"[GmpBulkConnector][sendBulkRequest] Conflict")
         conflict.upstreamResponseCode
-      case large_file: Upstream4xxResponse if (large_file.upstreamResponseCode == play.api.http.Status.REQUEST_ENTITY_TOO_LARGE) =>
-        Logger.debug(s"[GmpBulkConnector][sendBulkRequest][file too large]")
+
+      case large_file: Upstream4xxResponse if large_file.upstreamResponseCode == play.api.http.Status.REQUEST_ENTITY_TOO_LARGE =>
+        Logger.warn(s"[GmpBulkConnector][sendBulkRequest] File too large")
         large_file.upstreamResponseCode
-      case e: Throwable => Logger.debug(s"[GmpBulkConnector][sendBulkRequest][failure] : $e")
+
+      case e: Throwable => Logger.error(s"[GmpBulkConnector][sendBulkRequest] ${e.getMessage}", e)
         500
     }
   }
@@ -71,9 +73,15 @@ trait GmpBulkConnector extends ServicesConfig {
 
     Logger.debug(s"[GmpBulkConnector][getPreviousBulkRequests][GET]")
 
+    // $COVERAGE-OFF$
     result onSuccess {
       case response => Logger.debug(s"[GmpBulkConnector][getPreviousBulkRequests][response] : $response")
     }
+
+    result onFailure {
+      case e: Exception => Logger.error(s"[GmpBulkConnector][getPreviousBulkRequests] ${e.getMessage}", e)
+    }
+    // $COVERAGE-ON$
 
     result
 
@@ -88,23 +96,36 @@ trait GmpBulkConnector extends ServicesConfig {
 
     Logger.debug(s"[GmpBulkConnector][getBulkResultsSummary][GET] reference : $uploadReference")
 
+    // $COVERAGE-OFF$
     result onSuccess {
       case response => Logger.debug(s"[GmpBulkConnector][getBulkResultsSummary][response] : $response")
     }
+
+    result onFailure {
+      case e: Exception => Logger.error(s"[GmpBulkConnector][getBulkResultsSummary] ${e.getMessage}", e)
+    }
+    // $COVERAGE-ON$
+
     result
   }
 
   def getResultsAsCsv(uploadReference: String, filter: String)(implicit user: AuthContext, headerCarrier: HeaderCarrier): Future[HttpResponse] = {
+
     val baseURI = s"gmp/${getUser(user)}/gmp/get-results-as-csv"
     val bulkUri = s"$serviceURL/$baseURI/$uploadReference/$filter"
-
     val result = httpGet.GET(bulkUri)
 
     Logger.debug(s"[GmpBulkConnector][getResultsAsCsv][GET] reference : $uploadReference")
 
+    // $COVERAGE-OFF$
     result onSuccess {
       case response => Logger.debug(s"[GmpBulkConnector][getResultsAsCsv][response] : $response")
     }
+
+    result onFailure {
+      case e: Exception => Logger.error(s"[GmpBulkConnector][getResultsAsCsv] ${e.getMessage}", e)
+    }
+    // $COVERAGE-ON$
 
     result.map {
       response => response
@@ -112,16 +133,22 @@ trait GmpBulkConnector extends ServicesConfig {
   }
 
   def getContributionsAndEarningsAsCsv(uploadReference: String)(implicit user: AuthContext, headerCarrier: HeaderCarrier): Future[HttpResponse] = {
+
     val baseURI = s"gmp/${getUser(user)}/gmp/get-contributions-as-csv"
     val bulkUri = s"$serviceURL/$baseURI/$uploadReference"
-
     val result = httpGet.GET(bulkUri)
 
     Logger.debug(s"[GmpBulkConnector][getContributionsAndEarningsAsCsv][GET] reference : $uploadReference")
 
+    // $COVERAGE-OFF$
     result onSuccess {
       case response => Logger.debug(s"[GmpBulkConnector][getContributionsAndEarningsAsCsv][response] : $response")
     }
+
+    result onFailure {
+      case e: Exception => Logger.error(s"[GmpBulkConnector][getContributionsAndEarningsAsCsv] ${e.getMessage}", e)
+    }
+    // $COVERAGE-ON$
 
     result.map {
       response => response
