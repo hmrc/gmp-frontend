@@ -954,12 +954,60 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
 
         "go to failure page when session not returned" in {
           when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(None))
-
-
           withAuthorisedUser { request =>
             val result = TestResultsController.getContributionsAndEarnings.apply(request)
             contentAsString(result)replaceAll("&#x27;", "'") must include (Messages("gmp.cannot_calculate.gmp"))
             contentAsString(result) must include (Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/dashboard"))
+          }
+        }
+
+        "go to failure page when session missing scon" in {
+          val emptySession = GmpSession(MemberDetails("", "", ""), "", "", None, None, Leaving(GmpDate(None, None, None), None), None)
+          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(emptySession)))
+          withAuthorisedUser { request =>
+            val result = TestResultsController.getContributionsAndEarnings.apply(request)
+            contentAsString(result)replaceAll("&#x27;", "'") must include (Messages("gmp.cannot_calculate.gmp"))
+            contentAsString(result) must include (Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/pension-details"))
+          }
+        }
+
+        "go to failure page when session missing nino" in {
+          val emptySession = GmpSession(MemberDetails("", "", ""), "S1234567T", "", None, None, Leaving(GmpDate(None, None, None), None), None)
+          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(emptySession)))
+          withAuthorisedUser { request =>
+            val result = TestResultsController.getContributionsAndEarnings.apply(request)
+            contentAsString(result)replaceAll("&#x27;", "'") must include (Messages("gmp.cannot_calculate.gmp"))
+            contentAsString(result) must include (Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/member-details"))
+          }
+        }
+
+        "go to failure page when session missing firstname" in {
+          val emptySession = GmpSession(MemberDetails(nino, "", ""), "S1234567T", "", None, None, Leaving(GmpDate(None, None, None), None), None)
+          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(emptySession)))
+          withAuthorisedUser { request =>
+            val result = TestResultsController.getContributionsAndEarnings.apply(request)
+            contentAsString(result)replaceAll("&#x27;", "'") must include (Messages("gmp.cannot_calculate.gmp"))
+            contentAsString(result) must include (Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/member-details"))
+          }
+        }
+
+        "go to failure page when session missing lastname" in {
+          val emptySession = GmpSession(MemberDetails(nino, "A", ""), "S1234567T", "", None, None, Leaving(GmpDate(None, None, None), None), None)
+          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(emptySession)))
+          withAuthorisedUser { request =>
+            val result = TestResultsController.getContributionsAndEarnings.apply(request)
+            contentAsString(result)replaceAll("&#x27;", "'") must include (Messages("gmp.cannot_calculate.gmp"))
+            contentAsString(result) must include (Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/member-details"))
+          }
+        }
+
+        "go to failure page when session missing scenario" in {
+          val emptySession = GmpSession(MemberDetails(nino, "A", "AAA"), "S1234567T", "", None, None, Leaving(GmpDate(None, None, None), None), None)
+          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(emptySession)))
+          withAuthorisedUser { request =>
+            val result = TestResultsController.getContributionsAndEarnings.apply(request)
+            contentAsString(result)replaceAll("&#x27;", "'") must include (Messages("gmp.cannot_calculate.gmp"))
+            contentAsString(result) must include (Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/calculation-reason"))
           }
         }
 

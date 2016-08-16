@@ -326,7 +326,7 @@ gmp.error.scheme_details = Change scheme details
 gmp.error.download_CA1604 = Download CA1604 (PDF)
 gmp.error.no_conts_and_earnings = No contributions and earnings available
 
-gmp.error.session_parts_missing = You haven't given us enough information about the member and type of calculation you need or it has been too long since you did so.<br/><a href="{0}">Go back</a> and fill in the information required.
+gmp.error.session_parts_missing = You haven''t given us enough information about the member and type of calculation you need or it has been too long since you did so.<br/><a href="{0}"">Go back</a> and fill in the information required.
 
 ############################################################################
 # calculation results
