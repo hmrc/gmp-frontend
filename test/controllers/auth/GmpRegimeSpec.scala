@@ -92,7 +92,7 @@ class GmpRegimeSpec extends PlaySpec with OneServerPerSuite with MockitoSugar wi
             SessionKeys.userId -> userId)
 
           when(mockAuthConnector.currentAuthority(Matchers.any())) thenReturn {
-            Future.successful(Some(Authority(userId, Accounts(psa = Some(PsaAccount("gmp/B1234567", PsaId("B1234567")))), None, None, CredentialStrength.None, ConfidenceLevel.L50)))
+            Future.successful(Some(Authority(userId, Accounts(psa = Some(PsaAccount("gmp/B1234567", PsaId("B1234567")))), None, None, CredentialStrength.None, ConfidenceLevel.L50, None, None)))
           }
 
           val result = TestController.testRoute.apply(request)
@@ -112,7 +112,7 @@ class GmpRegimeSpec extends PlaySpec with OneServerPerSuite with MockitoSugar wi
             SessionKeys.userId -> userId)
 
           when(mockAuthConnector.currentAuthority(Matchers.any())) thenReturn {
-            Future.successful(Some(Authority(userId, Accounts(org = Some(OrgAccount("org/1234", Org("1234")))), None, None, CredentialStrength.None, ConfidenceLevel.L50)))
+            Future.successful(Some(Authority(userId, Accounts(org = Some(OrgAccount("org/1234", Org("1234")))), None, None, CredentialStrength.None, ConfidenceLevel.L50, None, None)))
           }
           val result = TestController.testRoute.apply(request)
           status(result) must be(SEE_OTHER)

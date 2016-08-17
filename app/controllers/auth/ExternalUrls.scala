@@ -28,4 +28,5 @@ object ExternalUrls extends RunMode {
   val signOutPath = Play.configuration.getString("gg-urls.signout_path").getOrElse("")
   val signIn = s"$companyAuthHost/gg/$loginPath?continue=$loginCallback"
   val signOut = s"$companyAuthHost/gg/$signOutPath?continue=$signOutCallback"
+  val continue = Play.configuration.getString("gg-urls.continue.url").getOrElse("")
 }

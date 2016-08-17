@@ -47,7 +47,7 @@ class BulkRequestReceivedControllerSpec extends PlaySpec with OneServerPerSuite 
   val mockBulkRequestCreationService = mock[BulkRequestCreationService]
   val mockGmpBulkConnector = mock[GmpBulkConnector]
 
-  implicit val user = AuthContext(authority = Authority("1234", Accounts(psa = Some(PsaAccount("link", PsaId("B1234567")))), None, None, CredentialStrength.None, ConfidenceLevel.L50))
+  implicit val user = AuthContext(authority = Authority("1234", Accounts(psa = Some(PsaAccount("link", PsaId("B1234567")))), None, None, CredentialStrength.None, ConfidenceLevel.L50, None, None))
   implicit val hc = new HeaderCarrier(sessionId = Some(SessionId(s"session-${UUID.randomUUID}")))
 
   val callBackData = CallBackData("AAAAA", "11111", 1L, Some("Ted"), Some("application/json"), "YYYYYYY", None)
