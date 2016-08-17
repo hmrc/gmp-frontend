@@ -19,6 +19,7 @@ package controllers
 import config.GmpFrontendAuthConnector
 import connectors.GmpBulkConnector
 import controllers.auth.GmpRegime
+import play.api.Logger
 import uk.gov.hmrc.play.http.{NotFoundException, Upstream4xxResponse}
 
 trait BulkResultsController extends GmpController {
@@ -27,19 +28,29 @@ trait BulkResultsController extends GmpController {
 
   def get(uploadReference: String, comingFromPage: Int) = AuthorisedFor(GmpRegime, pageVisibilityPredicate).async {
 
+    val log = (e: Throwable) => Logger.error(s"[BulkResultsController][GET] ${e.getMessage}", e)
+
     implicit user =>
       implicit request => {
-        gmpBulkConnector.getBulkResultsSummary(uploadReference).map{
+        gmpBulkConnector.getBulkResultsSummary(uploadReference).map {
           bulkResultsSummary => {
-            Ok(views.html.bulk_results(bulkResultsSummary, uploadReference,comingFromPage))
+            Ok(views.html.bulk_results(bulkResultsSummary, uploadReference, comingFromPage))
           }
         }.recover {
           case e: Upstream4xxResponse if e.upstreamResponseCode == FORBIDDEN => {
+            log(e)
             Ok(views.html.bulk_wrong_user(request))
           }
-          case x: NotFoundException => {
+          case e: NotFoundException => {
+            log(e)
             Ok(views.html.bulk_results_not_found())
           }
+          // $COVERAGE-OFF$
+          case e: Exception => {
+            log(e)
+            throw e
+          }
+          // $COVERAGE-ON$
         }
       }
   }
@@ -48,7 +59,7 @@ trait BulkResultsController extends GmpController {
     implicit user =>
       implicit request => {
         gmpBulkConnector.getResultsAsCsv(uploadReference, filter).map {
-          csvResponse => Ok(csvResponse.body).as("text/csv").withHeaders(("Content-Disposition",csvResponse.header("Content-Disposition").getOrElse("")))
+          csvResponse => Ok(csvResponse.body).as("text/csv").withHeaders(("Content-Disposition", csvResponse.header("Content-Disposition").getOrElse("")))
         }
       }
   }
@@ -58,7 +69,7 @@ trait BulkResultsController extends GmpController {
     implicit user =>
       implicit request => {
         gmpBulkConnector.getContributionsAndEarningsAsCsv(uploadReference).map {
-          csvResponse => Ok(csvResponse.body).as("text/csv").withHeaders(("Content-Disposition",csvResponse.header("Content-Disposition").getOrElse("")))
+          csvResponse => Ok(csvResponse.body).as("text/csv").withHeaders(("Content-Disposition", csvResponse.header("Content-Disposition").getOrElse("")))
         }
       }
   }

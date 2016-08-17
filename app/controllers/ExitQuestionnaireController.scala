@@ -52,8 +52,9 @@ trait ExitQuestionnaireController extends GmpController {
                                                                                           value.email.getOrElse(""),
                                                                                           value.phoneNumber.getOrElse("")))
             questionnaireResult.onFailure {
-              case e: Throwable => Logger.warn("[ExitQuestionnaireController][post] : questionnaireResult: " + e.getMessage(), e)
+              case e: Throwable => Logger.error(s"[ExitQuestionnaireController][post] ${e.getMessage}", e)
             }
+
             Future.successful(Redirect(controllers.routes.ExitQuestionnaireController.showThankYou()))
           }
         )

@@ -28,9 +28,11 @@ trait SessionCacheController extends GmpPageFlow {
   def newCalculation = AuthorisedFor(GmpRegime, pageVisibilityPredicate).async {
     implicit user =>
       implicit request => {
+
         Logger.debug(s"[SessionCacheController][newCalculation][GET] : $request")
+
         sessionService.resetGmpSessionWithScon map {
-          case Some(x) => Redirect(controllers.routes.PensionDetailsController.get)
+          case Some(x) => Redirect(controllers.routes.PensionDetailsController.get())
           case None => throw new RuntimeException
         }
       }
@@ -39,9 +41,11 @@ trait SessionCacheController extends GmpPageFlow {
   def newBulkCalculation = AuthorisedFor(GmpRegime, pageVisibilityPredicate).async {
     implicit user =>
       implicit request => {
+
         Logger.debug(s"[SessionCacheController][newBulkCalculation][GET] : $request")
+
         sessionService.resetGmpBulkSession() map {
-          case Some(x) => Redirect(controllers.routes.FileUploadController.get)
+          case Some(x) => Redirect(controllers.routes.FileUploadController.get())
           case None => throw new RuntimeException
         }
       }

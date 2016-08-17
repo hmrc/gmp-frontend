@@ -66,8 +66,13 @@ trait AttachmentsConnector extends HeaderCarrierForPartialsConverter{
 
     // $COVERAGE-OFF$
     partial onSuccess {
-      case response => Logger.debug(s"[AttachmentsConnector[[getFileUploadPartial : $response]")
+      case response => Logger.debug(s"[AttachmentsConnector][getFileUploadPartial] $response")
     }
+
+    partial.onFailure {
+      case e: Exception => Logger.error(s"[AttachmentsConnector][getFileUploadPartial] Failed to get upload partial", e)
+    }
+
     // $COVERAGE-ON$
 
     partial

@@ -34,11 +34,9 @@ trait MemberDetailsController extends GmpPageFlow {
   def get = AuthorisedFor(GmpRegime, pageVisibilityPredicate).async {
     implicit user =>
       implicit request => {
-        sessionService.fetchMemberDetails() map { memberDetailsOpt =>
-          memberDetailsOpt match {
-            case Some(memberDetails) => Ok(views.html.member_details(form.fill(memberDetails)))
-            case _ => Ok(views.html.member_details(form))
-          }
+        sessionService.fetchMemberDetails() map {
+          case Some(memberDetails) => Ok(views.html.member_details(form.fill(memberDetails)))
+          case _ => Ok(views.html.member_details(form))
         }
       }
   }
@@ -46,17 +44,17 @@ trait MemberDetailsController extends GmpPageFlow {
   def post = AuthorisedFor(GmpRegime, pageVisibilityPredicate).async {
     implicit user =>
       implicit request => {
-        Logger.debug(s"[MemberDetailsController][post][POST] : ${request.body}")
+
+        Logger.debug(s"[MemberDetailsController][POST] : ${request.body}")
+
         form.bindFromRequest.fold(
           formWithErrors => {
             Future.successful(BadRequest(views.html.member_details(formWithErrors)))
           },
           memberDetails => {
-            sessionService.cacheMemberDetails(memberDetails) map { sessionOpt =>
-              sessionOpt match {
-                case Some(session) => nextPage("MemberDetailsController", session)
-                case _ => throw new RuntimeException
-              }
+            sessionService.cacheMemberDetails(memberDetails) map {
+              case Some(session) => nextPage("MemberDetailsController", session)
+              case _ => throw new RuntimeException
             }
           }
         )
@@ -67,11 +65,9 @@ trait MemberDetailsController extends GmpPageFlow {
 
     implicit user =>
       implicit request => {
-        sessionService.fetchGmpSession() map { gmpSessionOpt =>
-          gmpSessionOpt match {
-            case Some(session) => previousPage("MemberDetailsController", session)
-            case _ => throw new RuntimeException
-          }
+        sessionService.fetchGmpSession() map {
+          case Some(session) => previousPage("MemberDetailsController", session)
+          case _ => throw new RuntimeException
         }
       }
   }

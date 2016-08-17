@@ -35,25 +35,23 @@ trait RevaluationRateController extends GmpPageFlow {
   def get = AuthorisedFor(GmpRegime, pageVisibilityPredicate).async {
     implicit user =>
       implicit request => sessionService.fetchGmpSession() map {
-          sessionOpt => sessionOpt match{
-            case Some(x) => Ok(views.html.revaluation_rate(revaluationRateForm, x))
-            case _ => throw new RuntimeException
-          }
-        }
+        case Some(x) => Ok(views.html.revaluation_rate(revaluationRateForm, x))
+        case _ => throw new RuntimeException
+      }
 
   }
 
   def post = AuthorisedFor(GmpRegime, pageVisibilityPredicate).async {
     implicit user =>
       implicit request => {
+
         Logger.debug(s"[RevaluationRateController][post][POST] : ${request.body}")
+
         revaluationRateForm.bindFromRequest.fold(
           formWithErrors => {
             sessionService.fetchGmpSession() map {
-              sessionOpt => sessionOpt match {
-                case Some(x) => BadRequest(views.html.revaluation_rate(formWithErrors, x))
-                case _ => throw new RuntimeException
-              }
+              case Some(x) => BadRequest(views.html.revaluation_rate(formWithErrors, x))
+              case _ => throw new RuntimeException
             }
           },
           revaluationRate => {
@@ -70,11 +68,9 @@ trait RevaluationRateController extends GmpPageFlow {
 
     implicit user =>
       implicit request => {
-        sessionService.fetchGmpSession() map { gmpSessionOpt =>
-          gmpSessionOpt match {
-            case Some(session) => previousPage("RevaluationRateController", session)
-            case _ => throw new RuntimeException
-          }
+        sessionService.fetchGmpSession() map {
+          case Some(session) => previousPage("RevaluationRateController", session)
+          case _ => throw new RuntimeException
         }
       }
   }

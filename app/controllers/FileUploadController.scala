@@ -64,7 +64,7 @@ trait FileUploadController extends GmpController with Actions {
 
       val result = sessionService.cacheCallBackData(Some(callBackData))(request,
         callBackData.sessionId match {
-          case sid:String if !sid.isEmpty => hc.copy(sessionId = Some(SessionId((sid))))
+          case sid:String if !sid.isEmpty => hc.copy(sessionId = Some(SessionId(sid)))
           case _ => hc
         }
       )

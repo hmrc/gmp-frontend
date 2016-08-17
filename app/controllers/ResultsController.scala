@@ -88,13 +88,15 @@ trait ResultsController extends GmpPageFlow {
                     calculationConnector.calculateSingle(calcRequest) map {
                       response: CalculationResponse => {
                         if (response.globalErrorCode != 0) metrics.countNpsError(response.globalErrorCode.toString)
+
                         for (period <- response.calculationPeriods) {
                           if (period.errorCode != 0) metrics.countNpsError(period.errorCode.toString)
                         }
 
                         val contsAndEarningsResult = auditConnector.sendEvent(new ContributionsAndEarningsEvent(calculationConnector.getUser(user), response.nino))
+
                         contsAndEarningsResult.onFailure {
-                          case e: Throwable => Logger.warn("[ResultsController][post] : contsAndEarningsResult: " + e.getMessage(), e)
+                          case e: Throwable => Logger.error(s"[ResultsController][post] contsAndEarningsResult ${e.getMessage}", e)
                         }
 
                         Ok(views.html.contributions_earnings(response))
@@ -153,7 +155,7 @@ trait ResultsController extends GmpPageFlow {
 
   private def revalRateSubheader(response: CalculationResponse, leaving:Leaving): Option[String] = {
 
-    if(!response.calculationPeriods.isEmpty) {
+    if(response.calculationPeriods.nonEmpty) {
 
       response.calcType match {
         case 0 => {
@@ -197,7 +199,7 @@ trait ResultsController extends GmpPageFlow {
 
   private def survivorSubheader(session: GmpSession, response: CalculationResponse): Option[String] = {
 
-    if (!response.calculationPeriods.isEmpty) {
+    if (response.calculationPeriods.nonEmpty) {
       response.calcType match {
         case 3 => {
           session.leaving.leaving match {
