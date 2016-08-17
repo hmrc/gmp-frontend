@@ -22,8 +22,9 @@ class GmpGovernmentGatewaySpec extends PlaySpec with OneServerPerSuite {
   
   "GmpGovernmentGateway" must {
     
-    "have login value overridden" in {
-      GmpGovernmentGateway.login must be(ExternalUrls.signIn)
+    "have values overridden" in {
+      GmpGovernmentGateway.loginURL must be(ExternalUrls.signIn)
+      GmpGovernmentGateway.continueURL must be(ExternalUrls.continue)
     }
     
   }

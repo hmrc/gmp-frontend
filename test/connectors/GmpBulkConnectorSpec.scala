@@ -46,13 +46,13 @@ class GmpBulkConnectorSpec extends PlaySpec with OneServerPerSuite with MockitoS
     override val httpGet: HttpGet = mockHttpGet
   }
 
-
   "The GMP Bulk Connector" must {
 
     implicit val hc = new HeaderCarrier(sessionId = Some(SessionId(s"session-${UUID.randomUUID}")))
+    implicit val user = AuthContext(authority = Authority("1234", Accounts(psa = Some(PsaAccount(link, PsaId(psaId)))), None, None, CredentialStrength.None, ConfidenceLevel.L50, None, None))
 
     "send a bulk request with valid data" in {
-      implicit val user = AuthContext(authority = Authority("1234", Accounts(psa = Some(PsaAccount(link, PsaId(psaId)))), None, None, CredentialStrength.None, ConfidenceLevel.L50))
+
       when(mockHttpPost.POST[BulkCalculationRequest, HttpResponse](Matchers.any(), Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any()))
         .thenReturn(Future.successful(HttpResponse(responseStatus = OK)))
 
@@ -67,7 +67,7 @@ class GmpBulkConnectorSpec extends PlaySpec with OneServerPerSuite with MockitoS
     }
 
     "send a bulk request with valid data but there is a duplicate" in {
-      implicit val user = AuthContext(authority = Authority("1234", Accounts(psa = Some(PsaAccount(link, PsaId(psaId)))), None, None, CredentialStrength.None, ConfidenceLevel.L50))
+
       when(mockHttpPost.POST[BulkCalculationRequest, HttpResponse](Matchers.any(), Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any()))
         .thenReturn(Future.failed(new Upstream4xxResponse("Tried to insert duplicate", 409, 409)))
 
@@ -81,7 +81,7 @@ class GmpBulkConnectorSpec extends PlaySpec with OneServerPerSuite with MockitoS
     }
 
     "send a bulk request with valid data but the file is too large" in {
-      implicit val user = AuthContext(authority = Authority("1234", Accounts(psa = Some(PsaAccount(link, PsaId(psaId)))), None, None, CredentialStrength.None, ConfidenceLevel.L50))
+
       when(mockHttpPost.POST[BulkCalculationRequest, HttpResponse](Matchers.any(), Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any()))
         .thenReturn(Future.failed(new Upstream4xxResponse("File too large", 413, 413)))
 
@@ -95,7 +95,7 @@ class GmpBulkConnectorSpec extends PlaySpec with OneServerPerSuite with MockitoS
     }
 
     "send a bulk request with valid data but bulk fails" in {
-      implicit val user = AuthContext(authority = Authority("1234", Accounts(psa = Some(PsaAccount(link, PsaId(psaId)))), None, None, CredentialStrength.None, ConfidenceLevel.L50))
+
       when(mockHttpPost.POST[BulkCalculationRequest, HttpResponse](Matchers.any(), Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any()))
         .thenReturn(Future.failed(new Upstream5xxResponse("Failed generically", 500, 500)))
 
@@ -109,9 +109,6 @@ class GmpBulkConnectorSpec extends PlaySpec with OneServerPerSuite with MockitoS
     }
 
     "retrieve bulk requests associated with the user " in {
-
-      implicit val user = AuthContext(authority = Authority("1234", Accounts(psa =
-        Some(PsaAccount(link, PsaId(psaId)))), None, None, CredentialStrength.None, ConfidenceLevel.L50))
 
       val bulkPreviousRequest = Json.parse(
         """[{"uploadReference":"uploadRef","reference":"ref","timestamp":"2016-04-27T14:53:18.308","processedDateTime":"2016-05-18T17:50:55.511"}]"""
@@ -128,7 +125,7 @@ class GmpBulkConnectorSpec extends PlaySpec with OneServerPerSuite with MockitoS
     }
 
     "return a bulk results summary" in {
-      implicit val user = AuthContext(authority = Authority("1234", Accounts(psa = Some(PsaAccount(link, PsaId(psaId)))), None, None, CredentialStrength.None, ConfidenceLevel.L50))
+
       when(mockHttpGet.GET[BulkResultsSummary](Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(BulkResultsSummary("test",1,1)))
 
       val result = testGmpBulkConnector.getBulkResultsSummary("")
@@ -137,7 +134,6 @@ class GmpBulkConnectorSpec extends PlaySpec with OneServerPerSuite with MockitoS
 
     "return all bulk request as csv" in {
 
-      implicit val user = AuthContext(authority = Authority("1234", Accounts(psa = Some(PsaAccount(link, PsaId(psaId)))), None, None, CredentialStrength.None, ConfidenceLevel.L50))
       when(mockHttpGet.GET[HttpResponse](Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(HttpResponse(responseStatus = OK,responseString = Some("THIS IS A CSV STRING"))))
 
       val result = testGmpBulkConnector.getResultsAsCsv("","")
@@ -148,7 +144,6 @@ class GmpBulkConnectorSpec extends PlaySpec with OneServerPerSuite with MockitoS
 
     "return all contributions and earnings as a csv" in {
 
-      implicit val user = AuthContext(authority = Authority("1234", Accounts(psa = Some(PsaAccount(link, PsaId(psaId)))), None, None, CredentialStrength.None, ConfidenceLevel.L50))
       when(mockHttpGet.GET[HttpResponse](Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(HttpResponse(responseStatus = OK,responseString = Some("THIS IS A CSV STRING"))))
 
       val result = testGmpBulkConnector.getContributionsAndEarningsAsCsv("")
