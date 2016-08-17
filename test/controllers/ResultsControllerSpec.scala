@@ -62,12 +62,12 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
 
   private val nino: String = RandomNino.generate
 
-  val gmpSession = GmpSession(MemberDetails(nino, "John", "Johnson"), "S1234567T", CalculationType.REVALUATION, None, None, Leaving(GmpDate(None, None, None), None), None)
-  val gmpSession2 = GmpSession(MemberDetails(nino, "John", "Johnson"), "S1234567T", CalculationType.REVALUATION, Some(GmpDate(Some("12"), Some("12"), Some("1999"))), None, Leaving(GmpDate(None, None, None), None), None)
-  val gmpSession3 = GmpSession(MemberDetails(nino, "John", "Johnson"), "S1234567T", CalculationType.REVALUATION, Some(GmpDate(Some("12"), Some("12"), Some("1999"))), None, Leaving(GmpDate(None, None, None), None), equalise = Some(1))
+  val gmpSession = GmpSession(MemberDetails(nino, "John", "Johnson"), "S1234567T", CalculationType.REVALUATION, None, None, Leaving(GmpDate(None, None, None), Some(Leaving.YES_BEFORE)), None)
+  val gmpSession2 = GmpSession(MemberDetails(nino, "John", "Johnson"), "S1234567T", CalculationType.REVALUATION, Some(GmpDate(Some("12"), Some("12"), Some("1999"))), None, Leaving(GmpDate(None, None, None), Some(Leaving.NO)), None)
+  val gmpSession3 = GmpSession(MemberDetails(nino, "John", "Johnson"), "S1234567T", CalculationType.REVALUATION, Some(GmpDate(Some("12"), Some("12"), Some("1999"))), None, Leaving(GmpDate(None, None, None), Some(Leaving.NO)), equalise = Some(1))
 
-  val gmpSessionWithRate = GmpSession(MemberDetails(nino, "John", "Johnson"), "S1234567T", CalculationType.REVALUATION, None, Some("1"), Leaving(GmpDate(None, None, None), None), None)
-  val gmpSessionWithHMRCRate = GmpSession(MemberDetails(nino, "John", "Johnson"), "S1234567T", CalculationType.REVALUATION, None, Some("0"), Leaving(GmpDate(None, None, None), None), None)
+  val gmpSessionWithRate = GmpSession(MemberDetails(nino, "John", "Johnson"), "S1234567T", CalculationType.REVALUATION, None, Some("1"), Leaving(GmpDate(None, None, None), Some(Leaving.NO)), None)
+  val gmpSessionWithHMRCRate = GmpSession(MemberDetails(nino, "John", "Johnson"), "S1234567T", CalculationType.REVALUATION, None, Some("0"), Leaving(GmpDate(None, None, None), Some(Leaving.NO)), None)
 
   val gmpSession4Nino = RandomNino.generate
   val gmpSession4NinoSpaced = gmpSession4Nino.grouped(2).foldLeft(new StringBuilder){
@@ -78,13 +78,13 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
       }
     }
   }.toString
-  val gmpSession4 = GmpSession(MemberDetails(gmpSession4NinoSpaced, "John", "Johnson"), "S1234567T", CalculationType.REVALUATION, None, None, Leaving(GmpDate(None, None, None), None), None)
+  val gmpSession4 = GmpSession(MemberDetails(gmpSession4NinoSpaced, "John", "Johnson"), "S1234567T", CalculationType.REVALUATION, None, None, Leaving(GmpDate(None, None, None), Some(Leaving.NO)), None)
 
   val gmpSessionSameTaxYear = GmpSession(MemberDetails(nino, "John", "Johnson"), "S1234567T", CalculationType.REVALUATION, Some(GmpDate(Some("07"), Some("07"), Some("2015"))), None,
-                                                                                                                                Leaving(GmpDate(Some("07"), Some("07"), Some("2015")), None),None)
+                                                                                                                                Leaving(GmpDate(Some("07"), Some("07"), Some("2015")), Some(Leaving.YES_BEFORE)),None)
 
   val gmpSessionDifferentTaxYear = GmpSession(MemberDetails(nino, "John", "Johnson"), "S1234567T", CalculationType.REVALUATION, Some(GmpDate(Some("07"), Some("07"), Some("2015"))), None,
-                                                                                                                                     Leaving(GmpDate(Some("07"), Some("07"), Some("2017")), None),None)
+                                                                                                                                     Leaving(GmpDate(Some("07"), Some("07"), Some("2017")), Some(Leaving.YES_AFTER)),None)
 
   val validCalculationResponse = CalculationResponse("John Johnson", nino, "S1234567T", None, None, List(CalculationPeriod(Some(new
       LocalDate(2015,
@@ -349,7 +349,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
         //survivor
 
         "show the correct header when survivor and not revaluing" in {
-          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
+          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession.copy(scenario = CalculationType.SURVIVOR))))
           when(mockCalculationConnector.calculateSingle(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(survivorCalculationResponse))
           withAuthorisedUser { request =>
             val result = TestResultsController.get.apply(request)
@@ -360,7 +360,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
         }
 
         "show the correct header when survivor and revaluing" in {
-          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
+          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession.copy(scenario = CalculationType.SURVIVOR))))
           when(mockCalculationConnector.calculateSingle(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(survivorRevaluationCalculationResponse))
           withAuthorisedUser { request =>
             val result = TestResultsController.get.apply(request)
@@ -370,7 +370,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
         }
 
         "show the correct subheader when survivor and no inflation proof" in {
-          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
+          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession.copy(scenario = CalculationType.SURVIVOR))))
           when(mockCalculationConnector.calculateSingle(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(survivorRevaluationCalculationResponse))
           withAuthorisedUser { request =>
             val result = TestResultsController.get.apply(request)
@@ -379,7 +379,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
         }
 
         "show the correct subheader when survivor and inflation proof" in {
-          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
+          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession.copy(scenario = CalculationType.SURVIVOR))))
           when(mockCalculationConnector.calculateSingle(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(survivorRevaluationCalculationResponseNoInflation))
           withAuthorisedUser { request =>
             val result = TestResultsController.get.apply(request)
@@ -388,7 +388,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
         }
 
         "show the returned date of death and the correct header when survivor and no inflation proof" in {
-          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
+          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession.copy(scenario = CalculationType.SURVIVOR))))
           when(mockCalculationConnector.calculateSingle(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(
             survivorRevaluationCalculationResponseNoInflation.copy(dateOfDeath = Some(new LocalDate("2017-01-01")), revaluationDate = None)))
           withAuthorisedUser { request =>
@@ -1011,6 +1011,16 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
           }
         }
 
+        "go to failure page when session missing leaving" in {
+          val emptySession = GmpSession(MemberDetails(nino, "A", "AAA"), "S1234567T", "0", None, None, Leaving(GmpDate(None, None, None), None), None)
+          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(emptySession)))
+          withAuthorisedUser { request =>
+            val result = TestResultsController.getContributionsAndEarnings.apply(request)
+            contentAsString(result)replaceAll("&#x27;", "'") must include (Messages("gmp.cannot_calculate.gmp"))
+            contentAsString(result) must include (Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/left-scheme"))
+          }
+        }
+
         "contain contributions and earnings" in {
           when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession2)))
           when(mockCalculationConnector.calculateSingle(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(validCalculationWithContsAndEarningsResponse))
@@ -1070,7 +1080,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
 
         withAuthorisedUser { request =>
           val result = TestResultsController.createCalculationRequest(gmpSession)
-          result.get.requestEarnings must be(Some(1))
+          result.requestEarnings must be(Some(1))
         }
       }
     }
@@ -1081,7 +1091,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
 
         withAuthorisedUser { request =>
           val result = TestResultsController.createCalculationRequest(gmpSession2.copy(leaving = Leaving(GmpDate(Some("1"), Some("1"), Some("2010")), leaving = Some("Yes"))))
-          result.get.terminationDate must be(Some(new LocalDate(2010, 1, 1)))
+          result.terminationDate must be(Some(new LocalDate(2010, 1, 1)))
 
         }
       }
@@ -1091,21 +1101,21 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
       "remove spaces when creating request" in {
         withAuthorisedUser { request =>
           val result = TestResultsController.createCalculationRequest(gmpSession4)
-          result.get.nino must be(gmpSession4Nino)
+          result.nino must be(gmpSession4Nino)
         }
       }
 
       "create request with fixed rate" in {
         withAuthorisedUser { request =>
           val result = TestResultsController.createCalculationRequest(gmpSession.copy(rate = Some(RevaluationRate.FIXED)))
-          result.get.revaluationRate must be(Some(2))
+          result.revaluationRate must be(Some(2))
         }
       }
 
       "create request with limited rate" in {
         withAuthorisedUser { request =>
           val result = TestResultsController.createCalculationRequest(gmpSession.copy(rate = Some(RevaluationRate.LIMITED)))
-          result.get.revaluationRate must be(Some(3))
+          result.revaluationRate must be(Some(3))
         }
       }
     }
@@ -1258,7 +1268,16 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
         }
       }
 
+      "display error page when missing leaving with correct back link" in {
+        val emptySession = GmpSession(MemberDetails(nino, "A", "AAA"), "S1234567T", "0", None, None, Leaving(GmpDate(None, None, None), None), None)
+        when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(emptySession)))
 
+        withAuthorisedUser { request =>
+          val result = TestResultsController.get.apply(request)
+          contentAsString(result)replaceAll("&#x27;", "'") must include (Messages("gmp.cannot_calculate.gmp"))
+          contentAsString(result) must include (Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/left-scheme"))
+        }
+      }
     }
 
   }
