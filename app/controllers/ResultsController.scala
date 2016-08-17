@@ -30,6 +30,9 @@ import play.twirl.api.HtmlFormat
 import services.SessionService
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 
+import scala.concurrent.Future
+import scala.util.{Failure, Success, Try}
+
 trait ResultsController extends GmpPageFlow {
 
   val sessionService: SessionService
@@ -48,17 +51,26 @@ trait ResultsController extends GmpPageFlow {
           sessionOpt: Option[GmpSession] =>
             sessionOpt match {
               case Some(session) =>
-                calculationConnector.calculateSingle(createCalculationRequest(session)) map {
-                  response:CalculationResponse => {
-                    if (response.globalErrorCode != 0) metrics.countNpsError(response.globalErrorCode.toString)
-                    for (period <- response.calculationPeriods) {
-                      if (period.errorCode != 0) metrics.countNpsError(period.errorCode.toString)
-                    }
+                createCalculationRequest(session) match {
+                  case Some(calcRequest) => {
+                    calculationConnector.calculateSingle(calcRequest) map {
+                      response: CalculationResponse => {
+                        if (response.globalErrorCode != 0) metrics.countNpsError(response.globalErrorCode.toString)
+                        for (period <- response.calculationPeriods) {
+                          if (period.errorCode != 0) metrics.countNpsError(period.errorCode.toString)
+                        }
 
-                    Ok(resultsView(response, revalRateSubheader(response,session.leaving), survivorSubheader(session, response)))
+                        Ok(resultsView(response, revalRateSubheader(response, session.leaving), survivorSubheader(session, response)))
+                      }
+                    }
+                  }
+                  case _ => session match {
+                    case _ if session.scon == "" => Future.successful(Ok(views.html.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/pension-details"),Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title"))))
+                    case _ if session.memberDetails.nino == "" || session.memberDetails.firstForename == "" || session.memberDetails.surname == "" => Future.successful(Ok(views.html.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/member-details"),Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title"))))
+                    case _ if session.scenario == "" => Future.successful(Ok(views.html.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/calculation-reason"),Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title"))))
                   }
                 }
-              case _ => throw new RuntimeException
+              case _ => Future.successful(Ok(views.html.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/dashboard"),Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title"))))
             }
         }
       }
@@ -71,54 +83,74 @@ trait ResultsController extends GmpPageFlow {
           sessionOpt: Option[GmpSession] =>
             sessionOpt match {
               case Some(session) =>
-                calculationConnector.calculateSingle(createCalculationRequest(session)).map {
-                  response: CalculationResponse => {
-                    if (response.globalErrorCode != 0) metrics.countNpsError(response.globalErrorCode.toString)
+                createCalculationRequest(session) match {
+                  case Some(calcRequest) => {
+                    calculationConnector.calculateSingle(calcRequest) map {
+                      response: CalculationResponse => {
+                        if (response.globalErrorCode != 0) metrics.countNpsError(response.globalErrorCode.toString)
 
-                    for (period <- response.calculationPeriods) {
-                      if (period.errorCode != 0) metrics.countNpsError(period.errorCode.toString)
+                        for (period <- response.calculationPeriods) {
+                          if (period.errorCode != 0) metrics.countNpsError(period.errorCode.toString)
+                        }
+
+                        val contsAndEarningsResult = auditConnector.sendEvent(new ContributionsAndEarningsEvent(calculationConnector.getUser(user), response.nino))
+
+                        contsAndEarningsResult.onFailure {
+                          case e: Throwable => Logger.error(s"[ResultsController][post] contsAndEarningsResult ${e.getMessage}", e)
+                        }
+
+                        Ok(views.html.contributions_earnings(response))
+                      }
                     }
-
-                    val contsAndEarningsResult = auditConnector.sendEvent(new ContributionsAndEarningsEvent(calculationConnector.getUser(user), response.nino))
-
-                    contsAndEarningsResult.onFailure {
-                      case e: Throwable => Logger.error(s"[ResultsController][post] ${e.getMessage}", e)
-                    }
-
-                    Ok(views.html.contributions_earnings(response))
+                  }
+                  case _ => session match {
+                    case _ if session.scon == "" => Future.successful(Ok(views.html.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/pension-details"),Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title"))))
+                    case _ if session.memberDetails.nino == "" || session.memberDetails.firstForename == "" || session.memberDetails.surname == ""  => Future.successful(Ok(views.html.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/member-details"),Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title"))))
+                    case _ if session.scenario == "" => Future.successful(Ok(views.html.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/calculation-reason"),Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title"))))
                   }
                 }
-              case _ => throw new RuntimeException
+              case _ => Future.successful(Ok(views.html.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/dashboard"),Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title"))))
             }
         }
       }
   }
 
-  def createCalculationRequest(gmpSession: GmpSession): CalculationRequest = {
+  def createCalculationRequest(gmpSession: GmpSession): Option[CalculationRequest] = {
 
-    CalculationRequest(
-      gmpSession.scon,
-      gmpSession.memberDetails.nino.replaceAll("\\s", ""),
-      gmpSession.memberDetails.surname,
-      gmpSession.memberDetails.firstForename,
-      gmpSession.scenario.toInt,
-      gmpSession.revaluationDate match {
-        case Some(rDate: GmpDate) if (rDate.day.isDefined && rDate.month.isDefined && rDate.year.isDefined) =>
-          Some(new LocalDate(rDate.year.get.toInt, rDate.month.get.toInt, rDate.day.get.toInt))
-        case _ => None
-      }, gmpSession.rate match {
-        case Some(RevaluationRate.HMRC) => Some(0)
-        case Some(RevaluationRate.S148) => Some(1)
-        case Some(RevaluationRate.FIXED) => Some(2)
-        case Some(RevaluationRate.LIMITED) => Some(3)
-        case _ => None
-      }, Some(1),
-      gmpSession.equalise,
-      gmpSession.leaving.leavingDate match {
-        case lDate: GmpDate if (lDate.day.isDefined && lDate.month.isDefined && lDate.year.isDefined) =>
-          Some(new LocalDate(lDate.year.get.toInt, lDate.month.get.toInt, lDate.day.get.toInt))
-        case _ => None
-      })
+    val tryCreateRequest = Try {
+      Some(CalculationRequest(
+        gmpSession.scon,
+        gmpSession.memberDetails.nino.replaceAll("\\s", ""),
+        gmpSession.memberDetails.surname,
+        gmpSession.memberDetails.firstForename,
+        gmpSession.scenario.toInt,
+        gmpSession.revaluationDate match {
+          case Some(rDate: GmpDate) if (rDate.day.isDefined && rDate.month.isDefined && rDate.year.isDefined) =>
+            Some(new LocalDate(rDate.year.get.toInt, rDate.month.get.toInt, rDate.day.get.toInt))
+          case _ => None
+        }, gmpSession.rate match {
+          case Some(RevaluationRate.HMRC) => Some(0)
+          case Some(RevaluationRate.S148) => Some(1)
+          case Some(RevaluationRate.FIXED) => Some(2)
+          case Some(RevaluationRate.LIMITED) => Some(3)
+          case _ => None
+        }, Some(1),
+        gmpSession.equalise,
+        gmpSession.leaving.leavingDate match {
+          case lDate: GmpDate if (lDate.day.isDefined && lDate.month.isDefined && lDate.year.isDefined) =>
+            Some(new LocalDate(lDate.year.get.toInt, lDate.month.get.toInt, lDate.day.get.toInt))
+          case _ => None
+        }))
+    }
+
+    tryCreateRequest match {
+      case Success(successfulRequest) => successfulRequest
+      case Failure(f) => {
+        Logger.debug(s"[ResultsController][Creating Request error ${f.getMessage}]")
+        None
+      }
+    }
+
   }
 
   private def revalRateSubheader(response: CalculationResponse, leaving:Leaving): Option[String] = {

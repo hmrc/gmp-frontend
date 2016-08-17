@@ -29,6 +29,7 @@ gmp.offline.title = GMP checker offline - GOV.UK
 gmp.thank_you.title = GMP checker survey thanks - GOV.UK
 gmp.unauthorised.title = Wrong GMP checker login - GOV.UK
 gmp.fileupload.title = Upload GMP file - GOV.UK
+gmp.session_missing.title = Incomplete GMP checker information - GOV.UK
 
 ############################################################################
 # headers
@@ -325,6 +326,8 @@ gmp.error.scheme_details = Change scheme details
 gmp.error.download_CA1604 = Download CA1604 (PDF)
 gmp.error.no_conts_and_earnings = No contributions and earnings available
 
+gmp.error.session_parts_missing = You haven''t given us enough information about the member and type of calculation you need or it has been too long since you did so.<br/><a href="{0}"">Go back</a> and fill in the information required.
+
 ############################################################################
 # calculation results
 ############################################################################
@@ -369,8 +372,6 @@ gmp.scenarios.survivor = <span class="bold-small">Survivor</span>
 gmp.scenarios.leaving = <span class="bold-small">Leaving</span>
 gmp.scenarios.specific_date = <span class="bold-small">GMP value on a specific date:</span><br/>For example, transferring to another scheme, divorce or any other date of your choice
 
-
-
 gmp.revaluation_multiple_subheader = All periods have been revalued using
 gmp.to = to
 gmp.date_of_divorce = Date of divorce
@@ -383,6 +384,7 @@ gmp.generic.no=No
 ############################################################################
 gmp.cannot_calculate = We can''t calculate a Guaranteed Minimum Pension
 gmp.cannot_calculate_online = We can''t calculate a Guaranteed Minimum Pension online
+gmp.cannot_calculate.gmp = We can''t calculate a GMP
 
 gmp.what_now = What to do now:
 gmp.errors.query_handling.header = Alternatively:

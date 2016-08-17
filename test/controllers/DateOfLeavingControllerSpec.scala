@@ -70,7 +70,7 @@ class DateOfLeavingControllerSpec extends PlaySpec with OneServerPerSuite with M
 
     "authenticated users" must {
       val memberDetails = MemberDetails("", "", "")
-      val session = GmpSession(memberDetails, "", CalculationType.DOL, None, None, Leaving(GmpDate(None, None, None), None), None, Dashboard(List()))
+      val session = GmpSession(memberDetails, "", CalculationType.DOL, None, None, Leaving(GmpDate(None, None, None), None), None)
       "respond with ok" in {
 
         withAuthorisedUser { user =>
@@ -193,7 +193,7 @@ class DateOfLeavingControllerSpec extends PlaySpec with OneServerPerSuite with M
     "authorised users redirect" in {
 
       val memberDetails = MemberDetails("", "", "")
-      val session = GmpSession(memberDetails, "", "", None, None, Leaving(GmpDate(None, None, None), None), None, Dashboard(List()))
+      val session = GmpSession(memberDetails, "", "", None, None, Leaving(GmpDate(None, None, None), None), None)
 
       withAuthorisedUser { request =>
         when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(session)))
@@ -225,7 +225,7 @@ class DateOfLeavingControllerSpec extends PlaySpec with OneServerPerSuite with M
     "authenticated users" must {
 
       "with invalid data" must {
-        val gmpSession = GmpSession(MemberDetails("", "", ""), "", CalculationType.DOL, None, None, Leaving(GmpDate(None, None, None), None), None, Dashboard(List()))
+        val gmpSession = GmpSession(MemberDetails("", "", ""), "", CalculationType.DOL, None, None, Leaving(GmpDate(None, None, None), None), None)
         when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
 
         "respond with BAD_REQUEST" in {
@@ -265,7 +265,7 @@ class DateOfLeavingControllerSpec extends PlaySpec with OneServerPerSuite with M
       }
 
       "with valid data" must {
-        val gmpSession = GmpSession(MemberDetails("", "", ""), "", CalculationType.DOL, None, None, Leaving(GmpDate(None, None, None), None), None, Dashboard(List()))
+        val gmpSession = GmpSession(MemberDetails("", "", ""), "", CalculationType.DOL, None, None, Leaving(GmpDate(None, None, None), None), None)
         "redirect" in {
 
 

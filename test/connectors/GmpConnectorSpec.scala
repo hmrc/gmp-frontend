@@ -70,12 +70,11 @@ class GmpConnectorSpec extends PlaySpec with OneServerPerSuite with MockitoSugar
   "The GMP Connector" must {
 
     implicit val hc = new HeaderCarrier(sessionId = Some(SessionId(s"session-${UUID.randomUUID}")))
-
+    implicit val user = AuthContext(authority = Authority("1234", Accounts(psa = Some(PsaAccount(link, PsaId(psaId)))), None, None, CredentialStrength.None, ConfidenceLevel.L50, None, None))
 
     "performing a single calculation" must {
 
       "return a calculation response" in {
-        implicit val user = AuthContext(authority = Authority("1234", Accounts(psa = Some(PsaAccount(link, PsaId(psaId)))), None, None, CredentialStrength.None, ConfidenceLevel.L50))
 
         val calcResponseJson = Json.parse(
           s"""
@@ -111,7 +110,6 @@ class GmpConnectorSpec extends PlaySpec with OneServerPerSuite with MockitoSugar
       }
 
       "return a calculation response when practitioner" in {
-        implicit val user = AuthContext(authority = Authority("1234", Accounts(psp = Some(PspAccount(link, PspId(pspId)))), None, None, CredentialStrength.None, ConfidenceLevel.L50))
 
         val calcResponseJson = Json.parse(
           """
@@ -147,7 +145,6 @@ class GmpConnectorSpec extends PlaySpec with OneServerPerSuite with MockitoSugar
       }
 
       "return a calculation response when start date is null" in {
-        implicit val user = AuthContext(authority = Authority("1234", Accounts(psa = Some(PsaAccount(link, PsaId(psaId)))), None, None, CredentialStrength.None, ConfidenceLevel.L50))
 
         val calcResponseJson = Json.parse(
           s"""
@@ -183,7 +180,6 @@ class GmpConnectorSpec extends PlaySpec with OneServerPerSuite with MockitoSugar
       }
 
       "return an error when scon incorrect" in {
-        implicit val user = AuthContext(authority = Authority("1234", Accounts(psa = Some(PsaAccount(link, PsaId(psaId)))), None, None, CredentialStrength.None, ConfidenceLevel.L50))
 
         val calcRequestBody =
           s"""{
@@ -208,7 +204,6 @@ class GmpConnectorSpec extends PlaySpec with OneServerPerSuite with MockitoSugar
       "throw an exception with invalid user" in {
 
         val nino = RandomNino.generate
-        implicit val user = AuthContext(authority = Authority("1234", Accounts(psa = None), None, None, CredentialStrength.None, ConfidenceLevel.L200))
         val calculationRequest: CalculationRequest = CalculationRequest(scon = "S1401234Z", nino = nino, surname = "Smith", firstForename = "Bill", 1)
 
         intercept[RuntimeException] {
@@ -219,7 +214,6 @@ class GmpConnectorSpec extends PlaySpec with OneServerPerSuite with MockitoSugar
 
     "performing scon validation" must {
       "return a validateScon response" in {
-        implicit val user = AuthContext(authority = Authority("1234", Accounts(psa = Some(PsaAccount(link, PsaId(psaId)))), None, None, CredentialStrength.None, ConfidenceLevel.L50))
 
         val validateSconResponseJson = Json.parse(
           """{
@@ -237,7 +231,6 @@ class GmpConnectorSpec extends PlaySpec with OneServerPerSuite with MockitoSugar
       }
 
       "throw an exception with invalid user" in {
-        implicit val user = AuthContext(authority = Authority("1234", Accounts(psa = None), None, None, CredentialStrength.None, ConfidenceLevel.L200))
         val validateSconRequest: ValidateSconRequest = ValidateSconRequest(scon = "S1401234Z")
 
         intercept[RuntimeException] {
@@ -248,7 +241,6 @@ class GmpConnectorSpec extends PlaySpec with OneServerPerSuite with MockitoSugar
 
     "performing scon validation on practitioner" must {
       "return a validateScon response" in {
-        implicit val user = AuthContext(authority = Authority("1234", Accounts(psp = Some(PspAccount(link, PspId(pspId)))), None, None, CredentialStrength.None, ConfidenceLevel.L50))
 
         val validateSconResponseJson = Json.parse(
           """{
@@ -266,7 +258,7 @@ class GmpConnectorSpec extends PlaySpec with OneServerPerSuite with MockitoSugar
       }
 
       "throw an exception with invalid user" in {
-        implicit val user = AuthContext(authority = Authority("1234", Accounts(psa = None), None, None, CredentialStrength.None, ConfidenceLevel.L200))
+        implicit val user = AuthContext(authority = Authority("1234", Accounts(psa = None), None, None, CredentialStrength.None, ConfidenceLevel.L200, None, None))
         val validateSconRequest: ValidateSconRequest = ValidateSconRequest(scon = "S1401234Z")
 
         intercept[RuntimeException] {
@@ -277,7 +269,6 @@ class GmpConnectorSpec extends PlaySpec with OneServerPerSuite with MockitoSugar
 
     "DualCalc" must {
       "return dualCalc indicated in request" in {
-        implicit val user = AuthContext(authority = Authority("1234", Accounts(psa = Some(PsaAccount(link, PsaId(psaId)))), None, None, CredentialStrength.None, ConfidenceLevel.L50))
 
         val calcResponseJson = Json.parse(
           s"""

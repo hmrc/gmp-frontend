@@ -47,7 +47,7 @@ class PensionDetailsControllerSpec extends PlaySpec with OneServerPerSuite with 
   val mockSessionService = mock[SessionService]
   val mockGmpConnector = mock[GmpConnector]
 
-  implicit val user = AuthContext(authority = Authority("1234", Accounts(psa = Some(PsaAccount("link", PsaId("B1234567")))), None, None, CredentialStrength.None, ConfidenceLevel.L50))
+  implicit val user = AuthContext(authority = Authority("1234", Accounts(psa = Some(PsaAccount("link", PsaId("B1234567")))), None, None, CredentialStrength.None, ConfidenceLevel.L50, None, None))
   implicit val hc = new HeaderCarrier(sessionId = Some(SessionId(s"session-${UUID.randomUUID}")))
 
   object TestPensionDetailsController extends PensionDetailsController {
@@ -121,7 +121,7 @@ class PensionDetailsControllerSpec extends PlaySpec with OneServerPerSuite with 
 
       val validGmpRequest = PensionDetails("S1301234T")
       val emptySconGmpRequest = PensionDetails("")
-      val gmpSession = GmpSession(MemberDetails("", "", ""), "S1301234T", "", None, None, Leaving(GmpDate(None, None, None), None), None, Dashboard(List()))
+      val gmpSession = GmpSession(MemberDetails("", "", ""), "S1301234T", "", None, None, Leaving(GmpDate(None, None, None), None), None)
 
       "validate scon and store scon and redirect" in {
         when(mockSessionService.cachePensionDetails(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))

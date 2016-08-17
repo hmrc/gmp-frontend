@@ -62,12 +62,12 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
 
   private val nino: String = RandomNino.generate
 
-  val gmpSession = GmpSession(MemberDetails(nino, "John", "Johnson"), "S1234567T", CalculationType.REVALUATION, None, None, Leaving(GmpDate(None, None, None), None), None, Dashboard(List()))
-  val gmpSession2 = GmpSession(MemberDetails(nino, "John", "Johnson"), "S1234567T", CalculationType.REVALUATION, Some(GmpDate(Some("12"), Some("12"), Some("1999"))), None, Leaving(GmpDate(None, None, None), None), None, Dashboard(List()))
-  val gmpSession3 = GmpSession(MemberDetails(nino, "John", "Johnson"), "S1234567T", CalculationType.REVALUATION, Some(GmpDate(Some("12"), Some("12"), Some("1999"))), None, Leaving(GmpDate(None, None, None), None), equalise = Some(1), Dashboard(List()))
+  val gmpSession = GmpSession(MemberDetails(nino, "John", "Johnson"), "S1234567T", CalculationType.REVALUATION, None, None, Leaving(GmpDate(None, None, None), None), None)
+  val gmpSession2 = GmpSession(MemberDetails(nino, "John", "Johnson"), "S1234567T", CalculationType.REVALUATION, Some(GmpDate(Some("12"), Some("12"), Some("1999"))), None, Leaving(GmpDate(None, None, None), None), None)
+  val gmpSession3 = GmpSession(MemberDetails(nino, "John", "Johnson"), "S1234567T", CalculationType.REVALUATION, Some(GmpDate(Some("12"), Some("12"), Some("1999"))), None, Leaving(GmpDate(None, None, None), None), equalise = Some(1))
 
-  val gmpSessionWithRate = GmpSession(MemberDetails(nino, "John", "Johnson"), "S1234567T", CalculationType.REVALUATION, None, Some("1"), Leaving(GmpDate(None, None, None), None), None, Dashboard(List()))
-  val gmpSessionWithHMRCRate = GmpSession(MemberDetails(nino, "John", "Johnson"), "S1234567T", CalculationType.REVALUATION, None, Some("0"), Leaving(GmpDate(None, None, None), None), None, Dashboard(List()))
+  val gmpSessionWithRate = GmpSession(MemberDetails(nino, "John", "Johnson"), "S1234567T", CalculationType.REVALUATION, None, Some("1"), Leaving(GmpDate(None, None, None), None), None)
+  val gmpSessionWithHMRCRate = GmpSession(MemberDetails(nino, "John", "Johnson"), "S1234567T", CalculationType.REVALUATION, None, Some("0"), Leaving(GmpDate(None, None, None), None), None)
 
   val gmpSession4Nino = RandomNino.generate
   val gmpSession4NinoSpaced = gmpSession4Nino.grouped(2).foldLeft(new StringBuilder){
@@ -78,13 +78,13 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
       }
     }
   }.toString
-  val gmpSession4 = GmpSession(MemberDetails(gmpSession4NinoSpaced, "John", "Johnson"), "S1234567T", CalculationType.REVALUATION, None, None, Leaving(GmpDate(None, None, None), None), None, Dashboard(List()))
+  val gmpSession4 = GmpSession(MemberDetails(gmpSession4NinoSpaced, "John", "Johnson"), "S1234567T", CalculationType.REVALUATION, None, None, Leaving(GmpDate(None, None, None), None), None)
 
   val gmpSessionSameTaxYear = GmpSession(MemberDetails(nino, "John", "Johnson"), "S1234567T", CalculationType.REVALUATION, Some(GmpDate(Some("07"), Some("07"), Some("2015"))), None,
-                                                                                                                                Leaving(GmpDate(Some("07"), Some("07"), Some("2015")), None),None, Dashboard(List()))
+                                                                                                                                Leaving(GmpDate(Some("07"), Some("07"), Some("2015")), None),None)
 
   val gmpSessionDifferentTaxYear = GmpSession(MemberDetails(nino, "John", "Johnson"), "S1234567T", CalculationType.REVALUATION, Some(GmpDate(Some("07"), Some("07"), Some("2015"))), None,
-                                                                                                                                     Leaving(GmpDate(Some("07"), Some("07"), Some("2017")), None),None, Dashboard(List()))
+                                                                                                                                     Leaving(GmpDate(Some("07"), Some("07"), Some("2017")), None),None)
 
   val validCalculationResponse = CalculationResponse("John Johnson", nino, "S1234567T", None, None, List(CalculationPeriod(Some(new
       LocalDate(2015,
@@ -749,15 +749,14 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
 
         }
 
-        "throw exception when session not returned" in {
+        "go to failure page when session not returned" in {
           when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(None))
 
 
           withAuthorisedUser { request =>
             val result = TestResultsController.get.apply(request)
-            intercept[RuntimeException] {
-              val content = contentAsString(result).replaceAll("&#x27;", "'")
-            }
+            contentAsString(result)replaceAll("&#x27;", "'") must include (Messages("gmp.cannot_calculate.gmp"))
+            contentAsString(result) must include (Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/dashboard"))
           }
         }
 
@@ -953,15 +952,62 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
           }
         }
 
-        "throw exception when session not returned" in {
+        "go to failure page when session not returned" in {
           when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(None))
-
-
           withAuthorisedUser { request =>
             val result = TestResultsController.getContributionsAndEarnings.apply(request)
-            intercept[RuntimeException] {
-              val content = contentAsString(result).replaceAll("&#x27;", "'")
-            }
+            contentAsString(result)replaceAll("&#x27;", "'") must include (Messages("gmp.cannot_calculate.gmp"))
+            contentAsString(result) must include (Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/dashboard"))
+          }
+        }
+
+        "go to failure page when session missing scon" in {
+          val emptySession = GmpSession(MemberDetails("", "", ""), "", "", None, None, Leaving(GmpDate(None, None, None), None), None)
+          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(emptySession)))
+          withAuthorisedUser { request =>
+            val result = TestResultsController.getContributionsAndEarnings.apply(request)
+            contentAsString(result)replaceAll("&#x27;", "'") must include (Messages("gmp.cannot_calculate.gmp"))
+            contentAsString(result) must include (Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/pension-details"))
+          }
+        }
+
+        "go to failure page when session missing nino" in {
+          val emptySession = GmpSession(MemberDetails("", "", ""), "S1234567T", "", None, None, Leaving(GmpDate(None, None, None), None), None)
+          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(emptySession)))
+          withAuthorisedUser { request =>
+            val result = TestResultsController.getContributionsAndEarnings.apply(request)
+            contentAsString(result)replaceAll("&#x27;", "'") must include (Messages("gmp.cannot_calculate.gmp"))
+            contentAsString(result) must include (Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/member-details"))
+          }
+        }
+
+        "go to failure page when session missing firstname" in {
+          val emptySession = GmpSession(MemberDetails(nino, "", ""), "S1234567T", "", None, None, Leaving(GmpDate(None, None, None), None), None)
+          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(emptySession)))
+          withAuthorisedUser { request =>
+            val result = TestResultsController.getContributionsAndEarnings.apply(request)
+            contentAsString(result)replaceAll("&#x27;", "'") must include (Messages("gmp.cannot_calculate.gmp"))
+            contentAsString(result) must include (Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/member-details"))
+          }
+        }
+
+        "go to failure page when session missing lastname" in {
+          val emptySession = GmpSession(MemberDetails(nino, "A", ""), "S1234567T", "", None, None, Leaving(GmpDate(None, None, None), None), None)
+          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(emptySession)))
+          withAuthorisedUser { request =>
+            val result = TestResultsController.getContributionsAndEarnings.apply(request)
+            contentAsString(result)replaceAll("&#x27;", "'") must include (Messages("gmp.cannot_calculate.gmp"))
+            contentAsString(result) must include (Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/member-details"))
+          }
+        }
+
+        "go to failure page when session missing scenario" in {
+          val emptySession = GmpSession(MemberDetails(nino, "A", "AAA"), "S1234567T", "", None, None, Leaving(GmpDate(None, None, None), None), None)
+          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(emptySession)))
+          withAuthorisedUser { request =>
+            val result = TestResultsController.getContributionsAndEarnings.apply(request)
+            contentAsString(result)replaceAll("&#x27;", "'") must include (Messages("gmp.cannot_calculate.gmp"))
+            contentAsString(result) must include (Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/calculation-reason"))
           }
         }
 
@@ -1024,7 +1070,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
 
         withAuthorisedUser { request =>
           val result = TestResultsController.createCalculationRequest(gmpSession)
-          result.requestEarnings must be(Some(1))
+          result.get.requestEarnings must be(Some(1))
         }
       }
     }
@@ -1035,7 +1081,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
 
         withAuthorisedUser { request =>
           val result = TestResultsController.createCalculationRequest(gmpSession2.copy(leaving = Leaving(GmpDate(Some("1"), Some("1"), Some("2010")), leaving = Some("Yes"))))
-          result.terminationDate must be(Some(new LocalDate(2010, 1, 1)))
+          result.get.terminationDate must be(Some(new LocalDate(2010, 1, 1)))
 
         }
       }
@@ -1045,21 +1091,21 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
       "remove spaces when creating request" in {
         withAuthorisedUser { request =>
           val result = TestResultsController.createCalculationRequest(gmpSession4)
-          result.nino must be(gmpSession4Nino)
+          result.get.nino must be(gmpSession4Nino)
         }
       }
 
       "create request with fixed rate" in {
         withAuthorisedUser { request =>
           val result = TestResultsController.createCalculationRequest(gmpSession.copy(rate = Some(RevaluationRate.FIXED)))
-          result.revaluationRate must be(Some(2))
+          result.get.revaluationRate must be(Some(2))
         }
       }
 
       "create request with limited rate" in {
         withAuthorisedUser { request =>
           val result = TestResultsController.createCalculationRequest(gmpSession.copy(rate = Some(RevaluationRate.LIMITED)))
-          result.revaluationRate must be(Some(3))
+          result.get.revaluationRate must be(Some(3))
         }
       }
     }
@@ -1152,6 +1198,63 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
           contentAsString(result) must include ("4.56")
           contentAsString(result) must include ("--")
 
+        }
+      }
+    }
+
+    "session missing info" must {
+      "display error page when missing scon with correct back link" in {
+        val emptySession = GmpSession(MemberDetails("", "", ""), "", "", None, None, Leaving(GmpDate(None, None, None), None), None)
+        when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(emptySession)))
+
+        withAuthorisedUser { request =>
+          val result = TestResultsController.get.apply(request)
+          contentAsString(result)replaceAll("&#x27;", "'") must include (Messages("gmp.cannot_calculate.gmp"))
+          contentAsString(result) must include (Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/pension-details"))
+        }
+      }
+
+      "display error page when missing nino with correct back link" in {
+        val emptySession = GmpSession(MemberDetails("", "", ""), "S1234567T", "", None, None, Leaving(GmpDate(None, None, None), None), None)
+        when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(emptySession)))
+
+        withAuthorisedUser { request =>
+          val result = TestResultsController.get.apply(request)
+          contentAsString(result)replaceAll("&#x27;", "'") must include (Messages("gmp.cannot_calculate.gmp"))
+          contentAsString(result) must include (Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/member-details"))
+        }
+      }
+
+      "display error page when missing firstName with correct back link" in {
+        val emptySession = GmpSession(MemberDetails(nino, "", ""), "S1234567T", "", None, None, Leaving(GmpDate(None, None, None), None), None)
+        when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(emptySession)))
+
+        withAuthorisedUser { request =>
+          val result = TestResultsController.get.apply(request)
+          contentAsString(result)replaceAll("&#x27;", "'") must include (Messages("gmp.cannot_calculate.gmp"))
+          contentAsString(result) must include (Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/member-details"))
+        }
+      }
+
+      "display error page when missing surname with correct back link" in {
+        val emptySession = GmpSession(MemberDetails(nino, "A", ""), "S1234567T", "", None, None, Leaving(GmpDate(None, None, None), None), None)
+        when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(emptySession)))
+
+        withAuthorisedUser { request =>
+          val result = TestResultsController.get.apply(request)
+          contentAsString(result)replaceAll("&#x27;", "'") must include (Messages("gmp.cannot_calculate.gmp"))
+          contentAsString(result) must include (Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/member-details"))
+        }
+      }
+
+      "display error page when missing scenario with correct back link" in {
+        val emptySession = GmpSession(MemberDetails(nino, "A", "AAA"), "S1234567T", "", None, None, Leaving(GmpDate(None, None, None), None), None)
+        when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(emptySession)))
+
+        withAuthorisedUser { request =>
+          val result = TestResultsController.get.apply(request)
+          contentAsString(result)replaceAll("&#x27;", "'") must include (Messages("gmp.cannot_calculate.gmp"))
+          contentAsString(result) must include (Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/calculation-reason"))
         }
       }
 
