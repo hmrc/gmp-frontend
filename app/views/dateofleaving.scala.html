@@ -14,7 +14,7 @@
 * limitations under the License.
 *@
 
-@(dateOfLeavingForm: Form[models.Leaving],session: GmpSession)(implicit request: Request[_])
+@(dateOfLeavingForm: Form[models.Leaving],scenario: String)(implicit request: Request[_])
 
 @import uk.gov.hmrc.play.views.html._
 @import uk.gov.hmrc.play.views.html.helpers._
@@ -37,7 +37,7 @@
   <div class="grid">
       <div class="grid-2-3">
           <h1>
-              @{session.scenario match {
+              @{scenario match {
               case CalculationType.DOL => Messages.get("gmp.leaving.dol.question")
               case CalculationType.SPA | CalculationType.PAYABLE_AGE | CalculationType.REVALUATION => Messages.get("gmp.other.dol.left.question")
               case CalculationType.SURVIVOR => Messages.get("gmp.survivor.dol.question")
@@ -52,7 +52,7 @@
             @form(action = routes.DateOfLeavingController.post) {
 
                 <div class="form-group-leaving-options">
-                    @if(session.scenario == CalculationType.DOL){
+                    @if(scenario == CalculationType.DOL){
                         <div class="form-group-leaving-options inline">
                             @dolRadioGroup(
                                 dateOfLeavingForm("leaving"),
@@ -72,7 +72,7 @@
                         <div class="form-group-leaving-options">
                             @dolRadioGroup(
                             dateOfLeavingForm("leaving"),
-                            session.scenario match {
+                            scenario match {
                             case CalculationType.SURVIVOR =>
                             Seq(
                             (Leaving.NO  , "none" , Leaving.NO) -> Messages.get("gmp.dol.threequestions.no.survivor"),
@@ -87,7 +87,7 @@
                             )
                             },
                             '_fieldsetAttributesLegend -> "leaving",
-                            session.scenario match {
+                            scenario match {
                                 case CalculationType.SURVIVOR => '_legend -> Messages.get("gmp.survivor.dol.question")
                                 case _ => '_legend -> Messages.get("gmp.other.dol.left.question")
                             },

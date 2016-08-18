@@ -16,6 +16,7 @@
 
 package controllers
 
+import helpers.RandomNino
 import models._
 import org.joda.time.{DateTime, DateTimeUtils}
 import org.mockito.Matchers
@@ -45,6 +46,8 @@ class DateOfLeavingControllerSpec extends PlaySpec with OneServerPerSuite with M
     override val sessionService = mockSessionService
   }
 
+  val nino = RandomNino.generate
+
   "Date of Leaving controller" must {
 
     "respond to GET /guaranteed-minimum-pension/left-scheme" in {
@@ -69,8 +72,8 @@ class DateOfLeavingControllerSpec extends PlaySpec with OneServerPerSuite with M
     }
 
     "authenticated users" must {
-      val memberDetails = MemberDetails("", "", "")
-      val session = GmpSession(memberDetails, "", CalculationType.DOL, None, None, Leaving(GmpDate(None, None, None), None), None)
+      val memberDetails = MemberDetails(nino, "A", "AAA")
+      val session = GmpSession(memberDetails, "S1234567T", CalculationType.DOL, None, None, Leaving(GmpDate(None, None, None), None), None)
       "respond with ok" in {
 
         withAuthorisedUser { user =>
@@ -89,9 +92,8 @@ class DateOfLeavingControllerSpec extends PlaySpec with OneServerPerSuite with M
 
         withAuthorisedUser { user =>
           when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(None))
-          intercept[RuntimeException] {
-            await(TestDateOfLeavingController.get.apply(user))
-          }
+          val result = TestDateOfLeavingController.get.apply(user)
+          contentAsString(result) must include (Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/dashboard"))
         }
       }
 
@@ -179,6 +181,56 @@ class DateOfLeavingControllerSpec extends PlaySpec with OneServerPerSuite with M
 
         }
       }
+
+      "go to failure page when session missing scon" in {
+        val emptySession = GmpSession(MemberDetails("", "", ""), "", "", None, None, Leaving(GmpDate(None, None, None), None), None)
+        when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(emptySession)))
+        withAuthorisedUser { request =>
+          val result = TestDateOfLeavingController.get.apply(request)
+          contentAsString(result)replaceAll("&#x27;", "'") must include (Messages("gmp.cannot_calculate.gmp"))
+          contentAsString(result) must include (Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/pension-details"))
+        }
+      }
+
+      "go to failure page when session missing nino" in {
+        val emptySession = GmpSession(MemberDetails("", "", ""), "S1234567T", "", None, None, Leaving(GmpDate(None, None, None), None), None)
+        when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(emptySession)))
+        withAuthorisedUser { request =>
+          val result = TestDateOfLeavingController.get.apply(request)
+          contentAsString(result)replaceAll("&#x27;", "'") must include (Messages("gmp.cannot_calculate.gmp"))
+          contentAsString(result) must include (Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/member-details"))
+        }
+      }
+
+      "go to failure page when session missing firstname" in {
+        val emptySession = GmpSession(MemberDetails(nino, "", ""), "S1234567T", "", None, None, Leaving(GmpDate(None, None, None), None), None)
+        when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(emptySession)))
+        withAuthorisedUser { request =>
+          val result = TestDateOfLeavingController.get.apply(request)
+          contentAsString(result)replaceAll("&#x27;", "'") must include (Messages("gmp.cannot_calculate.gmp"))
+          contentAsString(result) must include (Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/member-details"))
+        }
+      }
+
+      "go to failure page when session missing lastname" in {
+        val emptySession = GmpSession(MemberDetails(nino, "A", ""), "S1234567T", "", None, None, Leaving(GmpDate(None, None, None), None), None)
+        when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(emptySession)))
+        withAuthorisedUser { request =>
+          val result = TestDateOfLeavingController.get.apply(request)
+          contentAsString(result)replaceAll("&#x27;", "'") must include (Messages("gmp.cannot_calculate.gmp"))
+          contentAsString(result) must include (Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/member-details"))
+        }
+      }
+
+      "go to failure page when session missing scenario" in {
+        val emptySession = GmpSession(MemberDetails(nino, "A", "AAA"), "S1234567T", "", None, None, Leaving(GmpDate(None, None, None), None), None)
+        when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(emptySession)))
+        withAuthorisedUser { request =>
+          val result = TestDateOfLeavingController.get.apply(request)
+          contentAsString(result)replaceAll("&#x27;", "'") must include (Messages("gmp.cannot_calculate.gmp"))
+          contentAsString(result) must include (Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/calculation-reason"))
+        }
+      }
     }
   }
 
@@ -192,8 +244,8 @@ class DateOfLeavingControllerSpec extends PlaySpec with OneServerPerSuite with M
 
     "authorised users redirect" in {
 
-      val memberDetails = MemberDetails("", "", "")
-      val session = GmpSession(memberDetails, "", "", None, None, Leaving(GmpDate(None, None, None), None), None)
+      val memberDetails = MemberDetails(nino, "A", "AAA")
+      val session = GmpSession(memberDetails, "S1234567T", CalculationType.DOL, None, None, Leaving(GmpDate(None, None, None), None), None)
 
       withAuthorisedUser { request =>
         when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(session)))
@@ -225,7 +277,7 @@ class DateOfLeavingControllerSpec extends PlaySpec with OneServerPerSuite with M
     "authenticated users" must {
 
       "with invalid data" must {
-        val gmpSession = GmpSession(MemberDetails("", "", ""), "", CalculationType.DOL, None, None, Leaving(GmpDate(None, None, None), None), None)
+        val gmpSession = GmpSession(MemberDetails(nino, "A", "AAA"), "S1234567T", CalculationType.DOL, None, None, Leaving(GmpDate(None, None, None), None), None)
         when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
 
         "respond with BAD_REQUEST" in {
@@ -265,7 +317,7 @@ class DateOfLeavingControllerSpec extends PlaySpec with OneServerPerSuite with M
       }
 
       "with valid data" must {
-        val gmpSession = GmpSession(MemberDetails("", "", ""), "", CalculationType.DOL, None, None, Leaving(GmpDate(None, None, None), None), None)
+        val gmpSession = GmpSession(MemberDetails(nino, "A", "AAA"), "S1234567T", CalculationType.DOL, None, None, Leaving(GmpDate(None, None, None), None), None)
         "redirect" in {
 
 
