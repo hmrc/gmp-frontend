@@ -752,7 +752,6 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
         "go to failure page when session not returned" in {
           when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(None))
 
-
           withAuthorisedUser { request =>
             val result = TestResultsController.get.apply(request)
             contentAsString(result)replaceAll("&#x27;", "'") must include (Messages("gmp.cannot_calculate.gmp"))

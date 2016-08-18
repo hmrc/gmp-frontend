@@ -20,7 +20,10 @@ import config.GmpFrontendAuthConnector
 import controllers.auth.GmpRegime
 import forms.DateOfLeavingForm._
 import play.api.Logger
+import play.api.i18n.Messages
 import services.SessionService
+
+import scala.concurrent.Future
 
 object DateOfLeavingController extends DateOfLeavingController {
   val authConnector = GmpFrontendAuthConnector
@@ -33,10 +36,14 @@ trait DateOfLeavingController extends GmpPageFlow {
   def get = AuthorisedFor(GmpRegime, pageVisibilityPredicate).async {
     implicit user =>
       implicit request =>
-
         sessionService.fetchGmpSession.map {
-          case Some(session) => Ok(views.html.dateofleaving(dateOfLeavingForm, session))
-          case _ => throw new RuntimeException
+          case Some(session) => session match {
+            case _ if session.scon == "" => Ok(views.html.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/pension-details"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title")))
+            case _ if session.memberDetails.nino == "" || session.memberDetails.firstForename == "" || session.memberDetails.surname == "" => Ok(views.html.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/member-details"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title")))
+            case _ if session.scenario == "" => Ok(views.html.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/calculation-reason"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title")))
+            case _ => Ok (views.html.dateofleaving (dateOfLeavingForm, session.scenario) )
+          }
+          case _ => Ok(views.html.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/dashboard"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title")))
         }
 
 
@@ -49,7 +56,7 @@ trait DateOfLeavingController extends GmpPageFlow {
         dateOfLeavingForm.bindFromRequest.fold(
           formWithErrors => {
             sessionService.fetchGmpSession.map {
-              case Some(session) => BadRequest(views.html.dateofleaving(formWithErrors, session))
+              case Some(session) => BadRequest(views.html.dateofleaving(formWithErrors, session.scenario))
               case _ => throw new RuntimeException
             }
           },
