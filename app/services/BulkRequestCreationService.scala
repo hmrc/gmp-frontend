@@ -16,21 +16,16 @@
 
 package services
 
-import java.io.InputStreamReader
-import java.nio.charset.Charset
-
-import models.{BulkCalculationRequest, BulkCalculationRequestLine, CalculationRequestLine, GmpDate}
+import models.{BulkCalculationRequest, BulkCalculationRequestLine, CalculationRequestLine}
 import org.joda.time.LocalDate
 import org.joda.time.format.DateTimeFormat
 import play.api.Logger
 import play.api.i18n.Messages
-import play.api.libs.iteratee.{Enumerator, Iteratee}
 import uk.gov.hmrc.play.config.ServicesConfig
 import uk.gov.hmrc.stream.BulkEntityProcessor
 import uk.gov.hmrc.time.TaxYear
 import validation.{CsvLineValidator, DateValidate, SMValidate}
 
-import scala.concurrent.Future
 import scala.util.{Failure, Success, Try}
 
 object BulkRequestCsvColumn {
@@ -49,24 +44,28 @@ object BulkRequestCsvColumn {
   val LINE_ERROR_EMPTY = -3
 }
 
-class LimitingEnumerator(limit: Int, delimiter: Char, iterator: Iterator[Char] ) extends Iterator[Char] {
-
-  var count = 0
-
-  override def hasNext: Boolean = iterator.hasNext && count <= limit
-
-  override def next(): Char = {
-
-    val c = iterator.next()
-
-    if (c == delimiter)
-      count += 1
-
-    c
-  }
-}
+class DataLimitExceededException extends Throwable
 
 trait BulkRequestCreationService extends BulkEntityProcessor[BulkCalculationRequestLine] with ServicesConfig {
+
+  private class LimitingEnumerator(limit: Int, delimiter: Char, iterator: Iterator[Char]) extends Iterator[Char] {
+
+    private var count = 0
+
+    override def hasNext: Boolean = iterator.hasNext && count <= limit
+
+    override def next(): Char = {
+
+      val c = iterator.next()
+
+      if (c == delimiter)
+        count += 1
+
+      c
+    }
+
+    def hasDataBeyondLimit = !hasNext && iterator.hasNext
+  }
 
   val LINE_FEED: Int = 10
   val MAX_LINES = 25000
@@ -79,27 +78,34 @@ trait BulkRequestCreationService extends BulkEntityProcessor[BulkCalculationRequ
     for ((x, i) <- bulkCalculationRequestLines.zipWithIndex) yield x.copy(lineId = i + 1)
   }
 
-  def createBulkRequest(collection: String, id: String, email: String, reference: String): BulkCalculationRequest = {
+  def createBulkRequest(collection: String, id: String, email: String, reference: String): Either[BulkCalculationRequest, Throwable] = {
 
     val attachmentUrl = s"${baseUrl("attachments")}/attachments-internal/$collection/$id"
-    val bulkCalculationRequestLines: List[BulkCalculationRequestLine] = list(new LimitingEnumerator(MAX_LINES, LINE_FEED.toByte.toChar, sourceData(attachmentUrl)), LINE_FEED.toByte.toChar, constructBulkCalculationRequestLine _)
+    val enumerator = new LimitingEnumerator(MAX_LINES, LINE_FEED.toByte.toChar, sourceData(attachmentUrl))
+    val bulkCalculationRequestLines: List[BulkCalculationRequestLine] = list(enumerator, LINE_FEED.toByte.toChar, constructBulkCalculationRequestLine _)
 
-    if (bulkCalculationRequestLines.size == 1){
-      val emptyFileLines = List(BulkCalculationRequestLine(1, None, None, Some(Map(BulkRequestCsvColumn.LINE_ERROR_EMPTY.toString -> Messages("gmp.error.parsing.empty_file")))))
-      val req = BulkCalculationRequest(id, email, reference, enterLineNumbers(emptyFileLines))
-      Logger.debug(s"[BulkRequestCreationService][createBulkRequest] size : empty")
-      req
-    }
-    else {
-      val req = BulkCalculationRequest(id, email, reference, enterLineNumbers(bulkCalculationRequestLines.drop(1)))
-      Logger.debug(s"[BulkRequestCreationService][createBulkRequest] size : ${req.calculationRequests.size}")
-      req
+    if (enumerator.hasDataBeyondLimit) {
+      Right(new DataLimitExceededException)
+    } else {
+      if (bulkCalculationRequestLines.size == 1) {
+        val emptyFileLines = List(BulkCalculationRequestLine(1, None, None, Some(Map(BulkRequestCsvColumn.LINE_ERROR_EMPTY.toString -> Messages("gmp.error.parsing.empty_file")))))
+        val req = BulkCalculationRequest(id, email, reference, enterLineNumbers(emptyFileLines))
+        Logger.debug(s"[BulkRequestCreationService][createBulkRequest] size : empty")
+        Left(req)
+      }
+      else {
+        val req = BulkCalculationRequest(id, email, reference, enterLineNumbers(bulkCalculationRequestLines.drop(1)))
+        Logger.debug(s"[BulkRequestCreationService][createBulkRequest] size : ${req.calculationRequests.size}")
+        Left(req)
+      }
     }
   }
 
   private def constructCalculationRequestLine(line: String): CalculationRequestLine = {
 
-    val lineArray = line.replaceAll("’", "'").split(",", -1) map { _.trim }
+    val lineArray = line.replaceAll("’", "'").split(",", -1) map {
+      _.trim
+    }
 
     val calculationRequestLine = CalculationRequestLine(
       lineArray(BulkRequestCsvColumn.SCON).toUpperCase,
@@ -130,7 +136,7 @@ trait BulkRequestCreationService extends BulkEntityProcessor[BulkCalculationRequ
     }
   }
 
-  private def protectedToInt(number: String): Option[Int] ={
+  private def protectedToInt(number: String): Option[Int] = {
     val tryConverting = Try(number.toInt)
 
     tryConverting match {
@@ -141,7 +147,7 @@ trait BulkRequestCreationService extends BulkEntityProcessor[BulkCalculationRequ
     }
   }
 
-  private def protectedDateConvert(date: String): Option[String] ={
+  private def protectedDateConvert(date: String): Option[String] = {
     val tryConverting = Try(LocalDate.parse(date, inputDateFormatter).toString(DATE_FORMAT))
 
     tryConverting match {
@@ -184,7 +190,7 @@ trait BulkRequestCreationService extends BulkEntityProcessor[BulkCalculationRequ
     validationErrors match {
       case Some(x) if x.keySet.contains(BulkRequestCsvColumn.LINE_ERROR_TOO_FEW.toString)
         || x.keySet.contains(BulkRequestCsvColumn.LINE_ERROR_TOO_MANY.toString)
-        => BulkCalculationRequestLine(1, None, None, validationErrors)
+      => BulkCalculationRequestLine(1, None, None, validationErrors)
       case _ => BulkCalculationRequestLine(1, Some(constructCalculationRequestLine(line)), None, validationErrors)
     }
   }

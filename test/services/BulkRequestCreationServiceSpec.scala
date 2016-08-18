@@ -156,34 +156,34 @@ class BulkRequestCreationServiceSpec extends PlaySpec with ScalaFutures with Moc
 
     "return Bulk Request 1" in {
 
-      val bulkRequest: BulkCalculationRequest = TestBulkRequestCreationService.createBulkRequest(collection, "1", bulkRequest1.email, bulkRequest1.reference)
+      val bulkRequest: BulkCalculationRequest = TestBulkRequestCreationService.createBulkRequest(collection, "1", bulkRequest1.email, bulkRequest1.reference).left.get
 
       bulkRequest.getFirstValid.firstForename mustBe "ISAMBARD"
       bulkRequest.getFirstValid.surname mustBe "BRUNELL"
     }
 
     "a request without SM as the termination date, should set memberIsInScheme to false" in {
-      val request = TestBulkRequestCreationService.createBulkRequest(collection, "1", bulkRequest1.email, bulkRequest1.reference)
+      val request = TestBulkRequestCreationService.createBulkRequest(collection, "1", bulkRequest1.email, bulkRequest1.reference).left.get
 
       request.getFirstValid.memberIsInScheme mustBe false
     }
 
     "return Bulk Request 2" in {
 
-      val bulkRequest: BulkCalculationRequest = TestBulkRequestCreationService.createBulkRequest(collection, "2", bulkRequest2.email, bulkRequest2.reference)
+      val bulkRequest: BulkCalculationRequest = TestBulkRequestCreationService.createBulkRequest(collection, "2", bulkRequest2.email, bulkRequest2.reference).left.get
 
       bulkRequest.getFirstValid.surname mustBe "O'BRIEN"
     }
 
     "return Bulk Request with multiple calcs" in {
-      val bulkRequest: BulkCalculationRequest = TestBulkRequestCreationService.createBulkRequest(collection, "3", bulkRequest3.email, bulkRequest3.reference)
+      val bulkRequest: BulkCalculationRequest = TestBulkRequestCreationService.createBulkRequest(collection, "3", bulkRequest3.email, bulkRequest3.reference).left.get
 
       bulkRequest.calculationRequests.size mustBe 2
     }
 
     "contain Nones when dates are left blank" in {
 
-      val bulkRequest: BulkCalculationRequest = TestBulkRequestCreationService.createBulkRequest(collection, "4", bulkRequest4.email, bulkRequest4.reference)
+      val bulkRequest: BulkCalculationRequest = TestBulkRequestCreationService.createBulkRequest(collection, "4", bulkRequest4.email, bulkRequest4.reference).left.get
 
       bulkRequest.getFirstValid.revaluationDate mustBe None
       bulkRequest.getFirstValid.terminationDate mustBe None
@@ -191,21 +191,21 @@ class BulkRequestCreationServiceSpec extends PlaySpec with ScalaFutures with Moc
 
     "termination date for person who is still in scheme should be same as reval date" in {
 
-      val bulkRequest: BulkCalculationRequest = TestBulkRequestCreationService.createBulkRequest(collection, "11", bulkRequest11.email, bulkRequest11.reference)
+      val bulkRequest: BulkCalculationRequest = TestBulkRequestCreationService.createBulkRequest(collection, "11", bulkRequest11.email, bulkRequest11.reference).left.get
 
       bulkRequest.getFirstValid.revaluationDate mustBe bulkRequest.getFirstValid.terminationDate
     }
 
     "termination date for person with blank input termination date should be None" in {
 
-      val bulkRequest: BulkCalculationRequest = TestBulkRequestCreationService.createBulkRequest(collection, "10", bulkRequest10.email, bulkRequest10.reference)
+      val bulkRequest: BulkCalculationRequest = TestBulkRequestCreationService.createBulkRequest(collection, "10", bulkRequest10.email, bulkRequest10.reference).left.get
 
       bulkRequest.getFirstValid.terminationDate mustBe None
     }
 
     "termination date for person who left scheme post-2016 should be correct date entered" in {
 
-      val bulkRequest: BulkCalculationRequest = TestBulkRequestCreationService.createBulkRequest(collection, "12", bulkRequest12.email, bulkRequest12.reference)
+      val bulkRequest: BulkCalculationRequest = TestBulkRequestCreationService.createBulkRequest(collection, "12", bulkRequest12.email, bulkRequest12.reference).left.get
 
       bulkRequest.getFirstValid.revaluationDate mustBe Some("2017-07-07")
       bulkRequest.getFirstValid.terminationDate mustBe Some("2016-07-07")
@@ -214,7 +214,7 @@ class BulkRequestCreationServiceSpec extends PlaySpec with ScalaFutures with Moc
 
     "contain Nones for other options" in {
 
-      val bulkRequest: BulkCalculationRequest = TestBulkRequestCreationService.createBulkRequest(collection, "5", bulkRequest4.email, bulkRequest4.reference)
+      val bulkRequest: BulkCalculationRequest = TestBulkRequestCreationService.createBulkRequest(collection, "5", bulkRequest4.email, bulkRequest4.reference).left.get
 
       bulkRequest.getFirstValid.revaluationDate mustBe None
       bulkRequest.getFirstValid.terminationDate mustBe None
@@ -224,14 +224,14 @@ class BulkRequestCreationServiceSpec extends PlaySpec with ScalaFutures with Moc
     }
 
     "return Bulk Request with correct line numbers" in {
-      val bulkRequest: BulkCalculationRequest = TestBulkRequestCreationService.createBulkRequest(collection, "3", bulkRequest3.email, bulkRequest3.reference)
+      val bulkRequest: BulkCalculationRequest = TestBulkRequestCreationService.createBulkRequest(collection, "3", bulkRequest3.email, bulkRequest3.reference).left.get
 
       bulkRequest.calculationRequests.head.lineId mustBe 1
       bulkRequest.calculationRequests.tail.head.lineId mustBe 2
     }
 
     "return bulk requests with field validation messages" in {
-      val bulkRequest = TestBulkRequestCreationService.createBulkRequest(collection, "7", invalidBulkRequest.email, invalidBulkRequest.reference)
+      val bulkRequest = TestBulkRequestCreationService.createBulkRequest(collection, "7", invalidBulkRequest.email, invalidBulkRequest.reference).left.get
       val errors = bulkRequest.calculationRequests.head.validationErrors
 
       errors mustBe defined
@@ -239,7 +239,7 @@ class BulkRequestCreationServiceSpec extends PlaySpec with ScalaFutures with Moc
     }
 
     "cope with invalid number and date" in {
-      val bulkRequest = TestBulkRequestCreationService.createBulkRequest(collection, "15", invalidBulkRequest.email, invalidBulkRequest.reference)
+      val bulkRequest = TestBulkRequestCreationService.createBulkRequest(collection, "15", invalidBulkRequest.email, invalidBulkRequest.reference).left.get
       val errors = bulkRequest.calculationRequests.head.validationErrors
 
       errors mustBe defined
@@ -247,7 +247,7 @@ class BulkRequestCreationServiceSpec extends PlaySpec with ScalaFutures with Moc
     }
 
     "return bulk requests with general line error" in {
-      val bulkRequest = TestBulkRequestCreationService.createBulkRequest(collection, "13", invalidBulkRequest.email, invalidBulkRequest.reference)
+      val bulkRequest = TestBulkRequestCreationService.createBulkRequest(collection, "13", invalidBulkRequest.email, invalidBulkRequest.reference).left.get
       val errors = bulkRequest.calculationRequests.head.validationErrors
 
       errors mustBe defined
@@ -255,17 +255,17 @@ class BulkRequestCreationServiceSpec extends PlaySpec with ScalaFutures with Moc
     }
 
     "return bulk request with dual calc Yes" in {
-      val bulkRequest = TestBulkRequestCreationService.createBulkRequest(collection, "8", anotherBulkRequest.email, anotherBulkRequest.reference)
+      val bulkRequest = TestBulkRequestCreationService.createBulkRequest(collection, "8", anotherBulkRequest.email, anotherBulkRequest.reference).left.get
       bulkRequest.calculationRequests.head.validCalculationRequest.head.dualCalc must be(1)
     }
 
     "return bulk request with dual calc No" in {
-      val bulkRequest = TestBulkRequestCreationService.createBulkRequest(collection, "9", "somebody@email.com", "a-ref-123")
+      val bulkRequest = TestBulkRequestCreationService.createBulkRequest(collection, "9", "somebody@email.com", "a-ref-123").left.get
       bulkRequest.calculationRequests.head.validCalculationRequest.head.dualCalc must be(0)
     }
 
     "trim spaces around fields" in {
-      val bulkRequest = TestBulkRequestCreationService.createBulkRequest(collection, "14", bulkRequest14.email, bulkRequest14.reference)
+      val bulkRequest = TestBulkRequestCreationService.createBulkRequest(collection, "14", bulkRequest14.email, bulkRequest14.reference).left.get
       bulkRequest.getFirstValid.firstForename mustBe "TIM"
       bulkRequest.getFirstValid.surname mustBe "O'BRIEN"
       bulkRequest.getFirstValid.nino mustBe "GY000002A"
@@ -275,58 +275,58 @@ class BulkRequestCreationServiceSpec extends PlaySpec with ScalaFutures with Moc
     }
 
     "cope with termination date with wrong format dd MM yyyy with no slashes" in {
-      val bulkRequest = TestBulkRequestCreationService.createBulkRequest(collection, "16", bulkRequest16.email, bulkRequest16.reference)
+      val bulkRequest = TestBulkRequestCreationService.createBulkRequest(collection, "16", bulkRequest16.email, bulkRequest16.reference).left.get
       bulkRequest.getFirstValid.firstForename mustBe "TIM"
     }
 
     "convert scon to uppercase" in {
-      val bulkRequest = TestBulkRequestCreationService.createBulkRequest(collection, "17", bulkRequest17.email, bulkRequest17.reference)
+      val bulkRequest = TestBulkRequestCreationService.createBulkRequest(collection, "17", bulkRequest17.email, bulkRequest17.reference).left.get
       bulkRequest.getFirstValid.scon mustBe "S1301234T"
     }
 
     "not send the revaluation date if provided when calculation type is leaving" in {
-      val bulkRequest = TestBulkRequestCreationService.createBulkRequest(collection, "18", bulkRequest18.email, bulkRequest18.reference)
+      val bulkRequest = TestBulkRequestCreationService.createBulkRequest(collection, "18", bulkRequest18.email, bulkRequest18.reference).left.get
       bulkRequest.getFirstValid.revaluationDate mustBe None
       bulkRequest.getFirstValid.revaluationRate mustBe None
     }
 
     "not send the revaluation date if provided when calculation type is PA" in {
-      val bulkRequest = TestBulkRequestCreationService.createBulkRequest(collection, "20", bulkRequest20.email, bulkRequest20.reference)
+      val bulkRequest = TestBulkRequestCreationService.createBulkRequest(collection, "20", bulkRequest20.email, bulkRequest20.reference).left.get
       bulkRequest.getFirstValid.revaluationDate mustBe None
     }
 
     "not send the revaluation date if provided when calculation type is SPA" in {
-      val bulkRequest = TestBulkRequestCreationService.createBulkRequest(collection, "21", bulkRequest21.email, bulkRequest21.reference)
+      val bulkRequest = TestBulkRequestCreationService.createBulkRequest(collection, "21", bulkRequest21.email, bulkRequest21.reference).left.get
       bulkRequest.getFirstValid.revaluationDate mustBe None
     }
 
     "not send the termination date if SM is provided, when calculation type is survivor" in {
-      val bulkRequest = TestBulkRequestCreationService.createBulkRequest(collection, "24", bulkRequest24.email, bulkRequest24.reference)
+      val bulkRequest = TestBulkRequestCreationService.createBulkRequest(collection, "24", bulkRequest24.email, bulkRequest24.reference).left.get
       bulkRequest.getFirstValid.terminationDate mustBe None
     }
 
     "should set the schemeMember property to true" in {
-      val bulkRequest = TestBulkRequestCreationService.createBulkRequest(collection, "24", bulkRequest24.email, bulkRequest24.reference)
+      val bulkRequest = TestBulkRequestCreationService.createBulkRequest(collection, "24", bulkRequest24.email, bulkRequest24.reference).left.get
       bulkRequest.getFirstValid.memberIsInScheme mustBe true
     }
 
     "not send dual calc when calculation type is survivor" in {
-      val bulkRequest = TestBulkRequestCreationService.createBulkRequest(collection, "19", bulkRequest19.email, bulkRequest19.reference)
+      val bulkRequest = TestBulkRequestCreationService.createBulkRequest(collection, "19", bulkRequest19.email, bulkRequest19.reference).left.get
       bulkRequest.getFirstValid.dualCalc mustBe 0
     }
 
     "send term date when term date is on or after 06/04/2016" in {
-      val bulkRequest = TestBulkRequestCreationService.createBulkRequest(collection, "22", bulkRequest22.email, bulkRequest22.reference)
+      val bulkRequest = TestBulkRequestCreationService.createBulkRequest(collection, "22", bulkRequest22.email, bulkRequest22.reference).left.get
       bulkRequest.getFirstValid.terminationDate mustBe Some("2016-04-06")
     }
 
     "not send term date when term date is on or before 05/04/2016" in {
-      val bulkRequest = TestBulkRequestCreationService.createBulkRequest(collection, "23", bulkRequest23.email, bulkRequest23.reference)
+      val bulkRequest = TestBulkRequestCreationService.createBulkRequest(collection, "23", bulkRequest23.email, bulkRequest23.reference).left.get
       bulkRequest.getFirstValid.terminationDate mustBe None
     }
 
     "should send through a LINE_EMPTY validation error when there are no calculations to perform" in {
-      val bulkRequest = TestBulkRequestCreationService.createBulkRequest(collection, "25", "tim@burton.com", "uploadRef123")
+      val bulkRequest = TestBulkRequestCreationService.createBulkRequest(collection, "25", "tim@burton.com", "uploadRef123").left.get
       val errors = bulkRequest.calculationRequests.head.validationErrors
 
       errors mustBe defined
@@ -335,11 +335,11 @@ class BulkRequestCreationServiceSpec extends PlaySpec with ScalaFutures with Moc
 
     "limit the number of rows returned" in {
 
-      val bulkRequest = TestBulkRequestCreationService.createBulkRequest(collection, "26", "tim@burton.com", "uploadRef123")
+      val result = TestBulkRequestCreationService.createBulkRequest(collection, "26", "tim@burton.com", "uploadRef123")
 
-      println(Console.YELLOW + line26Data + Console.WHITE)
+      println(Console.YELLOW + result)
 
-      bulkRequest.calculationRequests.size mustBe 2
+      result.isRight mustBe true
     }
 
   }
