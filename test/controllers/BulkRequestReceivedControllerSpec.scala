@@ -21,7 +21,7 @@ import java.util.UUID
 import connectors.GmpBulkConnector
 import helpers.RandomNino
 import models._
-import org.joda.time.{LocalDateTime, LocalDate}
+import org.joda.time.{LocalDate, LocalDateTime}
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.mock.MockitoSugar
@@ -30,13 +30,13 @@ import play.api.i18n.Messages
 import play.api.mvc.{AnyContentAsEmpty, Result}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import services.{BulkRequestCreationService, SessionService}
+import services.{BulkRequestCreationService, DataLimitExceededException, SessionService}
 import uk.gov.hmrc.domain.PsaId
 import uk.gov.hmrc.emailaddress.EmailAddress
 import uk.gov.hmrc.play.frontend.auth.AuthContext
 import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
 import uk.gov.hmrc.play.frontend.auth.connectors.domain._
-import uk.gov.hmrc.play.http.{HttpResponse, HeaderCarrier}
+import uk.gov.hmrc.play.http.{HeaderCarrier, HttpResponse}
 import uk.gov.hmrc.play.http.logging.SessionId
 
 import scala.concurrent.Future
@@ -87,7 +87,7 @@ class BulkRequestReceivedControllerSpec extends PlaySpec with OneServerPerSuite 
         "respond with ok" in {
 
           when(mockSessionService.fetchGmpBulkSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpBulkSession)))
-          when(mockBulkRequestCreationService.createBulkRequest(Matchers.any(),Matchers.any(),Matchers.any(),Matchers.any())).thenReturn(bulkRequest1)
+          when(mockBulkRequestCreationService.createBulkRequest(Matchers.any(),Matchers.any(),Matchers.any(),Matchers.any())).thenReturn(Left(bulkRequest1))
           when(mockGmpBulkConnector.sendBulkRequest(Matchers.any())(Matchers.any(),Matchers.any())).thenReturn(Future.successful(OK))
           withAuthorisedUser { user =>
             getBulkRequestReceived(user) { result =>
@@ -105,7 +105,7 @@ class BulkRequestReceivedControllerSpec extends PlaySpec with OneServerPerSuite 
         "respond with ok and failure page if conflict received usually for a duplicate record trying to be inserted" in {
 
           when(mockSessionService.fetchGmpBulkSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpBulkSession)))
-          when(mockBulkRequestCreationService.createBulkRequest(Matchers.any(),Matchers.any(),Matchers.any(),Matchers.any())).thenReturn(bulkRequest1)
+          when(mockBulkRequestCreationService.createBulkRequest(Matchers.any(),Matchers.any(),Matchers.any(),Matchers.any())).thenReturn(Left(bulkRequest1))
           when(mockGmpBulkConnector.sendBulkRequest(Matchers.any())(Matchers.any(),Matchers.any())).thenReturn(Future.successful(CONFLICT))
           withAuthorisedUser { user =>
             getBulkRequestReceived(user) { result =>
@@ -119,8 +119,23 @@ class BulkRequestReceivedControllerSpec extends PlaySpec with OneServerPerSuite 
         "respond with ok and failure page if file too large" in {
 
           when(mockSessionService.fetchGmpBulkSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpBulkSession)))
-          when(mockBulkRequestCreationService.createBulkRequest(Matchers.any(),Matchers.any(),Matchers.any(),Matchers.any())).thenReturn(bulkRequest1)
+          when(mockBulkRequestCreationService.createBulkRequest(Matchers.any(),Matchers.any(),Matchers.any(),Matchers.any())).thenReturn(Left(bulkRequest1))
           when(mockGmpBulkConnector.sendBulkRequest(Matchers.any())(Matchers.any(),Matchers.any())).thenReturn(Future.successful(REQUEST_ENTITY_TOO_LARGE))
+          withAuthorisedUser { user =>
+            getBulkRequestReceived(user) { result =>
+              status(result) must equal(OK)
+              contentAsString(result) must include(Messages("gmp.bulk.failure.too_large"))
+              contentAsString(result) must include(Messages("gmp.bulk_failure_file_too_large.title"))
+            }
+          }
+        }
+
+        "respond with ok and failure page if file row limit exceeded" in {
+
+          when(mockSessionService.fetchGmpBulkSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpBulkSession)))
+          when(mockBulkRequestCreationService.createBulkRequest(Matchers.any(),Matchers.any(),Matchers.any(),Matchers.any())).thenReturn(Right(new DataLimitExceededException))
+
+
           withAuthorisedUser { user =>
             getBulkRequestReceived(user) { result =>
               status(result) must equal(OK)
@@ -133,7 +148,7 @@ class BulkRequestReceivedControllerSpec extends PlaySpec with OneServerPerSuite 
         "generic failure page if bulk fails for 5XX reason" in {
 
           when(mockSessionService.fetchGmpBulkSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpBulkSession)))
-          when(mockBulkRequestCreationService.createBulkRequest(Matchers.any(),Matchers.any(),Matchers.any(),Matchers.any())).thenReturn(bulkRequest1)
+          when(mockBulkRequestCreationService.createBulkRequest(Matchers.any(),Matchers.any(),Matchers.any(),Matchers.any())).thenReturn(Left(bulkRequest1))
           when(mockGmpBulkConnector.sendBulkRequest(Matchers.any())(Matchers.any(),Matchers.any())).thenReturn(Future.successful(500))
           withAuthorisedUser { user =>
             getBulkRequestReceived(user) { result =>
