@@ -16,6 +16,7 @@
 
 package controllers
 
+import helpers.RandomNino
 import models._
 import org.mockito.Matchers
 import org.mockito.Mockito._
@@ -42,6 +43,8 @@ class RevaluationRateControllerSpec extends PlaySpec with OneServerPerSuite with
 
   }
 
+  private val nino: String = RandomNino.generate
+
   "Revaluation Rate controller" must {
 
     "respond to GET /guaranteed-minimum-pension/revaluation-rate" in {
@@ -62,7 +65,7 @@ class RevaluationRateControllerSpec extends PlaySpec with OneServerPerSuite with
 
     "authenticated users" must {
 
-      val gmpSession = GmpSession(MemberDetails("", "", ""), "S1301234T", CalculationType.REVALUATION, None, Some(""), Leaving(GmpDate(None, None, None), None), None)
+      val gmpSession = GmpSession(MemberDetails(nino, "A", "AAA"), "S1301234T", CalculationType.REVALUATION, None, Some(""), Leaving(GmpDate(None, None, None), Some(Leaving.NO)), None)
       when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
       "respond with ok" in {
 
@@ -85,6 +88,66 @@ class RevaluationRateControllerSpec extends PlaySpec with OneServerPerSuite with
             }
 
           }
+        }
+      }
+
+      "go to failure page when session missing scon" in {
+        val emptySession = GmpSession(MemberDetails("", "", ""), "", "", None, None, Leaving(GmpDate(None, None, None), Some(Leaving.NO)), None)
+        when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(emptySession)))
+        withAuthorisedUser { request =>
+          val result = TestRevaluationRateController.get.apply(request)
+          contentAsString(result)replaceAll("&#x27;", "'") must include (Messages("gmp.cannot_calculate.gmp"))
+          contentAsString(result) must include (Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/pension-details"))
+        }
+      }
+
+      "go to failure page when session missing nino" in {
+        val emptySession = GmpSession(MemberDetails("", "", ""), "S1234567T", "", None, None, Leaving(GmpDate(None, None, None), None), None)
+        when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(emptySession)))
+        withAuthorisedUser { request =>
+          val result = TestRevaluationRateController.get.apply(request)
+          contentAsString(result)replaceAll("&#x27;", "'") must include (Messages("gmp.cannot_calculate.gmp"))
+          contentAsString(result) must include (Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/member-details"))
+        }
+      }
+
+      "go to failure page when session missing firstname" in {
+        val emptySession = GmpSession(MemberDetails(nino, "", ""), "S1234567T", "", None, None, Leaving(GmpDate(None, None, None), None), None)
+        when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(emptySession)))
+        withAuthorisedUser { request =>
+          val result = TestRevaluationRateController.get.apply(request)
+          contentAsString(result)replaceAll("&#x27;", "'") must include (Messages("gmp.cannot_calculate.gmp"))
+          contentAsString(result) must include (Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/member-details"))
+        }
+      }
+
+      "go to failure page when session missing lastname" in {
+        val emptySession = GmpSession(MemberDetails(nino, "A", ""), "S1234567T", "", None, None, Leaving(GmpDate(None, None, None), None), None)
+        when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(emptySession)))
+        withAuthorisedUser { request =>
+          val result = TestRevaluationRateController.get.apply(request)
+          contentAsString(result)replaceAll("&#x27;", "'") must include (Messages("gmp.cannot_calculate.gmp"))
+          contentAsString(result) must include (Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/member-details"))
+        }
+      }
+
+      "go to failure page when session missing scenario" in {
+        val emptySession = GmpSession(MemberDetails(nino, "A", "AAA"), "S1234567T", "", None, None, Leaving(GmpDate(None, None, None), None), None)
+        when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(emptySession)))
+        withAuthorisedUser { request =>
+          val result = TestRevaluationRateController.get.apply(request)
+          contentAsString(result)replaceAll("&#x27;", "'") must include (Messages("gmp.cannot_calculate.gmp"))
+          contentAsString(result) must include (Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/calculation-reason"))
+        }
+      }
+
+      "go to failure page when session missing leaving" in {
+        val emptySession = GmpSession(MemberDetails(nino, "A", "AAA"), "S1234567T", "0", None, None, Leaving(GmpDate(None, None, None), None), None)
+        when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(emptySession)))
+        withAuthorisedUser { request =>
+          val result = TestRevaluationRateController.get.apply(request)
+          contentAsString(result)replaceAll("&#x27;", "'") must include (Messages("gmp.cannot_calculate.gmp"))
+          contentAsString(result) must include (Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/left-scheme"))
         }
       }
 
@@ -116,7 +179,7 @@ class RevaluationRateControllerSpec extends PlaySpec with OneServerPerSuite with
       }
 
       "include the correct header when non revaluation Scenario pre 06/04/2016 selected" in {
-        val gmpSession = GmpSession(MemberDetails("", "", ""), "", CalculationType.REVALUATION, Some(GmpDate(Some("1"), Some("1"), Some("2015"))), None, Leaving(GmpDate(None, None, None), None), None)
+        val gmpSession = GmpSession(MemberDetails(nino, "A", "AAA"), "S1234567T", CalculationType.REVALUATION, Some(GmpDate(Some("1"), Some("1"), Some("2015"))), None, Leaving(GmpDate(None, None, None), Some(Leaving.YES_BEFORE)), None)
         when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
         withAuthorisedUser { user =>
           get(user) { result =>
@@ -126,7 +189,7 @@ class RevaluationRateControllerSpec extends PlaySpec with OneServerPerSuite with
       }
 
       "include the correct header when non revaluation Scenario after 06/04/2016 selected" in {
-        val gmpSession = GmpSession(MemberDetails("", "", ""), "", CalculationType.REVALUATION, Some(GmpDate(Some("1"), Some("1"), Some("2018"))), None, Leaving(GmpDate(None, None, None), None), None)
+        val gmpSession = GmpSession(MemberDetails(nino, "A", "AAA"), "S1234567T", CalculationType.REVALUATION, Some(GmpDate(Some("1"), Some("1"), Some("2018"))), None, Leaving(GmpDate(None, None, None), Some(Leaving.YES_AFTER)), None)
         when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
         withAuthorisedUser { user =>
           get(user) { result =>
@@ -136,7 +199,7 @@ class RevaluationRateControllerSpec extends PlaySpec with OneServerPerSuite with
       }
 
       "not show limited rate option when leaving date after 06/04/2016 selected" in {
-        val gmpSession = GmpSession(MemberDetails("", "", ""), "", CalculationType.SPA, None, None, Leaving(GmpDate(Some("1"), Some("5"), Some("2016")), Some(Leaving.YES_AFTER)), None)
+        val gmpSession = GmpSession(MemberDetails(nino, "A", "AAA"), "S1234567T", CalculationType.SPA, None, None, Leaving(GmpDate(Some("1"), Some("5"), Some("2016")), Some(Leaving.YES_AFTER)), None)
         when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
         withAuthorisedUser { user =>
           get(user) { result =>
@@ -146,7 +209,7 @@ class RevaluationRateControllerSpec extends PlaySpec with OneServerPerSuite with
       }
 
       "show limited rate option when leaving date before 06/04/2016 selected" in {
-        val gmpSession = GmpSession(MemberDetails("", "", ""), "", CalculationType.SPA, None, None, Leaving(GmpDate(None, None, None), Some(Leaving.YES_BEFORE)), None)
+        val gmpSession = GmpSession(MemberDetails(nino, "A", "AAA"), "S1234567T", CalculationType.SPA, None, None, Leaving(GmpDate(None, None, None), Some(Leaving.YES_BEFORE)), None)
         when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
         withAuthorisedUser { user =>
           get(user) { result =>
@@ -207,7 +270,7 @@ class RevaluationRateControllerSpec extends PlaySpec with OneServerPerSuite with
       }
       "with valid data" must {
 
-        val gmpSession = GmpSession(MemberDetails("", "", ""), "S1301234T", CalculationType.REVALUATION, None, Some(""), Leaving(GmpDate(None, None, None), None), None)
+        val gmpSession = GmpSession(MemberDetails("", "", ""), "S1301234T", CalculationType.REVALUATION, None, Some(""), Leaving(GmpDate(None, None, None), Some(Leaving.NO)), None)
 
         "redirect" in {
 
