@@ -19,16 +19,18 @@ package services
 import java.io.InputStreamReader
 import java.nio.charset.Charset
 
-import models.{GmpDate, BulkCalculationRequest, BulkCalculationRequestLine, CalculationRequestLine}
+import models.{BulkCalculationRequest, BulkCalculationRequestLine, CalculationRequestLine, GmpDate}
 import org.joda.time.LocalDate
 import org.joda.time.format.DateTimeFormat
 import play.api.Logger
 import play.api.i18n.Messages
+import play.api.libs.iteratee.{Enumerator, Iteratee}
 import uk.gov.hmrc.play.config.ServicesConfig
 import uk.gov.hmrc.stream.BulkEntityProcessor
 import uk.gov.hmrc.time.TaxYear
-import validation.{SMValidate, DateValidate, CsvLineValidator}
+import validation.{CsvLineValidator, DateValidate, SMValidate}
 
+import scala.concurrent.Future
 import scala.util.{Failure, Success, Try}
 
 object BulkRequestCsvColumn {
@@ -47,9 +49,27 @@ object BulkRequestCsvColumn {
   val LINE_ERROR_EMPTY = -3
 }
 
+class LimitingEnumerator(limit: Int, delimiter: Char, iterator: Iterator[Char] ) extends Iterator[Char] {
+
+  var count = 0
+
+  override def hasNext: Boolean = iterator.hasNext && count <= limit
+
+  override def next(): Char = {
+
+    val c = iterator.next()
+
+    if (c == delimiter)
+      count += 1
+
+    c
+  }
+}
+
 trait BulkRequestCreationService extends BulkEntityProcessor[BulkCalculationRequestLine] with ServicesConfig {
 
   val LINE_FEED: Int = 10
+  val MAX_LINES = 25000
 
   private val DATE_FORMAT: String = "yyyy-MM-dd"
 
@@ -62,7 +82,7 @@ trait BulkRequestCreationService extends BulkEntityProcessor[BulkCalculationRequ
   def createBulkRequest(collection: String, id: String, email: String, reference: String): BulkCalculationRequest = {
 
     val attachmentUrl = s"${baseUrl("attachments")}/attachments-internal/$collection/$id"
-    val bulkCalculationRequestLines: List[BulkCalculationRequestLine] = list(sourceData(attachmentUrl), LINE_FEED.toByte.toChar, constructBulkCalculationRequestLine _)
+    val bulkCalculationRequestLines: List[BulkCalculationRequestLine] = list(new LimitingEnumerator(MAX_LINES, LINE_FEED.toByte.toChar, sourceData(attachmentUrl)), LINE_FEED.toByte.toChar, constructBulkCalculationRequestLine _)
 
     if (bulkCalculationRequestLines.size == 1){
       val emptyFileLines = List(BulkCalculationRequestLine(1, None, None, Some(Map(BulkRequestCsvColumn.LINE_ERROR_EMPTY.toString -> Messages("gmp.error.parsing.empty_file")))))

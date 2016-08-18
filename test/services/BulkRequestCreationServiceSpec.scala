@@ -72,6 +72,12 @@ class BulkRequestCreationServiceSpec extends PlaySpec with ScalaFutures with Moc
   val inputLine24 = (Messages("gmp.upload_csv_column_headers") + "\n" + lineListFromCalculationRequestLine(calcLine24).mkString).toList
   val inputLine25 = (Messages("gmp.upload_csv_column_headers") + "\n").toList
 
+  val line26Data: String = Seq(calcLine1, calcLine2, calcLine3) map { line =>
+    lineListFromCalculationRequestLine(line).mkString
+  } mkString
+
+  val inputLine26 = (Messages("gmp.upload_csv_column_headers") + "\n" + line26Data).toList
+
   val inputLineWithoutData = (Messages("gmp.upload_csv_column_headers") + "\n" + ",,,").toList
 
 
@@ -87,6 +93,8 @@ class BulkRequestCreationServiceSpec extends PlaySpec with ScalaFutures with Moc
   }
 
   object TestBulkRequestCreationService extends BulkRequestCreationService {
+
+    override val MAX_LINES: Int = 2
 
     override def sourceData(resourceLocation: String): Iterator[Char] = {
 
@@ -115,6 +123,7 @@ class BulkRequestCreationServiceSpec extends PlaySpec with ScalaFutures with Moc
         case "23" => inputLine23.iterator
         case "24" => inputLine24.iterator
         case "25" => inputLine25.iterator
+        case "26" => inputLine26.iterator
       }
     }
 
@@ -322,6 +331,15 @@ class BulkRequestCreationServiceSpec extends PlaySpec with ScalaFutures with Moc
 
       errors mustBe defined
       errors.get.isDefinedAt(BulkRequestCsvColumn.LINE_ERROR_EMPTY.toString) mustBe true
+    }
+
+    "limit the number of rows returned" in {
+
+      val bulkRequest = TestBulkRequestCreationService.createBulkRequest(collection, "26", "tim@burton.com", "uploadRef123")
+
+      println(Console.YELLOW + line26Data + Console.WHITE)
+
+      bulkRequest.calculationRequests.size mustBe 2
     }
 
   }
