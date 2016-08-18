@@ -21,8 +21,11 @@ import config.GmpFrontendAuthConnector
 import controllers.auth.GmpRegime
 import forms.RevaluationRateForm._
 import play.api.Logger
+import play.api.i18n.Messages
 import services.SessionService
 import uk.gov.hmrc.play.frontend.auth.Actions
+
+import scala.concurrent.Future
 
 
 object RevaluationRateController extends RevaluationRateController {
@@ -35,7 +38,13 @@ trait RevaluationRateController extends GmpPageFlow {
   def get = AuthorisedFor(GmpRegime, pageVisibilityPredicate).async {
     implicit user =>
       implicit request => sessionService.fetchGmpSession() map {
-        case Some(x) => Ok(views.html.revaluation_rate(revaluationRateForm, x))
+        case Some(session) => session match {
+          case _ if session.scon == "" => Ok(views.html.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/pension-details"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title")))
+          case _ if session.memberDetails.nino == "" || session.memberDetails.firstForename == "" || session.memberDetails.surname == "" => Ok(views.html.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/member-details"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title")))
+          case _ if session.scenario == "" => Ok(views.html.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/calculation-reason"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title")))
+          case _ if !session.leaving.leaving.isDefined => Ok(views.html.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/left-scheme"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title")))
+          case _ => Ok(views.html.revaluation_rate(revaluationRateForm, session))
+        }
         case _ => throw new RuntimeException
       }
 
