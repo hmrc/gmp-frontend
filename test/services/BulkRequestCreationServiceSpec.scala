@@ -76,7 +76,7 @@ class BulkRequestCreationServiceSpec extends PlaySpec with ScalaFutures with Moc
     lineListFromCalculationRequestLine(line).mkString
   } mkString
 
-  val inputLine26 = (Messages("gmp.upload_csv_column_headers") + "\n" + line26Data).toList
+  val dataLineWith3Calcs = (Messages("gmp.upload_csv_column_headers") + "\n" + line26Data).toList
 
   val inputLineWithoutData = (Messages("gmp.upload_csv_column_headers") + "\n" + ",,,").toList
 
@@ -123,7 +123,7 @@ class BulkRequestCreationServiceSpec extends PlaySpec with ScalaFutures with Moc
         case "23" => inputLine23.iterator
         case "24" => inputLine24.iterator
         case "25" => inputLine25.iterator
-        case "26" => inputLine26.iterator
+        case "26" => dataLineWith3Calcs.iterator
       }
     }
 
@@ -333,15 +333,29 @@ class BulkRequestCreationServiceSpec extends PlaySpec with ScalaFutures with Moc
       errors.get.isDefinedAt(BulkRequestCsvColumn.LINE_ERROR_EMPTY.toString) mustBe true
     }
 
-    "limit the number of rows returned" in {
+    "return an exception when uploading more than the max number of lines" in {
 
-      val result = TestBulkRequestCreationService.createBulkRequest(collection, "26", "tim@burton.com", "uploadRef123")
+      object TestService extends BulkRequestCreationService {
+        override val MAX_LINES = 2
+        override def sourceData(resourceLocation: String): Iterator[Char] = dataLineWith3Calcs.iterator
+      }
 
-      println(Console.YELLOW + result)
+      val result = TestService.createBulkRequest(collection, "26", "tim@burton.com", "uploadRef123")
 
       result.isRight mustBe true
     }
 
+    "allow uploading right up to the line limit" in {
+
+      object TestService extends BulkRequestCreationService {
+        override val MAX_LINES = 3
+        override def sourceData(resourceLocation: String): Iterator[Char] = dataLineWith3Calcs.iterator
+      }
+
+      val result = TestService.createBulkRequest(collection, "26", "tim@burton.com", "uploadRef123")
+
+      result.isLeft mustBe true
+    }
   }
 
   def lineListFromCalculationRequestLine(line: BulkCalculationRequestLine): List[Char] = {
