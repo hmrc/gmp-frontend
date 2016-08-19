@@ -64,11 +64,13 @@ trait BulkRequestCreationService extends BulkEntityProcessor[BulkCalculationRequ
       c
     }
 
+    def getCount = count
+
     def hasDataBeyondLimit = !hasNext && iterator.hasNext
   }
 
   val LINE_FEED: Int = 10
-  val MAX_LINES = 25000
+  val MAX_LINES = 25001     // Limit is 25,000 rows, but we add one to account for the header
 
   private val DATE_FORMAT: String = "yyyy-MM-dd"
 
@@ -82,9 +84,10 @@ trait BulkRequestCreationService extends BulkEntityProcessor[BulkCalculationRequ
 
     val attachmentUrl = s"${baseUrl("attachments")}/attachments-internal/$collection/$id"
     val enumerator = new LimitingEnumerator(MAX_LINES, LINE_FEED.toByte.toChar, sourceData(attachmentUrl))
-    val bulkCalculationRequestLines: List[BulkCalculationRequestLine] = list(enumerator, LINE_FEED.toByte.toChar, constructBulkCalculationRequestLine _)
+    val bulkCalculationRequestLines: List[BulkCalculationRequestLine] = list(enumerator, LINE_FEED.toByte.toChar, constructBulkCalculationRequestLine)
 
     if (enumerator.hasDataBeyondLimit) {
+      Logger.debug(s"[BulkRequestCreationService][createBulkRequest] size: ${enumerator.getCount} (too large, throwing DataLimitExceededException)")
       Right(new DataLimitExceededException)
     } else {
       if (bulkCalculationRequestLines.size == 1) {
