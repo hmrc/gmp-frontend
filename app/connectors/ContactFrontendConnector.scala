@@ -40,6 +40,5 @@ trait ContactFrontendConnector extends ServicesConfig {
 
 }
 
-object ContactFrontendConnector extends ContactFrontendConnector {
+object ContactFrontendConnector extends ContactFrontendConnector {}
 
-}
