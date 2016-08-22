@@ -31,6 +31,7 @@ import play.api.test.Helpers._
 import play.twirl.api.HtmlFormat
 import services.SessionService
 import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
+import helpers.RandomNino
 
 import scala.concurrent.Future
 
@@ -43,6 +44,10 @@ class ScenarioControllerSpec extends PlaySpec with OneServerPerSuite with Mockit
     override val authConnector = mockAuthConnector
     override val sessionService = mockSessionService
   }
+
+  private val nino: String = RandomNino.generate
+  val gmpSession = GmpSession(MemberDetails(nino, "A", "AAA"), "S1301234T", CalculationType.REVALUATION, None, None, Leaving(GmpDate(None, None, None), None), None)
+  val emptySession = GmpSession(MemberDetails("", "", ""), "", "", None, None, Leaving(GmpDate(None, None, None), None), None)
 
   "ScenarioController GET" must {
 
@@ -59,7 +64,7 @@ class ScenarioControllerSpec extends PlaySpec with OneServerPerSuite with Mockit
     }
 
     "respond with ok" in {
-
+      when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
       withAuthorisedUser { user =>
         getCalculationReason(user) { result =>
           status(result) must equal(OK)
@@ -77,6 +82,7 @@ class ScenarioControllerSpec extends PlaySpec with OneServerPerSuite with Mockit
     }
 
     "return the correct scenarios" in {
+      when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
       withAuthorisedUser { user =>
         getCalculationReason(user) { result =>
           status(result) must equal(OK)
@@ -89,6 +95,16 @@ class ScenarioControllerSpec extends PlaySpec with OneServerPerSuite with Mockit
         }
       }
     }
+
+    "go to failure page when session missing scon and member details" in {
+      when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(emptySession)))
+      withAuthorisedUser { request =>
+        val result = TestScenarioController.get.apply(request)
+        contentAsString(result)replaceAll("&#x27;", "'") must include (Messages("gmp.cannot_calculate.gmp"))
+        contentAsString(result) must include (Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/pension-details"))
+      }
+    }
+
   }
 
   "ScenarioController back" must {

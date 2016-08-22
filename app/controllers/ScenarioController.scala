@@ -27,6 +27,7 @@ import play.api.mvc.Request
 import play.twirl.api.HtmlFormat
 import services.SessionService
 import uk.gov.hmrc.play.frontend.auth.Actions
+import play.api.i18n.Messages
 
 import scala.concurrent.Future
 
@@ -35,7 +36,14 @@ trait ScenarioController extends GmpPageFlow {
 
   def get = AuthorisedFor(GmpRegime, pageVisibilityPredicate).async {
     implicit user =>
-      implicit request => Future.successful(Ok(views.html.scenario(scenarioForm)))
+      implicit request => sessionService.fetchGmpSession() map {
+        case Some(session) => session match {
+          case _ if session.scon == "" => Ok(views.html.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/pension-details"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title")))
+          case _ if session.memberDetails.nino == "" || session.memberDetails.firstForename == "" || session.memberDetails.surname == "" => Ok(views.html.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/member-details"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title")))
+          case _ => Ok(views.html.scenario(scenarioForm))
+        }
+        case _ => Ok(views.html.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/dashboard"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title")))
+      }      
   }
 
   def post = AuthorisedFor(GmpRegime, pageVisibilityPredicate).async {
