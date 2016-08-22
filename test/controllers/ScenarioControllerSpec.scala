@@ -96,12 +96,30 @@ class ScenarioControllerSpec extends PlaySpec with OneServerPerSuite with Mockit
       }
     }
 
-    "go to failure page when session missing scon and member details" in {
+    "go to failure page when session missing scon" in {
       when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(emptySession)))
       withAuthorisedUser { request =>
         val result = TestScenarioController.get.apply(request)
         contentAsString(result)replaceAll("&#x27;", "'") must include (Messages("gmp.cannot_calculate.gmp"))
         contentAsString(result) must include (Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/pension-details"))
+      }
+    }
+
+    "go to failure page when session missing member details" in {
+      when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(emptySession.copy(scon="S1234567T"))))
+      withAuthorisedUser { request =>
+        val result = TestScenarioController.get.apply(request)
+        contentAsString(result)replaceAll("&#x27;", "'") must include (Messages("gmp.cannot_calculate.gmp"))
+        contentAsString(result) must include (Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/member-details"))
+      }
+    }
+
+    "go to failure page when no session" in {
+      when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(None))
+      withAuthorisedUser { request =>
+        val result = TestScenarioController.get.apply(request)
+        contentAsString(result)replaceAll("&#x27;", "'") must include (Messages("gmp.cannot_calculate.gmp"))
+        contentAsString(result) must include (Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/dashboard"))
       }
     }
 
