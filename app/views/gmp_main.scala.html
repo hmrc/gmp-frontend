@@ -29,9 +29,7 @@ dashboardLinkEnabled:Boolean = true)(mainContent: Html)(implicit request: Reques
 @import play.i18n._
 
 @getHelpForm = {
-  @if(supportLinkEnabled) {
-    @includes.report_problem
-  }
+    @includes.report_problem(supportLinkEnabled)
 }
 
 @linkElement = {
