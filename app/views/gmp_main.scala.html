@@ -14,6 +14,9 @@
 * limitations under the License.
 *@
 
+@import uk.gov.hmrc.play.http.HeaderCarrier
+@import scala.concurrent.ExecutionContext
+
 @(applicationConfig: config.ApplicationConfig = config.ApplicationConfig,
 title: String,
 pageScripts: Option[Html] = None,
@@ -23,16 +26,14 @@ supportLinkEnabled: Boolean = true,
 signOutEnabled: Boolean = true,
 dashboardLinkEnabled:Boolean = true)(mainContent: Html)(implicit request: Request[_])
 
-@import uk.gov.hmrc.play.views.html.layouts
-@import uk.gov.hmrc.play.views.html.{helpers => uiHelpers}
 @import play.i18n._
 
 @getHelpForm = {
   @if(supportLinkEnabled) {
-  @{uiHelpers.reportAProblemLink(config.ApplicationConfig.reportAProblemPartialUrl, config.ApplicationConfig.reportAProblemNonJSUrl)}
-
+    @includes.report_problem
   }
 }
+
 @linkElement = {
   <link rel="stylesheet" href='@controllers.routes.AssetsController.at("stylesheets/gmp.css")'/>
 }

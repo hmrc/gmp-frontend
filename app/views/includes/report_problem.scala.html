@@ -1,0 +1,17 @@
+
+@import connectors.ContactFrontendConnector
+@import uk.gov.hmrc.play.http.HeaderCarrier
+@import scala.concurrent.ExecutionContext
+
+@(supportLinkEnabled: Boolean)(implicit request: Request[_])
+
+@*
+@import uk.gov.hmrc.play.views.html.{helpers => uiHelpers}
+*@
+
+@if(supportLinkEnabled) {
+    @{
+        //uiHelpers.reportAProblemLink(config.ApplicationConfig.reportAProblemPartialUrl, config.ApplicationConfig.reportAProblemNonJSUrl)
+        ContactFrontendConnector.getHelpPartial(HeaderCarrier.fromHeadersAndSession(request.headers))
+    }
+}

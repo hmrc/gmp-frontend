@@ -17,7 +17,6 @@
 package connectors
 
 import config.WSHttp
-import play.api.mvc.Result
 import uk.gov.hmrc.play.config.ServicesConfig
 import uk.gov.hmrc.play.http.{HeaderCarrier, HttpGet}
 
@@ -25,10 +24,12 @@ import scala.concurrent.{ExecutionContext, Future}
 
 trait ContactFrontendConnector extends ServicesConfig {
 
+  import scala.concurrent.ExecutionContext.Implicits.global
+
   lazy val http: HttpGet = WSHttp
   lazy val serviceBase = s"${baseUrl("contact-frontend")}/contact"
 
-  def getHelpPartial(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[String] = {
+  def getHelpPartial(implicit hc: HeaderCarrier): Future[String] = {
 
     val url = s"$serviceBase/problem_reports"
 

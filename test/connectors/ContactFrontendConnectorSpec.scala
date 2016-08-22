@@ -30,8 +30,6 @@ import scala.concurrent.Future
 
 class ContactFrontendConnectorSpec extends PlaySpec with OneAppPerSuite with MockitoSugar with BeforeAndAfterEach with ServicesConfig {
 
-  import scala.concurrent.ExecutionContext.Implicits.global
-
   implicit override lazy val app: FakeApplication = FakeApplication()
   implicit val headerCarrier = HeaderCarrier()
 
