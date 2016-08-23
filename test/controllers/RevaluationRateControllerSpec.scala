@@ -16,6 +16,7 @@
 
 package controllers
 
+import config.GmpContext
 import helpers.RandomNino
 import models._
 import org.mockito.Matchers
@@ -40,7 +41,7 @@ class RevaluationRateControllerSpec extends PlaySpec with OneServerPerSuite with
   object TestRevaluationRateController extends RevaluationRateController {
     val authConnector = mockAuthConnector
     override val sessionService = mockSessionService
-
+    override val context = FakeGmpContext()
   }
 
   private val nino: String = RandomNino.generate

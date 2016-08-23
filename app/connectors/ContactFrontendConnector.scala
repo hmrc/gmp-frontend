@@ -26,7 +26,7 @@ trait ContactFrontendConnector extends ServicesConfig {
 
   import scala.concurrent.ExecutionContext.Implicits.global
 
-  lazy val http: HttpGet = WSHttp
+  val http: HttpGet = WSHttp
   lazy val serviceBase = s"${baseUrl("contact-frontend")}/contact"
 
   def getHelpPartial(implicit hc: HeaderCarrier): Future[String] = {

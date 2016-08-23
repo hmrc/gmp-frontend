@@ -47,7 +47,7 @@ class FileUploadControllerSpec extends PlaySpec with OneServerPerSuite with Mock
     val authConnector = mockAuthConnector
     val attachmentsConnector = mockAttachmentsConnector
     override val sessionService = mockSessionService
-
+    override val context = FakeGmpContext()
   }
 
   "File upload controller" must {

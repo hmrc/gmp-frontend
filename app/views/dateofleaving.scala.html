@@ -14,7 +14,7 @@
 * limitations under the License.
 *@
 
-@(dateOfLeavingForm: Form[models.Leaving],scenario: String)(implicit request: Request[_])
+@(dateOfLeavingForm: Form[models.Leaving],scenario: String)(implicit request: Request[_], context: config.GmpContext)
 
 @import uk.gov.hmrc.play.views.html._
 @import uk.gov.hmrc.play.views.html.helpers._

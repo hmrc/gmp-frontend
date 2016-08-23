@@ -41,6 +41,7 @@ class RevaluationControllerSpec extends PlaySpec with OneServerPerSuite with Moc
   object TestRevaluationController extends RevaluationController {
     val authConnector = mockAuthConnector
     override val sessionService = mockSessionService
+    override val context = FakeGmpContext()
   }
 
   "Revaluation controller" must {

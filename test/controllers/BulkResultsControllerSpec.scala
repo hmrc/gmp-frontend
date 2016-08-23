@@ -37,8 +37,8 @@ class BulkResultsControllerSpec extends PlaySpec with OneServerPerSuite with Moc
 
   object TestBulkResultsController extends BulkResultsController {
     override protected def authConnector: AuthConnector = mockAuthConnector
-
     override val gmpBulkConnector: GmpBulkConnector = mockGmpBulkConnector
+    override val context = FakeGmpContext()
   }
 
   "Bulk Results Controller" must {

@@ -25,6 +25,10 @@ import play.api.test.Helpers._
 
 class ServiceUnavailableControllerSpec extends PlaySpec with OneServerPerSuite with MockitoSugar {
 
+  object TestController extends ServiceUnavailableController {
+    override val context = FakeGmpContext()
+  }
+
   "Service unavailable controller" must {
 
     "respond to GET /guaranteed-minimum-pension/service-unavailable" in {
@@ -37,12 +41,14 @@ class ServiceUnavailableControllerSpec extends PlaySpec with OneServerPerSuite w
   "GET" must {
 
     "be accessible without authorisation" in {
-      val result = controllers.ServiceUnavailableController.get.apply(FakeRequest())
+      val result = TestController.get.apply(FakeRequest())
+
       status(result) must be(OK)
     }
 
     "display the service unavailable message" in {
-      val result = controllers.ServiceUnavailableController.get.apply(FakeRequest())
+      val result = TestController.get.apply(FakeRequest())
+
       contentAsString(result) must include(Messages("gmp.serviceunavailable.message"))
       contentAsString(result) must include(Messages("gmp.serviceunavailable.title"))
       contentAsString(result) must not include(Messages("gmp.back_to_dashboard"))

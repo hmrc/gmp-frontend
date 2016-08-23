@@ -24,7 +24,7 @@ scriptElem: Option[Html] = None,
 userLoggedIn: Boolean = false,
 supportLinkEnabled: Boolean = true,
 signOutEnabled: Boolean = true,
-dashboardLinkEnabled:Boolean = true)(mainContent: Html)(implicit request: Request[_])
+dashboardLinkEnabled:Boolean = true)(mainContent: Html)(implicit request: Request[_], context: config.GmpContext)
 
 @import play.i18n._
 

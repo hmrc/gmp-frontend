@@ -44,6 +44,7 @@ class DateOfLeavingControllerSpec extends PlaySpec with OneServerPerSuite with M
   object TestDateOfLeavingController extends DateOfLeavingController {
     val authConnector = mockAuthConnector
     override val sessionService = mockSessionService
+    override val context = FakeGmpContext()
   }
 
   val nino = RandomNino.generate

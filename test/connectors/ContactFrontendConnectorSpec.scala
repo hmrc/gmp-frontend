@@ -34,7 +34,11 @@ class ContactFrontendConnectorSpec extends PlaySpec with OneAppPerSuite with Moc
   implicit val headerCarrier = HeaderCarrier()
 
   object TestConnector extends ContactFrontendConnector {
-    override lazy val http = mock[HttpGet]
+    override val http = mock[HttpGet]
+  }
+
+  override def beforeEach() = {
+    reset(TestConnector.http)
   }
 
   "ContactFrontendConnector" must {

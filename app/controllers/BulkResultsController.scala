@@ -16,7 +16,7 @@
 
 package controllers
 
-import config.GmpFrontendAuthConnector
+import config.{GmpContext, GmpFrontendAuthConnector}
 import connectors.GmpBulkConnector
 import controllers.auth.GmpRegime
 import play.api.Logger
@@ -39,7 +39,7 @@ trait BulkResultsController extends GmpController {
         }.recover {
           case e: Upstream4xxResponse if e.upstreamResponseCode == FORBIDDEN => {
             log(e)
-            Ok(views.html.bulk_wrong_user(request))
+            Ok(views.html.bulk_wrong_user())
           }
           case e: NotFoundException => {
             log(e)

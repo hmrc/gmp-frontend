@@ -18,7 +18,7 @@ package controllers.auth
 
 import java.util.UUID
 
-import controllers.GmpController
+import controllers.{FakeGmpContext, GmpController}
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
@@ -71,6 +71,7 @@ class GmpRegimeSpec extends PlaySpec with OneServerPerSuite with MockitoSugar wi
 
     object TestController extends GmpController with Actions {
       val authConnector = mockAuthConnector
+      override val context = FakeGmpContext()
 
       def testRoute = AuthorisedFor(GmpRegime, pageVisibilityPredicate) {
         implicit user =>

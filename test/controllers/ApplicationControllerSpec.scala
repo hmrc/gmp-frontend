@@ -23,29 +23,27 @@ import play.api.test.Helpers._
 
 class ApplicationControllerSpec extends PlaySpec with OneServerPerSuite {
 
-  "ApplicationController" must {
-
-    "respond to /unauthorised" in {
-      val result = route(FakeRequest(GET, "/guaranteed-minimum-pension/unauthorised"))
-      status(result.get) must not equal (NOT_FOUND)
-    }
+  object TestController extends ApplicationController {
+    override val context = FakeGmpContext()
   }
 
-  "get /unauthorised" must {
+  "ApplicationController" must {
+    "get /unauthorised" must {
 
-    "have a status of OK" in {
-      val result = ApplicationController.unauthorised.apply(FakeRequest())
-      status(result) must be(OK)
-    }
+      "have a status of OK" in {
+        val result = TestController.unauthorised.apply(FakeRequest())
+        status(result) must be(OK)
+      }
 
-    "have a title of Unauthorised" in {
-      val result = ApplicationController.unauthorised.apply(FakeRequest())
-      contentAsString(result) must include(Messages("gmp.unauthorised.title"))
-    }
+      "have a title of Unauthorised" in {
+        val result = TestController.unauthorised.apply(FakeRequest())
+        contentAsString(result) must include(Messages("gmp.unauthorised.title"))
+      }
 
-    "have some text on the page" in {
-      val result = ApplicationController.unauthorised.apply(FakeRequest())
-      contentAsString(result) must include("You are not authorised to view this page")
+      "have some text on the page" in {
+        val result = TestController.unauthorised.apply(FakeRequest())
+        contentAsString(result) must include("You are not authorised to view this page")
+      }
     }
   }
 }

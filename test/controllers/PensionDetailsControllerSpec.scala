@@ -53,6 +53,8 @@ class PensionDetailsControllerSpec extends PlaySpec with OneServerPerSuite with 
   object TestPensionDetailsController extends PensionDetailsController {
     val authConnector = mockAuthConnector
     override val sessionService = mockSessionService
+    override val context = FakeGmpContext()
+
     val gmpConnector = mockGmpConnector
 
     override def metrics = Metrics

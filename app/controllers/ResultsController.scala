@@ -16,10 +16,10 @@
 
 package controllers
 
-import config.{ApplicationGlobal, GmpFrontendAuthConnector}
+import config.{ApplicationGlobal, GmpContext, GmpFrontendAuthConnector}
 import connectors.GmpConnector
 import controllers.auth.GmpRegime
-import events.{ContributionsAndEarningsEvent, ExitQuestionnaireEvent}
+import events.ContributionsAndEarningsEvent
 import metrics.Metrics
 import models._
 import org.joda.time.LocalDate
@@ -31,7 +31,6 @@ import services.SessionService
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 
 import scala.concurrent.Future
-import scala.util.{Failure, Success, Try}
 
 trait ResultsController extends GmpPageFlow {
 
@@ -39,7 +38,7 @@ trait ResultsController extends GmpPageFlow {
   val calculationConnector: GmpConnector
   val auditConnector : AuditConnector = ApplicationGlobal.auditConnector
 
-  def resultsView(response: CalculationResponse, revalRateSubheader: Option[String], survivorSubheader: Option[String])(implicit request: Request[_]): HtmlFormat.Appendable
+  def resultsView(response: CalculationResponse, revalRateSubheader: Option[String], survivorSubheader: Option[String])(implicit request: Request[_], context: GmpContext): HtmlFormat.Appendable
 
   def metrics: Metrics
 
@@ -53,7 +52,7 @@ trait ResultsController extends GmpPageFlow {
                 case _ if session.scon == "" => Future.successful(Ok(views.html.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/pension-details"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title"))))
                 case _ if session.memberDetails.nino == "" || session.memberDetails.firstForename == "" || session.memberDetails.surname == "" => Future.successful(Ok(views.html.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/member-details"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title"))))
                 case _ if session.scenario == "" => Future.successful(Ok(views.html.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/calculation-reason"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title"))))
-                case _ if !session.leaving.leaving.isDefined => Future.successful(Ok(views.html.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/left-scheme"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title"))))
+                case _ if session.leaving.leaving.isEmpty => Future.successful(Ok(views.html.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/left-scheme"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title"))))
                 case _ =>
                   val calcRequest = createCalculationRequest(session)
                   calculationConnector.calculateSingle(calcRequest) map { response: CalculationResponse => {
@@ -209,7 +208,7 @@ object ResultsController extends ResultsController {
   // $COVERAGE-OFF$Trivial and never going to be called by a test that uses it's own object implementation
   override def metrics = Metrics
 
-  override def resultsView(response: CalculationResponse, revalRateSubheader: Option[String], survivorSubheader: Option[String])(implicit request: Request[_]): HtmlFormat.Appendable = {
+  override def resultsView(response: CalculationResponse, revalRateSubheader: Option[String], survivorSubheader: Option[String])(implicit request: Request[_], context: GmpContext): HtmlFormat.Appendable = {
     views.html.results(applicationConfig = config.ApplicationConfig, response, revalRateSubheader, survivorSubheader)
   }
 

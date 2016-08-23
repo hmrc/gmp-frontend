@@ -14,7 +14,7 @@
 * limitations under the License.
 *@
 
-@(pensionDetailsForm: Form[models.PensionDetails])(implicit request: Request[_])
+@(pensionDetailsForm: Form[models.PensionDetails])(implicit request: Request[_], context: config.GmpContext)
 
 @import uk.gov.hmrc.play.views.html._
 @import uk.gov.hmrc.play.views.html.helpers._

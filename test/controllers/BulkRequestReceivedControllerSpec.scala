@@ -64,6 +64,7 @@ class BulkRequestReceivedControllerSpec extends PlaySpec with OneServerPerSuite 
     override val sessionService = mockSessionService
     override val bulkRequestCreationService = mockBulkRequestCreationService
     override val gmpBulkConnector = mockGmpBulkConnector
+    override val context = FakeGmpContext()
   }
 
   "BulkRequestReceivedController" must {

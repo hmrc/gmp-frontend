@@ -17,6 +17,7 @@
 package controllers
 
 
+import config.GmpContextImpl
 import models.{CalculationType, GmpSession, Leaving}
 import play.api.mvc.Result
 import services.SessionService
@@ -28,9 +29,10 @@ import uk.gov.hmrc.time.TaxYear
 import scala.concurrent.Future
 
 trait GmpController extends FrontendController with Actions{
-
   val pageVisibilityPredicate = new IdentityConfidencePredicate(ConfidenceLevel.L50, Future.successful(Forbidden))
   val sessionService: SessionService = SessionService
+
+  implicit val context: config.GmpContext = GmpContextImpl
 }
 
 object PageType {
