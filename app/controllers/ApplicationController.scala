@@ -16,13 +16,13 @@
 
 package controllers
 
-import config.GmpContext
+import config.{GmpContext, GmpContextImpl}
 import play.api.mvc.Action
 import uk.gov.hmrc.play.frontend.controller.FrontendController
 
-object ApplicationController extends FrontendController {
+trait ApplicationController extends FrontendController {
 
-  implicit val context = GmpContext
+  implicit val context: GmpContext = GmpContextImpl
 
   def unauthorised = Action {
     implicit request =>
@@ -30,3 +30,5 @@ object ApplicationController extends FrontendController {
   }
 
 }
+
+object ApplicationController extends ApplicationController

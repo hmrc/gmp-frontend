@@ -27,7 +27,7 @@ trait GmpContext {
 
 }
 
-object GmpContext extends GmpContext {
+case object GmpContextImpl extends GmpContext {
 
   override def getPageHelpPartial()(implicit hc: HeaderCarrier): Future[String] = ContactFrontendConnector.getHelpPartial
 

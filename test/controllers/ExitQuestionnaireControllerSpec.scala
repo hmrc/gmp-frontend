@@ -42,6 +42,7 @@ class ExitQuestionnaireControllerSpec extends PlaySpec with OneServerPerSuite wi
     val authConnector = mockAuthConnector
     override val sessionService = mockSessionService
     override val auditConnector = mockAuditConnector
+    override val context = FakeGmpContext()
   }
 
   "Exit Questionnaire controller" must {

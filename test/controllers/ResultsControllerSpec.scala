@@ -52,8 +52,9 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
     val authConnector = mockAuthConnector
     override val sessionService = mockSessionService
     override val calculationConnector = mockCalculationConnector
+    override val context = FakeGmpContext()
 
-    override def resultsView(response: CalculationResponse, subheader: Option[String], revalSubheader: Option[String])(implicit request: Request[_]): HtmlFormat.Appendable = {
+    override def resultsView(response: CalculationResponse, subheader: Option[String], revalSubheader: Option[String])(implicit request: Request[_], context: config.GmpContext): HtmlFormat.Appendable = {
       views.html.results(applicationConfig = mockApplicationConfig, response, subheader, revalSubheader)
     }
 

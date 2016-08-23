@@ -40,6 +40,7 @@ class EqualiseControllerSpec extends PlaySpec with OneServerPerSuite with Mockit
   object TestEqualiseController extends EqualiseController {
     override val authConnector = mockAuthConnector
     override val sessionService = mockSessionService
+    override val context = FakeGmpContext()
   }
 
   "EqualiseController GET" must {

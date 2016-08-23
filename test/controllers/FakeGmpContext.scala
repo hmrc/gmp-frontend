@@ -16,18 +16,22 @@
 
 package controllers
 
-import config.{GmpContext, GmpContextImpl}
-import play.api.mvc.{Action, Controller}
+import config.GmpContext
+import org.scalatest.mock.MockitoSugar._
+import uk.gov.hmrc.play.http.HeaderCarrier
+import org.mockito.Matchers._
+import org.mockito.Mockito.when
 
-trait ServiceUnavailableController extends Controller {
+import scala.concurrent.Future
 
-  implicit val context: GmpContext = GmpContextImpl
+object FakeGmpContext {
 
-  def get = Action {
-    implicit request => {
-      Ok(views.html.service_unavailable())
-    }
+  def apply() = {
+    val m = mock[GmpContext]
+
+    when(m.getPageHelpPartial()(any[HeaderCarrier])) thenReturn Future.successful("<div id=\"help_partial\"></div>")
+
+    m
   }
-}
 
-object ServiceUnavailableController extends ServiceUnavailableController
+}
