@@ -17,10 +17,11 @@
 package connectors
 
 import config.WSHttp
+import play.api.Logger
 import uk.gov.hmrc.play.config.ServicesConfig
-import uk.gov.hmrc.play.http.{HeaderCarrier, HttpGet}
+import uk.gov.hmrc.play.http.{BadGatewayException, HeaderCarrier, HttpGet}
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.Future
 
 trait ContactFrontendConnector extends ServicesConfig {
 
@@ -35,6 +36,10 @@ trait ContactFrontendConnector extends ServicesConfig {
 
     http.GET(url) map { r =>
       r.body
+    } recover {
+      case e: BadGatewayException =>
+        Logger.error(s"[ContactFrontendConnector] ${e.message}", e)
+        ""
     }
   }
 
