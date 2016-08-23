@@ -14,7 +14,8 @@
 * limitations under the License.
 *@
 
-@(implicit request: Request[_])
+@()(implicit request: Request[_], context: config.GmpContext)
+
 @import play.i18n.Messages
 
 @gmp_main(title = Messages.get("gmp.offline.title"),supportLinkEnabled = false, dashboardLinkEnabled = false) {

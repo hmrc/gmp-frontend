@@ -21,7 +21,7 @@
     getHelpForm: Html  = HtmlFormat.empty,
     linkElement : Option[Html] = None,
     scriptElement : Option[Html] = None,
-    signOutEnabled:Boolean)(mainContent: Html = HtmlFormat.empty)(implicit request: Request[_])
+    signOutEnabled:Boolean)(mainContent: Html = HtmlFormat.empty)(implicit request: Request[_], context: config.GmpContext)
 
 @import layouts.{govuk_template => hmrcGovUkTemplate}
 @import uk.gov.hmrc.play.views.html.{layouts => uiLayouts}

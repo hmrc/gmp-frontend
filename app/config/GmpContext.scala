@@ -14,20 +14,21 @@
  * limitations under the License.
  */
 
-package controllers
+package config
 
-import config.GmpContext
-import play.api.mvc.{Action, Controller}
+import connectors.ContactFrontendConnector
+import uk.gov.hmrc.play.http.HeaderCarrier
 
-trait ServiceUnavailableController extends Controller {
+import scala.concurrent.Future
 
-  implicit val context = GmpContext
+trait GmpContext {
 
-  def get = Action {
-    implicit request => {
-      Ok(views.html.service_unavailable())
-    }
-  }
+  def getPageHelpPartial()(implicit hc: HeaderCarrier): Future[String]
+
 }
 
-object ServiceUnavailableController extends ServiceUnavailableController
+object GmpContext extends GmpContext {
+
+  override def getPageHelpPartial()(implicit hc: HeaderCarrier): Future[String] = ContactFrontendConnector.getHelpPartial
+
+}
