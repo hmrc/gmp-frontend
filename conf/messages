@@ -37,7 +37,7 @@ gmp.session_missing.title = Incomplete GMP checker information - GOV.UK
 gmp.results.table_caption = GMP calculation results per period
 gmp.bulk.results_not_found = Calculation no longer available
 gmp.signout = Sign out
-gmp.title = Guaranteed Minimum Pension checker
+gmp.title = Guaranteed Minimum Pension (GMP) checker
 gmp.start_date = Start date
 gmp.leaving_date = Leaving date
 gmp.entered_details.title = Entered details
@@ -139,7 +139,8 @@ gmp.month = Month
 gmp.name = Name
 gmp.nino = National Insurance number
 gmp.nino.hint = For example, QQ123456D
-gmp.scon = Scheme Contracted Out Number
+gmp.scon = Scheme Contracted Out Number (SCON)
+gmp.scon.noabrv = Scheme Contracted Out Number
 gmp.scon.hint = For example, S2730011Z
 gmp.scon.message = If you have a SCON that is not recognised by this service
 gmp.contact.hmrc = contact HMRC
@@ -209,7 +210,7 @@ gmp.reference.calcname = Calculation name
 gmp.bulk_reference.reference_text = You can change the filename to help you recognise your results when they are returned (40 characters)
 gmp.bulk_request_received.text = <ul class="list-bullet"><li>Your calculation should be complete in less than 72 hours</li><li>It will then appear on the GMP checker dashboard with the reference {0}</li></ul>
 gmp.fileupload.hint = The file must contain mandatory information and in a specific format. You can <a href="{0}"> download a template and instructions as a ZIP file (3Kb)</a> on how to create your file first.
-gmp.dashboard_header = GMP checker dashboard
+gmp.dashboard_header = Guaranteed Minimum Pension (GMP) checker dashboard
 gmp.dashboard.choose_calculation_type = Choose the type of calculation you need.
 gmp.single_calculation_link = Single calculation
 gmp.bulk_calculation_link = Bulk calculation
