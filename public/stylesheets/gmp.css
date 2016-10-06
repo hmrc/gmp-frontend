@@ -379,3 +379,10 @@ div.noMarginBottom {
 #choose-calculation-type{
   font-weight: normal;
 }
+
+#global-header.with-proposition .header-wrapper .header-proposition{
+  width:73%;
+}
+#global-header.with-proposition .header-wrapper .header-global{
+  width:27%;
+}

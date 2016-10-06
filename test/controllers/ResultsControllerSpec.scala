@@ -1065,7 +1065,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
             contentAsString(result) must include(Messages("gmp.print"))
             contentAsString(result) must include(Messages("gmp.name"))
             contentAsString(result) must include(Messages("gmp.nino"))
-            contentAsString(result) must include(Messages("gmp.scon"))
+            contentAsString(result) must include(Messages("gmp.scon.noabrv"))
             contentAsString(result) must include(Messages("gmp.queryhandling.contsandearnings"))
             contentAsString(result) must include(Messages("gmp.button.request-another"))
             contentAsString(result) must include(Messages("gmp.what_did_you_think"))
