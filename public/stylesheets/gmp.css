@@ -117,6 +117,14 @@
   padding-left: 45px;
 }
 
+.icon-file-download {
+  background-image: url("../images/icon-file-download.png");
+  background-repeat: no-repeat;
+  padding-left: 40px;
+  padding-bottom: 20px;
+  padding-top: 10px;
+}
+
 .button-get-started {
   font-size: 24px;
   font-weight: 700;
