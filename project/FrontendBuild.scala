@@ -10,17 +10,16 @@ object FrontendBuild extends Build with MicroService {
 }
 
 private object AppDependencies {
-  import play.sbt.PlayImport._
   import play.core.PlayVersion
+  import play.sbt.PlayImport._
 
   private val playHealthVersion = "2.0.0"
   private val frontendBootstrapVersion = "7.10.0"
   private val govukTemplateVersion = "5.0.0"
-  private val playUiVersion = "5.0.0"
+  private val playUiVersion = "5.3.0"
   private val playAuthFrontendVersion = "6.2.0"
   private val playConfigVersion = "3.0.0"
-  private val metricsPlayVersion = "0.2.1"
-  private val metricsGraphiteVersion = "3.0.2"
+  private val playGraphiteVersion = "3.1.0"
   private val domainVersion = "3.7.0"
   private val httpCachingVersion = "6.1.0"
   private val logbackJsonLoggerVersion = "3.1.0"
@@ -39,8 +38,7 @@ private object AppDependencies {
     "uk.gov.hmrc" %% "play-authorised-frontend" % playAuthFrontendVersion,
     "uk.gov.hmrc" %% "domain" % domainVersion,
     "uk.gov.hmrc" %% "http-caching-client" % httpCachingVersion,
-    "com.kenshoo" %% "metrics-play" % metricsPlayVersion,
-    "com.codahale.metrics" % "metrics-graphite" % metricsGraphiteVersion,
+    "uk.gov.hmrc" %% "play-graphite" % playGraphiteVersion,
     "uk.gov.hmrc" %% "logback-json-logger" % logbackJsonLoggerVersion,
     "uk.gov.hmrc" %% "tax-year" % taxyearVersion,
     "uk.gov.hmrc" %% "play-partials" % playPartialsVersion,
