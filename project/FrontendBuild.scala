@@ -22,7 +22,7 @@ private object AppDependencies {
   private val metricsPlayVersion = "0.2.1"
   private val metricsGraphiteVersion = "3.0.2"
   private val domainVersion = "3.7.0"
-  private val httpCachingVersion = "5.6.0"
+  private val httpCachingVersion = "6.1.0"
   private val logbackJsonLoggerVersion = "3.1.0"
   private val taxyearVersion = "0.2.0"
   private val playPartialsVersion = "5.2.0"
