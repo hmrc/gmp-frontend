@@ -13,19 +13,19 @@ private object AppDependencies {
   import play.sbt.PlayImport._
   import play.core.PlayVersion
 
-  private val playHealthVersion = "1.1.0"
-  private val frontendBootstrapVersion = "6.7.0"
-  private val govukTemplateVersion = "4.0.0"
-  private val playUiVersion = "4.17.2"
-  private val playAuthFrontendVersion = "5.5.0"
-  private val playConfigVersion = "2.1.0"
+  private val playHealthVersion = "2.0.0"
+  private val frontendBootstrapVersion = "7.10.0"
+  private val govukTemplateVersion = "5.0.0"
+  private val playUiVersion = "5.0.0"
+  private val playAuthFrontendVersion = "6.2.0"
+  private val playConfigVersion = "3.0.0"
   private val metricsPlayVersion = "0.2.1"
   private val metricsGraphiteVersion = "3.0.2"
   private val domainVersion = "3.7.0"
   private val httpCachingVersion = "5.6.0"
-  private val playJsonLogger = "2.1.1"
+  private val logbackJsonLoggerVersion = "3.1.0"
   private val taxyearVersion = "0.2.0"
-  private val playPartialsVersion = "4.5.0"
+  private val playPartialsVersion = "5.2.0"
   private val emailAddressVersion = "1.1.0"
   private val bulkEntityStreamingVersion = "1.0.0"
 
@@ -41,7 +41,7 @@ private object AppDependencies {
     "uk.gov.hmrc" %% "http-caching-client" % httpCachingVersion,
     "com.kenshoo" %% "metrics-play" % metricsPlayVersion,
     "com.codahale.metrics" % "metrics-graphite" % metricsGraphiteVersion,
-    "uk.gov.hmrc" %% "play-json-logger" % playJsonLogger,
+    "uk.gov.hmrc" %% "logback-json-logger" % logbackJsonLoggerVersion,
     "uk.gov.hmrc" %% "tax-year" % taxyearVersion,
     "uk.gov.hmrc" %% "play-partials" % playPartialsVersion,
     "uk.gov.hmrc" %% "emailaddress" % emailAddressVersion,
@@ -54,7 +54,7 @@ private object AppDependencies {
   }
 
   private val scalatestVersion = "2.2.6"
-  private val scalatestPlusPlayVersion = "1.2.0"
+  private val scalatestPlusPlayVersion = "1.5.1"
   private val pegdownVersion = "1.6.0"
   private val jsoupVersion = "1.9.2"
 
@@ -62,7 +62,7 @@ private object AppDependencies {
     def apply() = new TestDependencies {
       override lazy val test = Seq(
         "org.scalatest" %% "scalatest" % scalatestVersion % scope,
-        "org.scalatestplus" %% "play" % scalatestPlusPlayVersion % scope,
+        "org.scalatestplus.play" %% "scalatestplus-play" % scalatestPlusPlayVersion % scope,
         "org.pegdown" % "pegdown" % pegdownVersion % scope,
         "org.jsoup" % "jsoup" % jsoupVersion % scope,
         "com.typesafe.play" %% "play-test" % PlayVersion.current % scope
@@ -70,7 +70,7 @@ private object AppDependencies {
     }.test
   }
 
-  private val hmrcTestVersion = "1.8.0"
+  private val hmrcTestVersion = "2.1.0"
 
   object IntegrationTest {
     def apply() = new TestDependencies {
