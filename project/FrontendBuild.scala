@@ -20,7 +20,7 @@ private object AppDependencies {
   private val playAuthFrontendVersion = "6.2.0"
   private val playConfigVersion = "3.0.0"
   private val playGraphiteVersion = "3.1.0"
-  private val domainVersion = "3.7.0"
+  private val domainVersion = "4.0.0"
   private val httpCachingVersion = "6.1.0"
   private val logbackJsonLoggerVersion = "3.1.0"
   private val taxyearVersion = "0.2.0"
@@ -51,8 +51,8 @@ private object AppDependencies {
     lazy val test : Seq[ModuleID] = ???
   }
 
-  private val scalatestVersion = "2.2.6"
   private val scalatestPlusPlayVersion = "1.5.1"
+  private val scalatestVersion = "2.2.6"
   private val pegdownVersion = "1.6.0"
   private val jsoupVersion = "1.9.2"
 
@@ -77,7 +77,7 @@ private object AppDependencies {
 
       override lazy val test = Seq(
         "org.scalatest" %% "scalatest" % scalatestVersion % scope,
-        "org.scalatestplus" %% "play" % scalatestPlusPlayVersion % scope,
+        "org.scalatestplus.play" %% "scalatestplus-play" % scalatestPlusPlayVersion % scope,
         "org.pegdown" % "pegdown" % pegdownVersion % scope,
         "org.jsoup" % "jsoup" % jsoupVersion % scope,
         "com.typesafe.play" %% "play-test" % PlayVersion.current % scope,
