@@ -21,11 +21,11 @@ import connectors.GmpConnector
 import controllers.auth.GmpRegime
 import forms.PensionDetailsForm._
 import metrics.Metrics
-import models.{ValidateSconResponse, ValidateSconRequest, PensionDetails}
+import models.{PensionDetails, ValidateSconRequest}
 import play.api.Logger
+import play.api.Play.current
 import play.api.i18n.Messages
-import services.SessionService
-import uk.gov.hmrc.play.frontend.auth.Actions
+import play.api.i18n.Messages.Implicits._
 
 import scala.concurrent.Future
 

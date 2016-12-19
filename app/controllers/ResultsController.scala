@@ -29,6 +29,8 @@ import play.api.mvc.Request
 import play.twirl.api.HtmlFormat
 import services.SessionService
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
+import play.api.i18n.Messages.Implicits._
+import play.api.Play.current
 
 import scala.concurrent.Future
 

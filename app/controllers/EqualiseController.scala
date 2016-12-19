@@ -19,11 +19,8 @@ package controllers
 import config.GmpFrontendAuthConnector
 import controllers.auth.GmpRegime
 import forms.EqualiseForm._
-import forms.ScenarioForm._
-import models.CalculationType
 import play.api.Logger
 import services.SessionService
-import uk.gov.hmrc.play.frontend.auth.Actions
 
 import scala.concurrent.Future
 

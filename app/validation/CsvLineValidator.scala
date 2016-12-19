@@ -21,6 +21,8 @@ import org.joda.time.format.DateTimeFormat
 import play.api.i18n.Messages
 import services.BulkRequestCsvColumn
 import uk.gov.hmrc.time.TaxYear
+import play.api.i18n.Messages.Implicits._
+import play.api.Play.current
 
 trait FieldValidator {
 

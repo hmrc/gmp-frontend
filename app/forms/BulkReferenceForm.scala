@@ -22,6 +22,8 @@ import play.api.data.Forms._
 import play.api.data.validation.{Valid, ValidationError, Invalid, Constraint}
 import play.api.i18n.Messages
 import uk.gov.hmrc.emailaddress.EmailAddress
+import play.api.i18n.Messages.Implicits._
+import play.api.Play.current
 
 object BulkReferenceForm {
   val MAX_REFERENCE_LENGTH: Int = 99
