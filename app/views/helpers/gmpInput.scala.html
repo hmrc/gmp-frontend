@@ -14,13 +14,13 @@
 * limitations under the License.
 *@
 
-@(field: Field, args: (Symbol,Any)*)(implicit lang: Lang, formInstance: Option[Form[_]] = None)
+@(field: Field, args: (Symbol,Any)*)(implicit messages: Messages, formInstance: Option[Form[_]] = None)
 
 @import play.api.i18n._
 @import views.html.helper._
 @import views.helpers._
 
-@elements = @{ new FieldElements(field.id, field, null, args.toMap, lang) }
+@elements = @{ new FieldElements(field.id, field, null, args.toMap, messages) }
 @parentField = @{args.toMap.get('parentField).asInstanceOf[Option[Field]]}
 @errors = @{ FormHelpers.getErrors(field, parentField) }
 @parentElements = @{parentField.map(pf => new FieldElements(pf.id, pf, null, Map(), messages) )}

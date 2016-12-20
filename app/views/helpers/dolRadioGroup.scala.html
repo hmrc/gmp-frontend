@@ -14,14 +14,14 @@
 * limitations under the License.
 *@
 
-@(field: Field, radioOptions: Seq[((String, String, String), String)], args: (Symbol, Any)*)(implicit lang: play.api.i18n.Lang, formInstance: Option[Form[_]] = None)
+@(field: Field, radioOptions: Seq[((String, String, String), String)], args: (Symbol, Any)*)(implicit messages: Messages, formInstance: Option[Form[_]] = None)
 
 @import play.api.i18n._
 @import views.html.helper._
 @import views.html.helpers._
 @import views.helpers._
 
-@elements = @{new FieldElements(field.id, field, null, args.toMap, lang) }
+@elements = @{new FieldElements(field.id, field, null, args.toMap, messages) }
 @parentField = @{args.toMap.get('parentField).asInstanceOf[Option[Field]]}
 @errors = @{ FormHelpers.getErrors(field, parentField) }
 @fieldsetClass = {@elements.args.get('_groupClass)@if(errors.nonEmpty){ form-field--error}}

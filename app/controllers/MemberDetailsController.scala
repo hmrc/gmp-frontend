@@ -19,9 +19,9 @@ package controllers
 import config.GmpFrontendAuthConnector
 import controllers.auth.GmpRegime
 import forms.MemberDetailsForm._
-
+import play.api.Play.current
+import play.api.i18n.Messages.Implicits._
 import play.api.Logger
-
 
 import scala.concurrent.Future
 

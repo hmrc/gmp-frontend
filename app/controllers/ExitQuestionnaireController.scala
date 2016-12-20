@@ -24,7 +24,8 @@ import play.api.Logger
 import play.api.mvc.{AnyContent, Action}
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.frontend.controller.UnauthorisedAction
-
+import play.api.i18n.Messages.Implicits._
+import play.api.Play.current
 import scala.concurrent.Future
 
 trait ExitQuestionnaireController extends GmpController {

@@ -20,6 +20,8 @@ import config.GmpFrontendAuthConnector
 import connectors.GmpBulkConnector
 import controllers.auth.GmpRegime
 import play.api.Logger
+import play.api.i18n.Messages.Implicits._
+import play.api.Play.current
 
 object DashboardController extends DashboardController {
   val authConnector = GmpFrontendAuthConnector

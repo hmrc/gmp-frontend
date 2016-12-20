@@ -19,7 +19,8 @@ package controllers
 import config.GmpFrontendAuthConnector
 import connectors.GmpBulkConnector
 import controllers.auth.GmpRegime
-
+import play.api.i18n.Messages.Implicits._
+import play.api.Play.current
 
 object MoreBulkResultsController extends MoreBulkResultsController{
   val authConnector = GmpFrontendAuthConnector

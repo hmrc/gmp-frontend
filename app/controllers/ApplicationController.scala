@@ -19,6 +19,8 @@ package controllers
 import config.{GmpContext, GmpContextImpl}
 import play.api.mvc.Action
 import uk.gov.hmrc.play.frontend.controller.FrontendController
+import play.api.i18n.Messages.Implicits._
+import play.api.Play.current
 
 trait ApplicationController extends FrontendController {
 

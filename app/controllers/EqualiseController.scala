@@ -23,6 +23,8 @@ import play.api.Logger
 import services.SessionService
 
 import scala.concurrent.Future
+import play.api.i18n.Messages.Implicits._
+import play.api.Play.current
 
 object EqualiseController extends EqualiseController {
   val authConnector = GmpFrontendAuthConnector

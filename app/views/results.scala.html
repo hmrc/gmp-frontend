@@ -17,7 +17,7 @@
 @(applicationConfig: config.ApplicationConfig = config.ApplicationConfig,
         calculationResponse:CalculationResponse,
         revalRateSubheader: Option[String],
-        survivorSubheader: Option[String])(implicit request: Request[_], context: config.GmpContext)
+        survivorSubheader: Option[String])(implicit request: Request[_], context: config.GmpContext, messages: Messages)
 
 @import uk.gov.hmrc.play.views.html._
 @import uk.gov.hmrc.play.views.html.helpers._

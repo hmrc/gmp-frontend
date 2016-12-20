@@ -14,14 +14,14 @@
 * limitations under the License.
 *@
 
-@(field: play.api.data.Field, args: (Symbol,Any)*)(implicit lang: play.api.i18n.Lang)
+@(field: play.api.data.Field, args: (Symbol,Any)*)(implicit messages: Messages)
 
 @import views.html.helper._
-
-@elements = @{ new FieldElements(field.id, field, null, args.toMap, lang) }
+@import play.api.i18n._
+@elements = @{ new FieldElements(field.id, field, null, args.toMap, messages) }
 
 @if(elements.hasErrors) {
-    @elements.errors(elements.lang).zipWithIndex.map { case (error, index) =>
+    @elements.errors.zipWithIndex.map { case (error, index) =>
         <span style="display: block" class="error-notification" id="@(field.name)-error-@index">@Messages(error)</span>
     }
 }
