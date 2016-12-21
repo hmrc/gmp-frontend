@@ -21,7 +21,7 @@ import org.joda.time.LocalDate
 import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
 import play.api.i18n.Messages
-import services.SessionService
+import play.api.i18n.Messages.Implicits._
 import views.helpers.GmpDateFormatter._
 
 class CalculationResponseSpec extends PlaySpec with MockitoSugar with OneServerPerSuite {

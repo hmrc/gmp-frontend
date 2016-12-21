@@ -48,7 +48,7 @@ class PensionDetailsControllerSpec extends PlaySpec with OneServerPerSuite with 
   val mockSessionService = mock[SessionService]
   val mockGmpConnector = mock[GmpConnector]
 
-  implicit val user = AuthContext(authority = Authority("1234", Accounts(psa = Some(PsaAccount("link", PsaId("B1234567")))), None, None, CredentialStrength.None, ConfidenceLevel.L50, None, None))
+  implicit val user = AuthContext(authority = Authority("1234", Accounts(psa = Some(PsaAccount("link", PsaId("B1234567")))), None, None, CredentialStrength.None, ConfidenceLevel.L50, None, None, None, ""))
   implicit val hc = new HeaderCarrier(sessionId = Some(SessionId(s"session-${UUID.randomUUID}")))
 
   object TestPensionDetailsController extends PensionDetailsController {

@@ -18,9 +18,10 @@ package validation
 
 import helpers.RandomNino
 import models.CalculationRequestLine
-import org.scalatest.{Entry, Matchers, FlatSpec}
+import org.scalatest.{FlatSpec, Matchers}
 import org.scalatestplus.play.OneAppPerSuite
 import play.api.i18n.Messages
+import play.api.i18n.Messages.Implicits._
 import services.BulkRequestCsvColumn
 
 /**

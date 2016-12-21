@@ -17,14 +17,13 @@
 package models
 
 import helpers.RandomNino
-import org.scalatest.{WordSpec, Matchers}
-import validation.NinoValidate
+import org.scalatest.{Matchers, WordSpec}
 
 class NinoSpec extends WordSpec with Matchers {
 
   "Creating a Nino" should {
     "fail if the nino is not valid" in {
-      an [IllegalArgumentException] should be thrownBy Nino("INVALID_NINO")
+      an[IllegalArgumentException] should be thrownBy Nino("INVALID_NINO")
     }
   }
 

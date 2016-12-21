@@ -24,14 +24,12 @@ import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
-import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.domain.{Org, PsaId}
 import uk.gov.hmrc.play.frontend.auth.Actions
 import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
 import uk.gov.hmrc.play.frontend.auth.connectors.domain._
-import uk.gov.hmrc.play.frontend.controller.FrontendController
 import uk.gov.hmrc.play.http.SessionKeys
 
 import scala.concurrent.Future
@@ -93,7 +91,7 @@ class GmpRegimeSpec extends PlaySpec with OneServerPerSuite with MockitoSugar wi
             SessionKeys.userId -> userId)
 
           when(mockAuthConnector.currentAuthority(Matchers.any())) thenReturn {
-            Future.successful(Some(Authority(userId, Accounts(psa = Some(PsaAccount("gmp/B1234567", PsaId("B1234567")))), None, None, CredentialStrength.None, ConfidenceLevel.L50, None, None)))
+            Future.successful(Some(Authority(userId, Accounts(psa = Some(PsaAccount("gmp/B1234567", PsaId("B1234567")))), None, None, CredentialStrength.None, ConfidenceLevel.L50, None, None, None, "")))
           }
 
           val result = TestController.testRoute.apply(request)
@@ -113,7 +111,7 @@ class GmpRegimeSpec extends PlaySpec with OneServerPerSuite with MockitoSugar wi
             SessionKeys.userId -> userId)
 
           when(mockAuthConnector.currentAuthority(Matchers.any())) thenReturn {
-            Future.successful(Some(Authority(userId, Accounts(org = Some(OrgAccount("org/1234", Org("1234")))), None, None, CredentialStrength.None, ConfidenceLevel.L50, None, None)))
+            Future.successful(Some(Authority(userId, Accounts(org = Some(OrgAccount("org/1234", Org("1234")))), None, None, CredentialStrength.None, ConfidenceLevel.L50, None, None, None, "")))
           }
           val result = TestController.testRoute.apply(request)
           status(result) must be(SEE_OTHER)
