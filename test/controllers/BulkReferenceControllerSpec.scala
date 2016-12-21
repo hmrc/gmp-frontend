@@ -35,7 +35,7 @@ import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
 import uk.gov.hmrc.play.frontend.auth.connectors.domain._
 import uk.gov.hmrc.play.http.HeaderCarrier
 import uk.gov.hmrc.play.http.logging.SessionId
-
+import play.api.i18n.Messages.Implicits._
 import scala.concurrent.Future
 
 class BulkReferenceControllerSpec extends PlaySpec with OneServerPerSuite with MockitoSugar with GmpUsers {
@@ -43,7 +43,8 @@ class BulkReferenceControllerSpec extends PlaySpec with OneServerPerSuite with M
   val mockAuthConnector = mock[AuthConnector]
   val mockSessionService = mock[SessionService]
 
-  implicit val user = AuthContext(authority = Authority("1234", Accounts(psa = Some(PsaAccount("link", PsaId("B1234567")))), None, None, CredentialStrength.None, ConfidenceLevel.L50, None, None))
+  implicit val user = AuthContext(authority = Authority("1234", Accounts(psa = Some(PsaAccount("link", PsaId("B1234567")))),
+                                            None, None, CredentialStrength.None, ConfidenceLevel.L50, None, None,None, legacyOid= ""))
   implicit val hc = new HeaderCarrier(sessionId = Some(SessionId(s"session-${UUID.randomUUID}")))
 
   object TestBulkReferenceController extends BulkReferenceController {

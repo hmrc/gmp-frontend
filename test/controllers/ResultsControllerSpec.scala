@@ -36,7 +36,7 @@ import services.SessionService
 import uk.gov.hmrc.play.audit.http.connector.{AuditResult, AuditConnector}
 import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
 import views.helpers.GmpDateFormatter._
-
+import play.api.i18n.Messages.Implicits._
 import scala.concurrent.Future
 
 class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with MockitoSugar with GmpUsers {

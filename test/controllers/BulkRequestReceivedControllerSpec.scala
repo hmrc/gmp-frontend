@@ -38,6 +38,7 @@ import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
 import uk.gov.hmrc.play.frontend.auth.connectors.domain._
 import uk.gov.hmrc.play.http.{HeaderCarrier, HttpResponse}
 import uk.gov.hmrc.play.http.logging.SessionId
+import play.api.i18n.Messages.Implicits._
 
 import scala.concurrent.Future
 

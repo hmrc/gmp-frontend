@@ -27,7 +27,7 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
 import uk.gov.hmrc.play.http.{HttpResponse, Upstream4xxResponse, NotFoundException}
-
+import play.api.i18n.Messages.Implicits._
 import scala.concurrent.Future
 
 class BulkResultsControllerSpec extends PlaySpec with OneServerPerSuite with MockitoSugar with GmpUsers {

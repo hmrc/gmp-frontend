@@ -55,6 +55,7 @@ private object AppDependencies {
   private val scalatestVersion = "2.2.6"
   private val pegdownVersion = "1.6.0"
   private val jsoupVersion = "1.9.2"
+  private val mockitoCoreVersion = "1.9.5"
 
   object Test {
     def apply() = new TestDependencies {
@@ -63,7 +64,8 @@ private object AppDependencies {
         "org.scalatestplus.play" %% "scalatestplus-play" % scalatestPlusPlayVersion % scope,
         "org.pegdown" % "pegdown" % pegdownVersion % scope,
         "org.jsoup" % "jsoup" % jsoupVersion % scope,
-        "com.typesafe.play" %% "play-test" % PlayVersion.current % scope
+        "com.typesafe.play" %% "play-test" % PlayVersion.current % scope,
+        "org.mockito" % "mockito-core" % mockitoCoreVersion %scope
       )
     }.test
   }

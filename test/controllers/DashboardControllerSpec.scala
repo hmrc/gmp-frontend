@@ -31,7 +31,7 @@ import play.api.test.Helpers._
 import services.SessionService
 import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
 import uk.gov.hmrc.play.http.Upstream5xxResponse
-
+import play.api.i18n.Messages.Implicits._
 import scala.concurrent.Future
 
 class DashboardControllerSpec extends PlaySpec with OneServerPerSuite with MockitoSugar with GmpUsers {

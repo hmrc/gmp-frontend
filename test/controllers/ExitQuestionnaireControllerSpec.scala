@@ -29,7 +29,7 @@ import play.api.test.Helpers._
 import services.SessionService
 import uk.gov.hmrc.play.audit.http.connector.{AuditResult, AuditConnector}
 import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
-
+import play.api.i18n.Messages.Implicits._
 import scala.concurrent.Future
 
 class ExitQuestionnaireControllerSpec extends PlaySpec with OneServerPerSuite with MockitoSugar with GmpUsers {

@@ -26,7 +26,7 @@ import play.api.libs.json.Json
 import play.api.mvc.{Result, AnyContentAsEmpty}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-
+import play.api.i18n.Messages.Implicits._
 import services.SessionService
 import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
 

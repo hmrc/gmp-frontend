@@ -32,6 +32,7 @@ import play.twirl.api.HtmlFormat
 import services.SessionService
 import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
 import helpers.RandomNino
+import play.api.i18n.Messages.Implicits._
 
 import scala.concurrent.Future
 
