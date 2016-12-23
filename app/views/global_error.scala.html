@@ -37,22 +37,13 @@ headScripts = None)
 <meta name="format-detection" content="telephone=no"/>
 }
 
-@betaBanner = {
-@uiLayouts.betaBanner(
-userLoggedIn = false,
-applicationConfig.betaFeedbackUrl,
-applicationConfig.betaFeedbackUnauthenticatedUrl,
-showFeedbackLinkInBetaBanner = true)
-}
-
 @serviceInfo = {
 @uiLayouts.serviceInfo(
-betaBanner = betaBanner,
+betaBanner = HtmlFormat.empty,
 includeGridWrapper = false,
 serviceInfoContent = None,
 includeHMRCBranding = false)
 }
-
 
 @content = {
 @uiLayouts.main_content(
