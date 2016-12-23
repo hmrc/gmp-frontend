@@ -62,17 +62,9 @@
 @footerTop = {}
 @footerLinks = {}
 
-@betaBanner = {
-    @uiLayouts.betaBanner(
-        userLoggedIn = userLoggedIn,
-        betaFeedbackUrl = applicationConfig.betaFeedbackUrl,
-        betaFeedbackUnauthenticatedUrl = applicationConfig.betaFeedbackUnauthenticatedUrl,
-        showFeedbackLinkInBetaBanner = true)
-}
-
 @serviceInfo = {
     @uiLayouts.serviceInfo(
-        betaBanner = betaBanner,
+        betaBanner = HtmlFormat.empty,
         includeGridWrapper = false,
         serviceInfoContent = None,
         includeHMRCBranding = false
