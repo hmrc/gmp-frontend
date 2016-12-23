@@ -18,7 +18,6 @@ package validation
 
 import helpers.RandomNino
 import org.scalatest.{WordSpec, Matchers}
-import validation.NinoValidate
 
 class NinoValidatorSpec extends WordSpec with Matchers {
 

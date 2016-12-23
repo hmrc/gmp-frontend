@@ -23,7 +23,7 @@ import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
-import play.api.Play
+import play.api.{Application, Play}
 import play.api.http.HeaderNames
 import play.api.test.{FakeApplication, FakeRequest}
 import uk.gov.hmrc.play.frontend.filters.SessionCookieCryptoFilter
@@ -37,6 +37,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class AttachmentsConnectorSpec extends PlaySpec with OneServerPerSuite with MockitoSugar with BeforeAndAfterEach {
+  implicit override lazy val app: Application = fakeApplication
 
   class MockHttp extends WSGet with WSPost {
 
