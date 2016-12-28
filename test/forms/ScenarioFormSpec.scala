@@ -16,14 +16,16 @@
 
 package forms
 
+import forms.ScenarioForm._
 import models.CalculationType
 import org.scalatest.mock.MockitoSugar
-import org.scalatestplus.play.PlaySpec
+import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.data.FormError
+import play.api.i18n.Messages
+import play.api.i18n.Messages.Implicits._
 import play.api.libs.json.Json
-import forms.ScenarioForm._
 
-class ScenarioFormSpec extends PlaySpec with MockitoSugar{
+class ScenarioFormSpec extends PlaySpec with OneAppPerSuite with MockitoSugar {
 
   "Calculation Reason Form" must {
 
@@ -41,14 +43,14 @@ class ScenarioFormSpec extends PlaySpec with MockitoSugar{
       val calculationReasonResult = scenarioForm.bind(Map[String, String]())
 
       assert(calculationReasonResult.errors.size == 1)
-      assert(calculationReasonResult.errors.contains(FormError("calcType",List("gmp.error.reason.mandatory"))))
+      assert(calculationReasonResult.errors.contains(FormError("calcType",List(Messages("gmp.error.reason.mandatory")))))
     }
 
     "does not accept invalid format" in  {
       val calculationReason = Json.toJson(CalculationType(Some("%&20!")))
       val calculationReasonResult = scenarioForm.bind(calculationReason)
       assert(calculationReasonResult.errors.size == 1)
-      assert(calculationReasonResult.errors.contains(FormError("calcType",List("gmp.error.reason.mandatory"))))
+      assert(calculationReasonResult.errors.contains(FormError("calcType",List(Messages("gmp.error.reason.mandatory")))))
     }
   }
 

@@ -17,11 +17,13 @@
 package forms
 
 import forms.BulkReferenceForm._
-import org.scalatestplus.play.PlaySpec
+import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.data.FormError
+import play.api.i18n.Messages
+import play.api.i18n.Messages.Implicits._
 import play.api.libs.json.Json
 
-class BulkReferenceFormSpec extends PlaySpec {
+class BulkReferenceFormSpec extends PlaySpec with OneAppPerSuite {
 
   "BulkReferenceForm" must {
     "return no errors with valid data" in {
@@ -43,8 +45,7 @@ class BulkReferenceFormSpec extends PlaySpec {
           "reference" -> "Reference"
         )
         val validatedForm = bulkReferenceForm.bind(postData)
-
-        assert(validatedForm.errors.contains(FormError("email", List("gmp.error.mandatory.an"))))
+        assert(validatedForm.errors.contains(FormError("email", List(Messages("gmp.error.mandatory.an", Messages("gmp.email"))))))
       }
 
       "return an error if email invalid" in {
@@ -54,7 +55,7 @@ class BulkReferenceFormSpec extends PlaySpec {
         )
         val validatedForm = bulkReferenceForm.bind(postData)
 
-        assert(validatedForm.errors.contains(FormError("email", List("gmp.error.email.invalid"))))
+        assert(validatedForm.errors.contains(FormError("email", List(Messages("gmp.error.email.invalid")))))
       }
     }
 
@@ -66,7 +67,7 @@ class BulkReferenceFormSpec extends PlaySpec {
         )
         val validatedForm = bulkReferenceForm.bind(postData)
 
-        assert(validatedForm.errors.contains(FormError("reference", List("gmp.error.mandatory"))))
+        assert(validatedForm.errors.contains(FormError("reference", List(Messages("gmp.error.mandatory", Messages("gmp.reference"))))))
       }
 
       "return an error if more than 99 chars" in {
@@ -76,7 +77,7 @@ class BulkReferenceFormSpec extends PlaySpec {
         )
         val validatedForm = bulkReferenceForm.bind(postData)
 
-        assert(validatedForm.errors.contains(FormError("reference", List("gmp.error.csv.member_ref.length.invalid"))))
+        assert(validatedForm.errors.contains(FormError("reference", List(Messages("gmp.error.csv.member_ref.length.invalid")))))
       }
 
       "return an error if special characters" in {
@@ -86,7 +87,7 @@ class BulkReferenceFormSpec extends PlaySpec {
         )
         val validatedForm = bulkReferenceForm.bind(postData)
 
-        assert(validatedForm.errors.contains(FormError("reference", List("gmp.error.csv.member_ref.character.invalid"))))
+        assert(validatedForm.errors.contains(FormError("reference", List(Messages("gmp.error.csv.member_ref.character.invalid")))))
       }
 
       "return an error if white spaces" in {
@@ -96,7 +97,7 @@ class BulkReferenceFormSpec extends PlaySpec {
         )
         val validatedForm = bulkReferenceForm.bind(postData)
 
-        assert(validatedForm.errors.contains(FormError("reference", List("gmp.error.csv.member_ref.spaces.invalid"))))
+        assert(validatedForm.errors.contains(FormError("reference", List(Messages("gmp.error.csv.member_ref.spaces.invalid")))))
       }
     }
 

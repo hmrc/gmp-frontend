@@ -18,11 +18,14 @@ package forms
 
 import forms.PensionDetailsForm._
 import models.PensionDetails
-import org.scalatestplus.play.PlaySpec
+import org.scalatest.mock.MockitoSugar
+import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.data.FormError
+import play.api.i18n.Messages
+import play.api.i18n.Messages.Implicits._
 import play.api.libs.json.Json
 
-class PensionDetailsFormSpec extends PlaySpec{
+class PensionDetailsFormSpec extends PlaySpec with OneAppPerSuite with MockitoSugar{
 
 
   "Pension details form" must {
@@ -32,7 +35,7 @@ class PensionDetailsFormSpec extends PlaySpec{
       val gmpRequest = Json.toJson(PensionDetails("S1301234T"))
       val pensionDetailsResult = pensionDetailsForm.bind(gmpRequest)
 
-      assert(!pensionDetailsResult.errors.contains(FormError("scon",List("gmp.error.scon.invalid"))))
+      assert(!pensionDetailsResult.errors.contains(FormError("scon",List(Messages("gmp.error.scon.invalid")))))
 
     }
 
@@ -41,7 +44,7 @@ class PensionDetailsFormSpec extends PlaySpec{
       val gmpRequest = Json.toJson(PensionDetails(""))
       val pensionDetailsResult = pensionDetailsForm.bind(gmpRequest)
 
-      assert(pensionDetailsResult.errors.contains(FormError("scon",List("gmp.error.mandatory"))))
+      assert(pensionDetailsResult.errors.contains(FormError("scon",List(Messages("gmp.error.mandatory", Messages("gmp.scon"))))))
 
     }
 
@@ -50,7 +53,7 @@ class PensionDetailsFormSpec extends PlaySpec{
       val gmpRequest = Json.toJson(PensionDetails("ABCD"))
       val pensionDetailsResult = pensionDetailsForm.bind(gmpRequest)
 
-      assert(pensionDetailsResult.errors.contains(FormError("scon",List("gmp.error.scon.invalid"))))
+      assert(pensionDetailsResult.errors.contains(FormError("scon",List(Messages("gmp.error.scon.invalid")))))
 
     }
   }

@@ -18,10 +18,10 @@ package forms
 
 import forms.EqualiseForm._
 import models.Equalise
-import org.scalatestplus.play.PlaySpec
+import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.libs.json.Json
 
-class EqualiseFormSpec extends PlaySpec {
+class EqualiseFormSpec extends PlaySpec with OneAppPerSuite{
 
   "Equalise Form" must {
 

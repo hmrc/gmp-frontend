@@ -17,12 +17,12 @@
 package forms
 
 import forms.InflationProofForm._
-import models.{InflationProof, GmpDate}
-import org.scalatestplus.play.PlaySpec
+import models.{GmpDate, InflationProof}
+import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.data.FormError
 import play.api.libs.json.Json
 
-class inflationProofFormSpec extends PlaySpec {
+class inflationProofFormSpec extends PlaySpec with OneAppPerSuite {
 
   val inflationProofDate = GmpDate(Some("01"), Some("02"), Some("2010"))
 

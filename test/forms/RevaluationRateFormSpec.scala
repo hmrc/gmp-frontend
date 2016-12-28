@@ -19,10 +19,10 @@ package forms
 import forms.RevaluationRateForm._
 import models.RevaluationRate
 import org.scalatest.mock.MockitoSugar
-import org.scalatestplus.play.PlaySpec
+import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.libs.json.Json
 
-class RevaluationRateFormSpec extends PlaySpec with MockitoSugar {
+class RevaluationRateFormSpec extends PlaySpec with OneAppPerSuite with MockitoSugar {
   "Revaluation Rate Form" must {
     "return no errors when valid values are entered" in {
 
