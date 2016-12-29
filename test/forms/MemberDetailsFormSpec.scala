@@ -182,7 +182,6 @@ class MemberDetailsFormSpec extends PlaySpec with OneAppPerSuite {
           "surname" -> "Jones"
         )
         val validatedForm = form.bind(postData)
-
         assert(validatedForm.errors.contains(FormError("firstForename", List(Messages("gmp.error.firstnameorinitial")))))
         assert(validatedForm.errors.length == 1)
       }
@@ -208,7 +207,7 @@ class MemberDetailsFormSpec extends PlaySpec with OneAppPerSuite {
         )
         val validatedForm = form.bind(postData)
 
-        assert(validatedForm.errors.contains(FormError("firstForename", List(Messages("gmp.error.length")))))
+        assert(validatedForm.errors.contains(FormError("firstForename", List(Messages("gmp.error.length", Messages("gmp.firstname"), MAX_LENGTH)))))
       }
 
       "return an error when contains a digit" in {
@@ -219,7 +218,7 @@ class MemberDetailsFormSpec extends PlaySpec with OneAppPerSuite {
         )
         val validatedForm = form.bind(postData)
 
-        assert(validatedForm.errors.contains(FormError("firstForename", List(Messages("gmp.error.name.invalid")))))
+        assert(validatedForm.errors.contains(FormError("firstForename", List(Messages("gmp.error.name.invalid", Messages("gmp.lowercase.firstname"))))))
       }
 
       "allow apostrophes" in {
@@ -241,7 +240,7 @@ class MemberDetailsFormSpec extends PlaySpec with OneAppPerSuite {
         )
         val validatedForm = form.bind(postData)
 
-        assert(validatedForm.errors.contains(FormError("firstForename", List(Messages("gmp.error.name.invalid")))))
+        assert(validatedForm.errors.contains(FormError("firstForename", List(Messages("gmp.error.name.invalid", Messages("gmp.lowercase.firstname"))))))
       }
 
       "allow hyphens" in {
@@ -263,7 +262,7 @@ class MemberDetailsFormSpec extends PlaySpec with OneAppPerSuite {
         )
         val validatedForm = form.bind(postData)
 
-        assert(validatedForm.errors.contains(FormError("firstForename", List(Messages("gmp.error.name.invalid")))))
+        assert(validatedForm.errors.contains(FormError("firstForename", List(Messages("gmp.error.name.invalid", Messages("gmp.lowercase.firstname"))))))
       }
 
       "disallow other special characters" in {
@@ -281,8 +280,8 @@ class MemberDetailsFormSpec extends PlaySpec with OneAppPerSuite {
         )
         val validatedForm2 = form.bind(postData2)
 
-        assert(validatedForm1.errors.contains(FormError("firstForename", List(Messages("gmp.error.name.invalid")))))
-        assert(validatedForm2.errors.contains(FormError("firstForename", List(Messages("gmp.error.name.invalid")))))
+        assert(validatedForm1.errors.contains(FormError("firstForename", List(Messages("gmp.error.name.invalid", Messages("gmp.lowercase.firstname"))))))
+        assert(validatedForm2.errors.contains(FormError("firstForename", List(Messages("gmp.error.name.invalid", Messages("gmp.lowercase.firstname"))))))
       }
 
       "allow whitespace" in {
@@ -309,7 +308,7 @@ class MemberDetailsFormSpec extends PlaySpec with OneAppPerSuite {
       )
       val validatedForm = form.bind(postData)
 
-      assert(validatedForm.errors.contains(FormError("surname", List(Messages("gmp.error.mandatory")))))
+      assert(validatedForm.errors.contains(FormError("surname", List(Messages("gmp.error.mandatory", Messages("gmp.lowercase.lastname"))))))
       assert(validatedForm.errors.length == 1)
     }
 
@@ -335,7 +334,7 @@ class MemberDetailsFormSpec extends PlaySpec with OneAppPerSuite {
       )
       val validatedForm = form.bind(postData)
 
-      assert(validatedForm.errors.contains(FormError("surname", List(Messages("gmp.error.length")))))
+      assert(validatedForm.errors.contains(FormError("surname", List(Messages("gmp.error.length", Messages("gmp.lastname"), MAX_LENGTH)))))
     }
 
     "return an error when contains a digit" in {
@@ -346,7 +345,7 @@ class MemberDetailsFormSpec extends PlaySpec with OneAppPerSuite {
       )
       val validatedForm = form.bind(postData)
 
-      assert(validatedForm.errors.contains(FormError("surname", List(Messages("gmp.error.name.invalid")))))
+      assert(validatedForm.errors.contains(FormError("surname", List(Messages("gmp.error.name.invalid", Messages("gmp.lowercase.lastname"))))))
     }
 
     "return an error when only one character" in {
@@ -380,7 +379,7 @@ class MemberDetailsFormSpec extends PlaySpec with OneAppPerSuite {
       )
       val validatedForm = form.bind(postData)
 
-      assert(validatedForm.errors.contains(FormError("surname", List(Messages("gmp.error.name.invalid")))))
+      assert(validatedForm.errors.contains(FormError("surname", List(Messages("gmp.error.name.invalid", Messages("gmp.lowercase.lastname"))))))
     }
 
     "allow hyphens" in {
@@ -402,7 +401,7 @@ class MemberDetailsFormSpec extends PlaySpec with OneAppPerSuite {
       )
       val validatedForm = form.bind(postData)
 
-      assert(validatedForm.errors.contains(FormError("surname", List(Messages("gmp.error.name.invalid")))))
+      assert(validatedForm.errors.contains(FormError("surname", List(Messages("gmp.error.name.invalid", Messages("gmp.lowercase.lastname"))))))
     }
 
     "allow whitespace" in {
@@ -431,8 +430,8 @@ class MemberDetailsFormSpec extends PlaySpec with OneAppPerSuite {
       )
       val validatedForm2 = form.bind(postData2)
 
-      assert(validatedForm1.errors.contains(FormError("surname", List(Messages("gmp.error.name.invalid")))))
-      assert(validatedForm2.errors.contains(FormError("surname", List(Messages("gmp.error.name.invalid")))))
+      assert(validatedForm1.errors.contains(FormError("surname", List(Messages("gmp.error.name.invalid", Messages("gmp.lowercase.lastname"))))))
+      assert(validatedForm2.errors.contains(FormError("surname", List(Messages("gmp.error.name.invalid", Messages("gmp.lowercase.lastname"))))))
     }
   }
 }
