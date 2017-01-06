@@ -29,7 +29,6 @@ import play.api.test.Helpers._
 import services.SessionService
 import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
 import play.api.i18n.Messages.Implicits._
-
 import scala.concurrent.Future
 
 class RevaluationControllerSpec extends PlaySpec with OneServerPerSuite with MockitoSugar with GmpUsers {
@@ -52,10 +51,10 @@ class RevaluationControllerSpec extends PlaySpec with OneServerPerSuite with Moc
       status(result.get) must not equal (NOT_FOUND)
     }
 
-    "respond to POST /guaranteed-minimum-pension/relevant-date" in {
+/*    "respond to POST /guaranteed-minimum-pension/relevant-date" in {
       val result = route(FakeRequest(POST, "/guaranteed-minimum-pension/relevant-date"))
       status(result.get) must not equal (NOT_FOUND)
-    }
+    }*/
 
     "respond to GET /guaranteed-minimum-pension/relevant-date/back" in {
       val result = route(FakeRequest(GET, "/guaranteed-minimum-pension/relevant-date/back"))
