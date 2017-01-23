@@ -307,7 +307,7 @@ class CsvLineValidatorSpec extends FlatSpec with Matchers with OneAppPerSuite {
   }
 
   it should "not report YES as a validation error" in {
-   CsvLineValidator.validateDualCalc("YES") shouldBe empty
+    CsvLineValidator.validateDualCalc("YES") shouldBe empty
   }
 
   it should "not report yes as a validation error" in {
