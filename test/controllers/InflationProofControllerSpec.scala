@@ -49,10 +49,10 @@ class InflationProofControllerSpec extends PlaySpec with OneServerPerSuite with 
       status(result.get) must not equal (NOT_FOUND)
     }
 
-/*    "respond to POST /guaranteed-minimum-pension/inflation-proof" in {
+    "respond to POST /guaranteed-minimum-pension/inflation-proof" in {
       val result = route(FakeRequest(POST, "/guaranteed-minimum-pension/inflation-proof"))
       status(result.get) must not equal (NOT_FOUND)
-    }*/
+    }
 
     "respond to GET /guaranteed-minimum-pension/inflation-proof/back" in {
       val result = route(FakeRequest(GET, "/guaranteed-minimum-pension/inflation-proof/back"))

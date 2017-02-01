@@ -51,10 +51,10 @@ class RevaluationControllerSpec extends PlaySpec with OneServerPerSuite with Moc
       status(result.get) must not equal (NOT_FOUND)
     }
 
-/*    "respond to POST /guaranteed-minimum-pension/relevant-date" in {
+    "respond to POST /guaranteed-minimum-pension/relevant-date" in {
       val result = route(FakeRequest(POST, "/guaranteed-minimum-pension/relevant-date"))
       status(result.get) must not equal (NOT_FOUND)
-    }*/
+    }
 
     "respond to GET /guaranteed-minimum-pension/relevant-date/back" in {
       val result = route(FakeRequest(GET, "/guaranteed-minimum-pension/relevant-date/back"))

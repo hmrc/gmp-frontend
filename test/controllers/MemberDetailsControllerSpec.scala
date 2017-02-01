@@ -50,10 +50,10 @@ class MemberDetailsControllerSpec extends PlaySpec with OneServerPerSuite with M
       status(result.get) must not equal (NOT_FOUND)
     }
 
-/*    "respond to POST /guaranteed-minimum-pension/member-details" in {
+    "respond to POST /guaranteed-minimum-pension/member-details" in {
       val result = route(FakeRequest(POST, "/guaranteed-minimum-pension/member-details"))
       status(result.get) must not equal (NOT_FOUND)
-    }*/
+    }
 
     "respond to back /guaranteed-minimum-pension/member-details/back" in {
       val result = route(FakeRequest(GET, "/guaranteed-minimum-pension/member-details/back"))
