@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 HM Revenue & Customs
+ * Copyright 2017 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,14 +20,10 @@ import config.GmpFrontendAuthConnector
 import connectors.GmpConnector
 import controllers.auth.GmpRegime
 import forms.ScenarioForm._
-import models.{CalculationType, GmpDate}
 import play.api.Logger
-import play.api.data.Form
-import play.api.mvc.Request
-import play.twirl.api.HtmlFormat
-import services.SessionService
-import uk.gov.hmrc.play.frontend.auth.Actions
+import play.api.Play.current
 import play.api.i18n.Messages
+import play.api.i18n.Messages.Implicits._
 
 import scala.concurrent.Future
 

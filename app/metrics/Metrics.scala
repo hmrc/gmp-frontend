@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 HM Revenue & Customs
+ * Copyright 2017 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,9 +16,8 @@
 
 package metrics
 
-import com.codahale.metrics.{Counter, Timer}
-import com.kenshoo.play.metrics.MetricsRegistry
-
+import com.codahale.metrics.{MetricRegistry, Timer}
+import uk.gov.hmrc.play.graphite.MicroserviceMetrics
 trait Metrics {
 
   val keystoreStoreTimer: Timer
@@ -29,11 +28,12 @@ trait Metrics {
 
 }
 
-object Metrics extends Metrics {
+object Metrics extends Metrics with MicroserviceMetrics{
+  val registry: MetricRegistry = metrics.defaultRegistry
 
-  override val keystoreStoreTimer = MetricsRegistry.defaultRegistry.timer("gmp-keystore-storage-timer")
-  override val keystoreRetrieveTimer = MetricsRegistry.defaultRegistry.timer("gmp-keystore-retrieve-timer")
-  override val gmpConnectorTimer = MetricsRegistry.defaultRegistry.timer("gmp-connector-timer")
-  override def countNpsError(code: String) = MetricsRegistry.defaultRegistry.counter(s"gmp-npserror-$code").inc()
-  override def countNpsSconInvalid() = MetricsRegistry.defaultRegistry.counter(s"gmp-npssconinvalid").inc()
+  override val keystoreStoreTimer = registry.timer("gmp-keystore-storage-timer")
+  override val keystoreRetrieveTimer = registry.timer("gmp-keystore-retrieve-timer")
+  override val gmpConnectorTimer = registry.timer("gmp-connector-timer")
+  override def countNpsError(code: String) = registry.counter(s"gmp-npserror-$code").inc()
+  override def countNpsSconInvalid() = registry.counter(s"gmp-npssconinvalid").inc()
 }

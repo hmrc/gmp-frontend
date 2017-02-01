@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 HM Revenue & Customs
+ * Copyright 2017 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,6 +25,8 @@ import play.api.mvc.Action
 import services.SessionService
 import uk.gov.hmrc.play.frontend.auth.Actions
 import uk.gov.hmrc.play.http.logging.SessionId
+import play.api.i18n.Messages.Implicits._
+import play.api.Play.current
 
 object FileUploadController extends FileUploadController {
   val authConnector = GmpFrontendAuthConnector

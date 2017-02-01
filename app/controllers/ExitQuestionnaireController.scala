@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 HM Revenue & Customs
+ * Copyright 2017 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,8 @@ import play.api.Logger
 import play.api.mvc.{AnyContent, Action}
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.frontend.controller.UnauthorisedAction
-
+import play.api.i18n.Messages.Implicits._
+import play.api.Play.current
 import scala.concurrent.Future
 
 trait ExitQuestionnaireController extends GmpController {

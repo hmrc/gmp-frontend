@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 HM Revenue & Customs
+ * Copyright 2017 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,6 +22,8 @@ import play.api.data.Forms._
 import play.api.data.validation.{Valid, ValidationError, Invalid, Constraint}
 import play.api.i18n.Messages
 import uk.gov.hmrc.emailaddress.EmailAddress
+import play.api.i18n.Messages.Implicits._
+import play.api.Play.current
 
 object BulkReferenceForm {
   val MAX_REFERENCE_LENGTH: Int = 99

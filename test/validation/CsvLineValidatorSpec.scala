@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 HM Revenue & Customs
+ * Copyright 2017 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,9 +18,10 @@ package validation
 
 import helpers.RandomNino
 import models.CalculationRequestLine
-import org.scalatest.{Entry, Matchers, FlatSpec}
+import org.scalatest.{FlatSpec, Matchers}
 import org.scalatestplus.play.OneAppPerSuite
 import play.api.i18n.Messages
+import play.api.i18n.Messages.Implicits._
 import services.BulkRequestCsvColumn
 
 /**
@@ -306,7 +307,7 @@ class CsvLineValidatorSpec extends FlatSpec with Matchers with OneAppPerSuite {
   }
 
   it should "not report YES as a validation error" in {
-   CsvLineValidator.validateDualCalc("YES") shouldBe empty
+    CsvLineValidator.validateDualCalc("YES") shouldBe empty
   }
 
   it should "not report yes as a validation error" in {

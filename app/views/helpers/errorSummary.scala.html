@@ -14,7 +14,7 @@
 * limitations under the License.
 *@
 
-@(form: Form[_])
+@(form: Form[_])(implicit messages: Messages)
 
 @if(form.hasGlobalErrors || form.hasErrors) {
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 HM Revenue & Customs
+ * Copyright 2017 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,6 +32,7 @@ import services.SessionService
 import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
 import uk.gov.hmrc.play.partials.HtmlPartial
 import scala.concurrent.Future
+import play.api.i18n.Messages.Implicits._
 
 class FileUploadControllerSpec extends PlaySpec with OneServerPerSuite with MockitoSugar with GmpUsers {
   val mockAuthConnector = mock[AuthConnector]
@@ -41,7 +42,7 @@ class FileUploadControllerSpec extends PlaySpec with OneServerPerSuite with Mock
   val gmpBulkSession = GmpBulkSession(Some(CallBackData(collection = "gmp", id = "id", length = 1L, name = None,
     customMetadata = None, contentType = None, sessionId = "THING")), None, None)
 
-  val fakeRequest = FakeRequest(method = "POST", uri = "", headers = FakeHeaders(Seq("Content-type" -> Seq("application/json"))), body = Json.toJson(gmpBulkSession.callBackData.get))
+  val fakeRequest = FakeRequest(method = "POST", uri = "", headers = FakeHeaders(Seq("Content-type" -> ("application/json"))), body = Json.toJson(gmpBulkSession.callBackData.get))
 
   object TestFileUploadController extends FileUploadController {
     val authConnector = mockAuthConnector
@@ -175,7 +176,7 @@ class FileUploadControllerSpec extends PlaySpec with OneServerPerSuite with Mock
     "fail to store callback data in session cache when no sessionId" in {
       val callbackData = gmpBulkSession.callBackData.get.copy(sessionId = "")
 
-      val fakeRequest = FakeRequest(method = "POST", uri = "", headers = FakeHeaders(Seq("Content-type" -> Seq("application/json"))), body = Json.toJson(callbackData))
+      val fakeRequest = FakeRequest(method = "POST", uri = "", headers = FakeHeaders(Seq("Content-type" -> ("application/json"))), body = Json.toJson(callbackData))
       when(mockSessionService.cacheCallBackData(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.failed(new RuntimeException))
       intercept[RuntimeException]{
         await(TestFileUploadController.callback.apply(fakeRequest))
@@ -185,7 +186,7 @@ class FileUploadControllerSpec extends PlaySpec with OneServerPerSuite with Mock
     "store data when valid session id" in {
 
 
-      val fakeRequest = FakeRequest(method = "POST", uri = "", headers = FakeHeaders(Seq("Content-type" -> Seq("application/json"))), body = Json.toJson(gmpBulkSession.callBackData))
+      val fakeRequest = FakeRequest(method = "POST", uri = "", headers = FakeHeaders(Seq("Content-type" -> ("application/json"))), body = Json.toJson(gmpBulkSession.callBackData))
       when(mockSessionService.cacheCallBackData(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpBulkSession)))
       val result = TestFileUploadController.callback.apply(fakeRequest)
       status(result) must be(OK)
@@ -193,7 +194,7 @@ class FileUploadControllerSpec extends PlaySpec with OneServerPerSuite with Mock
     }
   }
 
-  def callback(request: FakeRequest[JsValue] = FakeRequest(method = "POST", uri = "", headers = FakeHeaders(Seq("Content-type" -> Seq("application/json"))), body = Json.toJson("")))(handler: Future[Result] => Any): Unit = {
+  def callback(request: FakeRequest[JsValue] = FakeRequest(method = "POST", uri = "", headers = FakeHeaders(Seq("Content-type" -> ("application/json"))), body = Json.toJson("")))(handler: Future[Result] => Any): Unit = {
     handler(TestFileUploadController.callback().apply(request))
   }
 

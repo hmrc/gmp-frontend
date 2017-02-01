@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 HM Revenue & Customs
+ * Copyright 2017 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,7 +36,7 @@ trait GmpUsers {
   def withAuthorisedUser(test: FakeRequest[AnyContentAsEmpty.type] => Any) {
     val userId = s"user-${UUID.randomUUID}"
     when(mockAuthConnector.currentAuthority(Matchers.any())) thenReturn {
-      Future.successful(Some(Authority(userId, Accounts(psa = Some(PsaAccount("gmp/B1234567", PsaId("B1234567")))), None, None, CredentialStrength.None, ConfidenceLevel.L50, None, None)))
+      Future.successful(Some(Authority(userId, Accounts(psa = Some(PsaAccount("gmp/B1234567", PsaId("B1234567")))), None, None, CredentialStrength.None, ConfidenceLevel.L50, None, None, None, "")))
     }
     val sessionId = s"session-${UUID.randomUUID}"
     lazy val request = FakeRequest().withSession(
@@ -49,7 +49,7 @@ trait GmpUsers {
   def withAuthorisedUserAndPath(test: FakeRequest[AnyContentAsEmpty.type] => Any, method: String, path: String) {
     val userId = s"user-${UUID.randomUUID}"
     when(mockAuthConnector.currentAuthority(Matchers.any())) thenReturn {
-      Future.successful(Some(Authority(userId, Accounts(psa = Some(PsaAccount("gmp/B1234567", PsaId("B1234567")))), None, None, CredentialStrength.None, ConfidenceLevel.L50, None, None)))
+      Future.successful(Some(Authority(userId, Accounts(psa = Some(PsaAccount("gmp/B1234567", PsaId("B1234567")))), None, None, CredentialStrength.None, ConfidenceLevel.L50, None, None, None, "")))
     }
     val sessionId = s"session-${UUID.randomUUID}"
     lazy val request = FakeRequest(method, path).withSession(
@@ -62,7 +62,7 @@ trait GmpUsers {
   def withAuthorisedUserLowConfidenceLevel(test: FakeRequest[AnyContentAsEmpty.type] => Any) {
     val userId = s"user-${UUID.randomUUID}"
     when(mockAuthConnector.currentAuthority(Matchers.any())) thenReturn {
-      Future.successful(Some(Authority(userId, Accounts(psa = Some(PsaAccount("gmp/B1234567", PsaId("B1234567")))), None, None, CredentialStrength.None,  ConfidenceLevel.L0, None, None)))
+      Future.successful(Some(Authority(userId, Accounts(psa = Some(PsaAccount("gmp/B1234567", PsaId("B1234567")))), None, None, CredentialStrength.None,  ConfidenceLevel.L0, None, None, None, "")))
     }
     val sessionId = s"session-${UUID.randomUUID}"
     lazy val request = FakeRequest().withSession(

@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 HM Revenue & Customs
+ * Copyright 2017 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,9 @@ package validation
 
 import org.joda.time.LocalDate
 import org.joda.time.format.DateTimeFormat
+import play.api.Play.current
 import play.api.i18n.Messages
+import play.api.i18n.Messages.Implicits._
 import services.BulkRequestCsvColumn
 import uk.gov.hmrc.time.TaxYear
 
@@ -36,12 +38,12 @@ trait FieldValidator {
     }
   }
 
-  def validateNino(nino: String) = {
+  def validateNino(nino: String): Option[String] = {
     val TEMP_NINO = "TN"
     nino match {
       case "" => Some(Messages("gmp.error.mandatory", Messages("gmp.nino")))
-      case x if !NinoValidate.isValid(x) => Some(Messages("gmp.error.nino.invalid"))
       case x if x.toUpperCase().startsWith(TEMP_NINO) => Some(Messages("gmp.error.nino.temporary"))
+      case x if !NinoValidate.isValid(x) => Some(Messages("gmp.error.nino.invalid"))
       case _ => None
     }
   }
@@ -89,14 +91,14 @@ trait FieldValidator {
   }
 
   def validateTerminationDate(value: String) = value match {
-      case "" => None
-      case sm if SMValidate.isValid(sm) => None
-      case x => tryParseDate(x) match {
-        case Some(validDate) if validDate.isBefore(TaxYear(2016).starts) => Some(Messages("gmp.error.csv.termination.oob"))
-        case None => Some(Messages("gmp.error.csv.termination.invalid"))
-        case _ => None
-      }
+    case "" => None
+    case sm if SMValidate.isValid(sm) => None
+    case x => tryParseDate(x) match {
+      case Some(validDate) if validDate.isBefore(TaxYear(2016).starts) => Some(Messages("gmp.error.csv.termination.oob"))
+      case None => Some(Messages("gmp.error.csv.termination.invalid"))
+      case _ => None
     }
+  }
 
   def validateRevalRate(value: String) = {
     value match {
@@ -130,7 +132,9 @@ object CsvLineValidator extends FieldValidator {
 
   def validateLine(line: String) = {
 
-    val columns = line.split(",", -1).map { _.trim }.toList
+    val columns = line.split(",", -1).map {
+      _.trim
+    }.toList
 
     columns.length match {
       case x if x < CSV_COLUMN_COUNT => Some(Map(BulkRequestCsvColumn.LINE_ERROR_TOO_FEW -> Messages("gmp.error.parsing.too_few_columns")))
@@ -157,5 +161,3 @@ object CsvLineValidator extends FieldValidator {
     }
   }
 }
-
-

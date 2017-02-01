@@ -14,7 +14,7 @@
 * limitations under the License.
 *@
 
-@(globalErrorCode: Integer)(implicit request: Request[_])
+@(globalErrorCode: Integer)(implicit request: Request[_],messages: Messages)
 
 @import play.i18n._
 @import config.ApplicationConfig.globalErrors

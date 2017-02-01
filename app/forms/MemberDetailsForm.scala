@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 HM Revenue & Customs
+ * Copyright 2017 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,12 +16,14 @@
 
 package forms
 
-import models.{Nino, MemberDetails}
+import models.MemberDetails
+import play.api.Play.current
 import play.api.data.Form
 import play.api.data.Forms._
-import play.api.data.validation.{ValidationError, Invalid, Valid, Constraint}
+import play.api.data.validation.{Constraint, Invalid, Valid, ValidationError}
 import play.api.i18n.Messages
-import validation.{FieldValidator, NinoValidate}
+import play.api.i18n.Messages.Implicits._
+import validation.NinoValidate
 
 
 object MemberDetailsForm {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 HM Revenue & Customs
+ * Copyright 2017 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -49,7 +49,7 @@ class GmpBulkConnectorSpec extends PlaySpec with OneServerPerSuite with MockitoS
   "The GMP Bulk Connector" must {
 
     implicit val hc = new HeaderCarrier(sessionId = Some(SessionId(s"session-${UUID.randomUUID}")))
-    implicit val user = AuthContext(authority = Authority("1234", Accounts(psa = Some(PsaAccount(link, PsaId(psaId)))), None, None, CredentialStrength.None, ConfidenceLevel.L50, None, None))
+    implicit val user = AuthContext(authority = Authority("1234", Accounts(psa = Some(PsaAccount(link, PsaId(psaId)))), None, None, CredentialStrength.None, ConfidenceLevel.L50, None, None, None, ""))
 
     "send a bulk request with valid data" in {
 
