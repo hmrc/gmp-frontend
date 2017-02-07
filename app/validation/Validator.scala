@@ -46,7 +46,7 @@ object SconValidate extends Validator with Modulus19CheckDigit {
 }
 
 object NinoValidate extends Validator {
-  override def isValid(nino: String): Boolean = Nino.isValid(nino.replaceAll("\\s", ""))
+  override def isValid(nino: String): Boolean = Nino.isValid(nino.replaceAll("\\s", "").toUpperCase)
 }
 
 object NameValidate extends Validator {
