@@ -80,6 +80,10 @@ class NinoValidatorSpec extends WordSpec with Matchers {
       validateNino("KC000000A") should equal(true)
     }
 
+    "should pass for lower case ninos" in {
+      validateNino("gy000002a") should equal(true)
+    }
+
   }
 
   def validateNino(nino: String): Boolean = NinoValidate.isValid(nino)
