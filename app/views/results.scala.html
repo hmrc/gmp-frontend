@@ -21,7 +21,7 @@
 
 @import uk.gov.hmrc.play.views.html._
 @import uk.gov.hmrc.play.views.html.helpers._
-@import play.i18n._
+
 @import config.ApplicationConfig.globalErrors
 
 @gmp_main(
@@ -29,9 +29,9 @@
   title = {
     if(calculationResponse.globalErrorCode > 0 ||
       (calculationResponse.calculationPeriods.length == 1 && calculationResponse.calculationPeriods.head.errorCode > 0)){
-        Messages.get("gmp.results.error")
+        Messages("gmp.results.error")
     }else{
-        Messages.get("gmp.results.title")
+        Messages("gmp.results.title")
     }
   },
   supportLinkEnabled = false,
@@ -60,7 +60,7 @@
   @if(!calculationResponse.hasErrors){
     <div class="grid">
       <div class="grid-2-3">
-        <span id="queryhandling">@Messages.get("gmp.queryhandling.resultsmessage")</span>
+        <span id="queryhandling">@Messages("gmp.queryhandling.resultsmessage")</span>
         <br/>
         <br/>
       </div>

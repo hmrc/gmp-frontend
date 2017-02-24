@@ -13,15 +13,15 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 *@
+@import play.api.Play.current
+@import play.api.i18n.Messages.Implicits._
 
 @()(implicit request: Request[_])
-
-@import play.i18n._
 
 <div class="grid-2-3">
   <div class="query-handling-message">
     <br>
-    <p id="query-handling-header">@Html(Messages.get("gmp.bulk.query_handling_message.header"))</p>
-    <p id="query-handling-body">@Html(Messages.get("gmp.bulk.query_handling_message.body"))</p>
+    <p id="query-handling-header">@Html(Messages("gmp.bulk.query_handling_message.header"))</p>
+    <p id="query-handling-body">@Html(Messages("gmp.bulk.query_handling_message.body"))</p>
   </div>
 </div>

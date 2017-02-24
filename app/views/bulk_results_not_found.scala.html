@@ -13,23 +13,24 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 *@
+@import play.api.Play.current
+@import play.api.i18n.Messages.Implicits._
 
-@()(implicit request: Request[_], context: config.GmpContext,messages: Messages)
+@()(implicit request: Request[_], context: config.GmpContext)
 
 @import uk.gov.hmrc.play.views.html._
 @import uk.gov.hmrc.play.views.html.helpers._
 @import views.html.helpers._
-@import play.i18n._
 
-@gmp_main(title = Messages.get("gmp.bulk.results_not_found.title"),supportLinkEnabled = false, dashboardLinkEnabled = false) {
+@gmp_main(title = Messages("gmp.bulk.results_not_found.title"),supportLinkEnabled = false, dashboardLinkEnabled = false) {
 
 <div class="grid">
     <div class="grid-2-3">
-        <h1 class="heading-xlarge">@Messages.get("gmp.bulk.results_not_found")</h1>
+        <h1 class="heading-xlarge">@Messages("gmp.bulk.results_not_found")</h1>
 
-        <p>@Html(Messages.get("gmp.bulk.results_not_found.1"))</p>
-        <p>@Html(Messages.get("gmp.bulk.results_not_found.2"))</p>
-        <p>@Html(Messages.get("gmp.bulk.results_not_found.3"))</p>
+        <p>@Html(Messages("gmp.bulk.results_not_found.1"))</p>
+        <p>@Html(Messages("gmp.bulk.results_not_found.2"))</p>
+        <p>@Html(Messages("gmp.bulk.results_not_found.3"))</p>
 
     </div>
 </div>

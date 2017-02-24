@@ -13,14 +13,14 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 *@
+@import play.api.Play.current
+@import play.api.i18n.Messages.Implicits._
 
 @()(implicit request: Request[_])
-
-@import play.i18n._
 
 <div class="grid" id="what-did-you-think-div">
   <div class="grid-2-3">
     <br/>
-    <a id="what_did_you_think_link" href="@routes.ExitQuestionnaireController.get">@Messages.get("gmp.what_did_you_think")</a> @Messages.get("gmp.what_did_you_think.seconds")
+    <a id="what_did_you_think_link" href="@routes.ExitQuestionnaireController.get">@Messages("gmp.what_did_you_think")</a> @Messages("gmp.what_did_you_think.seconds")
   </div>
 </div>

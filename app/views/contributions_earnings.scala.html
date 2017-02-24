@@ -18,17 +18,16 @@
 
 @import uk.gov.hmrc.play.views.html._
 @import uk.gov.hmrc.play.views.html.helpers._
-@import play.i18n._
 @import config.ApplicationConfig.globalErrors
 
-@gmp_main(title = Messages.get("gmp.contributions_earnings.title"),supportLinkEnabled = false, dashboardLinkEnabled = !calculationResponse.hasErrors) {
+@gmp_main(title = Messages("gmp.contributions_earnings.title"),supportLinkEnabled = false, dashboardLinkEnabled = !calculationResponse.hasErrors) {
 
   @if(calculationResponse.hasSuccessfulCalculations) {
     @includes.print_page()
   }
 
   <div class="grid-2-3">
-    <h1 id="contributions-earnings-title">@Html(Messages.get("gmp.contributions_earnings.header"))</h1>
+    <h1 id="contributions-earnings-title">@Html(Messages("gmp.contributions_earnings.header"))</h1>
   </div>
 
   @includes.contributions_earnings(calculationResponse)
@@ -37,7 +36,7 @@
 
   <div class="grid">
     <div class="grid-2-3">
-      <span id="queryhandling">@Html(Messages.get("gmp.queryhandling.contsandearnings"))</span>
+      <span id="queryhandling">@Html(Messages("gmp.queryhandling.contsandearnings"))</span>
       <br/>
       <br/>
     </div>
@@ -46,7 +45,7 @@
   @includes.request_another_button()
 
   <div class="grid custom-back-link">
-    <a href="@routes.ResultsController.get" id="earnings-back-link">@Messages.get("gmp.back.link")</a>
+    <a href="@routes.ResultsController.get" id="earnings-back-link">@Messages("gmp.back.link")</a>
   </div>
 
   @includes.what_did_you_think_link()

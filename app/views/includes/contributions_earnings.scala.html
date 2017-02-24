@@ -16,7 +16,6 @@
 
 @(calculationResponse:CalculationResponse)(implicit request: Request[_],messages: Messages)
 
-@import play.i18n._
 @import org.joda.time.LocalDate
 @import scala.math.BigDecimal.RoundingMode
 
@@ -51,16 +50,16 @@
 
       <table id="contributions-earnings-table-@count">
           <caption id="gmp-conts-and-earnings-header-@count">
-              @{Messages.get("gmp.contracted_out_period_table_header" ,s"${period.startDate.get.toString("dd/MM/yyyy")} to ${period.endDate.toString("dd/MM/yyyy")}")}
+              @{Messages("gmp.contracted_out_period_table_header" ,s"${period.startDate.get.toString("dd/MM/yyyy")} to ${period.endDate.toString("dd/MM/yyyy")}")}
           </caption>
 
                 <thead>
                   <tr>
                     <th id="tax-year-table-col-header-@count">
-                      @{Messages.get("gmp.tax_year_table_column_header")}
+                      @{Messages("gmp.tax_year_table_column_header")}
                     </th>
                     <th class="conts-and-earnings-table-col" id="contracted-out-period-table-header-@count">
-                      @{Messages.get("gmp.contracted_out_period_table_column_header")}
+                      @{Messages("gmp.contracted_out_period_table_column_header")}
                     </th>
                   </tr>
                 </thead>
@@ -73,7 +72,7 @@
                       }
                     } else{
                         <tr class="error-row" id="period-row-in-error-@count">
-                            <td colspan="2" class="error-message">@{Messages.get("gmp.error.no_conts_and_earnings")}</td>
+                            <td colspan="2" class="error-message">@{Messages("gmp.error.no_conts_and_earnings")}</td>
                         </tr>
                     }
                 </tbody>

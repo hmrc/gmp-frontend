@@ -16,7 +16,7 @@
 
 @(calculationResponse:CalculationResponse)(implicit request: Request[_],messages: Messages)
 
-@import play.i18n._
+
 @import config.ApplicationConfig.globalErrors
 @import org.joda.time.LocalDate
 
@@ -24,14 +24,14 @@
     <div class="grid-2-3">
         <div class="global-error">
 
-            <h1 id="part-problem">@{ Messages.get("gmp.part_problem") }</h1>
+            <h1 id="part-problem">@{ Messages("gmp.part_problem") }</h1>
 
             <ul>
                 @for((period, count) <- calculationResponse.calculationPeriods.zipWithIndex) {
                 <li>
                     @if(period.errorCode > 0) {
                         <a href="#reason-@count" class="error-list" id="from-to-error-@count">
-                            @{ new LocalDate(period.startDate.get).toString("dd/MM/yyyy") } to @{ new LocalDate(period.endDate).toString("dd/MM/yyyy") }: @Messages.get("gmp.unavailable")
+                            @{ new LocalDate(period.startDate.get).toString("dd/MM/yyyy") } to @{ new LocalDate(period.endDate).toString("dd/MM/yyyy") }: @Messages("gmp.unavailable")
                         </a>
                     }
                 </li>
@@ -41,9 +41,9 @@
         <br/>
         @includes.multi_results_table(calculationResponse)
         <div>
-            <h2 id="what-now">@Messages.get("gmp.what_now")</h2>
+            <h2 id="what-now">@Messages("gmp.what_now")</h2>
 
-            <p id="multi-solution">@Messages.get("gmp.queryhandling.resultsmessage")</p>
+            <p id="multi-solution">@Messages("gmp.queryhandling.resultsmessage")</p>
         </div>
     </div>
 

@@ -16,12 +16,11 @@
 
 @(globalErrorCode: Integer)(implicit request: Request[_],messages: Messages)
 
-@import play.i18n._
 @import config.ApplicationConfig.globalErrors
 
 @queryHandlingHeader = {
     @if(globalErrors.hasPath(s"$globalErrorCode.solution")){
-        <h2 class="error-h2" id="global-query-handling-header">@{ Messages.get("gmp.errors.query_handling.header") }</h2>
+        <h2 class="error-h2" id="global-query-handling-header">@{ Messages("gmp.errors.query_handling.header") }</h2>
     }
 }
 
@@ -30,28 +29,28 @@
 
         <div class="global-error">
             @if(globalErrors.hasPath(s"$globalErrorCode.cannot_calculate")){
-                <h1 class="error-h1" id="cannot-calculate-header">@{ Messages.get(globalErrors.getString(s"$globalErrorCode.cannot_calculate")) }</h1>
+                <h1 class="error-h1" id="cannot-calculate-header">@{ Messages(globalErrors.getString(s"$globalErrorCode.cannot_calculate")) }</h1>
             }
 
             @if(globalErrors.hasPath(s"$globalErrorCode.reason")){
-                <div class="error-list" id="global-error-reason">@Messages.get(globalErrors.getString(s"$globalErrorCode.reason"))</div>
+                <div class="error-list" id="global-error-reason">@Messages(globalErrors.getString(s"$globalErrorCode.reason"))</div>
             }
         </div>
 
         @if(globalErrors.hasPath(s"$globalErrorCode.solution")){
             <div>
-                <h2 class="error-h2" id="global-what-now">@Messages.get("gmp.what_now")</h2>
-                @Html(Messages.get(globalErrors.getString(s"$globalErrorCode.solution")))
+                <h2 class="error-h2" id="global-what-now">@Messages("gmp.what_now")</h2>
+                @Html(Messages(globalErrors.getString(s"$globalErrorCode.solution")))
             </div>
         }
 
         @if(globalErrors.hasPath(s"$globalErrorCode.also")){
             <br/>
             @queryHandlingHeader
-            <div id="query-handling">@Html(Messages.get(globalErrors.getString(s"$globalErrorCode.also")))</div>
+            <div id="query-handling">@Html(Messages(globalErrors.getString(s"$globalErrorCode.also")))</div>
         }
         @if(globalErrors.hasPath(s"$globalErrorCode.help_link")){
-            <p id="query-handling-link">@Html(Messages.get(globalErrors.getString(s"$globalErrorCode.help_link")))</p>
+            <p id="query-handling-link">@Html(Messages(globalErrors.getString(s"$globalErrorCode.help_link")))</p>
         }
 
     </div>

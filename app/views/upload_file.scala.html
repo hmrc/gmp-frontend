@@ -19,21 +19,21 @@
 @import uk.gov.hmrc.play.views.html._
 @import uk.gov.hmrc.play.views.html.helpers._
 @import views.html.helpers._
-@import play.i18n._
 
 
-@gmp_main(title = Messages.get("gmp.fileupload.title")) {
+
+@gmp_main(title = Messages("gmp.fileupload.title")) {
 
 
 <div class="grid">
     <div class="grid-2-3">
-        <h1>@Messages.get("gmp.fileupload.header")</h1>
+        <h1>@Messages("gmp.fileupload.header")</h1>
 
         <br>
-        <p>@Html(Messages.get("gmp.fileupload.hint", routes.AssetsController.at("csv/GMP_template_and_instructions.zip")))</p>
+        <p>@Html(Messages("gmp.fileupload.hint", routes.AssetsController.at("csv/GMP_template_and_instructions.zip")))</p>
 
     </div>
-    <label for="fileToUpload" class="hidden">@Html(Messages.get("gmp.fileupload.header"))</label>
+    <label for="fileToUpload" class="hidden">@Html(Messages("gmp.fileupload.header"))</label>
     @uploadForm
 </div>
 
