@@ -19,7 +19,6 @@
 @import uk.gov.hmrc.play.views.html._
 @import uk.gov.hmrc.play.views.html.helpers._
 @import views.html.helpers._
-@import play.i18n._
 @import models.Leaving
 
 @implicitFormInstance = @{ Some(dateOfLeavingForm) }
@@ -30,7 +29,7 @@
   <script type="text/javascript" src='@controllers.routes.AssetsController.at("javascripts/leaving-date.js")'></script>
 }
 
-@gmp_main(title = Messages.get("gmp.leaving.title"), pageScripts = Some(pageScripts)) {
+@gmp_main(title = Messages("gmp.leaving.title"), pageScripts = Some(pageScripts)) {
 
 @views.html.helpers.errorSummary(dateOfLeavingForm)
 
@@ -38,9 +37,9 @@
       <div class="grid-2-3">
           <h1>
               @{scenario match {
-              case CalculationType.DOL => Messages.get("gmp.leaving.dol.question")
-              case CalculationType.SPA | CalculationType.PAYABLE_AGE | CalculationType.REVALUATION => Messages.get("gmp.other.dol.left.question")
-              case CalculationType.SURVIVOR => Messages.get("gmp.survivor.dol.question")
+              case CalculationType.DOL => Messages("gmp.leaving.dol.question")
+              case CalculationType.SPA | CalculationType.PAYABLE_AGE | CalculationType.REVALUATION => Messages("gmp.other.dol.left.question")
+              case CalculationType.SURVIVOR => Messages("gmp.survivor.dol.question")
               }}
           </h1>
       </div>
@@ -57,11 +56,11 @@
                             @dolRadioGroup(
                                 dateOfLeavingForm("leaving"),
                                 Seq(
-                                  (Leaving.YES_BEFORE, "none", Leaving.YES_BEFORE) -> Messages.get("gmp.generic.yes"),
-                                  (Leaving.YES_AFTER, "leaving-date", Leaving.YES_AFTER) -> Messages.get("gmp.generic.no")
+                                  (Leaving.YES_BEFORE, "none", Leaving.YES_BEFORE) -> Messages("gmp.generic.yes"),
+                                  (Leaving.YES_AFTER, "leaving-date", Leaving.YES_AFTER) -> Messages("gmp.generic.no")
                                 ),
                                 '_fieldsetAttributesLegend -> "leaving",
-                                '_legend -> Messages.get("gmp.leaving.dol.question"),
+                                '_legend -> Messages("gmp.leaving.dol.question"),
                                 '_legendClass -> "visuallyhidden",
                                 '_labelAfter -> true,
                                 '_labelClass -> "block-label",
@@ -75,21 +74,21 @@
                             scenario match {
                             case CalculationType.SURVIVOR =>
                             Seq(
-                            (Leaving.NO  , "none" , Leaving.NO) -> Messages.get("gmp.dol.threequestions.no.survivor"),
-                            (Leaving.YES_BEFORE  , "none" , Leaving.YES_BEFORE) -> Messages.get("gmp.dol.threequestions.before2016"),
-                            (Leaving.YES_AFTER  , "leaving-date" ,  Leaving.YES_AFTER) -> Messages.get("gmp.dol.threequestions.after2016")
+                            (Leaving.NO  , "none" , Leaving.NO) -> Messages("gmp.dol.threequestions.no.survivor"),
+                            (Leaving.YES_BEFORE  , "none" , Leaving.YES_BEFORE) -> Messages("gmp.dol.threequestions.before2016"),
+                            (Leaving.YES_AFTER  , "leaving-date" ,  Leaving.YES_AFTER) -> Messages("gmp.dol.threequestions.after2016")
                             )
                             case _ =>
                             Seq(
-                            (Leaving.NO  , "none" , Leaving.NO) -> Messages.get("gmp.dol.threequestions.no"),
-                            (Leaving.YES_BEFORE  , "none" , Leaving.YES_BEFORE) -> Messages.get("gmp.dol.threequestions.before2016"),
-                            (Leaving.YES_AFTER  , "leaving-date" ,  Leaving.YES_AFTER) -> Messages.get("gmp.dol.threequestions.after2016")
+                            (Leaving.NO  , "none" , Leaving.NO) -> Messages("gmp.dol.threequestions.no"),
+                            (Leaving.YES_BEFORE  , "none" , Leaving.YES_BEFORE) -> Messages("gmp.dol.threequestions.before2016"),
+                            (Leaving.YES_AFTER  , "leaving-date" ,  Leaving.YES_AFTER) -> Messages("gmp.dol.threequestions.after2016")
                             )
                             },
                             '_fieldsetAttributesLegend -> "leaving",
                             scenario match {
-                                case CalculationType.SURVIVOR => '_legend -> Messages.get("gmp.survivor.dol.question")
-                                case _ => '_legend -> Messages.get("gmp.other.dol.left.question")
+                                case CalculationType.SURVIVOR => '_legend -> Messages("gmp.survivor.dol.question")
+                                case _ => '_legend -> Messages("gmp.other.dol.left.question")
                             },
                             '_legendClass -> "visuallyhidden",
                             '_labelAfter -> true,
@@ -110,9 +109,9 @@
                     <fieldset id="termination-date">
 
                         <legend id="leavingDate">
-                            <span class="form-label-bold" id="date_header">@Messages.get("gmp.date.header_text")</span>
+                            <span class="form-label-bold" id="date_header">@Messages("gmp.date.header_text")</span>
                         </legend>
-                        <p class="form-hint" id="date_hint">@Messages.get("gmp.date.example")</p>
+                        <p class="form-hint" id="date_hint">@Messages("gmp.date.example")</p>
 
                         <div class="form-date">
 
@@ -125,19 +124,19 @@
 
                             <div class="form-group-leaving-options">
                               @gmpInput(dateOfLeavingForm("leavingDate.day"),
-                              '_label -> Html(Messages.get("gmp.day")),
+                              '_label -> Html(Messages("gmp.day")),
                               '_id -> "leavingDate_day",
                               '_maxLength -> 2)
                             </div>
                             <div class="form-group-leaving-options">
                               @gmpInput(dateOfLeavingForm("leavingDate.month"),
-                              '_label -> Html(Messages.get("gmp.month")),
+                              '_label -> Html(Messages("gmp.month")),
                               '_id -> "leavingDate_month",
                               '_maxLength -> 2)
                             </div>
                             <div class="form-group-leaving-options">
                               @gmpInput(dateOfLeavingForm("leavingDate.year"),
-                              '_label -> Html(Messages.get("gmp.year")),
+                              '_label -> Html(Messages("gmp.year")),
                               '_id -> "leavingDate_year",
                               '_maxLength ->4,
                               '_inputClass -> " form-control year-input")
@@ -151,14 +150,14 @@
 
                 <div>
                   <br/>
-                  <button class="button" type="submit" id="submit-button">@Messages.get("gmp.continue.button")</button>
+                  <button class="button" type="submit" id="submit-button">@Messages("gmp.continue.button")</button>
                 </div>
 
             }
         </div>
         <br/><br/>
         <div>
-            <a href="@routes.DateOfLeavingController.back" id="back-link">@Messages.get("gmp.back.link")</a>
+            <a href="@routes.DateOfLeavingController.back" id="back-link">@Messages("gmp.back.link")</a>
         </div>
     </div>
 

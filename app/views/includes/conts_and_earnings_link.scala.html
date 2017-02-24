@@ -13,16 +13,16 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 *@
+@import play.api.Play.current
+@import play.api.i18n.Messages.Implicits._
 
 @(calculationResponse:CalculationResponse)(implicit request: Request[_])
-
-@import play.i18n._
 
 @if(calculationResponse.globalErrorCode == 0 && calculationResponse.numPeriodsInError < calculationResponse.calculationPeriods.size) {
     <div class="grid" id="conts-earnings-link-div">
         <div class="grid-2-3">
             <a href="@routes.ResultsController.getContributionsAndEarnings" id="conts-earnings-link">
-                @Html(Messages.get("gmp.link.contributions-earnings"))
+                @Html(Messages("gmp.link.contributions-earnings"))
             </a>
 
         </div>

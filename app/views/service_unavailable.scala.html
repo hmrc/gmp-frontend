@@ -16,20 +16,13 @@
 
 @()(implicit request: Request[_], context: config.GmpContext,messages: Messages)
 
-@import play.i18n.Messages
-
-@gmp_main(title = Messages.get("gmp.offline.title"),supportLinkEnabled = false, dashboardLinkEnabled = false) {
+@gmp_main(title = Messages("gmp.offline.title"),supportLinkEnabled = false, dashboardLinkEnabled = false) {
 
 <div class="grid">
     <div class="grid-2-3">
-        <h1 class="heading-xlarge">@Messages.get("gmp.serviceunavailable.title")</h1>
-
-
-        <p>@Html(Messages.get("gmp.serviceunavailable.message"))</p>
-
-
+        <h1 class="heading-xlarge">@Messages("gmp.serviceunavailable.title")</h1>
+        <p>@Html(Messages("gmp.serviceunavailable.message"))</p>
     </div>
 </div>
-
 
 }

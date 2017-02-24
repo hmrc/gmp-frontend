@@ -19,9 +19,8 @@
 @import uk.gov.hmrc.play.views.html._
 @import uk.gov.hmrc.play.views.html.helpers._
 @import views.html.helpers._
-@import play.i18n._
 
-@gmp_main(title = Messages.get("gmp.bulk_request_received.title"),supportLinkEnabled = true) {
+@gmp_main(title = Messages("gmp.bulk_request_received.title"),supportLinkEnabled = true) {
 
   <div class="grid">
       <div class="grid-2-3">
@@ -29,16 +28,16 @@
         <div class="confirmation">
           <h1>
             <img src='@routes.AssetsController.at("images/tick.png")' alt=""/>
-            @Messages.get("gmp.bulk_request_received.banner")
+            @Messages("gmp.bulk_request_received.banner")
           </h1>
         </div>
 
-        <h2>@Messages.get("gmp.bulk_request_received.header")</h2>
+        <h2>@Messages("gmp.bulk_request_received.header")</h2>
 
-        @Html(Messages.get("gmp.bulk_request_received.text", reference))
+        @Html(Messages("gmp.bulk_request_received.text", reference))
 
         <form action="@routes.SessionCacheController.newBulkCalculation">
-          <button class="upload-file-button" type="submit" id="submit-button" data-journey-click="gmp-bulk:click:bulk_upload_another">@Messages.get("gmp.bulk_request_received.button")</button>
+          <button class="upload-file-button" type="submit" id="submit-button" data-journey-click="gmp-bulk:click:bulk_upload_another">@Messages("gmp.bulk_request_received.button")</button>
         </form>
 
         <br>

@@ -16,10 +16,8 @@
 
 @()(implicit request: Request[_], context: config.GmpContext,messages: Messages)
 
-@import play.i18n._
+@gmp_main(title = Messages("gmp.unauthorised.title")) {
 
-@gmp_main(title = Messages.get("gmp.unauthorised.title")) {
-
-<h1>@Messages.get("gmp.unauthorised.message")</h1>
+<h1>@Messages("gmp.unauthorised.message")</h1>
 
 }

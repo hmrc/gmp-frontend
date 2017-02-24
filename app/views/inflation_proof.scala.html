@@ -19,7 +19,6 @@
 @import uk.gov.hmrc.play.views.html._
 @import uk.gov.hmrc.play.views.html.helpers._
 @import views.html.helpers._
-@import play.i18n._
 
 @implicitFormInstance = @{ Some(inflationProofForm) }
 
@@ -29,13 +28,13 @@
 <script type="text/javascript" src='@controllers.routes.AssetsController.at("javascripts/revaluation-date.js")'></script>
 }
 
-@gmp_main(title = Messages.get("gmp.inflation_proof.title"), pageScripts = Some(pageScripts)) {
+@gmp_main(title = Messages("gmp.inflation_proof.title"), pageScripts = Some(pageScripts)) {
 
 @views.html.helpers.errorSummary(inflationProofForm)
 
 <div class="grid">
     <div class="grid-2-3">
-        <h1>@Messages.get("gmp.inflation_proof.question")</h1>
+        <h1>@Messages("gmp.inflation_proof.question")</h1>
     </div>
 </div>
 
@@ -51,11 +50,11 @@
                 @dolRadioGroup(
                     inflationProofForm("revaluate"),
                     Seq(
-                        ("Yes", "revaluation-date", "Yes") -> Messages.get("gmp.generic.yes"),
-                        ("No", "none", "No") -> Messages.get("gmp.generic.no")
+                        ("Yes", "revaluation-date", "Yes") -> Messages("gmp.generic.yes"),
+                        ("No", "none", "No") -> Messages("gmp.generic.no")
                     ),
                     '_fieldsetAttributesLegend -> "revaluate",
-                    '_legend -> Messages.get("gmp.inflation_proof.question"),
+                    '_legend -> Messages("gmp.inflation_proof.question"),
                     '_legendClass -> "visuallyhidden",
                     '_labelAfter -> true,
                     '_labelClass -> "block-label",
@@ -73,10 +72,10 @@
                 <fieldset id="revaluation-date">
 
                     <legend>
-                        <span class="form-label-bold">@Messages.get("gmp.inflation_proofed")</span>
+                        <span class="form-label-bold">@Messages("gmp.inflation_proofed")</span>
                     </legend>
 
-                    <p class="form-hint">@Messages.get("gmp.date.example")</p>
+                    <p class="form-hint">@Messages("gmp.date.example")</p>
 
                     <div class="form-date">
 
@@ -89,19 +88,19 @@
 
                         <div class="form-group">
                             @gmpInput(inflationProofForm("revaluationDate.day"),
-                            '_label -> Html(Messages.get("gmp.day")),
+                            '_label -> Html(Messages("gmp.day")),
                             '_id -> "revaluationDate_day",
                             '_maxLength -> 2)
                         </div>
                         <div class="form-group">
                             @gmpInput(inflationProofForm("revaluationDate.month"),
-                            '_label -> Html(Messages.get("gmp.month")),
+                            '_label -> Html(Messages("gmp.month")),
                             '_id -> "revaluationDate_month",
                             '_maxLength -> 2)
                         </div>
                         <div class="form-group">
                             @gmpInput(inflationProofForm("revaluationDate.year"),
-                            '_label -> Html(Messages.get("gmp.year")),
+                            '_label -> Html(Messages("gmp.year")),
                             '_id -> "revaluationDate_year",
                             '_maxLength ->4,
                             '_inputClass -> "form-control year-input")
@@ -109,14 +108,14 @@
                         <br/>
                         <br/>
                         <br/>
-                        <p>@Messages.get("gmp.inflationproof.subtext")</p>
+                        <p>@Messages("gmp.inflationproof.subtext")</p>
 
                     </div>
                 </fieldset>
             </div>
 
             <div class="continue-button">
-                <button class="button" type="submit" id="submit-button">@Messages.get("gmp.check_gmp.button")</button>
+                <button class="button" type="submit" id="submit-button">@Messages("gmp.check_gmp.button")</button>
             </div>
 
         </div>
@@ -124,7 +123,7 @@
         }
 
         <div>
-            <a href="@routes.InflationProofController.back" id="back-link">@Messages.get("gmp.back.link")</a>
+            <a href="@routes.InflationProofController.back" id="back-link">@Messages("gmp.back.link")</a>
         </div>
 
     </div>

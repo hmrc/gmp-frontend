@@ -13,15 +13,15 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 *@
+@import play.api.Play.current
+@import play.api.i18n.Messages.Implicits._
 
 @(survivorCalc: Boolean)(implicit request: Request[_])
-
-@import play.i18n._
 
 @if(survivorCalc){
   <div class="grid">
     <div class="grid-2-3">
-        <p id="survivor-disclaimer">@Html({Messages.get("gmp.results.survivior.disclaimer")})</p>
+        <p id="survivor-disclaimer">@Html({Messages("gmp.results.survivior.disclaimer")})</p>
     </div>
   </div>
 }

@@ -18,25 +18,24 @@
 
 @import uk.gov.hmrc.play.views.html._
 @import uk.gov.hmrc.play.views.html.helpers._
-@import play.i18n._
 @import config.ApplicationConfig.globalErrors
 
-@gmp_main(title = Messages.get("gmp.bulk.results.title")) {
+@gmp_main(title = Messages("gmp.bulk.results.title")) {
 
 <div class="grid">
     <div class="grid-2-3">
         <div class="confirmation-bulk">
             <h1 id="calc-ready" class="heading-large">
-                @Messages.get("gmp.bulk.results.banner")
+                @Messages("gmp.bulk.results.banner")
             </h1>
-            <h2 id="reference">@Messages.get("gmp.bulk.results.reference", bulkResultsSummary.reference)</h2>
+            <h2 id="reference">@Messages("gmp.bulk.results.reference", bulkResultsSummary.reference)</h2>
         </div>
     </div>
 
     <div class="grid grid-2-3">
       <br>
-        <div id="results-heading" class="grid grid-3-4">@Messages.get("gmp.bulk.results")</div>
-        <div id="csv-heading" class="grid grid-1-4 text--right">@Messages.get("gmp.bulk.results.csv")</div>
+        <div id="results-heading" class="grid grid-3-4">@Messages("gmp.bulk.results")</div>
+        <div id="csv-heading" class="grid grid-1-4 text--right">@Messages("gmp.bulk.results.csv")</div>
     </div>
 
     @if(bulkResultsSummary.total == bulkResultsSummary.getNumberOfSuccessfulCalculations) {
@@ -59,7 +58,7 @@
 
     @if(comingFromPage != 0){
         <div class="grid-2-3 custom-back-link">
-            <a href="@routes.MoreBulkResultsController.retrieveMoreBulkResults" id="back-link-other">@Messages.get("gmp.back.link")</a>
+            <a href="@routes.MoreBulkResultsController.retrieveMoreBulkResults" id="back-link-other">@Messages("gmp.back.link")</a>
         </div>
       }
 </div>

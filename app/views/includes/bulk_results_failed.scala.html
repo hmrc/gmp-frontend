@@ -14,6 +14,9 @@
 * limitations under the License.
 *@
 
+@import play.api.Play.current
+@import play.api.i18n.Messages.Implicits._
+
 @(bulkResultsSummary: BulkResultsSummary, uploadReference: String)(implicit request: Request[_])
 
 @failed = @{"failed"}
@@ -21,25 +24,24 @@
 @import uk.gov.hmrc.play.views.html._
 @import uk.gov.hmrc.play.views.html.helpers._
 @import views.html.helpers._
-@import play.i18n._
 
 <div class="grid grid-2-3 divider--top">
-  <h3 id="failed-calculations">@Messages.get("gmp.bulk.subheaders.failedcalculations") (@bulkResultsSummary.failed)</h3>
+  <h3 id="failed-calculations">@Messages("gmp.bulk.subheaders.failedcalculations") (@bulkResultsSummary.failed)</h3>
   <div class="grid grid-3-4">
     <ul class="bullets font-xsmall">
-      <li id="exp-failed-1" class="font-xsmall">@Messages.get("gmp.bulk.explanations.failed.1")</li>
-      <li id="exp-failed-2" class="font-xsmall">@Messages.get("gmp.bulk.explanations.failed.2")</li>
-      <li id="exp-failed-3" class="font-xsmall">@Messages.get("gmp.bulk.explanations.failed.3")</li>
+      <li id="exp-failed-1" class="font-xsmall">@Messages("gmp.bulk.explanations.failed.1")</li>
+      <li id="exp-failed-2" class="font-xsmall">@Messages("gmp.bulk.explanations.failed.2")</li>
+      <li id="exp-failed-3" class="font-xsmall">@Messages("gmp.bulk.explanations.failed.3")</li>
     </ul>
   </div>
   <div class="grid grid-1-4 text--right"><a id="download-failed" data-journey-click="gmp-bulk:click:download_failed" href="@routes.BulkResultsController.getResultsAsCsv(uploadReference, failed)">Download</a></div>
 </div>
 
 <div class="grid grid-2-3 divider--top divider--bottom">
-  <h3 id="conts-and-earnings">@Messages.get("gmp.bulk.subheaders.contsandearnings")</h3>
+  <h3 id="conts-and-earnings">@Messages("gmp.bulk.subheaders.contsandearnings")</h3>
   <div class="grid grid-3-4">
     <ul class="bullets font-xsmall">
-      <li id="exp-conts" class="font-xsmall">@Messages.get("gmp.bulk.explanations.contsandearnings")</li>
+      <li id="exp-conts" class="font-xsmall">@Messages("gmp.bulk.explanations.contsandearnings")</li>
     </ul>
   </div>
   <div class="grid grid-1-4 text--right"><a id="download-conts" data-journey-click="gmp-bulk:click:download_ce" href="@routes.BulkResultsController.getContributionsAndEarningsAsCsv(uploadReference)">Download</a></div>

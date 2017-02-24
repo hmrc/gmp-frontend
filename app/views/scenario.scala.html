@@ -18,18 +18,18 @@
 
 @import uk.gov.hmrc.play.views.html._
 @import uk.gov.hmrc.play.views.html.helpers._
-@import play.i18n._
+
 @import views.html.helpers._
 
 @implicitFormInstance = @{ Some(calculationType) }
 
-@gmp_main(title = Messages.get("gmp.calculation_type.title")) {
+@gmp_main(title = Messages("gmp.calculation_type.title")) {
 
   @views.html.helpers.errorSummary(calculationType)
 
   <div class="grid">
       <div class="grid-2-3">
-          <h1 id="calc-type">@Messages.get("gmp.scenarios.title")</h1>
+          <h1 id="calc-type">@Messages("gmp.scenarios.title")</h1>
       </div>
   </div>
   <div class="grid">
@@ -41,14 +41,14 @@
                   @gmpRadioGroup(
                     calculationType("calcType"),
                     Seq(
-                        "2"  -> "payableage" -> Messages.get("gmp.scenarios.payable_age"),
-                        "4"  ->  "spa" -> Messages.get("gmp.scenarios.spa"),
-                        "3"  -> "survivor" -> Messages.get("gmp.scenarios.survivor"),
-                        "0"  -> "leaving" -> Messages.get("gmp.scenarios.leaving"),
-                        "1"  -> "specificdate" -> Messages.get("gmp.scenarios.specific_date")
+                        "2"  -> "payableage" -> Messages("gmp.scenarios.payable_age"),
+                        "4"  ->  "spa" -> Messages("gmp.scenarios.spa"),
+                        "3"  -> "survivor" -> Messages("gmp.scenarios.survivor"),
+                        "0"  -> "leaving" -> Messages("gmp.scenarios.leaving"),
+                        "1"  -> "specificdate" -> Messages("gmp.scenarios.specific_date")
                     ),
                     '_fieldsetAttributesLegend -> "calcType",
-                    '_legend -> Messages.get("gmp.scenarios.title"),
+                    '_legend -> Messages("gmp.scenarios.title"),
                     '_legendClass -> "visuallyhidden",
                     '_labelAfter -> true,
                     '_labelClass -> "block-label",
@@ -57,14 +57,14 @@
               </div>
 
               <div>
-                  <button class="button" type="submit" id="submit-button">@Messages.get("gmp.continue")</button>
+                  <button class="button" type="submit" id="submit-button">@Messages("gmp.continue")</button>
               </div>
 
           }
       </div><br>
 
       <div class="grid-2-3 custom-back-link">
-          <a href="@routes.MemberDetailsController.get" id="back-link">@Messages.get("gmp.back.link")</a>
+          <a href="@routes.MemberDetailsController.get" id="back-link">@Messages("gmp.back.link")</a>
       </div>
 
   </div>

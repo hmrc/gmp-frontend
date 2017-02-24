@@ -19,20 +19,20 @@
 @import uk.gov.hmrc.play.views.html._
 @import uk.gov.hmrc.play.views.html.helpers._
 @import views.html.helpers._
-@import play.i18n._
 
-@gmp_main(title = Messages.get("gmp.thank_you.title"),supportLinkEnabled = false, dashboardLinkEnabled = false) {
+
+@gmp_main(title = Messages("gmp.thank_you.title"),supportLinkEnabled = false, dashboardLinkEnabled = false) {
 
   <div class="grid" id="thank-you-page">
       <div class="grid-2-3">
-          <h1>@Messages.get("gmp.thank_you.header")</h1>
+          <h1>@Messages("gmp.thank_you.header")</h1>
 
-          <h2>@Messages.get("gmp.thank_you.what_now")</h2>
+          <h2>@Messages("gmp.thank_you.what_now")</h2>
 
           <form action="@routes.DashboardController.get">
-              <button class="button" type="submit" id="request-another">@Messages.get("gmp.button.check_another")</button>
+              <button class="button" type="submit" id="request-another">@Messages("gmp.button.check_another")</button>
           </form>
-          <p>@Messages.get("gmp.or.go.to") <a href="https://www.gov.uk/">@Messages.get("gmp.gov.uk.homepage")</a>.</p>
+          <p>@Messages("gmp.or.go.to") <a href="https://www.gov.uk/">@Messages("gmp.gov.uk.homepage")</a>.</p>
       </div>
   </div>
 }

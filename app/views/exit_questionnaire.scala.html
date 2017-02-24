@@ -19,20 +19,19 @@
 @import uk.gov.hmrc.play.views.html._
 @import uk.gov.hmrc.play.views.html.helpers._
 @import views.html.helpers._
-@import play.i18n._
 
-@gmp_main(title = Messages.get("gmp.questionnaire.title"),supportLinkEnabled = false) {
+@gmp_main(title = Messages("gmp.questionnaire.title"),supportLinkEnabled = false) {
 
   <div class="grid">
       <div class="grid-2-3">
 
-          <h1>@Messages.get("gmp.questionnaire.header")</h1>
+          <h1>@Messages("gmp.questionnaire.header")</h1>
 
           @form(action = routes.ExitQuestionnaireController.post) {
 
             <div class="grid">
               <div class="grid-2-3">
-                <h2>@Messages.get("gmp.questionnaire.how_easy")</h2><br>
+                <h2>@Messages("gmp.questionnaire.how_easy")</h2><br>
               </div>
             </div>
             <br>
@@ -41,13 +40,13 @@
               @gmpRadioGroup(
                 exitQuestionnaireForm("serviceDifficulty"),
                 Seq(
-                  ExitQuestionnaire.VERY_EASY  -> ExitQuestionnaire.VERY_EASY -> Messages.get("gmp.questionnaire.very_easy"),
-                  ExitQuestionnaire.EASY  ->   ExitQuestionnaire.EASY     -> Messages.get("gmp.questionnaire.easy"),
-                  ExitQuestionnaire.NEITHER_ED  ->   ExitQuestionnaire.NEITHER_ED     -> Messages.get("gmp.questionnaire.neither_ed"),
-                  ExitQuestionnaire.DIFFICULT  -> ExitQuestionnaire.DIFFICULT    -> Messages.get("gmp.questionnaire.difficult"),
-                  ExitQuestionnaire.VERY_DIFFICULT -> ExitQuestionnaire.VERY_DIFFICULT -> Messages.get("gmp.questionnaire.very_difficult")
+                  ExitQuestionnaire.VERY_EASY  -> ExitQuestionnaire.VERY_EASY -> Messages("gmp.questionnaire.very_easy"),
+                  ExitQuestionnaire.EASY  ->   ExitQuestionnaire.EASY     -> Messages("gmp.questionnaire.easy"),
+                  ExitQuestionnaire.NEITHER_ED  ->   ExitQuestionnaire.NEITHER_ED     -> Messages("gmp.questionnaire.neither_ed"),
+                  ExitQuestionnaire.DIFFICULT  -> ExitQuestionnaire.DIFFICULT    -> Messages("gmp.questionnaire.difficult"),
+                  ExitQuestionnaire.VERY_DIFFICULT -> ExitQuestionnaire.VERY_DIFFICULT -> Messages("gmp.questionnaire.very_difficult")
                 ),
-                '_legend -> Messages.get("gmp.questionnaire.how_easy"),
+                '_legend -> Messages("gmp.questionnaire.how_easy"),
                 '_legendClass -> "hidden",
                 '_labelAfter -> true,
                 '_labelClass -> "block-label",
@@ -58,7 +57,7 @@
 
               <div class="grid">
                 <div class="grid-2-3">
-                  <h2>@Messages.get("gmp.questionnaire.how_satisfied")</h2><br>
+                  <h2>@Messages("gmp.questionnaire.how_satisfied")</h2><br>
                 </div>
               </div>
               <br>
@@ -66,13 +65,13 @@
               @gmpRadioGroup(
                 exitQuestionnaireForm("serviceFeel"),
                 Seq(
-                  ExitQuestionnaire.VERY_SATISFIED  -> ExitQuestionnaire.VERY_SATISFIED -> Messages.get("gmp.questionnaire.very_satisfied"),
-                  ExitQuestionnaire.SATISFIED  ->   ExitQuestionnaire.SATISFIED     -> Messages.get("gmp.questionnaire.satisfied"),
-                  ExitQuestionnaire.NEITHER_SU  ->   ExitQuestionnaire.NEITHER_SU     -> Messages.get("gmp.questionnaire.neither_su"),
-                  ExitQuestionnaire.UNSATISFIED  -> ExitQuestionnaire.UNSATISFIED    -> Messages.get("gmp.questionnaire.unsatisfied"),
-                  ExitQuestionnaire.VERY_UNSATISFIED -> ExitQuestionnaire.VERY_UNSATISFIED -> Messages.get("gmp.questionnaire.very_unsatisfied")
+                  ExitQuestionnaire.VERY_SATISFIED  -> ExitQuestionnaire.VERY_SATISFIED -> Messages("gmp.questionnaire.very_satisfied"),
+                  ExitQuestionnaire.SATISFIED  ->   ExitQuestionnaire.SATISFIED     -> Messages("gmp.questionnaire.satisfied"),
+                  ExitQuestionnaire.NEITHER_SU  ->   ExitQuestionnaire.NEITHER_SU     -> Messages("gmp.questionnaire.neither_su"),
+                  ExitQuestionnaire.UNSATISFIED  -> ExitQuestionnaire.UNSATISFIED    -> Messages("gmp.questionnaire.unsatisfied"),
+                  ExitQuestionnaire.VERY_UNSATISFIED -> ExitQuestionnaire.VERY_UNSATISFIED -> Messages("gmp.questionnaire.very_unsatisfied")
                 ),
-                '_legend -> Messages.get("gmp.questionnaire.how_satisfied"),
+                '_legend -> Messages("gmp.questionnaire.how_satisfied"),
                 '_legendClass -> "hidden",
                 '_labelAfter -> true,
                 '_labelClass -> "block-label",
@@ -84,19 +83,19 @@
                   args =
                   'rows -> 10,
                   'cols -> 30,
-                  '_label -> Messages.get("gmp.questionnaire.comments"),
+                  '_label -> Messages("gmp.questionnaire.comments"),
                   '_labelClass -> "heading-medium",
                   'id -> "comments",
                   'name -> "comments"
               )
             </div>
 
-            <h2>@Messages.get("gmp.questionnaire.leave_details")</h2>
+            <h2>@Messages("gmp.questionnaire.leave_details")</h2>
             <br>
 
             <div class="form-group" id="name-form-group">
               @gmpInput(exitQuestionnaireForm("fullName"),
-              '_label -> Html(Messages.get("gmp.questionnaire.full_name")),
+              '_label -> Html(Messages("gmp.questionnaire.full_name")),
               '_labelClass -> "form-label-bold",
               '_id -> "fullName",
               '_maxLength -> 99)
@@ -104,25 +103,25 @@
 
             <div class="form-group noMarginBottom" id="email-form-group">
               @gmpInput(exitQuestionnaireForm("email"),
-              '_label -> Html(Messages.get("gmp.email.address")),
+              '_label -> Html(Messages("gmp.email.address")),
               '_labelClass -> "form-label-bold",
               '_id -> "email",
               '_maxLength -> 99)
             </div>
 
-            <span class="form-label-bold">@Messages.get("gmp.questionnaire.or")</span>
+            <span class="form-label-bold">@Messages("gmp.questionnaire.or")</span>
             <br/>
 
             <div class="form-group" id="phone-form-group">
               @gmpInput(exitQuestionnaireForm("phoneNumber"),
-              '_label -> Html(Messages.get("gmp.questionnaire.phone_number")),
+              '_label -> Html(Messages("gmp.questionnaire.phone_number")),
               '_labelClass -> "form-label-bold",
               '_id -> "phoneNumber",
               '_maxLength -> 20)
             </div>
 
             <div>
-                <button class="button" type="submit" id="submit-button">@Messages.get("gmp.continue")</button>
+                <button class="button" type="submit" id="submit-button">@Messages("gmp.continue")</button>
             </div>
           }
 
