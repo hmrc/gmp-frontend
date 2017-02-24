@@ -1,10 +1,7 @@
 import sbt._
 
 object FrontendBuild extends Build with MicroService {
-  import scala.util.Properties.envOrElse
-
   val appName = "gmp-frontend"
-  val appVersion = envOrElse("GMP_FRONTEND_VERSION", "999-SNAPSHOT")
 
   override lazy val appDependencies: Seq[ModuleID] = AppDependencies()
 }
@@ -48,7 +45,7 @@ private object AppDependencies {
 
   trait TestDependencies {
     lazy val scope: String = "test"
-    lazy val test : Seq[ModuleID] = ???
+    lazy val test : Seq[ModuleID] = Seq.empty
   }
 
   private val scalatestPlusPlayVersion = "1.5.1"
