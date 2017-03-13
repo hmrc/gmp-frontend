@@ -10,18 +10,18 @@ private object AppDependencies {
   import play.core.PlayVersion
   import play.sbt.PlayImport._
 
-  private val playHealthVersion = "2.0.0"
-  private val frontendBootstrapVersion = "7.11.0"
-  private val govukTemplateVersion = "5.0.0"
-  private val playUiVersion = "5.4.0"
-  private val playAuthFrontendVersion = "6.2.0"
-  private val playConfigVersion = "3.1.0"
+  private val playHealthVersion = "2.1.0"
+  private val frontendBootstrapVersion = "7.13.0"
+  private val govukTemplateVersion = "5.1.0"
+  private val playUiVersion = "7.0.0"
+  private val playAuthFrontendVersion = "6.3.0"
+  private val playConfigVersion = "4.3.0"
   private val playGraphiteVersion = "3.1.0"
-  private val domainVersion = "4.0.0"
-  private val httpCachingVersion = "6.1.0"
+  private val domainVersion = "4.1.0"
+  private val httpCachingVersion = "6.2.0"
   private val logbackJsonLoggerVersion = "3.1.0"
   private val taxyearVersion = "0.3.0"
-  private val playPartialsVersion = "5.2.0"
+  private val playPartialsVersion = "5.3.0"
   private val emailAddressVersion = "2.0.0"
   private val bulkEntityStreamingVersion = "1.0.0"
 
