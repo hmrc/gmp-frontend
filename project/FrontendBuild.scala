@@ -11,7 +11,7 @@ private object AppDependencies {
   import play.sbt.PlayImport._
 
   private val playHealthVersion = "2.1.0"
-  private val frontendBootstrapVersion = "7.13.0"
+  private val frontendBootstrapVersion = "7.17.0"
   private val govukTemplateVersion = "5.1.0"
   private val playUiVersion = "7.0.0"
   private val playAuthFrontendVersion = "6.3.0"
