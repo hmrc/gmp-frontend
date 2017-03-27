@@ -61,7 +61,7 @@
 
     <logger name="play.core.netty" level="WARN"/>
 
-    <root level="DEBUG">
+    <root level="WARN">
         <appender-ref ref="FILE"/>
         <appender-ref ref="STDOUT"/>
     </root>
