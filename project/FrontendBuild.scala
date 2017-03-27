@@ -11,12 +11,12 @@ private object AppDependencies {
   import play.sbt.PlayImport._
 
   private val playHealthVersion = "2.1.0"
-  private val frontendBootstrapVersion = "7.17.0"
+  private val frontendBootstrapVersion = "7.22.0"
   private val govukTemplateVersion = "5.1.0"
   private val playUiVersion = "7.0.0"
   private val playAuthFrontendVersion = "6.3.0"
   private val playConfigVersion = "4.3.0"
-  private val playGraphiteVersion = "3.1.0"
+  private val playGraphiteVersion = "3.2.0"
   private val domainVersion = "4.1.0"
   private val httpCachingVersion = "6.2.0"
   private val logbackJsonLoggerVersion = "3.1.0"
@@ -24,6 +24,13 @@ private object AppDependencies {
   private val playPartialsVersion = "5.3.0"
   private val emailAddressVersion = "2.0.0"
   private val bulkEntityStreamingVersion = "1.0.0"
+
+  private val scalatestPlusPlayVersion = "1.5.1"
+  private val scalatestVersion = "2.2.6"
+  private val pegdownVersion = "1.6.0"
+  private val jsoupVersion = "1.9.2"
+  private val mockitoCoreVersion = "1.9.5"
+  private val hmrcTestVersion = "2.3.0"
 
   val compile = Seq(
     ws,
@@ -48,12 +55,6 @@ private object AppDependencies {
     lazy val test : Seq[ModuleID] = Seq.empty
   }
 
-  private val scalatestPlusPlayVersion = "1.5.1"
-  private val scalatestVersion = "2.2.6"
-  private val pegdownVersion = "1.6.0"
-  private val jsoupVersion = "1.9.2"
-  private val mockitoCoreVersion = "1.9.5"
-
   object Test {
     def apply() = new TestDependencies {
       override lazy val test = Seq(
@@ -66,8 +67,6 @@ private object AppDependencies {
       )
     }.test
   }
-
-  private val hmrcTestVersion = "2.2.0"
 
   object IntegrationTest {
     def apply() = new TestDependencies {
