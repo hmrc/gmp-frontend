@@ -91,7 +91,6 @@ class MoreBulkResultsControllerSpec extends PlaySpec with OneServerPerSuite with
     }
   }
 
-
   def getMoreBulkResults(request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest())(handler: Future[Result] => Any): Unit = {
     handler(TestMoreBulkResultsController.retrieveMoreBulkResults.apply(request))
   }

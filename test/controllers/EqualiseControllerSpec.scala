@@ -78,7 +78,6 @@ class EqualiseControllerSpec extends PlaySpec with OneServerPerSuite with Mockit
       }
     }
 
-
   }
 
   "BACK" must {

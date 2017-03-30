@@ -60,10 +60,10 @@ class BulkReferenceControllerSpec extends PlaySpec with OneServerPerSuite with M
       status(result.get) must not equal (NOT_FOUND)
     }
 
-/*    "respond to POST /guaranteed-minimum-pension/getting-results" in {
+    "respond to POST /guaranteed-minimum-pension/getting-results" in {
       val result = route(FakeRequest(POST, "/guaranteed-minimum-pension/getting-results"))
       status(result.get) must not equal (NOT_FOUND)
-    }*/
+    }
 
     "bulk reference GET " must {
 

@@ -55,7 +55,6 @@ class RevaluationRateControllerSpec extends PlaySpec with OneServerPerSuite with
     }
   }
 
-
   "Revaluation Rate controller GET " must {
 
     "be authorised" in {
