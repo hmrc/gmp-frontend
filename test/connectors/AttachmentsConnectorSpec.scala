@@ -36,7 +36,6 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class AttachmentsConnectorSpec extends PlaySpec with OneAppPerSuite with MockitoSugar with BeforeAndAfterEach {
-  //implicit override lazy val app: Application = fakeApplication
 
   class MockHttp extends WSGet with WSPost {
 
@@ -54,7 +53,6 @@ class AttachmentsConnectorSpec extends PlaySpec with OneAppPerSuite with Mockito
     reset(mockHttp)
 
   }
-
 
   "AttachmentsConnector" must {
 
@@ -75,7 +73,6 @@ class AttachmentsConnectorSpec extends PlaySpec with OneAppPerSuite with Mockito
     }
 
   }
-
 
   "UploadConfig" must {
     implicit val hc = HeaderCarrier(requestId = Some(RequestId(UUID.randomUUID().toString)))
@@ -110,7 +107,6 @@ class AttachmentsConnectorSpec extends PlaySpec with OneAppPerSuite with Mockito
       config must include("accepts=.csv")
     }
 
-
 //    "returns the correct url with parameters" in {
 //      config must be(
 //        "http://localhost:8895/attachments-internal/uploader?" +
@@ -122,9 +118,6 @@ class AttachmentsConnectorSpec extends PlaySpec with OneAppPerSuite with Mockito
 //      )
 //    }
 
-
-    //Play.stop()
   }
-
 
 }

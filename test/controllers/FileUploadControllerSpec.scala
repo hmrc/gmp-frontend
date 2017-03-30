@@ -70,7 +70,6 @@ class FileUploadControllerSpec extends PlaySpec with OneServerPerSuite with Mock
 
   }
 
-
   "File upload controller GET " must {
 
     "be authorised" in {

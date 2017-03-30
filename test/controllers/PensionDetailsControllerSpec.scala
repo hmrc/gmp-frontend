@@ -16,7 +16,6 @@
 
 package controllers
 
-
 import java.util.UUID
 
 import connectors.GmpConnector
@@ -68,12 +67,11 @@ class PensionDetailsControllerSpec extends PlaySpec with OneServerPerSuite with 
       status(result.get) must not equal (NOT_FOUND)
     }
 
-/*    "respond to POST /guaranteed-minimum-pension/pension-details" in {
+    "respond to POST /guaranteed-minimum-pension/pension-details" in {
       val result = route(FakeRequest(POST, "/guaranteed-minimum-pension/pension-details"))
       status(result.get) must not equal (NOT_FOUND)
-    }*/
+    }
   }
-
 
   "pension details GET " must {
 

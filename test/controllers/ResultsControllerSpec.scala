@@ -93,7 +93,6 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
     new LocalDate(2015, 11, 10), "1.11", "2.22", 1, 0, Some(0))), 0, None, None, None, false, 1)
 
 
-
   val revaluationNotRevaluedSingleResponse = CalculationResponse("John Johnson", nino, "S1234567T", Some("1"),
     revaluationDate = Some(new LocalDate(2015, 7, 7)), List(CalculationPeriod(Some(new LocalDate(2015, 11, 10)),
     new LocalDate(2015, 11, 10), "1.11", "2.22", 1, 0, Some(1))), 0, None, None, None, false, 1)
