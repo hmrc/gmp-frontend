@@ -31,7 +31,7 @@ class ExternalUrlsSpec extends PlaySpec with OneServerPerSuite {
     }
 
     "have signOutCallback " in {
-      ExternalUrls.signOutCallback must be("http://localhost:9941/guaranteed-minimum-pension")
+      ExternalUrls.signOutCallback must be("http://localhost:9514/feedback-survey/?origin=GMP")
     }
 
     "have loginPath " in {
@@ -47,7 +47,7 @@ class ExternalUrlsSpec extends PlaySpec with OneServerPerSuite {
     }
 
     "have signout" in {
-      ExternalUrls.signOut must be(s"""http://localhost:9025/gg/sign-out?continue=http://localhost:9941/guaranteed-minimum-pension""")
+      ExternalUrls.signOut must be(s"""http://localhost:9025/gg/sign-out?continue=http://localhost:9514/feedback-survey/?origin=GMP""")
     }
   }
   
