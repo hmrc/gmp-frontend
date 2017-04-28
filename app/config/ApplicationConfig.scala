@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
- 
-
 package config
 
 import com.typesafe.config.ConfigFactory
@@ -27,9 +25,6 @@ trait ApplicationConfig {
   val assetsPrefix: String
   val analyticsToken: Option[String]
   val analyticsHost: String
-  val contactFrontendPartialBaseUrl: String
-  val reportAProblemPartialUrl: String
-  val reportAProblemNonJSUrl: String
   val frontendHost: String
 
 }
@@ -40,18 +35,11 @@ object ApplicationConfig extends ApplicationConfig with ServicesConfig {
 
   private def loadConfig(key: String) = configuration.getString(key).getOrElse(throw new Exception(s"Missing key: $key"))
 
-  private val contactHost = configuration.getString("microservice.contact-frontend.host").getOrElse("")
-  private val contactFrontendService = baseUrl("contact-frontend")
-
   override lazy val assetsPrefix: String = loadConfig("assets.url") + loadConfig("assets.version")
   override lazy val analyticsToken: Option[String] = configuration.getString("google-analytics.token")
   override lazy val analyticsHost: String = configuration.getString("google-analytics.host").getOrElse("auto")
 
   val globalErrors = ConfigFactory.load("global-errors.properties")
   val contactFormServiceIdentifier = "GMP"
-
-  override lazy val contactFrontendPartialBaseUrl = s"$contactFrontendService"
-  override lazy val reportAProblemPartialUrl = s"$contactHost/contact/problem_reports_ajax?service=$contactFormServiceIdentifier"
-  override lazy val reportAProblemNonJSUrl = s"$contactHost/contact/problem_reports_nonjs?service=$contactFormServiceIdentifier"
 
 }
