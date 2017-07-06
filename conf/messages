@@ -114,6 +114,7 @@ gmp.print = Print this page
 gmp.link.contributions-earnings = View contributions and earnings
 gmp.bulk_reference.button = Confirm and submit
 gmp.bulk_request_received.button = Upload another file
+gmp.download.link = Download
 
 ############################################################################
 # Fields
@@ -136,7 +137,7 @@ gmp.continue = Continue
 gmp.date.example = Use numbers and enter the year in full.
 gmp.year = Year
 gmp.inflation_proofed = Enter the date.
-
+gmp.caption = Recent calculations
 gmp.revaluation.rate = Revaluation rate
 gmp.revaluation_rate.rate_held_by_hmrc = The rate held by HMRC
 gmp.revaluation_rate.fixed = Fixed rate
