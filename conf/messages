@@ -1,5 +1,5 @@
 ############################################################################
-# page titles
+# Page titles
 ############################################################################
 gmp.bulk_failure_generic.title = GMP bulk file problem - GOV.UK
 gmp.bulk_failure_antivirus.title = GMP bulk file virus - GOV.UK
@@ -32,14 +32,12 @@ gmp.fileupload.title = Upload GMP file - GOV.UK
 gmp.session_missing.title = Incomplete GMP checker information - GOV.UK
 
 ############################################################################
-# headers
+# Headers
 ############################################################################
 gmp.results.table_caption = GMP calculation results per period
 gmp.bulk.results_not_found = Calculation no longer available
 gmp.signout = Sign out
 gmp.title = Guaranteed Minimum Pension (GMP) checker
-gmp.start_date = Start date
-gmp.leaving_date = Leaving date
 gmp.entered_details.title = Entered details
 gmp.entered_details.title.survivor = Deceased member''s entered details
 gmp.contributions_earnings.header = Contributions and earnings
@@ -48,13 +46,10 @@ gmp.pension_details.header = Pension scheme details
 gmp.revaluation.question = At which date would you like the calculation to apply?
 gmp.revaluation.info = This could be a transfer date, date of divorce, or any other date relevant to the member''s circumstances.
 gmp.inflation_proof.question = Would you like a calculation for a date after the date of death?
-gmp.inflation_proof.info = The GMP value will increase based on the rate of inflation.
-gmp.leaving.question = Do you have a date of leaving?
 gmp.leaving.dol.question = Did the member leave the scheme before 6 April 2016?
 gmp.other.dol.left.question = Has the member left the scheme?
 gmp.survivor.dol.question = Had the member already left the scheme at date of death?
 gmp.fileupload.header = Upload your file
-
 gmp.bulk.results.banner = Calculation ready
 gmp.bulk_request_received.banner = Your request has been received
 gmp.revaluation_rate.header = Which revaluation rate would you like to use?
@@ -67,28 +62,24 @@ gmp.contracted_out_period_error = Contracted out period {0}:
 gmp.tax_year_table_column_header = Tax year
 gmp.contracted_out_period_table_column_header = Contributions and earnings
 gmp.equalise_header = Do you also want an opposite gender calculation?
-
 gmp.results.survivor.header = Surviving partner''s GMP entitlement at date of death ({0})
 gmp.results.survivor.revaluation.header = Surviving partner''s GMP entitlement at {0}
-
 gmp.bulk_reference.header = Name your calculation
-
 gmp.bulk_request_received.header = What next
-
 gmp.no_inflation.subheader = This GMP has not been inflation proofed as you entered a date in the same tax year as the date of death.
 
-gmp.bulk.subheaders.allcalculations=All results
-gmp.bulk.subheaders.successfulcalculations=Total GMP calculated
-gmp.bulk.subheaders.failedcalculations=No total GMP calculated
-gmp.bulk.subheaders.contsandearnings=Contributions and earnings
+gmp.bulk.subheaders.allcalculations = All results
+gmp.bulk.subheaders.successfulcalculations = Total GMP calculated
+gmp.bulk.subheaders.failedcalculations = No total GMP calculated
+gmp.bulk.subheaders.contsandearnings = Contributions and earnings
 
-gmp.bulk.explanations.all.1=GMP figures are weekly and in pounds.
-gmp.bulk.explanations.all.2=Results of all calculation requests.
-gmp.bulk.explanations.successful.1=Results where a total GMP was successfully calculated.
-gmp.bulk.explanations.successful.2=Includes GMP amounts per period if there is more than one contracted-out period.
-gmp.bulk.explanations.failed.1=Requests where we can''t calculate a total GMP. GMPs per period are shown if they have been successfully calculated.
-gmp.bulk.explanations.failed.2=Where there is no GMP, see ''Reason for error'' and '''What to do''.
-gmp.bulk.explanations.failed.3=You can then submit the calculation again request (either on its own or as part of another bulk file) or contact HM Revenue and Customs where advised.
+gmp.bulk.explanations.all.1 = GMP figures are weekly and in pounds.
+gmp.bulk.explanations.all.2 = Results of all calculation requests.
+gmp.bulk.explanations.successful.1 = Results where a total GMP was successfully calculated.
+gmp.bulk.explanations.successful.2 = Includes GMP amounts per period if there is more than one contracted-out period.
+gmp.bulk.explanations.failed.1 = Requests where we can''t calculate a total GMP. GMPs per period are shown if they have been successfully calculated.
+gmp.bulk.explanations.failed.2 = Where there is no GMP, see ''Reason for error'' and '''What to do''.
+gmp.bulk.explanations.failed.3 = You can then submit the calculation again request (either on its own or as part of another bulk file) or contact HM Revenue and Customs where advised.
 gmp.bulk.explanations.contsandearnings = A separate contributions and earnings file for all queries.
 gmp.bulk.problem.header = There is a problem
 gmp.bulk.file_too_large.header = The file is too large
@@ -105,7 +96,6 @@ gmp.th.time_left = Time left
 gmp.days_left = {0} Day{1}
 gmp.more_bulk_results.header = Recent bulk calculations
 
-gmp.weekly_total = Weekly total
 gmp.date_from = From:
 gmp.date_to = To:
 gmp.multi.dual_calc.header = Post-1990 GMP value
@@ -124,12 +114,11 @@ gmp.print = Print this page
 gmp.link.contributions-earnings = View contributions and earnings
 gmp.bulk_reference.button = Confirm and submit
 gmp.bulk_request_received.button = Upload another file
+gmp.download.link = Download
 
 ############################################################################
-# fields
+# Fields
 ############################################################################
-gmp.date.start = Start date
-gmp.date.dol = Date of leaving
 gmp.day = Day
 gmp.firstname = First name or initial
 gmp.lastname = Last name
@@ -144,26 +133,20 @@ gmp.scon.noabrv = Scheme Contracted Out Number
 gmp.scon.hint = For example, S2730011Z
 gmp.scon.message = If you have a SCON that is not recognised by this service
 gmp.contact.hmrc = contact HMRC
-gmp.calctype = Calculation type
-gmp.submit = Submit
 gmp.continue = Continue
 gmp.date.example = Use numbers and enter the year in full.
 gmp.year = Year
-gmp.revaluation_date = Enter the date for revaluation
 gmp.inflation_proofed = Enter the date.
-gmp.revaluation.date = Revaluation date
+gmp.caption = Recent calculations
 gmp.revaluation.rate = Revaluation rate
 gmp.revaluation_rate.rate_held_by_hmrc = The rate held by HMRC
 gmp.revaluation_rate.fixed = Fixed rate
 gmp.revaluation_rate.s148 = S148 or full rate revaluation
 gmp.revaluation_rate.limited = Limited rate
-gmp.revaluation_rate_short.fixed = Fixed
-gmp.revaluation_rate_short.s148 = S148 or full rate revaluation
-gmp.revaluation_rate_short.limited = Limited
+
 gmp.total = Total GMP
 gmp.frequency.weekly = a week
-gmp.post88 = Post-1988 GMP:
-gmp.post90 = Post-1990 GMP
+
 gmp.questionnaire.how_easy = How easy was it to use this service?
 gmp.questionnaire.how_satisfied = How satisfied were you with this service?
 gmp.questionnaire.very_satisfied = Very satisfied
@@ -181,11 +164,11 @@ gmp.questionnaire.leave_details = Leave us your details if you would like to be 
 gmp.questionnaire.full_name = Full name
 gmp.questionnaire.phone_number = Phone number
 gmp.questionnaire.or = or
+
 gmp.what_did_you_think = What did you think of this service?
 gmp.what_did_you_think.seconds = (takes 30 seconds)
 gmp.or.go.to = or go to the
 gmp.gov.uk.homepage = GOV.UK homepage
-gmp.post_1990 = Post 1990
 gmp.true = True
 gmp.opposite = Opposite
 gmp.true_calculation = True calculation:
@@ -195,10 +178,8 @@ gmp.dol.threequestions.before2016 = Yes, before 6 April 2016
 gmp.dol.threequestions.after2016 = Yes, on or after 6 April 2016
 gmp.dol.threequestions.no = No, member is still in the scheme
 gmp.dol.threequestions.no.survivor = No, member was still in the scheme
-gmp.period_table_header = GMP period
-gmp.conts_and_earnings_header = List of contributions and earnings
+
 gmp.date.header_text = Enter a leaving date.
-gmp.inflationproof.date_header_text = This will be inflation proofed.
 gmp.inflationproof.subtext = The GMP will be inflation proofed and its value will increase based on the rate of inflation.
 gmp.total.entitlement = Total GMP entitlement
 gmp.post88.entitlement = Post-1988 GMP entitlement
@@ -236,13 +217,12 @@ gmp.bulk.failure.too_large = You should include the details of no more than 25,0
 gmp.back_to_dashboard = Back to the GMP checker
 
 ############################################################################
-# errors
+# Errors
 ############################################################################
 gmp.error.revaluation_before_leaving = Enter a date on or after {0}
 gmp.error.revaluation_pre2016_not_left = Enter a date on or after 6 April 2016
 gmp.error.email.invalid = Enter a valid email address
 gmp.error.date.invalid = Enter a valid date
-gmp.error.date.thistaxyear = Enter a date in this tax year or the next
 gmp.error.day.invalid = Enter a day between 1 and 31
 gmp.error.length = {0} is too long (>{1})
 gmp.error.mandatory = Enter a {0}
@@ -262,12 +242,10 @@ gmp.error.surname.invalid = Enter a last name with more than 1 character
 gmp.error.email.invalid = Enter a valid email address
 gmp.error.calctype.out_of_range = Enter a calculation type between 0 and 4. See instructions file
 gmp.error.calctype.invalid = Enter a valid calculation type
-gmp.error.calctype.oob = Calc type should be between 0 and 4
 gmp.error.revaluation_rate.invalid = Enter a revaluation rate between 0 and 3. See instructions file
 gmp.error.parsing.too_few_columns = The calculation request has fewer than ten fields
 gmp.error.parsing.too_many_columns = The calculation request has more than ten fields
 gmp.error.parsing.empty_file = No information submitted
-
 gmp.error.scon.bulk.invalid = Enter a SCON in the same format as the example given in the instructions file
 gmp.error.scon.invalid = Enter a Scheme Contracted Out Number in the same format as the example given
 gmp.error.scon.nps_invalid = This SCON does not exist. Check and try again.
@@ -275,6 +253,7 @@ gmp.error.nino.invalid = The National Insurance number you have entered is not v
 gmp.error.nino.temporary = This is a temporary National Insurance number. You need a permanent one to calculate a GMP.
 gmp.error.reval_date.mandatory = Enter a revaluation date
 gmp.error.leaving_date.mandatory = Enter a leaving date
+
 gmp.error.csv.date.invalid = Enter a date in the same format as the example given in the instructions file
 gmp.error.csv.termination.invalid = Enter a date If the member left on or after 6/4/2016 or ''SM'' if the member is still in the scheme
 gmp.error.csv.termination.oob = Enter a date that is on or after 6/4/2016
@@ -282,7 +261,6 @@ gmp.error.csv.dual_calc.invalid = Enter 'Yes' or 'Y' if you want an opposite gen
 gmp.error.csv.member_ref.character.invalid = The calculation name can only contain letters or numbers
 gmp.error.csv.member_ref.spaces.invalid = The calculation name can''t have spaces
 gmp.error.csv.member_ref.length.invalid = The calculation name must have fewer than 99 letters or numbers
-
 gmp.error.member_previous_names = If we still can''t calculate a GMP, ask if the member has any previous names that may not have been updated with HM Revenue and Customs.
 gmp.error.contact_us_shared_workspace = Contact us by creating a new entry in the single queries database in Shared Workspace''s eRoom.
 gmp.error.contact.scon = If you think the SCON is correct, <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pensions-helpline-contracted-out">call HMRC</a>.
@@ -312,7 +290,6 @@ gmp.error.solution.bullets = <ul class="list-number"><li>Check you have spelled 
 gmp.error.solution.63121 = If you still need a GMP, choose the survivor calculation option and <a href="/guaranteed-minimum-pension/calculation-reason">try again</a>.
 gmp.error.solution.63123 = <a href="/guaranteed-minimum-pension/revaluation">Change the revaluation date</a> to one after the member left the scheme and try the calculation again.
 gmp.error.solution.check_scon = Check you have entered the correct SCON and <a href="/guaranteed-minimum-pension/pension-details">try the calculation again</a>.
-gmp.error.solution.56010 = Ask the member to visit their local Department of Work and Pensions or HM Revenue and Customs office with a copy of their birth certificate so we can update their records.
 gmp.error.solution.56018 = Ask the member to contact us if they disagree with the information we hold.
 gmp.error.solution.56002 = Submit a new request once <a href="http://www.legislation.gov.uk/all?title=The%20Social%20Security%20Revaluation%20of%20Earnings%20Factors%20Order%20">the orders are published</a>.<br/>
 gmp.error.solution.try_again = Check your records and <a href="/guaranteed-minimum-pension/pension-details">try the calculation again</a>.
@@ -321,19 +298,12 @@ gmp.error.solution.63148 = Check the date up to which you would like the calcula
 gmp.error.solution.63150 = <a href="/guaranteed-minimum-pension/equalise">Go back</a> and select ''No'' when asked if you want an opposite gender calculation.
 gmp.error.solution.63167 = Choose another <a href="/guaranteed-minimum-pension/revaluation-rate">revaluation rate</a>.
 
-gmp.error.member_details = Change member details
-gmp.error.revaluation_date = Change revaluation date
-gmp.error.scheme_details = Change scheme details
-gmp.error.download_CA1604 = Download CA1604 (PDF)
 gmp.error.no_conts_and_earnings = No contributions and earnings available
-
 gmp.error.session_parts_missing = You haven''t given us enough information about the member and type of calculation you need or it has been too long since you did so.<br/><br/><a href="{0}"">Go back</a> and fill in the information required.
 
 ############################################################################
-# calculation results
+# Calculation results
 ############################################################################
-gmp.transfer.scheme.header = GMP at date of transfer
-gmp.divorce.scheme.header = GMP at date of divorce
 gmp.payable_age.header = GMP value at GMP payable age ({0})
 gmp.spa.header = GMP value at State Pension age ({0})
 gmp.leaving.scheme.header = GMP value at {0}
@@ -342,22 +312,14 @@ gmp.per.week = GMP a week
 gmp.post.1988 = Post 1988
 gmp.rate = Rate
 gmp.rate_hmrc_holds = Rate
+
 gmp.revaluation_rate.type_0 = HMRC held rate
 gmp.revaluation_rate.type_1 = S148
 gmp.revaluation_rate.type_2 = Fixed
 gmp.revaluation_rate.type_3 = Limited
-gmp.transfer.scheme.subheader = GMP revalued to the date of transfer
-gmp.divorce.scheme.subheader = GMP revalued to the date of divorce
-gmp.transfer.dol.subheader = This GMP is not revalued up to the date of transfer
-gmp.divorce.dol.subheader = This GMP is not revalued up to the date of divorce
-gmp.results.table.subheading = GMP value by contracted-out period 
+
 gmp.notrevalued.subheader = This GMP is not revalued.
 gmp.notrevalued.multi.subheader = This GMP is not revalued and is the sum of the amounts per period shown below.
-gmp.revalued.reason = GMP revalued to {0}
-gmp.nonrevalued.header = GMP at {0}
-gmp.nonrevalued.message = This GMP is not revalued up to the {0}
-gmp.revaluation.dateoftransfer = date of transfer
-gmp.revaluation.dateofdivorce = date of divorce
 gmp.results.survivior.disclaimer = This amount is subject to qualifying conditions of the <a href="https://www.gov.uk/browse/benefits/bereavement">type of bereavement benefit</a> the surviving partner is entitled to.
 gmp.reval_rate.subheader = Revaluation rate: {0}
 gmp.held_rate.subheader = Revaluation rate held for this SCON: {0}
@@ -373,15 +335,11 @@ gmp.scenarios.survivor = <span class="bold-small">Survivor</span>
 gmp.scenarios.leaving = <span class="bold-small">Leaving</span>
 gmp.scenarios.specific_date = <span class="bold-small">GMP value on a specific date:</span><br/>For example, transferring to another scheme, divorce or any other date of your choice
 
-gmp.revaluation_multiple_subheader = All periods have been revalued using
-gmp.to = to
-gmp.date_of_divorce = Date of divorce
-gmp.date_of_transfer = Date of transfer
-gmp.generic.yes=Yes
-gmp.generic.no=No
+gmp.generic.yes = Yes
+gmp.generic.no = No
 
 ############################################################################
-# Global Errors
+# Global errors
 ############################################################################
 gmp.cannot_calculate = We can''t calculate a Guaranteed Minimum Pension
 gmp.cannot_calculate_online = We can''t calculate a Guaranteed Minimum Pension online
@@ -395,22 +353,20 @@ gmp.part_problem = There is a problem with all or part of the calculation
 gmp.unavailable = No GMP available
 
 ############################################################################
-#Query Handling
+# Query handling
 ############################################################################
 gmp.queryhandling.resultsmessage = If you disagree with this calculation, contact HM Revenue and Customs by creating a new entry in the single queries database in Shared Workspace''s eRoom.
 gmp.queryhandling.contsandearnings = If you disagree with this information, contact HM Revenue and Customs by creating a new entry in the single queries database in Shared Workspace''s eRoom.
 gmp.queryhandling.changedetails.link = <a href='https://www.gov.uk/tell-hmrc-change-of-details' rel="external">How the member can tell HMRC their personal details have changed</a>
 
 ############################################################################
-#Service unavailable
+# Service unavailable
 ############################################################################
 gmp.serviceunavailable.title = Service unavailable
 gmp.serviceunavailable.message = Sorry, we are experiencing technical problems. <br><p><a href="/guaranteed-minimum-pension">Try again</a> later or go to <a href="https://www.gov.uk">GOV.UK homepage</a>.
 
 ############################################################################
-#CSV
+# CSV
 ############################################################################
 gmp.upload_csv_column_headers = SCON,NINO,First name or initial,Last name,"Member Reference number",Calculation type. Enter a figure,"Date of leaving(DD/MM/YYYY)",GMP relevant date,Revaluation rate. Enter a figure,Opposite gender calculation
-
-
 gmp.unauthorised.message = You are not authorised to view this page

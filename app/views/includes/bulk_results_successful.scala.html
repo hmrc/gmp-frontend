@@ -33,7 +33,7 @@
       <li id="exp-success-2" class="font-xsmall">@Messages("gmp.bulk.explanations.successful.2")</li>
     </ul>
   </div>
-  <div class="grid grid-1-4 text--right"><a id="download-success" data-journey-click="gmp-bulk:click:download_successful" href="@routes.BulkResultsController.getResultsAsCsv(uploadReference, successful)">Download</a></div>
+  <div class="grid grid-1-4 text--right"><a id="download-success" data-journey-click="gmp-bulk:click:download_successful" href="@routes.BulkResultsController.getResultsAsCsv(uploadReference, successful)">@Messages("gmp.download.link")</a></div>
 </div>
 
 <div class="grid grid-2-3 divider--top divider--bottom">
@@ -43,6 +43,6 @@
       <li id="exp-conts" class="font-xsmall">@Messages("gmp.bulk.explanations.contsandearnings")</li>
     </ul>
   </div>
-  <div class="grid grid-1-4 text--right"><a id="download-conts" data-journey-click="gmp-bulk:click:download_ce" href="@routes.BulkResultsController.getContributionsAndEarningsAsCsv(uploadReference)">Download</a></div>
+  <div class="grid grid-1-4 text--right"><a id="download-conts" data-journey-click="gmp-bulk:click:download_ce" href="@routes.BulkResultsController.getContributionsAndEarningsAsCsv(uploadReference)">@Messages("gmp.download.link")</a></div>
 </div>
 
