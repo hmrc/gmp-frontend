@@ -34,7 +34,7 @@ gmp.session_missing.title = Incomplete GMP checker information - GOV.UK
 ############################################################################
 # Headers
 ############################################################################
-gmp.results.table_caption = GMP calculation results per period
+gmp.results.table_caption = GMP calculation results each period
 gmp.bulk.results_not_found = Calculation no longer available
 gmp.signout = Sign out
 gmp.title = Guaranteed Minimum Pension (GMP) checker
@@ -77,7 +77,7 @@ gmp.bulk.explanations.all.1 = GMP figures are weekly and in pounds.
 gmp.bulk.explanations.all.2 = Results of all calculation requests.
 gmp.bulk.explanations.successful.1 = Results where a total GMP was successfully calculated.
 gmp.bulk.explanations.successful.2 = Includes GMP amounts each period if there’s more than one contracted-out period.
-gmp.bulk.explanations.failed.1 = Requests where we can’t calculate a total GMP. GMPs per period are shown if they have been successfully calculated.
+gmp.bulk.explanations.failed.1 = Requests where we can’t calculate a total GMP. GMPs per period are shown if they’ve been successfully calculated.
 gmp.bulk.explanations.failed.2 = Where there’s no GMP, see ‘Reason for error’ and ‘What to do’.
 gmp.bulk.explanations.failed.3 = You can then submit the calculation again request (either on its own or as part of another bulk file) or contact HM Revenue and Customs where advised.
 gmp.bulk.explanations.contsandearnings = A separate contributions and earnings file for all queries.
@@ -87,7 +87,7 @@ gmp.bulk.query_handling_message.header = Contact HMRC about a calculation
 gmp.bulk.query_handling_message.body = If the instruction is to contact HMRC because we can’t calculate a GMP, or if you disagree with the result of a successful calculation, you can do so in Shared Workspace’s eRoom.<br/><br/>To query several calculations at once, create a bulk query document from the template in the guidance and templates folder. Drag and drop the query document into a new entry in the bulk queries database. To query a small number of calculations, create a new entry in the single queries database for each calculation.
 
 gmp.bulk.results_not_found.1 = We keep results for 30 days only. If you still need these calculations, you will have to <a href="/guaranteed-minimum-pension/upload-csv">upload the file again</a>.
-gmp.bulk.results_not_found.2 = If you need access to a calculation result for longer than 30 days, you can save the file on your own computer or network after you have downloaded it.
+gmp.bulk.results_not_found.2 = If you need access to a calculation result for longer than 30 days, you can save the file on your own computer or network after you’ve downloaded it.
 gmp.bulk.results_not_found.3 = To check other calculation results, <a href="/guaranteed-minimum-pension/dashboard">go to the GMP dashboard</a>.
 
 gmp.th.reference = Reference
@@ -131,7 +131,7 @@ gmp.nino.hint = For example, QQ123456D
 gmp.scon = Scheme Contracted Out Number (SCON)
 gmp.scon.noabrv = Scheme Contracted Out Number
 gmp.scon.hint = For example, S2730011Z
-gmp.scon.message = If you have a SCON that isn’t recognised by this service
+gmp.scon.message = If you’ve a SCON that isn’t recognised by this service
 gmp.contact.hmrc = contact HMRC
 gmp.continue = Continue
 gmp.date.example = Use numbers and enter the year in full.
@@ -203,8 +203,8 @@ gmp.bulk_calculation_text = Upload the details of up to 25,000 members to get a 
 gmp.previous_calculations_text = Results for the last three bulk requests made in the previous 30 days.
 gmp.bulk.wrong_user.login_text = You need to login with the same Government Gateway account that was used to submit the file.
 gmp.bulk.wrong_user.signout_text = and login with right account.
-gmp.previous_calculations_text = You have 30 days from the date the file is returned to download the results.
-gmp.no_previous_calculations_text = You have 30 days to download the results.
+gmp.previous_calculations_text = You’ve 30 days from the date the file is returned to download the results.
+gmp.no_previous_calculations_text = You’ve 30 days to download the results.
 gmp.revaluation_rate = Revaluation rate
 gmp.bulk.results = Results
 gmp.bulk.results.csv = CSV
@@ -212,7 +212,7 @@ gmp.bulk.results.reference = Reference {0}
 gmp.bulk.failure.antivirus = A virus was detected in the uploaded file. Create the file again and <a href="/guaranteed-minimum-pension/new-bulk-calculation" id="bulk-back-link">upload it</a>.
 gmp.bulk.failure.missing = You didn’t select a file to upload. Please go <a href="/guaranteed-minimum-pension/new-bulk-calculation">back</a>, browse for a file and try again.
 gmp.bulk.failure.generic = Something went wrong with uploading your file. <br/>There’s probably a problem with the system so <a href="/guaranteed-minimum-pension/new-bulk-calculation">try again in a few moments</a>.
-gmp.bulk.failure.duplicate_upload = <span class="lede">We think you have already uploaded this file.</span><br/><br/>We recommend you wait for the results to be ready and don’t duplicate file uploads. If you want to process the same file again, perhaps to give it a different name, <a href="/guaranteed-minimum-pension/upload-csv">resubmit it</a>.
+gmp.bulk.failure.duplicate_upload = <span class="lede">We think you’ve already uploaded this file.</span><br/><br/>We recommend you wait for the results to be ready and don’t duplicate file uploads. If you want to process the same file again, perhaps to give it a different name, <a href="/guaranteed-minimum-pension/upload-csv">resubmit it</a>.
 gmp.bulk.failure.too_large = You should include the details of no more than 25,000 members in one file. Try splitting the calculation requests across two or more files and <a href="/guaranteed-minimum-pension/upload-csv">upload them</a> separately.
 gmp.back_to_dashboard = Back to the GMP checker
 
@@ -249,7 +249,7 @@ gmp.error.parsing.empty_file = No information submitted
 gmp.error.scon.bulk.invalid = Enter a SCON in the same format as the example given in the instructions file
 gmp.error.scon.invalid = Enter a Scheme Contracted Out Number in the same format as the example given
 gmp.error.scon.nps_invalid = This SCON doesn’t exist. Check and try again.
-gmp.error.nino.invalid = The National Insurance number you have entered isn’t valid. Check it and try again.
+gmp.error.nino.invalid = The National Insurance number you’ve entered isn’t valid. Check it and try again.
 gmp.error.nino.temporary = This is a temporary National Insurance number. You need a permanent one to calculate a GMP.
 gmp.error.reval_date.mandatory = Enter a revaluation date
 gmp.error.leaving_date.mandatory = Enter a leaving date
@@ -286,14 +286,14 @@ gmp.error.reason.leaving_date = This is because you entered a leaving date that�
 gmp.error.reason.56010 = This is because we need the member to confirm their date of birth.
 
 gmp.error.solution.contact_hmrc = If you think our records are incorrect, contact us by creating a new entry in the single queries database in Shared Workspace’s eRoom.
-gmp.error.solution.bullets = <ul class="list-number"><li>Check you have spelled the name correctly</li><li>Check you have entered the correct National Insurance number</li><li><a href="/guaranteed-minimum-pension/member-details">Try the calculation again</a></li></ul>
+gmp.error.solution.bullets = <ul class="list-number"><li>Check you’ve spelled the name correctly</li><li>Check you’ve entered the correct National Insurance number</li><li><a href="/guaranteed-minimum-pension/member-details">Try the calculation again</a></li></ul>
 gmp.error.solution.63121 = If you still need a GMP, choose the survivor calculation option and <a href="/guaranteed-minimum-pension/calculation-reason">try again</a>.
 gmp.error.solution.63123 = <a href="/guaranteed-minimum-pension/revaluation">Change the revaluation date</a> to one after the member left the scheme and try the calculation again.
-gmp.error.solution.check_scon = Check you have entered the correct SCON and <a href="/guaranteed-minimum-pension/pension-details">try the calculation again</a>.
+gmp.error.solution.check_scon = Check you’ve entered the correct SCON and <a href="/guaranteed-minimum-pension/pension-details">try the calculation again</a>.
 gmp.error.solution.56018 = Ask the member to contact us if they disagree with the information we hold.
 gmp.error.solution.56002 = Submit a new request once <a href="http://www.legislation.gov.uk/all?title=The%20Social%20Security%20Revaluation%20of%20Earnings%20Factors%20Order%20">the orders are published</a>.<br/>
 gmp.error.solution.try_again = Check your records and <a href="/guaranteed-minimum-pension/pension-details">try the calculation again</a>.
-gmp.error.solution.leaving_date = Check you have entered the correct leaving date and <a href="/guaranteed-minimum-pension/left-scheme">try again</a>.
+gmp.error.solution.leaving_date = Check you’ve entered the correct leaving date and <a href="/guaranteed-minimum-pension/left-scheme">try again</a>.
 gmp.error.solution.63148 = Check the date up to which you would like the calculation to apply and <a href="/guaranteed-minimum-pension/inflation-proof">try again</a>.
 gmp.error.solution.63150 = <a href="/guaranteed-minimum-pension/equalise">Go back</a> and select ‘No’ when asked if you want an opposite gender calculation.
 gmp.error.solution.63167 = Choose another <a href="/guaranteed-minimum-pension/revaluation-rate">revaluation rate</a>.
