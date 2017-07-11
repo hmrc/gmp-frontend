@@ -66,7 +66,7 @@ gmp.results.survivor.header = Surviving partner’s GMP entitlement at date of d
 gmp.results.survivor.revaluation.header = Surviving partner’s GMP entitlement at {0}
 gmp.bulk_reference.header = Name your calculation
 gmp.bulk_request_received.header = What next
-gmp.no_inflation.subheader = This GMP has not been inflation proofed as you entered a date in the same tax year as the date of death.
+gmp.no_inflation.subheader = This GMP hasn’t been inflation proofed as you entered a date in the same tax year as the date of death.
 
 gmp.bulk.subheaders.allcalculations = All results
 gmp.bulk.subheaders.successfulcalculations = Total GMP calculated
@@ -76,12 +76,12 @@ gmp.bulk.subheaders.contsandearnings = Contributions and earnings
 gmp.bulk.explanations.all.1 = GMP figures are weekly and in pounds.
 gmp.bulk.explanations.all.2 = Results of all calculation requests.
 gmp.bulk.explanations.successful.1 = Results where a total GMP was successfully calculated.
-gmp.bulk.explanations.successful.2 = Includes GMP amounts per period if there is more than one contracted-out period.
+gmp.bulk.explanations.successful.2 = Includes GMP amounts each period if there’s more than one contracted-out period.
 gmp.bulk.explanations.failed.1 = Requests where we can’t calculate a total GMP. GMPs per period are shown if they have been successfully calculated.
-gmp.bulk.explanations.failed.2 = Where there is no GMP, see ‘Reason for error’ and ‘What to do’.
+gmp.bulk.explanations.failed.2 = Where there’s no GMP, see ‘Reason for error’ and ‘What to do’.
 gmp.bulk.explanations.failed.3 = You can then submit the calculation again request (either on its own or as part of another bulk file) or contact HM Revenue and Customs where advised.
 gmp.bulk.explanations.contsandearnings = A separate contributions and earnings file for all queries.
-gmp.bulk.problem.header = There is a problem
+gmp.bulk.problem.header = There’s a problem
 gmp.bulk.file_too_large.header = The file is too large
 gmp.bulk.query_handling_message.header = Contact HMRC about a calculation
 gmp.bulk.query_handling_message.body = If the instruction is to contact HMRC because we can’t calculate a GMP, or if you disagree with the result of a successful calculation, you can do so in Shared Workspace’s eRoom.<br/><br/>To query several calculations at once, create a bulk query document from the template in the guidance and templates folder. Drag and drop the query document into a new entry in the bulk queries database. To query a small number of calculations, create a new entry in the single queries database for each calculation.
@@ -131,7 +131,7 @@ gmp.nino.hint = For example, QQ123456D
 gmp.scon = Scheme Contracted Out Number (SCON)
 gmp.scon.noabrv = Scheme Contracted Out Number
 gmp.scon.hint = For example, S2730011Z
-gmp.scon.message = If you have a SCON that is not recognised by this service
+gmp.scon.message = If you have a SCON that isn’t recognised by this service
 gmp.contact.hmrc = contact HMRC
 gmp.continue = Continue
 gmp.date.example = Use numbers and enter the year in full.
@@ -210,8 +210,8 @@ gmp.bulk.results = Results
 gmp.bulk.results.csv = CSV
 gmp.bulk.results.reference = Reference {0}
 gmp.bulk.failure.antivirus = A virus was detected in the uploaded file. Create the file again and <a href="/guaranteed-minimum-pension/new-bulk-calculation" id="bulk-back-link">upload it</a>.
-gmp.bulk.failure.missing = You did not select a file to upload. Please go <a href="/guaranteed-minimum-pension/new-bulk-calculation">back</a>, browse for a file and try again.
-gmp.bulk.failure.generic = Something went wrong with uploading your file. <br/>There is probably a problem with the system so <a href="/guaranteed-minimum-pension/new-bulk-calculation">try again in a few moments</a>.
+gmp.bulk.failure.missing = You didn’t select a file to upload. Please go <a href="/guaranteed-minimum-pension/new-bulk-calculation">back</a>, browse for a file and try again.
+gmp.bulk.failure.generic = Something went wrong with uploading your file. <br/>There’s probably a problem with the system so <a href="/guaranteed-minimum-pension/new-bulk-calculation">try again in a few moments</a>.
 gmp.bulk.failure.duplicate_upload = <span class="lede">We think you have already uploaded this file.</span><br/><br/>We recommend you wait for the results to be ready and don’t duplicate file uploads. If you want to process the same file again, perhaps to give it a different name, <a href="/guaranteed-minimum-pension/upload-csv">resubmit it</a>.
 gmp.bulk.failure.too_large = You should include the details of no more than 25,000 members in one file. Try splitting the calculation requests across two or more files and <a href="/guaranteed-minimum-pension/upload-csv">upload them</a> separately.
 gmp.back_to_dashboard = Back to the GMP checker
@@ -228,15 +228,15 @@ gmp.error.length = {0} is too long (>{1})
 gmp.error.mandatory = Enter a {0}
 gmp.error.mandatory.an = Enter an {0}
 gmp.error.firstnameorinitial = Enter a first name or initial
-gmp.error.firstname.toolong = Enter a first name that is fewer than 99 characters
-gmp.error.lastname.toolong = Enter a last name that is fewer than 99 characters
+gmp.error.firstname.toolong = Enter a first name that’s fewer than 99 characters
+gmp.error.lastname.toolong = Enter a last name that’s fewer than 99 characters
 gmp.error.month.invalid = Enter a month between 1 and 12
 gmp.error.reval_date.from = The calculation can only be revalued from 5 April 1978
 gmp.error.reval_date.to = The calculation can only be revalued up until 4 April 2046
 gmp.error.year.invalid.format = Enter the year in full (4 numbers)
 gmp.error.date.nonnumber = Enter a date using numbers only
 gmp.error.reason.mandatory = Select an option
-gmp.generic.errors_heading = There is a problem with the form
+gmp.generic.errors_heading = There’s a problem with the form
 gmp.error.name.invalid = Enter a {0} using only letters, hyphens, apostrophes and spaces
 gmp.error.surname.invalid = Enter a last name with more than 1 character
 gmp.error.email.invalid = Enter a valid email address
@@ -248,15 +248,15 @@ gmp.error.parsing.too_many_columns = The calculation request has more than ten f
 gmp.error.parsing.empty_file = No information submitted
 gmp.error.scon.bulk.invalid = Enter a SCON in the same format as the example given in the instructions file
 gmp.error.scon.invalid = Enter a Scheme Contracted Out Number in the same format as the example given
-gmp.error.scon.nps_invalid = This SCON does not exist. Check and try again.
-gmp.error.nino.invalid = The National Insurance number you have entered is not valid. Check it and try again.
+gmp.error.scon.nps_invalid = This SCON doesn’t exist. Check and try again.
+gmp.error.nino.invalid = The National Insurance number you have entered isn’t valid. Check it and try again.
 gmp.error.nino.temporary = This is a temporary National Insurance number. You need a permanent one to calculate a GMP.
 gmp.error.reval_date.mandatory = Enter a revaluation date
 gmp.error.leaving_date.mandatory = Enter a leaving date
 
 gmp.error.csv.date.invalid = Enter a date in the same format as the example given in the instructions file
 gmp.error.csv.termination.invalid = Enter a date If the member left on or after 6/4/2016 or ‘SM’ if the member is still in the scheme
-gmp.error.csv.termination.oob = Enter a date that is on or after 6/4/2016
+gmp.error.csv.termination.oob = Enter a date that’s on or after 6/4/2016
 gmp.error.csv.dual_calc.invalid = Enter ‘Yes’ or ‘Y’ if you want an opposite gender calculation or ‘No’ or ‘N’ if you don’t. This field can’t be left blank.
 gmp.error.csv.member_ref.character.invalid = The calculation name can only contain letters or numbers
 gmp.error.csv.member_ref.spaces.invalid = The calculation name can’t have spaces
@@ -267,22 +267,22 @@ gmp.error.contact.scon = If you think the SCON is correct, <a href="https://www.
 gmp.error.also.contact = If you still can’t get a calculation result, contact HM Revenue and Customs by creating a new entry in the single queries database in Shared Workspace’s eRoom.
 gmp.error.also.death = If you think the date of death held on the member’s record is wrong, contact HM Revenue and Customs by creating a new entry in the single queries database in Shared Workspace’s eRoom.
 
-gmp.error.reason.63119 = This is because the member’s name or National Insurance number are either incorrect or do not match our records.
+gmp.error.reason.63119 = This is because the member’s name or National Insurance number are either incorrect or don’t match our records.
 gmp.error.reason.63121 = This is because our records show this member is deceased.
 gmp.error.reason.63123 = This is because our records show the member was still in the scheme on the date you would like it to be revalued.
 gmp.error.reason.check_scon = This is because this member has no pre-1997 GMP liability under this SCON.
 gmp.error.reason.56067 = This is because we believe the member has no pre-1997 GMP liability under this Scheme Contracted Out Number.
-gmp.error.reason.56018 = This is because the member has a Married Woman’s Reduced Rate Election for the contracted-out period therefore there is no GMP liability.
-gmp.error.reason.56002 = This is because the S148/S37a orders are not yet available.
+gmp.error.reason.56018 = This is because the member has a Married Woman’s Reduced Rate Election for the contracted-out period therefore there’s no GMP liability.
+gmp.error.reason.56002 = This is because the S148/S37a orders aren’t yet available.
 gmp.error.reason.56013 = This is because this scheme has no Guaranteed Minimum Pension liability.
 gmp.error.reason.generic = But HM Revenue and Customs may still be able to do a calculation for you.
-gmp.error.reason.valid_contributions = This is because we do not hold any valid contributions or earnings for some of the time the member was contracted out.
-gmp.error.reason.63149 = This is because you entered a leaving date that is after the final relevant year.
-gmp.error.reason.63148 = This is because you entered a calculation date that is before the date of death we hold on record.
-gmp.error.reason.63147 = This is because we do not have a date of death for this member.
-gmp.error.reason.63150 = You asked for an opposite gender calculation. However, one is not available as there are no post-1990 contributions and earnings.
-gmp.error.reason.63167 = This is because you asked for the GMP to be revalued using Limited rate. This is not available to leavers after 5 April 1997.
-gmp.error.reason.leaving_date = This is because you entered a leaving date that is after the date of death.
+gmp.error.reason.valid_contributions = This is because we don’t hold any valid contributions or earnings for some of the time the member was contracted out.
+gmp.error.reason.63149 = This is because you entered a leaving date that’s after the final relevant year.
+gmp.error.reason.63148 = This is because you entered a calculation date that’s before the date of death we hold on record.
+gmp.error.reason.63147 = This is because we don’t have a date of death for this member.
+gmp.error.reason.63150 = You asked for an opposite gender calculation. However, one isn’t available as there are no post-1990 contributions and earnings.
+gmp.error.reason.63167 = This is because you asked for the GMP to be revalued using Limited rate. This isn’t available to leavers after 5 April 1997.
+gmp.error.reason.leaving_date = This is because you entered a leaving date that’s after the date of death.
 gmp.error.reason.56010 = This is because we need the member to confirm their date of birth.
 
 gmp.error.solution.contact_hmrc = If you think our records are incorrect, contact us by creating a new entry in the single queries database in Shared Workspace’s eRoom.
@@ -318,8 +318,8 @@ gmp.revaluation_rate.type_1 = S148
 gmp.revaluation_rate.type_2 = Fixed
 gmp.revaluation_rate.type_3 = Limited
 
-gmp.notrevalued.subheader = This GMP is not revalued.
-gmp.notrevalued.multi.subheader = This GMP is not revalued and is the sum of the amounts per period shown below.
+gmp.notrevalued.subheader = This GMP isn’t revalued.
+gmp.notrevalued.multi.subheader = This GMP isn’t revalued and is the sum of the amounts per period shown below.
 gmp.results.survivior.disclaimer = This amount is subject to qualifying conditions of the <a href="https://www.gov.uk/browse/benefits/bereavement">type of bereavement benefit</a> the surviving partner is entitled to.
 gmp.reval_rate.subheader = Revaluation rate: {0}
 gmp.held_rate.subheader = Revaluation rate held for this SCON: {0}
@@ -348,8 +348,8 @@ gmp.cannot_calculate.gmp = We can’t calculate a GMP
 gmp.what_now = What to do now:
 gmp.errors.query_handling.header = Alternatively:
 
-gmp.only_part_problem = There is a problem with part of the calculation
-gmp.part_problem = There is a problem with all or part of the calculation
+gmp.only_part_problem = There’s a problem with part of the calculation
+gmp.part_problem = There’s a problem with all or part of the calculation
 gmp.unavailable = No GMP available
 
 ############################################################################
@@ -369,4 +369,4 @@ gmp.serviceunavailable.message = Sorry, we are experiencing technical problems. 
 # CSV
 ############################################################################
 gmp.upload_csv_column_headers = SCON,NINO,First name or initial,Last name,"Member Reference number",Calculation type. Enter a figure,"Date of leaving(DD/MM/YYYY)",GMP relevant date,Revaluation rate. Enter a figure,Opposite gender calculation
-gmp.unauthorised.message = You are not authorised to view this page
+gmp.unauthorised.message = You aren’t authorised to view this page
