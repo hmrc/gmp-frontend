@@ -38,10 +38,6 @@ GET         /results                                      controllers.ResultsCon
 GET         /new-calculation                              controllers.SessionCacheController.newCalculation
 GET         /new-bulk-calculation                         controllers.SessionCacheController.newBulkCalculation
 
-GET         /questionnaire                                controllers.ExitQuestionnaireController.get
-POST        /questionnaire                                controllers.ExitQuestionnaireController.post
-GET         /questionnaire/thankyou                       controllers.ExitQuestionnaireController.showThankYou
-
 GET         /                                             controllers.DashboardController.get
 GET         /service-unavailable                          controllers.ServiceUnavailableController.get
 
