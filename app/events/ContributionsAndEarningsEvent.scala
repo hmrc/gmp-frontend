@@ -16,7 +16,7 @@
 
 package events
 
-import uk.gov.hmrc.play.http.HeaderCarrier
+import uk.gov.hmrc.http.HeaderCarrier
 
 class ContributionsAndEarningsEvent(userId: String, nino: String)(implicit hc: HeaderCarrier)
   extends GmpBusinessEvent("GMP-Contributions-Earnings",

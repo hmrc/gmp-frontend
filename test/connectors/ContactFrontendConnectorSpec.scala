@@ -24,10 +24,10 @@ import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.Application
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.Helpers._
+import uk.gov.hmrc.http.{BadGatewayException, HeaderCarrier, HttpGet, HttpResponse}
 import uk.gov.hmrc.play.config.ServicesConfig
-import uk.gov.hmrc.play.http.{BadGatewayException, HeaderCarrier, HttpGet, HttpResponse}
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 class ContactFrontendConnectorSpec extends PlaySpec with OneAppPerSuite with MockitoSugar with BeforeAndAfterEach with ServicesConfig {
   implicit override lazy val app: Application = new GuiceApplicationBuilder()
@@ -54,16 +54,16 @@ class ContactFrontendConnectorSpec extends PlaySpec with OneAppPerSuite with Moc
 
       val response = HttpResponse(200, responseString = Some(dummyResponseHtml))
 
-      when(TestConnector.http.GET[HttpResponse](meq(serviceUrl))(any(), any[HeaderCarrier])) thenReturn Future.successful(response)
+      when(TestConnector.http.GET[HttpResponse](meq(serviceUrl))(any(), any[HeaderCarrier], any[ExecutionContext])) thenReturn Future.successful(response)
 
       await(TestConnector.getHelpPartial)
 
-      verify(TestConnector.http).GET(meq(serviceUrl))(any(), any[HeaderCarrier])
+      verify(TestConnector.http).GET(meq(serviceUrl))(any(), any[HeaderCarrier], any[ExecutionContext])
     }
 
     "return an empty string if a BadGatewayException is encountered" in {
 
-      when(TestConnector.http.GET[HttpResponse](meq(serviceUrl))(any(), any[HeaderCarrier])) thenReturn Future.failed(new BadGatewayException("Phony exception"))
+      when(TestConnector.http.GET[HttpResponse](meq(serviceUrl))(any(), any[HeaderCarrier], any[ExecutionContext])) thenReturn Future.failed(new BadGatewayException("Phony exception"))
 
       val result = await(TestConnector.getHelpPartial)
 

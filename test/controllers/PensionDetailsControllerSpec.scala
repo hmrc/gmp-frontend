@@ -35,11 +35,11 @@ import uk.gov.hmrc.domain.PsaId
 import uk.gov.hmrc.play.frontend.auth.AuthContext
 import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
 import uk.gov.hmrc.play.frontend.auth.connectors.domain._
-import uk.gov.hmrc.play.http.HeaderCarrier
-import uk.gov.hmrc.play.http.logging.SessionId
 import play.api.i18n.Messages.Implicits._
 
 import scala.concurrent.Future
+import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.http.logging.SessionId
 
 class PensionDetailsControllerSpec extends PlaySpec with OneServerPerSuite with MockitoSugar with GmpUsers {
 
