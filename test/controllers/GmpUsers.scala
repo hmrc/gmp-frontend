@@ -25,9 +25,9 @@ import play.api.test.FakeRequest
 import uk.gov.hmrc.domain.PsaId
 import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
 import uk.gov.hmrc.play.frontend.auth.connectors.domain._
-import uk.gov.hmrc.play.http.SessionKeys
 
 import scala.concurrent.Future
+import uk.gov.hmrc.http.SessionKeys
 
 trait GmpUsers {
 
@@ -35,7 +35,7 @@ trait GmpUsers {
 
   def withAuthorisedUser(test: FakeRequest[AnyContentAsEmpty.type] => Any) {
     val userId = s"user-${UUID.randomUUID}"
-    when(mockAuthConnector.currentAuthority(Matchers.any())) thenReturn {
+    when(mockAuthConnector.currentAuthority(Matchers.any(), Matchers.any())) thenReturn {
       Future.successful(Some(Authority(userId, Accounts(psa = Some(PsaAccount("gmp/B1234567", PsaId("B1234567")))), None, None, CredentialStrength.None, ConfidenceLevel.L50, None, None, None, "")))
     }
     val sessionId = s"session-${UUID.randomUUID}"
@@ -48,7 +48,7 @@ trait GmpUsers {
 
   def withAuthorisedUserAndPath(test: FakeRequest[AnyContentAsEmpty.type] => Any, method: String, path: String) {
     val userId = s"user-${UUID.randomUUID}"
-    when(mockAuthConnector.currentAuthority(Matchers.any())) thenReturn {
+    when(mockAuthConnector.currentAuthority(Matchers.any(), Matchers.any())) thenReturn {
       Future.successful(Some(Authority(userId, Accounts(psa = Some(PsaAccount("gmp/B1234567", PsaId("B1234567")))), None, None, CredentialStrength.None, ConfidenceLevel.L50, None, None, None, "")))
     }
     val sessionId = s"session-${UUID.randomUUID}"
@@ -61,7 +61,7 @@ trait GmpUsers {
 
   def withAuthorisedUserLowConfidenceLevel(test: FakeRequest[AnyContentAsEmpty.type] => Any) {
     val userId = s"user-${UUID.randomUUID}"
-    when(mockAuthConnector.currentAuthority(Matchers.any())) thenReturn {
+    when(mockAuthConnector.currentAuthority(Matchers.any(), Matchers.any())) thenReturn {
       Future.successful(Some(Authority(userId, Accounts(psa = Some(PsaAccount("gmp/B1234567", PsaId("B1234567")))), None, None, CredentialStrength.None,  ConfidenceLevel.L0, None, None, None, "")))
     }
     val sessionId = s"session-${UUID.randomUUID}"

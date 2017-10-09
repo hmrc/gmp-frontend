@@ -18,11 +18,11 @@ package controllers
 
 import config.GmpContext
 import org.scalatest.mock.MockitoSugar._
-import uk.gov.hmrc.play.http.HeaderCarrier
 import org.mockito.Matchers._
 import org.mockito.Mockito.when
 
 import scala.concurrent.Future
+import uk.gov.hmrc.http.HeaderCarrier
 
 object FakeGmpContext {
 

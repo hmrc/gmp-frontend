@@ -24,9 +24,9 @@ import play.api.i18n.Messages
 import play.api.mvc.Action
 import services.SessionService
 import uk.gov.hmrc.play.frontend.auth.Actions
-import uk.gov.hmrc.play.http.logging.SessionId
 import play.api.i18n.Messages.Implicits._
 import play.api.Play.current
+import uk.gov.hmrc.http.logging.SessionId
 
 object FileUploadController extends FileUploadController {
   val authConnector = GmpFrontendAuthConnector

@@ -22,7 +22,7 @@ import controllers.auth.GmpRegime
 import play.api.Logger
 import play.api.Play.current
 import play.api.i18n.Messages.Implicits._
-import uk.gov.hmrc.play.http.{NotFoundException, Upstream4xxResponse}
+import uk.gov.hmrc.http.{ NotFoundException, Upstream4xxResponse }
 
 trait BulkResultsController extends GmpController {
 

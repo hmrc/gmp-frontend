@@ -17,8 +17,8 @@
 package events
 
 import uk.gov.hmrc.play.audit.model.DataEvent
-import uk.gov.hmrc.play.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.AuditExtensions._
+import uk.gov.hmrc.http.HeaderCarrier
 
 abstract class GmpBusinessEvent(auditType: String, detail: Map[String, String])(implicit hc: HeaderCarrier)
   extends DataEvent(auditSource = "gmp-frontend", auditType = auditType, detail = detail, tags = hc.toAuditTags("", "N/A"))

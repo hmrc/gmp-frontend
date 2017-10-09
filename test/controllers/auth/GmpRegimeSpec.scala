@@ -30,9 +30,9 @@ import uk.gov.hmrc.domain.{Org, PsaId}
 import uk.gov.hmrc.play.frontend.auth.Actions
 import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
 import uk.gov.hmrc.play.frontend.auth.connectors.domain._
-import uk.gov.hmrc.play.http.SessionKeys
 
 import scala.concurrent.Future
+import uk.gov.hmrc.http.SessionKeys
 
 class GmpRegimeSpec extends PlaySpec with OneServerPerSuite with MockitoSugar with BeforeAndAfterEach {
 
@@ -90,7 +90,7 @@ class GmpRegimeSpec extends PlaySpec with OneServerPerSuite with MockitoSugar wi
             SessionKeys.token -> "RANDOMTOKEN",
             SessionKeys.userId -> userId)
 
-          when(mockAuthConnector.currentAuthority(Matchers.any())) thenReturn {
+          when(mockAuthConnector.currentAuthority(Matchers.any(), Matchers.any())) thenReturn {
             Future.successful(Some(Authority(userId, Accounts(psa = Some(PsaAccount("gmp/B1234567", PsaId("B1234567")))), None, None, CredentialStrength.None, ConfidenceLevel.L50, None, None, None, "")))
           }
 
@@ -110,7 +110,7 @@ class GmpRegimeSpec extends PlaySpec with OneServerPerSuite with MockitoSugar wi
             SessionKeys.token -> "RANDOMTOKEN",
             SessionKeys.userId -> userId)
 
-          when(mockAuthConnector.currentAuthority(Matchers.any())) thenReturn {
+          when(mockAuthConnector.currentAuthority(Matchers.any(), Matchers.any())) thenReturn {
             Future.successful(Some(Authority(userId, Accounts(org = Some(OrgAccount("org/1234", Org("1234")))), None, None, CredentialStrength.None, ConfidenceLevel.L50, None, None, None, "")))
           }
           val result = TestController.testRoute.apply(request)
