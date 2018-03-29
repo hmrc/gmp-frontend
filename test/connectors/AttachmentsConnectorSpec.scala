@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 HM Revenue & Customs
+ * Copyright 2018 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ package connectors
 
 import java.util.UUID
 
+import config.{Hooks, WSHttp}
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
@@ -26,18 +27,18 @@ import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.http.HeaderNames
 import play.api.test.FakeRequest
 import uk.gov.hmrc.play.frontend.filters.SessionCookieCryptoFilter
-import uk.gov.hmrc.play.http.hooks.HttpHook
-import uk.gov.hmrc.play.http.logging.RequestId
 import uk.gov.hmrc.play.http.ws.{WSGet, WSPost}
-import uk.gov.hmrc.play.http.{HeaderCarrier, HttpResponse}
 import uk.gov.hmrc.play.partials.HeaderCarrierForPartials
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
+import uk.gov.hmrc.http.hooks.HttpHook
+import uk.gov.hmrc.http.logging.RequestId
 
 class AttachmentsConnectorSpec extends PlaySpec with OneAppPerSuite with MockitoSugar with BeforeAndAfterEach {
 
-  class MockHttp extends WSGet with WSPost {
+  class MockHttp extends WSHttp with Hooks {
 
     override val hooks: Seq[HttpHook] = Nil
   }
@@ -63,7 +64,7 @@ class AttachmentsConnectorSpec extends PlaySpec with OneAppPerSuite with Mockito
         implicit val hc = HeaderCarrier()
         implicit val hcwc = HeaderCarrierForPartials(hc,"")
         val html = "<h1>helloworld</h1>"
-        when(mockHttp.GET[HttpResponse](Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(HttpResponse(200, responseString = Some
+        when(mockHttp.GET[HttpResponse](Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(HttpResponse(200, responseString = Some
         (html))))
         new TestAttachmentsConnector().getFileUploadPartial().map {
           response => response.successfulContentOrEmpty must equal(html)

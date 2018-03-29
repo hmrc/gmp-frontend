@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 HM Revenue & Customs
+ * Copyright 2018 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,11 +18,11 @@ package controllers
 
 import config.GmpContext
 import org.scalatest.mock.MockitoSugar._
-import uk.gov.hmrc.play.http.HeaderCarrier
 import org.mockito.Matchers._
 import org.mockito.Mockito.when
 
 import scala.concurrent.Future
+import uk.gov.hmrc.http.HeaderCarrier
 
 object FakeGmpContext {
 

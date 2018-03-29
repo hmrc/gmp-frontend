@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 HM Revenue & Customs
+ * Copyright 2018 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,15 +18,18 @@ package connectors
 
 import java.net.URLEncoder
 
+import com.typesafe.config.Config
 import config.{ApplicationConfig, WSHttp}
 import controllers.routes
 import play.api.Logger
 import play.api.mvc.Request
+import uk.gov.hmrc.http.hooks.HttpHook
+import uk.gov.hmrc.http.{HeaderCarrier, HttpGet, HttpResponse}
 import uk.gov.hmrc.play.config.ServicesConfig
 import uk.gov.hmrc.play.frontend.filters.SessionCookieCryptoFilter
-import uk.gov.hmrc.play.http._
+import uk.gov.hmrc.play.http.ws.WSGet
 import uk.gov.hmrc.play.partials.{HeaderCarrierForPartialsConverter, HtmlPartial}
-import scala.concurrent.ExecutionContext.Implicits.global
+import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext._
 
 import scala.concurrent.Future
 
@@ -56,9 +59,9 @@ trait UploadConfig extends ServicesConfig {
 object UploadConfig extends UploadConfig
 
 
-trait AttachmentsConnector extends HeaderCarrierForPartialsConverter{
+trait AttachmentsConnector extends HeaderCarrierForPartialsConverter {
 
-  val http: HttpGet with HttpPost = WSHttp
+  val http: HttpGet = WSHttp
 
   def getFileUploadPartial()(implicit request: Request[_]): Future[HtmlPartial] = {
 
