@@ -24,6 +24,8 @@ scriptElem: Option[Html] = None,
 userLoggedIn: Boolean = false,
 supportLinkEnabled: Boolean = true,
 signOutEnabled: Boolean = true,
+showSignOutLink: Boolean = true,
+showUserResearchBanner: Boolean = false,
 dashboardLinkEnabled:Boolean = true)(mainContent: Html)(implicit request: Request[_], context: config.GmpContext,messages: Messages)
 
 @getHelpForm = {
@@ -32,6 +34,7 @@ dashboardLinkEnabled:Boolean = true)(mainContent: Html)(implicit request: Reques
 
 @linkElement = {
   <link rel="stylesheet" href='@controllers.routes.AssetsController.at("stylesheets/gmp.css")'/>
+  <link rel="stylesheet" href='@routes.AssetsController.at("stylesheets/urBanner.css")' media="screen" type="text/css" />
 }
 
 @main(
@@ -40,6 +43,7 @@ dashboardLinkEnabled:Boolean = true)(mainContent: Html)(implicit request: Reques
   userLoggedIn = userLoggedIn,
   getHelpForm = getHelpForm,
   linkElement = Some(linkElement),
+  isUserResearchBannerVisible = showUserResearchBanner,
   scriptElement = Some(scriptElement),
   signOutEnabled = signOutEnabled) {
   @if(dashboardLinkEnabled) {
