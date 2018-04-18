@@ -18,7 +18,7 @@ package controllers
 
 import connectors.GmpBulkConnector
 import models._
-import org.joda.time.{Chronology, LocalDateTime, LocalDate}
+import org.joda.time.{Chronology, LocalDate, LocalDateTime}
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.mock.MockitoSugar
@@ -31,10 +31,12 @@ import play.api.test.Helpers._
 import services.SessionService
 import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
 import play.api.i18n.Messages.Implicits._
+
 import scala.concurrent.Future
 import uk.gov.hmrc.http.Upstream5xxResponse
+import uk.gov.hmrc.play.test.UnitSpec
 
-class DashboardControllerSpec extends PlaySpec with OneServerPerSuite with MockitoSugar with GmpUsers {
+class DashboardControllerSpec extends PlaySpec with OneServerPerSuite with MockitoSugar with GmpUsers with UnitSpec {
 
   val mockAuthConnector = mock[AuthConnector]
   val mockSessionService = mock[SessionService]
@@ -57,6 +59,12 @@ class DashboardControllerSpec extends PlaySpec with OneServerPerSuite with Mocki
     "respond to GET /guaranteed-minimum-pension" in {
       val result = route(FakeRequest(GET, "/guaranteed-minimum-pension"))
       status(result.get) must not equal (NOT_FOUND)
+    }
+
+    "Contain Ur banner" in {
+      val result = route(FakeRequest(GET, "/guaranteed-minimum-pension/dashboard"))
+      contentAsString(result.get) should include("Help improve digital services by joining the HMRC user panel (opens in new window)")
+      contentAsString(result.get) should include("No thanks")
     }
   }
 
