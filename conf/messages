@@ -348,3 +348,10 @@ gmp.serviceunavailable.message = Sorry, we are experiencing technical problems. 
 ############################################################################
 gmp.upload_csv_column_headers = SCON,NINO,First name or initial,Last name,"Member Reference number",Calculation type. Enter a figure,"Date of leaving(DD/MM/YYYY)",GMP relevant date,Revaluation rate. Enter a figure,Opposite gender calculation
 gmp.unauthorised.message = You are not authorised to view this page
+
+############################################################################
+# UR Banner
+############################################################################
+urbanner.message.text = Help improve digital services by joining the HMRC user panel
+urbanner.message.open.new.window = (opens in new window)
+urbanner.message.reject = No thanks

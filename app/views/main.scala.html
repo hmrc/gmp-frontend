@@ -21,6 +21,7 @@
     getHelpForm: Html  = HtmlFormat.empty,
     linkElement : Option[Html] = None,
     scriptElement : Option[Html] = None,
+    isUserResearchBannerVisible:Boolean = false,
     signOutEnabled:Boolean)(mainContent: Html = HtmlFormat.empty)(implicit request: Request[_], context: config.GmpContext, messages: Messages)
 
 @import layouts.{govuk_template => hmrcGovUkTemplate}
@@ -32,6 +33,10 @@
         linkElem = linkElement,
         headScripts = None)
     <meta name="format-detection" content="telephone=no"/>
+}
+
+@urToggle = @{
+    true
 }
 
 @signOutLink = {
@@ -47,7 +52,15 @@
     )
 }
 
-@afterHeader = {}
+@afterHeader = @{
+    if(isUserResearchBannerVisible && urToggle) {
+            helpers.fullWidthBanner(
+                    Messages("urbanner.message.text"),
+                    applicationConfig.urBannerLink
+            )
+        }
+        else HtmlFormat.empty
+}
 
 @bodyEnd = {
     @uiLayouts.footer(
@@ -57,6 +70,7 @@
         scriptElem = scriptElement,
         gaCalls = None
     )
+    <script src='@routes.AssetsController.at("javascripts/urBanner.js")'> </script>
 }
 
 @footerTop = {}

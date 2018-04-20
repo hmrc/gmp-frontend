@@ -26,6 +26,8 @@ trait ApplicationConfig {
   val analyticsToken: Option[String]
   val analyticsHost: String
   val frontendHost: String
+  val urBannerToggle: Boolean
+  val urBannerLink: String
 
 }
 
@@ -38,6 +40,8 @@ object ApplicationConfig extends ApplicationConfig with ServicesConfig {
   override lazy val assetsPrefix: String = loadConfig("assets.url") + loadConfig("assets.version")
   override lazy val analyticsToken: Option[String] = configuration.getString("google-analytics.token")
   override lazy val analyticsHost: String = configuration.getString("google-analytics.host").getOrElse("auto")
+  override lazy val urBannerToggle:Boolean = loadConfig("urBanner.toggle").toBoolean
+  override lazy val urBannerLink: String = loadConfig("urBanner.link")
 
   val globalErrors = ConfigFactory.load("global-errors.properties")
   val contactFormServiceIdentifier = "GMP"
