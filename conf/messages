@@ -353,5 +353,6 @@ gmp.unauthorised.message = You are not authorised to view this page
 # UR Banner
 ############################################################################
 urbanner.message.text = Help improve digital services by joining the HMRC user panel
+urbanner.message.ga.text = homepage UR banner
 urbanner.message.open.new.window = (opens in new window)
 urbanner.message.reject = No thanks
