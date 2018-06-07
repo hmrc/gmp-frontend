@@ -16,19 +16,24 @@
 
 package views.html
 
-import forms.BulkReferenceForm
-import play.api.data.Form
 import play.twirl.api.Html
 import utils.GmpViewSpec
 
-class BulkReferenceSpec extends GmpViewSpec {
+class UploadFileSpec extends GmpViewSpec {
 
-  "BulkReference page" must {
-    behave like pageWithTitle(messages("gmp.bulk_reference.title"))
-    behave like pageWithHeader(messages("gmp.bulk_reference.header"))
+  override def view: Html = views.html.upload_file(uploadForm)
+
+  "UploadFiles page" must {
+    behave like pageWithTitle(messages("gmp.fileupload.title"))
+    behave like pageWithHeader(messages("gmp.fileupload.header"))
+
+
+    "display an explanation text paragraph" in {
+      doc must haveParagraphWithText("The file must contain mandatory information and in a specific format. " +
+        "You can download a template and instructions as a ZIP file (3Kb) on how to create your file first.")
+    }
   }
 
-  override def view: Html = views.html.bulk_reference(form)
-  private val form: Form[models.BulkReference] = BulkReferenceForm.bulkReferenceForm
+  private val uploadForm = Html("")
 
 }
