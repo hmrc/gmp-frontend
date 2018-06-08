@@ -16,9 +16,18 @@
 
 package views.html
 
+import forms.BulkReferenceForm
+import models.BulkPreviousRequest
+import org.joda.time.LocalDateTime
+import play.api.data.Form
 import play.twirl.api.Html
 import utils.GmpViewSpec
 
-class MoreBulkResultsSpec extends GmpViewSpec{
-  override def view: Html = ???
+class MoreBulkResultsSpec extends GmpViewSpec {
+
+
+  override def view: Html = views.html.more_bulk_results(bulkPreviousRequestsList)
+  private val bulkPreviousRequestsList: List[models.BulkPreviousRequest] = List(BulkPreviousRequest(uploadReference = "upload reference",
+    reference = "fake reference", timestamp = LocalDateTime.now, processedDateTime = LocalDateTime.now))
+
 }
