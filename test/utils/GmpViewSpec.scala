@@ -18,21 +18,17 @@ package utils
 
 import controllers.FakeGmpContext
 import org.jsoup.Jsoup
-import org.jsoup.nodes.{Document, Element}
-import org.scalatest.matchers.{MatchResult, Matcher}
+import org.jsoup.nodes.Document
 import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
 import play.twirl.api.Html
 
-import scala.collection.JavaConversions._
-
-trait GmpViewSpec extends PlaySpec with OneServerPerSuite{
+trait GmpViewSpec extends PlaySpec with JSoupMatchers with OneServerPerSuite {
 
   implicit val request = FakeRequest()
   implicit val context = FakeGmpContext()
   implicit val messages: Messages = play.api.i18n.Messages.Implicits.applicationMessages
-
 
   def view: Html
   def doc: Document = Jsoup.parse(view.toString())
@@ -50,36 +46,25 @@ trait GmpViewSpec extends PlaySpec with OneServerPerSuite{
     }
   }
 
-  def haveHeadingWithText (expectedText: String) = new TagWithTextMatcher(expectedText, "h1")
-  def haveParagraphWithText (expectedText: String) = new TagWithTextMatcher(expectedText, "p")
-
-  class TagWithTextMatcher(expectedContent: String, tag: String) extends Matcher[Document] {
-    def apply(left: Document): MatchResult = {
-      val elements: List[String] =
-        left.getElementsByTag(tag).toList
-          .map(_.text)
-
-      lazy val elementContents = elements.mkString("\t", "\n\t", "")
-
-      MatchResult(
-        elements.contains(expectedContent),
-        s"[$expectedContent] not found in '$tag' elements:[\n$elementContents]",
-        s"'$tag' element found with text [$expectedContent]"
-      )
+  def pageWithH2Header(headerText: String): Unit = {
+    "have a static h2 header" in {
+      doc must haveH2HeadingWithText(headerText)
     }
   }
 
-  class ElementWithAttributeValueMatcher(expectedContent: String, attribute: String) extends Matcher[Element] {
-    def apply(left: Element): MatchResult = {
-      val attribVal = left.attr(attribute)
-      val attributes = left.attributes().asList().mkString("\t", "\n\t", "")
-
-      MatchResult(
-        attribVal == expectedContent,
-        s"""[${attribute}="${expectedContent}"] is not a member of the element's attributes:[\n${attributes}]""",
-        s"""[${attribute}="${expectedContent}"] is a member of the element's attributes:[\n${attributes}]""")
+  def pageWithButtonForm(submitUrl: String, buttonText: String): Unit = {
+    "have a form with a submit button or input labelled as buttonText" in {
+      doc must haveSubmitButton(buttonText)
     }
+    "have a form with the correct submit url" in {
+      doc must haveFormWithSubmitUrl(submitUrl)
+    }
+  }
 
+  def pageWithBackLink: Unit = {
+    "have a back link" in {
+      doc must haveBackLink
+    }
   }
 
 }
