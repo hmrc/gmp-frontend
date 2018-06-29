@@ -34,6 +34,7 @@ trait JSoupMatchers {
   def haveBulletPointWithText (expectedText: String) = new CssSelectorWithTextMatcher(expectedText, "ul>li")
   def haveThWithText (expectedText: String) = new CssSelectorWithTextMatcher(expectedText,"th")
   def haveTdWithText (expectedText: String) = new CssSelectorWithTextMatcher(expectedText,"td")
+  def haveLinkWithText (expectedText: String) = new CssSelectorWithTextMatcher(expectedText, "a")
 
   class CssSelectorWithTextMatcher(expectedContent: String, selector: String) extends Matcher[Document] {
     def apply(left: Document): MatchResult = {
