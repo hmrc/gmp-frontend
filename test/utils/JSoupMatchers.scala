@@ -32,6 +32,8 @@ trait JSoupMatchers {
   def haveInputLabelWithText (id:String, expectedText: String) = new CssSelectorWithTextMatcher(expectedText, s"label[for=$id]")
   def haveH2HeadingWithText (expectedText: String) = new TagWithTextMatcher(expectedText, "h2")
   def haveBulletPointWithText (expectedText: String) = new CssSelectorWithTextMatcher(expectedText, "ul>li")
+  def haveThWithText (expectedText: String) = new CssSelectorWithTextMatcher(expectedText,"th")
+  def haveTdWithText (expectedText: String) = new CssSelectorWithTextMatcher(expectedText,"td")
 
   class CssSelectorWithTextMatcher(expectedContent: String, selector: String) extends Matcher[Document] {
     def apply(left: Document): MatchResult = {

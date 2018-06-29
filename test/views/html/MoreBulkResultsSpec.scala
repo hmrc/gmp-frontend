@@ -16,18 +16,36 @@
 
 package views.html
 
-import forms.BulkReferenceForm
 import models.BulkPreviousRequest
 import org.joda.time.LocalDateTime
-import play.api.data.Form
 import play.twirl.api.Html
 import utils.GmpViewSpec
 
 class MoreBulkResultsSpec extends GmpViewSpec {
 
+  "MoreBulkResults page" must {
 
+    behave like pageWithTitle(messages("gmp.more_bulk_results.title"))
+    behave like pageWithHeader(messages("gmp.more_bulk_results.header"))
+    behave like pageWithBackLink
+
+    "display recent calculations table" in {
+      doc must haveThWithText(messages("gmp.th.reference"))
+      doc must haveThWithText(messages("gmp.th.upload_date"))
+      doc must haveThWithText(messages("gmp.th.time_left"))
+
+      doc must haveTdWithText("fake")
+      doc must haveTdWithText(LocalDateTime.now.toString("dd MMMM yyyy"))
+      //doc must haveTdWithText("30 Days")
+    }
+
+
+  }
   override def view: Html = views.html.more_bulk_results(bulkPreviousRequestsList)
-  private val bulkPreviousRequestsList: List[models.BulkPreviousRequest] = List(BulkPreviousRequest(uploadReference = "upload reference",
-    reference = "fake reference", timestamp = LocalDateTime.now, processedDateTime = LocalDateTime.now))
+  private val bulkPreviousRequestsList: List[models.BulkPreviousRequest] = List(BulkPreviousRequest(uploadReference = "upload",
+    reference = "fake", timestamp = LocalDateTime.now, processedDateTime = LocalDateTime.now),BulkPreviousRequest(uploadReference = "upload",
+    reference = "fake", timestamp = LocalDateTime.now, processedDateTime = LocalDateTime.now),BulkPreviousRequest(uploadReference = "upload",
+    reference = "fake", timestamp = LocalDateTime.now, processedDateTime = LocalDateTime.now),BulkPreviousRequest(uploadReference = "upload",
+    reference = "fake", timestamp = LocalDateTime.now, processedDateTime = LocalDateTime.now))
 
 }
