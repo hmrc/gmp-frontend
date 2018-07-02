@@ -46,16 +46,16 @@ class DashboardSpec extends GmpViewSpec {
     }
 
     "must have table with correct header content" in {
-      doc must haveTableWithCaption(messages("gmp.caption"))
-      doc must haveTableWithHeader(messages("gmp.th.reference"))
-      doc must haveTableWithHeader(messages("gmp.th.upload_date"))
-      doc must haveTableWithHeader(messages("gmp.th.time_left"))
+      doc must haveTableCaptionWithIdAndText("recent-calcualtions-caption", messages("gmp.caption"))
+      doc must haveThWithText(messages("gmp.th.reference"))
+      doc must haveThWithText(messages("gmp.th.upload_date"))
+      doc must haveThWithText(messages("gmp.th.time_left"))
     }
 
     "must have table with rows for each day" in {
       bulkPreviousRequestsList.foreach { bpr =>
-        doc must haveTableCell(bpr.reference)
-        doc must haveTableCell(messages("gmp.days_left", 30, "s"))
+        doc must haveTdWithText(bpr.reference)
+        doc must haveTdWithText(messages("gmp.days_left", 30, "s"))
       }
     }
 
