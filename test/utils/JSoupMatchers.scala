@@ -36,6 +36,10 @@ trait JSoupMatchers {
   def haveTdWithText (expectedText: String) = new CssSelectorWithTextMatcher(expectedText,"td")
   def haveLinkWithText (expectedText: String) = new CssSelectorWithTextMatcher(expectedText, "a")
 
+  def haveTableWithCaption (expectedText: String) = new TagWithTextMatcher(expectedText, "caption")
+  def haveTableWithHeader (expectedText: String) = new TagWithTextMatcher(expectedText, "th")
+  def haveTableCell (expectedText: String) = new TagWithTextMatcher(expectedText, "td")
+
   class CssSelectorWithTextMatcher(expectedContent: String, selector: String) extends Matcher[Document] {
     def apply(left: Document): MatchResult = {
       val elements: List[String] =

@@ -4,7 +4,7 @@ import sbt.Tests.{Group, SubProcess}
 import sbt._
 import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin
 import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin._
-import scoverage.ScoverageSbtPlugin
+import scoverage.{ScoverageKeys, ScoverageSbtPlugin}
 import uk.gov.hmrc.versioning.SbtGitVersioning
 import play.sbt.routes.RoutesKeys.routesGenerator
 
@@ -23,13 +23,11 @@ trait MicroService {
   lazy val playSettings : Seq[Setting[_]] = Seq.empty
 
   lazy val scoverageSettings = {
-    import ScoverageSbtPlugin._
-
     Seq(
-      ScoverageKeys.coverageExcludedPackages := "<empty>;app.*;config.*;testOnlyDoNotUseInAppConf.*;views.*;uk.gov.hmrc.*;prod.*;forms.*",
-      ScoverageKeys.coverageMinimum := 90,
-      ScoverageKeys.coverageFailOnMinimum := true,
-      ScoverageKeys.coverageHighlighting := true
+      scoverage.ScoverageKeys.coverageExcludedPackages := "<empty>;app.*;config.*;testOnlyDoNotUseInAppConf.*;views.*;uk.gov.hmrc.*;prod.*;forms.*",
+      scoverage.ScoverageKeys.coverageMinimum := 90,
+      scoverage.ScoverageKeys.coverageFailOnMinimum := true,
+      scoverage.ScoverageKeys.coverageHighlighting := true
     )
   }
 

@@ -27,6 +27,7 @@ class MoreBulkResultsSpec extends GmpViewSpec {
 
     behave like pageWithTitle(messages("gmp.more_bulk_results.title"))
     behave like pageWithHeader(messages("gmp.more_bulk_results.header"))
+    behave like pageWithH2Header(messages("gmp.dashboard.choose_calculation_type"))
     behave like pageWithBackLink
 
     "display recent calculations table" in {
