@@ -31,7 +31,7 @@ class DashboardSpec extends GmpViewSpec {
 
     "have a single calculation link" in {
       doc must haveLinkWithText(messages("gmp.single_calculation_link"))
-      //doc must haveParagraphWithText(messages("gmp.single_calculation_text"))
+      doc must haveParagraphWithText(messages("Get a pension scheme member's GMP calculation."))
     }
 
     "have a bulk calculation link" in {
