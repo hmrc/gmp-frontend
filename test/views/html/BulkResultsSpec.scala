@@ -39,23 +39,23 @@ class BulkResultsSpec extends GmpViewSpec{
       doc must haveDivWithText(messages("gmp.bulk.results.csv"))
     }
 
-    "have a div with csv" in {
+    "have a heading level 3 with csv" in {
       doc must haveHeadingH3WithText(messages("gmp.bulk.subheaders.successfulcalculations") + " (2)")
     }
-    "have a div with asdasdad" in {
+
+    "have correct list item number 1" in {
       doc must haveListItemWithText(messages("gmp.bulk.explanations.successful.1"))
     }
-    "ashave a div with asdasdad" in {
+
+    "have correct list item number 2" in {
       doc must haveListItemWithText(messages("gmp.bulk.explanations.successful.2"))
     }
-    "asdasashave a div with asdasdad" in {
+
+    "have a download success anchor with correct URL and text" in {
       doc.select("#download-success").first must haveLinkURL(routes.BulkResultsController.getResultsAsCsv(uploadReference, "successful").url)
       doc must haveLinkWithText(messages("gmp.download.link"))
     }
-
   }
 
-
   override def view = views.html.bulk_results(bulkResultsSummary, uploadReference, comingFromPage)
-
 }
