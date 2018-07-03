@@ -160,3 +160,18 @@ class BulkResultsSpecFailure extends BulkResultsSpec {
   }
 }
 
+class BulkResultsSpecAll extends BulkResultsSpec {
+
+  override val bulkResultsSummary:BulkResultsSummary =  BulkResultsSummary("fake reference", 3, 1)
+  override val uploadReference: String = "Fakereference"
+  override val comingFromPage: Int = 1
+
+  "BulkResults page for failure" must {
+
+  //All Specific
+
+    "have a heading level 3 with all page" in {
+      doc must haveHeadingH3WithText(messages("gmp.bulk.subheaders.allcalculations") + " (3)")
+    }
+  }
+}
