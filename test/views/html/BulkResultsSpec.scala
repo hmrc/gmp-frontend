@@ -20,13 +20,24 @@ import controllers.routes
 import models.BulkResultsSummary
 import utils.GmpViewSpec
 
-class BulkResultsSpec extends GmpViewSpec{
+abstract class BulkResultsSpec extends GmpViewSpec{
 
-  val bulkResultsSummary:BulkResultsSummary =  BulkResultsSummary("fake reference", 2, 0)
-  val uploadReference: String = "Fakereference"
-  val comingFromPage: Int = 1
+  val bulkResultsSummary:BulkResultsSummary
+  val uploadReference: String
+  val comingFromPage: Int
 
-  "BulkResults page" must {
+  override def view = views.html.bulk_results(bulkResultsSummary, uploadReference, comingFromPage)
+}
+
+
+class BulkResultsSpecSuccess extends BulkResultsSpec {
+
+  override val bulkResultsSummary:BulkResultsSummary =  BulkResultsSummary("fake reference", 2, 0)
+  override val uploadReference: String = "Fakereference"
+  override val comingFromPage: Int = 1
+
+  "BulkResults page for success" must {
+
     behave like pageWithTitle(messages("gmp.bulk.results.title"))
     behave like pageWithHeader(messages("gmp.bulk.results.banner"))
     behave like pageWithH2Header(messages("gmp.bulk.results.reference", bulkResultsSummary.reference))
@@ -38,6 +49,8 @@ class BulkResultsSpec extends GmpViewSpec{
     "have a div with csv results text" in {
       doc must haveDivWithText(messages("gmp.bulk.results.csv"))
     }
+
+    // Success-specific
 
     "have a heading level 3 with csv" in {
       doc must haveHeadingH3WithText(messages("gmp.bulk.subheaders.successfulcalculations") + " (2)")
@@ -55,7 +68,95 @@ class BulkResultsSpec extends GmpViewSpec{
       doc.select("#download-success").first must haveLinkURL(routes.BulkResultsController.getResultsAsCsv(uploadReference, "successful").url)
       doc must haveLinkWithText(messages("gmp.download.link"))
     }
-  }
 
-  override def view = views.html.bulk_results(bulkResultsSummary, uploadReference, comingFromPage)
+    "have a heading level 3 with conts and earnings" in {
+      doc must haveHeadingH3WithText(messages("gmp.bulk.subheaders.contsandearnings"))
+    }
+
+    "have correct list item with const earnings" in {
+      doc must haveListItemWithText(messages("gmp.bulk.explanations.contsandearnings"))
+    }
+
+    "have a download conts anchor with correct URL and text" in {
+      doc.select("#download-conts").first must haveLinkURL(routes.BulkResultsController.getContributionsAndEarningsAsCsv(uploadReference).url)
+      doc must haveLinkWithText(messages("gmp.download.link"))
+    }
+
+    // Not have Failure specific
+    " not have a heading level 3 with failed page" in {
+      doc mustNot haveHeadingH3WithText(messages("gmp.bulk.subheaders.failedcalculations") + " (2)")
+    }
+
+    "not have failure list item number 1" in {
+      doc mustNot haveListItemWithText(messages("gmp.bulk.explanations.failed.1"))
+    }
+
+    "not have failure list item number 2" in {
+      doc mustNot haveListItemWithText(messages("gmp.bulk.explanations.failed.2"))
+    }
+
+    "not have failure list item number 3" in {
+      doc mustNot haveListItemWithText(messages("gmp.bulk.explanations.failed.3"))
+    }
+  }
 }
+
+class BulkResultsSpecFailure extends BulkResultsSpec {
+
+  override val bulkResultsSummary:BulkResultsSummary =  BulkResultsSummary("fake reference", 2, 2)
+  override val uploadReference: String = "Fakereference"
+  override val comingFromPage: Int = 1
+
+  "BulkResults page for failure" must {
+
+    // Failure-specific
+    "have a heading level 3 with failed page" in {
+        doc must haveHeadingH3WithText(messages("gmp.bulk.subheaders.failedcalculations") + " (2)")
+    }
+
+    "have failure list item number 1" in {
+      doc must haveListItemWithText(messages("gmp.bulk.explanations.failed.1"))
+    }
+
+    "have failure list item number 2" in {
+      doc must haveListItemWithText(messages("gmp.bulk.explanations.failed.2"))
+    }
+
+    "have failure list item number 3" in {
+      doc must haveListItemWithText(messages("gmp.bulk.explanations.failed.3"))
+    }
+
+    "have a download failure anchor with correct URL and text" in {
+      doc.select("#download-failed").first must haveLinkURL(routes.BulkResultsController.getResultsAsCsv(uploadReference, "failed").url)
+      doc must haveLinkWithText(messages("gmp.download.link"))
+    }
+
+    "have a heading level 3 with failure conts and earnings" in {
+      doc must haveHeadingH3WithText(messages("gmp.bulk.subheaders.contsandearnings"))
+    }
+
+    "have correct failure list item with const earnings" in {
+      doc must haveListItemWithText(messages("gmp.bulk.explanations.contsandearnings"))
+    }
+
+    "have a failure download conts anchor with correct URL and text" in {
+      doc.select("#download-conts").first must haveLinkURL(routes.BulkResultsController.getContributionsAndEarningsAsCsv(uploadReference).url)
+      doc must haveLinkWithText(messages("gmp.download.link"))
+    }
+
+    // Not have Success-specific
+    "not have a heading level 3 with csv" in {
+      doc mustNot haveHeadingH3WithText(messages("gmp.bulk.subheaders.successfulcalculations") + " (2)")
+    }
+
+    "not have correct list item number 1" in {
+      doc mustNot haveListItemWithText(messages("gmp.bulk.explanations.successful.1"))
+    }
+
+    "not have correct list item number 2" in {
+      doc mustNot haveListItemWithText(messages("gmp.bulk.explanations.successful.2"))
+    }
+
+  }
+}
+
