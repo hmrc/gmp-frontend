@@ -17,24 +17,80 @@
 package views.html
 
 import forms.DateOfLeavingForm
-import models.CalculationType
+import models.{CalculationType, Leaving}
 import play.api.data.Form
 import play.twirl.api.Html
 import utils.GmpViewSpec
 
-class DateOfLeavingSpec extends GmpViewSpec{
+abstract class DateOfLeavingSpec extends GmpViewSpec {
   override def view: Html = views.html.dateofleaving(dateOfLeavingForm, scenario)
-  private val dateOfLeavingForm: Form[models.Leaving] = DateOfLeavingForm.dateOfLeavingForm
-  private val scenario = CalculationType.DOL
 
-  "DateOfLeaving page" must {
-   behave like pageWithTitle(messages("gmp.calculation_type.title"))
+  val dateOfLeavingForm: Form[models.Leaving] = DateOfLeavingForm.dateOfLeavingForm
+  val scenario = CalculationType.DOL
+}
 
+class DateOfLeavingScenarioDolSpec extends DateOfLeavingSpec {
 
-    "r" in {
-    print(doc.body())
+  "GMP opposite gender - GOV.UK page" must {
+    behave like pageWithTitle(messages("gmp.leaving.title"))
+    behave like pageWithHeader(messages("gmp.leaving.dol.question"))
+    behave like pageWithBackLink
 
+    "have correct input labels and legend with text" in {
+      doc must haveInputLabelWithText("leaving-yes-before", messages("gmp.generic.yes"))
+      doc must haveInputLabelWithText("leaving-yes-after", messages("gmp.generic.no"))
+      doc must haveLegendWithText(messages("gmp.leaving.dol.question"))
+    }
+
+    "have correct span with text" in {
+      doc must haveSpanWithText(messages("gmp.date.header_text"))
+    }
+
+    "have correct paragraph with text" in {
+      doc must haveParagraphWithText(messages("gmp.date.example"))
+    }
+
+    "have correct input labels with text" in {
+      doc must haveInputLabelWithText("leavingDate_day", messages("gmp.day"))
+      doc must haveInputLabelWithText("leavingDate_month", messages("gmp.month"))
+      doc must haveInputLabelWithText("leavingDate_year", messages("gmp.year"))
+    }
+
+    "have a submit button text" in {
+      doc must haveSubmitButton(messages("gmp.continue.button"))
+    }
+  }
+}
+
+class DateOfLeavingScenarioSpaPayRevSpec extends DateOfLeavingSpec {
+
+  override val scenario = CalculationType.SPA
+
+  "DateOfLeavingScenarioSpaPayRev page" must {
+    behave like pageWithHeader(messages("gmp.other.dol.left.question"))
+
+    "have correct input labels and legend with text" in {
+      doc must haveInputLabelWithText("leaving-no", messages("gmp.dol.threequestions.no"))
+      doc must haveInputLabelWithText("leaving-yes-before", messages("gmp.dol.threequestions.before2016"))
+      doc must haveInputLabelWithText("leaving-yes-after", messages("gmp.dol.threequestions.after2016"))
+      doc must haveLegendWithText(messages("gmp.other.dol.left.question"))
     }
   }
 
+}
+
+class DateOfLeavingScenarioSurvivorSpec extends DateOfLeavingSpec {
+  
+  override val scenario = CalculationType.SURVIVOR
+
+  "DateOfLeavingScenarioSurvivor page" must {
+    behave like pageWithHeader(messages("gmp.survivor.dol.question"))
+
+    "have correct input labels and legend with text" in {
+      doc must haveInputLabelWithText("leaving-no", messages("gmp.dol.threequestions.no.survivor"))
+      doc must haveInputLabelWithText("leaving-yes-before", messages("gmp.dol.threequestions.before2016"))
+      doc must haveInputLabelWithText("leaving-yes-after", messages("gmp.dol.threequestions.after2016"))
+      doc must haveLegendWithText(messages("gmp.survivor.dol.question"))
+    }
+  }
 }
