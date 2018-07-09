@@ -229,6 +229,8 @@ trait JSoupMatchers {
   def haveElementAtPathWithAttribute(elementSelector: String, attributeName: String, attributeValue: String) = new CssSelectorWithAttributeValueMatcher(attributeName, attributeValue, elementSelector)
   def haveElementAtPathWithClass(elementSelector: String, className: String) = new CssSelectorWithClassMatcher(className, elementSelector)
   def haveElementWithId(id: String) = new CssSelector(s"#${id}")
+  //Legend
+  def haveLegendWithText (expectedText: String) = new CssSelectorWithTextMatcher(expectedText,"legend")
 
   def haveTableRowWithText (expectedText: String) = new TagWithTextMatcher(expectedText, "dt")
   def haveTableRowWithTextDescription (expectedText: String) = new TagWithTextMatcher(expectedText, "dd")
@@ -257,6 +259,8 @@ trait JSoupMatchers {
   def haveLinkElement(id:String, href: String, text: String) = new IdSelectorWithUrlAndTextMatcher(id, href, text)
 
   def haveInputLabelWithText (id:String, expectedText: String) = new CssSelectorWithTextMatcher(expectedText, s"label[for=$id]")
+  //def haveInputLabelWithText2 (id:String, expectedText: String) = new CssSelectorWithTextMatcher(expectedText, s"label[for=$id]")
+
 
   def haveStrongWithText (expectedText: String) = new CssSelectorWithTextMatcher(expectedText,"strong")
 }

@@ -16,7 +16,7 @@
 
 package views.html
 
-import forms.{MemberDetailsForm, PensionDetailsForm}
+import forms.MemberDetailsForm
 import play.api.data.Form
 import play.twirl.api.Html
 import utils.GmpViewSpec
@@ -28,6 +28,18 @@ class MemberDetailsViewSpec extends GmpViewSpec{
 
   "MemberDetails page " must {
     behave like pageWithTitle(messages("gmp.member_details.title"))
+    behave like pageWithHeader(messages("gmp.member_details.header"))
+    behave like pageWithBackLink
+
+    "have correct input labels" in {
+      doc must haveInputLabelWithText("nino", messages("gmp.nino") + " " + messages("gmp.nino.hint"))
+      doc must haveInputLabelWithText("firstForename", messages("gmp.firstname"))
+      doc must haveInputLabelWithText("surname", messages("gmp.lastname"))
+    }
+
+    "have a continue button" in {
+      doc must haveSubmitButton(messages("gmp.continue.button"))
+    }
   }
 
 }

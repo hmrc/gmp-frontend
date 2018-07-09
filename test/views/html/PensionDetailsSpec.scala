@@ -16,10 +16,7 @@
 
 package views.html
 
-import controllers.auth.ExternalUrls
 import forms.PensionDetailsForm
-import models.BulkPreviousRequest
-import org.joda.time.LocalDateTime
 import play.api.data.Form
 import play.twirl.api.Html
 import utils.GmpViewSpec
@@ -38,10 +35,10 @@ class PensionDetailsSpec extends GmpViewSpec {
       doc must haveLinkWithText(messages("gmp.contact.hmrc"))
     }
 
-//    "have a correct URL" in {
-//      doc must haveLinkURL("https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pensions-helpline-contracted-out")
-//    }
+    "have correct input labels" in {
+      doc must haveInputLabelWithText("scon", messages("gmp.scon") + " " + messages("gmp.scon.hint"))
 
+    }
     "have a submit button text" in {
       doc must haveSubmitButton(messages("gmp.continue.button"))
     }
