@@ -17,7 +17,7 @@
 package views.html
 
 import forms.DateOfLeavingForm
-import models.{CalculationType, Leaving}
+import models.CalculationType
 import play.api.data.Form
 import play.twirl.api.Html
 import utils.GmpViewSpec
@@ -31,7 +31,7 @@ abstract class DateOfLeavingSpec extends GmpViewSpec {
 
 class DateOfLeavingScenarioDolSpec extends DateOfLeavingSpec {
 
-  "GMP opposite gender - GOV.UK page" must {
+  "DateOfLeavingScenarioDol page" must {
     behave like pageWithTitle(messages("gmp.leaving.title"))
     behave like pageWithHeader(messages("gmp.leaving.dol.question"))
     behave like pageWithBackLink
@@ -80,7 +80,7 @@ class DateOfLeavingScenarioSpaPayRevSpec extends DateOfLeavingSpec {
 }
 
 class DateOfLeavingScenarioSurvivorSpec extends DateOfLeavingSpec {
-  
+
   override val scenario = CalculationType.SURVIVOR
 
   "DateOfLeavingScenarioSurvivor page" must {
