@@ -19,12 +19,18 @@ package views.html
 import play.twirl.api.Html
 import utils.GmpViewSpec
 
-class UnauthorisedSpec extends GmpViewSpec {
-  override def view: Html = views.html.unauthorised()
+class FailureSpec extends GmpViewSpec{
+  override def view: Html = views.html.failure(message, header, title)
+  private val message : String = "message"
+  private val header : String = "header"
+  private val title : String = "title"
 
-  "Unauthorised page" must {
-    behave like pageWithTitle(messages("gmp.unauthorised.title"))
-    behave like pageWithHeader(messages("gmp.unauthorised.message"))
+  "Failure page" must {
+    behave like pageWithTitle(title)
+    behave like pageWithHeader(header)
+
+    "have correct paragraph text" in {
+      doc must haveParagraphWithText(message)
+    }
   }
-
 }

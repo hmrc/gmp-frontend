@@ -17,7 +17,6 @@
 package views.html
 
 import controllers.auth.ExternalUrls
-import controllers.routes
 import play.twirl.api.Html
 import utils.GmpViewSpec
 

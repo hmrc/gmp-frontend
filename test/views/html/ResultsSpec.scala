@@ -17,7 +17,7 @@
 package views.html
 
 import models.{CalculationPeriod, CalculationResponse, ContributionsAndEarnings}
-import org.joda.time.{LocalDate, LocalDateTime}
+import org.joda.time.LocalDate
 import play.twirl.api.Html
 import utils.GmpViewSpec
 
