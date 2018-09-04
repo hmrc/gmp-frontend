@@ -22,7 +22,7 @@
 
 @implicitFormInstance = @{ Some(memberDetailsForm) }
 
-@gmp_main(title = Messages("gmp.member_details.title")) {
+@gmp_main(title = Messages("gmp.member_details.title"), pageHeading= Some(Messages("gmp.member_details.header"))) {
 
   @views.html.helpers.errorSummary(memberDetailsForm)
 
@@ -61,7 +61,8 @@
               </div>
 
               <div>
-                  <button class="button" type="submit" id="submit-button">@Messages("gmp.continue.button")</button>
+                  <button data-journey-click='@Messages("gmp.ga-track.button.click"):@Messages("gmp.member_details.header"):@Messages("gmp.continue.button")'
+                          class="button" type="submit" id="submit-button">@Messages("gmp.continue.button")</button>
               </div>
           }
 

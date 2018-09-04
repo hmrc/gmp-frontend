@@ -23,7 +23,7 @@
 
 @implicitFormInstance = @{ Some(calculationType) }
 
-@gmp_main(title = Messages("gmp.calculation_type.title")) {
+@gmp_main(title = Messages("gmp.calculation_type.title"), pageHeading= Some(Messages("gmp.scenarios.title"))) {
 
   @views.html.helpers.errorSummary(calculationType)
 
@@ -57,7 +57,8 @@
               </div>
 
               <div>
-                  <button class="button" type="submit" id="submit-button">@Messages("gmp.continue.button")</button>
+                  <button data-journey-click='@Messages("gmp.ga-track.button.click"):@Messages("gmp.scenarios.title"):@Messages("gmp.continue.button")'
+                          class="button" type="submit" id="submit-button">@Messages("gmp.continue.button")</button>
               </div>
 
           }

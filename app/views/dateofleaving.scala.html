@@ -29,18 +29,20 @@
   <script type="text/javascript" src='@controllers.routes.AssetsController.at("javascripts/leaving-date.js")'></script>
 }
 
-@gmp_main(title = Messages("gmp.leaving.title"), pageScripts = Some(pageScripts)) {
+
+@heading_h1={@{scenario match {
+case CalculationType.DOL => Messages("gmp.leaving.dol.question")
+case CalculationType.SPA | CalculationType.PAYABLE_AGE | CalculationType.REVALUATION => Messages("gmp.other.dol.left.question")
+case CalculationType.SURVIVOR => Messages("gmp.survivor.dol.question")
+}}}
+@gmp_main(title = Messages("gmp.leaving.title"), pageScripts = Some(pageScripts), pageHeading= Some(heading_h1.toString)) {
 
 @views.html.helpers.errorSummary(dateOfLeavingForm)
 
   <div class="grid">
       <div class="grid-2-3">
           <h1>
-              @{scenario match {
-              case CalculationType.DOL => Messages("gmp.leaving.dol.question")
-              case CalculationType.SPA | CalculationType.PAYABLE_AGE | CalculationType.REVALUATION => Messages("gmp.other.dol.left.question")
-              case CalculationType.SURVIVOR => Messages("gmp.survivor.dol.question")
-              }}
+              @heading_h1
           </h1>
       </div>
   </div>
@@ -150,7 +152,8 @@
 
                 <div>
                   <br/>
-                  <button class="button" type="submit" id="submit-button">@Messages("gmp.continue.button")</button>
+                  <button class="button" data-journey-click='@Messages("gmp.ga-track.button.click"):@heading_h1:@Messages("gmp.continue.button")'
+                          type="submit" id="submit-button">@Messages("gmp.continue.button")</button>
                 </div>
 
             }
