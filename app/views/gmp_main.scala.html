@@ -26,7 +26,8 @@ supportLinkEnabled: Boolean = true,
 signOutEnabled: Boolean = true,
 showSignOutLink: Boolean = true,
 showUserResearchBanner: Boolean = false,
-dashboardLinkEnabled:Boolean = true)(mainContent: Html)(implicit request: Request[_], context: config.GmpContext,messages: Messages)
+dashboardLinkEnabled:Boolean = true,
+pageHeading: Option[String] = None)(mainContent: Html)(implicit request: Request[_], context: config.GmpContext,messages: Messages)
 
 @getHelpForm = {
     @includes.report_problem(supportLinkEnabled)
@@ -47,7 +48,7 @@ dashboardLinkEnabled:Boolean = true)(mainContent: Html)(implicit request: Reques
   scriptElement = Some(scriptElement),
   signOutEnabled = signOutEnabled) {
   @if(dashboardLinkEnabled) {
-    <a href="/guaranteed-minimum-pension/dashboard" class="dashboard-back">@Messages("gmp.back_to_dashboard")</a>
+    <a data-journey-click='@Messages("gmp.ga-track.link.click"):@pageHeading:@Messages("gmp.back_to_dashboard")' href="/guaranteed-minimum-pension/dashboard" class="dashboard-back">@Messages("gmp.back_to_dashboard")</a>
   }
     @mainContent
 }
