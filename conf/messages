@@ -334,7 +334,7 @@ gmp.unavailable = No GMP available
 # Query handling
 ############################################################################
 gmp.queryhandling.resultsmessage = If you disagree with this calculation, contact HM Revenue and Customs by creating a new entry in the single queries database in Shared Workspace''s eRoom.
-gmp.queryhandling.contsandearnings = If you disagree with this information, contact HM Revenue and Customs by creating a new entry in the single queries database in Shared Workspace''s eRoom.
+gmp.queryhandling.contsandearnings = If you do not agree with this result, contact HMRC by creating a new entry in the ''single queries database'' in the Shared Workspace eRoom.
 gmp.queryhandling.changedetails.link = <a href="https://www.gov.uk/tell-hmrc-change-of-details" rel="external">How the member can tell HMRC their personal details have changed</a>
 
 ############################################################################
