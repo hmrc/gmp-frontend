@@ -1,5 +1,5 @@
 @*
-* Copyright 2016 HM Revenue & Customs
+* Copyright 2018 HM Revenue & Customs
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -14,22 +14,11 @@
 * limitations under the License.
 *@
 
-@(message: String, header: String, title: String)(implicit request: Request[_], context: config.GmpContext,messages: Messages)
+@(pageHeading: String=null)(implicit messages: Messages)
 
-@import uk.gov.hmrc.play.views.html._
-@import uk.gov.hmrc.play.views.html.helpers._
-@import views.html.helpers._
+<div id="back" class="js-hidden">
+    <p><a id="back-link" class="custom-back link-back" href="#" data-journey-click='link - click:@pageHeading:@messages("gmp.back.link")'>@messages("gmp.back.link")</a></p>
+</div>
 
-@gmp_main(title = title,supportLinkEnabled = false) {
 
-  <div class="grid">
-      @includes.back_link(header)
-      <div class="grid-2-3">
-          <h1>@header</h1>
-          <br/>
 
-          <p>@Html(message)</p>
-
-      </div>
-  </div>
-}

@@ -46,10 +46,7 @@ dashboardLinkEnabled:Boolean = true)(mainContent: Html)(implicit request: Reques
   isUserResearchBannerVisible = showUserResearchBanner,
   scriptElement = Some(scriptElement),
   signOutEnabled = signOutEnabled) {
-  @if(dashboardLinkEnabled) {
-    <a href="/guaranteed-minimum-pension/dashboard" class="dashboard-back">@Messages("gmp.back_to_dashboard")</a>
-  }
-    @mainContent
+  @mainContent
 }
 
 @scriptElement = {

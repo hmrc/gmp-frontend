@@ -25,6 +25,7 @@
 
 </br>
 <div class="grid">
+  @includes.back_link(Messages("gmp.more_bulk_results.header"))
   <div class="grid grid-2-3">
     <h1 id="recent-bulk-calculations-header">@Messages("gmp.more_bulk_results.header")</h1>
   </div>
@@ -66,8 +67,4 @@
     </table>
   </div>
 
-</br>
-<div class="grid-2-3 custom-back-link">
-  <a href="@routes.DashboardController.get" id="back-link">@Messages("gmp.back.link")</a>
-</div>
 }

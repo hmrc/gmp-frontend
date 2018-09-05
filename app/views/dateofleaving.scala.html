@@ -34,6 +34,7 @@
 @views.html.helpers.errorSummary(dateOfLeavingForm)
 
   <div class="grid">
+      @includes.back_link(Messages(""))
       <div class="grid-2-3">
           <h1>
               @{scenario match {
@@ -155,10 +156,7 @@
 
             }
         </div>
-        <br/><br/>
-        <div>
-            <a href="@routes.DateOfLeavingController.back" id="back-link">@Messages("gmp.back.link")</a>
-        </div>
+
     </div>
 
 }

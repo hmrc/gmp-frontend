@@ -22,11 +22,12 @@
 
 @import models.CalculationType
 
-@gmp_main(title = Messages("gmp.revaluation_rate.title")) {
+@gmp_main(title = Messages("")) {
 
 @views.html.helpers.errorSummary(revaluationRateForm)
 
   <div class="grid">
+      @includes.back_link(Messages("gmp.revaluation.question"))
       <div class="grid-2-3">
           <h1>@{session.scenario match {
               case CalculationType.PAYABLE_AGE | CalculationType.SPA | CalculationType.SURVIVOR => Messages("gmp.revaluation_rate_spa.header")

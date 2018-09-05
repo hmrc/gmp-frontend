@@ -23,6 +23,7 @@
 @gmp_main(title = Messages("gmp.bulk_request_received.title"),supportLinkEnabled = true) {
 
   <div class="grid">
+    @includes.back_link(Messages("gmp.bulk_request_received.banner"))
       <div class="grid-2-3">
 
         <div class="confirmation">
@@ -40,9 +41,8 @@
           <button class="upload-file-button" type="submit" id="submit-button" data-journey-click="gmp-bulk:click:bulk_upload_another">@Messages("gmp.bulk_request_received.button")</button>
         </form>
 
-        <br>
 
-      </div><br>
+      </div>
 
   </div>
 

@@ -27,6 +27,7 @@
   }
 
   <div class="grid-2-3">
+    @includes.back_link(Messages("gmp.contributions_earnings.header"))
     <h1 id="contributions-earnings-title">@Html(Messages("gmp.contributions_earnings.header"))</h1>
   </div>
 
@@ -43,9 +44,5 @@
   </div>
 
   @includes.request_another_button()
-
-  <div class="grid custom-back-link">
-    <a href="@routes.ResultsController.get" id="earnings-back-link">@Messages("gmp.back.link")</a>
-  </div>
 
 }
