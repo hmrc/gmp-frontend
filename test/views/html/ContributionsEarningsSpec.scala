@@ -42,9 +42,9 @@ class ContributionsEarningsSpec extends GmpViewSpec {
     }
 
     "have a table with td's" in {
-      doc must haveTdWithText(messages("Name:"))
-      doc must haveTdWithText(messages("Scheme Contracted Out Number:"))
-      doc must haveTdWithText(messages("National Insurance number:"))
+      doc must haveTdWithText(messages("Name"))
+      doc must haveTdWithText(messages("Scheme Contracted Out Number"))
+      doc must haveTdWithText(messages("National Insurance number"))
     }
 
     "have a valid submit button" in {
