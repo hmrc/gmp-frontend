@@ -87,7 +87,6 @@ class FileUploadControllerSpec extends PlaySpec with OneServerPerSuite with Mock
             result =>
               status(result) must equal(OK)
               contentAsString(result) must include(Messages("gmp.fileupload.title"))
-              contentAsString(result) must include(Messages("gmp.back_to_dashboard"))
           }
         }
       }

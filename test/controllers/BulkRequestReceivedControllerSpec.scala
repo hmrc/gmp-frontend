@@ -99,7 +99,6 @@ class BulkRequestReceivedControllerSpec extends PlaySpec with OneServerPerSuite 
               contentAsString(result) must include(Messages("gmp.bulk_request_received.header"))
               contentAsString(result) must include(Messages("gmp.bulk_request_received.text", bulkRequest1.reference))
               contentAsString(result) must include(Messages("gmp.bulk_request_received.button"))
-              contentAsString(result) must include(Messages("gmp.back_to_dashboard"))
             }
           }
         }

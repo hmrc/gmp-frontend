@@ -84,7 +84,6 @@ class DateOfLeavingControllerSpec extends PlaySpec with OneServerPerSuite with M
             contentAsString(result) must include(Messages("gmp.leaving.title"))
             contentAsString(result) must include(Messages("gmp.date.header_text"))
             contentAsString(result) must include(Messages("gmp.date.example"))
-            contentAsString(result) must include(Messages("gmp.back_to_dashboard"))
           }
         }
       }
