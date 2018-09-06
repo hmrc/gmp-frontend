@@ -23,7 +23,7 @@
 
 @implicitFormInstance = @{ Some(revaluationForm) }
 
-@gmp_main(title = Messages("gmp.revaluation.title")) {
+@gmp_main(title = Messages("gmp.revaluation.question") + " - " + Messages("service.title") + " - " + Messages("gov.uk")) {
 
 @views.html.helpers.errorSummary(revaluationForm)
 

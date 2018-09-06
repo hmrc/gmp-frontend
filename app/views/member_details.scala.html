@@ -22,7 +22,7 @@
 
 @implicitFormInstance = @{ Some(memberDetailsForm) }
 
-@gmp_main(title = Messages("gmp.member_details.title")) {
+@gmp_main(title = Messages("gmp.member_details.header") + " - " + Messages("service.title") + " - " + Messages("gov.uk")) {
 
   @views.html.helpers.errorSummary(memberDetailsForm)
 

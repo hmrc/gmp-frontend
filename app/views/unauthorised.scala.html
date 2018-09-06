@@ -16,7 +16,7 @@
 
 @()(implicit request: Request[_], context: config.GmpContext,messages: Messages)
 
-@gmp_main(title = Messages("gmp.unauthorised.title")) {
+@gmp_main(title = Messages("gmp.unauthorised.message") + " - " + Messages("service.title") + " - " + Messages("gov.uk")) {
 
 <h1>@Messages("gmp.unauthorised.message")</h1>
 

@@ -20,7 +20,7 @@
 @import uk.gov.hmrc.play.views.html.helpers._
 @import config.ApplicationConfig.globalErrors
 
-@gmp_main(title = Messages("gmp.bulk.results.title")) {
+@gmp_main(title = Messages("gmp.bulk.results.banner") + " - " + Messages("service.title") + " - " + Messages("gov.uk")) {
 
 <div class="grid">
     @includes.back_link(Messages("gmp.bulk.results.banner"))
