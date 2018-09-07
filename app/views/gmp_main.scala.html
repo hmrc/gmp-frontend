@@ -39,7 +39,7 @@ dashboardLinkEnabled:Boolean = true)(mainContent: Html)(implicit request: Reques
 
 @main(
   applicationConfig = config.ApplicationConfig,
-  title = title + " - " + Messages("service.title") + " - " + Messages("gov.uk"),
+  title = s"$title - ${Messages("service.title")} - ${Messages("gov.uk")}",
   userLoggedIn = userLoggedIn,
   getHelpForm = getHelpForm,
   linkElement = Some(linkElement),
