@@ -22,10 +22,11 @@
 
 
 
-@gmp_main(title = Messages("gmp.fileupload.title")) {
+@gmp_main(title = Messages("gmp.fileupload.header")) {
 
 
 <div class="grid">
+    @includes.back_link(Messages("gmp.fileupload.header"))
     <div class="grid-2-3">
         <h1>@Messages("gmp.fileupload.header")</h1>
 

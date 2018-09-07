@@ -20,13 +20,14 @@
 @import uk.gov.hmrc.play.views.html.helpers._
 @import config.ApplicationConfig.globalErrors
 
-@gmp_main(title = Messages("gmp.contributions_earnings.title"),supportLinkEnabled = false, dashboardLinkEnabled = !calculationResponse.hasErrors) {
+@gmp_main(title = Messages("gmp.contributions_earnings.header"),supportLinkEnabled = false, dashboardLinkEnabled = !calculationResponse.hasErrors) {
 
   @if(calculationResponse.hasSuccessfulCalculations) {
     @includes.print_page()
   }
 
   <div class="grid-2-3">
+    @includes.back_link(Messages("gmp.contributions_earnings.header"))
     <h1 id="contributions-earnings-title">@Html(Messages("gmp.contributions_earnings.header"))</h1>
   </div>
 
@@ -43,9 +44,5 @@
   </div>
 
   @includes.request_another_button()
-
-  <div class="grid custom-back-link">
-    <a href="@routes.ResultsController.get" id="earnings-back-link">@Messages("gmp.back.link")</a>
-  </div>
 
 }

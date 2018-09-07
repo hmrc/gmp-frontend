@@ -21,9 +21,10 @@
 @import views.html.helpers._
 
 
-@gmp_main(title = Messages("gmp.thank_you.title"),supportLinkEnabled = false, dashboardLinkEnabled = false) {
+@gmp_main(title = Messages("gmp.thank_you.header"),supportLinkEnabled = false, dashboardLinkEnabled = false) {
 
   <div class="grid" id="thank-you-page">
+      @includes.back_link(Messages("gmp.thank_you.header"))
       <div class="grid-2-3">
           <h1>@Messages("gmp.thank_you.header")</h1>
 

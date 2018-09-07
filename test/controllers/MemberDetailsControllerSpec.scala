@@ -87,7 +87,6 @@ class MemberDetailsControllerSpec extends PlaySpec with OneServerPerSuite with M
           contentAsString(result) must include(Messages("gmp.nino"))
           contentAsString(result) must include(Messages("gmp.firstname"))
           contentAsString(result) must include(Messages("gmp.lastname"))
-          contentAsString(result) must include(Messages("gmp.back_to_dashboard"))
         }
       }
 

@@ -22,11 +22,12 @@
 
 @implicitFormInstance = @{ Some(memberDetailsForm) }
 
-@gmp_main(title = Messages("gmp.member_details.title")) {
+@gmp_main(title = Messages("gmp.member_details.header")) {
 
   @views.html.helpers.errorSummary(memberDetailsForm)
 
   <div class="grid">
+      @includes.back_link(Messages("gmp.pension_details.header"))
       <div class="grid-2-3">
           <h1>@Messages("gmp.member_details.header")</h1>
       </div>
@@ -65,11 +66,8 @@
               </div>
           }
 
-      </div><br>
-
-      <div class="grid-2-3 custom-back-link">
-        <a href="@routes.MemberDetailsController.back" id="back-link">@Messages("gmp.back.link")</a>
       </div>
+
 
   </div>
 

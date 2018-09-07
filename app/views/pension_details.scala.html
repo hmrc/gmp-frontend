@@ -27,11 +27,14 @@
     <script type="text/javascript" src='@controllers.routes.AssetsController.at("javascripts/pension-details.js")'></script>
 }
 
-@gmp_main(title = Messages("gmp.pension_details.title"), pageScripts = Some(pageScripts)) {
+@gmp_main(title = Messages("gmp.pension_details.header"), pageScripts = Some(pageScripts)) {
 
   @views.html.helpers.errorSummary(pensionDetailsForm)
 
+
+
   <div class="grid">
+      @includes.back_link(Messages("gmp.pension_details.header"))
       <div class="grid-2-3">
           <h1>@Messages("gmp.pension_details.header")</h1>
       </div>

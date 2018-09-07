@@ -29,18 +29,24 @@
   <script type="text/javascript" src='@controllers.routes.AssetsController.at("javascripts/leaving-date.js")'></script>
 }
 
-@gmp_main(title = Messages("gmp.leaving.title"), pageScripts = Some(pageScripts)) {
+@heading = {
+    @{scenario match {
+        case CalculationType.DOL => Messages("gmp.leaving.dol.question")
+        case CalculationType.SPA | CalculationType.PAYABLE_AGE | CalculationType.REVALUATION => Messages("gmp.other.dol.left.question")
+        case CalculationType.SURVIVOR => Messages("gmp.survivor.dol.question")
+        }
+    }
+}
+
+@gmp_main(title = heading.body, pageScripts = Some(pageScripts)) {
 
 @views.html.helpers.errorSummary(dateOfLeavingForm)
 
   <div class="grid">
+      @includes.back_link(Messages(""))
       <div class="grid-2-3">
           <h1>
-              @{scenario match {
-              case CalculationType.DOL => Messages("gmp.leaving.dol.question")
-              case CalculationType.SPA | CalculationType.PAYABLE_AGE | CalculationType.REVALUATION => Messages("gmp.other.dol.left.question")
-              case CalculationType.SURVIVOR => Messages("gmp.survivor.dol.question")
-              }}
+              @heading
           </h1>
       </div>
   </div>
@@ -155,10 +161,7 @@
 
             }
         </div>
-        <br/><br/>
-        <div>
-            <a href="@routes.DateOfLeavingController.back" id="back-link">@Messages("gmp.back.link")</a>
-        </div>
+
     </div>
 
 }

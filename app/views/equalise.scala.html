@@ -20,11 +20,12 @@
 @import uk.gov.hmrc.play.views.html.helpers._
 @import views.html.helpers._
 
-@gmp_main(title = Messages("gmp.equalise.title")) {
+@gmp_main(title = Messages("gmp.equalise_header")) {
 
   @views.html.helpers.errorSummary(equaliseForm)
 
   <div class="grid">
+    @includes.back_link(Messages("gmp.equalise_header"))
       <div class="grid-2-3">
           <h1>@Messages("gmp.equalise_header")</h1>
           <p>@Messages("gmp.equalise_subheader")</p>
@@ -63,10 +64,6 @@
       </div>
 
       }
-
-      <div>
-        <a href="@routes.EqualiseController.back" id="back-link">@Messages("gmp.back.link")</a>
-      </div>
 
     </div>
   </div>

@@ -39,17 +39,14 @@ dashboardLinkEnabled:Boolean = true)(mainContent: Html)(implicit request: Reques
 
 @main(
   applicationConfig = config.ApplicationConfig,
-  title = title,
+  title = s"$title - ${Messages("service.title")} - ${Messages("gov.uk")}",
   userLoggedIn = userLoggedIn,
   getHelpForm = getHelpForm,
   linkElement = Some(linkElement),
   isUserResearchBannerVisible = showUserResearchBanner,
   scriptElement = Some(scriptElement),
   signOutEnabled = signOutEnabled) {
-  @if(dashboardLinkEnabled) {
-    <a href="/guaranteed-minimum-pension/dashboard" class="dashboard-back">@Messages("gmp.back_to_dashboard")</a>
-  }
-    @mainContent
+  @mainContent
 }
 
 @scriptElement = {

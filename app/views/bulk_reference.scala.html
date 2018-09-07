@@ -24,11 +24,12 @@
 @import play.api.i18n.Messages.Implicits._
 @import play.api.Play.current
 
-@gmp_main(title = Messages("gmp.bulk_reference.title"),supportLinkEnabled = true) {
+@gmp_main(title = Messages("gmp.bulk_reference.header"), supportLinkEnabled = true) {
 
   @views.html.helpers.errorSummary(bulkReferenceForm)
 
   <div class="grid">
+    @includes.back_link(Messages("gmp.bulk_reference.header"))
       <div class="grid-2-3">
 
         <h1>@Messages("gmp.bulk_reference.header")</h1>
@@ -55,11 +56,6 @@
             <button class="button" type="submit" id="submit-button">@Messages("gmp.bulk_reference.button")</button>
           </div>
         }
-
-        <br>
-        <div>
-          <a href="@routes.FileUploadController.get" id="back-link">@Messages("gmp.back.link")</a>
-        </div>
 
       </div><br>
 

@@ -6,29 +6,35 @@ gmp.bulk_failure_antivirus.title = GMP bulk file virus - GOV.UK
 gmp.bulk_failure_missing.title = GMP no bulk file - GOV.UK
 gmp.bulk_failure_duplicate.title = GMP duplicate file - GOV.UK
 gmp.bulk_failure_file_too_large.title = GMP file too large - GOV.UK
-gmp.bulk_reference.title = Name your GMP calculation - GOV.UK
-gmp.bulk_request_received.title = GMP bulk file received - GOV.UK
-gmp.bulk.results.title = Download GMP calculation - GOV.UK
+gmp.bulk_reference.title = Name your calculation
+gmp.bulk_request_received.title = Your request has been received
+gmp.bulk.results.title = Calculation ready
 gmp.bulk.results_not_found.title = GMP calculation no longer available - GOV.UK
-gmp.bulk.wrong_user.title = Wrong GMP checker login - GOV.UK
-gmp.contributions_earnings.title = Contributions and earnings - GOV.UK
-gmp.dashboard.title = GMP checker - GOV.UK
-gmp.leaving.title = Left pension scheme - GOV.UK
-gmp.equalise.title = GMP opposite gender - GOV.UK
-gmp.inflation_proof.title = GMP inflation proofing - GOV.UK
-gmp.member_details.title = Member details - GOV.UK
-gmp.more_bulk_results.title = Recent bulk GMP calculations - GOV.UK
-gmp.pension_details.title = Pension scheme details - GOV.UK
+gmp.bulk.wrong_user.title = There is a problem
+gmp.contributions_earnings.title = Contributions and earnings
+gmp.dashboard.title = Guaranteed Minimum Pension (GMP) checker
+gmp.leaving.title = Did the member leave the scheme before 6 April 2016?
+gmp.equalise.title = Do you also want an opposite gender calculation?
+gmp.inflation_proof.title = Would you like a calculation for a date after the date of death?
+gmp.member_details.title = Member details
+gmp.more_bulk_results.title = Recent bulk calculations
+gmp.pension_details.title = Pension scheme details
 gmp.results.title = GMP calculation result - GOV.UK
 gmp.results.error = GMP checker error - GOV.UK
-gmp.revaluation.title = GMP calculation at specific date - GOV.UK
-gmp.revaluation_rate.title = GMP revaluation rate - GOV.UK
-gmp.calculation_type.title = GMP calculation type - GOV.UK
+gmp.revaluation.title = At which date would you like the calculation to apply?
+gmp.revaluation_rate.title = If HMRC needs to revalue this calculation which rate would you like to use?
+gmp.calculation_type.title = Choose what type of calculation you need for this member
 gmp.offline.title = GMP checker offline - GOV.UK
-gmp.thank_you.title = GMP checker survey thanks - GOV.UK
-gmp.unauthorised.title = Wrong GMP checker login - GOV.UK
-gmp.fileupload.title = Upload GMP file - GOV.UK
+gmp.thank_you.title = Thank you
+gmp.unauthorised.title = You are not authorised to view this page
+gmp.fileupload.title = Upload your file
 gmp.session_missing.title = Incomplete GMP checker information - GOV.UK
+
+############################################################################
+# Service info titles
+############################################################################
+service.title=Guaranteed Minimum Pension
+gov.uk=GOV.UK
 
 ############################################################################
 # Headers
@@ -214,7 +220,7 @@ gmp.error.reval_date.to = The calculation can only be revalued up until 4 April 
 gmp.error.year.invalid.format = Enter the year in full (4 numbers)
 gmp.error.date.nonnumber = Enter a date using numbers only
 gmp.error.reason.mandatory = Select an option
-gmp.generic.errors_heading = There is a problem with the form
+gmp.generic.errors_heading = There is a problem
 gmp.error.name.invalid = Enter a {0} using only letters, hyphens, apostrophes and spaces
 gmp.error.surname.invalid = Enter a last name with more than 1 character
 gmp.error.email.invalid = Enter a valid email address

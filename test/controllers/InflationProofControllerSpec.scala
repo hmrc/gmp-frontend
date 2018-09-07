@@ -74,7 +74,6 @@ class InflationProofControllerSpec extends PlaySpec with OneServerPerSuite with 
             val result = TestInflationProofController.get.apply(request)
             status(result) must equal(OK)
             contentAsString(result) must include(Messages("gmp.inflation_proof.question"))
-            contentAsString(result) must include(Messages("gmp.back_to_dashboard"))
             contentAsString(result) must include(Messages("gmp.check_gmp.button"))
           }
         }
