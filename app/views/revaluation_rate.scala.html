@@ -24,14 +24,14 @@
 
 @heading = {
     @{session.scenario match {
-    case CalculationType.PAYABLE_AGE | CalculationType.SPA | CalculationType.SURVIVOR => Messages("gmp.revaluation_rate_spa.header")
-    case CalculationType.REVALUATION => {
-    session.revaluationDate match {
-    case Some(rd) if(!rd.isOnOrAfter06042016) => Messages("gmp.revaluation_rate_spa.header")
-    case _ => Messages("gmp.revaluation_rate.header")
-    }
-    }
-    case _ => Messages("gmp.revaluation_rate.header")
+        case CalculationType.PAYABLE_AGE | CalculationType.SPA | CalculationType.SURVIVOR => Messages("gmp.revaluation_rate_spa.header")
+        case CalculationType.REVALUATION => {
+            session.revaluationDate match {
+                case Some(rd) if(!rd.isOnOrAfter06042016) => Messages("gmp.revaluation_rate_spa.header")
+                case _ => Messages("gmp.revaluation_rate.header")
+            }
+        }
+        case _ => Messages("gmp.revaluation_rate.header")
     }}
 }
 

@@ -38,7 +38,7 @@
     }
 }
 
-@gmp_main(title = heading + " - " + Messages("service.title") + " - " + Messages("gov.uk"), pageScripts = Some(pageScripts)) {
+@gmp_main(title = heading.body, pageScripts = Some(pageScripts)) {
 
 @views.html.helpers.errorSummary(dateOfLeavingForm)
 

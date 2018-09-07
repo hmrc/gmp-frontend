@@ -28,7 +28,7 @@
 <script type="text/javascript" src='@controllers.routes.AssetsController.at("javascripts/revaluation-date.js")'></script>
 }
 
-@gmp_main(title = Messages("gmp.inflation_proof.question") + " - " + Messages("service.title") + " - " + Messages("gov.uk"), pageScripts = Some(pageScripts)) {
+@gmp_main(title = Messages("gmp.inflation_proof.question"), pageScripts = Some(pageScripts)) {
 
 @views.html.helpers.errorSummary(inflationProofForm)
 
