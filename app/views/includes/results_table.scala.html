@@ -27,18 +27,22 @@
             <th class="multi-results-header-date"><span class="hidden">hidden text for empty th</span></th>
             <th class="multi-results-header-text table-background">
                 @if(calculationResponse.calcType == CalculationType.SURVIVOR.toInt) {
-                <span aria-hidden="true">@Messages("gmp.total.entitlement")</span><span class="visuallyhidden">@Messages("gmp.result.first-table-total.value")</span>
+                <span aria-hidden="true">@Messages("gmp.total.entitlement")</span>
+                <span class="visuallyhidden">@Messages("gmp.result.first-table-total.value")</span>
                 } else {
-                <span aria-hidden="true">@Messages("gmp.total")</span><span class="visuallyhidden">@Messages("gmp.result.first-table-total.value")</span>
+                <span aria-hidden="true">@Messages("gmp.total")</span>
+                <span class="visuallyhidden">@Messages("gmp.result.first-table-total.value")</span>
                 }
                 <br/><span class="multi-results-header-value">£@calculationResponse.totalGmp</span>
 
             </th>
             <th class="multi-results-header-text">
                 @if(calculationResponse.calcType == CalculationType.SURVIVOR.toInt) {
-                <span aria-hidden="true">@Messages("gmp.post88.entitlement")</span><span class="visuallyhidden">@Messages("gmp.result.first-table-post.value")</span>
+                <span aria-hidden="true">@Messages("gmp.post88.entitlement")</span>
+                <span class="visuallyhidden">@Messages("gmp.result.first-table-post.value")</span>
                 } else {
-                <span aria-hidden="true"> @Messages("gmp.post.1988")</span><span class="visuallyhidden">@Messages("gmp.result.first-table-post.value")</span>
+                <span aria-hidden="true"> @Messages("gmp.post.1988")</span>
+                <span class="visuallyhidden">@Messages("gmp.result.first-table-post.value")</span>
                 }
                 <br/><span class="multi-results-header-value">£@calculationResponse.post88Gmp</span>
             </th>
@@ -51,8 +55,10 @@
     @for((period, count) <- calculationResponse.calculationPeriods.zipWithIndex){
         <tr>
             <td>
-                <span class="bold-xsmall" id="gmp-from-date-@count">@Messages("gmp.date_from")</span> @{ new LocalDate(period.startDate.get).toString("d M yyyy") } <br/>
-                <span class="bold-xsmall" id="gmp-to-date-@count">@Messages("gmp.date_to")</span> @{ new LocalDate(period.endDate).toString("d M yyyy") }
+                <span class="bold-xsmall" id="gmp-from-date-@count">@Messages("gmp.date_from")</span>
+                @{ new LocalDate(period.startDate.get).toString("d M yyyy") } <br/>
+                <span class="bold-xsmall" id="gmp-to-date-@count">@Messages("gmp.date_to")</span>
+                @{ new LocalDate(period.endDate).toString("d M yyyy") }
             </td>
             <td id="gmp-total-@count" class="multi-table-value table-background">
                 <span>£@{ period.gmpTotal }<br/>@Messages("gmp.frequency.weekly")</span>
@@ -84,11 +90,18 @@
 <table id="post90-periods">
     <thead>
         <tr id="post90-table-column-names">
-            <th class="multi-results-header-date"><span class="hidden">hidden text for empty th</span></th>
-            <th class="multi-results-header-text"><span aria-hidden="true">@Messages("gmp.post90.true")</span><span class="visuallyhidden">@Messages("gmp.post90.true.value")</span>
-                <br/><span class="multi-results-header-value">£@calculationResponse.trueCalculation</span></th>
-            <th class="multi-results-header-text"><span aria-hidden="true">@Messages("gmp.post90.opposite")</span><span class="visuallyhidden">@Messages("gmp.post90.opposite.value")</span>
-                <br/><span class="multi-results-header-value">£@calculationResponse.oppositeCalculation</span></th>
+            <th class="multi-results-header-date">
+                <span class="hidden">hidden text for empty th</span></th>
+            <th class="multi-results-header-text">
+                <span aria-hidden="true">@Messages("gmp.post90.true")</span>
+                <span class="visuallyhidden">@Messages("gmp.post90.true.value")</span>
+                <br/><span class="multi-results-header-value">£@calculationResponse.trueCalculation</span>
+            </th>
+            <th class="multi-results-header-text">
+                <span aria-hidden="true">@Messages("gmp.post90.opposite")</span>
+                <span class="visuallyhidden">@Messages("gmp.post90.opposite.value")</span>
+                <br/><span class="multi-results-header-value">£@calculationResponse.oppositeCalculation</span>
+            </th>
             @if(calculationResponse.showRateColumn){
             <th class="multi-results-header-rate">@Messages("gmp.rate")</th>
             }
@@ -98,8 +111,10 @@
         @for((period, count) <- calculationResponse.calculationPeriods.zipWithIndex){
             <tr>
                 <td>
-                    <span class="bold-xsmall" id="post90-from-date-@count">@Messages("gmp.date_from")</span> @{ new LocalDate(period.startDate.get).toString("d M yyyy") } <br/>
-                    <span class="bold-xsmall" id="post90-to-date-@count">@Messages("gmp.date_to")</span> @{ new LocalDate(period.endDate).toString("dd M yyyy") }
+                    <span class="bold-xsmall" id="post90-from-date-@count">@Messages("gmp.date_from")</span>
+                    @{ new LocalDate(period.startDate.get).toString("d M yyyy") } <br/>
+                    <span class="bold-xsmall" id="post90-to-date-@count">@Messages("gmp.date_to")</span>
+                    @{ new LocalDate(period.endDate).toString("dd M yyyy") }
                 </td>
                 <td id="post90-total-@count" class="multi-table-value">
                     @if(period.dualCalcPost90OppositeTotal != Some("0.00")) {
