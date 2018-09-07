@@ -39,7 +39,7 @@ gmp.results.table_caption = GMP calculation results each period
 gmp.bulk.results_not_found = Calculation no longer available
 gmp.signout = Sign out
 gmp.title = Guaranteed Minimum Pension (GMP) checker
-gmp.entered_details.title = Entered details
+gmp.entered_details.title = Scheme member details
 gmp.entered_details.title.survivor = Deceased member''s entered details
 gmp.contributions_earnings.header = Contributions and earnings
 gmp.member_details.header = Member details
@@ -98,9 +98,11 @@ gmp.more_bulk_results.header = Recent bulk calculations
 
 gmp.date_from = From:
 gmp.date_to = To:
-gmp.multi.dual_calc.header = Post-1990 GMP value
+gmp.multi.dual_calc.header = Post-1990 value
 gmp.post90.true = True gender
+gmp.post90.true.value = True-gender value
 gmp.post90.opposite = Opposite gender
+gmp.post90.opposite.value = Opposite-gender value
 
 ############################################################################
 # Buttons
@@ -284,7 +286,7 @@ gmp.error.session_parts_missing = You have not given us enough information about
 ############################################################################
 # Calculation results
 ############################################################################
-gmp.payable_age.header = GMP value at GMP payable age ({0})
+gmp.payable_age.header =Value at {0}
 gmp.spa.header = GMP value at State Pension age ({0})
 gmp.leaving.scheme.header = GMP value at {0}
 gmp.leaving.revalued.header = GMP revalued to {0}
@@ -292,6 +294,9 @@ gmp.per.week = GMP a week
 gmp.post.1988 = Post 1988
 gmp.rate = Rate
 gmp.rate_hmrc_holds = Rate
+
+gmp.result.first-table-total.value=Total value
+gmp.result.first-table-post.value=Post-1988 value
 
 gmp.revaluation_rate.type_0 = HMRC held rate
 gmp.revaluation_rate.type_1 = S148
@@ -335,7 +340,7 @@ gmp.unavailable = No GMP available
 ############################################################################
 # Query handling
 ############################################################################
-gmp.queryhandling.resultsmessage = If you disagree with this calculation, contact HM Revenue and Customs by creating a new entry in the single queries database in Shared Workspace''s eRoom.
+gmp.queryhandling.resultsmessage = If you do not agree with this result, contact HMRC by creating a new entry in the ''single queries database'' in the Shared Workspace eRoom.
 gmp.queryhandling.contsandearnings = If you disagree with this information, contact HM Revenue and Customs by creating a new entry in the single queries database in Shared Workspace''s eRoom.
 gmp.queryhandling.changedetails.link = <a href="https://www.gov.uk/tell-hmrc-change-of-details" rel="external">How the member can tell HMRC their personal details have changed</a>
 
