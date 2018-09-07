@@ -51,8 +51,8 @@
     @for((period, count) <- calculationResponse.calculationPeriods.zipWithIndex){
         <tr>
             <td>
-                <span class="bold-xsmall" id="gmp-from-date-@count">@Messages("gmp.date_from")</span> @{ new LocalDate(period.startDate.get).toString("d MM yyyy") } <br/>
-                <span class="bold-xsmall" id="gmp-to-date-@count">@Messages("gmp.date_to")</span> @{ new LocalDate(period.endDate).toString("d MM yyyy") }
+                <span class="bold-xsmall" id="gmp-from-date-@count">@Messages("gmp.date_from")</span> @{ new LocalDate(period.startDate.get).toString("d M yyyy") } <br/>
+                <span class="bold-xsmall" id="gmp-to-date-@count">@Messages("gmp.date_to")</span> @{ new LocalDate(period.endDate).toString("d M yyyy") }
             </td>
             <td id="gmp-total-@count" class="multi-table-value table-background">
                 <span>£@{ period.gmpTotal }<br/>@Messages("gmp.frequency.weekly")</span>
@@ -98,8 +98,8 @@
         @for((period, count) <- calculationResponse.calculationPeriods.zipWithIndex){
             <tr>
                 <td>
-                    <span class="bold-xsmall" id="post90-from-date-@count">@Messages("gmp.date_from")</span> @{ new LocalDate(period.startDate.get).toString("d MM yyyy") } <br/>
-                    <span class="bold-xsmall" id="post90-to-date-@count">@Messages("gmp.date_to")</span> @{ new LocalDate(period.endDate).toString("dd MM yyyy") }
+                    <span class="bold-xsmall" id="post90-from-date-@count">@Messages("gmp.date_from")</span> @{ new LocalDate(period.startDate.get).toString("d M yyyy") } <br/>
+                    <span class="bold-xsmall" id="post90-to-date-@count">@Messages("gmp.date_to")</span> @{ new LocalDate(period.endDate).toString("dd M yyyy") }
                 </td>
                 <td id="post90-total-@count" class="multi-table-value">
                     @if(period.dualCalcPost90OppositeTotal != Some("0.00")) {
