@@ -20,7 +20,7 @@
 @import uk.gov.hmrc.play.views.html.helpers._
 @import views.html.helpers._
 
-@gmp_main(title = Messages("gmp.equalise.title")) {
+@gmp_main(title = Messages("gmp.equalise.title"), pageHeading= Some(Messages("gmp.equalise_header"))) {
 
   @views.html.helpers.errorSummary(equaliseForm)
 
@@ -57,7 +57,8 @@
         </div>
 
         <div>
-          <button class="button" type="submit" id="submit-button">@Messages("gmp.check_gmp.button")</button>
+          <button data-journey-click='@Messages("gmp.ga-track.button.click"):@Messages("gmp.equalise_header"):@Messages("gmp.check_gmp.button")'
+                  class="button" type="submit" id="submit-button">@Messages("gmp.check_gmp.button")</button>
         </div>
 
       </div>

@@ -27,7 +27,7 @@
     <script type="text/javascript" src='@controllers.routes.AssetsController.at("javascripts/pension-details.js")'></script>
 }
 
-@gmp_main(title = Messages("gmp.pension_details.title"), pageScripts = Some(pageScripts)) {
+@gmp_main(title = Messages("gmp.pension_details.title"), pageScripts = Some(pageScripts), pageHeading= Some(Messages("gmp.pension_details.header"))) {
 
   @views.html.helpers.errorSummary(pensionDetailsForm)
 
@@ -53,9 +53,10 @@
 
               </div>
 
-              <p>@Messages("gmp.scon.message") <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pensions-helpline-contracted-out">@Messages("gmp.contact.hmrc")</a>.</p>
+              <p>@Messages("gmp.scon.message") <a data-journey-click='@Messages("gmp.ga-track.link.click"):@Messages("gmp.pension_details.header"):@Messages("gmp.contact.hmrc")'
+                                                  href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pensions-helpline-contracted-out">@Messages("gmp.contact.hmrc")</a>.</p>
 
-          <button class="button" type="submit" id="submit-button">@Messages("gmp.continue.button")</button>
+          <button data-journey-click='@Messages("gmp.ga-track.button.click"):@Messages("gmp.pension_details.header"):@Messages("gmp.continue.button")' class="button" type="submit" id="submit-button">@Messages("gmp.continue.button")</button>
 
           }
 
