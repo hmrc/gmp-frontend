@@ -45,7 +45,6 @@ trait UploadConfig  extends ServicesConfig {
     val onFailure = ApplicationConfig.frontendHost+routes.FileUploadController.failure()
     val callback = s"${baseUrl("gmp-frontend")}${routes.FileUploadController.callback()}"
     val pageHeadingGA = Messages("gmp.fileupload.header")
-
     Logger.debug(s"[UploadConfig][onSuccessUrl : $onSuccess]")
     s"$url?" +
       s"callbackUrl=${encode(callback)}" +
@@ -53,8 +52,7 @@ trait UploadConfig  extends ServicesConfig {
       s"&onFailure=${encode(onFailure)}" +
       s"&accepts=${encode(".csv")}" +
       s"&collection=${encode("gmp")}" +
-      s"&pageHeadingGA=${encode(pageHeadingGA)}" + {
-    }
+      s"&pageHeadingGA=${encode(pageHeadingGA)}"
 
   }
 
@@ -70,8 +68,6 @@ trait AttachmentsConnector extends HeaderCarrierForPartialsConverter {
   val http: HttpGet = WSHttp
 
   def getFileUploadPartial()(implicit request: Request[_]): Future[HtmlPartial] = {
-Logger.debug("test config...!!!!!!!!!"+UploadConfig(request).toString)
-    println("test config...!!!!!!!!!"+UploadConfig(request).toString)
     val partial = http.GET[HtmlPartial](UploadConfig(request))
 
     // $COVERAGE-OFF$
