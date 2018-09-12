@@ -1,6 +1,7 @@
 ############################################################################
 # Page titles
 ############################################################################
+gmp-pbik-gov.uk-title=GOV.UK
 gmp.bulk_failure_generic.title = GMP bulk file problem - GOV.UK
 gmp.bulk_failure_antivirus.title = GMP bulk file virus - GOV.UK
 gmp.bulk_failure_missing.title = GMP no bulk file - GOV.UK
