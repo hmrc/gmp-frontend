@@ -1,6 +1,7 @@
 ############################################################################
 # Page titles
 ############################################################################
+gmp-pbik-gov.uk-title=GOV.UK
 gmp.bulk_failure_generic.title = GMP bulk file problem - GOV.UK
 gmp.bulk_failure_antivirus.title = GMP bulk file virus - GOV.UK
 gmp.bulk_failure_missing.title = GMP no bulk file - GOV.UK
@@ -41,7 +42,7 @@ gmp.entered_details.title = Scheme member details
 gmp.entered_details.title.survivor = Deceased member''s entered details
 gmp.contributions_earnings.header = Contributions and earnings
 gmp.member_details.header = Member details
-gmp.pension_details.header = Pension scheme details
+gmp.pension_details.header = Enter Scheme Contracted Out Number (SCON)
 gmp.revaluation.question = At which date would you like the calculation to apply?
 gmp.revaluation.info = This could be a transfer date, date of divorce, or any other date relevant to the member''s circumstances.
 gmp.inflation_proof.question = Would you like a calculation for a date after the date of death?
@@ -203,7 +204,7 @@ gmp.error.email.invalid = Enter a valid email address
 gmp.error.date.invalid = Enter a valid date
 gmp.error.day.invalid = Enter a day between 1 and 31
 gmp.error.length = {0} is too long (>{1})
-gmp.error.mandatory = Enter a {0}
+gmp.error.mandatory = Enter a Scheme Contracted Out Number in the correct format
 gmp.error.mandatory.an = Enter an {0}
 gmp.error.firstnameorinitial = Enter a first name or initial
 gmp.error.firstname.toolong = Enter a first name that is fewer than 99 characters

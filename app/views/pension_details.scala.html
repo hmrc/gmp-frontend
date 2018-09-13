@@ -27,7 +27,7 @@
     <script type="text/javascript" src='@controllers.routes.AssetsController.at("javascripts/pension-details.js")'></script>
 }
 
-@gmp_main(title = Messages("gmp.pension_details.title"), pageScripts = Some(pageScripts)) {
+@gmp_main(title = Messages("gmp.pension_details.header") + " - " + Messages("gmp-pbik-gov.uk-title"), pageScripts = Some(pageScripts)) {
 
   @views.html.helpers.errorSummary(pensionDetailsForm)
 
@@ -43,10 +43,7 @@
           @form(action = routes.PensionDetailsController.post) {
 
               <div class="form-group" id="scon-form-group">
-
                   @gmpInput(pensionDetailsForm("scon"),
-                  '_label -> Html(Messages("gmp.scon")),
-                  '_labelClass -> "form-label-bold",
                   '_id -> "scon",
                   '_maxLength -> 9,
                   '_hintText -> Messages("gmp.scon.hint"))
