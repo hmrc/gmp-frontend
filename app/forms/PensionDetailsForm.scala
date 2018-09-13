@@ -29,7 +29,7 @@ object PensionDetailsForm {
   val pensionDetailsForm = Form(
     mapping(
       "scon" -> text
-        .verifying(Messages("gmp.error.mandatory", Messages("gmp.scon")), x => x.length != 0)
+        .verifying(Messages("gmp.error.mandatory"), x => x.length != 0)
         .verifying(Messages("gmp.error.scon.invalid"), x => x.length == 0 || SconValidate.isValid(x))
 
     )(customApply)(customUnapply)
