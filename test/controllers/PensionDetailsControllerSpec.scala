@@ -89,7 +89,7 @@ class PensionDetailsControllerSpec extends PlaySpec with OneServerPerSuite with 
         withAuthorisedUser { user =>
           getPensionDetails(user) { result =>
             status(result) must equal(OK)
-            contentAsString(result) must include(Messages("gmp.pension_details.title"))
+            contentAsString(result) must include(Messages("gmp.pension_details.header"))
             contentAsString(result) must include(Messages("gmp.scon"))
             contentAsString(result) must include(Messages("gmp.signout"))
             contentAsString(result) must include(Messages("gmp.back_to_dashboard"))
