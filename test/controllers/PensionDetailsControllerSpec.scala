@@ -137,7 +137,7 @@ class PensionDetailsControllerSpec extends PlaySpec with OneServerPerSuite with 
         withAuthorisedUser { request =>
           val result = TestPensionDetailsController.post()(request.withJsonBody(Json.toJson(emptySconGmpRequest)))
           status(result) must equal(BAD_REQUEST)
-          contentAsString(result) must include(Messages("gmp.error.mandatory", Messages("gmp.scon")))
+          contentAsString(result) must include(Messages("gmp.error.mandatory.new", Messages("gmp.scon")))
         }
       }
 
