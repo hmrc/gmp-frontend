@@ -22,7 +22,7 @@
 @displayConts(contsAndEarnings :ContributionsAndEarnings) = {
   <tr>
     <td>
-      @{s"${contsAndEarnings.taxYear} to ${contsAndEarnings.taxYear + 1}"}
+      @{s"6 April ${contsAndEarnings.taxYear} to 5 April ${contsAndEarnings.taxYear + 1}"}
     </td>
     <td class="conts-and-earnings-table-col">
       £@contsAndEarnings.contEarnings
@@ -47,10 +47,9 @@
         @period.contsAndEarnings match {
 
           case Some(contList: List[ContributionsAndEarnings]) => {
-
       <table id="contributions-earnings-table-@count">
           <caption id="gmp-conts-and-earnings-header-@count">
-              @{Messages("gmp.contracted_out_period_table_header" ,s"${period.startDate.get.toString("dd/MM/yyyy")} to ${period.endDate.toString("dd/MM/yyyy")}")}
+              @{Messages("gmp.contracted_out_period_table_header" ,s"${period.startDate.get.toString("dd MM yyyy")} to ${period.endDate.toString("dd MM yyyy")}")}
           </caption>
 
                 <thead>
