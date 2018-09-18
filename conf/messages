@@ -57,7 +57,7 @@ gmp.revaluation_rate_spa.header = If HMRC needs to revalue this calculation whic
 gmp.thank_you.header = Thank you
 gmp.thank_you.what_now = What do you want to do now?
 gmp.contracted_out_period_table_header = Contracted-out period {0}
-gmp.contracted_out_period_error = Contracted out period {0}:
+gmp.contracted_out_period_error = Contracted out period {0}
 gmp.tax_year_table_column_header = Year
 gmp.contracted_out_period_table_column_header = Amount
 gmp.equalise_header = Do you also want an opposite gender calculation?
@@ -335,7 +335,7 @@ gmp.unavailable = No GMP available
 ############################################################################
 # Query handling
 ############################################################################
-gmp.queryhandling.resultsmessage = If you disagree with this calculation, contact HM Revenue and Customs by creating a new entry in the single queries database in Shared Workspace''s eRoom.
+gmp.queryhandling.resultsmessage = If you do not agree with this result, contact HMRC by creating a new entry in the ''single queries database'' in the Shared Workspace eRoom.
 gmp.queryhandling.contsandearnings = If you do not agree with this result, contact HMRC by creating a new entry in the ''single queries database'' in the Shared Workspace eRoom.
 gmp.queryhandling.changedetails.link = <a href="https://www.gov.uk/tell-hmrc-change-of-details" rel="external">How the member can tell HMRC their personal details have changed</a>
 
