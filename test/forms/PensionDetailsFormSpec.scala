@@ -44,7 +44,7 @@ class PensionDetailsFormSpec extends PlaySpec with OneAppPerSuite with MockitoSu
       val gmpRequest = Json.toJson(PensionDetails(""))
       val pensionDetailsResult = pensionDetailsForm.bind(gmpRequest)
 
-      assert(pensionDetailsResult.errors.contains(FormError("scon",List(Messages("gmp.error.mandatory", Messages("gmp.scon"))))))
+      assert(pensionDetailsResult.errors.contains(FormError("scon",List(Messages("gmp.error.mandatory.new", Messages("gmp.scon"))))))
 
     }
 
