@@ -5,7 +5,9 @@ import sbt._
 import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin
 import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin._
 import scoverage.ScoverageSbtPlugin
+import uk.gov.hmrc.SbtArtifactory
 import uk.gov.hmrc.versioning.SbtGitVersioning
+import uk.gov.hmrc.versioning.SbtGitVersioning.autoImport.majorVersion
 import play.sbt.routes.RoutesKeys.routesGenerator
 
 trait MicroService {
@@ -40,6 +42,7 @@ trait MicroService {
     .settings(publishingSettings: _*)
     .settings(scalaSettings: _*)
     .settings(defaultSettings(): _*)
+    .settings(majorVersion := 4)
     .settings(
       targetJvm := "jvm-1.8",
       scalaVersion := "2.11.11",
@@ -56,10 +59,10 @@ trait MicroService {
       Keys.fork in IntegrationTest := false,
       unmanagedSourceDirectories in IntegrationTest <<= (baseDirectory in IntegrationTest)(base => Seq(base / "it")),
       addTestReportOption(IntegrationTest, "int-test-reports"),
-      testGrouping in IntegrationTest := oneForkedJvmPerTest((definedTests in IntegrationTest).value),
+      testGrouping in IntegrationTest := forkJvmPerTest((definedTests in IntegrationTest).value),
       parallelExecution in IntegrationTest := false)
     .settings(resolvers ++= Seq(Resolver.bintrayRepo("hmrc", "releases"), Resolver.jcenterRepo))
-    .enablePlugins(SbtDistributablesPlugin, SbtAutoBuildPlugin, SbtGitVersioning)
+    .enablePlugins(SbtDistributablesPlugin, SbtAutoBuildPlugin, SbtGitVersioning, SbtArtifactory)
 }
 
 private object TestPhases {
@@ -70,7 +73,7 @@ private object TestPhases {
   lazy val TemplateTest = config("tt") extend Test
   lazy val TemplateItTest = config("tit") extend IntegrationTest
 
-  def oneForkedJvmPerTest(tests: Seq[TestDefinition]) =
+  def forkJvmPerTest(tests: Seq[TestDefinition]) =
     tests map {
       test => new Group(test.name, Seq(test), SubProcess(ForkOptions(runJVMOptions = Seq("-Dtest.name=" + test.name))))
     }
