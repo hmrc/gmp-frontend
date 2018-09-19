@@ -114,7 +114,7 @@
                     <span class="bold-xsmall" id="post90-from-date-@count">@Messages("gmp.date_from")</span>
                     @{ new LocalDate(period.startDate.get).toString("d M yyyy") } <br/>
                     <span class="bold-xsmall" id="post90-to-date-@count">@Messages("gmp.date_to")</span>
-                    @{ new LocalDate(period.endDate).toString("dd M yyyy") }
+                    @{ new LocalDate(period.endDate).toString("d M yyyy") }
                 </td>
                 <td id="post90-total-@count" class="multi-table-value">
                     @if(period.dualCalcPost90OppositeTotal != Some("0.00")) {
