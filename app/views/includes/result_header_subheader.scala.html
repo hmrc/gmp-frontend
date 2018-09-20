@@ -14,12 +14,20 @@
  * limitations under the License.
  *@
 
+@import play.api.Play.current
+@import play.api.i18n.Messages.Implicits._
+
 @(calculationResponse:CalculationResponse, revalRateSubheader: Option[String], survivorSubheader: Option[String])(implicit request: Request[_])
 
 
 
 <div class="grid grid-2-3">
-	<h1 id="results-header">@calculationResponse.header</h1>
+
+    <h1 id="page-title">@Messages("gmp.results.h1")</h1>
+
+    <p id="value-revealed">@Messages("gmp.results.p1")</p>
+
+    <h2  id="results-header">@calculationResponse.header</h2>
 
 	@if(revalRateSubheader.isDefined) {
 		<div id="revaluation-subheader">@revalRateSubheader</div>
