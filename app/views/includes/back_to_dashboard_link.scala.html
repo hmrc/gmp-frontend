@@ -17,8 +17,6 @@
 @(pageHeading: String)(implicit messages: Messages)
 
 <div id="back" class="js-hidden">
-    <p><a href="/guaranteed-minimum-pension/dashboard" class="dashboard-back">@Messages("gmp.back_to_dashboard")</a></p>
+    <p><a id="back-link-dasboard" class="custom-back link-back" href="/guaranteed-minimum-pension/dashboard"
+          data-journey-click='link - click:@pageHeading:@messages("gmp.back_to_dashboard")'>@messages("gmp.back_to_dashboard")</a></p>
 </div>
-
-
-
