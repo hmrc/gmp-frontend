@@ -1,15 +1,15 @@
 ############################################################################
 # Page titles
 ############################################################################
-gmp.bulk_failure_generic.title = GMP bulk file problem - GOV.UK
-gmp.bulk_failure_antivirus.title = GMP bulk file virus - GOV.UK
-gmp.bulk_failure_missing.title = GMP no bulk file - GOV.UK
-gmp.bulk_failure_duplicate.title = GMP duplicate file - GOV.UK
-gmp.bulk_failure_file_too_large.title = GMP file too large - GOV.UK
+gmp.bulk_failure_generic.title = GMP bulk file problem
+gmp.bulk_failure_antivirus.title = GMP bulk file virus
+gmp.bulk_failure_missing.title = GMP no bulk file
+gmp.bulk_failure_duplicate.title = GMP duplicate file
+gmp.bulk_failure_file_too_large.title = GMP file too large
 gmp.bulk_reference.title = Name your calculation
 gmp.bulk_request_received.title = Your request has been received
 gmp.bulk.results.title = Calculation ready
-gmp.bulk.results_not_found.title = GMP calculation no longer available - GOV.UK
+gmp.bulk.results_not_found.title = GMP calculation no longer available
 gmp.bulk.wrong_user.title = There is a problem
 gmp.contributions_earnings.title = Contributions and earnings
 gmp.dashboard.title = Guaranteed Minimum Pension (GMP) checker
@@ -19,16 +19,16 @@ gmp.inflation_proof.title = Would you like a calculation for a date after the da
 gmp.member_details.title = Member details
 gmp.more_bulk_results.title = Recent bulk calculations
 gmp.pension_details.title = Pension scheme details
-gmp.results.title = GMP calculation result - GOV.UK
-gmp.results.error = GMP checker error - GOV.UK
+gmp.results.title = GMP calculation result
+gmp.results.error = GMP checker error
 gmp.revaluation.title = At which date would you like the calculation to apply?
 gmp.revaluation_rate.title = If HMRC needs to revalue this calculation which rate would you like to use?
 gmp.calculation_type.title = Choose what type of calculation you need for this member
-gmp.offline.title = GMP checker offline - GOV.UK
+gmp.offline.title = GMP checker offline
 gmp.thank_you.title = Thank you
 gmp.unauthorised.title = You are not authorised to view this page
 gmp.fileupload.title = Upload your file
-gmp.session_missing.title = Incomplete GMP checker information - GOV.UK
+gmp.session_missing.title = Incomplete GMP checker information
 
 ############################################################################
 # Service info titles
