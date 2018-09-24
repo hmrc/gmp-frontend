@@ -27,7 +27,7 @@ class PensionDetailsSpec extends GmpViewSpec {
   private val pensionDetailsForm: Form[models.PensionDetails] = PensionDetailsForm.pensionDetailsForm
 
   "PensionDetails page" must {
-    behave like pageWithTitle(messages("gmp.pension_details.title"))
+    behave like pageWithTitle("Enter Scheme Contracted Out Number (SCON) - GOV.UK")
     behave like pageWithHeader(messages("gmp.pension_details.header"))
 
 
@@ -35,10 +35,7 @@ class PensionDetailsSpec extends GmpViewSpec {
       doc must haveLinkWithText(messages("gmp.contact.hmrc"))
     }
 
-    "have correct input labels" in {
-      doc must haveInputLabelWithText("scon", messages("gmp.scon") + " " + messages("gmp.scon.hint"))
 
-    }
     "have a submit button text" in {
       doc must haveSubmitButton(messages("gmp.continue.button"))
     }

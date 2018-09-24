@@ -21,7 +21,7 @@ import org.joda.time.format.DateTimeFormat
 
 object GmpDateFormatter {
 
-  val dateFormatter = DateTimeFormat.forPattern("dd/MM/yyyy")
+  val dateFormatter = DateTimeFormat.forPattern("d MMMM yyyy")
 
   def formatDate(localDate: LocalDate): String = {
     localDate.toString(dateFormatter)

@@ -1,18 +1,18 @@
 @*
-* Copyright 2016 HM Revenue & Customs
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*     http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*@
+ * Copyright 2018 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
 
 @(pensionDetailsForm: Form[models.PensionDetails])(implicit request: Request[_], context: config.GmpContext, messages: Messages)
 
@@ -27,7 +27,7 @@
     <script type="text/javascript" src='@controllers.routes.AssetsController.at("javascripts/pension-details.js")'></script>
 }
 
-@gmp_main(title = Messages("gmp.pension_details.title"), pageScripts = Some(pageScripts), pageHeading= Some(Messages("gmp.pension_details.header"))) {
+@gmp_main(title = Messages("gmp.pension_details.header") + " - " + Messages("gmp-pbik-gov.uk-title"), pageScripts = Some(pageScripts)) {
 
   @views.html.helpers.errorSummary(pensionDetailsForm)
 
@@ -43,10 +43,7 @@
           @form(action = routes.PensionDetailsController.post) {
 
               <div class="form-group" id="scon-form-group">
-
                   @gmpInput(pensionDetailsForm("scon"),
-                  '_label -> Html(Messages("gmp.scon")),
-                  '_labelClass -> "form-label-bold",
                   '_id -> "scon",
                   '_maxLength -> 9,
                   '_hintText -> Messages("gmp.scon.hint"))

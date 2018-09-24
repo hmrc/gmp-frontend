@@ -301,7 +301,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
           withAuthorisedUser { request =>
             val result = TestResultsController.get.apply(request)
             contentAsString(result) must not include (Messages("gmp.notrevalued.subheader"))
-            contentAsString(result) must include(Messages("gmp.leaving.revalued.header", "24/08/2016", "HMRC held"))
+            contentAsString(result) must include(Messages("gmp.leaving.revalued.header", "24 August 2016", "HMRC held"))
             contentAsString(result) must include(Messages("--"))
           }
 
@@ -318,7 +318,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
           withAuthorisedUser { request =>
             val result = TestResultsController.get.apply(request)
             contentAsString(result) must include(Messages("gmp.notrevalued.subheader"))
-            contentAsString(result) must include(Messages("gmp.leaving.scheme.header", "24/08/2016"))
+            contentAsString(result) must include(Messages("gmp.leaving.scheme.header", "24 August 2016"))
 
           }
 
@@ -331,7 +331,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
           when(mockCalculationConnector.calculateSingle(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(validCalculationSpaResponse))
           withAuthorisedUser { request =>
             val result = TestResultsController.get.apply(request)
-            contentAsString(result) must include(Messages("gmp.spa.header", "10/11/2015"))
+            contentAsString(result) must include(Messages("gmp.spa.header", "10 November 2015"))
           }
         }
 
@@ -342,7 +342,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
           when(mockCalculationConnector.calculateSingle(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(validCalculationPayableAgeResponse))
           withAuthorisedUser { request =>
             val result = TestResultsController.get.apply(request)
-            contentAsString(result) must include(Messages("gmp.payable_age.header", "10/11/2015"))
+            contentAsString(result) must include(Messages("gmp.payable_age.header", "10 November 2015"))
           }
         }
 
@@ -364,7 +364,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
           when(mockCalculationConnector.calculateSingle(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(survivorRevaluationCalculationResponse))
           withAuthorisedUser { request =>
             val result = TestResultsController.get.apply(request)
-            contentAsString(result) must include("Surviving partner&#x27;s GMP entitlement at 10/11/2010")
+            contentAsString(result) must include("Surviving partner&#x27;s GMP entitlement at 10 November 2010")
             contentAsString(result) must include(Messages("gmp.results.survivior.disclaimer"))
           }
         }
@@ -393,7 +393,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
             survivorRevaluationCalculationResponseNoInflation.copy(dateOfDeath = Some(new LocalDate("2017-01-01")), revaluationDate = None)))
           withAuthorisedUser { request =>
             val result = TestResultsController.get.apply(request)
-            contentAsString(result) must include("Surviving partner&#x27;s GMP entitlement at date of death (01/01/2017)")
+            contentAsString(result) must include("Surviving partner&#x27;s GMP entitlement at date of death (1 January 2017)")
             contentAsString(result) must not include (Messages("gmp.no_inflation.subheader"))
           }
         }
@@ -455,7 +455,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
           (validCalculationResponse.copy(revaluationDate = Some(new LocalDate(2000, 11, 11)), revaluationRate = Some("1"))))
           withAuthorisedUser { request =>
             val result = TestResultsController.get.apply(request)
-            contentAsString(result) must include(Messages("gmp.leaving.revalued.header", "11/11/2000", "S148"))
+            contentAsString(result) must include(Messages("gmp.leaving.revalued.header", "11 November 2000", "S148"))
           }
         }
 
@@ -487,7 +487,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
           (validCalculationResponse.copy(revaluationDate = Some(new LocalDate(2000, 11, 11)), revaluationRate = Some("1"))))
           withAuthorisedUser { request =>
             val result = TestResultsController.get.apply(request)
-            contentAsString(result) must include(Messages("gmp.leaving.revalued.header", "11/11/2000", "S148"))
+            contentAsString(result) must include(Messages("gmp.leaving.revalued.header", "11 November 2000", "S148"))
           }
         }
 
@@ -499,7 +499,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
           (validNonRevalMultipleCalculationResponse.copy(revaluationDate = Some(new LocalDate(2000, 11, 11)), revaluationRate = Some("0"))))
           withAuthorisedUser { request =>
             val result = TestResultsController.get.apply(request)
-            contentAsString(result) must include(Messages("gmp.leaving.revalued.header", "11/11/2000", "HMRC held"))
+            contentAsString(result) must include(Messages("gmp.leaving.revalued.header", "11 November 2000", "HMRC held"))
           }
         }
 
@@ -509,7 +509,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
           (validNonRevalMultipleCalculationResponse.copy(revaluationDate = Some(new LocalDate(2000, 11, 11)), revaluationRate = Some("3"))))
           withAuthorisedUser { request =>
             val result = TestResultsController.get.apply(request)
-            contentAsString(result) must include(Messages("gmp.leaving.revalued.header", "11/11/2000", "Limited"))
+            contentAsString(result) must include(Messages("gmp.leaving.revalued.header", "11 November 2000", "Limited"))
           }
         }
 
@@ -1027,7 +1027,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
           withAuthorisedUser { request =>
             val result = TestResultsController.getContributionsAndEarnings.apply(request)
             status(result) must equal(OK)
-            contentAsString(result) must include(Messages("gmp.contracted_out_period_table_header", "10/11/2014 to 10/11/2015"))
+            contentAsString(result) must include(Messages("gmp.contracted_out_period_table_header", "10 11 2014 to 10 11 2015"))
             contentAsString(result) must include(Messages("gmp.tax_year_table_column_header"))
             contentAsString(result) must include(Messages("gmp.contracted_out_period_table_column_header"))
             contentAsString(result) must include("2014")

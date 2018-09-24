@@ -89,7 +89,7 @@ class PensionDetailsControllerSpec extends PlaySpec with OneServerPerSuite with 
         withAuthorisedUser { user =>
           getPensionDetails(user) { result =>
             status(result) must equal(OK)
-            contentAsString(result) must include(Messages("gmp.pension_details.title"))
+            contentAsString(result) must include(Messages("gmp.pension_details.header"))
             contentAsString(result) must include(Messages("gmp.scon"))
             contentAsString(result) must include(Messages("gmp.signout"))
             contentAsString(result) must include(Messages("gmp.back_to_dashboard"))
@@ -137,7 +137,7 @@ class PensionDetailsControllerSpec extends PlaySpec with OneServerPerSuite with 
         withAuthorisedUser { request =>
           val result = TestPensionDetailsController.post()(request.withJsonBody(Json.toJson(emptySconGmpRequest)))
           status(result) must equal(BAD_REQUEST)
-          contentAsString(result) must include(Messages("gmp.error.mandatory", Messages("gmp.scon")))
+          contentAsString(result) must include(Messages("gmp.error.mandatory.new", Messages("gmp.scon")))
         }
       }
 
