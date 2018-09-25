@@ -31,7 +31,7 @@
       (calculationResponse.calculationPeriods.length == 1 && calculationResponse.calculationPeriods.head.errorCode > 0)){
         Messages("gmp.results.error")
     }else{
-        Messages("gmp.results.title")
+        Messages("gmp.results.title") + " - " + Messages("service.title") + " - " + Messages("gov.uk")
     }
   },
   supportLinkEnabled = false,

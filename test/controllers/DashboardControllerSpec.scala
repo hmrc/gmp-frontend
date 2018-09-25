@@ -91,7 +91,7 @@ class DashboardControllerSpec extends PlaySpec with OneServerPerSuite with Mocki
         withAuthorisedUser { user =>
           getDashboard(user) { result =>
             status(result) must equal(OK)
-            contentAsString(result) must include(Messages("gmp.dashboard.title"))
+            contentAsString(result) must include(Messages("gmp.dashboard_header"))
             contentAsString(result) must include(Messages("gmp.signout"))
             contentAsString(result) must not include(Messages("gmp.back_to_dashboard"))
           }
