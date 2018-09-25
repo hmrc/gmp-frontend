@@ -30,10 +30,10 @@
 }
 
 @heading = {
-    scenario match {
-        case CalculationType.DOL => Messages("gmp.leaving.dol.question")
-        case CalculationType.SPA | CalculationType.PAYABLE_AGE | CalculationType.REVALUATION => Messages("gmp.other.dol.left.question")
-        case CalculationType.SURVIVOR => Messages("gmp.survivor.dol.question")
+    @{scenario match {
+    case CalculationType.DOL => Messages("gmp.leaving.dol.question")
+    case CalculationType.SPA | CalculationType.PAYABLE_AGE | CalculationType.REVALUATION => Messages("gmp.other.dol.left.question")
+    case CalculationType.SURVIVOR => Messages("gmp.survivor.dol.question")}
     }
 }
 

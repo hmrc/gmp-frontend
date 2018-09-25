@@ -79,7 +79,7 @@ class BulkReferenceControllerSpec extends PlaySpec with OneServerPerSuite with M
           withAuthorisedUser { user =>
             getBulkReference(user) { result =>
               status(result) must equal(OK)
-              contentAsString(result) must include(Messages("gmp.bulk_reference.title"))
+              contentAsString(result) must include(Messages("gmp.bulk_reference.header"))
               contentAsString(result) must include(Messages("gmp.reference.calcname"))
               contentAsString(result) must include(Messages("gmp.back_to_dashboard"))
             }

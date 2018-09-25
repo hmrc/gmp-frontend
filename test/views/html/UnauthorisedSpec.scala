@@ -23,7 +23,7 @@ class UnauthorisedSpec extends GmpViewSpec {
   override def view: Html = views.html.unauthorised()
 
   "Unauthorised page" must {
-    behave like pageWithTitle(messages("gmp.unauthorised.title"))
+    behave like pageWithTitle(messages("gmp.unauthorised.message"))
     behave like pageWithHeader(messages("gmp.unauthorised.message"))
   }
 

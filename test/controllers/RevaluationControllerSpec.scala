@@ -78,7 +78,7 @@ class RevaluationControllerSpec extends PlaySpec with OneServerPerSuite with Moc
           when(mockSessionService.fetchLeaving()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(Leaving(GmpDate(None, None, None), None))))
           get(user) { result =>
             status(result) must equal(OK)
-            contentAsString(result) must include(Messages("gmp.revaluation.title"))
+            contentAsString(result) must include("At which date would you like the calculation to apply? - Guaranteed Minimum Pension - GOV.UK")
             contentAsString(result) must include(Messages("gmp.revaluation.question"))
             contentAsString(result) must include(Messages("gmp.back_to_dashboard"))
           }
@@ -90,7 +90,7 @@ class RevaluationControllerSpec extends PlaySpec with OneServerPerSuite with Moc
         withAuthorisedUser { user =>
           get(user) { result =>
             status(result) must equal(OK)
-            contentAsString(result) must include(Messages("gmp.revaluation.title"))
+            contentAsString(result) must include("At which date would you like the calculation to apply? - Guaranteed Minimum Pension - GOV.UK")
             contentAsString(result) must include(Messages("gmp.revaluation.question"))
 
           }

@@ -86,7 +86,7 @@ class FileUploadControllerSpec extends PlaySpec with OneServerPerSuite with Mock
           getFileUploadPartial(user) {
             result =>
               status(result) must equal(OK)
-              contentAsString(result) must include(Messages("gmp.fileupload.title"))
+              contentAsString(result) must include(Messages("gmp.fileupload.header"))
               contentAsString(result) must include(Messages("gmp.back_to_dashboard"))
           }
         }
@@ -120,7 +120,7 @@ class FileUploadControllerSpec extends PlaySpec with OneServerPerSuite with Mock
             failure(user) { result =>
               status(result) must be(OK)
               contentAsString(result) must include(Messages("gmp.bulk.failure.generic"))
-              contentAsString(result) must include(Messages("gmp.bulk_failure_generic.title"))
+              contentAsString(result) must include(Messages("gmp.bulk.problem.header"))
             }
           }
         }
@@ -130,7 +130,7 @@ class FileUploadControllerSpec extends PlaySpec with OneServerPerSuite with Mock
             failure(user) { result =>
               status(result) must be(OK)
               contentAsString(result) must include(Messages("gmp.bulk.failure.antivirus"))
-              contentAsString(result) must include(Messages("gmp.bulk_failure_antivirus.title"))
+              contentAsString(result) must include(Messages("gmp.bulk.problem.header"))
             }
           }, "GET", "/upload-csv/failure?error_message=VIRUS")
         }
@@ -140,7 +140,7 @@ class FileUploadControllerSpec extends PlaySpec with OneServerPerSuite with Mock
             failure(user) { result =>
               status(result) must be(OK)
               contentAsString(result) must include(Messages("gmp.bulk.failure.missing"))
-              contentAsString(result) must include(Messages("gmp.bulk_failure_missing.title"))
+              contentAsString(result) must include(Messages("gmp.bulk.problem.header"))
             }
           }, "GET", "/upload-csv/failure?error_message=SELECT")
         }
