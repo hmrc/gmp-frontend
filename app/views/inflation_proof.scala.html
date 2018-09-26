@@ -33,6 +33,7 @@
 @views.html.helpers.errorSummary(inflationProofForm)
 
 <div class="grid">
+    @includes.back_link(Messages("gmp.inflation_proof.question"))
     <div class="grid-2-3">
         <h1>@Messages("gmp.inflation_proof.question")</h1>
     </div>
@@ -122,9 +123,7 @@
 
         }
 
-        <div>
-            <a href="@routes.InflationProofController.back" id="back-link">@Messages("gmp.back.link")</a>
-        </div>
+
 
     </div>
 </div>

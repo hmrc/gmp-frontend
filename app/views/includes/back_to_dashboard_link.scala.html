@@ -14,16 +14,9 @@
  * limitations under the License.
  *@
 
-@()(implicit request: Request[_], context: config.GmpContext,messages: Messages)
+@(pageHeading: String)(implicit messages: Messages)
 
-@gmp_main(title = Messages("gmp.offline.title"),supportLinkEnabled = false, dashboardLinkEnabled = false) {
-
-<div class="grid">
-    @includes.back_link(Messages("gmp.serviceunavailable.title"))
-    <div class="grid-2-3">
-        <h1 class="heading-xlarge">@Messages("gmp.serviceunavailable.title")</h1>
-        <p>@Html(Messages("gmp.serviceunavailable.message"))</p>
-    </div>
+<div id="back" class="js-hidden">
+ <p><a id="back-link-dashboard" class="custom-back link-back" href="/guaranteed-minimum-pension/dashboard"
+       data-journey-click='link - click:@pageHeading:@messages("gmp.back_to_dashboard")'>@messages("gmp.back_to_dashboard")</a></p>
 </div>
-
-}
