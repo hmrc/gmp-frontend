@@ -62,7 +62,7 @@ class EqualiseControllerSpec extends PlaySpec with OneServerPerSuite with Mockit
       withAuthorisedUser { user =>
         getEqualise(user) { result =>
           status(result) must equal(OK)
-          contentAsString(result) must include(Messages("gmp.equalise.title"))
+          contentAsString(result) must include(Messages("gmp.equalise_header"))
         }
       }
     }

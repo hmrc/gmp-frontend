@@ -24,7 +24,7 @@ class BulkWrongUserSpec extends GmpViewSpec{
   override def view: Html = views.html.bulk_wrong_user()
 
   "BulkWrongUser page" must {
-    behave like pageWithTitle(messages("gmp.bulk.wrong_user.title"))
+    behave like pageWithTitle(messages("gmp.bulk.problem.header"))
     behave like pageWithHeader(messages("gmp.bulk.problem.header"))
 
     "have a paragraph with text 1" in {

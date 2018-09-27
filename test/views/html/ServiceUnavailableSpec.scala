@@ -23,7 +23,7 @@ class ServiceUnavailableSpec extends GmpViewSpec{
   override def view: Html = views.html.service_unavailable()
 
   "ServiceUnavailable page" must {
-    behave like pageWithTitle(messages("gmp.offline.title"))
+    behave like pageWithTitle("Service unavailable - Guaranteed Minimum Pension - GOV.UK")
     behave like pageWithHeader(messages("gmp.serviceunavailable.title"))
 
   }

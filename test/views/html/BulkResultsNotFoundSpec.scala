@@ -23,7 +23,7 @@ class BulkResultsNotFoundSpec extends GmpViewSpec {
   override def view: Html = views.html.bulk_results_not_found()
 
   "BulkResultsNotFound page" must {
-    behave like pageWithTitle(messages("gmp.bulk.results_not_found.title"))
+    behave like pageWithTitle(messages("gmp.bulk.results_not_found"))
     behave like pageWithHeader(messages("gmp.bulk.results_not_found"))
 
       "have correct paragraphs with text" in {

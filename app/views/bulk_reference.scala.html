@@ -25,7 +25,7 @@
 @import play.api.i18n.Messages.Implicits._
 @import play.api.Play.current
 
-@gmp_main(title = Messages("gmp.bulk_reference.title"),supportLinkEnabled = true) {
+@gmp_main(title = Messages("gmp.bulk_reference.header") + " - " + Messages("service.title") + " - " + Messages("gov.uk"), supportLinkEnabled = true) {
 
   @views.html.helpers.errorSummary(bulkReferenceForm)
 

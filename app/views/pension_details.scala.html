@@ -27,7 +27,7 @@
     <script type="text/javascript" src='@controllers.routes.AssetsController.at("javascripts/pension-details.js")'></script>
 }
 
-@gmp_main(title = Messages("gmp.pension_details.header") + " - " + Messages("gmp-pbik-gov.uk-title"), pageScripts = Some(pageScripts)) {
+@gmp_main(title = Messages("gmp.pension_details.header") + " - " + Messages("service.title") + " - " + Messages("gov.uk"), pageScripts = Some(pageScripts)) {
 
   @views.html.helpers.errorSummary(pensionDetailsForm)
 

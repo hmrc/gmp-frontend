@@ -20,7 +20,7 @@
 @import uk.gov.hmrc.play.views.html.helpers._
 @import config.ApplicationConfig.globalErrors
 
-@gmp_main(title = Messages("gmp.contributions_earnings.title"),supportLinkEnabled = false, dashboardLinkEnabled = !calculationResponse.hasErrors) {
+@gmp_main(title = Messages("gmp.contributions_earnings.header")+ " - " + Messages("service.title") + " - " + Messages("gov.uk"), supportLinkEnabled = false, dashboardLinkEnabled = !calculationResponse.hasErrors) {
 
   @if(calculationResponse.hasSuccessfulCalculations) {
     @includes.print_page()

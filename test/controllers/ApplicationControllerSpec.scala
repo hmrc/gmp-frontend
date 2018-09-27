@@ -38,7 +38,7 @@ class ApplicationControllerSpec extends PlaySpec with OneServerPerSuite {
 
       "have a title of Unauthorised" in {
         val result = TestController.unauthorised.apply(FakeRequest())
-        contentAsString(result) must include(Messages("gmp.unauthorised.title"))
+        contentAsString(result) must include(Messages("gmp.unauthorised.message"))
       }
 
       "have some text on the page" in {

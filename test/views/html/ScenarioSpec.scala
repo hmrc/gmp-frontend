@@ -26,7 +26,7 @@ class ScenarioSpec extends GmpViewSpec{
   private val pensionDetailsForm: Form[models.CalculationType] = ScenarioForm.scenarioForm
 
   "Scenario page" must {
-    behave like pageWithTitle(messages("gmp.calculation_type.title"))
+    behave like pageWithTitle(messages("gmp.scenarios.title"))
     behave like pageWithHeader(messages("gmp.scenarios.title"))
     behave like pageWithBackLink
 
