@@ -38,6 +38,7 @@
 @views.html.helpers.errorSummary(revaluationRateForm)
 
   <div class="grid">
+      @includes.back_link(Messages("gmp.revaluation_rate_spa.header"))
       <div class="grid-2-3">
           <h1>@heading</h1>
       </div>
@@ -87,10 +88,6 @@
             </div>
           }
 
-      </div>
-
-      <div class="grid-2-3 custom-back-link">
-          <a href="@routes.RevaluationRateController.back" id="back-link">@Messages("gmp.back.link")</a>
       </div>
 
   </div>

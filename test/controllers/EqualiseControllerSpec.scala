@@ -73,7 +73,7 @@ class EqualiseControllerSpec extends PlaySpec with OneServerPerSuite with Mockit
         val result = TestEqualiseController.get.apply(request)
         contentAsString(result) must include(Messages("gmp.equalise_header"))
         contentAsString(result) must include(Messages("gmp.equalise_subheader"))
-        contentAsString(result) must include(Messages("gmp.back_to_dashboard"))
+        contentAsString(result) must include(Messages("gmp.back.link"))
         contentAsString(result) must include(Messages("gmp.check_gmp.button"))
       }
     }

@@ -84,7 +84,7 @@ class DateOfLeavingControllerSpec extends PlaySpec with OneServerPerSuite with M
             contentAsString(result) must include("Did the member leave the scheme before 6 April 2016?\n - Guaranteed Minimum Pension - GOV.UK")
             contentAsString(result) must include(Messages("gmp.date.header_text"))
             contentAsString(result) must include(Messages("gmp.date.example"))
-            contentAsString(result) must include(Messages("gmp.back_to_dashboard"))
+            contentAsString(result) must include(Messages("gmp.back.link"))
           }
         }
       }

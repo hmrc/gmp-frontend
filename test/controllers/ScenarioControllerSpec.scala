@@ -93,7 +93,7 @@ class ScenarioControllerSpec extends PlaySpec with OneServerPerSuite with Mockit
           contentAsString(result) must include(Messages("gmp.scenarios.survivor"))
           contentAsString(result) must include(Messages("gmp.scenarios.leaving"))
           contentAsString(result) must include(Messages("gmp.scenarios.specific_date"))
-          contentAsString(result) must include(Messages("gmp.back_to_dashboard"))
+          contentAsString(result) must include(Messages("gmp.back.link"))
         }
       }
     }

@@ -17,9 +17,9 @@
 $(document).ready(function() {
 
   if(!$('#errors').length){
-    ("#leaving-yes-after").removeAttr("checked");
-    ("#leaving-yes-before").removeAttr("checked");
-    ("#leaving-no").removeAttr("checked");
+    $("#leaving-yes-after").removeAttr("checked");
+    $("#leaving-yes-before").removeAttr("checked");
+    $("#leaving-no").removeAttr("checked");
   }
 
   if ($('#errors').length && (
