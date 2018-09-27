@@ -24,7 +24,7 @@ class UploadFileSpec extends GmpViewSpec {
   override def view: Html = views.html.upload_file(uploadForm)
 
   "UploadFiles page" must {
-    behave like pageWithTitle(messages("gmp.fileupload.title"))
+    behave like pageWithTitle(messages("gmp.fileupload.header"))
     behave like pageWithHeader(messages("gmp.fileupload.header"))
 
 

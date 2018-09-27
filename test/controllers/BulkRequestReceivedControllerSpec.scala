@@ -94,7 +94,7 @@ class BulkRequestReceivedControllerSpec extends PlaySpec with OneServerPerSuite 
           withAuthorisedUser { user =>
             getBulkRequestReceived(user) { result =>
               status(result) must equal(OK)
-              contentAsString(result) must include(Messages("gmp.bulk_request_received.title"))
+              contentAsString(result) must include(Messages("gmp.bulk_request_received.banner"))
               contentAsString(result) must include(Messages("gmp.bulk_request_received.banner"))
               contentAsString(result) must include(Messages("gmp.bulk_request_received.header"))
               contentAsString(result) must include(Messages("gmp.bulk_request_received.text", bulkRequest1.reference))
@@ -112,8 +112,8 @@ class BulkRequestReceivedControllerSpec extends PlaySpec with OneServerPerSuite 
           withAuthorisedUser { user =>
             getBulkRequestReceived(user) { result =>
               status(result) must equal(OK)
-              contentAsString(result) must include(Messages("gmp.bulk.failure.duplicate_upload"))
-              contentAsString(result) must include(Messages("gmp.bulk_failure_duplicate.title"))
+              contentAsString(result) must include(Messages("gmp.bulk.problem.header"))
+              contentAsString(result) must include(Messages("gmp.bulk.problem.header"))
             }
           }
         }
@@ -127,7 +127,7 @@ class BulkRequestReceivedControllerSpec extends PlaySpec with OneServerPerSuite 
             getBulkRequestReceived(user) { result =>
               status(result) must equal(OK)
               contentAsString(result) must include(Messages("gmp.bulk.failure.too_large"))
-              contentAsString(result) must include(Messages("gmp.bulk_failure_file_too_large.title"))
+              contentAsString(result) must include(Messages("gmp.bulk.file_too_large.header"))
             }
           }
         }
@@ -142,7 +142,7 @@ class BulkRequestReceivedControllerSpec extends PlaySpec with OneServerPerSuite 
             getBulkRequestReceived(user) { result =>
               status(result) must equal(OK)
               contentAsString(result) must include(Messages("gmp.bulk.failure.too_large"))
-              contentAsString(result) must include(Messages("gmp.bulk_failure_file_too_large.title"))
+              contentAsString(result) must include(Messages("gmp.bulk.file_too_large.header"))
             }
           }
         }
@@ -156,8 +156,9 @@ class BulkRequestReceivedControllerSpec extends PlaySpec with OneServerPerSuite 
             getBulkRequestReceived(user) { result =>
               status(result) must equal(OK)
               contentAsString(result) must include(Messages("gmp.bulk.failure.generic"))
-              contentAsString(result) must include(Messages("gmp.bulk_failure_generic.title"))
+              contentAsString(result) must include(Messages("gmp.bulk.problem.header"))
             }
+
           }
         }
 

@@ -16,7 +16,7 @@
 
 @()(implicit request: Request[_], context: config.GmpContext,messages: Messages)
 
-@gmp_main(title = Messages("gmp.offline.title"),supportLinkEnabled = false, dashboardLinkEnabled = false) {
+@gmp_main(title = Messages("gmp.serviceunavailable.title") + " - " + Messages("service.title") + " - " + Messages("gov.uk"),supportLinkEnabled = false, dashboardLinkEnabled = false) {
 
 <div class="grid">
     <div class="grid-2-3">

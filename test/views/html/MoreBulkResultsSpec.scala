@@ -25,7 +25,7 @@ class MoreBulkResultsSpec extends GmpViewSpec {
 
   "MoreBulkResults page" must {
 
-    behave like pageWithTitle(messages("gmp.more_bulk_results.title"))
+    behave like pageWithTitle(messages("gmp.more_bulk_results.header"))
     behave like pageWithHeader(messages("gmp.more_bulk_results.header"))
     behave like pageWithBackLink
 

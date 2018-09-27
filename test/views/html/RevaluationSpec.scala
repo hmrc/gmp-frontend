@@ -26,7 +26,7 @@ class RevaluationSpec extends GmpViewSpec{
   private val revaluationForm: Form[models.RevaluationDate] = RevaluationForm.revaluationForm
 
   "Revaluation page" must {
-    behave like pageWithTitle(messages("gmp.revaluation.title"))
+    behave like pageWithTitle(messages("gmp.revaluation.question"))
     behave like pageWithHeader(messages("gmp.revaluation.question"))
     behave like pageWithBackLink
 

@@ -26,7 +26,7 @@ class EqualiseSpec extends GmpViewSpec {
   val equaliseForm: Form[models.Equalise] = EqualiseForm.equaliseForm
 
   "Equalise page" must {
-    behave like pageWithTitle(messages("gmp.equalise.title"))
+    behave like pageWithTitle("Do you also want an opposite gender calculation? - Guaranteed Minimum Pension - GOV.UK")
     behave like pageWithHeader(messages("gmp.equalise_header"))
     behave like pageWithBackLink
 
