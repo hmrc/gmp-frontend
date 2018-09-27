@@ -34,7 +34,7 @@
                     case _ => { error.key }
                 }
             ) { anchor =>
-            <li role="tooltip" data-journey="search-page:error:@error.key">
+            <li role="tooltip" data-journey="error field:@error.key:There is a problem">
                 <a href="#@anchor" class="error-list" data-focuses="@error.key">
                     @Messages(error.message)
                 </a>
