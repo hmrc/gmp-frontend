@@ -27,7 +27,7 @@ class MemberDetailsViewSpec extends GmpViewSpec{
   private val memberDetailsForm: Form[models.MemberDetails] = MemberDetailsForm.form
 
   "MemberDetails page " must {
-    behave like pageWithTitle(messages("gmp.member_details.title"))
+    behave like pageWithTitle(messages("gmp.member_details.header"))
     behave like pageWithHeader(messages("gmp.member_details.header"))
     behave like pageWithBackLink
 

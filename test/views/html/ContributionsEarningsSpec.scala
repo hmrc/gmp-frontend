@@ -29,7 +29,7 @@ class ContributionsEarningsSpec extends GmpViewSpec {
       Some("string2"), Some(4), Some(List(ContributionsAndEarnings(2018, "2000"))))), 0, Some(LocalDate.now), Some(LocalDate.now), Some(LocalDate.now), true, 1)
 
   "Contributions Earnings page" must {
-    behave like pageWithTitle(messages("gmp.contributions_earnings.title"))
+    behave like pageWithTitle(messages("gmp.contributions_earnings.header"))
     behave like pageWithHeader(messages("gmp.contributions_earnings.header"))
     behave like pageWithH2Header(messages("gmp.entered_details.title"))
 

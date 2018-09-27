@@ -25,7 +25,7 @@ class DashboardSpec extends GmpViewSpec {
 
   "MoreBulkResults page" must {
 
-    behave like pageWithTitle(messages("gmp.dashboard.title"))
+    behave like pageWithTitle(messages("gmp.dashboard_header"))
     behave like pageWithHeader(messages("gmp.dashboard_header"))
     behave like pageWithH2Header(messages("gmp.dashboard.choose_calculation_type"))
 

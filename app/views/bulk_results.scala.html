@@ -20,9 +20,10 @@
 @import uk.gov.hmrc.play.views.html.helpers._
 @import config.ApplicationConfig.globalErrors
 
-@gmp_main(title = Messages("gmp.bulk.results.title")) {
+@gmp_main(title = Messages("gmp.bulk.results.banner") + " - " + Messages("service.title") + " - " + Messages("gov.uk")) {
 
 <div class="grid">
+    @includes.back_link(Messages("gmp.bulk.results.banner"))
     <div class="grid-2-3">
         <div class="confirmation-bulk">
             <h1 id="calc-ready" class="heading-large">
@@ -54,11 +55,5 @@
 
     @includes.bulk_query_handling_message()
 
-
-    @if(comingFromPage != 0){
-        <div class="grid-2-3 custom-back-link">
-            <a href="@routes.MoreBulkResultsController.retrieveMoreBulkResults" id="back-link-other">@Messages("gmp.back.link")</a>
-        </div>
-      }
 </div>
 }

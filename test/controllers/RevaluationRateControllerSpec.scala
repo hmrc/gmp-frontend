@@ -74,7 +74,7 @@ class RevaluationRateControllerSpec extends PlaySpec with OneServerPerSuite with
           get(user) { result =>
             status(result) must equal(OK)
             contentAsString(result) must include(Messages("gmp.revaluation_rate.header"))
-            contentAsString(result) must include(Messages("gmp.back_to_dashboard"))
+            contentAsString(result) must include(Messages("gmp.back.link"))
           }
         }
       }

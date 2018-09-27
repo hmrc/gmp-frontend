@@ -32,7 +32,7 @@ abstract class DateOfLeavingSpec extends GmpViewSpec {
 class DateOfLeavingScenarioDolSpec extends DateOfLeavingSpec {
 
   "DateOfLeavingScenarioDol page" must {
-    behave like pageWithTitle(messages("gmp.leaving.title"))
+    behave like pageWithTitle("Did the member leave the scheme before 6 April 2016? - Guaranteed Minimum Pension - GOV.UK")
     behave like pageWithHeader(messages("gmp.leaving.dol.question"))
     behave like pageWithBackLink
 

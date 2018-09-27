@@ -257,7 +257,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
             val result = TestResultsController.get.apply(request)
             status(result) must equal(OK)
             contentAsString(result) must include(Messages("gmp.button.request-another"))
-            contentAsString(result) must include(Messages("gmp.back_to_dashboard"))
+            contentAsString(result) must include(Messages("gmp.back.link"))
           }
         }
 
@@ -276,7 +276,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
           when(mockCalculationConnector.calculateSingle(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(validCalculationResponse))
           withAuthorisedUser { request =>
             val result = TestResultsController.get.apply(request)
-            contentAsString(result) must include(Messages("gmp.back_to_dashboard"))
+            contentAsString(result) must include(Messages("gmp.back.link"))
           }
         }
 
@@ -925,7 +925,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
           withAuthorisedUser { request =>
             val result = TestResultsController.getContributionsAndEarnings.apply(request)
             status(result) must equal(OK)
-            contentAsString(result) must include(Messages("gmp.contributions_earnings.title"))
+            contentAsString(result) must include(Messages("gmp.contributions_earnings.header"))
           }
         }
 
@@ -936,7 +936,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
           withAuthorisedUser { request =>
             val result = TestResultsController.getContributionsAndEarnings.apply(request)
             status(result) must equal(OK)
-            contentAsString(result) must include(Messages("gmp.contributions_earnings.title"))
+            contentAsString(result) must include(Messages("gmp.contributions_earnings.header"))
           }
         }
 
@@ -947,7 +947,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
           withAuthorisedUser { request =>
             val result = TestResultsController.getContributionsAndEarnings.apply(request)
             status(result) must equal(OK)
-            contentAsString(result) must include(Messages("gmp.contributions_earnings.title"))
+            contentAsString(result) must include(Messages("gmp.contributions_earnings.header"))
           }
         }
 
@@ -1036,7 +1036,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
             contentAsString(result) must include("234.00")
             contentAsString(result) must include("124.00")
             contentAsString(result).replaceAll("&#x27;", "'") must include(Messages("gmp.queryhandling.contsandearnings"))
-            contentAsString(result) must include(Messages("gmp.back_to_dashboard"))
+            contentAsString(result) must include(Messages("gmp.back.link"))
           }
         }
 

@@ -26,7 +26,7 @@ class InflationProofSpec extends GmpViewSpec {
   private val inflationProofForm: Form[models.InflationProof] = InflationProofForm.inflationProofForm
 
   "Inflation Proof page" must {
-    behave like pageWithTitle(messages("gmp.inflation_proof.title"))
+    behave like pageWithTitle(messages("gmp.inflation_proof.question"))
     behave like pageWithHeader(messages("gmp.inflation_proof.question"))
     behave like pageWithBackLink
 

@@ -83,11 +83,11 @@ class MemberDetailsControllerSpec extends PlaySpec with OneServerPerSuite with M
         when(mockSessionService.fetchMemberDetails()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(None))
         withAuthorisedUser { request =>
           val result = TestMemberDetailsController.get.apply(request)
-          contentAsString(result) must include(Messages("gmp.member_details.title"))
+          contentAsString(result) must include(Messages("gmp.member_details.header"))
           contentAsString(result) must include(Messages("gmp.nino"))
           contentAsString(result) must include(Messages("gmp.firstname"))
           contentAsString(result) must include(Messages("gmp.lastname"))
-          contentAsString(result) must include(Messages("gmp.back_to_dashboard"))
+          contentAsString(result) must include(Messages("gmp.back.link"))
         }
       }
 

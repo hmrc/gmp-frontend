@@ -23,11 +23,12 @@
 
 @implicitFormInstance = @{ Some(calculationType) }
 
-@gmp_main(title = Messages("gmp.calculation_type.title"), pageHeading= Some(Messages("gmp.scenarios.title"))) {
+@gmp_main(title = Messages("gmp.scenarios.title") + " - " + Messages("service.title") + " - " + Messages("gov.uk")) {
 
   @views.html.helpers.errorSummary(calculationType)
 
   <div class="grid">
+      @includes.back_link(Messages("gmp.scenarios.title"))
       <div class="grid-2-3">
           <h1 id="calc-type">@Messages("gmp.scenarios.title")</h1>
       </div>
@@ -62,12 +63,7 @@
               </div>
 
           }
-      </div><br>
-
-      <div class="grid-2-3 custom-back-link">
-          <a href="@routes.MemberDetailsController.get" id="back-link">@Messages("gmp.back.link")</a>
       </div>
-
   </div>
 
 }

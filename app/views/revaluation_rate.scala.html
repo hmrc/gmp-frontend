@@ -21,24 +21,26 @@
 @import views.html.helpers._
 
 @import models.CalculationType
-
-@gmp_main(title = Messages("gmp.revaluation_rate.title")) {
+@heading = {
+        @{session.scenario match {
+        case CalculationType.PAYABLE_AGE | CalculationType.SPA | CalculationType.SURVIVOR => Messages("gmp.revaluation_rate_spa.header")
+        case CalculationType.REVALUATION => {
+        session.revaluationDate match {
+        case Some(rd) if(!rd.isOnOrAfter06042016) => Messages("gmp.revaluation_rate_spa.header")
+        case _ => Messages("gmp.revaluation_rate.header")
+        }
+        }
+        case _ => Messages("gmp.revaluation_rate.header")
+        }}
+}
+@gmp_main(title = heading + " - " + Messages("service.title") + " - " + Messages("gov.uk")) {
 
 @views.html.helpers.errorSummary(revaluationRateForm)
 
   <div class="grid">
+      @includes.back_link(Messages("gmp.revaluation_rate_spa.header"))
       <div class="grid-2-3">
-          <h1>@{session.scenario match {
-              case CalculationType.PAYABLE_AGE | CalculationType.SPA | CalculationType.SURVIVOR => Messages("gmp.revaluation_rate_spa.header")
-              case CalculationType.REVALUATION => {
-                session.revaluationDate match {
-                    case Some(rd) if(!rd.isOnOrAfter06042016) => Messages("gmp.revaluation_rate_spa.header")
-                    case _ => Messages("gmp.revaluation_rate.header")
-                }
-              }
-              case _ => Messages("gmp.revaluation_rate.header")
-              }}
-          </h1>
+          <h1>@heading</h1>
       </div>
   </div>
 
@@ -86,10 +88,6 @@
             </div>
           }
 
-      </div>
-
-      <div class="grid-2-3 custom-back-link">
-          <a href="@routes.RevaluationRateController.back" id="back-link">@Messages("gmp.back.link")</a>
       </div>
 
   </div>

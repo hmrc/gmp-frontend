@@ -25,7 +25,7 @@ class BulkReferenceSpec extends GmpViewSpec {
 
   "BulkReference page" must {
 
-    behave like pageWithTitle(messages("gmp.bulk_reference.title"))
+    behave like pageWithTitle(messages("gmp.bulk_reference.header"))
     behave like pageWithHeader(messages("gmp.bulk_reference.header"))
     behave like pageWithBackLink
 

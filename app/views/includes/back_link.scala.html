@@ -1,4 +1,4 @@
-/*
+@*
  * Copyright 2018 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,19 +12,12 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
+ *@
 
-package views.html
+@(pageHeading: String="")(implicit messages: Messages)
 
-import play.twirl.api.Html
-import utils.GmpViewSpec
+<div id="back" class="js-hidden">
+    <p><a id="back-link" class="custom-back link-back" href="#" data-journey-click='link - click:@pageHeading:@messages("gmp.back.link")'>@messages("gmp.back.link")</a></p>
+</div>
 
-class ServiceUnavailableSpec extends GmpViewSpec{
-  override def view: Html = views.html.service_unavailable()
 
-  "ServiceUnavailable page" must {
-    behave like pageWithTitle("Service unavailable - Guaranteed Minimum Pension - GOV.UK")
-    behave like pageWithHeader(messages("gmp.serviceunavailable.title"))
-
-  }
-}

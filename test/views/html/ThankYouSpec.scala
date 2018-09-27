@@ -23,7 +23,7 @@ class ThankYouSpec extends GmpViewSpec{
   override def view: Html = views.html.thank_you()
 
   "Thank you page" must {
-    behave like pageWithTitle(messages("gmp.thank_you.title"))
+    behave like pageWithTitle(messages("gmp.thank_you.header"))
     behave like pageWithHeader(messages("gmp.thank_you.header"))
     behave like pageWithH2Header(messages("gmp.thank_you.what_now"))
 

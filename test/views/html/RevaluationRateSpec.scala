@@ -38,7 +38,7 @@ class RevaluationRatePaySpaSurSpec extends RevaluationRateSpec {
     Leaving(GmpDate(Some("day"), Some("month"), Some("year")), Some(Leaving.YES_AFTER)), Some(1))
 
   "RevaluationRateRatePaySpaSur page" must {
-    behave like pageWithTitle(messages("gmp.revaluation_rate.title"))
+    behave like pageWithTitle(messages("gmp.revaluation_rate_spa.header"))
     behave like pageWithHeader(messages("gmp.revaluation_rate_spa.header"))
     behave like pageWithBackLink
 
