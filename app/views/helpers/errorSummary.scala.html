@@ -34,7 +34,7 @@
                     case _ => { error.key }
                 }
             ) { anchor =>
-            <li role="tooltip" data-journey="error field:@error.key:There is a problem">
+            <li role="tooltip" data-journey='@Messages("gmp.bulk.problem.error.field"):@error.key:@Messages("gmp.bulk.problem.header")'>
                 <a href="#@anchor" class="error-list" data-focuses="@error.key">
                     @Messages(error.message)
                 </a>

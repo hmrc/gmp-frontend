@@ -85,6 +85,7 @@ gmp.bulk.explanations.failed.2 = Where there is no GMP, see ''Reason for error''
 gmp.bulk.explanations.failed.3 = You can then submit the calculation again request (either on its own or as part of another bulk file) or contact HM Revenue and Customs where advised.
 gmp.bulk.explanations.contsandearnings = A separate contributions and earnings file for all queries.
 gmp.bulk.problem.header = There is a problem
+gmp.bulk.problem.error.field = error field
 gmp.bulk.file_too_large.header = The file is too large
 gmp.bulk.query_handling_message.header = Contact HMRC about a calculation
 gmp.bulk.query_handling_message.body = If the instruction is to contact HMRC because we cannot calculate a GMP, or if you disagree with the result of a successful calculation, you can do so in Shared Workspace''s eRoom.<br/><br/>To query several calculations at once, create a bulk query document from the template in the guidance and templates folder. Drag and drop the query document into a new entry in the bulk queries database. To query a small number of calculations, create a new entry in the single queries database for each calculation.
