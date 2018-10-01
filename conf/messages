@@ -85,6 +85,7 @@ gmp.bulk.explanations.failed.2 = Where there is no GMP, see ''Reason for error''
 gmp.bulk.explanations.failed.3 = You can then submit the calculation again request (either on its own or as part of another bulk file) or contact HM Revenue and Customs where advised.
 gmp.bulk.explanations.contsandearnings = A separate contributions and earnings file for all queries.
 gmp.bulk.problem.header = There is a problem
+gmp.bulk.problem.error.field = error field
 gmp.bulk.file_too_large.header = The file is too large
 gmp.bulk.query_handling_message.header = Contact HMRC about a calculation
 gmp.bulk.query_handling_message.body = If the instruction is to contact HMRC because we cannot calculate a GMP, or if you disagree with the result of a successful calculation, you can do so in Shared Workspace''s eRoom.<br/><br/>To query several calculations at once, create a bulk query document from the template in the guidance and templates folder. Drag and drop the query document into a new entry in the bulk queries database. To query a small number of calculations, create a new entry in the single queries database for each calculation.
@@ -175,7 +176,7 @@ gmp.reference = calculation name
 gmp.reference.calcname = Calculation name
 gmp.bulk_reference.reference_text = You can change the filename to help you recognise your results when they are returned (40 characters)
 gmp.bulk_request_received.text = <ul class="list-bullet"><li>Your calculation should be complete in less than 72 hours</li><li>It will then appear on the GMP checker dashboard with the reference {0}</li></ul>
-gmp.fileupload.hint = The file must contain mandatory information and in a specific format. You can <a href="{0}"> download a template and instructions as a ZIP file (3Kb)</a> on how to create your file first.
+gmp.fileupload.hint = The file must contain mandatory information and in a specific format. You can <a data-journey-click="link - click:{1}:download a template and instructions as a ZIP file (3Kb)" href="{0}"> download a template and instructions as a ZIP file (3Kb)</a> on how to create your file first.
 gmp.dashboard_header = Guaranteed Minimum Pension (GMP) checker
 gmp.dashboard.choose_calculation_type = Choose the type of calculation you need.
 gmp.single_calculation_link = Single calculation
@@ -367,4 +368,6 @@ urbanner.message.text = Help improve digital services by joining the HMRC user p
 urbanner.message.ga.text = homepage UR banner
 urbanner.message.open.new.window = (opens in new window)
 urbanner.message.reject = No thanks
-#################
+
+gmp.ga-track.link.click=link - click
+gmp.ga-track.button.click=button - click

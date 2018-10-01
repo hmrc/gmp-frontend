@@ -31,7 +31,7 @@
         <h1>@Messages("gmp.fileupload.header")</h1>
 
         <br>
-        <p>@Html(Messages("gmp.fileupload.hint", routes.AssetsController.at("csv/GMP_template_and_instructions.zip")))</p>
+        <p>@Html(Messages("gmp.fileupload.hint", routes.AssetsController.at("csv/GMP_template_and_instructions.zip"), Messages("gmp.fileupload.header")))</p>
 
     </div>
     <label for="fileToUpload" class="hidden">@Html(Messages("gmp.fileupload.header"))</label>

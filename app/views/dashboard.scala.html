@@ -35,19 +35,25 @@
 <div class="grid">
   <br/>
   <div class="grid-1-2">
-    <a class ="large-underlined-link" id="single-calculation-link" href="@routes.PensionDetailsController.get">@Messages("gmp.single_calculation_link")</a></br></br>
+    <a data-journey-click='@Messages("gmp.ga-track.link.click"):@Messages("gmp.dashboard_header"):@Messages("gmp.single_calculation_link")'
+       class ="large-underlined-link" id="single-calculation-link" href="@routes.PensionDetailsController.get">
+       @Messages("gmp.single_calculation_link")</a></br></br>
     <p id="single-calculation-description">@Html(Messages("gmp.single_calculation_text"))</p>
   </div>
 
   <div class="grid-1-2">
-    <a class ="large-underlined-link" id="bulk-calculation-link" href="@routes.FileUploadController.get">@Messages("gmp.bulk_calculation_link")</a></br></br>
+    <a class ="large-underlined-link" id="bulk-calculation-link"
+       data-journey-click='@Messages("gmp.ga-track.link.click"):@Messages("gmp.dashboard_header"):@Messages("gmp.bulk_calculation_link")'
+       href="@routes.FileUploadController.get">@Messages("gmp.bulk_calculation_link")</a></br></br>
     <p id="bulk-calculation-description">@Html(Messages("gmp.bulk_calculation_text"))</p>
   </div>
 </div>
 
 <div class="grid">
   <br/>
-    <a id="download-template-link" class="icon-file-download" href="@routes.AssetsController.at("csv/GMP_template_and_instructions.zip")">@Messages("gmp.download_templates_link")</a>
+    <a id="download-template-link" class="icon-file-download"
+       data-journey-click='@messages("gmp.ga-track.link.click"):@Messages("gmp.dashboard_header"):@messages("gmp.download_templates_link")'
+       href="@routes.AssetsController.at("csv/GMP_template_and_instructions.zip")">@Messages("gmp.download_templates_link")</a>
   <br/>
 </div>
 

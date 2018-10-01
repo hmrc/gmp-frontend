@@ -18,10 +18,12 @@ package connectors
 
 import java.net.URLEncoder
 
+import javax.inject.Inject
 import com.typesafe.config.Config
 import config.{ApplicationConfig, WSHttp}
 import controllers.routes
 import play.api.Logger
+import play.api.i18n.Messages
 import play.api.mvc.Request
 import uk.gov.hmrc.http.hooks.HttpHook
 import uk.gov.hmrc.http.{HeaderCarrier, HttpGet, HttpResponse}
@@ -30,25 +32,27 @@ import uk.gov.hmrc.play.frontend.filters.SessionCookieCryptoFilter
 import uk.gov.hmrc.play.http.ws.WSGet
 import uk.gov.hmrc.play.partials.{HeaderCarrierForPartialsConverter, HtmlPartial}
 import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext._
-
+import play.api.i18n.{ I18nSupport, Messages, MessagesApi }
+import play.api.i18n.Messages.Implicits._
 import scala.concurrent.Future
+import play.api.Play.current
 
-trait UploadConfig extends ServicesConfig {
+trait UploadConfig  extends ServicesConfig {
 
   def apply(implicit request: Request[_]): String = {
     lazy val url = s"${baseUrl("attachments")}/attachments-internal/uploader"
     val onSuccess = ApplicationConfig.frontendHost+routes.BulkReferenceController.get()
     val onFailure = ApplicationConfig.frontendHost+routes.FileUploadController.failure()
     val callback = s"${baseUrl("gmp-frontend")}${routes.FileUploadController.callback()}"
-
+    val pageHeadingGA = Messages("gmp.fileupload.header")
     Logger.debug(s"[UploadConfig][onSuccessUrl : $onSuccess]")
     s"$url?" +
       s"callbackUrl=${encode(callback)}" +
       s"&onSuccess=${encode(onSuccess)}" +
       s"&onFailure=${encode(onFailure)}" +
       s"&accepts=${encode(".csv")}" +
-      s"&collection=${encode("gmp")}" + {
-    }
+      s"&collection=${encode("gmp")}" +
+      s"&pageHeadingGA=${encode(pageHeadingGA)}"
 
   }
 
@@ -64,7 +68,6 @@ trait AttachmentsConnector extends HeaderCarrierForPartialsConverter {
   val http: HttpGet = WSHttp
 
   def getFileUploadPartial()(implicit request: Request[_]): Future[HtmlPartial] = {
-
     val partial = http.GET[HtmlPartial](UploadConfig(request))
 
     // $COVERAGE-OFF$
