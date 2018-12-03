@@ -16,7 +16,8 @@
 
 package controllers
 
-import org.mockito.{ArgumentCaptor}
+import controllers.auth.UUIDGenerator
+import org.mockito.ArgumentCaptor
 import org.mockito.Matchers._
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach

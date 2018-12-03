@@ -16,10 +16,8 @@
 
 package controllers
 
-import java.util.UUID
-
 import config.{GmpFrontendAuditConnector, GmpFrontendAuthConnector}
-import controllers.auth.{ExternalUrls, GmpRegime}
+import controllers.auth.{ExternalUrls, GmpRegime, UUIDGenerator}
 import play.api.Play.current
 import play.api.i18n.Messages.Implicits._
 import play.api.mvc.{Action, AnyContent}
@@ -54,12 +52,4 @@ object ApplicationController extends ApplicationController {
   override val auditConnector: AuditConnector = GmpFrontendAuditConnector
   override val authConnector: AuthConnector = GmpFrontendAuthConnector
   override val uuidGenerator: UUIDGenerator = UUIDGenerator
-}
-
-trait UUIDGenerator {
-  def generate: String
-}
-
-object UUIDGenerator extends UUIDGenerator {
-  override def generate: String = UUID.randomUUID().toString()
 }
