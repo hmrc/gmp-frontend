@@ -28,6 +28,7 @@ POST        /calculation-reason                           controllers.ScenarioCo
 GET         /calculation-reason/back                      controllers.ScenarioController.back
 
 GET         /unauthorised                                 controllers.ApplicationController.unauthorised
+GET         /signout                                      controllers.ApplicationController.signout
 
 GET         /member-details                               controllers.MemberDetailsController.get
 POST        /member-details                               controllers.MemberDetailsController.post
