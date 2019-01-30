@@ -10,20 +10,20 @@ private object AppDependencies {
   import play.core.PlayVersion
   import play.sbt.PlayImport._
 
-  private val frontendBootstrapVersion = "8.24.0"
-  private val domainVersion = "4.1.0"
-  private val httpCachingVersion = "7.0.0"
-  private val taxyearVersion = "0.3.0"
-  private val playPartialsVersion = "6.1.0"
+  private val frontendBootstrapVersion = "12.2.0"
+  private val domainVersion = "5.3.0"
+  private val httpCachingVersion = "8.0.0"
+  private val taxyearVersion = "0.4.0"
+  private val playPartialsVersion = "6.3.0"
   private val emailAddressVersion = "2.2.0"
   private val bulkEntityStreamingVersion = "1.0.0"
 
-  private val scalatestPlusPlayVersion = "1.5.1"
-  private val scalatestVersion = "2.2.6"
+  private val scalatestPlusPlayVersion = "2.0.1"
+  private val scalatestVersion = "3.0.2"
   private val pegdownVersion = "1.6.0"
   private val jsoupVersion = "1.9.2"
   private val mockitoCoreVersion = "1.9.5"
-  private val hmrcTestVersion = "2.3.0"
+  private val hmrcTestVersion = "3.4.0-play-25"
 
   val compile = Seq(
     ws,
