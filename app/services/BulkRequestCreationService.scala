@@ -49,7 +49,7 @@ object BulkRequestCsvColumn {
 
 class DataLimitExceededException extends Throwable
 
-trait BulkRequestCreationService extends BulkEntityProcessor[BulkCalculationRequestLine] with ServicesConfig {
+trait BulkRequestCreationService extends BulkEntityProcessor[BulkCalculationRequestLine] with ServicesConfig
 
   override protected def mode: Mode = Play.current.mode
 
