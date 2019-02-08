@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 HM Revenue & Customs
+ * Copyright 2019 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,8 @@ package services
 import models.{BulkCalculationRequest, BulkCalculationRequestLine, CalculationRequestLine}
 import org.joda.time.LocalDate
 import org.joda.time.format.DateTimeFormat
-import play.api.Logger
+import play.api.Mode.Mode
+import play.api.{Configuration, Logger, Play}
 import play.api.i18n.Messages
 import uk.gov.hmrc.play.config.ServicesConfig
 import uk.gov.hmrc.stream.BulkEntityProcessor
@@ -49,6 +50,10 @@ object BulkRequestCsvColumn {
 class DataLimitExceededException extends Throwable
 
 trait BulkRequestCreationService extends BulkEntityProcessor[BulkCalculationRequestLine] with ServicesConfig {
+
+  override protected def mode: Mode = Play.current.mode
+
+  override protected def runModeConfiguration: Configuration = Play.current.configuration
 
   private class LimitingEnumerator(limit: Int, delimiter: Char, iterator: Iterator[Char]) extends Iterator[Char] {
 
@@ -211,3 +216,5 @@ trait BulkRequestCreationService extends BulkEntityProcessor[BulkCalculationRequ
 }
 
 object BulkRequestCreationService extends BulkRequestCreationService
+
+

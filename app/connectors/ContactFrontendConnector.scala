@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 HM Revenue & Customs
+ * Copyright 2019 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,15 +17,19 @@
 package connectors
 
 import config.WSHttp
-import play.api.Logger
+import play.api.Mode.Mode
+import play.api.{Configuration, Logger, Play}
 import uk.gov.hmrc.play.config.ServicesConfig
 
 import scala.concurrent.Future
-import uk.gov.hmrc.http.{ BadGatewayException, HeaderCarrier, HttpGet }
+import uk.gov.hmrc.http.{BadGatewayException, HeaderCarrier, HttpGet}
 
 trait ContactFrontendConnector extends ServicesConfig {
 
   import scala.concurrent.ExecutionContext.Implicits.global
+
+  override protected def mode: Mode = Play.current.mode
+  override protected def runModeConfiguration: Configuration = Play.current.configuration
 
   val http: HttpGet = WSHttp
   lazy val serviceBase = s"${baseUrl("contact-frontend")}/contact"
@@ -45,4 +49,4 @@ trait ContactFrontendConnector extends ServicesConfig {
 
 }
 
-object ContactFrontendConnector extends ContactFrontendConnector {}
+object ContactFrontendConnector extends ContactFrontendConnector

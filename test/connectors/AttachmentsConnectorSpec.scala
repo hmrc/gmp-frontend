@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 HM Revenue & Customs
+ * Copyright 2019 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,14 +18,18 @@ package connectors
 
 import java.util.UUID
 
+import akka.actor.ActorSystem
+import com.typesafe.config.Config
 import config.{Hooks, WSHttp}
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
+import play.api.{Configuration, Play}
 import play.api.http.HeaderNames
 import play.api.test.FakeRequest
+import uk.gov.hmrc.crypto.ApplicationCrypto
 import uk.gov.hmrc.play.frontend.filters.SessionCookieCryptoFilter
 import uk.gov.hmrc.play.http.ws.{WSGet, WSPost}
 import uk.gov.hmrc.play.partials.HeaderCarrierForPartials
@@ -39,14 +43,13 @@ import uk.gov.hmrc.http.logging.RequestId
 class AttachmentsConnectorSpec extends PlaySpec with OneAppPerSuite with MockitoSugar with BeforeAndAfterEach {
 
   class MockHttp extends WSHttp with Hooks {
-
     override val hooks: Seq[HttpHook] = Nil
   }
 
   val mockHttp = mock[MockHttp]
 
   class TestAttachmentsConnector extends AttachmentsConnector {
-    val crypto = SessionCookieCryptoFilter.encrypt _
+    val crypto = new SessionCookieCryptoFilter(new ApplicationCrypto(Play.current.configuration.underlying)).encrypt _
     override val http = mockHttp
   }
 

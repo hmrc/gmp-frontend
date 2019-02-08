@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 HM Revenue & Customs
+ * Copyright 2019 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,10 @@
 
 package config
 
+import akka.actor.ActorSystem
+import com.typesafe.config.Config
+import play.api.Mode.Mode
+import play.api.{Configuration, Play}
 import uk.gov.hmrc.http._
 import uk.gov.hmrc.http.cache.client.SessionCache
 import uk.gov.hmrc.http.hooks.{HttpHook, HttpHooks}
@@ -29,6 +33,10 @@ import uk.gov.hmrc.play.frontend.config.LoadAuditingConfig
 
 object GmpFrontendAuditConnector extends AuditConnector with AppName with RunMode {
   lazy val auditingConfig: AuditingConfig = LoadAuditingConfig(s"auditing")
+
+  override protected def appNameConfiguration: Configuration = Play.current.configuration
+  override protected def mode: Mode = Play.current.mode
+  override protected def runModeConfiguration: Configuration = Play.current.configuration
 }
 
 trait Hooks extends uk.gov.hmrc.http.hooks.HttpHooks with HttpAuditing {
@@ -36,13 +44,20 @@ trait Hooks extends uk.gov.hmrc.http.hooks.HttpHooks with HttpAuditing {
   override lazy val auditConnector: AuditConnector = GmpFrontendAuditConnector
 }
 
-trait WSHttp extends HttpGet with WSGet with HttpPut with WSPut with HttpPost with WSPost with HttpDelete with WSDelete with Hooks with AppName
+trait WSHttp extends HttpGet with WSGet with HttpPut with WSPut with HttpPost with WSPost with HttpDelete with WSDelete with Hooks with AppName {
+  override protected def appNameConfiguration: Configuration = Play.current.configuration
+  override protected def actorSystem: ActorSystem = akka.actor.ActorSystem()
+  override protected def configuration: Option[Config] = Some(Play.current.configuration.underlying)
+}
 
 object WSHttp extends WSHttp with Hooks
 
 object GmpFrontendAuthConnector extends AuthConnector with ServicesConfig {
   val serviceUrl = baseUrl("auth")
   lazy val http = WSHttp
+
+  override protected def mode: Mode = Play.current.mode
+  override protected def runModeConfiguration: Configuration = Play.current.configuration
 }
 
 object GmpSessionCache extends SessionCache with AppName with ServicesConfig {
@@ -50,4 +65,8 @@ object GmpSessionCache extends SessionCache with AppName with ServicesConfig {
   override lazy val defaultSource = appName
   override lazy val baseUri = baseUrl("keystore")
   override lazy val domain = getConfString("cachable.session-cache.domain", throw new Exception(s"Could not find config 'cachable.session-cache.domain'"))
+
+  override protected def appNameConfiguration: Configuration = Play.current.configuration
+  override protected def mode: Mode = Play.current.mode
+  override protected def runModeConfiguration: Configuration = Play.current.configuration
 }
