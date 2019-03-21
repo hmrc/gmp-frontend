@@ -50,7 +50,7 @@ object NinoValidate extends Validator {
 }
 
 object NameValidate extends Validator {
-  private val pattern = """[a-zA-Z\- '’]+"""
+  private val pattern = """[a-zA-Z\- '’ôéàëŵŷáîïâêûü]+"""
 
   override def isValid(name: String) = name != null && name.matches(pattern)
 }
