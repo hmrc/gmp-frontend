@@ -1,22 +1,20 @@
 import play.routes.compiler.StaticRoutesGenerator
+import play.sbt.routes.RoutesKeys.routesGenerator
 import sbt.Keys._
 import sbt.Tests.{Group, SubProcess}
 import sbt._
+import scoverage.ScoverageSbtPlugin
 import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin
 import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin._
-import scoverage.ScoverageSbtPlugin
-import uk.gov.hmrc.SbtArtifactory
 import uk.gov.hmrc.versioning.SbtGitVersioning
 import uk.gov.hmrc.versioning.SbtGitVersioning.autoImport.majorVersion
-import play.sbt.routes.RoutesKeys.routesGenerator
 
 trait MicroService {
 
   import uk.gov.hmrc._
   import DefaultBuildSettings._
-  import uk.gov.hmrc.SbtAutoBuildPlugin
-
   import TestPhases._
+  import uk.gov.hmrc.SbtAutoBuildPlugin
 
   val appName: String
 
@@ -61,7 +59,10 @@ trait MicroService {
       addTestReportOption(IntegrationTest, "int-test-reports"),
       testGrouping in IntegrationTest := forkJvmPerTest((definedTests in IntegrationTest).value),
       parallelExecution in IntegrationTest := false)
-    .settings(resolvers ++= Seq(Resolver.bintrayRepo("hmrc", "releases"), Resolver.jcenterRepo))
+    .settings(resolvers ++= Seq(
+        Resolver.bintrayRepo("hmrc", "releases"),
+        Resolver.jcenterRepo,
+        "hmrc-releases" at "https://artefacts.tax.service.gov.uk/artifactory/hmrc-releases/"))
     .enablePlugins(SbtDistributablesPlugin, SbtAutoBuildPlugin, SbtGitVersioning, SbtArtifactory)
 }
 
