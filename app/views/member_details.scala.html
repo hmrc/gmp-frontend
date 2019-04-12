@@ -24,7 +24,7 @@
 
 @gmp_main(title = Messages("gmp.member_details.header") + " - " + Messages("service.title") + " - " + Messages("gov.uk")) {
 
-  @views.html.helpers.errorSummary(memberDetailsForm)
+  @views.html.helpers.errorSummary(memberDetailsForm, formHeaderKey = "gmp.member_details.header")
 
   <div class="grid">
       @includes.back_link(Messages("gmp.bulk.results.banner"))
