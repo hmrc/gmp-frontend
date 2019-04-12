@@ -37,7 +37,7 @@ object MemberDetailsForm {
     text =>
       val ninoText = text.replaceAll("\\s", "")
       if (ninoText.length == 0){
-        Invalid(Seq(ValidationError(Messages("gmp.error.mandatory", Messages("gmp.nino")))))
+        Invalid(Seq(ValidationError(Messages("gmp.error.member.nino.mandatory"))))
       }
       else if (ninoText.toUpperCase().startsWith(TEMP_NINO)){
         Invalid(Seq(ValidationError(Messages("gmp.error.nino.temporary"))))
@@ -63,7 +63,7 @@ object MemberDetailsForm {
         .verifying(Messages("gmp.error.length", Messages("gmp.firstname"), MAX_LENGTH), _.length <= MAX_LENGTH)
         .verifying(Messages("gmp.error.name.invalid", Messages("gmp.lowercase.firstname")), x => x.length == 0 || x.matches(NAME_REGEX)),
       "surname" -> text
-        .verifying(Messages("gmp.error.mandatory", Messages("gmp.lowercase.lastname")), x => x.length > 0)
+        .verifying(Messages("gmp.error.member.lastname.mandatory"), x => x.length > 0)
         .verifying(Messages("gmp.error.length", Messages("gmp.lastname"), MAX_LENGTH), x => x.length <= MAX_LENGTH)
         .verifying(Messages("gmp.error.name.invalid", Messages("gmp.lowercase.lastname")), x => x.length == 0 || x.matches(NAME_REGEX))
         .verifying(Messages("gmp.error.surname.invalid", Messages("gmp.lowercase.lastname")), x => x.length != 1))
