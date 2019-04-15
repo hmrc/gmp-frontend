@@ -203,7 +203,7 @@ class MemberDetailsControllerSpec extends PlaySpec with OneServerPerSuite with M
               "surname" -> ""
             )
             val result = TestMemberDetailsController.post.apply(request.withJsonBody(postData))
-            contentAsString(result) must include(Messages("gmp.error.mandatory", "last name"))
+            contentAsString(result) must include(Messages("gmp.error.member.lastname.mandatory"))
           }
         }
 
