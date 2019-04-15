@@ -60,13 +60,12 @@ object MemberDetailsForm {
         .verifying(ninoConstraint),
       "firstForename" -> text
         .verifying(Messages("gmp.error.firstnameorinitial", Messages("gmp.firstname")), _.length > 0)
-        .verifying(Messages("gmp.error.length", Messages("gmp.firstname"), MAX_LENGTH), _.length <= MAX_LENGTH)
+        .verifying(Messages("gmp.error.length", Messages("gmp.lowercase.firstname"), MAX_LENGTH), _.length <= MAX_LENGTH)
         .verifying(Messages("gmp.error.name.invalid", Messages("gmp.lowercase.firstname")), x => x.length == 0 || x.matches(NAME_REGEX)),
       "surname" -> text
         .verifying(Messages("gmp.error.member.lastname.mandatory"), x => x.length > 0)
-        .verifying(Messages("gmp.error.length", Messages("gmp.lastname"), MAX_LENGTH), x => x.length <= MAX_LENGTH)
-        .verifying(Messages("gmp.error.name.invalid", Messages("gmp.lowercase.lastname")), x => x.length == 0 || x.matches(NAME_REGEX))
-        .verifying(Messages("gmp.error.surname.invalid", Messages("gmp.lowercase.lastname")), x => x.length != 1))
+        .verifying(Messages("gmp.error.length", Messages("gmp.lowercase.lastname"), MAX_LENGTH), x => x.length <= MAX_LENGTH)
+        .verifying(Messages("gmp.error.name.invalid", Messages("gmp.lowercase.lastname")), x => x.length == 0 || x.matches(NAME_REGEX)))
     (MemberDetails.apply)(MemberDetails.unapply)
   )
 
