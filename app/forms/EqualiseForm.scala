@@ -26,7 +26,7 @@ object EqualiseForm {
 
   val equaliseForm = Form(
     mapping(
-      "equalise" -> optional(number).verifying(Messages("gmp.error.reason.mandatory"), {_.isDefined})
+      "equalise" -> optional(number).verifying(Messages("gmp.error.equalise.error_message"), {_.isDefined})
     )(Equalise.apply)(Equalise.unapply)
   )
 
