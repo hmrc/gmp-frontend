@@ -30,10 +30,6 @@ class EqualiseSpec extends GmpViewSpec {
     behave like pageWithHeader(messages("gmp.equalise_header"))
     behave like pageWithBackLink
 
-    "have correct paragraph with text" in {
-      doc must haveParagraphWithText(messages("gmp.equalise_subheader"))
-    }
-
     "have correct input labels with text" in {
       doc must haveInputLabelWithText("equalise-yes", messages("gmp.generic.yes"))
       doc must haveInputLabelWithText("equalise-no", messages("gmp.generic.no"))
@@ -44,7 +40,7 @@ class EqualiseSpec extends GmpViewSpec {
     }
 
     "have a submit button text" in {
-      doc must haveSubmitButton(messages("gmp.check_gmp.button"))
+      doc must haveSubmitButton(messages("gmp.continue.button"))
     }
   }
 

@@ -72,9 +72,8 @@ class EqualiseControllerSpec extends PlaySpec with OneServerPerSuite with Mockit
       withAuthorisedUser { request =>
         val result = TestEqualiseController.get.apply(request)
         contentAsString(result) must include(Messages("gmp.equalise_header"))
-        contentAsString(result) must include(Messages("gmp.equalise_subheader"))
         contentAsString(result) must include(Messages("gmp.back.link"))
-        contentAsString(result) must include(Messages("gmp.check_gmp.button"))
+        contentAsString(result) must include(Messages("gmp.continue.button"))
       }
     }
 
@@ -135,7 +134,7 @@ class EqualiseControllerSpec extends PlaySpec with OneServerPerSuite with Mockit
                 val result = TestEqualiseController.post()(request)
 
                 status(result) must equal(BAD_REQUEST)
-                contentAsString(result) must include(Messages("gmp.error.reason.mandatory"))
+                contentAsString(result) must include(Messages("gmp.error.equalise.error_message"))
             }
           }
         }
