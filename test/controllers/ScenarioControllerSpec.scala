@@ -181,7 +181,7 @@ class ScenarioControllerSpec extends PlaySpec with OneServerPerSuite with Mockit
 
 
           status(result) must equal(BAD_REQUEST)
-          contentAsString(result) must include(Messages("gmp.error.reason.mandatory"))
+          contentAsString(result) must include(Messages("gmp.error.scenario.mandatory"))
       }
     }
 

@@ -35,7 +35,7 @@ class ScenarioSpec extends GmpViewSpec{
       doc must haveInputLabelWithText("calcType-spa", "State Pension age")
       doc must haveInputLabelWithText("calcType-survivor", "Survivor")
       doc must haveInputLabelWithText("calcType-leaving", "Leaving")
-      doc must haveInputLabelWithText("calcType-specificdate", "GMP value on a specific date: For example, transferring to another scheme, divorce or any other date of your choice")
+      doc must haveInputLabelWithText("calcType-specificdate", "GMP value on a specific date")
       doc must haveLegendWithText(messages("gmp.scenarios.title"))
     }
 
