@@ -254,7 +254,7 @@ class BulkResultsQueryHandlingMessageSpec extends BulkResultsSpec {
     }
 
     "have a paragraph" in {
-      doc must haveParagraphWithText(messages("If the instruction is to contact HMRC because we cannot calculate a GMP, or if you disagree with the result of a successful calculation, you can do so in Shared Workspace's eRoom. To query several calculations at once, create a bulk query document from the template in the guidance and templates folder. Drag and drop the query document into a new entry in the bulk queries database. To query a small number of calculations, create a new entry in the single queries database for each calculation."))
+      doc must haveParagraphWithText(messages("If the instruction is to contact HMRC because we cannot calculate a GMP, or if you disagree with the result of a successful calculation, you can do so in Shared Workspace’s eRoom. To query several calculations at once, create a bulk query document from the template in the guidance and templates folder. Drag and drop the query document into a new entry in the bulk queries database. To query a small number of calculations, create a new entry in the single queries database for each calculation."))
     }
   }
 }
