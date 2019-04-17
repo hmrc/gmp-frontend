@@ -36,7 +36,7 @@ class ResultsSpec extends GmpViewSpec{
     behave like pageWithTitle(messages("gmp.results.h1"))
 
     "have a span" in {
-      doc must haveParagraphWithText(messages("If you do not agree with this result, contact HMRC by creating a new entry in the 'single queries database' in the Shared Workspace eRoom."))
+      doc must haveParagraphWithText(messages("If you do not agree with this result, contact HMRC by creating a new entry in the ‘single queries database’ in the Shared Workspace eRoom."))
     }
   }
 
