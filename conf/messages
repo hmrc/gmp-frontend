@@ -81,7 +81,7 @@ gmp.bulk.explanations.all.2 = Results of all calculation requests.
 gmp.bulk.explanations.successful.1 = Results where a total GMP was successfully calculated.
 gmp.bulk.explanations.successful.2 = Includes GMP amounts each period if there is more than one contracted-out period.
 gmp.bulk.explanations.failed.1 = Requests where we cannot calculate a total GMP. GMPs for each period are shown if they have been successfully calculated.
-gmp.bulk.explanations.failed.2 = Where there is no GMP, see ’Reason for error’ and ’What to do’.
+gmp.bulk.explanations.failed.2 = Where there is no GMP, see ‘Reason for error’ and ‘What to do’.
 gmp.bulk.explanations.failed.3 = You can then submit the calculation again request (either on its own or as part of another bulk file) or contact HM Revenue and Customs where advised.
 gmp.bulk.explanations.contsandearnings = A separate contributions and earnings file for all queries.
 gmp.bulk.problem.header = There is a problem
@@ -242,9 +242,9 @@ gmp.error.nino.temporary = This is a temporary National Insurance number. You ne
 gmp.error.reval_date.mandatory = Enter a revaluation date
 gmp.error.leaving_date.mandatory = Enter a leaving date
 gmp.error.csv.date.invalid = Enter a date in the same format as the example given in the instructions file
-gmp.error.csv.termination.invalid = Enter a date If the member left after 5 April 2016 or ’SM’ if the member is still in the scheme
+gmp.error.csv.termination.invalid = Enter a date If the member left after 5 April 2016 or ‘SM’ if the member is still in the scheme
 gmp.error.csv.termination.oob = Enter a date that is after 5 April 2016
-gmp.error.csv.dual_calc.invalid = Enter ’Yes’ or ’Y’ if you want an opposite gender calculation or ’No’ or ’N’ if you do not. This field cannot be left blank.
+gmp.error.csv.dual_calc.invalid = Enter ‘Yes’ or ‘Y’ if you want an opposite gender calculation or ‘No’ or ‘N’ if you do not. This field cannot be left blank.
 gmp.error.csv.member_ref.character.invalid = The calculation name can only contain letters or numbers
 gmp.error.csv.member_ref.spaces.invalid = The calculation name cannot have spaces
 gmp.error.csv.member_ref.length.invalid = The calculation name must have fewer than 99 letters or numbers
@@ -282,7 +282,7 @@ gmp.error.solution.56002 = Submit a new request once <a href="http://www.legisla
 gmp.error.solution.try_again = Check your records and <a href="/guaranteed-minimum-pension/pension-details">try the calculation again</a>.
 gmp.error.solution.leaving_date = Check you have entered the correct leaving date and <a href="/guaranteed-minimum-pension/left-scheme">try again</a>.
 gmp.error.solution.63148 = Check the date up to which you would like the calculation to apply and <a href="/guaranteed-minimum-pension/inflation-proof">try again</a>.
-gmp.error.solution.63150 = <a href="/guaranteed-minimum-pension/equalise">Go back</a> and select ’No’ when asked if you want an opposite gender calculation.
+gmp.error.solution.63150 = <a href="/guaranteed-minimum-pension/equalise">Go back</a> and select ‘No’ when asked if you want an opposite gender calculation.
 gmp.error.solution.63167 = Choose another <a href="/guaranteed-minimum-pension/revaluation-rate">revaluation rate</a>.
 
 gmp.error.no_conts_and_earnings = No contributions and earnings available
@@ -345,8 +345,8 @@ gmp.unavailable = No GMP available
 ############################################################################
 # Query handling
 ############################################################################
-gmp.queryhandling.resultsmessage = If you do not agree with this result, contact HMRC by creating a new entry in the ’single queries database’ in the Shared Workspace eRoom.
-gmp.queryhandling.contsandearnings = If you do not agree with this result, contact HMRC by creating a new entry in the ’single queries database’ in the Shared Workspace eRoom.
+gmp.queryhandling.resultsmessage = If you do not agree with this result, contact HMRC by creating a new entry in the ‘single queries database’ in the Shared Workspace eRoom.
+gmp.queryhandling.contsandearnings = If you do not agree with this result, contact HMRC by creating a new entry in the ‘single queries database’ in the Shared Workspace eRoom.
 gmp.queryhandling.changedetails.link = <a href="https://www.gov.uk/tell-hmrc-change-of-details" rel="external">How the member can tell HMRC their personal details have changed</a>
 
 ############################################################################
