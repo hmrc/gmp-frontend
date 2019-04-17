@@ -43,12 +43,12 @@ gmp.bulk.results_not_found = Calculation no longer available
 gmp.signout = Sign out
 gmp.title = Guaranteed Minimum Pension (GMP) checker
 gmp.entered_details.title = Scheme member details
-gmp.entered_details.title.survivor = Deceased member''s entered details
+gmp.entered_details.title.survivor = Deceased member’s entered details
 gmp.contributions_earnings.header = Contributions and earnings
-gmp.member_details.header = Member details
+gmp.member_details.header = What are the member’s details?
 gmp.pension_details.header = Enter Scheme Contracted Out Number (SCON)
 gmp.revaluation.question = At which date would you like the calculation to apply?
-gmp.revaluation.info = This could be a transfer date, date of divorce, or any other date relevant to the member''s circumstances.
+gmp.revaluation.info = This could be a transfer date, date of divorce, or any other date relevant to the member’s circumstances.
 gmp.inflation_proof.question = Would you like a calculation for a date after the date of death?
 gmp.leaving.dol.question = Did the member leave the scheme before 6 April 2016?
 gmp.other.dol.left.question = Has the member left the scheme?
@@ -65,8 +65,8 @@ gmp.contracted_out_period_error = Contracted out period {0}
 gmp.tax_year_table_column_header = Year
 gmp.contracted_out_period_table_column_header = Amount
 gmp.equalise_header = Do you also want an opposite gender calculation?
-gmp.results.survivor.header = Surviving partner''s GMP entitlement at date of death ({0})
-gmp.results.survivor.revaluation.header = Surviving partner''s GMP entitlement at {0}
+gmp.results.survivor.header = Surviving partner’s GMP entitlement at date of death ({0})
+gmp.results.survivor.revaluation.header = Surviving partner’s GMP entitlement at {0}
 gmp.bulk_reference.header = Name your calculation
 gmp.bulk_request_received.header = What next
 gmp.no_inflation.subheader = This GMP has not been inflation proofed as you entered a date in the same tax year as the date of death.
@@ -81,14 +81,14 @@ gmp.bulk.explanations.all.2 = Results of all calculation requests.
 gmp.bulk.explanations.successful.1 = Results where a total GMP was successfully calculated.
 gmp.bulk.explanations.successful.2 = Includes GMP amounts each period if there is more than one contracted-out period.
 gmp.bulk.explanations.failed.1 = Requests where we cannot calculate a total GMP. GMPs for each period are shown if they have been successfully calculated.
-gmp.bulk.explanations.failed.2 = Where there is no GMP, see ''Reason for error'' and ''What to do''.
+gmp.bulk.explanations.failed.2 = Where there is no GMP, see ‘Reason for error’ and ‘What to do’.
 gmp.bulk.explanations.failed.3 = You can then submit the calculation again request (either on its own or as part of another bulk file) or contact HM Revenue and Customs where advised.
 gmp.bulk.explanations.contsandearnings = A separate contributions and earnings file for all queries.
 gmp.bulk.problem.header = There is a problem
-gmp.bulk.problem.error.field = error field
+gmp.bulk.problem.error.field = error - field
 gmp.bulk.file_too_large.header = The file is too large
 gmp.bulk.query_handling_message.header = Contact HMRC about a calculation
-gmp.bulk.query_handling_message.body = If the instruction is to contact HMRC because we cannot calculate a GMP, or if you disagree with the result of a successful calculation, you can do so in Shared Workspace''s eRoom.<br/><br/>To query several calculations at once, create a bulk query document from the template in the guidance and templates folder. Drag and drop the query document into a new entry in the bulk queries database. To query a small number of calculations, create a new entry in the single queries database for each calculation.
+gmp.bulk.query_handling_message.body = If the instruction is to contact HMRC because we cannot calculate a GMP, or if you disagree with the result of a successful calculation, you can do so in Shared Workspace’s eRoom.<br/><br/>To query several calculations at once, create a bulk query document from the template in the guidance and templates folder. Drag and drop the query document into a new entry in the bulk queries database. To query a small number of calculations, create a new entry in the single queries database for each calculation.
 
 gmp.bulk.results_not_found.1 = We only keep results for 30 days. If you still need these calculations, you will have to <a href="/guaranteed-minimum-pension/upload-csv">upload the file again</a>.
 gmp.bulk.results_not_found.2 = If you need access to a calculation result for longer than 30 days, you can save the file on your own computer or network after you have downloaded it.
@@ -210,11 +210,11 @@ gmp.error.revaluation_pre2016_not_left = Enter a date on or after 6 April 2016
 gmp.error.email.invalid = Enter a valid email address
 gmp.error.date.invalid = Enter a valid date
 gmp.error.day.invalid = Enter a day between 1 and 31
-gmp.error.length = {0} is too long (>{1})
+gmp.error.length = Member’s {0} must be {1} characters or less
 gmp.error.mandatory = Enter a {0}
 gmp.error.mandatory.new = Enter a Scheme Contracted Out Number in the correct format
 gmp.error.mandatory.an = Enter an {0}
-gmp.error.firstnameorinitial = Enter a first name or initial
+gmp.error.firstnameorinitial = Enter member’s first name or initial
 gmp.error.firstname.toolong = Enter a first name that is fewer than 99 characters
 gmp.error.lastname.toolong = Enter a last name that is fewer than 99 characters
 gmp.error.month.invalid = Enter a month between 1 and 12
@@ -224,8 +224,7 @@ gmp.error.year.invalid.format = Enter the year in full (4 numbers)
 gmp.error.date.nonnumber = Enter a date using numbers only
 gmp.error.reason.mandatory = Select an option
 gmp.generic.errors_heading = There is a problem
-gmp.error.name.invalid = Enter a {0} using only letters, hyphens, apostrophes and spaces
-gmp.error.surname.invalid = Enter a last name with more than 1 character
+gmp.error.name.invalid = Enter member’s {0} using letters, hyphens, apostrophes and spaces
 gmp.error.email.invalid = Enter a valid email address
 gmp.error.calctype.out_of_range = Enter a calculation type between 0 and 4. See instructions file
 gmp.error.calctype.invalid = Enter a valid calculation type
@@ -236,30 +235,31 @@ gmp.error.parsing.empty_file = No information submitted
 gmp.error.scon.bulk.invalid = Enter a SCON in the same format as the example given in the instructions file
 gmp.error.scon.invalid = Enter a Scheme Contracted Out Number in the same format as the example given
 gmp.error.scon.nps_invalid = This SCON does not exist. Check and try again.
-gmp.error.nino.invalid = The National Insurance number you have entered is not valid. Check it and try again.
+gmp.error.nino.invalid = Enter member’s National Insurance number in the correct format
+gmp.error.member.nino.mandatory = Enter member’s National Insurance number
+gmp.error.member.lastname.mandatory = Enter member’s last name
 gmp.error.nino.temporary = This is a temporary National Insurance number. You need a permanent one to calculate a GMP.
 gmp.error.reval_date.mandatory = Enter a revaluation date
 gmp.error.leaving_date.mandatory = Enter a leaving date
-
 gmp.error.csv.date.invalid = Enter a date in the same format as the example given in the instructions file
-gmp.error.csv.termination.invalid = Enter a date If the member left after 5 April 2016 or ''SM'' if the member is still in the scheme
+gmp.error.csv.termination.invalid = Enter a date If the member left after 5 April 2016 or ‘SM’ if the member is still in the scheme
 gmp.error.csv.termination.oob = Enter a date that is after 5 April 2016
-gmp.error.csv.dual_calc.invalid = Enter ''Yes'' or ''Y'' if you want an opposite gender calculation or ''No'' or ''N'' if you do not. This field cannot be left blank.
+gmp.error.csv.dual_calc.invalid = Enter ‘Yes’ or ‘Y’ if you want an opposite gender calculation or ‘No’ or ‘N’ if you do not. This field cannot be left blank.
 gmp.error.csv.member_ref.character.invalid = The calculation name can only contain letters or numbers
 gmp.error.csv.member_ref.spaces.invalid = The calculation name cannot have spaces
 gmp.error.csv.member_ref.length.invalid = The calculation name must have fewer than 99 letters or numbers
 gmp.error.member_previous_names = If we still cannot calculate a GMP, ask if the member has any previous names that may not have been updated with HM Revenue and Customs.
-gmp.error.contact_us_shared_workspace = Contact us by creating a new entry in the single queries database in Shared Workspace''s eRoom.
+gmp.error.contact_us_shared_workspace = Contact us by creating a new entry in the single queries database in Shared Workspace’s eRoom.
 gmp.error.contact.scon = If you think the SCON is correct, <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pensions-helpline-contracted-out">call HMRC</a>.
-gmp.error.also.contact = If you still cannot get a calculation result, contact HM Revenue and Customs by creating a new entry in the single queries database in Shared Workspace''s eRoom.
-gmp.error.also.death = If you think the date of death held on the member''s record is wrong, contact HM Revenue and Customs by creating a new entry in the single queries database in Shared Workspace''s eRoom.
+gmp.error.also.contact = If you still cannot get a calculation result, contact HM Revenue and Customs by creating a new entry in the single queries database in Shared Workspace’s eRoom.
+gmp.error.also.death = If you think the date of death held on the member’s record is wrong, contact HM Revenue and Customs by creating a new entry in the single queries database in Shared Workspace’s eRoom.
 
-gmp.error.reason.63119 = This is because the member''s name or National Insurance number are either incorrect or do not match our records.
+gmp.error.reason.63119 = This is because the member’s name or National Insurance number are either incorrect or do not match our records.
 gmp.error.reason.63121 = This is because our records show this member is deceased.
 gmp.error.reason.63123 = This is because our records show the member was still in the scheme on the date you would like it to be revalued.
 gmp.error.reason.check_scon = This is because this member has no pre-1997 GMP liability under this SCON.
 gmp.error.reason.56067 = This is because we believe the member has no pre-1997 GMP liability under this Scheme Contracted Out Number.
-gmp.error.reason.56018 = This is because the member has a Married Woman''s Reduced Rate Election for the contracted-out period therefore there is no GMP liability.
+gmp.error.reason.56018 = This is because the member has a Married Woman’s Reduced Rate Election for the contracted-out period therefore there is no GMP liability.
 gmp.error.reason.56002 = This is because the S148/S37a orders are not yet available.
 gmp.error.reason.56013 = This is because this scheme has no GMP liability.
 gmp.error.reason.generic = But HM Revenue and Customs may still be able to do a calculation for you.
@@ -272,7 +272,7 @@ gmp.error.reason.63167 = This is because you asked for the GMP to be revalued us
 gmp.error.reason.leaving_date = This is because you entered a leaving date that is after the date of death.
 gmp.error.reason.56010 = This is because we need the member to confirm their date of birth.
 
-gmp.error.solution.contact_hmrc = If you think our records are incorrect, contact us by creating a new entry in the single queries database in Shared Workspace''s eRoom.
+gmp.error.solution.contact_hmrc = If you think our records are incorrect, contact us by creating a new entry in the single queries database in Shared Workspace’s eRoom.
 gmp.error.solution.bullets = <ul class="list-number"><li>Check you have spelled the name correctly</li><li>Check you have entered the correct National Insurance number</li><li><a href="/guaranteed-minimum-pension/member-details">Try the calculation again</a></li></ul>
 gmp.error.solution.63121 = If you still need a GMP, choose the survivor calculation option and <a href="/guaranteed-minimum-pension/calculation-reason">try again</a>.
 gmp.error.solution.63123 = <a href="/guaranteed-minimum-pension/revaluation">Change the revaluation date</a> to one after the member left the scheme and try the calculation again.
@@ -282,7 +282,7 @@ gmp.error.solution.56002 = Submit a new request once <a href="http://www.legisla
 gmp.error.solution.try_again = Check your records and <a href="/guaranteed-minimum-pension/pension-details">try the calculation again</a>.
 gmp.error.solution.leaving_date = Check you have entered the correct leaving date and <a href="/guaranteed-minimum-pension/left-scheme">try again</a>.
 gmp.error.solution.63148 = Check the date up to which you would like the calculation to apply and <a href="/guaranteed-minimum-pension/inflation-proof">try again</a>.
-gmp.error.solution.63150 = <a href="/guaranteed-minimum-pension/equalise">Go back</a> and select ''No'' when asked if you want an opposite gender calculation.
+gmp.error.solution.63150 = <a href="/guaranteed-minimum-pension/equalise">Go back</a> and select ‘No’ when asked if you want an opposite gender calculation.
 gmp.error.solution.63167 = Choose another <a href="/guaranteed-minimum-pension/revaluation-rate">revaluation rate</a>.
 
 gmp.error.no_conts_and_earnings = No contributions and earnings available
@@ -345,8 +345,8 @@ gmp.unavailable = No GMP available
 ############################################################################
 # Query handling
 ############################################################################
-gmp.queryhandling.resultsmessage = If you do not agree with this result, contact HMRC by creating a new entry in the ''single queries database'' in the Shared Workspace eRoom.
-gmp.queryhandling.contsandearnings = If you do not agree with this result, contact HMRC by creating a new entry in the ''single queries database'' in the Shared Workspace eRoom.
+gmp.queryhandling.resultsmessage = If you do not agree with this result, contact HMRC by creating a new entry in the ‘single queries database’ in the Shared Workspace eRoom.
+gmp.queryhandling.contsandearnings = If you do not agree with this result, contact HMRC by creating a new entry in the ‘single queries database’ in the Shared Workspace eRoom.
 gmp.queryhandling.changedetails.link = <a href="https://www.gov.uk/tell-hmrc-change-of-details" rel="external">How the member can tell HMRC their personal details have changed</a>
 
 ############################################################################

@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@(form: Form[_])(implicit messages: Messages)
+@(form: Form[_], formHeaderKey: String = "gmp.bulk.problem.header")(implicit messages: Messages)
 
 @if(form.hasGlobalErrors || form.hasErrors) {
 
@@ -34,7 +34,7 @@
                     case _ => { error.key }
                 }
             ) { anchor =>
-            <li role="tooltip" data-journey='@Messages("gmp.bulk.problem.error.field"):@error.key:@Messages("gmp.bulk.problem.header")'>
+            <li role="tooltip" data-journey='@Messages("gmp.bulk.problem.error.field"):@Messages(formHeaderKey):@error.message'>
                 <a href="#@anchor" class="error-list" data-focuses="@error.key">
                     @Messages(error.message)
                 </a>

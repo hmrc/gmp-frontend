@@ -52,7 +52,7 @@ class MemberDetailsFormSpec extends PlaySpec with OneAppPerSuite {
         )
         val validatedForm = form.bind(postData)
 
-        assert(validatedForm.errors.contains(FormError("nino", List(Messages("gmp.error.mandatory", Messages("gmp.nino"))))))
+        assert(validatedForm.errors.contains(FormError("nino", List(Messages("gmp.error.member.nino.mandatory")))))
       }
 
       "return an error when invalid" in {
@@ -207,7 +207,7 @@ class MemberDetailsFormSpec extends PlaySpec with OneAppPerSuite {
         )
         val validatedForm = form.bind(postData)
 
-        assert(validatedForm.errors.contains(FormError("firstForename", List(Messages("gmp.error.length", Messages("gmp.firstname"), MAX_LENGTH)))))
+        assert(validatedForm.errors.contains(FormError("firstForename", List(Messages("gmp.error.length", Messages("gmp.lowercase.firstname"), MAX_LENGTH)))))
       }
 
       "return an error when contains a digit" in {
@@ -308,7 +308,7 @@ class MemberDetailsFormSpec extends PlaySpec with OneAppPerSuite {
       )
       val validatedForm = form.bind(postData)
 
-      assert(validatedForm.errors.contains(FormError("surname", List(Messages("gmp.error.mandatory", Messages("gmp.lowercase.lastname"))))))
+      assert(validatedForm.errors.contains(FormError("surname", List(Messages("gmp.error.member.lastname.mandatory")))))
       assert(validatedForm.errors.length == 1)
     }
 
@@ -334,7 +334,7 @@ class MemberDetailsFormSpec extends PlaySpec with OneAppPerSuite {
       )
       val validatedForm = form.bind(postData)
 
-      assert(validatedForm.errors.contains(FormError("surname", List(Messages("gmp.error.length", Messages("gmp.lastname"), MAX_LENGTH)))))
+      assert(validatedForm.errors.contains(FormError("surname", List(Messages("gmp.error.length", Messages("gmp.lowercase.lastname"), MAX_LENGTH)))))
     }
 
     "return an error when contains a digit" in {
@@ -346,18 +346,6 @@ class MemberDetailsFormSpec extends PlaySpec with OneAppPerSuite {
       val validatedForm = form.bind(postData)
 
       assert(validatedForm.errors.contains(FormError("surname", List(Messages("gmp.error.name.invalid", Messages("gmp.lowercase.lastname"))))))
-    }
-
-    "return an error when only one character" in {
-      val postData = Json.obj(
-        "nino" -> RandomNino.generate,
-        "firstForename" -> "Bob",
-        "surname" -> "a"
-      )
-      val validatedForm = form.bind(postData)
-
-      assert(validatedForm.errors.contains(FormError("surname", List(Messages("gmp.error.surname.invalid")))))
-      assert(validatedForm.errors.length == 1)
     }
 
     "allow apostrophes" in {
