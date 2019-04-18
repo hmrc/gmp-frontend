@@ -225,7 +225,6 @@ gmp.error.reason.mandatory = Select an option
 gmp.error.equalise.error_message = Select yes if you want an opposite gender calculation
 gmp.generic.errors_heading = There is a problem
 gmp.error.name.invalid = Enter member’s {0} using letters, hyphens, apostrophes and spaces
-gmp.error.email.invalid = Enter a valid email address
 gmp.error.calctype.out_of_range = Enter a calculation type between 0 and 4. See instructions file
 gmp.error.calctype.invalid = Enter a valid calculation type
 gmp.error.revaluation_rate.invalid = Enter a revaluation rate between 0 and 3. See instructions file
@@ -241,6 +240,7 @@ gmp.error.member.lastname.mandatory = Enter member’s last name
 gmp.error.nino.temporary = This is a temporary National Insurance number. You need a permanent one to calculate a GMP.
 gmp.error.reval_date.mandatory = Enter a revaluation date
 gmp.error.leaving_date.mandatory = Enter a leaving date
+
 gmp.error.csv.date.invalid = Enter a date in the same format as the example given in the instructions file
 gmp.error.csv.termination.invalid = Enter a date If the member left after 5 April 2016 or ‘SM’ if the member is still in the scheme
 gmp.error.csv.termination.oob = Enter a date that is after 5 April 2016
