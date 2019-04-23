@@ -22,7 +22,7 @@
 
 @gmp_main(title = Messages("gmp.equalise_header")+ " - " + Messages("service.title") + " - " + Messages("gov.uk")) {
 
-  @views.html.helpers.errorSummary(equaliseForm)
+  @views.html.helpers.errorSummary(equaliseForm, formHeaderKey = "gmp.equalise_header")
 
   <div class="grid">
       @includes.back_link(Messages("gmp.equalise_header"))
