@@ -27,6 +27,7 @@
 @fieldsetClass = {@elements.args.get('_groupClass)@if(errors.nonEmpty){ form-field--error}}
 @labelAfter = @{ elements.args.get('_labelAfter).getOrElse(false).asInstanceOf[Boolean] }
 @trackGA = @{ elements.args.get('_trackGA).getOrElse(false).asInstanceOf[Boolean] }
+@formHeaderKey = @{ elements.args.get('_formHeaderKey).getOrElse("service.title").asInstanceOf[String] }
 
 
 <fieldset class="@fieldsetClass"
@@ -80,7 +81,7 @@
           value="@value"
           @elements.args.get('_inputClass).map{inputClass => class="@inputClass"}
           @if(elements.args.contains('_dataAttributes) ){ @elements.args.get('_dataAttributes)}
-          @if(trackGA){data-journey-click="gmp:click:@inputId"}
+          @if(trackGA){data-journey-click="radio - select:@Messages(formHeaderKey):@id"}
           @field.value.filter( _ == value).map{_ => checked="checked"}/>@if(labelAfter){@if(elements.args.get('_stackedLabel)){@if(label.split(" ").length < 2){<br>@label}else{@for((l, index) <- label.split(" ").zipWithIndex){@if(index != 0){<br>}@l}}}else{@Html(label)}}</label>
   }
 }

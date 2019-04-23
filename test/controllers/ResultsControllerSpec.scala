@@ -353,7 +353,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
           when(mockCalculationConnector.calculateSingle(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(survivorCalculationResponse))
           withAuthorisedUser { request =>
             val result = TestResultsController.get.apply(request)
-            contentAsString(result) must include("Surviving partner&#x27;s GMP entitlement at date of death")
+            contentAsString(result) must include("Surviving partner’s GMP entitlement at date of death")
             contentAsString(result) must include(Messages("gmp.total.entitlement"))
             contentAsString(result) must include(Messages("gmp.post88.entitlement"))
           }
@@ -364,7 +364,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
           when(mockCalculationConnector.calculateSingle(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(survivorRevaluationCalculationResponse))
           withAuthorisedUser { request =>
             val result = TestResultsController.get.apply(request)
-            contentAsString(result) must include("Surviving partner&#x27;s GMP entitlement at 10 November 2010")
+            contentAsString(result) must include("Surviving partner’s GMP entitlement at 10 November 2010")
             contentAsString(result) must include(Messages("gmp.results.survivior.disclaimer"))
           }
         }
@@ -393,7 +393,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
             survivorRevaluationCalculationResponseNoInflation.copy(dateOfDeath = Some(new LocalDate("2017-01-01")), revaluationDate = None)))
           withAuthorisedUser { request =>
             val result = TestResultsController.get.apply(request)
-            contentAsString(result) must include("Surviving partner&#x27;s GMP entitlement at date of death (1 January 2017)")
+            contentAsString(result) must include("Surviving partner’s GMP entitlement at date of death (1 January 2017)")
             contentAsString(result) must not include (Messages("gmp.no_inflation.subheader"))
           }
         }

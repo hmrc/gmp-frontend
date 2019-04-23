@@ -27,7 +27,7 @@ object ScenarioForm {
 
   val scenarioForm = Form(
     mapping(
-      "calcType" -> optional(text).verifying(Messages("gmp.error.reason.mandatory"), {x => {x.isDefined && x.get.matches("[0-4]{1}")}})
+      "calcType" -> optional(text).verifying(Messages("gmp.error.scenario.mandatory"), {x => {x.isDefined && x.get.matches("[0-4]{1}")}})
     )(CalculationType.apply)(CalculationType.unapply)
   )
 

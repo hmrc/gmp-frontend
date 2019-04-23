@@ -223,6 +223,7 @@ gmp.error.reval_date.to = The calculation can only be revalued up until 4 April 
 gmp.error.year.invalid.format = Enter the year in full (4 numbers)
 gmp.error.date.nonnumber = Enter a date using numbers only
 gmp.error.reason.mandatory = Select an option
+gmp.error.scenario.mandatory = Select the type of calculation you need
 gmp.generic.errors_heading = There is a problem
 gmp.error.name.invalid = Enter member’s {0} using letters, hyphens, apostrophes and spaces
 gmp.error.email.invalid = Enter a valid email address
@@ -318,12 +319,12 @@ gmp.chosen_rate.subheader = Revaluation rate chosen: {0}
 ############################################################################
 # Scenarios
 ############################################################################
-gmp.scenarios.title = Choose what type of calculation you need for this member
+gmp.scenarios.title = What type of calculation do you need?
 gmp.scenarios.payable_age = <span class="bold-small">GMP payable age</span>
 gmp.scenarios.spa = <span class="bold-small">State Pension age</span>
 gmp.scenarios.survivor = <span class="bold-small">Survivor</span>
 gmp.scenarios.leaving = <span class="bold-small">Leaving</span>
-gmp.scenarios.specific_date = <span class="bold-small">GMP value on a specific date:</span><br/>For example, transferring to another scheme, divorce or any other date of your choice
+gmp.scenarios.specific_date = <span class="bold-small">GMP value on a specific date</span>
 
 gmp.generic.yes = Yes
 gmp.generic.no = No

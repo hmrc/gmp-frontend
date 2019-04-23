@@ -25,7 +25,7 @@
 
 @gmp_main(title = Messages("gmp.scenarios.title") + " - " + Messages("service.title") + " - " + Messages("gov.uk")) {
 
-  @views.html.helpers.errorSummary(calculationType)
+  @views.html.helpers.errorSummary(calculationType, formHeaderKey = "gmp.scenarios.title")
 
   <div class="grid">
       @includes.back_link(Messages("gmp.scenarios.title"))
@@ -53,7 +53,9 @@
                     '_legendClass -> "visuallyhidden",
                     '_labelAfter -> true,
                     '_labelClass -> "block-label",
-                    '_groupClass -> "inline-block"
+                    '_groupClass -> "inline-block",
+                    '_trackGA -> true,
+                    '_formHeaderKey -> "gmp.scenarios.title"
                   )
               </div>
 
