@@ -44,10 +44,14 @@ object DateOfLeavingForm {
           Seq(ValidationError(Messages("gmp.error.date.invalid"), "leavingDate"))
         }
         else if (leaving.leaving.isDefined && leaving.leaving.get.equals(Leaving.YES_AFTER) && !leaving.leavingDate.isOnOrAfter06042016) {
-          Seq(ValidationError(Messages("gmp.error.date.invalid"), "leavingDate"))
+          Seq(ValidationError(Messages("gmp.error.leaving_on_or_after.too_low"), "leavingDate"))
         }
-        else
+        else if (leaving.leaving.isDefined && leaving.leaving.get.equals(Leaving.YES_AFTER) && !leaving.leavingDate.isBefore01012100) {
+          Seq(ValidationError(Messages("gmp.error.leaving_on_or_after.too_high"), "leavingDate"))
+        }
+        else {
           Nil
+        }
 
       if (errors.isEmpty) {
         Valid

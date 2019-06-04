@@ -103,7 +103,12 @@ class DateOfLeavingFormSpec extends PlaySpec with OneAppPerSuite with MockitoSug
 
       "return an error if before 06/04/2016" in {
         val dateOfLeavingFormResults = dateOfLeavingForm.bind(Json.toJson(Leaving(new GmpDate(Some("04"), Some("04"), Some("2016")),Some(Leaving.YES_AFTER))))
-        dateOfLeavingFormResults.errors must contain(FormError("", List(Messages("gmp.error.date.invalid")), List("leavingDate")))
+        dateOfLeavingFormResults.errors must contain(FormError("", List(Messages("gmp.error.leaving_on_or_after.too_low")), List("leavingDate")))
+      }
+
+      "return an error if not before 01/01/2100" in {
+        val dateOfLeavingFormResults = dateOfLeavingForm.bind(Json.toJson(Leaving(new GmpDate(Some("01"), Some("01"), Some("2100")),Some(Leaving.YES_AFTER))))
+        dateOfLeavingFormResults.errors must contain(FormError("", List(Messages("gmp.error.leaving_on_or_after.too_high")), List("leavingDate")))
       }
     }
 

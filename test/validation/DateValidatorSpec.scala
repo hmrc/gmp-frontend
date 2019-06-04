@@ -40,14 +40,6 @@ class DateValidatorSpec extends FlatSpec with Matchers {
     DateValidate.isValid("29/02/2016") should be(true)
   }
 
-  it should "fail with a date outside the range before 1900 31/12/1899" in {
-    DateValidate.isValid("31/12/1899") should be(false)
-  }
-
-  it should "fail with a date outside the ranfe after 2100 1/1/2100" in {
-    DateValidate.isValid("1/1/2100") should be(false)
-  }
-
   it should "fail with a leading space 31/1/2015" in {
     DateValidate.isValid(" 31/1/2015") should be(false)
   }

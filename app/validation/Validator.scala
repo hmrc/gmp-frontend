@@ -65,7 +65,7 @@ object SMValidate extends Validator {
 
 object DateValidate extends Validator {
 
-  private val validFormat = "^(0?[1-9]|[12][0-9]|3[01])[/](0?[1-9]|1[012])[/](19|20)\\d\\d$"
+  private val validFormat = "^(0?[1-9]|[12][0-9]|3[01])[/](0?[1-9]|1[012])[/]\\d\\d\\d\\d$"
   private val dateFormat = "dd/MM/yyyy"
   private val gmpStart = {
     new SimpleDateFormat(dateFormat).parse("05/04/1978")
@@ -83,7 +83,9 @@ object DateValidate extends Validator {
         format.parse(value)
         true
       } catch {
-        case e: ParseException => false
+        case e: ParseException => {
+          false
+        }
       }
     } else {
       false

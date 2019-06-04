@@ -39,7 +39,7 @@ object RevaluationForm {
             revaluationDate.leaving.leaving.get.equals(Leaving.NO) &&
             !revaluationDate.revaluationDate.isOnOrAfter06042016)
         {
-          Seq(ValidationError(Messages("gmp.error.revaluation_pre2016_not_left"), "revaluationDate"))
+          Seq(ValidationError(Messages("gmp.error.revaluation_pre2016_not_left"), "revaluationDate")) // 2016
         }
         else if (revaluationDate.revaluationDate.isBefore(revaluationDate.leaving.leavingDate)) {
           Seq(ValidationError(Messages("gmp.error.revaluation_before_leaving", revaluationDate.leaving.leavingDate.getAsText), "revaluationDate"))
@@ -56,31 +56,35 @@ object RevaluationForm {
     }
   })
 
+  val revaluationDateMapping = mapping(
+      "day" -> optional(text),
+      "month" -> optional(text),
+      "year" -> optional(text)
+    )(GmpDate.apply)(GmpDate.unapply)
+      .verifying(Messages("gmp.error.date.nonnumber"), x => checkForNumber(x.day) && checkForNumber(x.month) && checkForNumber(x.year))
+      .verifying(Messages("gmp.error.day.invalid"), x => checkDayRange(x.day))
+      .verifying(Messages("gmp.error.month.invalid"), x => checkMonthRange(x.month))
+      .verifying(Messages("gmp.error.year.invalid.format"), x => checkYearLength(x.year))
+      .verifying(Messages("gmp.error.reval_date.mandatory"), x => mandatoryDate(x))
+      .verifying(Messages("gmp.error.date.invalid"), x => checkValidDate(x))
+      .verifying(Messages("gmp.error.reval_date.from"), x => checkDateOnOrAfterGMPStart(x)) // 1978
+      .verifying(Messages("gmp.error.reval_date.to"), x => checkDateOnOBeforeGMPEnd(x)
+  )
+
+  val leavingMapping = mapping(
+    "leavingDate" -> mapping(
+      "day" -> optional(text),
+      "month" -> optional(text),
+      "year" -> optional(text)
+    )(GmpDate.apply)(GmpDate.unapply),
+    "leaving" -> optional(text)
+  )(Leaving.apply)(Leaving.unapply)
+
   val revaluationForm = Form(
     mapping(
-      "revaluationDate" -> mapping(
-        "day" -> optional(text),
-        "month" -> optional(text),
-        "year" -> optional(text)
-      )(GmpDate.apply)(GmpDate.unapply)
-        .verifying(Messages("gmp.error.date.nonnumber"), x => checkForNumber(x.day) && checkForNumber(x.month) && checkForNumber(x.year))
-        .verifying(Messages("gmp.error.day.invalid"), x => checkDayRange(x.day))
-        .verifying(Messages("gmp.error.month.invalid"), x => checkMonthRange(x.month))
-        .verifying(Messages("gmp.error.year.invalid.format"), x => checkYearLength(x.year))
-        .verifying(Messages("gmp.error.reval_date.mandatory"), x => mandatoryDate(x))
-        .verifying(Messages("gmp.error.date.invalid"), x => checkValidDate(x))
-        .verifying(Messages("gmp.error.reval_date.from"), x => checkDateOnOrAfterGMPStart(x))
-        .verifying(Messages("gmp.error.reval_date.to"), x => checkDateOnOBeforeGMPEnd(x)),
-      "leaving" -> mapping(
-        "leavingDate" -> mapping(
-        "day" -> optional(text),
-        "month" -> optional(text),
-        "year" -> optional(text)
-      )(GmpDate.apply)(GmpDate.unapply),
-      "leaving" -> optional(text)
-      )(Leaving.apply)(Leaving.unapply)
+      "leaving" -> leavingMapping,
+      "revaluationDate" -> revaluationDateMapping
     )(RevaluationDate.apply)(RevaluationDate.unapply)
       .verifying(revaluationDateConstraint)
   )
-
 }

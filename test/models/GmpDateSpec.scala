@@ -49,6 +49,28 @@ class GmpDateSpec extends PlaySpec with MockitoSugar{
 
   }
 
+  "isBeforer01012100" must {
+
+    "return true when before 01012100" in {
+
+      val before = GmpDate(Some("30"),Some("12"),Some("2099"))
+      before.isBefore01012100 must be(true)
+    }
+
+    "return false when on or after 01012099" in {
+
+      val after = GmpDate(Some("01"),Some("01"),Some("2100"))
+      after.isBefore01012100 must be(false)
+    }
+
+    "return false when not a valid date" in {
+
+      val after = GmpDate(None,Some("04"),Some("2016"))
+      after.isBefore01012100 must be(false)
+    }
+
+  }
+
   "getAsText" must {
     "return the date in the correct format" in {
       val date = GmpDate(Some("06"),Some("04"),Some("2016"))

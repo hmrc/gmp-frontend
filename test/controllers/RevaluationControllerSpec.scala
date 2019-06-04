@@ -78,7 +78,7 @@ class RevaluationControllerSpec extends PlaySpec with OneServerPerSuite with Moc
           when(mockSessionService.fetchLeaving()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(Leaving(GmpDate(None, None, None), None))))
           get(user) { result =>
             status(result) must equal(OK)
-            contentAsString(result) must include("At which date would you like the calculation to apply? - Guaranteed Minimum Pension - GOV.UK")
+            contentAsString(result) must include("When would you like the calculation made to?")
             contentAsString(result) must include(Messages("gmp.revaluation.question"))
             contentAsString(result) must include(Messages("gmp.back.link"))
           }
@@ -90,7 +90,7 @@ class RevaluationControllerSpec extends PlaySpec with OneServerPerSuite with Moc
         withAuthorisedUser { user =>
           get(user) { result =>
             status(result) must equal(OK)
-            contentAsString(result) must include("At which date would you like the calculation to apply? - Guaranteed Minimum Pension - GOV.UK")
+            contentAsString(result) must include("When would you like the calculation made to?")
             contentAsString(result) must include(Messages("gmp.revaluation.question"))
 
           }
@@ -149,7 +149,7 @@ class RevaluationControllerSpec extends PlaySpec with OneServerPerSuite with Moc
         "respond with BAD_REQUEST" in {
           withAuthorisedUser { request =>
             val postData = Json.toJson(
-              RevaluationDate(baseValidDate.copy(day = Some("31"), month = Some("2"), year = Some("2015")), Leaving(GmpDate(None, None, None), None))
+              RevaluationDate(Leaving(GmpDate(None, None, None), None), baseValidDate.copy(day = Some("31"), month = Some("2"), year = Some("2015")))
             )
             val result = TestRevaluationController.post.apply(request.withJsonBody(postData))
             status(result) must equal(BAD_REQUEST)
@@ -159,7 +159,7 @@ class RevaluationControllerSpec extends PlaySpec with OneServerPerSuite with Moc
         "display the errors" in {
           withAuthorisedUser { request =>
             val postData = Json.toJson(
-              RevaluationDate(baseValidDate.copy(day = Some("31"), month = Some("2"), year = Some("2015")), Leaving(GmpDate(None, None, None), None))
+              RevaluationDate(Leaving(GmpDate(None, None, None), None), baseValidDate.copy(day = Some("31"), month = Some("2"), year = Some("2015")))
             )
             val result = TestRevaluationController.post.apply(request.withJsonBody(postData))
             contentAsString(result) must include(Messages("gmp.error.date.invalid"))
@@ -176,7 +176,7 @@ class RevaluationControllerSpec extends PlaySpec with OneServerPerSuite with Moc
           when(mockSessionService.cacheRevaluationDate(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
           withAuthorisedUser { request =>
             val postData = Json.toJson(
-              RevaluationDate(baseValidDate.copy(day = Some("31"), month = Some("3"), year = Some("2015")), Leaving(GmpDate(None, None, None), None))
+              RevaluationDate(Leaving(GmpDate(None, None, None), None), baseValidDate.copy(day = Some("31"), month = Some("3"), year = Some("2015")))
             )
             val result = TestRevaluationController.post.apply(request.withJsonBody(postData))
             status(result) must equal(SEE_OTHER)
@@ -188,7 +188,7 @@ class RevaluationControllerSpec extends PlaySpec with OneServerPerSuite with Moc
           when(mockSessionService.cacheRevaluationDate(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(None))
           withAuthorisedUser { request =>
             val postData = Json.toJson(
-              RevaluationDate(baseValidDate.copy(day = Some("31"), month = Some("3"), year = Some("2015")), Leaving(GmpDate(None, None, None), None))
+              RevaluationDate(Leaving(GmpDate(None, None, None), None), baseValidDate.copy(day = Some("31"), month = Some("3"), year = Some("2015")))
             )
             intercept[RuntimeException] {
               await(TestRevaluationController.post.apply(request.withJsonBody(postData)))
