@@ -147,11 +147,6 @@ class RevaluationFormSpec extends PlaySpec with OneAppPerSuite {
         val revaluationFormResults = revaluationForm.bind(Json.toJson(RevaluationDate(leavingWithDateAndNO, revaluationDate)))
         revaluationFormResults.errors must contain(FormError("", List(Messages("gmp.error.revaluation_pre2016_not_left")), List("revaluationDate")))
       }
-
-      "return an error if Leaving.NO and revaluation date entered was before 1978" in {
-        val revaluationFormResults = revaluationForm.bind(Json.toJson(RevaluationDate(leavingWithDateAndNO, new GmpDate(Some("03"), Some("04"), Some("1950")))))
-        revaluationFormResults.errors must contain(FormError("", List(Messages("gmp.error.revaluation_pre2016_not_left")), List("revaluationDate")))
-      }
     }
 
   }
