@@ -299,7 +299,7 @@ class DateOfLeavingControllerSpec extends PlaySpec with OneServerPerSuite with M
             )
             when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
             val result = TestDateOfLeavingController.post.apply(request.withJsonBody(postData))
-            contentAsString(result) must include(Messages("gmp.error.date.invalid"))
+            contentAsString(result) must include(Messages("gmp.error.date.leaving.invalid"))
           }
         }
 

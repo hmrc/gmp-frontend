@@ -24,6 +24,8 @@ import play.api.i18n.Messages
 import play.api.i18n.Messages.Implicits._
 import play.api.libs.json.Json
 
+import scala.collection.mutable
+
 class RevaluationFormSpec extends PlaySpec with OneAppPerSuite {
 
   val revaluationDate = GmpDate(Some("01"), Some("02"), Some("2010"))
@@ -53,12 +55,12 @@ class RevaluationFormSpec extends PlaySpec with OneAppPerSuite {
 
       "return an error on the date when it is not a number" in {
         val revaluationFormResults = revaluationForm.bind(Json.toJson(RevaluationDate(leaving, GmpDate(Some("a"), Some("01"), Some("2012")))))
-        revaluationFormResults.errors must contain(FormError("revaluationDate", List(Messages("gmp.error.date.nonnumber"))))
+        revaluationFormResults.errors must contain(FormError("revaluationDate", List(Messages("gmp.error.date.invalid"))))
       }
 
       "return an error on the date when it is out of range" in {
         val revaluationFormResults = revaluationForm.bind(Json.toJson(RevaluationDate(leaving, new GmpDate(Some("32"), Some("01"), Some("2012")))))
-        revaluationFormResults.errors must contain(FormError("revaluationDate", List(Messages("gmp.error.day.invalid"))))
+        revaluationFormResults.errors must contain(FormError("revaluationDate", List(Messages("gmp.error.date.invalid"))))
       }
     }
 
@@ -66,12 +68,12 @@ class RevaluationFormSpec extends PlaySpec with OneAppPerSuite {
 
       "return an error on the date when it is not a number" in {
         val revaluationFormResults = revaluationForm.bind(Json.toJson(RevaluationDate(leaving, new GmpDate(Some("01"), Some("a"), Some("2012")))))
-        revaluationFormResults.errors must contain(FormError("revaluationDate", List(Messages("gmp.error.date.nonnumber"))))
+        revaluationFormResults.errors must contain(FormError("revaluationDate", List(Messages("gmp.error.date.invalid"))))
       }
 
       "return an error on the date when it is out of range" in {
         val revaluationFormResults = revaluationForm.bind(Json.toJson(RevaluationDate(leaving, new GmpDate(Some("01"), Some("13"), Some("2012")))))
-        revaluationFormResults.errors must contain(FormError("revaluationDate", List(Messages("gmp.error.month.invalid"))))
+        revaluationFormResults.errors must contain(FormError("revaluationDate", List(Messages("gmp.error.date.invalid"))))
       }
     }
 
@@ -79,13 +81,12 @@ class RevaluationFormSpec extends PlaySpec with OneAppPerSuite {
 
       "return an error on the date when it is not a number" in {
         val revaluationFormResults = revaluationForm.bind(Json.toJson(RevaluationDate(leaving, new GmpDate(Some("01"), Some("12"), Some("21a1")))))
-        revaluationFormResults.errors must contain(FormError("revaluationDate", List(Messages("gmp.error.date.nonnumber"))))
+        revaluationFormResults.errors must contain(FormError("revaluationDate", List(Messages("gmp.error.date.invalid"))))
       }
 
       "return an error on the date when it is not the correct format" in {
         val revaluationFormResults = revaluationForm.bind(Json.toJson(RevaluationDate(leaving, new GmpDate(Some("01"), Some("11"), Some("190")))))
-        revaluationFormResults.errors must contain(FormError("revaluationDate", List(Messages("gmp.error.year.invalid.format"))))
-        revaluationFormResults.errors must not contain(FormError("revaluationDate", List(Messages("gmp.error.year.invalid"))))
+        revaluationFormResults.errors must contain(FormError("revaluationDate", List(Messages("gmp.error.date.invalid"))))
       }
     }
 

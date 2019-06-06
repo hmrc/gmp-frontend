@@ -61,10 +61,6 @@ object RevaluationForm {
       "month" -> optional(text),
       "year" -> optional(text)
     )(GmpDate.apply)(GmpDate.unapply)
-      .verifying(Messages("gmp.error.date.nonnumber"), x => checkForNumber(x.day) && checkForNumber(x.month) && checkForNumber(x.year))
-      .verifying(Messages("gmp.error.day.invalid"), x => checkDayRange(x.day))
-      .verifying(Messages("gmp.error.month.invalid"), x => checkMonthRange(x.month))
-      .verifying(Messages("gmp.error.year.invalid.format"), x => checkYearLength(x.year))
       .verifying(Messages("gmp.error.reval_date.mandatory"), x => mandatoryDate(x))
       .verifying(Messages("gmp.error.date.invalid"), x => checkValidDate(x))
       .verifying(Messages("gmp.error.reval_date.from"), x => checkDateOnOrAfterGMPStart(x)) // 1978

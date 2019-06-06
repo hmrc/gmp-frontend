@@ -203,12 +203,13 @@ gmp.back_to_dashboard = Back to the GMP checker
 ############################################################################
 # Errors
 ############################################################################
-gmp.error.revaluation_before_leaving = Enter a date on or after {0}
-gmp.error.revaluation_pre2016_not_left = Enter a date after 5 April 2016
+gmp.error.revaluation_before_leaving = When you would like the calculation to be made must be on or after {0}
+gmp.error.revaluation_pre2016_not_left = When you would like the calculation to be made must be after 2016
 gmp.error.leaving_on_or_after.too_low = Enter a leaving date after 5 April 2016
-gmp.error.leaving_on_or_after.too_high = Enter a leaving date before 1 January 2100
+gmp.error.leaving_on_or_after.too_high = Enter a leaving date before 5 April 2046
 gmp.error.email.invalid = Enter a valid email address
-gmp.error.date.invalid = Enter a real date
+gmp.error.date.invalid = Enter a real date when you would like the calculation made to
+gmp.error.date.leaving.invalid = Enter a real leaving date
 gmp.error.day.invalid = Enter a day between 1 and 31
 gmp.error.length = Member’s {0} must be {1} characters or less
 gmp.error.mandatory = Enter a {0}
@@ -218,8 +219,8 @@ gmp.error.firstnameorinitial = Enter member’s first name or initial
 gmp.error.firstname.toolong = Enter a first name that is fewer than 99 characters
 gmp.error.lastname.toolong = Enter a last name that is fewer than 99 characters
 gmp.error.month.invalid = Enter a month between 1 and 12
-gmp.error.reval_date.from = Enter a date after 4 April 1978
-gmp.error.reval_date.to = Enter a date before 5 April 2046
+gmp.error.reval_date.from = When you would like the calculation to be made must be after 4 April 1978
+gmp.error.reval_date.to = When you would like the calculation to be made must be before 5 April 2046
 gmp.error.year.invalid.format = Enter the year in full (4 numbers)
 gmp.error.date.nonnumber = Enter a date using numbers only
 gmp.error.reason.mandatory = Select an option
@@ -240,8 +241,8 @@ gmp.error.nino.invalid = Enter member’s National Insurance number in the corre
 gmp.error.member.nino.mandatory = Enter member’s National Insurance number
 gmp.error.member.lastname.mandatory = Enter member’s last name
 gmp.error.nino.temporary = This is a temporary National Insurance number. You need a permanent one to calculate a GMP.
-gmp.error.reval_date.mandatory = Enter a real date
-gmp.error.leaving_date.mandatory = Enter a real date
+gmp.error.reval_date.mandatory = Enter when you would like the calculation made to
+gmp.error.leaving_date.mandatory = Enter a leaving date
 
 gmp.error.csv.date.invalid = Enter a date in the same format as the example given in the instructions file
 gmp.error.csv.termination.invalid = Enter a date If the member left after 5 April 2016 or ‘SM’ if the member is still in the scheme
