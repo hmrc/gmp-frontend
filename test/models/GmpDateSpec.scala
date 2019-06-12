@@ -23,19 +23,19 @@ class GmpDateSpec extends PlaySpec with MockitoSugar{
 
   "isOnOrAfter06042016" must {
 
-    "return true when the date is on 10 04 2016" in {
+    "return true when the date is after the 06 04 2016" in {
 
       val after = GmpDate(Some("10"),Some("04"),Some("2016"))
       after.isOnOrAfter06042016 must be(true)
     }
 
-    "return true when the date is on or after 06 04 2016" in {
+    "return true when the date is on the 06 04 2016" in {
 
       val after = GmpDate(Some("06"),Some("04"),Some("2016"))
       after.isOnOrAfter06042016 must be(true)
     }
 
-    "return false when the date is before 06 04 2016" in {
+    "return false when the date is before the 06 04 2016" in {
 
       val after = GmpDate(Some("05"),Some("04"),Some("2016"))
       after.isOnOrAfter06042016 must be(false)
@@ -57,7 +57,7 @@ class GmpDateSpec extends PlaySpec with MockitoSugar{
       before.isBefore05042046 must be(true)
     }
 
-    "return false when the date is on or after 06 04 2046" in {
+    "return false when the date is on the 06 04 2046" in {
 
       val after = GmpDate(Some("6"),Some("4"),Some("2046"))
       after.isBefore05042046 must be(false)
