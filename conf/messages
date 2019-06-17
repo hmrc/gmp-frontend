@@ -204,7 +204,7 @@ gmp.back_to_dashboard = Back to the GMP checker
 # Errors
 ############################################################################
 gmp.error.revaluation_before_leaving = When you would like the calculation to be made must be on or after {0}
-gmp.error.revaluation_pre2016_not_left = When you would like the calculation to be made must be after 2016
+gmp.error.revaluation_pre2016_not_left = When you would like the calculation to be made must be after 5 April 2016
 gmp.error.leaving_on_or_after.too_low = Enter a leaving date after 5 April 2016
 gmp.error.leaving_on_or_after.too_high = Enter a leaving date before 5 April 2046
 gmp.error.email.invalid = Enter a valid email address
