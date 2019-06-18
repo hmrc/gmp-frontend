@@ -41,13 +41,17 @@ object DateOfLeavingForm {
         if (!dateMustBePresentIfHaveDateOfLeavingAfterApril2016(leaving)) {
           Seq(ValidationError(Messages("gmp.error.leaving_date.mandatory"), "leavingDate"))
         } else if (!checkValidDate(leaving.leavingDate)) {
-          Seq(ValidationError(Messages("gmp.error.date.invalid"), "leavingDate"))
+          Seq(ValidationError(Messages("gmp.error.date.leaving.invalid"), "leavingDate"))
         }
         else if (leaving.leaving.isDefined && leaving.leaving.get.equals(Leaving.YES_AFTER) && !leaving.leavingDate.isOnOrAfter06042016) {
-          Seq(ValidationError(Messages("gmp.error.date.invalid"), "leavingDate"))
+          Seq(ValidationError(Messages("gmp.error.leaving_on_or_after.too_low"), "leavingDate"))
         }
-        else
+        else if (leaving.leaving.isDefined && leaving.leaving.get.equals(Leaving.YES_AFTER) && !leaving.leavingDate.isBefore05042046) {
+          Seq(ValidationError(Messages("gmp.error.leaving_on_or_after.too_high"), "leavingDate"))
+        }
+        else {
           Nil
+        }
 
       if (errors.isEmpty) {
         Valid
@@ -64,10 +68,10 @@ object DateOfLeavingForm {
         "month" -> optional(text),
         "year" -> optional(text)
       )(GmpDate.apply)(GmpDate.unapply)
-        .verifying(Messages("gmp.error.date.nonnumber"), x => checkForNumber(x.day) && checkForNumber(x.month) && checkForNumber(x.year))
-        .verifying(Messages("gmp.error.day.invalid"), x => checkDayRange(x.day))
-        .verifying(Messages("gmp.error.month.invalid"), x => checkMonthRange(x.month))
-        .verifying(Messages("gmp.error.year.invalid.format"), x => checkYearLength(x.year))
+//        .verifying(Messages("gmp.error.date.nonnumber"), x => checkForNumber(x.day) && checkForNumber(x.month) && checkForNumber(x.year))
+//        .verifying(Messages("gmp.error.day.invalid"), x => checkDayRange(x.day))
+//        .verifying(Messages("gmp.error.month.invalid"), x => checkMonthRange(x.month))
+//        .verifying(Messages("gmp.error.year.invalid.format"), x => checkYearLength(x.year))
       ,
       "leaving" -> optional(text).verifying(Messages("gmp.error.reason.mandatory"), {
         _.isDefined

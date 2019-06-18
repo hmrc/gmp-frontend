@@ -18,7 +18,7 @@ package models
 
 import play.api.libs.json.Json
 
-case class RevaluationDate(revaluationDate: GmpDate, leaving: Leaving)
+case class RevaluationDate(leaving: Leaving, revaluationDate: GmpDate)
 
 object RevaluationDate {
   implicit val formats = Json.format[RevaluationDate]

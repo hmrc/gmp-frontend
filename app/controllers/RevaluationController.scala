@@ -36,7 +36,7 @@ trait RevaluationController extends GmpPageFlow {
     implicit user =>
       implicit request => sessionService.fetchLeaving.map {
         case Some(leaving) => {
-          Ok(views.html.revaluation(revaluationForm.fill(RevaluationDate(GmpDate(None, None, None), leaving))))
+          Ok(views.html.revaluation(revaluationForm.fill(RevaluationDate(leaving, GmpDate(None, None, None)))))
         }
         case _ => Ok(views.html.revaluation(revaluationForm))
       }

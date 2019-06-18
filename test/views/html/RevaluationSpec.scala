@@ -30,10 +30,6 @@ class RevaluationSpec extends GmpViewSpec{
     behave like pageWithHeader(messages("gmp.revaluation.question"))
     behave like pageWithBackLink
 
-    "have correct div" in {
-      doc must haveDivWithText(messages("gmp.revaluation.info"))
-    }
-
     "have a paragraph with text" in {
       doc must haveParagraphWithText(messages("gmp.date.example"))
     }

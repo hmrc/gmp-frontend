@@ -43,8 +43,8 @@ package object forms {
     val day = data.day
     val month = data.month
     val year = data.year
-    checkValidDate(day, month, year)
-
+    val r = checkValidDate(day, month, year)
+    r
   }
 
   def checkYearLength(year: Option[String]): Boolean = {
@@ -74,7 +74,6 @@ package object forms {
     val month = data.month
     val year = data.year
     checkDateOnOrAfterGMPStart(day, month, year)
-
   }
 
   def checkDateOnOBeforeGMPEnd(data: GmpDate): Boolean = {

@@ -16,26 +16,26 @@
 
 package models
 
-import org.scalatest.mock.MockitoSugar
+import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 
 class GmpDateSpec extends PlaySpec with MockitoSugar{
 
   "isOnOrAfter06042016" must {
 
-    "return true when after 06042016" in {
+    "return true when the date is after the 06 04 2016" in {
 
       val after = GmpDate(Some("10"),Some("04"),Some("2016"))
       after.isOnOrAfter06042016 must be(true)
     }
 
-    "return true when on 06042016" in {
+    "return true when the date is on the 06 04 2016" in {
 
       val after = GmpDate(Some("06"),Some("04"),Some("2016"))
       after.isOnOrAfter06042016 must be(true)
     }
 
-    "return false when before 06042016" in {
+    "return false when the date is before the 06 04 2016" in {
 
       val after = GmpDate(Some("05"),Some("04"),Some("2016"))
       after.isOnOrAfter06042016 must be(false)
@@ -45,6 +45,28 @@ class GmpDateSpec extends PlaySpec with MockitoSugar{
 
       val after = GmpDate(None,Some("04"),Some("2016"))
       after.isOnOrAfter06042016 must be(false)
+    }
+
+  }
+
+  "isBefore05042046" must {
+
+    "return true when the date is before the 05 04 2046" in {
+
+      val before = GmpDate(Some("4"),Some("4"),Some("2046"))
+      before.isBefore05042046 must be(true)
+    }
+
+    "return false when the date is on the 06 04 2046" in {
+
+      val after = GmpDate(Some("6"),Some("4"),Some("2046"))
+      after.isBefore05042046 must be(false)
+    }
+
+    "return false when not a valid date" in {
+
+      val after = GmpDate(None,Some("04"),Some("2016"))
+      after.isBefore05042046 must be(false)
     }
 
   }

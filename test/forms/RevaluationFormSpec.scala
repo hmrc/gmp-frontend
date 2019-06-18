@@ -24,6 +24,8 @@ import play.api.i18n.Messages
 import play.api.i18n.Messages.Implicits._
 import play.api.libs.json.Json
 
+import scala.collection.mutable
+
 class RevaluationFormSpec extends PlaySpec with OneAppPerSuite {
 
   val revaluationDate = GmpDate(Some("01"), Some("02"), Some("2010"))
@@ -35,7 +37,7 @@ class RevaluationFormSpec extends PlaySpec with OneAppPerSuite {
   "Revaluation Form" must {
     "return no errors when valid values are entered" in {
 
-      val revaluationFormResults = revaluationForm.bind(Json.toJson(RevaluationDate(revaluationDate, leaving)))
+      val revaluationFormResults = revaluationForm.bind(Json.toJson(RevaluationDate(leaving, revaluationDate)))
 
       assert(revaluationFormResults.errors.size == 0)
 
@@ -43,7 +45,7 @@ class RevaluationFormSpec extends PlaySpec with OneAppPerSuite {
 
     "return errors when revaluation date not entered" in {
 
-      val revaluationFormResults = revaluationForm.bind(Json.toJson(RevaluationDate(revaluationDate.copy(None,None,None), leaving)))
+      val revaluationFormResults = revaluationForm.bind(Json.toJson(RevaluationDate(leaving, revaluationDate.copy(None,None,None))))
 
       assert(revaluationFormResults.errors.size == 1)
 
@@ -52,54 +54,53 @@ class RevaluationFormSpec extends PlaySpec with OneAppPerSuite {
     "entering a day" must {
 
       "return an error on the date when it is not a number" in {
-        val revaluationFormResults = revaluationForm.bind(Json.toJson(RevaluationDate(GmpDate(Some("a"), Some("01"), Some("2012")), leaving)))
-        revaluationFormResults.errors must contain(FormError("revaluationDate", List(Messages("gmp.error.date.nonnumber"))))
+        val revaluationFormResults = revaluationForm.bind(Json.toJson(RevaluationDate(leaving, GmpDate(Some("a"), Some("01"), Some("2012")))))
+        revaluationFormResults.errors must contain(FormError("revaluationDate", List(Messages("gmp.error.date.invalid"))))
       }
 
       "return an error on the date when it is out of range" in {
-        val revaluationFormResults = revaluationForm.bind(Json.toJson(RevaluationDate(new GmpDate(Some("32"), Some("01"), Some("2012")), leaving)))
-        revaluationFormResults.errors must contain(FormError("revaluationDate", List(Messages("gmp.error.day.invalid"))))
+        val revaluationFormResults = revaluationForm.bind(Json.toJson(RevaluationDate(leaving, new GmpDate(Some("32"), Some("01"), Some("2012")))))
+        revaluationFormResults.errors must contain(FormError("revaluationDate", List(Messages("gmp.error.date.invalid"))))
       }
     }
 
     "entering a month" must {
 
       "return an error on the date when it is not a number" in {
-        val revaluationFormResults = revaluationForm.bind(Json.toJson(RevaluationDate(new GmpDate(Some("01"), Some("a"), Some("2012")), leaving)))
-        revaluationFormResults.errors must contain(FormError("revaluationDate", List(Messages("gmp.error.date.nonnumber"))))
+        val revaluationFormResults = revaluationForm.bind(Json.toJson(RevaluationDate(leaving, new GmpDate(Some("01"), Some("a"), Some("2012")))))
+        revaluationFormResults.errors must contain(FormError("revaluationDate", List(Messages("gmp.error.date.invalid"))))
       }
 
       "return an error on the date when it is out of range" in {
-        val revaluationFormResults = revaluationForm.bind(Json.toJson(RevaluationDate(new GmpDate(Some("01"), Some("13"), Some("2012")), leaving)))
-        revaluationFormResults.errors must contain(FormError("revaluationDate", List(Messages("gmp.error.month.invalid"))))
+        val revaluationFormResults = revaluationForm.bind(Json.toJson(RevaluationDate(leaving, new GmpDate(Some("01"), Some("13"), Some("2012")))))
+        revaluationFormResults.errors must contain(FormError("revaluationDate", List(Messages("gmp.error.date.invalid"))))
       }
     }
 
     "entering a year" must {
 
       "return an error on the date when it is not a number" in {
-        val revaluationFormResults = revaluationForm.bind(Json.toJson(RevaluationDate(new GmpDate(Some("01"), Some("12"), Some("21a1")), leaving)))
-        revaluationFormResults.errors must contain(FormError("revaluationDate", List(Messages("gmp.error.date.nonnumber"))))
+        val revaluationFormResults = revaluationForm.bind(Json.toJson(RevaluationDate(leaving, new GmpDate(Some("01"), Some("12"), Some("21a1")))))
+        revaluationFormResults.errors must contain(FormError("revaluationDate", List(Messages("gmp.error.date.invalid"))))
       }
 
       "return an error on the date when it is not the correct format" in {
-        val revaluationFormResults = revaluationForm.bind(Json.toJson(RevaluationDate(new GmpDate(Some("01"), Some("11"), Some("190")), leaving)))
-        revaluationFormResults.errors must contain(FormError("revaluationDate", List(Messages("gmp.error.year.invalid.format"))))
-        revaluationFormResults.errors must not contain(FormError("revaluationDate", List(Messages("gmp.error.year.invalid"))))
+        val revaluationFormResults = revaluationForm.bind(Json.toJson(RevaluationDate(leaving, new GmpDate(Some("01"), Some("11"), Some("190")))))
+        revaluationFormResults.errors must contain(FormError("revaluationDate", List(Messages("gmp.error.date.invalid"))))
       }
     }
 
     "entering invalid dates" must {
       "return an error when the day is missing" in {
-        val revaluationFormResults = revaluationForm.bind(Json.toJson(RevaluationDate(new GmpDate(Some(""), Some("04"), Some("1978")), leaving)))
+        val revaluationFormResults = revaluationForm.bind(Json.toJson(RevaluationDate(leaving, new GmpDate(Some(""), Some("04"), Some("1978")))))
         revaluationFormResults.errors must contain(FormError("revaluationDate", List(Messages("gmp.error.date.invalid"))))
       }
       "return an error when the month is missing" in {
-        val revaluationFormResults = revaluationForm.bind(Json.toJson(RevaluationDate(new GmpDate(Some("04"), Some(""), Some("1978")), leaving)))
+        val revaluationFormResults = revaluationForm.bind(Json.toJson(RevaluationDate(leaving, new GmpDate(Some("04"), Some(""), Some("1978")))))
         revaluationFormResults.errors must contain(FormError("revaluationDate", List(Messages("gmp.error.date.invalid"))))
       }
       "return an error when the year is missing" in {
-        val revaluationFormResults = revaluationForm.bind(Json.toJson(RevaluationDate(new GmpDate(Some("04"), Some("04"), Some("")), leaving)))
+        val revaluationFormResults = revaluationForm.bind(Json.toJson(RevaluationDate(leaving, new GmpDate(Some("04"), Some("04"), Some("")))))
         revaluationFormResults.errors must contain(FormError("revaluationDate", List(Messages("gmp.error.date.invalid"))))
       }
     }
@@ -107,44 +108,44 @@ class RevaluationFormSpec extends PlaySpec with OneAppPerSuite {
     "entering a date outside valid GMP dates" must {
 
       "return an error when before 05/04/1978" in {
-        val revaluationFormResults = revaluationForm.bind(Json.toJson(RevaluationDate(new GmpDate(Some("04"), Some("04"), Some("1978")), leaving)))
+        val revaluationFormResults = revaluationForm.bind(Json.toJson(RevaluationDate(leaving, new GmpDate(Some("04"), Some("04"), Some("1978")))))
         revaluationFormResults.errors must contain(FormError("revaluationDate", List(Messages("gmp.error.reval_date.from"))))
       }
 
       "not return an error when on 05/04/1978" in {
-        val revaluationFormResults = revaluationForm.bind(Json.toJson(RevaluationDate(new GmpDate(Some("05"), Some("04"), Some("1978")), leaving)))
+        val revaluationFormResults = revaluationForm.bind(Json.toJson(RevaluationDate(leaving, new GmpDate(Some("05"), Some("04"), Some("1978")))))
         revaluationFormResults.errors must not contain(FormError("revaluationDate", List(Messages("gmp.error.reval_date.from"))))
       }
 
       "not return an error when after 05/04/1978" in {
-        val revaluationFormResults = revaluationForm.bind(Json.toJson(RevaluationDate(new GmpDate(Some("06"), Some("04"), Some("1978")), leaving)))
+        val revaluationFormResults = revaluationForm.bind(Json.toJson(RevaluationDate(leaving, new GmpDate(Some("06"), Some("04"), Some("1978")))))
         revaluationFormResults.errors must not contain(FormError("revaluationDate", List(Messages("gmp.error.reval_date.from"))))
       }
 
       "return an error when after 04/04/2046" in {
-        val revaluationFormResults = revaluationForm.bind(Json.toJson(RevaluationDate(new GmpDate(Some("05"), Some("04"), Some("2046")), leaving)))
+        val revaluationFormResults = revaluationForm.bind(Json.toJson(RevaluationDate(leaving, new GmpDate(Some("05"), Some("04"), Some("2046")))))
         revaluationFormResults.errors must contain(FormError("revaluationDate", List(Messages("gmp.error.reval_date.to"))))
       }
 
       "not return an error when on 04/04/2046" in {
-        val revaluationFormResults = revaluationForm.bind(Json.toJson(RevaluationDate(new GmpDate(Some("04"), Some("04"), Some("2046")), leaving)))
+        val revaluationFormResults = revaluationForm.bind(Json.toJson(RevaluationDate(leaving, new GmpDate(Some("04"), Some("04"), Some("2046")))))
         revaluationFormResults.errors must not contain(FormError("revaluationDate", List(Messages("gmp.error.reval_date.to"))))
       }
 
       "not return an error when before 04/04/2046" in {
-        val revaluationFormResults = revaluationForm.bind(Json.toJson(RevaluationDate(new GmpDate(Some("03"), Some("04"), Some("2046")), leaving)))
+        val revaluationFormResults = revaluationForm.bind(Json.toJson(RevaluationDate(leaving, new GmpDate(Some("03"), Some("04"), Some("2046")))))
         revaluationFormResults.errors must not contain(FormError("revaluationDate", List(Messages("gmp.error.reval_date.to"))))
       }
     }
 
     "revaluationDate" must {
       "return an error if before leavingDate" in {
-        val revaluationFormResults = revaluationForm.bind(Json.toJson(RevaluationDate(revaluationDate, leavingWithDate)))
+        val revaluationFormResults = revaluationForm.bind(Json.toJson(RevaluationDate(leavingWithDate, revaluationDate)))
         revaluationFormResults.errors must contain(FormError("", List(Messages("gmp.error.revaluation_before_leaving", leavingWithDate.leavingDate.getAsText)), List("revaluationDate")))
       }
 
       "return an error if Leaving.NO and revaluation date entered was before 2016" in {
-        val revaluationFormResults = revaluationForm.bind(Json.toJson(RevaluationDate(revaluationDate, leavingWithDateAndNO)))
+        val revaluationFormResults = revaluationForm.bind(Json.toJson(RevaluationDate(leavingWithDateAndNO, revaluationDate)))
         revaluationFormResults.errors must contain(FormError("", List(Messages("gmp.error.revaluation_pre2016_not_left")), List("revaluationDate")))
       }
     }

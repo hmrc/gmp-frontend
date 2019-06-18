@@ -39,6 +39,15 @@ case class GmpDate(day: Option[String], month: Option[String], year: Option[Stri
       false
   }
 
+  def isBefore05042046: Boolean = {
+    if (getAsLocalDate.isDefined) {
+      val thatDate = new LocalDate(2046, 4, 5)
+      getAsLocalDate.get.isBefore(thatDate)
+    }
+    else
+      false
+  }
+
   def getAsText: String = {
     getAsLocalDate match {
       case Some(date) => date.toString("dd MMMM yyyy")

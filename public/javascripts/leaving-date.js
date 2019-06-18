@@ -23,6 +23,9 @@ $(document).ready(function() {
   }
 
   if ($('#errors').length && (
+                              ($('#errors').text().indexOf('Enter a leaving date after 5 April 2016') > -1) ||
+                              ($('#errors').text().indexOf('Enter a leaving date before 1 January 2100') > -1) ||
+                              ($('#errors').text().indexOf('Enter a real leaving date') > -1) ||
                               ($('#errors').text().indexOf('Enter a leaving date') > -1) ||
                               ($('#errors').text().indexOf('Enter a valid date') > -1) ||
                               ($('#errors').text().indexOf('Enter a day between 1 and 31') > -1) ||
