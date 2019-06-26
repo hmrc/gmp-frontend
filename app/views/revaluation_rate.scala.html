@@ -43,7 +43,7 @@
 
 
           @form(action = routes.RevaluationRateController.post) {
-            <div class="form-group" id="rateType">
+            <div class="form-group @if(revaluationRateForm.hasErrors) {form-field--error}" id="rateType">
               @gmpRadioGroup(
                   revaluationRateForm("rateType"),
                     session.leaving.leaving match{
@@ -82,6 +82,4 @@
                 <button class="button" type="submit" id="submit-button">@Messages("gmp.continue.button")</button>
             </div>
           }
-
-
 }

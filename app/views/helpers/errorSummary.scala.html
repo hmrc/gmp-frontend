@@ -18,29 +18,29 @@
 
 @if(form.hasGlobalErrors || form.hasErrors) {
 
-<div id="errors" class="error-summary">
-    <h2 class="h2-heading error-summary-heading" id="errorMessageHeadingText">@Messages("gmp.generic.errors_heading")</h2>
-    <ul class="error-summary-list">
-        @form.errors.map { error =>
-            @defining(
-                error.args.nonEmpty match {
-                    case true => {
-                        if (error.key.nonEmpty) {
-                            error.key + (error.args.fold("") { _ + "." + _ })
-                        } else {
-                            error.args.head
+    <div id="errors" class="error-summary">
+        <h2 class="h2-heading error-summary-heading" id="errorMessageHeadingText">@Messages("gmp.generic.errors_heading")</h2>
+        <ul class="error-summary-list">
+            @form.errors.map { error =>
+                @defining(
+                    error.args.nonEmpty match {
+                        case true => {
+                            if (error.key.nonEmpty) {
+                                error.key + (error.args.fold("") { _ + "." + _ })
+                            } else {
+                                error.args.head
+                            }
                         }
+                        case _ => { error.key }
                     }
-                    case _ => { error.key }
+                ) { anchor =>
+                <li data-journey='@Messages("gmp.bulk.problem.error.field"):@Messages(formHeaderKey):@error.message'>
+                    <a href="#@anchor" data-focuses="@error.key">
+                        @Messages(error.message)
+                    </a>
+                </li>
                 }
-            ) { anchor =>
-            <li data-journey='@Messages("gmp.bulk.problem.error.field"):@Messages(formHeaderKey):@error.message'>
-                <a href="#@anchor" data-focuses="@error.key">
-                    @Messages(error.message)
-                </a>
-            </li>
             }
-        }
-    </ul>
-</div>
+        </ul>
+    </div>
 }

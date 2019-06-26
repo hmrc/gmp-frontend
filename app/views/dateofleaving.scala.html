@@ -47,7 +47,7 @@
 
             @form(action = routes.DateOfLeavingController.post) {
 
-            <div class="form-field @if(dateOfLeavingForm.hasErrors && !dateOfLeavingForm.hasGlobalErrors) {form-field--error}">
+            <div class="form-field @if(dateOfLeavingForm.hasErrors && !dateOfLeavingForm.hasGlobalErrors) {form-field--error}" id="leaving">
 
                 @if(scenario == CalculationType.DOL){
                         @gmpRadioGroup(
@@ -56,7 +56,7 @@
                               (Leaving.YES_BEFORE, Leaving.YES_BEFORE, "none") -> Messages("gmp.generic.yes"),
                               (Leaving.YES_AFTER, Leaving.YES_AFTER, "leaving-date") -> Messages("gmp.generic.no")
                             ),
-                            '_fieldsetAttributesLegend -> "leaving",
+                            '_fieldsetAttributes -> "class=inline",
                             '_legend -> Messages("gmp.leaving.dol.question"),
                             '_legendClass -> "visuallyhidden",
                             '_labelAfter -> true,
@@ -80,7 +80,6 @@
                         (Leaving.YES_AFTER,  Leaving.YES_AFTER, "leaving-date") -> Messages("gmp.dol.threequestions.after2016")
                         )
                         },
-                        '_fieldsetAttributesLegend -> "leaving",
                         scenario match {
                             case CalculationType.SURVIVOR => '_legend -> Messages("gmp.survivor.dol.question")
                             case _ => '_legend -> Messages("gmp.other.dol.left.question")
@@ -137,8 +136,6 @@
                               '_dataAttributes -> "aria-describedby=date_hint",
                               '_inputClass -> " form-control year-input")
                             </div>
-                            <br/>
-                            <br/>
 
                         </div>
                     </fieldset>
@@ -150,5 +147,5 @@
                       type="submit" id="submit-button">@Messages("gmp.continue.button")</button>
             </div>
 
-        }
+      }
 }

@@ -25,81 +25,74 @@
 
 @gmp_main(title = Messages("gmp.revaluation.question")+ " - " + Messages("service.title") + " - " + Messages("gov.uk")) {
 
+@includes.back_link(Messages("gmp.revaluation.question"))
+
 @views.html.helpers.errorSummary(revaluationForm, formHeaderKey="gmp.revaluation.question")
 
-<div class="grid">
-    @includes.back_link(Messages("gmp.revaluation.question"))
-    <div class="grid-2-3">
-        <h1>@Messages("gmp.revaluation.question")</h1>
-    </div>
-</div>
+<h1>@Messages("gmp.revaluation.question")</h1>
 
-<div class="grid">
-    <div class="grid-2-3">
 
-        @form(action = routes.RevaluationController.post) {
+    @form(action = routes.RevaluationController.post) {
 
-            @if(revaluationForm.hasErrors || revaluationForm.hasGlobalErrors) {
-              <div class="form-field--error form-date" id="revaluation-date">
-            } else {
-              <div class="form-date" id="revaluation-Date">
-            }
-
-                @views.html.helpers.groupError(revaluationForm("revaluationDate"))
-                  @if(revaluationForm.hasGlobalErrors) {
-                    @revaluationForm.globalErrors.zipWithIndex.map { case (error, index) =>
-                        <span style="display: block" class="error-notification" id="global-error-@index">@error.message</span>
-                    }
-                  }
-
-                <p class="form-hint">@Messages("gmp.date.example")</p>
-
-                <fieldset id="reval-date">
-
-                    <legend id="revaluationDate" class="visuallyhidden">
-                        @Messages("gmp.revaluation.question")
-                    </legend>
-
-                    <div class="form-group">
-                        @gmpInput(revaluationForm("revaluationDate.day"),
-                        '_label -> Html(Messages("gmp.day")),
-                        '_id -> "revaluationDate_day",
-                        '_maxLength -> 2)
-                    </div>
-                    <div class="form-group">
-                        @gmpInput(revaluationForm("revaluationDate.month"),
-                        '_label -> Html(Messages("gmp.month")),
-                        '_id -> "revaluationDate_month",
-                        '_maxLength -> 2)
-                    </div>
-                    <div class="form-group">
-                        @gmpInput(revaluationForm("revaluationDate.year"),
-                        '_label -> Html(Messages("gmp.year")),
-                        '_id -> "revaluationDate_year",
-                        '_maxLength ->4,
-                        '_inputClass -> "form-control year-input")
-                    </div>
-                    <br/>
-                    <br/>
-                    <br/>
-
-                </fieldset>
-
-            </div>
-
-            <!-- hidden part of form -->
-              <input type="hidden" id="leavingDate_day" name="leaving.leavingDate.day" value="@revaluationForm("leaving.leavingDate.day").value"/>
-              <input type="hidden" id="leavingDate_month" name="leaving.leavingDate.month" value="@revaluationForm("leaving.leavingDate.month").value"/>
-              <input type="hidden" id="leavingDate_year" name="leaving.leavingDate.year" value="@revaluationForm("leaving.leavingDate.year").value"/>
-              <input type="hidden" id="leavingText" name="leaving.leaving" value="@revaluationForm("leaving.leaving").value"/>
-            <!-- hidden part of form -->
-
-            <div class="continue-button">
-                <button class="button" type="submit" id="submit-button">@Messages("gmp.continue.button")</button>
-            </div>
-
+        @if(revaluationForm.hasErrors || revaluationForm.hasGlobalErrors) {
+          <div class="form-field--error form-date" id="revaluation-date">
+        } else {
+          <div class="form-date" id="revaluation-Date">
         }
 
-    </div>
-</div>
+            @views.html.helpers.groupError(revaluationForm("revaluationDate"))
+              @if(revaluationForm.hasGlobalErrors) {
+                @revaluationForm.globalErrors.zipWithIndex.map { case (error, index) =>
+                    <span style="display: block" class="error-notification" id="global-error-@index">@error.message</span>
+                }
+              }
+
+            <p class="form-hint">@Messages("gmp.date.example")</p>
+
+            <fieldset id="reval-date">
+
+                <legend id="revaluationDate" class="visuallyhidden">
+                    @Messages("gmp.revaluation.question")
+                </legend>
+
+                <div class="form-group">
+                    @gmpInput(revaluationForm("revaluationDate.day"),
+                    '_label -> Html(Messages("gmp.day")),
+                    '_id -> "revaluationDate_day",
+                    '_maxLength -> 2)
+                </div>
+                <div class="form-group">
+                    @gmpInput(revaluationForm("revaluationDate.month"),
+                    '_label -> Html(Messages("gmp.month")),
+                    '_id -> "revaluationDate_month",
+                    '_maxLength -> 2)
+                </div>
+                <div class="form-group">
+                    @gmpInput(revaluationForm("revaluationDate.year"),
+                    '_label -> Html(Messages("gmp.year")),
+                    '_id -> "revaluationDate_year",
+                    '_maxLength ->4,
+                    '_inputClass -> "form-control year-input")
+                </div>
+                <br/>
+                <br/>
+                <br/>
+
+            </fieldset>
+
+        </div>
+
+        <!-- hidden part of form -->
+          <input type="hidden" id="leavingDate_day" name="leaving.leavingDate.day" value="@revaluationForm("leaving.leavingDate.day").value"/>
+          <input type="hidden" id="leavingDate_month" name="leaving.leavingDate.month" value="@revaluationForm("leaving.leavingDate.month").value"/>
+          <input type="hidden" id="leavingDate_year" name="leaving.leavingDate.year" value="@revaluationForm("leaving.leavingDate.year").value"/>
+          <input type="hidden" id="leavingText" name="leaving.leaving" value="@revaluationForm("leaving.leaving").value"/>
+        <!-- hidden part of form -->
+
+        <div class="continue-button">
+            <button class="button" type="submit" id="submit-button">@Messages("gmp.continue.button")</button>
+        </div>
+
+    }
+
 }
