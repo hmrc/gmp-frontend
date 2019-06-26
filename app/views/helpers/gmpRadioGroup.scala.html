@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@(field: Field, radioOptions: Seq[((String, String), String)], args: (Symbol, Any)*)(implicit messages: Messages, formInstance: Option[Form[_]] = None)
+@(field: Field, radioOptions: Seq[((String, String, String), String)], args: (Symbol, Any)*)(implicit messages: Messages, formInstance: Option[Form[_]] = None)
 
 @import play.api.i18n._
 @import views.html.helper._
@@ -30,7 +30,7 @@
 @formHeaderKey = @{ elements.args.get('_formHeaderKey).getOrElse("service.title").asInstanceOf[String] }
 
 
-<fieldset class="@fieldsetClass"
+<fieldset
   @if(elements.args.get('_fieldsetAttributes).isDefined) {
     @elements.args.get('_fieldsetAttributes)
   }>
@@ -60,29 +60,37 @@
 
   }
 
-  @radioOptions.map { case ((value, id), label) =>
+  @radioOptions.map { case ((value, id, dataTarget), label) =>
   @defining(s"${elements.field.name}-${id.toLowerCase.replace(" ","_")}")  {inputId =>
-    <label for="@inputId" @elements.args.get('_labelClass).map{labelClass => class="@labelClass@field.value.filter( _ == value).map{_ => selected}"}>
-        @if(!labelAfter) {
-          @if(elements.args.get('_stackedLabel)) {
-            @if(label.split(" ").length < 2) {
-              <br>@label
-            } else {
-              @for( (l, index) <- label.split(" ").zipWithIndex) {
-                @if(index != 0) {<br>}@l
-              }
+
+    <div class="multiple-choice" @if(dataTarget != "none"){data-target="@dataTarget"}>
+        <input
+                type="radio"
+                id="@inputId"
+                name="@elements.field.name"
+                value="@value"
+                @if(dataTarget != "none"){aria-controls="@dataTarget"}
+                @elements.args.get('_inputClass).map{inputClass => class="@inputClass"}
+        @if(elements.args.contains('_dataAttributes) ){ @elements.args.get('_dataAttributes)}
+        @if(trackGA){data-journey-click="radio - select:@Messages(formHeaderKey):@id"}
+        @field.value.filter( _ == value).map{_ => checked="checked"}/>
+
+        <label for="@inputId" @elements.args.get('_labelClass).map{labelClass => class="@labelClass@field.value.filter( _ == value).map{_ => selected}"}>
+            @if(!labelAfter) {
+              @if(elements.args.get('_stackedLabel)) {
+                @if(label.split(" ").length < 2) {
+                  <br>@label
+                } else {
+                  @for( (l, index) <- label.split(" ").zipWithIndex) {
+                    @if(index != 0) {<br>}@l
+                  }
+                }
+              } else { @label }
             }
-          } else { @label }
-  }
-      <input
-          type="radio"
-          id="@inputId"
-          name="@elements.field.name"
-          value="@value"
-          @elements.args.get('_inputClass).map{inputClass => class="@inputClass"}
-          @if(elements.args.contains('_dataAttributes) ){ @elements.args.get('_dataAttributes)}
-          @if(trackGA){data-journey-click="radio - select:@Messages(formHeaderKey):@id"}
-          @field.value.filter( _ == value).map{_ => checked="checked"}/>@if(labelAfter){@if(elements.args.get('_stackedLabel)){@if(label.split(" ").length < 2){<br>@label}else{@for((l, index) <- label.split(" ").zipWithIndex){@if(index != 0){<br>}@l}}}else{@Html(label)}}</label>
+
+
+          @if(labelAfter){@if(elements.args.get('_stackedLabel)){@if(label.split(" ").length < 2){<br>@label}else{@for((l, index) <- label.split(" ").zipWithIndex){@if(index != 0){<br>}@l}}}else{@Html(label)}}</label>
+    </div>
   }
 }
 </fieldset>

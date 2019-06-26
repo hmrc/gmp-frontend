@@ -1,3 +1,48 @@
+#choose-calculation-type{
+  font-weight: normal;
+}
+
+.large-underlined-link {
+  font-size: 24px;
+  text-decoration: underline;
+  font-weight: bold;
+}
+
+#previous-calculations {
+  padding-top:40px;
+}
+
+.r-padding {
+  padding-right: 20px;
+}
+
+.numeric {
+  text-align: right;
+  padding-right: 0;
+}
+
+#more-calculations {
+ float:right;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 .bottom-blue-border {
   border-bottom: 5px solid #005ea5;
 }
@@ -135,10 +180,6 @@
   width: 130% !important;
 }
 
-.numeric {
-  text-align: right;
-  padding-right: 0;
-}
 
 .error-row {
   border-left: 5px solid #B10E1E;
@@ -252,27 +293,10 @@ caption {
  margin-top: 20px
 }
 
-#download-template-link {
-  margin-left: 50%;
-}
 
-.large-underlined-link {
-  font-size: 24px;
-  text-decoration: underline;
-  font-weight: bold;
-}
 
-#more-calculations {
- float:right;
-}
 
-.r-padding {
-  padding-right: 20px;
-}
 
-#previous-calculations {
-  padding-top:40px;
-}
 
 .dashboard-back {
   display: inline-block;
@@ -354,9 +378,6 @@ caption {
   font-weight:bold;
 }
 
-#scon-form-group{
-  margin-bottom: 0px;
-}
 
 .table-caption {
     font-size: 19px;
@@ -383,9 +404,7 @@ div.noMarginBottom {
     font-weight: normal;
 }
 
-#choose-calculation-type{
-  font-weight: normal;
-}
+
 
 #global-header.with-proposition .header-wrapper .header-proposition{
   width:73%;
@@ -436,4 +455,48 @@ div.noMarginBottom {
     left: 0;
     top: 50%;
     margin-top: -6px;
+}
+
+
+/*
+=====================================
+Error styling to bring in line with GDS
+=====================================
+*/
+.form-field--error {
+    border-left: 5px solid #b10e1e;
+}
+    .panel-indent .form-field--error {
+        margin-left: 0;
+    }
+.form-field--error .error-notification {
+    font-weight: 700;
+    color: #b10e1e;
+}
+@media screen and (min-width: 640px){
+    .form-field--error .error-notification {
+        font-size: 19px;
+    }
+}
+.form-field--error .form-control {
+    border: 4px solid #b10e1e;
+}
+.error-summary {
+    border: 4px solid #b10e1e;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    padding: 15px 10px;
+}
+@media (min-width: 641px){
+    .error-summary {
+        border: 5px solid #b10e1e;
+        margin-top: 30px;
+        margin-bottom: 30px;
+        padding: 20px 15px 15px;
+    }
+}
+.error-summary .error-summary-list a {
+    color: #b10e1e;
+    font-weight: bold;
+    text-decoration: underline;
 }
