@@ -20,6 +20,7 @@
     userLoggedIn: Boolean = false,
     getHelpForm: Html  = HtmlFormat.empty,
     linkElement : Option[Html] = None,
+    mainClass : Option[String] = None,
     scriptElement : Option[Html] = None,
     isUserResearchBannerVisible:Boolean = false,
     signOutEnabled:Boolean)(mainContent: Html = HtmlFormat.empty)(implicit request: Request[_], context: config.GmpContext, messages: Messages)
@@ -95,6 +96,7 @@
 @content = {
     @uiLayouts.main_content(
         article = uiLayouts.article(mainContent),
+        mainClass = mainClass,
         mainContentHeader = mainContentHeader,
         serviceInfo = serviceInfo,
         getHelpForm = getHelpForm)

@@ -24,8 +24,7 @@
     }
 }
 
-<div class="grid" id="global-results-grid">
-    <div class="grid-2-3">
+<div id="global-results-grid">
 
         <div class="global-error">
             @if(globalErrors.hasPath(s"$globalErrorCode.cannot_calculate")){
@@ -53,7 +52,6 @@
             <p id="query-handling-link">@Html(Messages(globalErrors.getString(s"$globalErrorCode.help_link")))</p>
         }
 
-    </div>
 
     @includes.print_page()
 

@@ -22,22 +22,18 @@
 
 @gmp_main(title = Messages("gmp.bulk.results.banner") + " - " + Messages("service.title") + " - " + Messages("gov.uk")) {
 
-<div class="grid">
     @includes.back_link(Messages("gmp.bulk.results.banner"))
-    <div class="grid-2-3">
-        <div class="confirmation-bulk">
+        <div class="govuk-box-highlight">
             <h1 id="calc-ready" class="heading-large">
                 @Messages("gmp.bulk.results.banner")
             </h1>
             <h2 id="reference">@Messages("gmp.bulk.results.reference", bulkResultsSummary.reference)</h2>
         </div>
-    </div>
 
-    <div class="grid grid-2-3">
       <br>
-        <div id="results-heading" class="grid grid-3-4">@Messages("gmp.bulk.results")</div>
-        <div id="csv-heading" class="grid grid-1-4 text--right">@Messages("gmp.bulk.results.csv")</div>
-    </div>
+        <div id="results-heading" class="column-three-quarters">@Messages("gmp.bulk.results")</div>
+        <div id="csv-heading" class="column-one-quarter text--right">@Messages("gmp.bulk.results.csv")</div>
+
 
     @if(bulkResultsSummary.total == bulkResultsSummary.getNumberOfSuccessfulCalculations) {
       @includes.bulk_results_successful(bulkResultsSummary, uploadReference)
@@ -55,5 +51,4 @@
 
     @includes.bulk_query_handling_message()
 
-</div>
 }

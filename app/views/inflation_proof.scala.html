@@ -33,9 +33,9 @@
 
     @includes.back_link(Messages("gmp.inflation_proof.question"))
 
-    <h1>@Messages("gmp.inflation_proof.question")</h1>
-
     @views.html.helpers.errorSummary(inflationProofForm)
+
+    <h1>@Messages("gmp.inflation_proof.question")</h1>
 
         @form(action = routes.InflationProofController.post) {
 
@@ -57,7 +57,7 @@
                 '_trackGA -> true)
         </div>
 
-            @if(inflationProofForm.hasGlobalErrors) {
+            @if(inflationProofForm.hasGlobalErrors || inflationProofForm.hasErrors) {
               <div class="form-field--error form-field js-hidden" id="revaluation-date">
             } else {
               <div class="form-field js-hidden" id="revaluation-date">

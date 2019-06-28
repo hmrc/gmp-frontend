@@ -20,9 +20,5 @@
 @(survivorCalc: Boolean)(implicit request: Request[_])
 
 @if(survivorCalc){
-  <div class="grid">
-    <div class="grid-2-3">
-        <p id="survivor-disclaimer">@Html({Messages("gmp.results.survivior.disclaimer")})</p>
-    </div>
-  </div>
+    <p id="survivor-disclaimer">@Html({Messages("gmp.results.survivior.disclaimer")})</p>
 }

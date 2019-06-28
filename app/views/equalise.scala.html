@@ -32,9 +32,8 @@
 
       @form(action = routes.EqualiseController.post) {
 
-      <div class="form-group">
 
-        <div class="form-group inline">
+        <div class="form-field inline @if(equaliseForm.hasErrors) {form-field--error}">
 
           @gmpRadioGroup(
             equaliseForm("equalise"),
@@ -52,12 +51,9 @@
 
         </div>
 
-        <div>
           <button data-journey-click='@Messages("gmp.ga-track.button.click"):@Messages("gmp.equalise_header"):@Messages("gmp.continue.button")'
                   class="button" type="submit" id="submit-button">@Messages("gmp.continue.button")</button>
-        </div>
 
-      </div>
 
    }
 }

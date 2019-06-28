@@ -21,7 +21,7 @@
 @import views.html.helpers._
 @import org.joda.time.{Days, LocalDate, LocalDateTime}
 
-@gmp_main(title = Messages("gmp.dashboard_header") + " - " + Messages("service.title") + " - " + Messages("gov.uk"), dashboardLinkEnabled = false, showUserResearchBanner = true) {
+@gmp_main(title = Messages("gmp.dashboard_header") + " - " + Messages("service.title") + " - " + Messages("gov.uk"), dashboardLinkEnabled = false, showUserResearchBanner = true, mainClass=Some("gmp-dashboard")) {
 
     <h1 id="gmp-dashboard-header">@Messages("gmp.dashboard_header")</h1>
     <h2 id="choose-calculation-type">@Messages("gmp.dashboard.choose_calculation_type")</h2>

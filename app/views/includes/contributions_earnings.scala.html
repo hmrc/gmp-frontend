@@ -31,16 +31,12 @@
 
 }
 
-<div class="grid">
 
     @if(calculationResponse.hasErrors){
         @includes.contributions_and_earnings_error(calculationResponse)
     }
 
-</div>
 
-<div class="grid">
-  <div class="grid-2-3">
 
     @for((period, count) <- calculationResponse.calculationPeriods.zipWithIndex){
 
@@ -79,5 +75,3 @@
           }
         }
     }
-  </div>
-</div>
