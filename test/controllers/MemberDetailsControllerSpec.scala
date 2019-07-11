@@ -37,8 +37,7 @@ class MemberDetailsControllerSpec extends PlaySpec with OneServerPerSuite with M
   val mockAuthConnector = mock[AuthConnector]
   val mockSessionService = mock[SessionService]
 
-  object TestMemberDetailsController extends MemberDetailsController {
-    val authConnector = mockAuthConnector
+  object TestMemberDetailsController extends MemberDetailsController(mockAuthConnector) {
     override val sessionService = mockSessionService
     override val context = FakeGmpContext()
   }

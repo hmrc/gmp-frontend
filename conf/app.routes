@@ -11,9 +11,9 @@ GET         /relevant-date                                controllers.Revaluatio
 POST        /relevant-date                                controllers.RevaluationController.post
 GET         /relevant-date/back                           controllers.RevaluationController.back
 
-GET         /inflation-proof                              controllers.InflationProofController.get
-POST        /inflation-proof                              controllers.InflationProofController.post
-GET         /inflation-proof/back                         controllers.InflationProofController.back
+GET         /inflation-proof                              @controllers.InflationProofController.get
+POST        /inflation-proof                              @controllers.InflationProofController.post
+GET         /inflation-proof/back                         @controllers.InflationProofController.back
 
 GET         /left-scheme                                  @controllers.DateOfLeavingController.get
 POST        /left-scheme                                  @controllers.DateOfLeavingController.post
@@ -30,9 +30,9 @@ GET         /calculation-reason/back                      controllers.ScenarioCo
 GET         /unauthorised                                 @controllers.ApplicationController.unauthorised
 GET         /signout                                      @controllers.ApplicationController.signout
 
-GET         /member-details                               controllers.MemberDetailsController.get
-POST        /member-details                               controllers.MemberDetailsController.post
-GET         /member-details/back                          controllers.MemberDetailsController.back
+GET         /member-details                               @controllers.MemberDetailsController.get
+POST        /member-details                               @controllers.MemberDetailsController.post
+GET         /member-details/back                          @controllers.MemberDetailsController.back
 
 GET         /results                                      controllers.ResultsController.get
 

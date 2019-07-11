@@ -16,17 +16,19 @@
 
 package controllers
 
+import com.google.inject.Inject
 import config.GmpFrontendAuthConnector
 import controllers.auth.GmpRegime
 import forms.InflationProofForm._
 import play.api.Logger
 import play.api.Play.current
 import play.api.i18n.Messages.Implicits._
+import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
 
 import scala.concurrent.Future
 
 
-trait InflationProofController extends GmpPageFlow {
+class InflationProofController @Inject()(val authConnector: AuthConnector) extends GmpPageFlow {
 
   def get = AuthorisedFor(GmpRegime, pageVisibilityPredicate).async {
     implicit user =>
@@ -72,8 +74,4 @@ trait InflationProofController extends GmpPageFlow {
       }
   }
 
-}
-
-object InflationProofController extends InflationProofController {
-  val authConnector = GmpFrontendAuthConnector
 }
