@@ -15,9 +15,9 @@ GET         /inflation-proof                              controllers.InflationP
 POST        /inflation-proof                              controllers.InflationProofController.post
 GET         /inflation-proof/back                         controllers.InflationProofController.back
 
-GET         /left-scheme                                  controllers.DateOfLeavingController.get
-POST        /left-scheme                                  controllers.DateOfLeavingController.post
-GET         /left-scheme/back                             controllers.DateOfLeavingController.back
+GET         /left-scheme                                  @controllers.DateOfLeavingController.get
+POST        /left-scheme                                  @controllers.DateOfLeavingController.post
+GET         /left-scheme/back                             @controllers.DateOfLeavingController.back
 
 GET         /revaluation-rate                             controllers.RevaluationRateController.get
 POST        /revaluation-rate                             controllers.RevaluationRateController.post
@@ -39,7 +39,7 @@ GET         /results                                      controllers.ResultsCon
 GET         /new-calculation                              controllers.SessionCacheController.newCalculation
 GET         /new-bulk-calculation                         controllers.SessionCacheController.newBulkCalculation
 
-GET         /                                             controllers.DashboardController.get
+GET         /                                             @controllers.DashboardController.get
 GET         /service-unavailable                          controllers.ServiceUnavailableController.get
 
 GET         /contributions-earnings                       controllers.ResultsController.getContributionsAndEarnings
@@ -57,7 +57,7 @@ POST        /getting-results                              @controllers.BulkRefer
 
 GET         /request-received                             @controllers.BulkRequestReceivedController.get
 
-GET         /dashboard                                    controllers.DashboardController.get
+GET         /dashboard                                    @controllers.DashboardController.get
 
 GET         /bulk/results/csv/:uploadReference/:filter    @controllers.BulkResultsController.getResultsAsCsv(uploadReference: String, filter: String)
 GET         /bulk/results/csv/:uploadReference            @controllers.BulkResultsController.getContributionsAndEarningsAsCsv(uploadReference: String)

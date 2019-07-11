@@ -16,6 +16,7 @@
 
 package controllers
 
+import com.google.inject.Inject
 import config.GmpFrontendAuthConnector
 import controllers.auth.GmpRegime
 import forms.DateOfLeavingForm._
@@ -24,14 +25,11 @@ import play.api.Play.current
 import play.api.i18n.Messages
 import play.api.i18n.Messages.Implicits._
 import services.SessionService
+import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
 
-object DateOfLeavingController extends DateOfLeavingController {
-  val authConnector = GmpFrontendAuthConnector
-}
 
-trait DateOfLeavingController extends GmpPageFlow {
-
-  val sessionService: SessionService
+class DateOfLeavingController @Inject()(val authConnector: AuthConnector,
+                                        sessionService: SessionService) extends GmpPageFlow {
 
   def get = AuthorisedFor(GmpRegime, pageVisibilityPredicate).async {
     implicit user =>

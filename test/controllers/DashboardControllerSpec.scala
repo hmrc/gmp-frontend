@@ -41,10 +41,8 @@ class DashboardControllerSpec extends PlaySpec with OneServerPerSuite with Mocki
   val mockSessionService = mock[SessionService]
   val mockGmpBulkConnector = mock[GmpBulkConnector]
 
-  object TestDashboardController extends DashboardController {
-    val authConnector = mockAuthConnector
+  object TestDashboardController extends DashboardController(mockAuthConnector, mockGmpBulkConnector) {
     override val sessionService = mockSessionService
-    override val gmpBulkConnector = mockGmpBulkConnector
     override val context = FakeGmpContext()
   }
 
@@ -128,10 +126,8 @@ class DashboardControllerSpec extends PlaySpec with OneServerPerSuite with Mocki
 
         val brokenGmpBulkConnector = mock[GmpBulkConnector]
 
-        object BrokenDashboardController extends DashboardController {
-          val authConnector = mockAuthConnector
+        object BrokenDashboardController extends DashboardController(mockAuthConnector, brokenGmpBulkConnector) {
           override val sessionService = mockSessionService
-          override val gmpBulkConnector = brokenGmpBulkConnector
           override val context = FakeGmpContext()
         }
 
