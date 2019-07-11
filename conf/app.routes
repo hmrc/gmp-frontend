@@ -23,9 +23,9 @@ GET         /revaluation-rate                             @controllers.Revaluati
 POST        /revaluation-rate                             @controllers.RevaluationRateController.post
 GET         /revaluation-rate/back                        @controllers.RevaluationRateController.back
 
-GET         /calculation-reason                           controllers.ScenarioController.get
-POST        /calculation-reason                           controllers.ScenarioController.post
-GET         /calculation-reason/back                      controllers.ScenarioController.back
+GET         /calculation-reason                           @controllers.ScenarioController.get
+POST        /calculation-reason                           @controllers.ScenarioController.post
+GET         /calculation-reason/back                      @controllers.ScenarioController.back
 
 GET         /unauthorised                                 @controllers.ApplicationController.unauthorised
 GET         /signout                                      @controllers.ApplicationController.signout
@@ -36,11 +36,11 @@ GET         /member-details/back                          @controllers.MemberDet
 
 GET         /results                                      @controllers.ResultsController.get
 
-GET         /new-calculation                              controllers.SessionCacheController.newCalculation
-GET         /new-bulk-calculation                         controllers.SessionCacheController.newBulkCalculation
+GET         /new-calculation                              @controllers.SessionCacheController.newCalculation
+GET         /new-bulk-calculation                         @controllers.SessionCacheController.newBulkCalculation
 
 GET         /                                             @controllers.DashboardController.get
-GET         /service-unavailable                          controllers.ServiceUnavailableController.get
+GET         /service-unavailable                          @controllers.ServiceUnavailableController.get
 
 GET         /contributions-earnings                       @controllers.ResultsController.getContributionsAndEarnings
 

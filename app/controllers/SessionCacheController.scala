@@ -16,14 +16,13 @@
 
 package controllers
 
-import config.GmpFrontendAuthConnector
+import com.google.inject.{Inject, Singleton}
 import controllers.auth.GmpRegime
 import play.api.Logger
-import services.SessionService
-import uk.gov.hmrc.play.frontend.auth.Actions
-import uk.gov.hmrc.play.frontend.controller.FrontendController
+import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
 
-trait SessionCacheController extends GmpPageFlow {
+@Singleton
+class SessionCacheController @Inject()(val authConnector: AuthConnector) extends GmpPageFlow {
 
   def newCalculation = AuthorisedFor(GmpRegime, pageVisibilityPredicate).async {
     implicit user =>
@@ -52,6 +51,3 @@ trait SessionCacheController extends GmpPageFlow {
   }
 }
 
-object SessionCacheController extends SessionCacheController {
-  val authConnector = GmpFrontendAuthConnector
-}

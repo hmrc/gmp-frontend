@@ -16,7 +16,7 @@
 
 package controllers
 
-import config.GmpFrontendAuthConnector
+import com.google.inject.{Inject, Singleton}
 import connectors.GmpConnector
 import controllers.auth.GmpRegime
 import forms.ScenarioForm._
@@ -24,11 +24,12 @@ import play.api.Logger
 import play.api.Play.current
 import play.api.i18n.Messages
 import play.api.i18n.Messages.Implicits._
+import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
 
 import scala.concurrent.Future
 
-
-trait ScenarioController extends GmpPageFlow {
+@Singleton
+class ScenarioController @Inject()(val authConnector: AuthConnector) extends GmpPageFlow {
 
   def get = AuthorisedFor(GmpRegime, pageVisibilityPredicate).async {
     implicit user =>
@@ -75,7 +76,3 @@ trait ScenarioController extends GmpPageFlow {
   }
 }
 
-object ScenarioController extends ScenarioController {
-  val authConnector = GmpFrontendAuthConnector
-  val calculationConnector = GmpConnector
-}

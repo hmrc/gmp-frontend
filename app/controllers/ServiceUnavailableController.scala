@@ -16,12 +16,14 @@
 
 package controllers
 
+import com.google.inject.Singleton
 import config.{GmpContext, GmpContextImpl}
 import play.api.mvc.{Action, Controller}
 import play.api.i18n.Messages.Implicits._
 import play.api.Play.current
 
-trait ServiceUnavailableController extends Controller {
+@Singleton
+class ServiceUnavailableController extends Controller {
 
   implicit val context: GmpContext = GmpContextImpl
 
@@ -31,5 +33,3 @@ trait ServiceUnavailableController extends Controller {
     }
   }
 }
-
-object ServiceUnavailableController extends ServiceUnavailableController

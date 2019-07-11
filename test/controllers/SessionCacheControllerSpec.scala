@@ -18,24 +18,21 @@ package controllers
 
 import org.mockito.Matchers
 import org.mockito.Mockito._
-import org.scalatest.mock.MockitoSugar
+import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
-import scala.concurrent.duration._
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.SessionService
 import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
-import play.api.i18n.Messages.Implicits._
 
-import scala.concurrent.{Await, Future}
+import scala.concurrent.Future
 
 class SessionCacheControllerSpec extends PlaySpec with OneServerPerSuite with MockitoSugar with GmpUsers {
 
   val mockAuthConnector = mock[AuthConnector]
   val mockSessionService = mock[SessionService]
 
-  object TestSessionCacheController extends SessionCacheController {
-    val authConnector = mockAuthConnector
+  object TestSessionCacheController extends SessionCacheController(mockAuthConnector) {
     override val sessionService = mockSessionService
     override val context = FakeGmpContext()
   }
