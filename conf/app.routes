@@ -52,8 +52,8 @@ GET         /upload-csv                                   controllers.FileUpload
 GET         /upload-csv/failure                           controllers.FileUploadController.failure
 POST        /upload-csv/callback                          controllers.FileUploadController.callback
 
-GET         /getting-results                              controllers.BulkReferenceController.get
-POST        /getting-results                              controllers.BulkReferenceController.post
+GET         /getting-results                              @controllers.BulkReferenceController.get
+POST        /getting-results                              @controllers.BulkReferenceController.post
 
 GET         /request-received                             controllers.BulkRequestReceivedController.get
 

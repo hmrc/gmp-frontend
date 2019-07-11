@@ -22,7 +22,7 @@ import play.api.inject.{Binding, Module}
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
 
-class gmpModule extends Module{
+class GmpModule extends Module{
   override def bindings(environment: Environment, configuration: Configuration): Seq[Binding[_]] = Seq(
     bind[AuditConnector].to(GmpFrontendAuditConnector),
     bind[AuthConnector].to(GmpFrontendAuthConnector),

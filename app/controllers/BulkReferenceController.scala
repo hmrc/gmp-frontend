@@ -16,18 +16,18 @@
 
 package controllers
 
-import config.{ApplicationGlobal, GmpFrontendAuthConnector}
+import com.google.inject.{Inject, Singleton}
 import controllers.auth.GmpRegime
 import forms.BulkReferenceForm
 import play.api.Logger
-import services.SessionService
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
+import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
 
 import scala.concurrent.Future
 
-trait BulkReferenceController extends GmpController {
-
-  val auditConnector : AuditConnector = ApplicationGlobal.auditConnector
+@Singleton
+class BulkReferenceController @Inject()(val authConnector: AuthConnector,
+                                        auditConnector : AuditConnector) extends GmpController {
 
   def get = AuthorisedFor(GmpRegime, pageVisibilityPredicate).async {
     implicit user =>
@@ -60,6 +60,4 @@ trait BulkReferenceController extends GmpController {
   }
 }
 
-object BulkReferenceController extends BulkReferenceController {
-  val authConnector = GmpFrontendAuthConnector
-}
+
