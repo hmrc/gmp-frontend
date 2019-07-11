@@ -16,8 +16,7 @@
 
 package controllers
 
-import com.google.inject.Inject
-import config.GmpFrontendAuthConnector
+import com.google.inject.{Inject, Singleton}
 import controllers.auth.GmpRegime
 import forms.DateOfLeavingForm._
 import play.api.Logger
@@ -27,7 +26,7 @@ import play.api.i18n.Messages.Implicits._
 import services.SessionService
 import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
 
-
+@Singleton
 class DateOfLeavingController @Inject()(val authConnector: AuthConnector,
                                         sessionService: SessionService) extends GmpPageFlow {
 

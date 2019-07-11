@@ -16,7 +16,8 @@
 
 package config
 
-import connectors.GmpBulkConnector
+import connectors.{AttachmentsConnector, GmpBulkConnector}
+import controllers.FileUploadController
 import controllers.auth.UUIDGenerator
 import play.api.{Configuration, Environment}
 import play.api.inject.{Binding, Module}
@@ -31,6 +32,7 @@ class GmpModule extends Module{
     bind[UUIDGenerator].to(UUIDGenerator),
     bind[SessionService].to(SessionService),
     bind[BulkRequestCreationService].to(BulkRequestCreationService),
-    bind[GmpBulkConnector].to(GmpBulkConnector)
+    bind[GmpBulkConnector].to(GmpBulkConnector),
+    bind[AttachmentsConnector].to(AttachmentsConnector)
   )
 }
