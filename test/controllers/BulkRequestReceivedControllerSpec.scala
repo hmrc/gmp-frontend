@@ -60,11 +60,11 @@ class BulkRequestReceivedControllerSpec extends PlaySpec with OneServerPerSuite 
   val inputLine1 = lineListFromCalculationRequestLine(calcLine1)
   val bulkRequest1 = BulkCalculationRequest("1", "bill@bixby.com", "uploadRef1", List(calcLine1), "userid", LocalDateTime.now() )
 
-  object TestBulkRequestReceivedController extends BulkRequestReceivedController {
-    val authConnector = mockAuthConnector
-    override val sessionService = mockSessionService
-    override val bulkRequestCreationService = mockBulkRequestCreationService
-    override val gmpBulkConnector = mockGmpBulkConnector
+  object TestBulkRequestReceivedController extends BulkRequestReceivedController(
+    mockAuthConnector,
+    mockSessionService,
+    mockBulkRequestCreationService,
+    mockGmpBulkConnector){
     override val context = FakeGmpContext()
   }
 

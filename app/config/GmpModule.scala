@@ -16,9 +16,11 @@
 
 package config
 
+import connectors.GmpBulkConnector
 import controllers.auth.UUIDGenerator
 import play.api.{Configuration, Environment}
 import play.api.inject.{Binding, Module}
+import services.{BulkRequestCreationService, SessionService}
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
 
@@ -26,6 +28,9 @@ class GmpModule extends Module{
   override def bindings(environment: Environment, configuration: Configuration): Seq[Binding[_]] = Seq(
     bind[AuditConnector].to(GmpFrontendAuditConnector),
     bind[AuthConnector].to(GmpFrontendAuthConnector),
-    bind[UUIDGenerator].to(UUIDGenerator)
+    bind[UUIDGenerator].to(UUIDGenerator),
+    bind[SessionService].to(SessionService),
+    bind[BulkRequestCreationService].to(BulkRequestCreationService),
+    bind[GmpBulkConnector].to(GmpBulkConnector)
   )
 }
