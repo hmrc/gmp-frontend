@@ -16,21 +16,20 @@
 
 package controllers
 
-import config.GmpContext
 import helpers.RandomNino
 import models._
 import org.mockito.Matchers
 import org.mockito.Mockito._
-import org.scalatest.mock.MockitoSugar
+import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
 import play.api.i18n.Messages
+import play.api.i18n.Messages.Implicits._
 import play.api.libs.json.Json
 import play.api.mvc.{AnyContentAsEmpty, Result}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.SessionService
 import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
-import play.api.i18n.Messages.Implicits._
 
 import scala.concurrent.Future
 
@@ -39,8 +38,7 @@ class RevaluationRateControllerSpec extends PlaySpec with OneServerPerSuite with
   val mockAuthConnector = mock[AuthConnector]
   val mockSessionService = mock[SessionService]
 
-  object TestRevaluationRateController extends RevaluationRateController {
-    val authConnector = mockAuthConnector
+  object TestRevaluationRateController extends RevaluationRateController(mockAuthConnector) {
     override val sessionService = mockSessionService
     override val context = FakeGmpContext()
   }

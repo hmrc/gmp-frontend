@@ -16,7 +16,7 @@
 
 package controllers
 
-import com.google.inject.Inject
+import com.google.inject.{Inject, Singleton}
 import config.GmpFrontendAuthConnector
 import controllers.auth.GmpRegime
 import forms.MemberDetailsForm._
@@ -27,6 +27,7 @@ import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
 
 import scala.concurrent.Future
 
+@Singleton
 class MemberDetailsController @Inject()(val authConnector: AuthConnector) extends GmpPageFlow {
 
   def get = AuthorisedFor(GmpRegime, pageVisibilityPredicate).async {

@@ -16,13 +16,14 @@
 
 package controllers
 
-import com.google.inject.Inject
+import com.google.inject.{Inject, Singleton}
 import connectors.GmpBulkConnector
 import controllers.auth.GmpRegime
 import play.api.Play.current
 import play.api.i18n.Messages.Implicits._
 import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
 
+@Singleton
 class MoreBulkResultsController @Inject()(val authConnector: AuthConnector,
                                           gmpBulkConnector: GmpBulkConnector) extends GmpPageFlow {
 

@@ -16,6 +16,7 @@
 
 package controllers
 
+import com.google.inject.{Inject, Singleton}
 import config.{ApplicationGlobal, GmpContext, GmpFrontendAuthConnector}
 import connectors.GmpConnector
 import controllers.auth.GmpRegime
@@ -31,18 +32,20 @@ import services.SessionService
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import play.api.i18n.Messages.Implicits._
 import play.api.Play.current
+import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
 
 import scala.concurrent.Future
 
-trait ResultsController extends GmpPageFlow {
+@Singleton
+class ResultsController @Inject()(val authConnector: AuthConnector,
+                                  sessionService: SessionService,
+                                  calculationConnector: GmpConnector,
+                                  auditConnector: AuditConnector,
+                                  metrics: Metrics) extends GmpPageFlow {
 
-  val sessionService: SessionService
-  val calculationConnector: GmpConnector
-  val auditConnector : AuditConnector = ApplicationGlobal.auditConnector
-
-  def resultsView(response: CalculationResponse, revalRateSubheader: Option[String], survivorSubheader: Option[String])(implicit request: Request[_], context: GmpContext): HtmlFormat.Appendable
-
-  def metrics: Metrics
+   def resultsView(response: CalculationResponse, revalRateSubheader: Option[String], survivorSubheader: Option[String])(implicit request: Request[_], context: GmpContext): HtmlFormat.Appendable = {
+    views.html.results(applicationConfig = config.ApplicationConfig, response, revalRateSubheader, survivorSubheader)
+  }
 
   def get = AuthorisedFor(GmpRegime, pageVisibilityPredicate).async {
     implicit user =>
@@ -203,16 +206,3 @@ trait ResultsController extends GmpPageFlow {
 }
 
 
-object ResultsController extends ResultsController {
-  val authConnector = GmpFrontendAuthConnector
-  override val calculationConnector = GmpConnector
-
-  // $COVERAGE-OFF$Trivial and never going to be called by a test that uses it's own object implementation
-  override def metrics = Metrics
-
-  override def resultsView(response: CalculationResponse, revalRateSubheader: Option[String], survivorSubheader: Option[String])(implicit request: Request[_], context: GmpContext): HtmlFormat.Appendable = {
-    views.html.results(applicationConfig = config.ApplicationConfig, response, revalRateSubheader, survivorSubheader)
-  }
-
-  // $COVERAGE-ON$
-}

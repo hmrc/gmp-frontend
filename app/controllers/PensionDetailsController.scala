@@ -16,7 +16,7 @@
 
 package controllers
 
-import com.google.inject.Inject
+import com.google.inject.{Inject, Singleton}
 import connectors.GmpConnector
 import controllers.auth.GmpRegime
 import forms.PensionDetailsForm._
@@ -30,6 +30,7 @@ import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
 
 import scala.concurrent.Future
 
+@Singleton
 class PensionDetailsController @Inject()(val authConnector: AuthConnector,
                                          gmpConnector: GmpConnector,
                                          metrics: Metrics) extends GmpPageFlow {
