@@ -4,8 +4,8 @@
 
 GET         /assets/*file                                 @controllers.AssetsController.at(path="/public", file)
 
-GET         /pension-details                              controllers.PensionDetailsController.get
-POST        /pension-details                              controllers.PensionDetailsController.post
+GET         /pension-details                              @controllers.PensionDetailsController.get
+POST        /pension-details                              @controllers.PensionDetailsController.post
 
 GET         /relevant-date                                controllers.RevaluationController.get
 POST        /relevant-date                                controllers.RevaluationController.post
@@ -63,4 +63,4 @@ GET         /bulk/results/csv/:uploadReference/:filter    @controllers.BulkResul
 GET         /bulk/results/csv/:uploadReference            @controllers.BulkResultsController.getContributionsAndEarningsAsCsv(uploadReference: String)
 GET         /bulk/results/:uploadReference/:fromPage      @controllers.BulkResultsController.get(uploadReference:String, fromPage:Int)
 
-GET         /more-bulk-results                            controllers.MoreBulkResultsController.retrieveMoreBulkResults
+GET         /more-bulk-results                            @controllers.MoreBulkResultsController.retrieveMoreBulkResults

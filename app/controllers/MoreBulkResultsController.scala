@@ -16,20 +16,15 @@
 
 package controllers
 
-import config.GmpFrontendAuthConnector
+import com.google.inject.Inject
 import connectors.GmpBulkConnector
 import controllers.auth.GmpRegime
-import play.api.i18n.Messages.Implicits._
 import play.api.Play.current
+import play.api.i18n.Messages.Implicits._
+import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
 
-object MoreBulkResultsController extends MoreBulkResultsController{
-  val authConnector = GmpFrontendAuthConnector
-  val gmpBulkConnector = GmpBulkConnector
-}
-
-trait MoreBulkResultsController extends GmpPageFlow {
-
-  val gmpBulkConnector: GmpBulkConnector
+class MoreBulkResultsController @Inject()(val authConnector: AuthConnector,
+                                          gmpBulkConnector: GmpBulkConnector) extends GmpPageFlow {
 
   def retrieveMoreBulkResults = AuthorisedFor(GmpRegime, pageVisibilityPredicate).async {
     implicit user =>

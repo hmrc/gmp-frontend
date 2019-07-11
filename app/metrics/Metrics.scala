@@ -29,7 +29,7 @@ trait Metrics {
 }
 
 object Metrics extends Metrics with MicroserviceMetrics{
-  val registry: MetricRegistry = metrics.defaultRegistry
+  lazy val registry: MetricRegistry = metrics.defaultRegistry
 
   override val keystoreStoreTimer = registry.timer("gmp-keystore-storage-timer")
   override val keystoreRetrieveTimer = registry.timer("gmp-keystore-retrieve-timer")

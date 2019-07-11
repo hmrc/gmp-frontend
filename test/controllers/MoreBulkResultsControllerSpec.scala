@@ -39,10 +39,8 @@ class MoreBulkResultsControllerSpec extends PlaySpec with OneServerPerSuite with
   val mockSessionService = mock[SessionService]
   val mockGmpBulkConnector = mock[GmpBulkConnector]
 
-  object TestMoreBulkResultsController extends MoreBulkResultsController {
-    val authConnector = mockAuthConnector
+  object TestMoreBulkResultsController extends MoreBulkResultsController(mockAuthConnector, mockGmpBulkConnector) {
     override val sessionService = mockSessionService
-    override val gmpBulkConnector = mockGmpBulkConnector
     override val context = FakeGmpContext()
   }
 
