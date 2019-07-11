@@ -31,9 +31,9 @@ import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
 import scala.concurrent.Future
 
 @Singleton
-class PensionDetailsController @Inject()(val authConnector: AuthConnector,
+class PensionDetailsController @Inject()(override val authConnector: AuthConnector,
                                          gmpConnector: GmpConnector,
-                                         metrics: Metrics) extends GmpPageFlow {
+                                         metrics: Metrics) extends GmpPageFlow(authConnector) {
 
   def get = AuthorisedFor(GmpRegime, pageVisibilityPredicate).async {
     implicit user =>

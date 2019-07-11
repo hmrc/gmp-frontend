@@ -22,7 +22,7 @@ import play.api.Logger
 import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
 
 @Singleton
-class SessionCacheController @Inject()(val authConnector: AuthConnector) extends GmpPageFlow {
+class SessionCacheController @Inject()(override val authConnector: AuthConnector) extends GmpPageFlow(authConnector) {
 
   def newCalculation = AuthorisedFor(GmpRegime, pageVisibilityPredicate).async {
     implicit user =>

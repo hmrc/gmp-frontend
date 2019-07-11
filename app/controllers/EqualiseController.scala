@@ -28,8 +28,8 @@ import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
 import scala.concurrent.Future
 
 @Singleton
-class EqualiseController @Inject()(val authConnector: AuthConnector,
-                                   sessionService: SessionService) extends GmpPageFlow {
+class EqualiseController @Inject()(override val authConnector: AuthConnector,
+                                   sessionService: SessionService) extends GmpPageFlow(authConnector) {
 
   def get = AuthorisedFor(GmpRegime, pageVisibilityPredicate).async {
     implicit user => implicit request => Future.successful(Ok(views.html.equalise(equaliseForm)))

@@ -27,8 +27,8 @@ import services.SessionService
 import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
 
 @Singleton
-class DateOfLeavingController @Inject()(val authConnector: AuthConnector,
-                                        sessionService: SessionService) extends GmpPageFlow {
+class DateOfLeavingController @Inject()( override val authConnector: AuthConnector,
+                                        sessionService: SessionService) extends GmpPageFlow(authConnector) {
 
   def get = AuthorisedFor(GmpRegime, pageVisibilityPredicate).async {
     implicit user =>

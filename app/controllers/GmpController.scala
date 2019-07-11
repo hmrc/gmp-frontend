@@ -17,10 +17,12 @@
 package controllers
 
 
+import com.google.inject.Inject
 import config.GmpContextImpl
 import models.{CalculationType, GmpSession, Leaving}
 import play.api.mvc.Result
 import services.SessionService
+import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
 import uk.gov.hmrc.play.frontend.auth.connectors.domain.ConfidenceLevel
 import uk.gov.hmrc.play.frontend.auth.{Actions, IdentityConfidencePredicate}
 import uk.gov.hmrc.play.frontend.controller.FrontendController
@@ -47,7 +49,7 @@ object PageType {
   val INFLATION_PROOF = "InflationProofController"
 }
 
-trait GmpPageFlow extends GmpController {
+class GmpPageFlow @Inject()(val authConnector: AuthConnector) extends GmpController {
 
   val forwardNavigation: Map[String, GmpSession => Result] = Map(
     PageType.INFLATION_PROOF -> { (session: GmpSession) => Redirect(routes.ResultsController.get) },

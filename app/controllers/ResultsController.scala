@@ -37,11 +37,11 @@ import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
 import scala.concurrent.Future
 
 @Singleton
-class ResultsController @Inject()(val authConnector: AuthConnector,
+class ResultsController @Inject()(override val authConnector: AuthConnector,
                                   sessionService: SessionService,
                                   calculationConnector: GmpConnector,
                                   auditConnector: AuditConnector,
-                                  metrics: Metrics) extends GmpPageFlow {
+                                  metrics: Metrics) extends GmpPageFlow(authConnector) {
 
    def resultsView(response: CalculationResponse, revalRateSubheader: Option[String], survivorSubheader: Option[String])(implicit request: Request[_], context: GmpContext): HtmlFormat.Appendable = {
     views.html.results(applicationConfig = config.ApplicationConfig, response, revalRateSubheader, survivorSubheader)

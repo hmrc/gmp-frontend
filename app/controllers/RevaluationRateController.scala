@@ -28,7 +28,7 @@ import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
 
 
 @Singleton
-class RevaluationRateController @Inject()(val authConnector: AuthConnector) extends GmpPageFlow {
+class RevaluationRateController @Inject()(override val authConnector: AuthConnector) extends GmpPageFlow(authConnector) {
 
   def get = AuthorisedFor(GmpRegime, pageVisibilityPredicate).async {
     implicit user =>

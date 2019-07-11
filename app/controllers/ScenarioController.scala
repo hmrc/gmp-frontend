@@ -29,7 +29,7 @@ import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
 import scala.concurrent.Future
 
 @Singleton
-class ScenarioController @Inject()(val authConnector: AuthConnector) extends GmpPageFlow {
+class ScenarioController @Inject()(override val authConnector: AuthConnector) extends GmpPageFlow(authConnector) {
 
   def get = AuthorisedFor(GmpRegime, pageVisibilityPredicate).async {
     implicit user =>

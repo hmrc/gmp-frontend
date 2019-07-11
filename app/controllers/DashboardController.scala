@@ -25,8 +25,8 @@ import play.api.i18n.Messages.Implicits._
 import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
 
 @Singleton
-class DashboardController @Inject()(val authConnector: AuthConnector,
-                                    gmpBulkConnector: GmpBulkConnector) extends GmpPageFlow {
+class DashboardController @Inject()(override val authConnector: AuthConnector,
+                                    gmpBulkConnector: GmpBulkConnector) extends GmpPageFlow(authConnector) {
 
   def get = AuthorisedFor(GmpRegime, pageVisibilityPredicate).async {
     implicit user =>
