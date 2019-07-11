@@ -16,6 +16,7 @@
 
 package services
 
+import com.google.inject.Inject
 import models.{BulkCalculationRequest, BulkCalculationRequestLine, CalculationRequestLine}
 import org.joda.time.LocalDate
 import org.joda.time.format.DateTimeFormat
@@ -49,7 +50,7 @@ object BulkRequestCsvColumn {
 
 class DataLimitExceededException extends Throwable
 
-trait BulkRequestCreationService extends BulkEntityProcessor[BulkCalculationRequestLine] with ServicesConfig {
+class BulkRequestCreationService extends BulkEntityProcessor[BulkCalculationRequestLine] with ServicesConfig {
 
   override protected def mode: Mode = Play.current.mode
 
@@ -214,7 +215,3 @@ trait BulkRequestCreationService extends BulkEntityProcessor[BulkCalculationRequ
 
   def sourceData(resourceLocation: String): Iterator[Char] = scala.io.Source.fromURL(resourceLocation, "UTF-8").iter
 }
-
-object BulkRequestCreationService extends BulkRequestCreationService
-
-

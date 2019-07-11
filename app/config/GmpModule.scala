@@ -31,8 +31,6 @@ class GmpModule extends Module{
     bind[AuditConnector].to(GmpFrontendAuditConnector),
     bind[AuthConnector].to(GmpFrontendAuthConnector),
     bind[UUIDGenerator].to(UUIDGenerator),
-    bind[SessionService].to(SessionService),
-    bind[BulkRequestCreationService].to(BulkRequestCreationService),
     bind[GmpBulkConnector].to(GmpBulkConnector),
     bind[AttachmentsConnector].to(AttachmentsConnector),
     bind[Metrics].to(Metrics),

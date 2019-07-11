@@ -16,6 +16,7 @@
 
 package services
 
+import com.google.inject.{Inject, Singleton}
 import config.SessionCacheWiring
 import metrics.Metrics
 import models._
@@ -26,18 +27,8 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import uk.gov.hmrc.http.HeaderCarrier
 
-object SessionService extends SessionService {
-  // $COVERAGE-OFF$Trivial and never going to be called by a test that uses it's own object implementation
-  override def metrics = Metrics
-
-  // $COVERAGE-ON$
-}
-
-
-trait SessionService extends SessionCacheWiring {
-
-
-  def metrics: Metrics
+@Singleton
+class SessionService @Inject()(metrics: Metrics) extends SessionCacheWiring {
 
   val GMP_SESSION_KEY = "gmp_session"
   val cleanSession = GmpSession(MemberDetails("", "", ""), "", "", None, None, Leaving(GmpDate(None, None, None), None), None)

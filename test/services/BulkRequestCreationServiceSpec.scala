@@ -20,7 +20,7 @@ import helpers.RandomNino
 import models.{BulkCalculationRequestLine, CalculationRequestLine, BulkCalculationRequest}
 import org.joda.time.{LocalDateTime, LocalDate}
 import org.scalatest.concurrent.ScalaFutures
-import org.scalatest.mock.MockitoSugar
+import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
 import play.api.i18n.Messages
 import play.api.i18n.Messages.Implicits._
