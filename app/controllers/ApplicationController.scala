@@ -16,6 +16,7 @@
 
 package controllers
 
+import com.google.inject.Inject
 import config.{GmpFrontendAuditConnector, GmpFrontendAuthConnector}
 import controllers.auth.{ExternalUrls, GmpRegime, UUIDGenerator}
 import play.api.Play.current
@@ -24,11 +25,10 @@ import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.audit.model.DataEvent
 import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
-trait ApplicationController extends GmpController {
 
-  val auditConnector: AuditConnector
-  val authConnector: AuthConnector
-  val uuidGenerator: UUIDGenerator
+class ApplicationController @Inject()(auditConnector: AuditConnector,
+                                       val authConnector: AuthConnector,
+                                       uuidGenerator: UUIDGenerator) extends GmpController {
   
   def unauthorised: Action[AnyContent] = Action {
     implicit request =>
@@ -48,8 +48,4 @@ trait ApplicationController extends GmpController {
   }
 }
 
-object ApplicationController extends ApplicationController {
-  override val auditConnector: AuditConnector = GmpFrontendAuditConnector
-  override val authConnector: AuthConnector = GmpFrontendAuthConnector
-  override val uuidGenerator: UUIDGenerator = UUIDGenerator
-}
+
