@@ -10,18 +10,18 @@ private object AppDependencies {
   import play.core.PlayVersion
   import play.sbt.PlayImport._
 
-  private val frontendBootstrapVersion = "12.8.0"
-  private val domainVersion = "5.3.0"
-  private val httpCachingVersion = "8.0.0"
+  private val frontendBootstrapVersion = "12.9.0"
+  private val domainVersion = "5.6.0-play-25"
+  private val httpCachingVersion = "8.4.0-play-25"
   private val taxyearVersion = "0.5.0"
-  private val playPartialsVersion = "6.4.0"
-  private val emailAddressVersion = "2.2.0"
+  private val playPartialsVersion = "6.9.0-play-25"
+  private val emailAddressVersion = "3.2.0"
   private val bulkEntityStreamingVersion = "1.0.0"
 
   private val scalatestPlusPlayVersion = "2.0.1"
   private val scalatestVersion = "3.0.2"
   private val pegdownVersion = "1.6.0"
-  private val jsoupVersion = "1.9.2"
+  private val jsoupVersion = "1.11.3"
   private val mockitoCoreVersion = "1.9.5"
   private val hmrcTestVersion = "3.4.0-play-25"
 
@@ -33,7 +33,8 @@ private object AppDependencies {
     "uk.gov.hmrc" %% "tax-year" % taxyearVersion,
     "uk.gov.hmrc" %% "play-partials" % playPartialsVersion,
     "uk.gov.hmrc" %% "emailaddress" % emailAddressVersion,
-    "uk.gov.hmrc" %% "bulk-entity-streaming" % bulkEntityStreamingVersion
+    "uk.gov.hmrc" %% "bulk-entity-streaming" % bulkEntityStreamingVersion,
+    "uk.gov.hmrc" %% "auth-client"  %  "2.22.0-play-25"
   )
 
   trait TestDependencies {
