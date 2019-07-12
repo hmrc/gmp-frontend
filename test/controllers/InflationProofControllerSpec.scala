@@ -16,6 +16,7 @@
 
 package controllers
 
+import controllers.auth.{AuthAction, GmpAuthConnector}
 import models._
 import org.mockito.Matchers
 import org.mockito.Mockito._
@@ -35,8 +36,9 @@ class InflationProofControllerSpec extends PlaySpec with OneServerPerSuite with 
 
   val mockAuthConnector = mock[GmpAuthConnector]
   val mockSessionService = mock[SessionService]
+  val mockAuthAction = mock[AuthAction]
 
-  object TestInflationProofController extends InflationProofController(mockAuthConnector) {
+  object TestInflationProofController extends InflationProofController(mockAuthAction, mockAuthConnector) {
     override val sessionService = mockSessionService
     override val context = FakeGmpContext()
   }

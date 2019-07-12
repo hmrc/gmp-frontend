@@ -16,7 +16,10 @@
 
 package controllers
 
+import java.util.UUID
+
 import connectors.GmpBulkConnector
+import controllers.auth.{AuthAction, GmpAuthConnector}
 import models.BulkResultsSummary
 import org.mockito.Matchers
 import org.mockito.Mockito._
@@ -27,15 +30,20 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
 import play.api.i18n.Messages.Implicits._
+import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.http.logging.SessionId
+
 import scala.concurrent.Future
-import uk.gov.hmrc.http.{ HttpResponse, NotFoundException, Upstream4xxResponse }
+import uk.gov.hmrc.http.{HttpResponse, NotFoundException, Upstream4xxResponse}
 
 class BulkResultsControllerSpec extends PlaySpec with OneServerPerSuite with MockitoSugar with GmpUsers {
 
   val mockAuthConnector = mock[GmpAuthConnector]
   val mockGmpBulkConnector = mock[GmpBulkConnector]
+  val link = "some-link"
+  implicit val hc = new HeaderCarrier(sessionId = Some(SessionId(s"session-${UUID.randomUUID}")))
 
-  object TestBulkResultsController extends BulkResultsController(mockAuthConnector, mockGmpBulkConnector) {
+  object TestBulkResultsController extends BulkResultsController(mock[AuthAction],mockAuthConnector, mockGmpBulkConnector) {
     override val context = FakeGmpContext()
   }
 
@@ -62,7 +70,7 @@ class BulkResultsControllerSpec extends PlaySpec with OneServerPerSuite with Moc
       "when authorised" must {
 
         "respond with a status of OK" in {
-          when(mockGmpBulkConnector.getBulkResultsSummary(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(bulkResultsSummary))
+          when(mockGmpBulkConnector.getBulkResultsSummary(Matchers.any(),link)).thenReturn(Future.successful(bulkResultsSummary))
           withAuthorisedUser { request =>
             val result = TestBulkResultsController.get("",comingFromDashboard).apply(request)
             status(result) must equal(OK)
@@ -70,7 +78,7 @@ class BulkResultsControllerSpec extends PlaySpec with OneServerPerSuite with Moc
         }
 
         "load the results page" in {
-          when(mockGmpBulkConnector.getBulkResultsSummary(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(bulkResultsSummary))
+          when(mockGmpBulkConnector.getBulkResultsSummary(Matchers.any(),link)).thenReturn(Future.successful(bulkResultsSummary))
           withAuthorisedUser { request =>
             val result = TestBulkResultsController.get("",comingFromDashboard).apply(request)
 
@@ -85,7 +93,7 @@ class BulkResultsControllerSpec extends PlaySpec with OneServerPerSuite with Moc
         "contain correct successful count" in {
 
 
-          when(mockGmpBulkConnector.getBulkResultsSummary(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(bulkResultsSummary))
+          when(mockGmpBulkConnector.getBulkResultsSummary(Matchers.any(),link)).thenReturn(Future.successful(bulkResultsSummary))
 
           withAuthorisedUser { request =>
             val result = TestBulkResultsController.get("",comingFromDashboard).apply(request)
@@ -96,7 +104,7 @@ class BulkResultsControllerSpec extends PlaySpec with OneServerPerSuite with Moc
         }
 
         "show the incorrect user page" in {
-          when(mockGmpBulkConnector.getBulkResultsSummary(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.failed(new Upstream4xxResponse("", FORBIDDEN, 0, Map())))
+          when(mockGmpBulkConnector.getBulkResultsSummary(Matchers.any(),link)).thenReturn(Future.failed(new Upstream4xxResponse("", FORBIDDEN, 0, Map())))
           withAuthorisedUser { request =>
             val result = TestBulkResultsController.get("",comingFromDashboard).apply(request)
 
@@ -105,7 +113,7 @@ class BulkResultsControllerSpec extends PlaySpec with OneServerPerSuite with Moc
         }
 
         "show the calc not found page" in {
-          when(mockGmpBulkConnector.getBulkResultsSummary(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.failed(new NotFoundException("")))
+          when(mockGmpBulkConnector.getBulkResultsSummary(Matchers.any(),link)).thenReturn(Future.failed(new NotFoundException("")))
           withAuthorisedUser { request =>
             val result = TestBulkResultsController.get("",comingFromDashboard).apply(request)
 
@@ -126,7 +134,7 @@ class BulkResultsControllerSpec extends PlaySpec with OneServerPerSuite with Moc
 
       "download the results summary in csv format" in {
 
-        when(mockGmpBulkConnector.getResultsAsCsv(Matchers.any(),Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(HttpResponse(responseStatus = 200,responseString = Some("CSV STRING"))))
+        when(mockGmpBulkConnector.getResultsAsCsv(Matchers.any(),Matchers.any(),link)).thenReturn(Future.successful(HttpResponse(responseStatus = 200,responseString = Some("CSV STRING"))))
 
         withAuthorisedUser { request =>
           val result = TestBulkResultsController.getResultsAsCsv("","").apply(request)
@@ -149,7 +157,7 @@ class BulkResultsControllerSpec extends PlaySpec with OneServerPerSuite with Moc
 
       "download the contributions and earnings in csv format" in {
 
-        when(mockGmpBulkConnector.getContributionsAndEarningsAsCsv(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(HttpResponse(responseStatus = 200,responseString = Some("CSV STRING"))))
+        when(mockGmpBulkConnector.getContributionsAndEarningsAsCsv(Matchers.any(),link)).thenReturn(Future.successful(HttpResponse(responseStatus = 200,responseString = Some("CSV STRING"))))
 
         withAuthorisedUser { request =>
           val result = TestBulkResultsController.getContributionsAndEarningsAsCsv("").apply(request)

@@ -16,6 +16,7 @@
 
 package controllers
 
+import controllers.auth.{AuthAction, GmpAuthConnector}
 import models._
 import org.mockito.Matchers
 import org.mockito.Mockito._
@@ -23,7 +24,7 @@ import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
 import play.api.i18n.Messages
 import play.api.libs.json.Json
-import play.api.mvc.{Result, AnyContentAsEmpty}
+import play.api.mvc.{AnyContentAsEmpty, Result}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import play.api.i18n.Messages.Implicits._
@@ -36,8 +37,9 @@ class EqualiseControllerSpec extends PlaySpec with OneServerPerSuite with Mockit
 
   val mockAuthConnector = mock[GmpAuthConnector]
   val mockSessionService = mock[SessionService]
+  val mockAuthAction = mock[AuthAction]
 
-  object TestEqualiseController extends EqualiseController(mockAuthConnector, mockSessionService) {
+  object TestEqualiseController extends EqualiseController(mockAuthAction, mockAuthConnector, mockSessionService) {
     override val context = FakeGmpContext()
   }
 

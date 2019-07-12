@@ -89,7 +89,6 @@ class GmpRegimeSpec extends PlaySpec with OneServerPerSuite with MockitoSugar wi
             SessionKeys.sessionId -> sessionId,
             SessionKeys.token -> "RANDOMTOKEN",
             SessionKeys.userId -> userId)
-
           when(mockAuthConnector.currentAuthority(Matchers.any(), Matchers.any())) thenReturn {
             Future.successful(Some(Authority(userId, Accounts(psa = Some(PsaAccount("gmp/B1234567", PsaId("B1234567")))), None, None, CredentialStrength.None, ConfidenceLevel.L50, None, None, None, "")))
           }

@@ -17,8 +17,9 @@
 package controllers
 
 import connectors.GmpBulkConnector
+import controllers.auth.{AuthAction, GmpAuthConnector}
 import models._
-import org.joda.time.{LocalDateTime, LocalDate}
+import org.joda.time.{LocalDate, LocalDateTime}
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.mockito.MockitoSugar
@@ -38,8 +39,10 @@ class MoreBulkResultsControllerSpec extends PlaySpec with OneServerPerSuite with
   val mockAuthConnector = mock[GmpAuthConnector]
   val mockSessionService = mock[SessionService]
   val mockGmpBulkConnector = mock[GmpBulkConnector]
+  val mockAuthAction = mock[AuthAction]
+  val link = "some-link"
 
-  object TestMoreBulkResultsController extends MoreBulkResultsController(mockAuthConnector, mockGmpBulkConnector) {
+  object TestMoreBulkResultsController extends MoreBulkResultsController(mockAuthAction, mockAuthConnector, mockGmpBulkConnector) {
     override val sessionService = mockSessionService
     override val context = FakeGmpContext()
   }
@@ -54,7 +57,7 @@ class MoreBulkResultsControllerSpec extends PlaySpec with OneServerPerSuite with
 
   val recentBulkCalculations = List(new BulkPreviousRequest("1234","abcd",LocalDateTime.now(),LocalDateTime.now()), new BulkPreviousRequest("5678","efgh", LocalDateTime.now(),LocalDateTime.now()))
 
-  when(mockGmpBulkConnector.getPreviousBulkRequests()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(recentBulkCalculations))
+  when(mockGmpBulkConnector.getPreviousBulkRequests(link)(Matchers.any())).thenReturn(Future.successful(recentBulkCalculations))
 
   "more bulk results GET " must {
 

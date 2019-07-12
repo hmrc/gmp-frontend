@@ -18,6 +18,7 @@ package controllers
 
 import java.util.UUID
 
+import controllers.auth.{AuthAction, GmpAuthConnector}
 import models._
 import org.mockito.Matchers
 import org.mockito.Mockito._
@@ -42,7 +43,7 @@ import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 
 class BulkReferenceControllerSpec extends PlaySpec with OneServerPerSuite with MockitoSugar with GmpUsers {
 
-  val mockAuthConnector: AuthConnector = mock[GmpAuthConnector]
+  val mockAuthConnector: GmpAuthConnector = mock[GmpAuthConnector]
   val mockSessionService: SessionService = mock[SessionService]
   val mockAuditConnector: AuditConnector = mock[AuditConnector]
 
@@ -51,7 +52,7 @@ class BulkReferenceControllerSpec extends PlaySpec with OneServerPerSuite with M
 
   implicit val hc = new HeaderCarrier(sessionId = Some(SessionId(s"session-${UUID.randomUUID}")))
 
-  object TestBulkReferenceController extends BulkReferenceController(mockAuthConnector, mockAuditConnector) {
+  object TestBulkReferenceController extends BulkReferenceController(mock[AuthAction],mockAuthConnector, mockAuditConnector) {
     override val sessionService = mockSessionService
     override val context = FakeGmpContext()
   }

@@ -17,6 +17,7 @@
 package controllers
 
 import connectors.AttachmentsConnector
+import controllers.auth.{AuthAction, GmpAuthConnector}
 import models._
 import org.mockito.Matchers
 import org.mockito.Mockito._
@@ -25,12 +26,13 @@ import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
 import play.api.i18n.Messages
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.{AnyContentAsEmpty, Result}
-import play.api.test.{FakeRequest, FakeHeaders}
+import play.api.test.{FakeHeaders, FakeRequest}
 import play.api.test.Helpers._
 import play.twirl.api.Html
 import services.SessionService
 import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
 import uk.gov.hmrc.play.partials.HtmlPartial
+
 import scala.concurrent.Future
 import play.api.i18n.Messages.Implicits._
 
@@ -38,13 +40,14 @@ class FileUploadControllerSpec extends PlaySpec with OneServerPerSuite with Mock
   val mockAuthConnector = mock[GmpAuthConnector]
   val mockAttachmentsConnector = mock[AttachmentsConnector]
   val mockSessionService = mock[SessionService]
+  val mockAuthAction = mock[AuthAction]
 
   val gmpBulkSession = GmpBulkSession(Some(CallBackData(collection = "gmp", id = "id", length = 1L, name = None,
     customMetadata = None, contentType = None, sessionId = "THING")), None, None)
 
   val fakeRequest = FakeRequest(method = "POST", uri = "", headers = FakeHeaders(Seq("Content-type" -> ("application/json"))), body = Json.toJson(gmpBulkSession.callBackData.get))
 
-  object TestFileUploadController extends FileUploadController(mockAuthConnector, mockSessionService, mockAttachmentsConnector) {
+  object TestFileUploadController extends FileUploadController(mockAuthAction, mockAuthConnector, mockSessionService, mockAttachmentsConnector) {
     override val context = FakeGmpContext()
   }
 

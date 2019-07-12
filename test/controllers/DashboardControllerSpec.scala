@@ -17,6 +17,7 @@
 package controllers
 
 import connectors.GmpBulkConnector
+import controllers.auth.{AuthAction, GmpAuthConnector}
 import models._
 import org.joda.time.LocalDateTime
 import org.mockito.Matchers
@@ -40,8 +41,11 @@ class DashboardControllerSpec extends PlaySpec with OneServerPerSuite with Mocki
   val mockAuthConnector = mock[GmpAuthConnector]
   val mockSessionService = mock[SessionService]
   val mockGmpBulkConnector = mock[GmpBulkConnector]
+  val mockAuthAction = mock[AuthAction]
 
-  object TestDashboardController extends DashboardController(mockAuthConnector, mockGmpBulkConnector) {
+  val link = "some-link"
+
+  object TestDashboardController extends DashboardController(mockAuthAction, mockAuthConnector, mockGmpBulkConnector) {
     override val sessionService = mockSessionService
     override val context = FakeGmpContext()
   }
@@ -72,7 +76,7 @@ class DashboardControllerSpec extends PlaySpec with OneServerPerSuite with Mocki
 
   val recentBulkCalculations = List(new BulkPreviousRequest("1234","abcd",LocalDateTime.now(),LocalDateTime.now()), new BulkPreviousRequest("5678","efgh", LocalDateTime.now(),LocalDateTime.now()))
 
-  when(mockGmpBulkConnector.getPreviousBulkRequests()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(recentBulkCalculations))
+  when(mockGmpBulkConnector.getPreviousBulkRequests(link)(Matchers.any())).thenReturn(Future.successful(recentBulkCalculations))
 
   "dashboard GET " must {
 
@@ -126,12 +130,12 @@ class DashboardControllerSpec extends PlaySpec with OneServerPerSuite with Mocki
 
         val brokenGmpBulkConnector = mock[GmpBulkConnector]
 
-        object BrokenDashboardController extends DashboardController(mockAuthConnector, brokenGmpBulkConnector) {
+        object BrokenDashboardController extends DashboardController(mockAuthAction, mockAuthConnector, brokenGmpBulkConnector) {
           override val sessionService = mockSessionService
           override val context = FakeGmpContext()
         }
 
-        when(brokenGmpBulkConnector.getPreviousBulkRequests()(Matchers.any(), Matchers.any())).thenReturn(Future.failed(new Upstream5xxResponse("failed",503,503)))
+        when(brokenGmpBulkConnector.getPreviousBulkRequests(link)(Matchers.any())).thenReturn(Future.failed(new Upstream5xxResponse("failed",503,503)))
         val dashboard = new Dashboard(Nil)
         withAuthorisedUser { request =>
           val result = BrokenDashboardController.get.apply(request)

@@ -16,6 +16,7 @@
 
 package controllers
 
+import controllers.auth.{AuthAction, GmpAuthConnector}
 import helpers.RandomNino
 import models._
 import org.mockito.Matchers
@@ -37,8 +38,9 @@ class ScenarioControllerSpec extends PlaySpec with OneServerPerSuite with Mockit
 
   val mockAuthConnector = mock[GmpAuthConnector]
   val mockSessionService = mock[SessionService]
+  val mockAuthAction = mock[AuthAction]
 
-  object TestScenarioController extends ScenarioController(mockAuthConnector) {
+  object TestScenarioController extends ScenarioController(mockAuthAction, mockAuthConnector) {
     override val sessionService = mockSessionService
     override val context = FakeGmpContext()
   }

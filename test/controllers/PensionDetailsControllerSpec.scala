@@ -19,6 +19,7 @@ package controllers
 import java.util.UUID
 
 import connectors.GmpConnector
+import controllers.auth.{AuthAction, GmpAuthConnector}
 import metrics.Metrics
 import models._
 import org.mockito.Matchers
@@ -46,11 +47,13 @@ class PensionDetailsControllerSpec extends PlaySpec with OneServerPerSuite with 
   val mockAuthConnector = mock[GmpAuthConnector]
   val mockSessionService = mock[SessionService]
   val mockGmpConnector = mock[GmpConnector]
+  val mockAuthAction = mock[AuthAction]
+  val link = "some-link"
 
   implicit val user = AuthContext(authority = Authority("1234", Accounts(psa = Some(PsaAccount("link", PsaId("B1234567")))), None, None, CredentialStrength.None, ConfidenceLevel.L50, None, None, None, ""))
   implicit val hc = new HeaderCarrier(sessionId = Some(SessionId(s"session-${UUID.randomUUID}")))
 
-  object TestPensionDetailsController extends PensionDetailsController(mockAuthConnector, mockGmpConnector, Metrics) {
+  object TestPensionDetailsController extends PensionDetailsController(mockAuthAction, mockAuthConnector, mockGmpConnector, Metrics) {
     override val sessionService = mockSessionService
     override val context = FakeGmpContext()
   }
@@ -121,7 +124,7 @@ class PensionDetailsControllerSpec extends PlaySpec with OneServerPerSuite with 
 
       "validate scon and store scon and redirect" in {
         when(mockSessionService.cachePensionDetails(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
-        when(mockGmpConnector.validateScon(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(ValidateSconResponse(true)))
+        when(mockGmpConnector.validateScon(Matchers.any(),link)).thenReturn(Future.successful(ValidateSconResponse(true)))
         withAuthorisedUser { request =>
           val result = TestPensionDetailsController.post()(request.withJsonBody(Json.toJson(validGmpRequest)))
           status(result) must equal(SEE_OTHER)
@@ -137,7 +140,7 @@ class PensionDetailsControllerSpec extends PlaySpec with OneServerPerSuite with 
       }
 
       "respond with bad request when scon not validated" in {
-        when(mockGmpConnector.validateScon(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(ValidateSconResponse(false)))
+        when(mockGmpConnector.validateScon(Matchers.any(),link)).thenReturn(Future.successful(ValidateSconResponse(false)))
         withAuthorisedUser { request =>
           val result = TestPensionDetailsController.post()(request.withJsonBody(Json.toJson(validGmpRequest)))
           status(result) must equal(BAD_REQUEST)
@@ -147,7 +150,7 @@ class PensionDetailsControllerSpec extends PlaySpec with OneServerPerSuite with 
 
       "respond with exception when scon service throws exception" in {
         when(mockSessionService.cachePensionDetails(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
-        when(mockGmpConnector.validateScon(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(null))
+        when(mockGmpConnector.validateScon(Matchers.any(),link)).thenReturn(Future.successful(null))
         withAuthorisedUser { request =>
           intercept[RuntimeException]{
             await(TestPensionDetailsController.post()(request.withJsonBody(Json.toJson(validGmpRequest))))
@@ -157,7 +160,7 @@ class PensionDetailsControllerSpec extends PlaySpec with OneServerPerSuite with 
 
       "respond with exception when cache service throws exception" in {
         when(mockSessionService.cachePensionDetails(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(None))
-        when(mockGmpConnector.validateScon(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(ValidateSconResponse(true)))
+        when(mockGmpConnector.validateScon(Matchers.any(),link)).thenReturn(Future.successful(ValidateSconResponse(true)))
         withAuthorisedUser { request =>
           intercept[RuntimeException]{
             await(TestPensionDetailsController.post()(request.withJsonBody(Json.toJson(validGmpRequest))))

@@ -16,6 +16,7 @@
 
 package controllers
 
+import controllers.auth.{AuthAction, GmpAuthConnector}
 import helpers.RandomNino
 import models._
 import org.mockito.Matchers
@@ -37,8 +38,9 @@ class RevaluationRateControllerSpec extends PlaySpec with OneServerPerSuite with
 
   val mockAuthConnector = mock[GmpAuthConnector]
   val mockSessionService = mock[SessionService]
+  val mockAuthAction = mock[AuthAction]
 
-  object TestRevaluationRateController extends RevaluationRateController(mockAuthConnector) {
+  object TestRevaluationRateController extends RevaluationRateController(mockAuthAction, mockAuthConnector) {
     override val sessionService = mockSessionService
     override val context = FakeGmpContext()
   }

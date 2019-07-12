@@ -19,6 +19,7 @@ package controllers
 import java.util.UUID
 
 import connectors.GmpBulkConnector
+import controllers.auth.{AuthAction, GmpAuthConnector}
 import helpers.RandomNino
 import models._
 import org.joda.time.{LocalDate, LocalDateTime}
@@ -47,6 +48,8 @@ class BulkRequestReceivedControllerSpec extends PlaySpec with OneServerPerSuite 
   val mockSessionService = mock[SessionService]
   val mockBulkRequestCreationService = mock[BulkRequestCreationService]
   val mockGmpBulkConnector = mock[GmpBulkConnector]
+  val mockAuthAction = mock[AuthAction]
+  val link = "some-link"
 
   implicit val user = AuthContext(authority = Authority("1234", Accounts(psa = Some(PsaAccount("link", PsaId("B1234567")))), None, None, CredentialStrength.None, ConfidenceLevel.L50, None, None, None, ""))
   implicit val hc = new HeaderCarrier(sessionId = Some(SessionId(s"session-${UUID.randomUUID}")))
@@ -61,6 +64,7 @@ class BulkRequestReceivedControllerSpec extends PlaySpec with OneServerPerSuite 
   val bulkRequest1 = BulkCalculationRequest("1", "bill@bixby.com", "uploadRef1", List(calcLine1), "userid", LocalDateTime.now() )
 
   object TestBulkRequestReceivedController extends BulkRequestReceivedController(
+    mockAuthAction,
     mockAuthConnector,
     mockSessionService,
     mockBulkRequestCreationService,
@@ -90,7 +94,7 @@ class BulkRequestReceivedControllerSpec extends PlaySpec with OneServerPerSuite 
 
           when(mockSessionService.fetchGmpBulkSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpBulkSession)))
           when(mockBulkRequestCreationService.createBulkRequest(Matchers.any(),Matchers.any(),Matchers.any(),Matchers.any())).thenReturn(Left(bulkRequest1))
-          when(mockGmpBulkConnector.sendBulkRequest(Matchers.any())(Matchers.any(),Matchers.any())).thenReturn(Future.successful(OK))
+          when(mockGmpBulkConnector.sendBulkRequest(Matchers.any(),link)).thenReturn(Future.successful(OK))
           withAuthorisedUser { user =>
             getBulkRequestReceived(user) { result =>
               status(result) must equal(OK)
@@ -108,7 +112,7 @@ class BulkRequestReceivedControllerSpec extends PlaySpec with OneServerPerSuite 
 
           when(mockSessionService.fetchGmpBulkSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpBulkSession)))
           when(mockBulkRequestCreationService.createBulkRequest(Matchers.any(),Matchers.any(),Matchers.any(),Matchers.any())).thenReturn(Left(bulkRequest1))
-          when(mockGmpBulkConnector.sendBulkRequest(Matchers.any())(Matchers.any(),Matchers.any())).thenReturn(Future.successful(CONFLICT))
+          when(mockGmpBulkConnector.sendBulkRequest(Matchers.any(),link)).thenReturn(Future.successful(CONFLICT))
           withAuthorisedUser { user =>
             getBulkRequestReceived(user) { result =>
               status(result) must equal(OK)
@@ -122,7 +126,7 @@ class BulkRequestReceivedControllerSpec extends PlaySpec with OneServerPerSuite 
 
           when(mockSessionService.fetchGmpBulkSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpBulkSession)))
           when(mockBulkRequestCreationService.createBulkRequest(Matchers.any(),Matchers.any(),Matchers.any(),Matchers.any())).thenReturn(Left(bulkRequest1))
-          when(mockGmpBulkConnector.sendBulkRequest(Matchers.any())(Matchers.any(),Matchers.any())).thenReturn(Future.successful(REQUEST_ENTITY_TOO_LARGE))
+          when(mockGmpBulkConnector.sendBulkRequest(Matchers.any(),link)).thenReturn(Future.successful(REQUEST_ENTITY_TOO_LARGE))
           withAuthorisedUser { user =>
             getBulkRequestReceived(user) { result =>
               status(result) must equal(OK)
@@ -151,7 +155,7 @@ class BulkRequestReceivedControllerSpec extends PlaySpec with OneServerPerSuite 
 
           when(mockSessionService.fetchGmpBulkSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpBulkSession)))
           when(mockBulkRequestCreationService.createBulkRequest(Matchers.any(),Matchers.any(),Matchers.any(),Matchers.any())).thenReturn(Left(bulkRequest1))
-          when(mockGmpBulkConnector.sendBulkRequest(Matchers.any())(Matchers.any(),Matchers.any())).thenReturn(Future.successful(500))
+          when(mockGmpBulkConnector.sendBulkRequest(Matchers.any(),link)).thenReturn(Future.successful(500))
           withAuthorisedUser { user =>
             getBulkRequestReceived(user) { result =>
               status(result) must equal(OK)

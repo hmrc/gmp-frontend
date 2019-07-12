@@ -16,6 +16,7 @@
 
 package controllers
 
+import controllers.auth.{AuthAction, GmpAuthConnector}
 import helpers.RandomNino
 import models._
 import org.joda.time.{DateTime, DateTimeUtils}
@@ -25,23 +26,25 @@ import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
 import play.api.i18n.Messages
 import play.api.libs.json.Json
-import play.api.mvc.{Result, AnyContentAsEmpty}
+import play.api.mvc.{AnyContentAsEmpty, Result}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.SessionService
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
 import play.api.i18n.Messages.Implicits._
+
 import scala.concurrent.Future
 
 class DateOfLeavingControllerSpec extends PlaySpec with OneServerPerSuite with MockitoSugar with GmpUsers {
   DateTimeUtils.setCurrentMillisFixed(new DateTime(2016, 1, 1, 1, 1).toDate.getTime)
   val mockAuthConnector = mock[GmpAuthConnector]
   val mockSessionService = mock[SessionService]
+  val mockAuthAction = mock[AuthAction]
 
   val baseValidDate = GmpDate(day = Some("31"), month = Some("1"), year = Some("2015"))
 
-  object TestDateOfLeavingController extends DateOfLeavingController(mockAuthConnector, mockSessionService) {
+  object TestDateOfLeavingController extends DateOfLeavingController(mockAuthAction, mockAuthConnector, mockSessionService) {
     override val context = FakeGmpContext()
   }
 

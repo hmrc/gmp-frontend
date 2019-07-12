@@ -16,6 +16,7 @@
 
 package controllers
 
+import controllers.auth.{AuthAction, GmpAuthConnector}
 import models._
 import org.mockito.Matchers
 import org.mockito.Mockito._
@@ -29,16 +30,18 @@ import play.api.test.Helpers._
 import services.SessionService
 import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
 import play.api.i18n.Messages.Implicits._
+
 import scala.concurrent.Future
 
 class RevaluationControllerSpec extends PlaySpec with OneServerPerSuite with MockitoSugar with GmpUsers {
 
   val mockAuthConnector = mock[GmpAuthConnector]
   val mockSessionService = mock[SessionService]
+  val mockAuthAction = mock[AuthAction]
 
   val baseValidDate = GmpDate(day = Some("31"), month = Some("1"), year = Some("2015"))
 
-  object TestRevaluationController extends RevaluationController(mockAuthConnector) {
+  object TestRevaluationController extends RevaluationController(mockAuthAction, mockAuthConnector) {
     override val sessionService = mockSessionService
     override val context = FakeGmpContext()
   }
