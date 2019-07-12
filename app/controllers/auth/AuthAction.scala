@@ -17,19 +17,19 @@
 package controllers.auth
 
 import com.google.inject.{ImplementedBy, Inject}
-import play.api.Configuration
-import play.api.mvc.Results._
+import config.WSHttp
+import play.api.{Configuration, Environment, Play}
+import play.api.Mode.Mode
 import play.api.mvc._
-import uk.gov.hmrc.auth.core._
+import uk.gov.hmrc.auth.core.{AuthConnector, AuthorisedFunctions, ConfidenceLevel, Enrolment, Enrolments, PlayAuthConnector}
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
-import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.HeaderCarrierConverter
-import uk.gov.hmrc.play.frontend.auth.connectors.domain.{PsaAccount, PspAccount}
+import uk.gov.hmrc.play.config.ServicesConfig
 
 import scala.concurrent.{ExecutionContext, Future}
 
-case class AuthenticatedRequest[A](psaAccount: Option[PsaAccount], pspAccount: Option[PspAccount], request:Request[A]) extends WrappedRequest[A](request)
+case class AuthenticatedRequest[A](link: String, request:Request[A]) extends WrappedRequest[A](request)
 
 class AuthActionImpl @Inject()(val authConnector: AuthConnector, configuration: Configuration)
                               (implicit ec: ExecutionContext) extends AuthAction with AuthorisedFunctions {
@@ -38,7 +38,6 @@ class AuthActionImpl @Inject()(val authConnector: AuthConnector, configuration: 
 
     implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session))
 
-    //Add authorisation parameters - Enrolment("") ???
     authorised(ConfidenceLevel.L50 and (Enrolment("HMRC-PSA-ORG") or Enrolment("HMRC-PP-ORG")))
       .retrieve(Retrievals.authorisedEnrolments) {
         case Enrolments(enrolments) => {
@@ -52,28 +51,35 @@ class AuthActionImpl @Inject()(val authConnector: AuthConnector, configuration: 
               enrolment.identifiers.find(id => id.key == "PPID").map(_.value)
           }
 
-          block(AuthenticatedRequest(psaid, ppid, request))
+          val link = (psaid, ppid) match {
+            case (Some(id),_)     => s"psa/$id"
+            case (None, Some(id)) => s"ppa/$id"
+            case _                => throw new RuntimeException("User Authorisation failed")
+          }
+
+          block(AuthenticatedRequest(link, request))
         }
         case _ => throw new RuntimeException("Can't find credentials for user")
       }
-  } recover {
-    case ex: NoActiveSession => Redirect(configuration.getString("auth-sign-in").get)
-
-    case ex: InsufficientEnrolments => Redirect(FrontendAppConfig.saUrl)
-
-    case ex: InsufficientConfidenceLevel => Redirect(FrontendAppConfig.saUrl)
-  }
+  } //recover {
+//    case ex: NoActiveSession => Redirect(configuration.getString("auth-sign-in").get)
+//
+//    case ex: InsufficientEnrolments => Redirect(FrontendAppConfig.saUrl)
+//
+//    case ex: InsufficientConfidenceLevel => Redirect(FrontendAppConfig.saUrl)
+//  }
 }
 
 @ImplementedBy(classOf[AuthActionImpl])
 trait AuthAction extends ActionBuilder[AuthenticatedRequest] with ActionFunction[Request, AuthenticatedRequest]
 
 
-//class C2NIAuthConnector @Inject()(val http: WSHttp, configuration: Configuration) extends PlayAuthConnector {
-//
-//  val host = configuration.getString("microservice.services.auth.host").get
-//  val port = configuration.getString("microservice.services.auth.port").get
-//
-//  override val serviceUrl: String = s"http://$host:$port"
-//
-//}
+class GmpAuthConnector @Inject()( val http: WSHttp,
+                                  environment: Environment,
+                                  val runModeConfiguration: Configuration
+                                ) extends PlayAuthConnector with ServicesConfig {
+
+  val serviceUrl: String = baseUrl("auth")
+
+  override protected def mode: Mode = environment.mode
+}

@@ -45,11 +45,11 @@ class GmpBulkConnector @Inject()(environment: Environment,
         throw new RuntimeException("User Authorisation failed"))).substring(5)
   }
 
-  def sendBulkRequest(bcr: BulkCalculationRequest)(implicit user: AuthContext, headerCarrier: HeaderCarrier): Future[Int] = {
+  def sendBulkRequest(bcr: BulkCalculationRequest, link: String)(implicit headerCarrier: HeaderCarrier): Future[Int] = {
 
-    val baseURI = s"gmp/${getUser(user)}/gmp/bulk-data"
+    val baseURI = s"gmp/${link}/gmp/bulk-data"
     val bulkUri = s"$serviceURL/$baseURI/"
-    val result = httpPost.POST[BulkCalculationRequest, HttpResponse](bulkUri,bcr.copy(timestamp = LocalDateTime.now(),userId = getUser(user)))
+    val result = httpPost.POST[BulkCalculationRequest, HttpResponse](bulkUri,bcr.copy(timestamp = LocalDateTime.now(),userId = link))
 
     Logger.debug(s"[GmpBulkConnector][sendBulkRequest][POST] size : ${bcr.calculationRequests.size}")
 

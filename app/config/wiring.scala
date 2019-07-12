@@ -52,13 +52,13 @@ trait WSHttp extends HttpGet with WSGet with HttpPut with WSPut with HttpPost wi
 
 object WSHttp extends WSHttp with Hooks
 
-object GmpFrontendAuthConnector extends AuthConnector with ServicesConfig {
-  val serviceUrl = baseUrl("auth")
-  lazy val http = WSHttp
-
-  override protected def mode: Mode = Play.current.mode
-  override protected def runModeConfiguration: Configuration = Play.current.configuration
-}
+//object GmpFrontendAuthConnector extends AuthConnector with ServicesConfig {
+//  val serviceUrl = baseUrl("auth")
+//  lazy val http = WSHttp
+//
+//  override protected def mode: Mode = Play.current.mode
+//  override protected def runModeConfiguration: Configuration = Play.current.configuration
+//}
 
 object GmpSessionCache extends SessionCache with AppName with ServicesConfig {
   override lazy val http = WSHttp
