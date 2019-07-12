@@ -1,4 +1,5 @@
 import play.routes.compiler.{InjectedRoutesGenerator, StaticRoutesGenerator}
+import play.sbt.PlayImport.PlayKeys
 import play.sbt.routes.RoutesKeys.routesGenerator
 import sbt.Keys._
 import sbt.Tests.{Group, SubProcess}
@@ -48,6 +49,7 @@ trait MicroService {
       parallelExecution in Test := false,
       fork in Test := false,
       retrieveManaged := true,
+      PlayKeys.playDefaultPort := 9941,
       routesGenerator := InjectedRoutesGenerator
     )
     .settings(inConfig(TemplateTest)(Defaults.testSettings): _*)
