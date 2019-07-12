@@ -33,7 +33,7 @@ import scala.concurrent.Future
 
 class InflationProofControllerSpec extends PlaySpec with OneServerPerSuite with MockitoSugar with GmpUsers {
 
-  val mockAuthConnector = mock[AuthConnector]
+  val mockAuthConnector = mock[GmpAuthConnector]
   val mockSessionService = mock[SessionService]
 
   object TestInflationProofController extends InflationProofController(mockAuthConnector) {

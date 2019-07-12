@@ -28,7 +28,6 @@ import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
 class GmpModule extends Module{
   override def bindings(environment: Environment, configuration: Configuration): Seq[Binding[_]] = Seq(
     bind[AuditConnector].to(GmpFrontendAuditConnector),
-    bind[AuthConnector].to(GmpFrontendAuthConnector),
     bind[UUIDGenerator].to(UUIDGenerator),
     bind[Metrics].to(Metrics),
     bind[HttpGet].to(WSHttp),

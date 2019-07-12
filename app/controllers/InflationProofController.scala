@@ -17,28 +17,26 @@
 package controllers
 
 import com.google.inject.{Inject, Singleton}
-import config.GmpFrontendAuthConnector
-import controllers.auth.GmpRegime
+import controllers.auth.{AuthAction, GmpAuthConnector}
 import forms.InflationProofForm._
 import play.api.Logger
 import play.api.Play.current
 import play.api.i18n.Messages.Implicits._
-import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
 
 import scala.concurrent.Future
 
 @Singleton
-class InflationProofController @Inject()(override val authConnector: AuthConnector) extends GmpPageFlow(authConnector) {
+class InflationProofController @Inject()( authAction: AuthAction,
+                                          override val authConnector: GmpAuthConnector
+                                        ) extends GmpPageFlow(authConnector) {
 
-  def get = AuthorisedFor(GmpRegime, pageVisibilityPredicate).async {
-    implicit user =>
+  def get = authAction.async {
       implicit request => {
         Future.successful(Ok(views.html.inflation_proof(inflationProofForm)))
       }
   }
 
-  def post = AuthorisedFor(GmpRegime, pageVisibilityPredicate).async {
-    implicit user =>
+  def post = authAction.async {
       implicit request => {
 
         Logger.debug(s"[InflationProofController][POST] : ${request.body}")
@@ -63,9 +61,7 @@ class InflationProofController @Inject()(override val authConnector: AuthConnect
       }
   }
 
-  def back = AuthorisedFor(GmpRegime, pageVisibilityPredicate).async {
-
-    implicit user =>
+  def back = authAction.async {
       implicit request => {
         sessionService.fetchGmpSession() map {
           case Some(session) => previousPage("InflationProofController", session)

@@ -18,7 +18,7 @@ package controllers
 
 
 import com.google.inject.{Inject, Singleton}
-import controllers.auth.GmpRegime
+import controllers.auth.{AuthAction, GmpAuthConnector, GmpRegime}
 import forms.RevaluationRateForm._
 import play.api.Logger
 import play.api.Play.current
@@ -28,10 +28,11 @@ import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
 
 
 @Singleton
-class RevaluationRateController @Inject()(override val authConnector: AuthConnector) extends GmpPageFlow(authConnector) {
+class RevaluationRateController @Inject()( authAction: AuthAction,
+                                           override val authConnector: GmpAuthConnector
+                                         ) extends GmpPageFlow(authConnector) {
 
-  def get = AuthorisedFor(GmpRegime, pageVisibilityPredicate).async {
-    implicit user =>
+  def get = authAction.async {
       implicit request => sessionService.fetchGmpSession() map {
         case Some(session) => session match {
           case _ if session.scon == "" => Ok(views.html.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/pension-details"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title")))
@@ -45,8 +46,7 @@ class RevaluationRateController @Inject()(override val authConnector: AuthConnec
 
   }
 
-  def post = AuthorisedFor(GmpRegime, pageVisibilityPredicate).async {
-    implicit user =>
+  def post = authAction.async {
       implicit request => {
 
         Logger.debug(s"[RevaluationRateController][post][POST] : ${request.body}")
@@ -68,10 +68,8 @@ class RevaluationRateController @Inject()(override val authConnector: AuthConnec
       }
   }
 
-  def back = AuthorisedFor(GmpRegime, pageVisibilityPredicate).async {
-
-    implicit user =>
-      implicit request => {
+  def back = authAction.async {
+     implicit request => {
         sessionService.fetchGmpSession() map {
           case Some(session) => previousPage("RevaluationRateController", session)
           case _ => throw new RuntimeException

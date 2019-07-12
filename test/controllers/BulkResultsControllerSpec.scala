@@ -32,7 +32,7 @@ import uk.gov.hmrc.http.{ HttpResponse, NotFoundException, Upstream4xxResponse }
 
 class BulkResultsControllerSpec extends PlaySpec with OneServerPerSuite with MockitoSugar with GmpUsers {
 
-  val mockAuthConnector = mock[AuthConnector]
+  val mockAuthConnector = mock[GmpAuthConnector]
   val mockGmpBulkConnector = mock[GmpBulkConnector]
 
   object TestBulkResultsController extends BulkResultsController(mockAuthConnector, mockGmpBulkConnector) {

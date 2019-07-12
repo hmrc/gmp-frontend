@@ -17,7 +17,7 @@
 package controllers
 
 import com.google.inject.{Inject, Singleton}
-import controllers.auth.GmpRegime
+import controllers.auth.{AuthAction, GmpAuthConnector, GmpRegime}
 import forms.EqualiseForm._
 import play.api.Logger
 import play.api.Play.current
@@ -28,16 +28,15 @@ import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
 import scala.concurrent.Future
 
 @Singleton
-class EqualiseController @Inject()(override val authConnector: AuthConnector,
+class EqualiseController @Inject()(authAction: AuthAction,
+                                   override val authConnector: GmpAuthConnector,
                                    sessionService: SessionService) extends GmpPageFlow(authConnector) {
 
-  def get = AuthorisedFor(GmpRegime, pageVisibilityPredicate).async {
-    implicit user => implicit request => Future.successful(Ok(views.html.equalise(equaliseForm)))
+  def get = authAction.async {
+    implicit request => Future.successful(Ok(views.html.equalise(equaliseForm)))
   }
 
-  def post = AuthorisedFor(GmpRegime, pageVisibilityPredicate).async {
-
-    implicit user =>
+  def post = authAction.async {
       implicit request => {
 
         Logger.debug(s"[EqualiseController][POST] : ${request.body}")
@@ -57,9 +56,7 @@ class EqualiseController @Inject()(override val authConnector: AuthConnector,
       }
   }
 
-  def back = AuthorisedFor(GmpRegime, pageVisibilityPredicate).async {
-
-    implicit user =>
+  def back = authAction.async {
       implicit request => {
         sessionService.fetchGmpSession() map {
           case Some(session) => previousPage("EqualiseController", session)

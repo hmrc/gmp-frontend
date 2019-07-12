@@ -65,7 +65,7 @@ class GmpRegimeSpec extends PlaySpec with OneServerPerSuite with MockitoSugar wi
 
   "when applying the GmpRegime" must {
 
-    val mockAuthConnector = mock[AuthConnector]
+    val mockAuthConnector = mock[GmpAuthConnector]
 
     object TestController extends GmpController with Actions {
       val authConnector = mockAuthConnector

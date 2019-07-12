@@ -18,7 +18,7 @@ package controllers
 
 import com.google.inject.{Inject, Singleton}
 import connectors.GmpConnector
-import controllers.auth.GmpRegime
+import controllers.auth.{AuthAction, GmpAuthConnector, GmpRegime}
 import forms.PensionDetailsForm._
 import metrics.Metrics
 import models.{PensionDetails, ValidateSconRequest}
@@ -31,12 +31,12 @@ import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
 import scala.concurrent.Future
 
 @Singleton
-class PensionDetailsController @Inject()(override val authConnector: AuthConnector,
+class PensionDetailsController @Inject()(authAction: AuthAction,
+                                         override val authConnector: GmpAuthConnector,
                                          gmpConnector: GmpConnector,
                                          metrics: Metrics) extends GmpPageFlow(authConnector) {
 
-  def get = AuthorisedFor(GmpRegime, pageVisibilityPredicate).async {
-    implicit user =>
+  def get = authAction.async {
       implicit request => {
         sessionService.fetchPensionDetails.map {
           case Some(scon) => Ok(views.html.pension_details(pensionDetailsForm.fill(PensionDetails(scon))))
@@ -45,10 +45,9 @@ class PensionDetailsController @Inject()(override val authConnector: AuthConnect
       }
   }
 
-  def post = AuthorisedFor(GmpRegime, pageVisibilityPredicate).async {
-    implicit user =>
+  def post = authAction.async {
       implicit request => {
-
+        val link = request.link
         Logger.debug(s"[PensionDetailsController][post][POST] : ${request.body}")
 
         pensionDetailsForm.bindFromRequest().fold(
@@ -59,7 +58,7 @@ class PensionDetailsController @Inject()(override val authConnector: AuthConnect
 
             val validateSconRequest = ValidateSconRequest(pensionDetails.scon.toUpperCase)
 
-            gmpConnector.validateScon(validateSconRequest) flatMap {
+            gmpConnector.validateScon(validateSconRequest, link) flatMap {
               response => {
                 if (response.sconExists) {
                   sessionService.cachePensionDetails(pensionDetails.scon.toUpperCase).map {

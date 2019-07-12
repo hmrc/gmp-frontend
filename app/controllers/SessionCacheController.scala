@@ -17,15 +17,16 @@
 package controllers
 
 import com.google.inject.{Inject, Singleton}
-import controllers.auth.GmpRegime
+import controllers.auth.{AuthAction, GmpAuthConnector, GmpRegime}
 import play.api.Logger
 import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
 
 @Singleton
-class SessionCacheController @Inject()(override val authConnector: AuthConnector) extends GmpPageFlow(authConnector) {
+class SessionCacheController @Inject()(authAction: AuthAction,
+                                       override val authConnector: GmpAuthConnector
+                                      ) extends GmpPageFlow(authConnector) {
 
-  def newCalculation = AuthorisedFor(GmpRegime, pageVisibilityPredicate).async {
-    implicit user =>
+  def newCalculation = authAction.async {
       implicit request => {
 
         Logger.debug(s"[SessionCacheController][newCalculation][GET] : $request")
@@ -37,8 +38,7 @@ class SessionCacheController @Inject()(override val authConnector: AuthConnector
       }
   }
 
-  def newBulkCalculation = AuthorisedFor(GmpRegime, pageVisibilityPredicate).async {
-    implicit user =>
+  def newBulkCalculation = authAction.async {
       implicit request => {
 
         Logger.debug(s"[SessionCacheController][newBulkCalculation][GET] : $request")

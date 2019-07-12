@@ -17,18 +17,15 @@
 package connectors
 
 import com.google.inject.Inject
-import config.WSHttp
 import models.{BulkCalculationRequest, BulkPreviousRequest, BulkResultsSummary}
 import org.joda.time.LocalDateTime
 import play.api.Mode.Mode
-import play.api.{Configuration, Environment, Logger, Play}
+import play.api.{Configuration, Environment, Logger}
+import uk.gov.hmrc.http._
 import uk.gov.hmrc.play.config.ServicesConfig
-import uk.gov.hmrc.play.frontend.auth.AuthContext
-import uk.gov.hmrc.play.http._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
-import uk.gov.hmrc.http.{HeaderCarrier, HttpGet, HttpPost, HttpResponse, Upstream4xxResponse}
 
 class GmpBulkConnector @Inject()(environment: Environment,
                                  val runModeConfiguration: Configuration,
@@ -39,11 +36,11 @@ class GmpBulkConnector @Inject()(environment: Environment,
 
   lazy val serviceURL = baseUrl("gmp-bulk")
 
-  def getUser(user: AuthContext): String = {
-    user.principal.accounts.psa.map(_.link).getOrElse(
-      user.principal.accounts.psp.map(_.link).getOrElse(
-        throw new RuntimeException("User Authorisation failed"))).substring(5)
-  }
+//  def getUser(user: AuthContext): String = {
+//    user.principal.accounts.psa.map(_.link).getOrElse(
+//      user.principal.accounts.psp.map(_.link).getOrElse(
+//        throw new RuntimeException("User Authorisation failed"))).substring(5)
+//  }
 
   def sendBulkRequest(bcr: BulkCalculationRequest, link: String)(implicit headerCarrier: HeaderCarrier): Future[Int] = {
 
@@ -70,9 +67,9 @@ class GmpBulkConnector @Inject()(environment: Environment,
     }
   }
 
-  def getPreviousBulkRequests()(implicit user: AuthContext, headerCarrier: HeaderCarrier): Future[List[BulkPreviousRequest]] = {
+  def getPreviousBulkRequests(link: String)(implicit headerCarrier: HeaderCarrier): Future[List[BulkPreviousRequest]] = {
 
-    val baseURI = s"gmp/${getUser(user)}/gmp/retrieve-previous-requests"
+    val baseURI = s"gmp/${link}/gmp/retrieve-previous-requests"
     val bulkUri = s"$serviceURL/$baseURI"
     val result = httpGet.GET[List[BulkPreviousRequest]](bulkUri)
 
@@ -92,9 +89,9 @@ class GmpBulkConnector @Inject()(environment: Environment,
 
   }
 
-  def getBulkResultsSummary(uploadReference: String)(implicit user: AuthContext, headerCarrier: HeaderCarrier): Future[BulkResultsSummary] = {
+  def getBulkResultsSummary(uploadReference: String, link: String)(implicit headerCarrier: HeaderCarrier): Future[BulkResultsSummary] = {
 
-    val baseURI = s"gmp/${getUser(user)}/gmp/get-results-summary"
+    val baseURI = s"gmp/${link}/gmp/get-results-summary"
     val bulkUri = s"$serviceURL/$baseURI/$uploadReference"
 
     val result = httpGet.GET[BulkResultsSummary](bulkUri)
@@ -114,9 +111,9 @@ class GmpBulkConnector @Inject()(environment: Environment,
     result
   }
 
-  def getResultsAsCsv(uploadReference: String, filter: String)(implicit user: AuthContext, headerCarrier: HeaderCarrier): Future[HttpResponse] = {
+  def getResultsAsCsv(uploadReference: String, filter: String, link: String)(implicit headerCarrier: HeaderCarrier): Future[HttpResponse] = {
 
-    val baseURI = s"gmp/${getUser(user)}/gmp/get-results-as-csv"
+    val baseURI = s"gmp/${link}/gmp/get-results-as-csv"
     val bulkUri = s"$serviceURL/$baseURI/$uploadReference/$filter"
     val result = httpGet.GET(bulkUri)
 
@@ -137,9 +134,9 @@ class GmpBulkConnector @Inject()(environment: Environment,
     }
   }
 
-  def getContributionsAndEarningsAsCsv(uploadReference: String)(implicit user: AuthContext, headerCarrier: HeaderCarrier): Future[HttpResponse] = {
+  def getContributionsAndEarningsAsCsv(uploadReference: String, link: String)(implicit headerCarrier: HeaderCarrier): Future[HttpResponse] = {
 
-    val baseURI = s"gmp/${getUser(user)}/gmp/get-contributions-as-csv"
+    val baseURI = s"gmp/${link}/gmp/get-contributions-as-csv"
     val bulkUri = s"$serviceURL/$baseURI/$uploadReference"
     val result = httpGet.GET(bulkUri)
 

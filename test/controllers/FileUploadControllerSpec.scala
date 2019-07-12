@@ -35,7 +35,7 @@ import scala.concurrent.Future
 import play.api.i18n.Messages.Implicits._
 
 class FileUploadControllerSpec extends PlaySpec with OneServerPerSuite with MockitoSugar with GmpUsers {
-  val mockAuthConnector = mock[AuthConnector]
+  val mockAuthConnector = mock[GmpAuthConnector]
   val mockAttachmentsConnector = mock[AttachmentsConnector]
   val mockSessionService = mock[SessionService]
 

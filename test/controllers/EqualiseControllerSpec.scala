@@ -34,7 +34,7 @@ import scala.concurrent.Future
 
 class EqualiseControllerSpec extends PlaySpec with OneServerPerSuite with MockitoSugar with GmpUsers {
 
-  val mockAuthConnector = mock[AuthConnector]
+  val mockAuthConnector = mock[GmpAuthConnector]
   val mockSessionService = mock[SessionService]
 
   object TestEqualiseController extends EqualiseController(mockAuthConnector, mockSessionService) {

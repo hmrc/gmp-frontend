@@ -31,7 +31,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 case class AuthenticatedRequest[A](link: String, request:Request[A]) extends WrappedRequest[A](request)
 
-class AuthActionImpl @Inject()(val authConnector: AuthConnector, configuration: Configuration)
+class AuthActionImpl @Inject()(val authConnector: GmpAuthConnector, configuration: Configuration)
                               (implicit ec: ExecutionContext) extends AuthAction with AuthorisedFunctions {
 
   override def invokeBlock[A](request: Request[A], block: AuthenticatedRequest[A] => Future[Result]): Future[Result] = {

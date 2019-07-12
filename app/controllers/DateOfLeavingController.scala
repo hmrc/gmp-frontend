@@ -17,7 +17,7 @@
 package controllers
 
 import com.google.inject.{Inject, Singleton}
-import controllers.auth.GmpRegime
+import controllers.auth.{AuthAction, GmpAuthConnector, GmpRegime}
 import forms.DateOfLeavingForm._
 import play.api.Logger
 import play.api.Play.current
@@ -27,11 +27,11 @@ import services.SessionService
 import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
 
 @Singleton
-class DateOfLeavingController @Inject()( override val authConnector: AuthConnector,
+class DateOfLeavingController @Inject()(authAction: AuthAction,
+                                        override val authConnector: GmpAuthConnector,
                                         sessionService: SessionService) extends GmpPageFlow(authConnector) {
 
-  def get = AuthorisedFor(GmpRegime, pageVisibilityPredicate).async {
-    implicit user =>
+  def get = authAction.async {
       implicit request =>
         sessionService.fetchGmpSession.map {
           case Some(session) => session match {
@@ -46,8 +46,7 @@ class DateOfLeavingController @Inject()( override val authConnector: AuthConnect
 
   }
 
-  def post = AuthorisedFor(GmpRegime, pageVisibilityPredicate).async {
-    implicit user =>
+  def post = authAction.async {
       implicit request => {
         Logger.debug(s"[DateOfLeavingController][post][POST] : ${request.body}")
         dateOfLeavingForm.bindFromRequest.fold(
@@ -67,9 +66,7 @@ class DateOfLeavingController @Inject()( override val authConnector: AuthConnect
       }
   }
 
-  def back = AuthorisedFor(GmpRegime, pageVisibilityPredicate).async {
-
-    implicit user =>
+  def back = authAction.async {
       implicit request => {
         sessionService.fetchGmpSession() map {
           case Some(session) => previousPage("DateOfLeavingController", session)

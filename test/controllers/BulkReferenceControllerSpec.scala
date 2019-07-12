@@ -42,7 +42,7 @@ import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 
 class BulkReferenceControllerSpec extends PlaySpec with OneServerPerSuite with MockitoSugar with GmpUsers {
 
-  val mockAuthConnector: AuthConnector = mock[AuthConnector]
+  val mockAuthConnector: AuthConnector = mock[GmpAuthConnector]
   val mockSessionService: SessionService = mock[SessionService]
   val mockAuditConnector: AuditConnector = mock[AuditConnector]
 

@@ -17,9 +17,8 @@
 package controllers
 
 import com.google.inject.{Inject, Singleton}
-import config.GmpFrontendAuthConnector
 import connectors.GmpBulkConnector
-import controllers.auth.{AuthAction, GmpRegime}
+import controllers.auth.{AuthAction, GmpAuthConnector, GmpRegime}
 import play.api.Logger
 import play.api.i18n.Messages
 import services.{BulkRequestCreationService, DataLimitExceededException, SessionService}
@@ -31,7 +30,7 @@ import scala.concurrent.Future
 
 @Singleton
 class BulkRequestReceivedController @Inject()(authAction: AuthAction,
-                                              val authConnector: AuthConnector,
+                                              val authConnector: GmpAuthConnector,
                                               sessionService: SessionService,
                                               bulkRequestCreationService: BulkRequestCreationService,
                                               gmpBulkConnector: GmpBulkConnector

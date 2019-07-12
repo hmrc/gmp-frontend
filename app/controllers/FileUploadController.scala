@@ -18,7 +18,7 @@ package controllers
 
 import com.google.inject.{Inject, Singleton}
 import connectors.AttachmentsConnector
-import controllers.auth.GmpRegime
+import controllers.auth.{AuthAction, GmpAuthConnector, GmpRegime}
 import models.{CallBackData, GmpBulkSession}
 import play.api.Play.current
 import play.api.i18n.Messages
@@ -30,21 +30,19 @@ import uk.gov.hmrc.play.frontend.auth.Actions
 import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
 
 @Singleton
-class FileUploadController @Inject()(val authConnector: AuthConnector,
+class FileUploadController @Inject()(authAction: AuthAction,
+                                     val authConnector: GmpAuthConnector,
                                      sessionService: SessionService,
-                                     attachmentsConnector: AttachmentsConnector) extends GmpController with Actions {
+                                     attachmentsConnector: AttachmentsConnector) extends GmpController {
 
-  def get = AuthorisedFor(GmpRegime, pageVisibilityPredicate).async {
-
-    implicit user =>
+  def get = authAction.async {
       implicit request =>
           attachmentsConnector.getFileUploadPartial().map {
             partial => Ok(views.html.upload_file(partial.successfulContentOrEmpty))
           }
   }
 
-  def failure() = AuthorisedFor(GmpRegime, pageVisibilityPredicate) {
-    implicit user =>
+  def failure() = authAction {
       implicit request =>
         request.getQueryString("error_message") match {
           case Some(x) if x.toUpperCase.contains("VIRUS") => Ok(views.html.failure(Messages("gmp.bulk.failure.antivirus"),Messages("gmp.bulk.problem.header"),Messages("gmp.bulk_failure_antivirus.title")))

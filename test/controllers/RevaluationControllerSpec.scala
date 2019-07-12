@@ -33,7 +33,7 @@ import scala.concurrent.Future
 
 class RevaluationControllerSpec extends PlaySpec with OneServerPerSuite with MockitoSugar with GmpUsers {
 
-  val mockAuthConnector = mock[AuthConnector]
+  val mockAuthConnector = mock[GmpAuthConnector]
   val mockSessionService = mock[SessionService]
 
   val baseValidDate = GmpDate(day = Some("31"), month = Some("1"), year = Some("2015"))

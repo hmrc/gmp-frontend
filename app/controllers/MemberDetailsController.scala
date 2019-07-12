@@ -17,21 +17,19 @@
 package controllers
 
 import com.google.inject.{Inject, Singleton}
-import config.GmpFrontendAuthConnector
-import controllers.auth.GmpRegime
+import controllers.auth.{AuthAction, GmpAuthConnector}
 import forms.MemberDetailsForm._
+import play.api.Logger
 import play.api.Play.current
 import play.api.i18n.Messages.Implicits._
-import play.api.Logger
-import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
 
 import scala.concurrent.Future
 
 @Singleton
-class MemberDetailsController @Inject()(override val authConnector: AuthConnector) extends GmpPageFlow(authConnector) {
+class MemberDetailsController @Inject()(authAction: AuthAction,
+                                        override val authConnector: GmpAuthConnector) extends GmpPageFlow(authConnector) {
 
-  def get = AuthorisedFor(GmpRegime, pageVisibilityPredicate).async {
-    implicit user =>
+  def get = authAction.async {
       implicit request => {
         sessionService.fetchMemberDetails() map {
           case Some(memberDetails) => Ok(views.html.member_details(form.fill(memberDetails)))
@@ -40,8 +38,7 @@ class MemberDetailsController @Inject()(override val authConnector: AuthConnecto
       }
   }
 
-  def post = AuthorisedFor(GmpRegime, pageVisibilityPredicate).async {
-    implicit user =>
+  def post = authAction.async {
       implicit request => {
 
         Logger.debug(s"[MemberDetailsController][POST] : ${request.body}")
@@ -60,9 +57,7 @@ class MemberDetailsController @Inject()(override val authConnector: AuthConnecto
       }
   }
 
-  def back = AuthorisedFor(GmpRegime, pageVisibilityPredicate).async {
-
-    implicit user =>
+  def back = authAction.async {
       implicit request => {
         sessionService.fetchGmpSession() map {
           case Some(session) => previousPage("MemberDetailsController", session)

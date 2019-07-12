@@ -41,7 +41,7 @@ class ApplicationControllerSpec extends PlaySpec
   with MockitoSugar
   with GmpUsers {
 
-  override implicit val mockAuthConnector: AuthConnector = mock[AuthConnector]
+  override implicit val mockAuthConnector: AuthConnector = mock[GmpAuthConnector]
   val mockAuditConnector: AuditConnector = mock[AuditConnector]
   val mockUUIDGenerator = mock[UUIDGenerator]
 

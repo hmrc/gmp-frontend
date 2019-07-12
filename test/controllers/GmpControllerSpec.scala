@@ -26,7 +26,7 @@ import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
 
 class GmpControllerSpec extends PlaySpec with OneServerPerSuite with MockitoSugar {
 
-  val mockAuthConnector = mock[AuthConnector]
+  val mockAuthConnector = mock[GmpAuthConnector]
   val mockSessionService = mock[SessionService]
 
   object TestGmpController extends GmpPageFlow(mockAuthConnector) {

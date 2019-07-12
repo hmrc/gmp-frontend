@@ -43,7 +43,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.logging.SessionId
 
 class BulkRequestReceivedControllerSpec extends PlaySpec with OneServerPerSuite with MockitoSugar with GmpUsers {
-  val mockAuthConnector = mock[AuthConnector]
+  val mockAuthConnector = mock[GmpAuthConnector]
   val mockSessionService = mock[SessionService]
   val mockBulkRequestCreationService = mock[BulkRequestCreationService]
   val mockGmpBulkConnector = mock[GmpBulkConnector]

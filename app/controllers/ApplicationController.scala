@@ -17,7 +17,7 @@
 package controllers
 
 import com.google.inject.{Inject, Singleton}
-import controllers.auth.{ExternalUrls, GmpRegime, UUIDGenerator}
+import controllers.auth.{AuthAction, ExternalUrls, GmpAuthConnector, GmpRegime, UUIDGenerator}
 import play.api.Play.current
 import play.api.i18n.Messages.Implicits._
 import play.api.mvc.{Action, AnyContent}
@@ -26,9 +26,10 @@ import uk.gov.hmrc.play.audit.model.DataEvent
 import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
 
 @Singleton
-class ApplicationController @Inject()(auditConnector: AuditConnector,
-                                       val authConnector: AuthConnector,
-                                       uuidGenerator: UUIDGenerator) extends GmpController {
+class ApplicationController @Inject()(authAction: AuthAction,
+                                      auditConnector: AuditConnector,
+                                      val authConnector: GmpAuthConnector,
+                                      uuidGenerator: UUIDGenerator) extends GmpController {
   
   def unauthorised: Action[AnyContent] = Action {
     implicit request =>
@@ -36,8 +37,7 @@ class ApplicationController @Inject()(auditConnector: AuditConnector,
   }
 
 
-  def signout: Action[AnyContent] = AuthorisedFor(GmpRegime, pageVisibilityPredicate) {
-    implicit user =>
+  def signout: Action[AnyContent] = authAction {
       implicit request =>
         val uuid: String = uuidGenerator.generate
         val auditData = Map("feedbackId" -> uuid)

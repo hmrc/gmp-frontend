@@ -54,7 +54,7 @@
 //
 //    "the user is authorised with psa " must {
 //      "create an authenticated link for psa" in {
-//        val mockAuthConnector = mock[AuthConnector]
+//        val mockAuthConnector = mock[GmpAuthConnector]
 //
 //        when(mockAuthConnector.authorise[Unit](any(),any())(any(), any()))
 //          .thenReturn(Future.successful(()))
