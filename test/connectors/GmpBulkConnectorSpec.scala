@@ -23,17 +23,18 @@ import models._
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfter
-import org.scalatest.mock.MockitoSugar
+import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
+import play.api.Environment
 import play.api.libs.json.Json
 import play.api.test.Helpers._
 import uk.gov.hmrc.domain.PsaId
+import uk.gov.hmrc.http.logging.SessionId
+import uk.gov.hmrc.http._
 import uk.gov.hmrc.play.frontend.auth.AuthContext
 import uk.gov.hmrc.play.frontend.auth.connectors.domain._
-import uk.gov.hmrc.play.http._
+
 import scala.concurrent.Future
-import uk.gov.hmrc.http.{ HeaderCarrier, HttpGet, HttpPost, HttpResponse, Upstream4xxResponse, Upstream5xxResponse }
-import uk.gov.hmrc.http.logging.SessionId
 
 class GmpBulkConnectorSpec extends PlaySpec with OneServerPerSuite with MockitoSugar with BeforeAndAfter {
 
@@ -42,10 +43,7 @@ class GmpBulkConnectorSpec extends PlaySpec with OneServerPerSuite with MockitoS
   val link = "some-link"
   val psaId = "B1234567"
 
-  object testGmpBulkConnector extends GmpBulkConnector {
-    override val httpPost: HttpPost = mockHttpPost
-    override val httpGet: HttpGet = mockHttpGet
-  }
+  object testGmpBulkConnector extends GmpBulkConnector(app.injector.instanceOf[Environment], app.configuration, mockHttpGet, mockHttpPost)
 
   "The GMP Bulk Connector" must {
 

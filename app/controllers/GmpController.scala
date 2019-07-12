@@ -18,9 +18,10 @@ package controllers
 
 
 import com.google.inject.Inject
-import config.GmpContextImpl
+import config.GmpContext
 import metrics.Metrics
 import models.{CalculationType, GmpSession, Leaving}
+import play.api.Play
 import play.api.mvc.Result
 import services.SessionService
 import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
@@ -35,7 +36,7 @@ trait GmpController extends FrontendController with Actions{
   val pageVisibilityPredicate = new IdentityConfidencePredicate(ConfidenceLevel.L50, Future.successful(Forbidden))
   val sessionService: SessionService = new SessionService(Metrics)
 
-  implicit val context: config.GmpContext = GmpContextImpl
+  implicit val context: config.GmpContext = Play.current.injector.instanceOf[GmpContext]
 }
 
 object PageType {

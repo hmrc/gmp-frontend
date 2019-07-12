@@ -21,7 +21,7 @@ import models.{BulkCalculationRequest, BulkCalculationRequestLine, CalculationRe
 import org.joda.time.LocalDate
 import org.joda.time.format.DateTimeFormat
 import play.api.Mode.Mode
-import play.api.{Configuration, Logger, Play}
+import play.api.{Configuration, Environment, Logger, Play}
 import play.api.i18n.Messages
 import uk.gov.hmrc.play.config.ServicesConfig
 import uk.gov.hmrc.stream.BulkEntityProcessor
@@ -50,11 +50,11 @@ object BulkRequestCsvColumn {
 
 class DataLimitExceededException extends Throwable
 
-class BulkRequestCreationService extends BulkEntityProcessor[BulkCalculationRequestLine] with ServicesConfig {
+class BulkRequestCreationService @Inject()( environment: Environment,
+                                            val runModeConfiguration: Configuration
+                                          ) extends BulkEntityProcessor[BulkCalculationRequestLine] with ServicesConfig {
 
-  override protected def mode: Mode = Play.current.mode
-
-  override protected def runModeConfiguration: Configuration = Play.current.configuration
+  override protected def mode: Mode = environment.mode
 
   private class LimitingEnumerator(limit: Int, delimiter: Char, iterator: Iterator[Char]) extends Iterator[Char] {
 

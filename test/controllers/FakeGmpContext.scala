@@ -17,14 +17,16 @@
 package controllers
 
 import config.GmpContext
-import org.scalatest.mock.MockitoSugar._
+import connectors.ContactFrontendConnector
+import org.scalatest.mockito.MockitoSugar._
 import org.mockito.Matchers._
 import org.mockito.Mockito.when
+import play.api.Play
 
 import scala.concurrent.Future
 import uk.gov.hmrc.http.HeaderCarrier
 
-object FakeGmpContext {
+object FakeGmpContext extends GmpContext(Play.current.injector.instanceOf[ContactFrontendConnector]){
 
   def apply() = {
     val m = mock[GmpContext]

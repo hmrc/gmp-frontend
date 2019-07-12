@@ -25,18 +25,18 @@ import models._
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfter
-import org.scalatest.mock.MockitoSugar
+import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
+import play.api.Environment
 import play.api.libs.json.{JsValue, Json}
 import play.api.test.Helpers._
 import uk.gov.hmrc.domain.PsaId
+import uk.gov.hmrc.http.logging.SessionId
+import uk.gov.hmrc.http._
 import uk.gov.hmrc.play.frontend.auth.AuthContext
 import uk.gov.hmrc.play.frontend.auth.connectors.domain._
-import uk.gov.hmrc.play.http._
 
 import scala.concurrent.Future
-import uk.gov.hmrc.http.{ HeaderCarrier, HttpGet, HttpPost, HttpPut, Upstream5xxResponse }
-import uk.gov.hmrc.http.logging.SessionId
 
 
 class GmpConnectorSpec extends PlaySpec with OneServerPerSuite with MockitoSugar with BeforeAndAfter {
@@ -52,15 +52,15 @@ class GmpConnectorSpec extends PlaySpec with OneServerPerSuite with MockitoSugar
   val mockHttpPost = mock[HttpPost]
   val mockHttpGet = mock[HttpGet]
   val mockHttpPut = mock[HttpPut]
-  val mockApplicationConfig = mock[ApplicationConfig]
 
-  object TestGmpConnector extends GmpConnector {
-    override val httpPost: HttpPost = mockHttpPost
-    override val httpGet: HttpGet = mockHttpGet
-    override val httpPut: HttpPut = mockHttpPut
-    override val applicationConfig: ApplicationConfig = mockApplicationConfig
-    override def metrics = Metrics
-  }
+  object TestGmpConnector extends GmpConnector(
+    app.injector.instanceOf[Environment],
+    app.configuration,
+    Metrics,
+    mockHttpPost,
+    mockHttpGet,
+    mockHttpPut
+  )
 
   before {
     reset(mockHttpPost)

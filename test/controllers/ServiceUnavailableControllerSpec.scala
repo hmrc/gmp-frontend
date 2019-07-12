@@ -25,8 +25,8 @@ import play.api.i18n.Messages.Implicits._
 
 class ServiceUnavailableControllerSpec extends PlaySpec with OneServerPerSuite with MockitoSugar {
 
-  object TestController extends ServiceUnavailableController {
-    override val context = FakeGmpContext()
+  object TestController extends ServiceUnavailableController(FakeGmpContext) {
+    override implicit val context = FakeGmpContext()
   }
 
   "Service unavailable controller" must {

@@ -16,13 +16,12 @@
 
 package config
 
-import connectors.{AttachmentsConnector, GmpBulkConnector, GmpConnector}
-import controllers.FileUploadController
+import connectors.{GmpBulkConnector, GmpConnector}
 import controllers.auth.UUIDGenerator
 import metrics.Metrics
-import play.api.{Configuration, Environment}
 import play.api.inject.{Binding, Module}
-import services.{BulkRequestCreationService, SessionService}
+import play.api.{Configuration, Environment}
+import uk.gov.hmrc.http.{HttpGet, HttpPost, HttpPut}
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
 
@@ -31,9 +30,9 @@ class GmpModule extends Module{
     bind[AuditConnector].to(GmpFrontendAuditConnector),
     bind[AuthConnector].to(GmpFrontendAuthConnector),
     bind[UUIDGenerator].to(UUIDGenerator),
-    bind[GmpBulkConnector].to(GmpBulkConnector),
-    bind[AttachmentsConnector].to(AttachmentsConnector),
     bind[Metrics].to(Metrics),
-    bind[GmpConnector].to(GmpConnector)
+    bind[HttpGet].to(WSHttp),
+    bind[HttpPost].to(WSHttp),
+    bind[HttpPut].to(WSHttp)
   )
 }

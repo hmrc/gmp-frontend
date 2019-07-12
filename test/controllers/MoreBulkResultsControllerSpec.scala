@@ -21,7 +21,7 @@ import models._
 import org.joda.time.{LocalDateTime, LocalDate}
 import org.mockito.Matchers
 import org.mockito.Mockito._
-import org.scalatest.mock.MockitoSugar
+import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
 import play.api.i18n.Messages
 import play.api.mvc.{AnyContentAsEmpty, Result}

@@ -27,7 +27,6 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import uk.gov.hmrc.http.HeaderCarrier
 
-@Singleton
 class SessionService @Inject()(metrics: Metrics) extends SessionCacheWiring {
 
   val GMP_SESSION_KEY = "gmp_session"
