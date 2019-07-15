@@ -18,7 +18,7 @@ package controllers
 
 import com.google.inject.{Inject, Singleton}
 import connectors.AttachmentsConnector
-import controllers.auth.{AuthAction, GmpAuthConnector, GmpRegime}
+import controllers.auth.{AuthAction, GmpAuthConnector}
 import models.{CallBackData, GmpBulkSession}
 import play.api.Play.current
 import play.api.i18n.Messages
@@ -26,8 +26,6 @@ import play.api.i18n.Messages.Implicits._
 import play.api.mvc.Action
 import services.SessionService
 import uk.gov.hmrc.http.logging.SessionId
-import uk.gov.hmrc.play.frontend.auth.Actions
-import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
 
 @Singleton
 class FileUploadController @Inject()(authAction: AuthAction,

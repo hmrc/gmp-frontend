@@ -47,7 +47,7 @@ class DashboardControllerSpec extends PlaySpec with OneServerPerSuite with Mocki
 
   object TestDashboardController extends DashboardController(mockAuthAction, mockAuthConnector, mockGmpBulkConnector) {
     override val sessionService = mockSessionService
-    override val context = FakeGmpContext()
+    override val context = FakeGmpContext
   }
 
   "DashboardController" must {
@@ -132,7 +132,7 @@ class DashboardControllerSpec extends PlaySpec with OneServerPerSuite with Mocki
 
         object BrokenDashboardController extends DashboardController(mockAuthAction, mockAuthConnector, brokenGmpBulkConnector) {
           override val sessionService = mockSessionService
-          override val context = FakeGmpContext()
+          override val context = FakeGmpContext
         }
 
         when(brokenGmpBulkConnector.getPreviousBulkRequests(link)(Matchers.any())).thenReturn(Future.failed(new Upstream5xxResponse("failed",503,503)))

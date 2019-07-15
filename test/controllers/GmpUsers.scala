@@ -18,58 +18,45 @@ package controllers
 
 import java.util.UUID
 
-import org.mockito.Matchers
-import org.mockito.Mockito._
+import controllers.auth.AuthenticatedRequest
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
-import uk.gov.hmrc.domain.PsaId
-import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
-import uk.gov.hmrc.play.frontend.auth.connectors.domain._
-
-import scala.concurrent.Future
 import uk.gov.hmrc.http.SessionKeys
 
 trait GmpUsers {
 
-  implicit val mockAuthConnector: AuthConnector
 
   def withAuthorisedUser(test: FakeRequest[AnyContentAsEmpty.type] => Any) {
     val userId = s"user-${UUID.randomUUID}"
-    when(mockAuthConnector.currentAuthority(Matchers.any(), Matchers.any())) thenReturn {
-      Future.successful(Some(Authority(userId, Accounts(psa = Some(PsaAccount("gmp/B1234567", PsaId("B1234567")))), None, None, CredentialStrength.None, ConfidenceLevel.L50, None, None, None, "")))
-    }
+
     val sessionId = s"session-${UUID.randomUUID}"
     lazy val request = FakeRequest().withSession(
       SessionKeys.sessionId -> sessionId,
       SessionKeys.token -> "RANDOMTOKEN",
       SessionKeys.userId -> userId)
-    test(request)
+    AuthenticatedRequest("gmp/B1234567", request)
   }
 
   def withAuthorisedUserAndPath(test: FakeRequest[AnyContentAsEmpty.type] => Any, method: String, path: String) {
     val userId = s"user-${UUID.randomUUID}"
-    when(mockAuthConnector.currentAuthority(Matchers.any(), Matchers.any())) thenReturn {
-      Future.successful(Some(Authority(userId, Accounts(psa = Some(PsaAccount("gmp/B1234567", PsaId("B1234567")))), None, None, CredentialStrength.None, ConfidenceLevel.L50, None, None, None, "")))
-    }
+
     val sessionId = s"session-${UUID.randomUUID}"
     lazy val request = FakeRequest(method, path).withSession(
       SessionKeys.sessionId -> sessionId,
       SessionKeys.token -> "RANDOMTOKEN",
       SessionKeys.userId -> userId)
-    test(request)
+    AuthenticatedRequest("gmp/B1234567", request)
   }
 
   def withAuthorisedUserLowConfidenceLevel(test: FakeRequest[AnyContentAsEmpty.type] => Any) {
     val userId = s"user-${UUID.randomUUID}"
-    when(mockAuthConnector.currentAuthority(Matchers.any(), Matchers.any())) thenReturn {
-      Future.successful(Some(Authority(userId, Accounts(psa = Some(PsaAccount("gmp/B1234567", PsaId("B1234567")))), None, None, CredentialStrength.None,  ConfidenceLevel.L0, None, None, None, "")))
-    }
+
     val sessionId = s"session-${UUID.randomUUID}"
     lazy val request = FakeRequest().withSession(
       SessionKeys.sessionId -> sessionId,
       SessionKeys.token -> "RANDOMTOKEN",
       SessionKeys.userId -> userId)
-    test(request)
+    AuthenticatedRequest("gmp/B1234567", request)
   }
 
 }

@@ -17,8 +17,8 @@
 package controllers.auth
 
 import play.api.Mode.Mode
-import play.api.{Configuration, Play}
 import play.api.Play.current
+import play.api.{Configuration, Play}
 import uk.gov.hmrc.play.config.RunMode
 
 object ExternalUrls extends RunMode {

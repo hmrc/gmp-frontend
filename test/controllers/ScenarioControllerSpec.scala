@@ -42,7 +42,7 @@ class ScenarioControllerSpec extends PlaySpec with OneServerPerSuite with Mockit
 
   object TestScenarioController extends ScenarioController(mockAuthAction, mockAuthConnector) {
     override val sessionService = mockSessionService
-    override val context = FakeGmpContext()
+    override val context = FakeGmpContext
   }
 
   private val nino: String = RandomNino.generate

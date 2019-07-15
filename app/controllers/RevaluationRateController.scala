@@ -18,13 +18,12 @@ package controllers
 
 
 import com.google.inject.{Inject, Singleton}
-import controllers.auth.{AuthAction, GmpAuthConnector, GmpRegime}
+import controllers.auth.{AuthAction, GmpAuthConnector}
 import forms.RevaluationRateForm._
 import play.api.Logger
 import play.api.Play.current
 import play.api.i18n.Messages
 import play.api.i18n.Messages.Implicits._
-import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
 
 
 @Singleton

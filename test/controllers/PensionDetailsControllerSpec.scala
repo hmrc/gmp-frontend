@@ -55,7 +55,7 @@ class PensionDetailsControllerSpec extends PlaySpec with OneServerPerSuite with 
 
   object TestPensionDetailsController extends PensionDetailsController(mockAuthAction, mockAuthConnector, mockGmpConnector, Metrics) {
     override val sessionService = mockSessionService
-    override val context = FakeGmpContext()
+    override val context = FakeGmpContext
   }
 
   "Pension details controller" must {

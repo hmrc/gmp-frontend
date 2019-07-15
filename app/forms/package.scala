@@ -15,11 +15,7 @@
  */
 
 import models.GmpDate
-import play.api.data.validation.{Valid, ValidationError, Invalid, Constraint}
-import play.api.i18n.Messages
 import validation.DateValidate
-
-import scala.util.matching.Regex
 
 package object forms {
 

@@ -40,7 +40,7 @@ class InflationProofControllerSpec extends PlaySpec with OneServerPerSuite with 
 
   object TestInflationProofController extends InflationProofController(mockAuthAction, mockAuthConnector) {
     override val sessionService = mockSessionService
-    override val context = FakeGmpContext()
+    override val context = FakeGmpContext
   }
 
   "InflationProofController" must {

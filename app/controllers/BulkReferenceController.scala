@@ -17,11 +17,10 @@
 package controllers
 
 import com.google.inject.{Inject, Singleton}
-import controllers.auth.{AuthAction, GmpAuthConnector, GmpRegime}
+import controllers.auth.{AuthAction, GmpAuthConnector}
 import forms.BulkReferenceForm
 import play.api.Logger
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
-import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
 
 import scala.concurrent.Future
 

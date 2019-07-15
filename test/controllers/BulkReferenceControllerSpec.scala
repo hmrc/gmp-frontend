@@ -54,7 +54,7 @@ class BulkReferenceControllerSpec extends PlaySpec with OneServerPerSuite with M
 
   object TestBulkReferenceController extends BulkReferenceController(mock[AuthAction],mockAuthConnector, mockAuditConnector) {
     override val sessionService = mockSessionService
-    override val context = FakeGmpContext()
+    override val context = FakeGmpContext
   }
 
   "BulkRerefenceController" must {

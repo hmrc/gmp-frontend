@@ -44,7 +44,7 @@ class BulkResultsControllerSpec extends PlaySpec with OneServerPerSuite with Moc
   implicit val hc = new HeaderCarrier(sessionId = Some(SessionId(s"session-${UUID.randomUUID}")))
 
   object TestBulkResultsController extends BulkResultsController(mock[AuthAction],mockAuthConnector, mockGmpBulkConnector) {
-    override val context = FakeGmpContext()
+    override val context = FakeGmpContext
   }
 
   "Bulk Results Controller" must {

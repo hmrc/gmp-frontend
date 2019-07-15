@@ -16,14 +16,12 @@
 
 package config
 
-import connectors.{GmpBulkConnector, GmpConnector}
 import controllers.auth.UUIDGenerator
 import metrics.Metrics
 import play.api.inject.{Binding, Module}
 import play.api.{Configuration, Environment}
 import uk.gov.hmrc.http.{HttpGet, HttpPost, HttpPut}
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
-import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
 
 class GmpModule extends Module{
   override def bindings(environment: Environment, configuration: Configuration): Seq[Binding[_]] = Seq(
@@ -32,6 +30,7 @@ class GmpModule extends Module{
     bind[Metrics].to(Metrics),
     bind[HttpGet].to(WSHttp),
     bind[HttpPost].to(WSHttp),
-    bind[HttpPut].to(WSHttp)
+    bind[HttpPut].to(WSHttp),
+    bind[WSHttp].to(WSHttp)
   )
 }

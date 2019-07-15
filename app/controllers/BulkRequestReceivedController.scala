@@ -18,13 +18,12 @@ package controllers
 
 import com.google.inject.{Inject, Singleton}
 import connectors.GmpBulkConnector
-import controllers.auth.{AuthAction, GmpAuthConnector, GmpRegime}
+import controllers.auth.{AuthAction, GmpAuthConnector}
 import play.api.Logger
-import play.api.i18n.Messages
-import services.{BulkRequestCreationService, DataLimitExceededException, SessionService}
-import play.api.i18n.Messages.Implicits._
 import play.api.Play.current
-import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
+import play.api.i18n.Messages
+import play.api.i18n.Messages.Implicits._
+import services.{BulkRequestCreationService, DataLimitExceededException, SessionService}
 
 import scala.concurrent.Future
 

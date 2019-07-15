@@ -25,9 +25,8 @@ import models.{CalculationType, GmpSession, Leaving}
 import play.api.Play
 import play.api.mvc.Result
 import services.SessionService
-import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
+import uk.gov.hmrc.play.frontend.auth.IdentityConfidencePredicate
 import uk.gov.hmrc.play.frontend.auth.connectors.domain.ConfidenceLevel
-import uk.gov.hmrc.play.frontend.auth.{Actions, IdentityConfidencePredicate}
 import uk.gov.hmrc.play.frontend.controller.FrontendController
 import uk.gov.hmrc.time.TaxYear
 

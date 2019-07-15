@@ -42,7 +42,7 @@ class RevaluationRateControllerSpec extends PlaySpec with OneServerPerSuite with
 
   object TestRevaluationRateController extends RevaluationRateController(mockAuthAction, mockAuthConnector) {
     override val sessionService = mockSessionService
-    override val context = FakeGmpContext()
+    override val context = FakeGmpContext
   }
 
   private val nino: String = RandomNino.generate

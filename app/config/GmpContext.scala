@@ -16,15 +16,22 @@
 
 package config
 
-import com.google.inject.Inject
+import com.google.inject.{ImplementedBy, Inject}
 import connectors.ContactFrontendConnector
-
-import scala.concurrent.Future
 import uk.gov.hmrc.http.HeaderCarrier
 
+import scala.concurrent.Future
 
-class GmpContext @Inject()(contactFrontendConnector: ContactFrontendConnector) {
+
+class GmpContextImpl @Inject()(contactFrontendConnector: ContactFrontendConnector) extends GmpContext {
 
   def getPageHelpPartial()(implicit hc: HeaderCarrier): Future[String] = contactFrontendConnector.getHelpPartial
+
+}
+
+@ImplementedBy(classOf[GmpContextImpl])
+trait GmpContext {
+
+  def getPageHelpPartial()(implicit hc: HeaderCarrier): Future[String]
 
 }

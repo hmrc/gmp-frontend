@@ -22,14 +22,13 @@ import play.api.Mode.Mode
 import play.api.{Configuration, Play}
 import uk.gov.hmrc.http._
 import uk.gov.hmrc.http.cache.client.SessionCache
-import uk.gov.hmrc.http.hooks.{HttpHook, HttpHooks}
+import uk.gov.hmrc.http.hooks.HttpHook
 import uk.gov.hmrc.play.audit.http.HttpAuditing
 import uk.gov.hmrc.play.audit.http.config.AuditingConfig
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.config.{AppName, RunMode, ServicesConfig}
-import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
-import uk.gov.hmrc.play.http.ws._
 import uk.gov.hmrc.play.frontend.config.LoadAuditingConfig
+import uk.gov.hmrc.play.http.ws._
 
 object GmpFrontendAuditConnector extends AuditConnector with AppName with RunMode {
   lazy val auditingConfig: AuditingConfig = LoadAuditingConfig(s"auditing")

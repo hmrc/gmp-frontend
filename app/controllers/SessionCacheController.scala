@@ -17,9 +17,8 @@
 package controllers
 
 import com.google.inject.{Inject, Singleton}
-import controllers.auth.{AuthAction, GmpAuthConnector, GmpRegime}
+import controllers.auth.{AuthAction, GmpAuthConnector}
 import play.api.Logger
-import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
 
 @Singleton
 class SessionCacheController @Inject()(authAction: AuthAction,

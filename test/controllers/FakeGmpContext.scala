@@ -26,14 +26,7 @@ import play.api.Play
 import scala.concurrent.Future
 import uk.gov.hmrc.http.HeaderCarrier
 
-object FakeGmpContext extends GmpContext(Play.current.injector.instanceOf[ContactFrontendConnector]){
+object FakeGmpContext extends GmpContext {
 
-  def apply() = {
-    val m = mock[GmpContext]
-
-    when(m.getPageHelpPartial()(any[HeaderCarrier])) thenReturn Future.successful("<div id=\"help_partial\"></div>")
-
-    m
-  }
-
+  override def getPageHelpPartial()(implicit hc: HeaderCarrier): Future[String] = Future.successful("<div id=\"help_partial\"></div>")
 }

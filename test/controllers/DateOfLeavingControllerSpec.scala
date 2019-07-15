@@ -45,7 +45,7 @@ class DateOfLeavingControllerSpec extends PlaySpec with OneServerPerSuite with M
   val baseValidDate = GmpDate(day = Some("31"), month = Some("1"), year = Some("2015"))
 
   object TestDateOfLeavingController extends DateOfLeavingController(mockAuthAction, mockAuthConnector, mockSessionService) {
-    override val context = FakeGmpContext()
+    override val context = FakeGmpContext
   }
 
   val nino = RandomNino.generate

@@ -18,11 +18,11 @@ package controllers.auth
 
 import com.google.inject.{ImplementedBy, Inject}
 import config.WSHttp
-import play.api.{Configuration, Environment, Play}
 import play.api.Mode.Mode
 import play.api.mvc._
-import uk.gov.hmrc.auth.core.{AuthConnector, AuthorisedFunctions, ConfidenceLevel, Enrolment, Enrolments, PlayAuthConnector}
+import play.api.{Configuration, Environment}
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
+import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.HeaderCarrierConverter
 import uk.gov.hmrc.play.config.ServicesConfig
@@ -44,6 +44,7 @@ class AuthActionImpl @Inject()(val authConnector: GmpAuthConnector, configuratio
 
           val psaid = enrolments.find(_.key == "HMRC-PSA-ORG").flatMap {
             enrolment =>
+              println(enrolment)
               enrolment.identifiers.find(id => id.key == "PSAID").map(_.value)
           }
           val ppid = enrolments.find(_.key == "HMRC-PP-ORG").flatMap {
@@ -61,13 +62,13 @@ class AuthActionImpl @Inject()(val authConnector: GmpAuthConnector, configuratio
         }
         case _ => throw new RuntimeException("Can't find credentials for user")
       }
-  } //recover {
-//    case ex: NoActiveSession => Redirect(configuration.getString("auth-sign-in").get)
+  } recover {
+    case ex: NoActiveSession => Results.Redirect(configuration.getString("gg-urls.login_path").get)
 //
 //    case ex: InsufficientEnrolments => Redirect(FrontendAppConfig.saUrl)
 //
 //    case ex: InsufficientConfidenceLevel => Redirect(FrontendAppConfig.saUrl)
-//  }
+  }
 }
 
 @ImplementedBy(classOf[AuthActionImpl])

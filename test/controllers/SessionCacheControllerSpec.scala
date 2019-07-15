@@ -37,7 +37,7 @@ class SessionCacheControllerSpec extends PlaySpec with OneServerPerSuite with Mo
 
   object TestSessionCacheController extends SessionCacheController(mockAuthAction, mockAuthConnector) {
     override val sessionService = mockSessionService
-    override val context = FakeGmpContext()
+    override val context = FakeGmpContext
   }
 
   "SessionCacheController" must {

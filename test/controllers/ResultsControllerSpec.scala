@@ -57,7 +57,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
   implicit val hc = new HeaderCarrier(sessionId = Some(SessionId(s"session-${UUID.randomUUID}")))
 
   object TestResultsController extends ResultsController(mockAuthAction, mockAuthConnector, mockSessionService, mockCalculationConnector, mockAuditConnector, Metrics) {
-    override val context = FakeGmpContext()
+    override val context = FakeGmpContext
 
     override def resultsView(response: CalculationResponse, subheader: Option[String], revalSubheader: Option[String])(implicit request: Request[_], context: config.GmpContext): HtmlFormat.Appendable = {
       views.html.results(applicationConfig = mockApplicationConfig, response, subheader, revalSubheader)
@@ -238,11 +238,6 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
   val survivor63167CalculationResponse = CalculationResponse("John Johnson", nino, "S1234567T", None, None, List(), 0, None, None, None, false, 3)
 
   "ResultsController" must {
-
-    "respond to GET /guaranteed-minimum-pension/results" in {
-      val result = route(FakeRequest(GET, "/guaranteed-minimum-pension/results"))
-      status(result.get) must not equal (NOT_FOUND)
-    }
 
     "GET" must {
 

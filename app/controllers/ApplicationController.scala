@@ -17,13 +17,12 @@
 package controllers
 
 import com.google.inject.{Inject, Singleton}
-import controllers.auth.{AuthAction, ExternalUrls, GmpAuthConnector, GmpRegime, UUIDGenerator}
+import controllers.auth.{AuthAction, ExternalUrls, GmpAuthConnector, UUIDGenerator}
 import play.api.Play.current
 import play.api.i18n.Messages.Implicits._
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.audit.model.DataEvent
-import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
 
 @Singleton
 class ApplicationController @Inject()(authAction: AuthAction,

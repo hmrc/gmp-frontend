@@ -19,14 +19,14 @@ package connectors
 import java.net.URLEncoder
 
 import com.google.inject.Inject
-import config.{ApplicationConfig, WSHttp}
+import config.ApplicationConfig
 import controllers.routes
 import play.api.Mode.Mode
 import play.api.Play.current
 import play.api.i18n.Messages
 import play.api.i18n.Messages.Implicits._
 import play.api.mvc.Request
-import play.api.{Configuration, Environment, Logger, Play}
+import play.api.{Configuration, Environment, Logger}
 import uk.gov.hmrc.crypto.ApplicationCrypto
 import uk.gov.hmrc.http.HttpGet
 import uk.gov.hmrc.play.config.ServicesConfig

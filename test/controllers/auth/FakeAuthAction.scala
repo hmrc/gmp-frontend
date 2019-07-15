@@ -14,22 +14,17 @@
  * limitations under the License.
  */
 
-package models
+package controllers.auth
 
-import uk.gov.hmrc.domain.{SimpleName, TaxIdentifier}
-import validation.NinoValidate
+import play.api.mvc.{Request, Result}
 
-case class Nino(nino: String) extends TaxIdentifier with SimpleName {
-  require(NinoValidate.isValid(nino), s"$nino is not a valid nino.")
+import scala.concurrent.Future
 
-  def value = nino
+object FakeAuthAction extends AuthAction {
 
-  val name = "nino"
+  override def invokeBlock[A](request: Request[A], block: AuthenticatedRequest[A] => Future[Result]): Future[Result] = {
 
-  def formatted = value.grouped(2).mkString(" ")
+    block(AuthenticatedRequest("gmp/B1234567", request))
+  }
 }
 
-//object Nino extends (String => Nino) {
-//
-//
-//}

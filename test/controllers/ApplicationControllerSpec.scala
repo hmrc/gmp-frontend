@@ -40,13 +40,13 @@ class ApplicationControllerSpec extends PlaySpec
   with MockitoSugar
   with GmpUsers {
 
-  override implicit val mockAuthConnector: GmpAuthConnector = mock[GmpAuthConnector]
+  val mockAuthConnector: GmpAuthConnector = mock[GmpAuthConnector]
   val mockAuditConnector: AuditConnector = mock[AuditConnector]
   val mockUUIDGenerator: UUIDGenerator = mock[UUIDGenerator]
   val mockAuthAction: AuthAction = mock[AuthAction]
 
   object TestController extends ApplicationController(mockAuthAction, mockAuditConnector, mockAuthConnector, mockUUIDGenerator) {
-    override val context = FakeGmpContext()
+    override val context = FakeGmpContext
   }
 
   override def beforeEach(): Unit = {

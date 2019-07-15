@@ -23,6 +23,8 @@ import utils.GmpViewSpec
 
 class MoreBulkResultsSpec extends GmpViewSpec {
 
+  override def view: Html = views.html.more_bulk_results(bulkPreviousRequestsList)
+
   "MoreBulkResults page" must {
 
     behave like pageWithTitle(messages("gmp.more_bulk_results.header"))
@@ -41,7 +43,6 @@ class MoreBulkResultsSpec extends GmpViewSpec {
 
 
   }
-  override def view: Html = views.html.more_bulk_results(bulkPreviousRequestsList)
   private val bulkPreviousRequestsList: List[models.BulkPreviousRequest] = List(BulkPreviousRequest(uploadReference = "upload",
     reference = "fake", timestamp = LocalDateTime.now, processedDateTime = LocalDateTime.now),BulkPreviousRequest(uploadReference = "upload",
     reference = "fake", timestamp = LocalDateTime.now, processedDateTime = LocalDateTime.now),BulkPreviousRequest(uploadReference = "upload",

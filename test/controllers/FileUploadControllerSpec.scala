@@ -48,7 +48,7 @@ class FileUploadControllerSpec extends PlaySpec with OneServerPerSuite with Mock
   val fakeRequest = FakeRequest(method = "POST", uri = "", headers = FakeHeaders(Seq("Content-type" -> ("application/json"))), body = Json.toJson(gmpBulkSession.callBackData.get))
 
   object TestFileUploadController extends FileUploadController(mockAuthAction, mockAuthConnector, mockSessionService, mockAttachmentsConnector) {
-    override val context = FakeGmpContext()
+    override val context = FakeGmpContext
   }
 
   "File upload controller" must {
