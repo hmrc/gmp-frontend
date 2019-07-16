@@ -45,28 +45,7 @@ class InflationProofControllerSpec extends PlaySpec with OneServerPerSuite with 
 
   "InflationProofController" must {
 
-    "respond to GET /guaranteed-minimum-pension/inflation-proof" in {
-      val result = route(FakeRequest(GET, "/guaranteed-minimum-pension/inflation-proof"))
-      status(result.get) must not equal (NOT_FOUND)
-    }
-
-    "respond to POST /guaranteed-minimum-pension/inflation-proof" in {
-      val result = route(FakeRequest(POST, "/guaranteed-minimum-pension/inflation-proof"))
-      status(result.get) must not equal (NOT_FOUND)
-    }
-
-    "respond to GET /guaranteed-minimum-pension/inflation-proof/back" in {
-      val result = route(FakeRequest(GET, "/guaranteed-minimum-pension/inflation-proof/back"))
-      status(result.get) must not equal (NOT_FOUND)
-    }
-
     "GET" must {
-
-      "be authorised" in {
-        val result = TestInflationProofController.get.apply(FakeRequest())
-        status(result) must equal(SEE_OTHER)
-        redirectLocation(result).get must include("/gg/sign-in")
-      }
 
       "authorised users" must {
 
@@ -83,12 +62,6 @@ class InflationProofControllerSpec extends PlaySpec with OneServerPerSuite with 
     }
 
     "POST" must {
-
-      "be authorised" in {
-        val result = TestInflationProofController.post.apply(FakeRequest())
-        status(result) must equal(SEE_OTHER)
-        redirectLocation(result).get must include("/gg/sign-in")
-      }
 
       "authorised users" must {
 
@@ -158,12 +131,6 @@ class InflationProofControllerSpec extends PlaySpec with OneServerPerSuite with 
     }
 
     "back" must {
-
-      "be authorised" in {
-        val result = TestInflationProofController.back.apply(FakeRequest())
-        status(result) must equal(SEE_OTHER)
-        redirectLocation(result).get must include("/gg/sign-in")
-      }
 
       "throw an exception when session not fetched" in {
 

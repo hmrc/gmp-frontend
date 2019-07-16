@@ -51,18 +51,6 @@ class ScenarioControllerSpec extends PlaySpec with OneServerPerSuite with Mockit
 
   "ScenarioController GET" must {
 
-    "respond to GET /guaranteed-minimum-pension/calculation-reason" in {
-      val result = route(FakeRequest(GET, "/guaranteed-minimum-pension/calculation-reason"))
-      status(result.get) must not equal (NOT_FOUND)
-    }
-
-    "be authorised" in {
-      getCalculationReason() { result =>
-        status(result) must equal(SEE_OTHER)
-        redirectLocation(result).get must include("/gg/sign-in")
-      }
-    }
-
     "respond with ok" in {
       when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
       withAuthorisedUser { user =>
@@ -127,17 +115,6 @@ class ScenarioControllerSpec extends PlaySpec with OneServerPerSuite with Mockit
 
   "ScenarioController back" must {
 
-    "respond to GET guaranteed-minimum-pension/calculation-reason/back" in {
-      val result = route(FakeRequest(GET, "/guaranteed-minimum-pension/calculation-reason/back"))
-      status(result.get) must not equal (NOT_FOUND)
-    }
-
-    "be authorised" in {
-      val result = TestScenarioController.back.apply(FakeRequest())
-      status(result) must equal(SEE_OTHER)
-      redirectLocation(result).get must include("/gg/sign-in")
-    }
-
     "redirect when authorised" in {
       val memberDetails = MemberDetails("", "", "")
       val session = GmpSession(memberDetails, "", "", None, None, Leaving(GmpDate(None, None, None), None), None)
@@ -164,13 +141,6 @@ class ScenarioControllerSpec extends PlaySpec with OneServerPerSuite with Mockit
   }
 
   "ScenarioController POST" must {
-
-    "be authorised" in {
-      postCalculationReason() { result =>
-        status(result) must equal(SEE_OTHER)
-        redirectLocation(result).get must include("/gg/sign-in")
-      }
-    }
 
     "respond with bad request must choose option" in {
       withAuthorisedUser {

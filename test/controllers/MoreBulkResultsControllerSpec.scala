@@ -40,33 +40,17 @@ class MoreBulkResultsControllerSpec extends PlaySpec with OneServerPerSuite with
   val mockSessionService = mock[SessionService]
   val mockGmpBulkConnector = mock[GmpBulkConnector]
   val mockAuthAction = mock[AuthAction]
-  val link = "some-link"
 
   object TestMoreBulkResultsController extends MoreBulkResultsController(mockAuthAction, mockAuthConnector, mockGmpBulkConnector) {
     override val sessionService = mockSessionService
     override val context = FakeGmpContext
   }
 
-  "MoreBulkResultsController" must {
-
-    "respond to GET /guaranteed-minimum-pension/more-bulk-results" in {
-      val result = route(FakeRequest(GET, "/guaranteed-minimum-pension/more-bulk-results"))
-      status(result.get) must not equal (NOT_FOUND)
-    }
-  }
-
   val recentBulkCalculations = List(new BulkPreviousRequest("1234","abcd",LocalDateTime.now(),LocalDateTime.now()), new BulkPreviousRequest("5678","efgh", LocalDateTime.now(),LocalDateTime.now()))
 
-  when(mockGmpBulkConnector.getPreviousBulkRequests(link)(Matchers.any())).thenReturn(Future.successful(recentBulkCalculations))
+  when(mockGmpBulkConnector.getPreviousBulkRequests(Matchers.any())(Matchers.any())).thenReturn(Future.successful(recentBulkCalculations))
 
   "more bulk results GET " must {
-
-    "be authorised" in {
-      getMoreBulkResults() { result =>
-        status(result) must equal(SEE_OTHER)
-        redirectLocation(result).get must include("/gg/sign-in")
-      }
-    }
 
     "authenticated users" must {
 

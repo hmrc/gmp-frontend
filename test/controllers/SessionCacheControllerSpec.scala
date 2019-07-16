@@ -40,21 +40,7 @@ class SessionCacheControllerSpec extends PlaySpec with OneServerPerSuite with Mo
     override val context = FakeGmpContext
   }
 
-  "SessionCacheController" must {
-
-    "respond to GET /guaranteed-minimum-pension/new-calculation" in {
-      val result = route(FakeRequest(GET, "/guaranteed-minimum-pension/new-calculation"))
-      status(result.get) must not equal (NOT_FOUND)
-    }
-  }
-
   "new-calculation" must {
-
-    "be an authorised route" in {
-      val result = TestSessionCacheController.newCalculation.apply(FakeRequest())
-      status(result) must equal(SEE_OTHER)
-      redirectLocation(result).get must include("/gg/sign-in")
-    }
 
     "reset the cached calculation parameters except for scon" in {
       withAuthorisedUser { request =>
@@ -84,12 +70,6 @@ class SessionCacheControllerSpec extends PlaySpec with OneServerPerSuite with Mo
   }
 
   "new-bulk-calculation" must {
-
-    "be an authorised route" in {
-      val result = TestSessionCacheController.newBulkCalculation.apply(FakeRequest())
-      status(result) must equal(SEE_OTHER)
-      redirectLocation(result).get must include("/gg/sign-in")
-    }
 
     "reset the cached calculation parameters" in {
       withAuthorisedUser { request =>

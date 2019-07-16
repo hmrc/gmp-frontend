@@ -48,7 +48,7 @@ class PensionDetailsControllerSpec extends PlaySpec with OneServerPerSuite with 
   val mockSessionService = mock[SessionService]
   val mockGmpConnector = mock[GmpConnector]
   val mockAuthAction = mock[AuthAction]
-  val link = "some-link"
+
 
   implicit val user = AuthContext(authority = Authority("1234", Accounts(psa = Some(PsaAccount("link", PsaId("B1234567")))), None, None, CredentialStrength.None, ConfidenceLevel.L50, None, None, None, ""))
   implicit val hc = new HeaderCarrier(sessionId = Some(SessionId(s"session-${UUID.randomUUID}")))
@@ -58,27 +58,7 @@ class PensionDetailsControllerSpec extends PlaySpec with OneServerPerSuite with 
     override val context = FakeGmpContext
   }
 
-  "Pension details controller" must {
-
-    "respond to GET /guaranteed-minimum-pension/pension-details" in {
-      val result = route(FakeRequest(GET, "/guaranteed-minimum-pension/pension-details"))
-      status(result.get) must not equal (NOT_FOUND)
-    }
-
-    "respond to POST /guaranteed-minimum-pension/pension-details" in {
-      val result = route(FakeRequest(POST, "/guaranteed-minimum-pension/pension-details"))
-      status(result.get) must not equal (NOT_FOUND)
-    }
-  }
-
   "pension details GET " must {
-
-    "be authorised" in {
-      getPensionDetails() { result =>
-        status(result) must equal(SEE_OTHER)
-        redirectLocation(result).get must include("/gg/sign-in")
-      }
-    }
 
     "authenticated users" must {
 
@@ -109,13 +89,6 @@ class PensionDetailsControllerSpec extends PlaySpec with OneServerPerSuite with 
 
   "pension details POST " must {
 
-    "be authorised" in {
-      postPensionDetails() { result =>
-        status(result) must equal(SEE_OTHER)
-        redirectLocation(result).get must include("/gg/sign-in")
-      }
-    }
-
     "authenticated users" must {
 
       val validGmpRequest = PensionDetails("S1301234T")
@@ -124,7 +97,7 @@ class PensionDetailsControllerSpec extends PlaySpec with OneServerPerSuite with 
 
       "validate scon and store scon and redirect" in {
         when(mockSessionService.cachePensionDetails(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
-        when(mockGmpConnector.validateScon(Matchers.any(),link)).thenReturn(Future.successful(ValidateSconResponse(true)))
+        when(mockGmpConnector.validateScon(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful(ValidateSconResponse(true)))
         withAuthorisedUser { request =>
           val result = TestPensionDetailsController.post()(request.withJsonBody(Json.toJson(validGmpRequest)))
           status(result) must equal(SEE_OTHER)
@@ -140,7 +113,7 @@ class PensionDetailsControllerSpec extends PlaySpec with OneServerPerSuite with 
       }
 
       "respond with bad request when scon not validated" in {
-        when(mockGmpConnector.validateScon(Matchers.any(),link)).thenReturn(Future.successful(ValidateSconResponse(false)))
+        when(mockGmpConnector.validateScon(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful(ValidateSconResponse(false)))
         withAuthorisedUser { request =>
           val result = TestPensionDetailsController.post()(request.withJsonBody(Json.toJson(validGmpRequest)))
           status(result) must equal(BAD_REQUEST)
@@ -150,7 +123,7 @@ class PensionDetailsControllerSpec extends PlaySpec with OneServerPerSuite with 
 
       "respond with exception when scon service throws exception" in {
         when(mockSessionService.cachePensionDetails(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
-        when(mockGmpConnector.validateScon(Matchers.any(),link)).thenReturn(Future.successful(null))
+        when(mockGmpConnector.validateScon(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful(null))
         withAuthorisedUser { request =>
           intercept[RuntimeException]{
             await(TestPensionDetailsController.post()(request.withJsonBody(Json.toJson(validGmpRequest))))
@@ -160,7 +133,7 @@ class PensionDetailsControllerSpec extends PlaySpec with OneServerPerSuite with 
 
       "respond with exception when cache service throws exception" in {
         when(mockSessionService.cachePensionDetails(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(None))
-        when(mockGmpConnector.validateScon(Matchers.any(),link)).thenReturn(Future.successful(ValidateSconResponse(true)))
+        when(mockGmpConnector.validateScon(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful(ValidateSconResponse(true)))
         withAuthorisedUser { request =>
           intercept[RuntimeException]{
             await(TestPensionDetailsController.post()(request.withJsonBody(Json.toJson(validGmpRequest))))

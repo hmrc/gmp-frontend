@@ -47,22 +47,8 @@ class RevaluationRateControllerSpec extends PlaySpec with OneServerPerSuite with
 
   private val nino: String = RandomNino.generate
 
-  "Revaluation Rate controller" must {
-
-    "respond to GET /guaranteed-minimum-pension/revaluation-rate" in {
-      val result = route(FakeRequest(GET, "/guaranteed-minimum-pension/revaluation-rate"))
-      status(result.get) must not equal (NOT_FOUND)
-    }
-  }
 
   "Revaluation Rate controller GET " must {
-
-    "be authorised" in {
-      get() { result =>
-        status(result) must equal(SEE_OTHER)
-        redirectLocation(result).get must include("/gg/sign-in")
-      }
-    }
 
     "authenticated users" must {
 
@@ -226,12 +212,6 @@ class RevaluationRateControllerSpec extends PlaySpec with OneServerPerSuite with
 
     when(mockSessionService.fetchScenario()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(None))
 
-    "be authorised" in {
-      val result = TestRevaluationRateController.get.apply(FakeRequest())
-      status(result) must equal(SEE_OTHER)
-      redirectLocation(result).get must include("/gg/sign-in")
-    }
-
     "authenticated users" must {
 
       "with invalid data" must {
@@ -303,12 +283,6 @@ class RevaluationRateControllerSpec extends PlaySpec with OneServerPerSuite with
 
   "BACK" must {
 
-    "be authorised" in {
-      val result = TestRevaluationRateController.back.apply(FakeRequest())
-      status(result) must equal(SEE_OTHER)
-      redirectLocation(result).get must include("/gg/sign-in")
-    }
-
     "authorised users redirect" in {
 
       val memberDetails = MemberDetails("", "", "")
@@ -331,7 +305,6 @@ class RevaluationRateControllerSpec extends PlaySpec with OneServerPerSuite with
         }
       }
     }
-
 
   }
 

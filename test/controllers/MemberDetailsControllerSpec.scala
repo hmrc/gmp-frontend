@@ -44,31 +44,7 @@ class MemberDetailsControllerSpec extends PlaySpec with OneServerPerSuite with M
     override val context = FakeGmpContext
   }
 
-  "MemberDetailsController" must {
-
-    "respond to GET /guaranteed-minimum-pension/member-details" in {
-      val result = route(FakeRequest(GET, "/guaranteed-minimum-pension/member-details"))
-      status(result.get) must not equal (NOT_FOUND)
-    }
-
-    "respond to POST /guaranteed-minimum-pension/member-details" in {
-      val result = route(FakeRequest(POST, "/guaranteed-minimum-pension/member-details"))
-      status(result.get) must not equal (NOT_FOUND)
-    }
-
-    "respond to back /guaranteed-minimum-pension/member-details/back" in {
-      val result = route(FakeRequest(GET, "/guaranteed-minimum-pension/member-details/back"))
-      status(result.get) must not equal (NOT_FOUND)
-    }
-  }
-
   "GET" must {
-
-    "be authorised" in {
-      val result = TestMemberDetailsController.get.apply(FakeRequest())
-      status(result) must equal(SEE_OTHER)
-      redirectLocation(result).get must include("/gg/sign-in")
-    }
 
     "authenticated users" must {
 
@@ -108,13 +84,6 @@ class MemberDetailsControllerSpec extends PlaySpec with OneServerPerSuite with M
 
   "BACK" must {
 
-    "be authorised" in {
-      val result = TestMemberDetailsController.back.apply(FakeRequest())
-      status(result) must equal(SEE_OTHER)
-      redirectLocation(result).get must include("/gg/sign-in")
-    }
-
-
     "authorised users redirect" in {
 
       val memberDetails = MemberDetails("", "", "")
@@ -130,12 +99,6 @@ class MemberDetailsControllerSpec extends PlaySpec with OneServerPerSuite with M
   }
 
   "POST" must {
-
-    "be authorised" in {
-      val result = TestMemberDetailsController.post.apply(FakeRequest())
-      status(result) must equal(SEE_OTHER)
-      redirectLocation(result).get must include("/gg/sign-in")
-    }
 
     "authenticated users" must {
 

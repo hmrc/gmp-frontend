@@ -29,15 +29,6 @@ class ServiceUnavailableControllerSpec extends PlaySpec with OneServerPerSuite w
     override implicit val context = FakeGmpContext
   }
 
-  "Service unavailable controller" must {
-
-    "respond to GET /guaranteed-minimum-pension/service-unavailable" in {
-      val result = route(FakeRequest(GET, "/guaranteed-minimum-pension/service-unavailable"))
-      status(result.get) must not equal (NOT_FOUND)
-
-    }
-  }
-
   "GET" must {
 
     "be accessible without authorisation" in {

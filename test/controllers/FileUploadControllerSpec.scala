@@ -51,33 +51,7 @@ class FileUploadControllerSpec extends PlaySpec with OneServerPerSuite with Mock
     override val context = FakeGmpContext
   }
 
-  "File upload controller" must {
-
-    "respond to GET /guaranteed-minimum-pension/upload-csv" in {
-      val result = route(FakeRequest(GET, "/guaranteed-minimum-pension/upload-csv"))
-      status(result.get) must not equal (NOT_FOUND)
-    }
-
-    "respond to /guaranteed-minimum-pension/upload-csv/failure" in {
-      val result = route(FakeRequest(GET, "/guaranteed-minimum-pension/upload-csv/failure"))
-      status(result.get) must not equal (NOT_FOUND)
-    }
-
-    "respond to /guaranteed-minimum-pension/upload-csv/callback" in {
-      val result = route(FakeRequest(POST, "/guaranteed-minimum-pension/upload-csv/callback"))
-      status(result.get) must not equal (NOT_FOUND)
-    }
-
-  }
-
   "File upload controller GET " must {
-
-    "be authorised" in {
-      getFileUploadPartial() { result =>
-        status(result) must equal(SEE_OTHER)
-        redirectLocation(result).get must include("/gg/sign-in")
-      }
-    }
 
     "authenticated users" must {
       "respond with ok" in {
@@ -106,13 +80,6 @@ class FileUploadControllerSpec extends PlaySpec with OneServerPerSuite with Mock
     }
 
     "failure" must {
-
-      "be authorised" in {
-        failure() { result =>
-          status(result) must equal(SEE_OTHER)
-          redirectLocation(result).get must include("/gg/sign-in")
-        }
-      }
 
       "authorised users" must {
         "have a status of OK for generic error" in {

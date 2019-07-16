@@ -59,24 +59,7 @@ class BulkReferenceControllerSpec extends PlaySpec with OneServerPerSuite with M
 
   "BulkRerefenceController" must {
 
-    "respond to GET /guaranteed-minimum-pension/getting-results" in {
-      val result = route(FakeRequest(GET, "/guaranteed-minimum-pension/getting-results"))
-      status(result.get) must not equal NOT_FOUND
-    }
-
-    "respond to POST /guaranteed-minimum-pension/getting-results" in {
-      val result = route(FakeRequest(POST, "/guaranteed-minimum-pension/getting-results"))
-      status(result.get) must not equal NOT_FOUND
-    }
-
     "bulk reference GET " must {
-
-      "be authorised" in {
-        getBulkReference() { result =>
-          status(result) must equal(SEE_OTHER)
-          redirectLocation(result).get must include("/gg/sign-in")
-        }
-      }
 
       "authenticated users" must {
         "respond with ok" in {
@@ -93,13 +76,6 @@ class BulkReferenceControllerSpec extends PlaySpec with OneServerPerSuite with M
     }
 
     "bulk reference POST " must {
-
-      "be authorised" in {
-        postBulkReference() { result =>
-          status(result) must equal(SEE_OTHER)
-          redirectLocation(result).get must include("/gg/sign-in")
-        }
-      }
 
       val validRequest = BulkReference("dan@hmrc.com", "Reference")
       val validRequestWithSpaces = BulkReference("dan@hmrc.com   ", "Reference   ")
@@ -146,13 +122,6 @@ class BulkReferenceControllerSpec extends PlaySpec with OneServerPerSuite with M
     }
 
     "BACK" must {
-
-      "be authorised" in {
-        val result = TestBulkReferenceController.back.apply(FakeRequest())
-        status(result) must equal(SEE_OTHER)
-        redirectLocation(result).get must include("/gg/sign-in")
-      }
-
 
       "authorised users redirect" in {
 

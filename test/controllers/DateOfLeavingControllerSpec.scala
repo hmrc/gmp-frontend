@@ -50,28 +50,7 @@ class DateOfLeavingControllerSpec extends PlaySpec with OneServerPerSuite with M
 
   val nino = RandomNino.generate
 
-  "Date of Leaving controller" must {
-
-    "respond to GET /guaranteed-minimum-pension/left-scheme" in {
-      val result = route(FakeRequest(GET, "/guaranteed-minimum-pension/left-scheme"))
-      status(result.get) must not equal (NOT_FOUND)
-    }
-
-    "respond to back /guaranteed-minimum-pension/left-scheme/back" in {
-      val result = route(FakeRequest(GET, "/guaranteed-minimum-pension/left-scheme/back"))
-      status(result.get) must not equal (NOT_FOUND)
-    }
-  }
-
-
   "Date of Leaving controller GET " must {
-
-    "be authorised" in {
-      get() { result =>
-        status(result) must equal(SEE_OTHER)
-        redirectLocation(result).get must include("/gg/sign-in")
-      }
-    }
 
     "authenticated users" must {
       val memberDetails = MemberDetails(nino, "A", "AAA")
@@ -238,12 +217,6 @@ class DateOfLeavingControllerSpec extends PlaySpec with OneServerPerSuite with M
 
   "BACK" must {
 
-    "be authorised" in {
-      val result = TestDateOfLeavingController.back.apply(FakeRequest())
-      status(result) must equal(SEE_OTHER)
-      redirectLocation(result).get must include("/gg/sign-in")
-    }
-
     "authorised users redirect" in {
 
       val memberDetails = MemberDetails(nino, "A", "AAA")
@@ -270,11 +243,6 @@ class DateOfLeavingControllerSpec extends PlaySpec with OneServerPerSuite with M
   }
 
   "Date of Leaving controller POST" must {
-    "be authorised" in {
-      val result = TestDateOfLeavingController.get.apply(FakeRequest())
-      status(result) must equal(SEE_OTHER)
-      redirectLocation(result).get must include("/gg/sign-in")
-    }
 
     "authenticated users" must {
 
