@@ -64,25 +64,19 @@ class PensionDetailsControllerSpec extends PlaySpec with OneServerPerSuite with 
 
       "respond with ok" in {
         when(mockSessionService.fetchPensionDetails()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(None))
-        withAuthorisedUser { user =>
-          getPensionDetails(user) { result =>
+        val result = TestPensionDetailsController.get.apply(FakeRequest())
             status(result) must equal(OK)
             contentAsString(result) must include(Messages("gmp.pension_details.header"))
             contentAsString(result) must include(Messages("gmp.scon"))
             contentAsString(result) must include(Messages("gmp.signout"))
             contentAsString(result) must include(Messages("gmp.back.link"))
             contentAsString(result) must include(Messages("gmp.scon.message"))
-          }
-        }
       }
 
       "get page containing scon when retrieved" in {
         when(mockSessionService.fetchPensionDetails()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some("S1301234T")))
-        withAuthorisedUser { user =>
-          getPensionDetails(user) { result =>
+        val result = TestPensionDetailsController.get.apply(FakeRequest())
             contentAsString(result) must include("S1301234T")
-          }
-        }
       }
     }
   }
@@ -98,58 +92,40 @@ class PensionDetailsControllerSpec extends PlaySpec with OneServerPerSuite with 
       "validate scon and store scon and redirect" in {
         when(mockSessionService.cachePensionDetails(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
         when(mockGmpConnector.validateScon(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful(ValidateSconResponse(true)))
-        withAuthorisedUser { request =>
-          val result = TestPensionDetailsController.post()(request.withJsonBody(Json.toJson(validGmpRequest)))
+          val result = TestPensionDetailsController.post()(FakeRequest().withJsonBody(Json.toJson(validGmpRequest)))
           status(result) must equal(SEE_OTHER)
-        }
       }
 
       "respond with bad request missing SCON" in {
-        withAuthorisedUser { request =>
-          val result = TestPensionDetailsController.post()(request.withJsonBody(Json.toJson(emptySconGmpRequest)))
+          val result = TestPensionDetailsController.post()(FakeRequest().withJsonBody(Json.toJson(emptySconGmpRequest)))
           status(result) must equal(BAD_REQUEST)
           contentAsString(result) must include(Messages("gmp.error.mandatory.new", Messages("gmp.scon")))
-        }
       }
 
       "respond with bad request when scon not validated" in {
         when(mockGmpConnector.validateScon(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful(ValidateSconResponse(false)))
-        withAuthorisedUser { request =>
-          val result = TestPensionDetailsController.post()(request.withJsonBody(Json.toJson(validGmpRequest)))
+          val result = TestPensionDetailsController.post()(FakeRequest().withJsonBody(Json.toJson(validGmpRequest)))
           status(result) must equal(BAD_REQUEST)
           contentAsString(result) must include(Messages("gmp.error.scon.nps_invalid", Messages("gmp.scon")))
-        }
       }
 
       "respond with exception when scon service throws exception" in {
         when(mockSessionService.cachePensionDetails(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
         when(mockGmpConnector.validateScon(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful(null))
-        withAuthorisedUser { request =>
           intercept[RuntimeException]{
-            await(TestPensionDetailsController.post()(request.withJsonBody(Json.toJson(validGmpRequest))))
-         }
+            await(TestPensionDetailsController.post()(FakeRequest().withJsonBody(Json.toJson(validGmpRequest))))
         }
       }
 
       "respond with exception when cache service throws exception" in {
         when(mockSessionService.cachePensionDetails(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(None))
         when(mockGmpConnector.validateScon(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful(ValidateSconResponse(true)))
-        withAuthorisedUser { request =>
           intercept[RuntimeException]{
-            await(TestPensionDetailsController.post()(request.withJsonBody(Json.toJson(validGmpRequest))))
-         }
+            await(TestPensionDetailsController.post()(FakeRequest().withJsonBody(Json.toJson(validGmpRequest))))
         }
       }
 
     }
-  }
-
-  def getPensionDetails(request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest())(handler: Future[Result] => Any): Unit = {
-    handler(TestPensionDetailsController.get.apply(request))
-  }
-
-  def postPensionDetails(request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest())(handler: Future[Result] => Any): Unit = {
-    handler(TestPensionDetailsController.post.apply(request))
   }
 
 }
