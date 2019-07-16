@@ -17,32 +17,26 @@
 package controllers.auth
 
 import akka.util.Timeout
-import com.google.inject.Inject
-import config.WSHttp
 import org.mockito.Matchers.any
 import org.mockito.Mockito.when
+import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
-import play.api.{Configuration, Environment}
+import play.api.http.Status._
 import play.api.mvc.{Action, AnyContent, Controller}
 import play.api.test.FakeRequest
-import uk.gov.hmrc.auth.core.authorise.Predicate
-import uk.gov.hmrc.auth.core.retrieve.{Retrieval, ~}
-import uk.gov.hmrc.auth.core.{AuthConnector, ConfidenceLevel, Enrolment, EnrolmentIdentifier, Enrolments, InsufficientConfidenceLevel, MissingBearerToken}
-import uk.gov.hmrc.http.HeaderCarrier
 import play.api.test.Helpers.{redirectLocation, status}
+import uk.gov.hmrc.auth.core.{Enrolment, EnrolmentIdentifier, Enrolments, MissingBearerToken}
 
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.Future
 import scala.concurrent.duration._
-import play.api.Configuration
-import play.api.http.Status._
 
-class AuthActionSpec extends PlaySpec with GuiceOneAppPerSuite with MockitoSugar {
+class AuthActionSpec extends PlaySpec with GuiceOneAppPerSuite with MockitoSugar with ScalaFutures {
 
   class Harness(authAction: AuthAction) extends Controller {
-    def onPageLoad(): Action[AnyContent] = authAction { request => Ok }
+    def onPageLoad(): Action[AnyContent] = authAction { request => Ok.withHeaders("link" -> request.link) }
   }
 
   implicit val timeout: Timeout = 5 seconds
@@ -50,64 +44,79 @@ class AuthActionSpec extends PlaySpec with GuiceOneAppPerSuite with MockitoSugar
   "Auth Action" when {
     "the user is not logged in" must {
       "redirect the user to log in" in {
-        val authAction = new AuthActionImpl(
-          new BrokenAuthConnector(new MissingBearerToken,
-            mock[WSHttp],
-            app.injector.instanceOf[Configuration],
-            app.injector.instanceOf[Environment]
-          ), app.configuration)
+
+        val mockAuthConnector = mock[GmpAuthConnector]
+
+        when(mockAuthConnector.authorise(any(),any())(any(), any()))
+          .thenReturn(Future.failed(new MissingBearerToken))
+
+        val authAction = new AuthActionImpl(mockAuthConnector,app.configuration)
+        val controller = new Harness(authAction)
+
+        val result = controller.onPageLoad()(FakeRequest("", ""))
+        status(result) mustBe SEE_OTHER
+        redirectLocation(result).get must include("/gg/sign-in")
+      }
+    }
+
+    "the user has no psa/psp account " must {
+      "redirect the user to the unauthorised page" in {
+        val mockAuthConnector = mock[GmpAuthConnector]
+
+        val retrievalResult: Future[Enrolments] =
+          Future.failed(new RuntimeException("User Authorisation failed"))
+
+        when(mockAuthConnector.authorise[Enrolments](any(), any())(any(), any()))
+          .thenReturn(retrievalResult)
+        val authAction = new AuthActionImpl(mockAuthConnector, app.configuration)
         val controller = new Harness(authAction)
         val result = controller.onPageLoad()(FakeRequest("", ""))
         status(result) mustBe SEE_OTHER
-        redirectLocation(result).get must endWith("sign-in")
+        redirectLocation(result) must be(Some("/guaranteed-minimum-pension/unauthorised"))
 
       }
     }
-//    "the user has a confidence level too low " must {
-//      "redirect the user to a page to enroll" in {
-//        val authAction = new AuthActionImpl(
-//          new BrokenAuthConnector(new InsufficientConfidenceLevel,
-//            mock[WSHttp],
-//            app.injector.instanceOf[Configuration],
-//            app.injector.instanceOf[Environment]
-//          ), app.configuration)
-//        val controller = new Harness(authAction)
-//        val result = controller.onPageLoad()(FakeRequest("", ""))
-//        status(result) mustBe SEE_OTHER
-//        redirectLocation(result) mustBe Some(FrontendAppConfig.saUrl)
-//
-//      }
-//    }
 
     "the user is authorised with psa " must {
       "create an authenticated link for psa" in {
         val mockAuthConnector = mock[GmpAuthConnector]
 
         val retrievalResult: Future[Enrolments] =
-          Future.successful(Enrolments(Set(Enrolment("HMRC-PSA-ORG",Seq(EnrolmentIdentifier("PSAID", "someID")),""))))
+          Future.successful(Enrolments(Set(Enrolment("HMRC-PSA-ORG", Seq(EnrolmentIdentifier("PSAID", "someID")), ""))))
 
-        when(mockAuthConnector.authorise[Enrolments](any(),any())(any(), any()))
+        when(mockAuthConnector.authorise[Enrolments](any(), any())(any(), any()))
           .thenReturn(retrievalResult)
 
-
-
-        val authAction = new AuthActionImpl(mockAuthConnector,app.configuration)
+        val authAction = new AuthActionImpl(mockAuthConnector, app.configuration)
         val controller = new Harness(authAction)
 
         val result = controller.onPageLoad()(FakeRequest("", ""))
         status(result) mustBe OK
+        whenReady(result) {
+          _.header.headers("link") mustBe "psa/someID"
+        }
       }
     }
+      "the user is authorised with psp " must {
+        "create an authenticated link for psp" in {
+          val mockAuthConnector = mock[GmpAuthConnector]
+
+          val retrievalResult: Future[Enrolments] =
+            Future.successful(Enrolments(Set(Enrolment("HMRC-PP-ORG", Seq(EnrolmentIdentifier("PPID", "someID")), ""))))
+
+          when(mockAuthConnector.authorise[Enrolments](any(), any())(any(), any()))
+            .thenReturn(retrievalResult)
+
+          val authAction = new AuthActionImpl(mockAuthConnector, app.configuration)
+          val controller = new Harness(authAction)
+
+          val result = controller.onPageLoad()(FakeRequest("", ""))
+          status(result) mustBe OK
+          whenReady(result) {
+            _.header.headers("link") mustBe "psp/someID"
+          }
+        }
+      }
+
   }
 }
-
-class BrokenAuthConnector @Inject()(exception: Throwable, httpClient:WSHttp, configuration: Configuration, environment: Environment) extends GmpAuthConnector(
-  httpClient,
-  environment,
-  configuration) {
-  override val serviceUrl: String = ""
-
-  override def authorise[A](predicate: Predicate, retrieval: Retrieval[A])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[A] =
-    Future.failed(exception)
-}
-

@@ -43,18 +43,15 @@ class AuthActionImpl @Inject()(val authConnector: GmpAuthConnector, configuratio
         case Enrolments(enrolments) => {
 
           val psaid = enrolments.find(_.key == "HMRC-PSA-ORG").flatMap {
-            enrolment =>
-              println(enrolment)
-              enrolment.identifiers.find(id => id.key == "PSAID").map(_.value)
+            enrolment => enrolment.identifiers.find(id => id.key == "PSAID").map(_.value)
           }
           val ppid = enrolments.find(_.key == "HMRC-PP-ORG").flatMap {
-            enrolment =>
-              enrolment.identifiers.find(id => id.key == "PPID").map(_.value)
+            enrolment => enrolment.identifiers.find(id => id.key == "PPID").map(_.value)
           }
 
           val link = (psaid, ppid) match {
             case (Some(id),_)     => s"psa/$id"
-            case (None, Some(id)) => s"ppa/$id"
+            case (None, Some(id)) => s"psp/$id"
             case _                => throw new RuntimeException("User Authorisation failed")
           }
 
@@ -63,11 +60,9 @@ class AuthActionImpl @Inject()(val authConnector: GmpAuthConnector, configuratio
         case _ => throw new RuntimeException("Can't find credentials for user")
       }
   } recover {
-    case ex: NoActiveSession => Results.Redirect(configuration.getString("gg-urls.login_path").get)
-//
-//    case ex: InsufficientEnrolments => Redirect(FrontendAppConfig.saUrl)
-//
-//    case ex: InsufficientConfidenceLevel => Redirect(FrontendAppConfig.saUrl)
+    case ex: NoActiveSession => Results.Redirect(ExternalUrls.signIn)
+
+    case _ => Results.Redirect(controllers.routes.ApplicationController.unauthorised().url)
   }
 }
 
