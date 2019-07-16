@@ -50,34 +50,28 @@ class MemberDetailsControllerSpec extends PlaySpec with OneServerPerSuite with M
 
       "respond with ok" in {
         when(mockSessionService.fetchMemberDetails()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(None))
-        withAuthorisedUser { request =>
-          val result = TestMemberDetailsController.get.apply(request)
+          val result = TestMemberDetailsController.get.apply(FakeRequest())
           status(result) must equal(OK)
-        }
       }
 
       "present the member's details page" in {
         when(mockSessionService.fetchMemberDetails()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(None))
-        withAuthorisedUser { request =>
-          val result = TestMemberDetailsController.get.apply(request)
+          val result = TestMemberDetailsController.get.apply(FakeRequest())
           contentAsString(result) must include(Messages("gmp.member_details.header"))
           contentAsString(result) must include(Messages("gmp.nino"))
           contentAsString(result) must include(Messages("gmp.firstname"))
           contentAsString(result) must include(Messages("gmp.lastname"))
           contentAsString(result) must include(Messages("gmp.back.link"))
-        }
       }
 
       "load the details from the session storage if present" in {
         val nino = RandomNino.generate
         when(mockSessionService.fetchMemberDetails()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some
         (MemberDetails(nino, "Bob", "Jones"))))
-        withAuthorisedUser { request =>
-          val result = TestMemberDetailsController.get.apply(request)
+          val result = TestMemberDetailsController.get.apply(FakeRequest())
           contentAsString(result) must include(nino)
           contentAsString(result) must include("Bob")
           contentAsString(result) must include("Jones")
-        }
       }
     }
   }
@@ -89,11 +83,9 @@ class MemberDetailsControllerSpec extends PlaySpec with OneServerPerSuite with M
       val memberDetails = MemberDetails("", "", "")
       val session = GmpSession(memberDetails, "", "", None, None, Leaving(GmpDate(None, None, None), None), None)
 
-      withAuthorisedUser { request =>
         when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(session)))
-        val result = TestMemberDetailsController.back.apply(request)
+        val result = TestMemberDetailsController.back.apply(FakeRequest())
         status(result) must equal(SEE_OTHER)
-      }
     }
 
   }
@@ -109,37 +101,31 @@ class MemberDetailsControllerSpec extends PlaySpec with OneServerPerSuite with M
 
         "redirect" in {
           when(mockSessionService.cacheMemberDetails(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(session)))
-          withAuthorisedUser { request =>
             val postData = Json.obj(
               "nino" -> RandomNino.generate,
               "firstForename" -> "Bob",
               "surname" -> "Jones"
             )
-            val result = TestMemberDetailsController.post.apply(request.withJsonBody(Json.toJson(memberDetails)))
+            val result = TestMemberDetailsController.post.apply(FakeRequest().withJsonBody(Json.toJson(memberDetails)))
             status(result) must equal(SEE_OTHER)
-          }
         }
 
         "save details to keystore" in {
           when(mockSessionService.cacheMemberDetails(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(session)))
-          withAuthorisedUser { request =>
-            TestMemberDetailsController.post.apply(request.withJsonBody(Json.toJson(memberDetails)))
+            TestMemberDetailsController.post.apply(FakeRequest().withJsonBody(Json.toJson(memberDetails)))
             verify(mockSessionService, atLeastOnce()).cacheMemberDetails(Matchers.any())(Matchers.any(), Matchers.any())
-          }
         }
 
         "respond with an exception when the session cache is unavailable" in {
           reset(mockSessionService)
           when(mockSessionService.cacheMemberDetails(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(None))
-          withAuthorisedUser { request =>
             val postData = Json.obj(
               "nino" -> RandomNino.generate,
               "firstForename" -> "Bob",
               "surname" -> "Jones"
             )
             intercept[RuntimeException]{
-              await(TestMemberDetailsController.post.apply(request.withJsonBody(postData)))
-            }
+              await(TestMemberDetailsController.post.apply(FakeRequest().withJsonBody(postData)))
           }
         }
 
@@ -148,37 +134,31 @@ class MemberDetailsControllerSpec extends PlaySpec with OneServerPerSuite with M
       "with invalid data" must {
 
         "respond with BAD_REQUEST" in {
-          withAuthorisedUser { request =>
             val postData = Json.obj(
               "nino" -> RandomNino.generate,
               "firstForename" -> "",
               "surname" -> "Jones"
             )
-            val result = TestMemberDetailsController.post.apply(request.withJsonBody(postData))
+            val result = TestMemberDetailsController.post.apply(FakeRequest().withJsonBody(postData))
             status(result) must equal(BAD_REQUEST)
-          }
         }
 
         "display the errors" in {
-          withAuthorisedUser { request =>
             val postData = Json.obj(
               "nino" -> RandomNino.generate,
               "firstForename" -> "Bob",
               "surname" -> ""
             )
-            val result = TestMemberDetailsController.post.apply(request.withJsonBody(postData))
+            val result = TestMemberDetailsController.post.apply(FakeRequest().withJsonBody(postData))
             contentAsString(result) must include(Messages("gmp.error.member.lastname.mandatory"))
-          }
         }
 
         "throw an exception when session not fetched" in {
 
-          withAuthorisedUser { request =>
             when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(None))
-            val result = TestMemberDetailsController.back.apply(request)
+            val result = TestMemberDetailsController.back.apply(FakeRequest())
             intercept[RuntimeException] {
               status(result)
-            }
           }
         }
       }
