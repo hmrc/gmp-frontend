@@ -16,7 +16,7 @@
 
 package controllers
 
-import controllers.auth.{AuthAction, GmpAuthConnector}
+import controllers.auth.{AuthAction, FakeAuthAction, GmpAuthConnector}
 import metrics.Metrics
 import org.mockito.Matchers
 import org.mockito.Mockito._
@@ -35,7 +35,7 @@ class SessionCacheControllerSpec extends PlaySpec with OneServerPerSuite with Mo
   val mockSessionService = mock[SessionService]
   val mockAuthAction = mock[AuthAction]
 
-  object TestSessionCacheController extends SessionCacheController(mockAuthAction, mockAuthConnector) {
+  object TestSessionCacheController extends SessionCacheController(FakeAuthAction, mockAuthConnector) {
     override val sessionService = mockSessionService
     override val context = FakeGmpContext
   }

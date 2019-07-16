@@ -18,7 +18,7 @@ package controllers
 
 import java.util.UUID
 
-import controllers.auth.{AuthAction, GmpAuthConnector}
+import controllers.auth.{AuthAction, FakeAuthAction, GmpAuthConnector}
 import models._
 import org.mockito.Matchers
 import org.mockito.Mockito._
@@ -52,9 +52,10 @@ class BulkReferenceControllerSpec extends PlaySpec with OneServerPerSuite with M
 
   implicit val hc = new HeaderCarrier(sessionId = Some(SessionId(s"session-${UUID.randomUUID}")))
 
-  object TestBulkReferenceController extends BulkReferenceController(mock[AuthAction],mockAuthConnector, mockAuditConnector) {
+  object TestBulkReferenceController extends BulkReferenceController(FakeAuthAction, mockAuthConnector, mockAuditConnector) {
     override val sessionService = mockSessionService
     override val context = FakeGmpContext
+
   }
 
   "BulkRerefenceController" must {
@@ -63,14 +64,13 @@ class BulkReferenceControllerSpec extends PlaySpec with OneServerPerSuite with M
 
       "authenticated users" must {
         "respond with ok" in {
-          withAuthorisedUser { user =>
-            getBulkReference(user) { result =>
-              status(result) must equal(OK)
+          val result = TestBulkReferenceController.get.apply(FakeRequest())
+          status(result) must equal(OK)
               contentAsString(result) must include(Messages("gmp.bulk_reference.header"))
               contentAsString(result) must include(Messages("gmp.reference.calcname"))
               contentAsString(result) must include(Messages("gmp.back.link"))
-            }
-          }
+
+
         }
       }
     }
@@ -84,40 +84,35 @@ class BulkReferenceControllerSpec extends PlaySpec with OneServerPerSuite with M
       val gmpBulkSession = GmpBulkSession(None, None, None)
 
       "respond with bad request missing email and reference" in {
-        withAuthorisedUser { request =>
-          val result = TestBulkReferenceController.post()(request.withJsonBody(Json.toJson(emptyRequest)))
+
+          val result = TestBulkReferenceController.post()(FakeRequest().withJsonBody(Json.toJson(emptyRequest)))
           status(result) must equal(BAD_REQUEST)
           contentAsString(result) must include(Messages("gmp.error.mandatory", Messages("gmp.reference")))
-        }
       }
 
       "throw an exception when can't cache email and reference" in {
         when(mockSessionService.cacheEmailAndReference(Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(None))
-        withAuthorisedUser { request =>
-          val result = TestBulkReferenceController.post()(request.withJsonBody(Json.toJson(validRequest)))
+
+          val result = TestBulkReferenceController.post()(FakeRequest().withJsonBody(Json.toJson(validRequest)))
           intercept[RuntimeException]{
             status(result) must equal(BAD_REQUEST)
-          }
-
         }
       }
 
       "validate email and reference, cache and redirect" in {
         when(mockSessionService.cacheEmailAndReference(Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpBulkSession)))
-        withAuthorisedUser { request =>
-          val result = TestBulkReferenceController.post()(request.withJsonBody(Json.toJson(validRequest)))
+
+          val result = TestBulkReferenceController.post()(FakeRequest().withJsonBody(Json.toJson(validRequest)))
           status(result) must equal(SEE_OTHER)
           redirectLocation(result).get must include("/request-received")
-        }
       }
 
       "validate email and reference with spaces, cache and redirect" in {
         when(mockSessionService.cacheEmailAndReference(Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpBulkSession)))
-        withAuthorisedUser { request =>
-          val result = TestBulkReferenceController.post()(request.withJsonBody(Json.toJson(validRequestWithSpaces)))
+
+          val result = TestBulkReferenceController.post()(FakeRequest().withJsonBody(Json.toJson(validRequestWithSpaces)))
           status(result) must equal(SEE_OTHER)
           redirectLocation(result).get must include("/request-received")
-        }
       }
     }
 
@@ -125,21 +120,12 @@ class BulkReferenceControllerSpec extends PlaySpec with OneServerPerSuite with M
 
       "authorised users redirect" in {
 
-        withAuthorisedUser { request =>
-          val result = TestBulkReferenceController.back.apply(request)
+          val result = TestBulkReferenceController.back.apply(FakeRequest())
           status(result) must equal(SEE_OTHER)
           redirectLocation(result).get must include("/upload-csv")
-        }
       }
 
     }
   }
 
-  def getBulkReference(request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest())(handler: Future[Result] => Any): Unit = {
-    handler(TestBulkReferenceController.get.apply(request))
-  }
-
-  def postBulkReference(request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest())(handler: Future[Result] => Any): Unit = {
-    handler(TestBulkReferenceController.post.apply(request))
-  }
 }

@@ -21,7 +21,7 @@ import java.util.UUID
 import config.ApplicationConfig
 import config.ApplicationConfig.globalErrors
 import connectors.GmpConnector
-import controllers.auth.{AuthAction, GmpAuthConnector}
+import controllers.auth.{AuthAction, FakeAuthAction, GmpAuthConnector}
 import helpers.RandomNino
 import metrics.Metrics
 import models._
@@ -56,7 +56,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
 
   implicit val hc = new HeaderCarrier(sessionId = Some(SessionId(s"session-${UUID.randomUUID}")))
 
-  object TestResultsController extends ResultsController(mockAuthAction, mockAuthConnector, mockSessionService, mockCalculationConnector, mockAuditConnector, Metrics) {
+  object TestResultsController extends ResultsController(FakeAuthAction, mockAuthConnector, mockSessionService, mockCalculationConnector, mockAuditConnector, Metrics) {
     override val context = FakeGmpContext
 
     override def resultsView(response: CalculationResponse, subheader: Option[String], revalSubheader: Option[String])(implicit request: Request[_], context: config.GmpContext): HtmlFormat.Appendable = {

@@ -17,7 +17,7 @@
 package controllers
 
 import connectors.GmpBulkConnector
-import controllers.auth.{AuthAction, GmpAuthConnector}
+import controllers.auth.{AuthAction, FakeAuthAction, GmpAuthConnector}
 import models._
 import org.joda.time.LocalDateTime
 import org.mockito.Matchers
@@ -45,7 +45,7 @@ class DashboardControllerSpec extends PlaySpec with OneServerPerSuite with Mocki
 
 
 
-  object TestDashboardController extends DashboardController(mockAuthAction, mockAuthConnector, mockGmpBulkConnector) {
+  object TestDashboardController extends DashboardController(FakeAuthAction, mockAuthConnector, mockGmpBulkConnector) {
     override val sessionService = mockSessionService
     override val context = FakeGmpContext
   }
@@ -73,20 +73,17 @@ class DashboardControllerSpec extends PlaySpec with OneServerPerSuite with Mocki
     "authenticated users" must {
 
       "respond with ok" in {
-        withAuthorisedUser { user =>
-          getDashboard(user) { result =>
+        val result = TestDashboardController.get.apply(FakeRequest())
             status(result) must equal(OK)
             contentAsString(result) must include(Messages("gmp.dashboard_header"))
             contentAsString(result) must include(Messages("gmp.signout"))
             contentAsString(result) must not include(Messages("gmp.back_to_dashboard"))
-          }
-        }
+
       }
 
       "contain required links to single/bulk calculation, the template file download link and more bulk calculations link" in {
 
-        withAuthorisedUser { user =>
-          getDashboard(user) { result =>
+          val result = TestDashboardController.get.apply(FakeRequest())
             status(result) must equal(OK)
             contentAsString(result) must include(Messages("gmp.dashboard_header"))
             contentAsString(result) must include(Messages("gmp.dashboard.choose_calculation_type"))
@@ -96,24 +93,19 @@ class DashboardControllerSpec extends PlaySpec with OneServerPerSuite with Mocki
             contentAsString(result) must include(Messages("gmp.single_calculation_text").replace("’", "&#x27;"))
             contentAsString(result) must include(Messages("gmp.bulk_calculation_text"))
             contentAsString(result) must include(Messages("gmp.previous_calculations_text"))
-
-          }
-        }
       }
 
       "load the dashboard from the bulk service if present but empty" in {
         val dashboard = new Dashboard(Nil)
-        withAuthorisedUser { request =>
-          val result = TestDashboardController.get.apply(request)
+          val result = TestDashboardController.get.apply(FakeRequest())
           contentAsString(result) must include(Messages("gmp.previous_calculations"))
-        }
       }
 
       "load the dashboard if the bulk service throws an exception" in {
 
         val brokenGmpBulkConnector = mock[GmpBulkConnector]
 
-        object BrokenDashboardController extends DashboardController(mockAuthAction, mockAuthConnector, brokenGmpBulkConnector) {
+        object BrokenDashboardController extends DashboardController(FakeAuthAction, mockAuthConnector, brokenGmpBulkConnector) {
           override val sessionService = mockSessionService
           override val context = FakeGmpContext
         }
@@ -128,12 +120,10 @@ class DashboardControllerSpec extends PlaySpec with OneServerPerSuite with Mocki
 
       "load the dashboard from the bulk service if present and complete" in {
 
-        withAuthorisedUser { request =>
-          val result = TestDashboardController.get.apply(request)
+          val result = TestDashboardController.get.apply(FakeRequest())
           contentAsString(result) must include(Messages("gmp.previous_calculations"))
           contentAsString(result) must include("1234")
           contentAsString(result) must include("5678")
-        }
       }
 
       "handle timestamp conversion" in {
@@ -174,11 +164,6 @@ class DashboardControllerSpec extends PlaySpec with OneServerPerSuite with Mocki
       }
 
     }
-  }
-
-
-  def getDashboard(request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest())(handler: Future[Result] => Any): Unit = {
-    handler(TestDashboardController.get.apply(request))
   }
 
 }

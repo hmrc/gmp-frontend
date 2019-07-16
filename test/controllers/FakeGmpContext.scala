@@ -17,14 +17,9 @@
 package controllers
 
 import config.GmpContext
-import connectors.ContactFrontendConnector
-import org.scalatest.mockito.MockitoSugar._
-import org.mockito.Matchers._
-import org.mockito.Mockito.when
-import play.api.Play
+import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.Future
-import uk.gov.hmrc.http.HeaderCarrier
 
 object FakeGmpContext extends GmpContext {
 

@@ -17,7 +17,7 @@
 package controllers
 
 import connectors.GmpBulkConnector
-import controllers.auth.{AuthAction, GmpAuthConnector}
+import controllers.auth.{AuthAction, FakeAuthAction, GmpAuthConnector}
 import models._
 import org.joda.time.{LocalDate, LocalDateTime}
 import org.mockito.Matchers
@@ -41,7 +41,7 @@ class MoreBulkResultsControllerSpec extends PlaySpec with OneServerPerSuite with
   val mockGmpBulkConnector = mock[GmpBulkConnector]
   val mockAuthAction = mock[AuthAction]
 
-  object TestMoreBulkResultsController extends MoreBulkResultsController(mockAuthAction, mockAuthConnector, mockGmpBulkConnector) {
+  object TestMoreBulkResultsController extends MoreBulkResultsController(FakeAuthAction, mockAuthConnector, mockGmpBulkConnector) {
     override val sessionService = mockSessionService
     override val context = FakeGmpContext
   }

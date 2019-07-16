@@ -19,7 +19,7 @@ package controllers
 import java.util.UUID
 
 import connectors.GmpBulkConnector
-import controllers.auth.{AuthAction, GmpAuthConnector}
+import controllers.auth.{AuthAction, FakeAuthAction, GmpAuthConnector}
 import helpers.RandomNino
 import models._
 import org.joda.time.{LocalDate, LocalDateTime}
@@ -63,7 +63,7 @@ class BulkRequestReceivedControllerSpec extends PlaySpec with OneServerPerSuite 
   val bulkRequest1 = BulkCalculationRequest("1", "bill@bixby.com", "uploadRef1", List(calcLine1), "userid", LocalDateTime.now() )
 
   object TestBulkRequestReceivedController extends BulkRequestReceivedController(
-    mockAuthAction,
+    FakeAuthAction,
     mockAuthConnector,
     mockSessionService,
     mockBulkRequestCreationService,

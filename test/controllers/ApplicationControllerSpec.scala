@@ -17,7 +17,7 @@
 package controllers
 
 import com.google.inject.Singleton
-import controllers.auth.{AuthAction, GmpAuthConnector, UUIDGenerator}
+import controllers.auth.{AuthAction, FakeAuthAction, GmpAuthConnector, UUIDGenerator}
 import org.mockito.ArgumentCaptor
 import org.mockito.Matchers._
 import org.mockito.Mockito._
@@ -45,7 +45,7 @@ class ApplicationControllerSpec extends PlaySpec
   val mockUUIDGenerator: UUIDGenerator = mock[UUIDGenerator]
   val mockAuthAction: AuthAction = mock[AuthAction]
 
-  object TestController extends ApplicationController(mockAuthAction, mockAuditConnector, mockAuthConnector, mockUUIDGenerator) {
+  object TestController extends ApplicationController(FakeAuthAction, mockAuditConnector, mockAuthConnector, mockUUIDGenerator) {
     override val context = FakeGmpContext
   }
 
@@ -76,17 +76,14 @@ class ApplicationControllerSpec extends PlaySpec
 
     "get /signout" must {
       "redirect to feedback survey" in {
-        withAuthorisedUser { request =>
-          val result = TestController.signout(request)
+          val result = TestController.signout(FakeRequest())
           redirectLocation(result) must be(Some("http://localhost:9514/feedback/GMP"))
-        }
       }
 
       "send the data to splunk" in {
         when(mockUUIDGenerator.generate).thenReturn("test-uuid")
 
-        withAuthorisedUser { request =>
-          val result = TestController.signout(request)
+          val result = TestController.signout(FakeRequest())
 
           whenReady(result) { _ =>
             val argument = ArgumentCaptor.forClass(classOf[DataEvent])
@@ -96,7 +93,6 @@ class ApplicationControllerSpec extends PlaySpec
             argument.getValue.auditSource mustBe "GMP"
             argument.getValue.auditType mustBe "signout"
             argument.getValue.detail mustBe Map("feedbackId" -> "test-uuid")
-          }
         }
       }
     }

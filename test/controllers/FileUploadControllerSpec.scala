@@ -17,7 +17,7 @@
 package controllers
 
 import connectors.AttachmentsConnector
-import controllers.auth.{AuthAction, GmpAuthConnector}
+import controllers.auth.{AuthAction, FakeAuthAction, GmpAuthConnector}
 import models._
 import org.mockito.Matchers
 import org.mockito.Mockito._
@@ -47,7 +47,7 @@ class FileUploadControllerSpec extends PlaySpec with OneServerPerSuite with Mock
 
   val fakeRequest = FakeRequest(method = "POST", uri = "", headers = FakeHeaders(Seq("Content-type" -> ("application/json"))), body = Json.toJson(gmpBulkSession.callBackData.get))
 
-  object TestFileUploadController extends FileUploadController(mockAuthAction, mockAuthConnector, mockSessionService, mockAttachmentsConnector) {
+  object TestFileUploadController extends FileUploadController(FakeAuthAction, mockAuthConnector, mockSessionService, mockAttachmentsConnector) {
     override val context = FakeGmpContext
   }
 
@@ -56,25 +56,19 @@ class FileUploadControllerSpec extends PlaySpec with OneServerPerSuite with Mock
     "authenticated users" must {
       "respond with ok" in {
 
-        withAuthorisedUser { user =>
-          getFileUploadPartial(user) {
+          getFileUploadPartial(FakeRequest()) {
             result =>
               status(result) must equal(OK)
               contentAsString(result) must include(Messages("gmp.fileupload.header"))
               contentAsString(result) must include(Messages("gmp.back.link"))
-          }
         }
       }
 
       "be shown correct title for DOL" in {
 
-        withAuthorisedUser { request =>
-
-          val result = TestFileUploadController.get.apply(request)
+          val result = TestFileUploadController.get.apply(FakeRequest())
           status(result) must equal(OK)
           contentAsString(result) must include(Messages("gmp.fileupload.header"))
-
-        }
       }
 
     }
@@ -83,34 +77,25 @@ class FileUploadControllerSpec extends PlaySpec with OneServerPerSuite with Mock
 
       "authorised users" must {
         "have a status of OK for generic error" in {
-          withAuthorisedUser { user =>
-            failure(user) { result =>
+            val result = TestFileUploadController.failure().apply(FakeRequest())
               status(result) must be(OK)
               contentAsString(result) must include(Messages("gmp.bulk.failure.generic"))
               contentAsString(result) must include(Messages("gmp.bulk.problem.header"))
-            }
-          }
         }
 
         "show correct message for virus error" in {
-          withAuthorisedUserAndPath ({ user =>
-            failure(user) { result =>
+          val result = TestFileUploadController.failure().apply(FakeRequest("GET", "/upload-csv/failure?error_message=VIRUS"))
               status(result) must be(OK)
               contentAsString(result) must include(Messages("gmp.bulk.failure.antivirus"))
               contentAsString(result) must include(Messages("gmp.bulk.problem.header"))
-            }
-          }, "GET", "/upload-csv/failure?error_message=VIRUS")
         }
 
         "show correct message for missing file error" in {
-          withAuthorisedUserAndPath ({ user =>
-            failure(user) { result =>
+          val result = TestFileUploadController.failure().apply(FakeRequest("GET", "/upload-csv/failure?error_message=SELECT"))
               status(result) must be(OK)
               contentAsString(result) must include(Messages("gmp.bulk.failure.missing"))
               contentAsString(result) must include(Messages("gmp.bulk.problem.header"))
             }
-          }, "GET", "/upload-csv/failure?error_message=SELECT")
-        }
       }
     }
   }
@@ -160,11 +145,6 @@ class FileUploadControllerSpec extends PlaySpec with OneServerPerSuite with Mock
     }
   }
 
-  def callback(request: FakeRequest[JsValue] = FakeRequest(method = "POST", uri = "", headers = FakeHeaders(Seq("Content-type" -> ("application/json"))), body = Json.toJson("")))(handler: Future[Result] => Any): Unit = {
-    handler(TestFileUploadController.callback().apply(request))
-  }
-
-
   def getFileUploadPartial(request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest())(handler: Future[Result] => Any) {
     val html =
       """
@@ -180,10 +160,6 @@ class FileUploadControllerSpec extends PlaySpec with OneServerPerSuite with Mock
     when(mockAttachmentsConnector.getFileUploadPartial()(Matchers.any())).thenReturn(Future.successful(HtmlPartial.Success(Some("thepartial"), Html(""))))
 
     handler(TestFileUploadController.get.apply(request))
-  }
-
-  def failure(request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest())(handler: Future[Result] => Any): Unit = {
-    handler(TestFileUploadController.failure().apply(request))
   }
 
 }

@@ -16,7 +16,7 @@
 
 package controllers
 
-import controllers.auth.{AuthAction, GmpAuthConnector}
+import controllers.auth.{AuthAction, FakeAuthAction, GmpAuthConnector}
 import models._
 import org.mockito.Matchers
 import org.mockito.Mockito._
@@ -41,7 +41,7 @@ class RevaluationControllerSpec extends PlaySpec with OneServerPerSuite with Moc
 
   val baseValidDate = GmpDate(day = Some("31"), month = Some("1"), year = Some("2015"))
 
-  object TestRevaluationController extends RevaluationController(mockAuthAction, mockAuthConnector) {
+  object TestRevaluationController extends RevaluationController(FakeAuthAction, mockAuthConnector) {
     override val sessionService = mockSessionService
     override val context = FakeGmpContext
   }

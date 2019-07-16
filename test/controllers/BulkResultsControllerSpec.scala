@@ -19,7 +19,7 @@ package controllers
 import java.util.UUID
 
 import connectors.GmpBulkConnector
-import controllers.auth.{AuthAction, GmpAuthConnector}
+import controllers.auth.{AuthAction, FakeAuthAction, GmpAuthConnector}
 import models.BulkResultsSummary
 import org.mockito.Matchers
 import org.mockito.Mockito._
@@ -43,7 +43,7 @@ class BulkResultsControllerSpec extends PlaySpec with OneServerPerSuite with Moc
 
   implicit val hc = new HeaderCarrier(sessionId = Some(SessionId(s"session-${UUID.randomUUID}")))
 
-  object TestBulkResultsController extends BulkResultsController(mock[AuthAction],mockAuthConnector, mockGmpBulkConnector) {
+  object TestBulkResultsController extends BulkResultsController(FakeAuthAction,mockAuthConnector, mockGmpBulkConnector) {
     override val context = FakeGmpContext
   }
 
@@ -58,23 +58,21 @@ class BulkResultsControllerSpec extends PlaySpec with OneServerPerSuite with Moc
 
         "respond with a status of OK" in {
           when(mockGmpBulkConnector.getBulkResultsSummary(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful(bulkResultsSummary))
-          withAuthorisedUser { request =>
-            val result = TestBulkResultsController.get("",comingFromDashboard).apply(request)
+
+            val result = TestBulkResultsController.get("",comingFromDashboard).apply(FakeRequest())
             status(result) must equal(OK)
-          }
         }
 
         "load the results page" in {
           when(mockGmpBulkConnector.getBulkResultsSummary(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful(bulkResultsSummary))
-          withAuthorisedUser { request =>
-            val result = TestBulkResultsController.get("",comingFromDashboard).apply(request)
+
+            val result = TestBulkResultsController.get("",comingFromDashboard).apply(FakeRequest())
 
             contentAsString(result) must include(Messages("gmp.bulk.results.banner"))
             contentAsString(result) must include(Messages("gmp.back.link"))
             contentAsString(result) must include(Messages("gmp.bulk.explanations.contsandearnings"))
             contentAsString(result) must include(Messages("gmp.bulk.query_handling_message.header"))
             contentAsString(result) must include(Messages("gmp.bulk.query_handling_message.body"))
-          }
         }
 
         "contain correct successful count" in {
@@ -82,30 +80,25 @@ class BulkResultsControllerSpec extends PlaySpec with OneServerPerSuite with Moc
 
           when(mockGmpBulkConnector.getBulkResultsSummary(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful(bulkResultsSummary))
 
-          withAuthorisedUser { request =>
-            val result = TestBulkResultsController.get("",comingFromDashboard).apply(request)
+            val result = TestBulkResultsController.get("",comingFromDashboard).apply(FakeRequest())
 
             contentAsString(result) must include(Messages("gmp.bulk.subheaders.successfulcalculations") + " (" + (bulkResultsSummary.total - bulkResultsSummary.failed) + ")")
-          }
 
         }
 
         "show the incorrect user page" in {
           when(mockGmpBulkConnector.getBulkResultsSummary(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.failed(new Upstream4xxResponse("", FORBIDDEN, 0, Map())))
-          withAuthorisedUser { request =>
-            val result = TestBulkResultsController.get("",comingFromDashboard).apply(request)
+            val result = TestBulkResultsController.get("",comingFromDashboard).apply(FakeRequest())
 
             contentAsString(result) must include(Messages("gmp.bulk.wrong_user.login_text"))
-          }
         }
 
         "show the calc not found page" in {
           when(mockGmpBulkConnector.getBulkResultsSummary(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.failed(new NotFoundException("")))
-          withAuthorisedUser { request =>
-            val result = TestBulkResultsController.get("",comingFromDashboard).apply(request)
+
+            val result = TestBulkResultsController.get("",comingFromDashboard).apply(FakeRequest())
 
             contentAsString(result) must include(Messages("gmp.bulk.results_not_found"))
-          }
         }
       }
     }
@@ -116,11 +109,9 @@ class BulkResultsControllerSpec extends PlaySpec with OneServerPerSuite with Moc
 
         when(mockGmpBulkConnector.getResultsAsCsv(Matchers.any(),Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful(HttpResponse(responseStatus = 200,responseString = Some("CSV STRING"))))
 
-        withAuthorisedUser { request =>
-          val result = TestBulkResultsController.getResultsAsCsv("","").apply(request)
+          val result = TestBulkResultsController.getResultsAsCsv("","").apply(FakeRequest())
 
           contentAsString(result) must be("CSV STRING")
-        }
       }
 
     }
@@ -132,11 +123,9 @@ class BulkResultsControllerSpec extends PlaySpec with OneServerPerSuite with Moc
 
         when(mockGmpBulkConnector.getContributionsAndEarningsAsCsv(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful(HttpResponse(responseStatus = 200,responseString = Some("CSV STRING"))))
 
-        withAuthorisedUser { request =>
-          val result = TestBulkResultsController.getContributionsAndEarningsAsCsv("").apply(request)
+          val result = TestBulkResultsController.getContributionsAndEarningsAsCsv("").apply(FakeRequest())
 
           contentAsString(result) must be("CSV STRING")
-        }
       }
 
     }
