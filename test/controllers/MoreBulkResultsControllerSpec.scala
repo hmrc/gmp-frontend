@@ -69,6 +69,6 @@ class MoreBulkResultsControllerSpec extends PlaySpec with OneServerPerSuite with
             contentAsString(result) must include(Messages("gmp.more_bulk_results.header"))
       }
     }
-  }git
+  }
 
 }
