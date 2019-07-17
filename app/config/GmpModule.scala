@@ -16,7 +16,6 @@
 
 package config
 
-import controllers.auth.UUIDGenerator
 import play.api.inject.{Binding, Module}
 import play.api.{Configuration, Environment}
 import uk.gov.hmrc.http.{HttpGet, HttpPost, HttpPut}
@@ -25,7 +24,6 @@ import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 class GmpModule extends Module{
   override def bindings(environment: Environment, configuration: Configuration): Seq[Binding[_]] = Seq(
     bind[AuditConnector].to(GmpFrontendAuditConnector),
-    bind[UUIDGenerator].to(UUIDGenerator),
     bind[HttpGet].to(WSHttp),
     bind[HttpPost].to(WSHttp),
     bind[HttpPut].to(WSHttp),
