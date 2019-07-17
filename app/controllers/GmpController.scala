@@ -20,7 +20,7 @@ package controllers
 import com.google.inject.Inject
 import config.GmpContext
 import controllers.auth.GmpAuthConnector
-import metrics.Metrics
+import metrics.ApplicationMetrics
 import models.{CalculationType, GmpSession, Leaving}
 import play.api.Play
 import play.api.mvc.Result
@@ -34,7 +34,7 @@ import scala.concurrent.Future
 
 trait GmpController extends FrontendController{
   val pageVisibilityPredicate = new IdentityConfidencePredicate(ConfidenceLevel.L50, Future.successful(Forbidden))
-  val sessionService: SessionService = new SessionService(Metrics)
+  val sessionService: SessionService = new SessionService(Play.current.injector.instanceOf[ApplicationMetrics])
 
   implicit val context: config.GmpContext = Play.current.injector.instanceOf[GmpContext]
 }

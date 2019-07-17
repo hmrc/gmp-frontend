@@ -20,27 +20,25 @@ import java.util.UUID
 
 import connectors.GmpConnector
 import controllers.auth.{AuthAction, FakeAuthAction, GmpAuthConnector}
-import metrics.Metrics
+import metrics.ApplicationMetrics
 import models._
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
 import play.api.i18n.Messages
+import play.api.i18n.Messages.Implicits._
 import play.api.libs.json.Json
-import play.api.mvc.{AnyContentAsEmpty, Result}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.SessionService
 import uk.gov.hmrc.domain.PsaId
-import uk.gov.hmrc.play.frontend.auth.AuthContext
-import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
-import uk.gov.hmrc.play.frontend.auth.connectors.domain._
-import play.api.i18n.Messages.Implicits._
-
-import scala.concurrent.Future
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.logging.SessionId
+import uk.gov.hmrc.play.frontend.auth.AuthContext
+import uk.gov.hmrc.play.frontend.auth.connectors.domain._
+
+import scala.concurrent.Future
 
 class PensionDetailsControllerSpec extends PlaySpec with OneServerPerSuite with MockitoSugar {
 
@@ -48,12 +46,12 @@ class PensionDetailsControllerSpec extends PlaySpec with OneServerPerSuite with 
   val mockSessionService = mock[SessionService]
   val mockGmpConnector = mock[GmpConnector]
   val mockAuthAction = mock[AuthAction]
-
+  val metrics = app.injector.instanceOf[ApplicationMetrics]
 
   implicit val user = AuthContext(authority = Authority("1234", Accounts(psa = Some(PsaAccount("link", PsaId("B1234567")))), None, None, CredentialStrength.None, ConfidenceLevel.L50, None, None, None, ""))
   implicit val hc = new HeaderCarrier(sessionId = Some(SessionId(s"session-${UUID.randomUUID}")))
 
-  object TestPensionDetailsController extends PensionDetailsController(FakeAuthAction, mockAuthConnector, mockGmpConnector, Metrics) {
+  object TestPensionDetailsController extends PensionDetailsController(FakeAuthAction, mockAuthConnector, mockGmpConnector, metrics) {
     override val sessionService = mockSessionService
     override val context = FakeGmpContext
   }

@@ -21,7 +21,7 @@ import config.GmpContext
 import connectors.GmpConnector
 import controllers.auth.{AuthAction, GmpAuthConnector}
 import events.ContributionsAndEarningsEvent
-import metrics.Metrics
+import metrics.ApplicationMetrics
 import models._
 import org.joda.time.LocalDate
 import play.api.Logger
@@ -41,7 +41,7 @@ class ResultsController @Inject()(authAction: AuthAction,
                                   sessionService: SessionService,
                                   calculationConnector: GmpConnector,
                                   auditConnector: AuditConnector,
-                                  metrics: Metrics) extends GmpPageFlow(authConnector) {
+                                  metrics: ApplicationMetrics) extends GmpPageFlow(authConnector) {
 
    def resultsView(response: CalculationResponse, revalRateSubheader: Option[String], survivorSubheader: Option[String])(implicit request: Request[_], context: GmpContext): HtmlFormat.Appendable = {
     views.html.results(applicationConfig = config.ApplicationConfig, response, revalRateSubheader, survivorSubheader)

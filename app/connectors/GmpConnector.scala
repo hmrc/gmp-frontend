@@ -17,7 +17,7 @@
 package connectors
 
 import com.google.inject.Inject
-import metrics.Metrics
+import metrics.ApplicationMetrics
 import models._
 import play.api.Mode.Mode
 import play.api.{Configuration, Environment, Logger, Play}
@@ -29,7 +29,7 @@ import scala.concurrent.Future
 
 class GmpConnector @Inject()(environment: Environment,
                              val runModeConfiguration: Configuration,
-                             metrics: Metrics,
+                             metrics: ApplicationMetrics,
                              httpPost: HttpPost,
                              httpGet: HttpGet,
                              httpPut: HttpPut) extends ServicesConfig {

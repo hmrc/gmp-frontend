@@ -20,7 +20,7 @@ import com.google.inject.{Inject, Singleton}
 import connectors.GmpConnector
 import controllers.auth.{AuthAction, GmpAuthConnector}
 import forms.PensionDetailsForm._
-import metrics.Metrics
+import metrics.ApplicationMetrics
 import models.{PensionDetails, ValidateSconRequest}
 import play.api.Logger
 import play.api.Play.current
@@ -33,7 +33,7 @@ import scala.concurrent.Future
 class PensionDetailsController @Inject()(authAction: AuthAction,
                                          override val authConnector: GmpAuthConnector,
                                          gmpConnector: GmpConnector,
-                                         metrics: Metrics) extends GmpPageFlow(authConnector) {
+                                         metrics: ApplicationMetrics) extends GmpPageFlow(authConnector) {
 
   def get = authAction.async {
       implicit request => {

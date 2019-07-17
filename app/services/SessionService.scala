@@ -18,7 +18,7 @@ package services
 
 import com.google.inject.Inject
 import config.SessionCacheWiring
-import metrics.Metrics
+import metrics.ApplicationMetrics
 import models._
 import play.api.Logger
 import play.api.mvc.Request
@@ -27,7 +27,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class SessionService @Inject()(metrics: Metrics) extends SessionCacheWiring {
+class SessionService @Inject()(metrics: ApplicationMetrics) extends SessionCacheWiring {
 
   val GMP_SESSION_KEY = "gmp_session"
   val cleanSession = GmpSession(MemberDetails("", "", ""), "", "", None, None, Leaving(GmpDate(None, None, None), None), None)
