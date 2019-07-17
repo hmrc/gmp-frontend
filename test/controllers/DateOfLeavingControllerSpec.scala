@@ -36,7 +36,7 @@ import play.api.i18n.Messages.Implicits._
 
 import scala.concurrent.Future
 
-class DateOfLeavingControllerSpec extends PlaySpec with OneServerPerSuite with MockitoSugar with GmpUsers {
+class DateOfLeavingControllerSpec extends PlaySpec with OneServerPerSuite with MockitoSugar {
   DateTimeUtils.setCurrentMillisFixed(new DateTime(2016, 1, 1, 1, 1).toDate.getTime)
   val mockAuthConnector = mock[GmpAuthConnector]
   val mockSessionService = mock[SessionService]

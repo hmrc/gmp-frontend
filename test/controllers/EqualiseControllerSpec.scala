@@ -33,7 +33,7 @@ import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
 
 import scala.concurrent.Future
 
-class EqualiseControllerSpec extends PlaySpec with OneServerPerSuite with MockitoSugar with GmpUsers {
+class EqualiseControllerSpec extends PlaySpec with OneServerPerSuite with MockitoSugar {
 
   val mockAuthConnector = mock[GmpAuthConnector]
   val mockSessionService = mock[SessionService]

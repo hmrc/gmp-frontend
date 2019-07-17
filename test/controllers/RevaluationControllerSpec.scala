@@ -33,7 +33,7 @@ import play.api.i18n.Messages.Implicits._
 
 import scala.concurrent.Future
 
-class RevaluationControllerSpec extends PlaySpec with OneServerPerSuite with MockitoSugar with GmpUsers {
+class RevaluationControllerSpec extends PlaySpec with OneServerPerSuite with MockitoSugar {
 
   val mockAuthConnector = mock[GmpAuthConnector]
   val mockSessionService = mock[SessionService]
@@ -51,27 +51,21 @@ class RevaluationControllerSpec extends PlaySpec with OneServerPerSuite with Moc
     "authenticated users" must {
 
       "respond with ok" in {
-        withAuthorisedUser { user =>
+
           when(mockSessionService.fetchLeaving()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(Leaving(GmpDate(None, None, None), None))))
-          get(user) { result =>
+          val result = TestRevaluationController.get.apply(FakeRequest())
             status(result) must equal(OK)
             contentAsString(result) must include("When would you like the calculation made to?")
             contentAsString(result) must include(Messages("gmp.revaluation.question"))
             contentAsString(result) must include(Messages("gmp.back.link"))
-          }
-        }
       }
 
       "respond with ok when no leaving" in {
         when(mockSessionService.fetchLeaving()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(None))
-        withAuthorisedUser { user =>
-          get(user) { result =>
+        val result = TestRevaluationController.get.apply(FakeRequest())
             status(result) must equal(OK)
             contentAsString(result) must include("When would you like the calculation made to?")
             contentAsString(result) must include(Messages("gmp.revaluation.question"))
-
-          }
-        }
       }
     }
   }
@@ -84,23 +78,20 @@ class RevaluationControllerSpec extends PlaySpec with OneServerPerSuite with Moc
       val session = GmpSession(memberDetails, "", CalculationType.REVALUATION, None, None, Leaving(GmpDate(None, None, None), None), None)
 
       "redirect to the date of leaving page" in {
-        withAuthorisedUser { request =>
+
           when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(session)))
-          val result = TestRevaluationController.back.apply(request)
+          val result = TestRevaluationController.back.apply(FakeRequest())
           status(result) must equal(SEE_OTHER)
           redirectLocation(result).get must include("/left-scheme")
-        }
       }
     }
 
     "throw an exception when session not fetched" in {
 
-      withAuthorisedUser { request =>
         when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(None))
-        val result = TestRevaluationController.back.apply(request)
+        val result = TestRevaluationController.back.apply(FakeRequest())
         intercept[RuntimeException] {
           status(result)
-        }
       }
     }
 
@@ -113,23 +104,20 @@ class RevaluationControllerSpec extends PlaySpec with OneServerPerSuite with Moc
       "with invalid data" must {
 
         "respond with BAD_REQUEST" in {
-          withAuthorisedUser { request =>
             val postData = Json.toJson(
               RevaluationDate(Leaving(GmpDate(None, None, None), None), baseValidDate.copy(day = Some("31"), month = Some("2"), year = Some("2015")))
             )
-            val result = TestRevaluationController.post.apply(request.withJsonBody(postData))
+            val result = TestRevaluationController.post.apply(FakeRequest().withJsonBody(postData))
             status(result) must equal(BAD_REQUEST)
-          }
         }
 
         "display the errors" in {
-          withAuthorisedUser { request =>
+
             val postData = Json.toJson(
               RevaluationDate(Leaving(GmpDate(None, None, None), None), baseValidDate.copy(day = Some("31"), month = Some("2"), year = Some("2015")))
             )
-            val result = TestRevaluationController.post.apply(request.withJsonBody(postData))
+            val result = TestRevaluationController.post.apply(FakeRequest().withJsonBody(postData))
             contentAsString(result) must include(Messages("gmp.error.date.invalid"))
-          }
         }
       }
 
@@ -140,33 +128,24 @@ class RevaluationControllerSpec extends PlaySpec with OneServerPerSuite with Moc
         "redirect" in {
 
           when(mockSessionService.cacheRevaluationDate(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
-          withAuthorisedUser { request =>
             val postData = Json.toJson(
               RevaluationDate(Leaving(GmpDate(None, None, None), None), baseValidDate.copy(day = Some("31"), month = Some("3"), year = Some("2015")))
             )
-            val result = TestRevaluationController.post.apply(request.withJsonBody(postData))
+            val result = TestRevaluationController.post.apply(FakeRequest().withJsonBody(postData))
             status(result) must equal(SEE_OTHER)
-          }
         }
 
 
         "respond with error when rate not stored" in {
           when(mockSessionService.cacheRevaluationDate(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(None))
-          withAuthorisedUser { request =>
             val postData = Json.toJson(
               RevaluationDate(Leaving(GmpDate(None, None, None), None), baseValidDate.copy(day = Some("31"), month = Some("3"), year = Some("2015")))
             )
             intercept[RuntimeException] {
-              await(TestRevaluationController.post.apply(request.withJsonBody(postData)))
-            }
+              await(TestRevaluationController.post.apply(FakeRequest().withJsonBody(postData)))
           }
         }
       }
     }
   }
-
-  def get(request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest())(handler: Future[Result] => Any): Unit = {
-    handler(TestRevaluationController.get.apply(request))
-  }
-
 }

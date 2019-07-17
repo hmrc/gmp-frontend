@@ -33,7 +33,7 @@ import play.api.i18n.Messages.Implicits._
 
 import scala.concurrent.Future
 
-class MemberDetailsControllerSpec extends PlaySpec with OneServerPerSuite with MockitoSugar with GmpUsers {
+class MemberDetailsControllerSpec extends PlaySpec with OneServerPerSuite with MockitoSugar {
 
   val mockAuthConnector = mock[GmpAuthConnector]
   val mockSessionService = mock[SessionService]

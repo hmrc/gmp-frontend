@@ -36,7 +36,7 @@ import uk.gov.hmrc.play.partials.HtmlPartial
 import scala.concurrent.Future
 import play.api.i18n.Messages.Implicits._
 
-class FileUploadControllerSpec extends PlaySpec with OneServerPerSuite with MockitoSugar with GmpUsers {
+class FileUploadControllerSpec extends PlaySpec with OneServerPerSuite with MockitoSugar {
   val mockAuthConnector = mock[GmpAuthConnector]
   val mockAttachmentsConnector = mock[AttachmentsConnector]
   val mockSessionService = mock[SessionService]

@@ -27,7 +27,7 @@ import play.api.http.Status._
 import play.api.mvc.{Action, AnyContent, Controller}
 import play.api.test.FakeRequest
 import play.api.test.Helpers.{redirectLocation, status}
-import uk.gov.hmrc.auth.core.{Enrolment, EnrolmentIdentifier, Enrolments, MissingBearerToken}
+import uk.gov.hmrc.auth.core.{Enrolment, EnrolmentIdentifier, Enrolments, InsufficientConfidenceLevel, MissingBearerToken}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -59,17 +59,33 @@ class AuthActionSpec extends PlaySpec with GuiceOneAppPerSuite with MockitoSugar
       }
     }
 
+    "the user has a confidence level too low" must {
+      "redirect the user to the unauthorised page" in {
+
+        val mockAuthConnector = mock[GmpAuthConnector]
+
+        when(mockAuthConnector.authorise(any(),any())(any(), any()))
+          .thenReturn(Future.failed(new InsufficientConfidenceLevel))
+
+        val authAction = new AuthActionImpl(mockAuthConnector,app.configuration)
+        val controller = new Harness(authAction)
+
+        val result = controller.onPageLoad()(FakeRequest("", ""))
+        status(result) mustBe SEE_OTHER
+        redirectLocation(result).get must be("/guaranteed-minimum-pension/unauthorised")
+      }
+    }
+
     "the user has no psa/psp account " must {
       "redirect the user to the unauthorised page" in {
         val mockAuthConnector = mock[GmpAuthConnector]
 
-        val retrievalResult: Future[Enrolments] =
-          Future.failed(new RuntimeException("User Authorisation failed"))
+        when(mockAuthConnector.authorise(any(),any())(any(), any()))
+          .thenReturn(Future.failed(new RuntimeException("User Authorisation failed")))
 
-        when(mockAuthConnector.authorise[Enrolments](any(), any())(any(), any()))
-          .thenReturn(retrievalResult)
         val authAction = new AuthActionImpl(mockAuthConnector, app.configuration)
         val controller = new Harness(authAction)
+
         val result = controller.onPageLoad()(FakeRequest("", ""))
         status(result) mustBe SEE_OTHER
         redirectLocation(result) must be(Some("/guaranteed-minimum-pension/unauthorised"))

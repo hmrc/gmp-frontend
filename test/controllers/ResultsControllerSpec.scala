@@ -45,7 +45,7 @@ import uk.gov.hmrc.http.logging.SessionId
 
 import scala.concurrent.Future
 
-class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with MockitoSugar with GmpUsers {
+class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with MockitoSugar {
 
   val mockAuthConnector = mock[GmpAuthConnector]
   val mockSessionService = mock[SessionService]
@@ -844,11 +844,11 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
         "go to failure page when session missing firstname" in {
           val emptySession = GmpSession(MemberDetails(nino, "", ""), "S1234567T", "", None, None, Leaving(GmpDate(None, None, None), None), None)
           when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(emptySession)))
-          withAuthorisedUser { request =>
-            val result = TestResultsController.getContributionsAndEarnings.apply(request)
+
+            val result = TestResultsController.getContributionsAndEarnings.apply(FakeRequest())
             contentAsString(result)replaceAll("&#x27;", "'") must include (Messages("gmp.cannot_calculate.gmp"))
             contentAsString(result) must include (Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/member-details"))
-          }
+
         }
 
         "go to failure page when session missing lastname" in {

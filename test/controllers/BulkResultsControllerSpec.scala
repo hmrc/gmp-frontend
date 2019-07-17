@@ -36,7 +36,7 @@ import uk.gov.hmrc.http.logging.SessionId
 import scala.concurrent.Future
 import uk.gov.hmrc.http.{HttpResponse, NotFoundException, Upstream4xxResponse}
 
-class BulkResultsControllerSpec extends PlaySpec with OneServerPerSuite with MockitoSugar with GmpUsers {
+class BulkResultsControllerSpec extends PlaySpec with OneServerPerSuite with MockitoSugar {
 
   val mockAuthConnector = mock[GmpAuthConnector]
   val mockGmpBulkConnector = mock[GmpBulkConnector]

@@ -36,7 +36,7 @@ import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
 
 import scala.concurrent.Future
 
-class DashboardControllerSpec extends PlaySpec with OneServerPerSuite with MockitoSugar with GmpUsers {
+class DashboardControllerSpec extends PlaySpec with OneServerPerSuite with MockitoSugar {
 
   val mockAuthConnector = mock[GmpAuthConnector]
   val mockSessionService = mock[SessionService]
@@ -55,12 +55,11 @@ class DashboardControllerSpec extends PlaySpec with OneServerPerSuite with Mocki
     "Contain Ur banner" in {
 
       val dashboard = new Dashboard(Nil)
-      withAuthorisedUser { request =>
-        val result = TestDashboardController.get.apply(request)
+
+        val result = TestDashboardController.get.apply(FakeRequest())
         contentAsString(result) must include(Messages("urbanner.message.text"))
         contentAsString(result) must include(Messages("urbanner.message.open.new.window"))
         contentAsString(result) must include(Messages("urbanner.message.reject"))
-      }
    }
   }
 
@@ -112,10 +111,9 @@ class DashboardControllerSpec extends PlaySpec with OneServerPerSuite with Mocki
 
         when(brokenGmpBulkConnector.getPreviousBulkRequests(Matchers.any())(Matchers.any())).thenReturn(Future.failed(new Upstream5xxResponse("failed",503,503)))
         val dashboard = new Dashboard(Nil)
-        withAuthorisedUser { request =>
-          val result = BrokenDashboardController.get.apply(request)
+
+          val result = BrokenDashboardController.get.apply(FakeRequest())
           contentAsString(result) must include(Messages("gmp.previous_calculations"))
-        }
       }
 
       "load the dashboard from the bulk service if present and complete" in {

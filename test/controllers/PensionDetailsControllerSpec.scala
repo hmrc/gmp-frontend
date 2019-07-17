@@ -42,7 +42,7 @@ import scala.concurrent.Future
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.logging.SessionId
 
-class PensionDetailsControllerSpec extends PlaySpec with OneServerPerSuite with MockitoSugar with GmpUsers {
+class PensionDetailsControllerSpec extends PlaySpec with OneServerPerSuite with MockitoSugar {
 
   val mockAuthConnector = mock[GmpAuthConnector]
   val mockSessionService = mock[SessionService]

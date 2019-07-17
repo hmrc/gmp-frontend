@@ -16,7 +16,7 @@
 
 package controllers.auth
 
-import play.api.mvc.{Request, Result}
+import play.api.mvc.{Request, Result, Results}
 
 import scala.concurrent.Future
 
@@ -27,4 +27,3 @@ object FakeAuthAction extends AuthAction {
     block(AuthenticatedRequest("gmp/B1234567", request))
   }
 }
-

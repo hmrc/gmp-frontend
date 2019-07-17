@@ -38,7 +38,7 @@ class ApplicationControllerSpec extends PlaySpec
   with BeforeAndAfterEach
   with ScalaFutures
   with MockitoSugar
-  with GmpUsers {
+  {
 
   val mockAuthConnector: GmpAuthConnector = mock[GmpAuthConnector]
   val mockAuditConnector: AuditConnector = mock[AuditConnector]
