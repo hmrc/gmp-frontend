@@ -37,7 +37,7 @@ class BulkRequestReceivedController @Inject()(authAction: AuthAction,
 
   def get = authAction.async {
       implicit request => {
-        val link = request.link
+        val link = request.linkId
 
         Logger.debug(s"[BulkRequestReceivedController][get][GET] : ${request.body}")
         sessionService.fetchGmpBulkSession().flatMap {

@@ -17,9 +17,10 @@
 package config
 
 import akka.actor.ActorSystem
+import com.google.inject.Inject
 import com.typesafe.config.Config
 import play.api.Mode.Mode
-import play.api.{Configuration, Play}
+import play.api.{Configuration, Environment, Play}
 import uk.gov.hmrc.http._
 import uk.gov.hmrc.http.cache.client.SessionCache
 import uk.gov.hmrc.http.hooks.HttpHook
@@ -51,21 +52,15 @@ trait WSHttp extends HttpGet with WSGet with HttpPut with WSPut with HttpPost wi
 
 object WSHttp extends WSHttp with Hooks
 
-//object GmpFrontendAuthConnector extends AuthConnector with ServicesConfig {
-//  val serviceUrl = baseUrl("auth")
-//  lazy val http = WSHttp
-//
-//  override protected def mode: Mode = Play.current.mode
-//  override protected def runModeConfiguration: Configuration = Play.current.configuration
-//}
+class GmpSessionCache @Inject()(environment: Environment,
+                                configuration: Configuration,
+                                val http: WSHttp) extends SessionCache with AppName with ServicesConfig {
 
-object GmpSessionCache extends SessionCache with AppName with ServicesConfig {
-  override lazy val http = WSHttp
   override lazy val defaultSource = appName
   override lazy val baseUri = baseUrl("keystore")
   override lazy val domain = getConfString("cachable.session-cache.domain", throw new Exception(s"Could not find config 'cachable.session-cache.domain'"))
 
-  override protected def appNameConfiguration: Configuration = Play.current.configuration
-  override protected def mode: Mode = Play.current.mode
-  override protected def runModeConfiguration: Configuration = Play.current.configuration
+  override protected def appNameConfiguration: Configuration = configuration
+  override protected def mode: Mode = environment.mode
+  override protected def runModeConfiguration: Configuration = configuration
 }

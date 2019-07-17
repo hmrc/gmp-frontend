@@ -49,7 +49,7 @@ class ResultsController @Inject()(authAction: AuthAction,
 
   def get = authAction.async {
       implicit request => {
-        val link = request.link
+        val link = request.linkId
         sessionService.fetchGmpSession() flatMap {
           sessionOpt: Option[GmpSession] =>
             sessionOpt match {
@@ -77,7 +77,7 @@ class ResultsController @Inject()(authAction: AuthAction,
 
   def getContributionsAndEarnings = authAction.async {
       implicit request => {
-        val link = request.link
+        val link = request.linkId
 
         sessionService.fetchGmpSession() flatMap {
           sessionOpt: Option[GmpSession] =>

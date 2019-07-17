@@ -16,6 +16,7 @@
 
 package services
 
+import config.GmpSessionCache
 import helpers.RandomNino
 import metrics.ApplicationMetrics
 import models._
@@ -39,16 +40,14 @@ class SessionServiceSpec extends PlaySpec with OneServerPerSuite with ScalaFutur
   val scon = "S3123456A"
   val gmpSession = GmpSession(memberDetails, scon, CalculationType.DOL, None, None, Leaving(GmpDate(None,None,None),None), None)
   val json = Json.toJson[GmpSession](gmpSession)
-  val mockSessionCache = mock[SessionCache]
+  val mockSessionCache = mock[GmpSessionCache]
   val metrics = app.injector.instanceOf[ApplicationMetrics]
 
   val callBackData = CallBackData("AAAAA", "11111", 1L, Some("Ted"), Some("application/json"), "YYYYYYY", None)
   val gmpBulkSession = GmpBulkSession(Some(callBackData), Some(EmailAddress("somebody@somewhere.com")), Some("reference"))
   val bulkJson = Json.toJson[GmpBulkSession](gmpBulkSession)
 
-  object TestSessionService extends SessionService(metrics) {
-    override def sessionCache: SessionCache = mockSessionCache
-  }
+  object TestSessionService extends SessionService(metrics, mockSessionCache)
 
   implicit val request = FakeRequest()
   val hc = HeaderCarrier()
@@ -274,13 +273,13 @@ class SessionServiceSpec extends PlaySpec with OneServerPerSuite with ScalaFutur
 
       "reset the session" in {
         val result = Await.result(TestSessionService.resetGmpSession()(request, hc), 10 seconds)
-        result must be(Some(new SessionService(metrics).cleanSession))
+        result must be(Some(new SessionService(metrics, mockSessionCache).cleanSession))
       }
 
       "reset the session with scon" in {
         when(mockSessionCache.fetchAndGetEntry[GmpSession](any())(any(), any(), any())).thenReturn(Future.successful(Some(gmpSession.copy(scon = scon))))
         val result = Await.result(TestSessionService.resetGmpSessionWithScon()(request, hc), 10 seconds)
-        result must be(Some(new SessionService(metrics).cleanSession.copy(scon = scon)))
+        result must be(Some(new SessionService(metrics, mockSessionCache).cleanSession.copy(scon = scon)))
       }
 
       "fetch the session" in {
@@ -299,7 +298,7 @@ class SessionServiceSpec extends PlaySpec with OneServerPerSuite with ScalaFutur
 
       "reset the session" in {
         val result = Await.result(TestSessionService.resetGmpBulkSession()(request, hc), 10 seconds)
-        result must be(Some(new SessionService(metrics).cleanBulkSession))
+        result must be(Some(new SessionService(metrics, mockSessionCache).cleanBulkSession))
       }
 
       "cache callbackdata" in {

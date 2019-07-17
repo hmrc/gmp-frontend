@@ -34,15 +34,9 @@ class GmpConnector @Inject()(environment: Environment,
                              httpGet: HttpGet,
                              httpPut: HttpPut) extends ServicesConfig {
 
-  override protected def mode: Mode = Play.current.mode
+  override protected def mode: Mode = environment.mode
 
   lazy val serviceURL = baseUrl("gmp")
-
-//  def getUser(user: AuthContext): String = {
-//    user.principal.accounts.psa.map(_.link).getOrElse(
-//      user.principal.accounts.psp.map(_.link).getOrElse(
-//        throw new RuntimeException("User Authorisation failed"))).substring(5)
-//  }
 
   def calculateSingle(calculationRequest: CalculationRequest, link: String)(implicit headerCarrier: HeaderCarrier): Future[CalculationResponse] = {
 

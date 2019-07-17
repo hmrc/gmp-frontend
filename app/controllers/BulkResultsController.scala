@@ -34,7 +34,7 @@ class BulkResultsController @Inject()(authAction: AuthAction,
 
       val log = (e: Throwable) => Logger.error(s"[BulkResultsController][GET] ${e.getMessage}", e)
 
-      val link = request.link
+      val link = request.linkId
 
         gmpBulkConnector.getBulkResultsSummary(uploadReference, link).map {
           bulkResultsSummary => {
@@ -61,7 +61,7 @@ class BulkResultsController @Inject()(authAction: AuthAction,
 
   def getResultsAsCsv(uploadReference: String, filter: String) = authAction.async {
       implicit request => {
-        val link = request.link
+        val link = request.linkId
         gmpBulkConnector.getResultsAsCsv(uploadReference, filter, link).map {
           csvResponse => Ok(csvResponse.body).as("text/csv").withHeaders(("Content-Disposition", csvResponse.header("Content-Disposition").getOrElse("")))
         }
@@ -70,7 +70,7 @@ class BulkResultsController @Inject()(authAction: AuthAction,
 
   def getContributionsAndEarningsAsCsv(uploadReference: String) = authAction.async {
       implicit request => {
-        val link = request.link
+        val link = request.linkId
         gmpBulkConnector.getContributionsAndEarningsAsCsv(uploadReference, link).map {
           csvResponse => Ok(csvResponse.body).as("text/csv").withHeaders(("Content-Disposition", csvResponse.header("Content-Disposition").getOrElse("")))
         }

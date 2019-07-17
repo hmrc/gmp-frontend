@@ -30,7 +30,7 @@ class DashboardController @Inject()(authAction: AuthAction,
 
   def get = authAction.async {
       implicit request => {
-        val link = request.link
+        val link = request.linkId
         sessionService.resetGmpSessionWithScon()
 
         gmpBulkConnector.getPreviousBulkRequests(link).map {

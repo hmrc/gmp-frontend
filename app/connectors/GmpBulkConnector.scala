@@ -36,12 +36,6 @@ class GmpBulkConnector @Inject()(environment: Environment,
 
   lazy val serviceURL = baseUrl("gmp-bulk")
 
-//  def getUser(user: AuthContext): String = {
-//    user.principal.accounts.psa.map(_.link).getOrElse(
-//      user.principal.accounts.psp.map(_.link).getOrElse(
-//        throw new RuntimeException("User Authorisation failed"))).substring(5)
-//  }
-
   def sendBulkRequest(bcr: BulkCalculationRequest, link: String)(implicit headerCarrier: HeaderCarrier): Future[Int] = {
 
     val baseURI = s"gmp/${link}/gmp/bulk-data"

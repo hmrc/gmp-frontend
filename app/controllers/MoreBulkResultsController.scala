@@ -29,7 +29,7 @@ class MoreBulkResultsController @Inject()(authAction: AuthAction,
 
   def retrieveMoreBulkResults = authAction.async {
       implicit request => {
-        val link = request.link
+        val link = request.linkId
         gmpBulkConnector.getPreviousBulkRequests(link).map {
           bulkPreviousRequests => {
             Ok(views.html.more_bulk_results(bulkPreviousRequests.sorted))

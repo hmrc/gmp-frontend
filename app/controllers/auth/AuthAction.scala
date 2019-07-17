@@ -29,7 +29,7 @@ import uk.gov.hmrc.play.config.ServicesConfig
 
 import scala.concurrent.{ExecutionContext, Future}
 
-case class AuthenticatedRequest[A](link: String, request:Request[A]) extends WrappedRequest[A](request)
+case class AuthenticatedRequest[A](linkId: String, request:Request[A]) extends WrappedRequest[A](request)
 
 class AuthActionImpl @Inject()(val authConnector: GmpAuthConnector, configuration: Configuration)
                               (implicit ec: ExecutionContext) extends AuthAction with AuthorisedFunctions {
@@ -49,20 +49,17 @@ class AuthActionImpl @Inject()(val authConnector: GmpAuthConnector, configuratio
             enrolment => enrolment.identifiers.find(id => id.key == "PPID").map(_.value)
           }
 
-          val link = (psaid, ppid) match {
-            case (Some(id),_)     => s"psa/$id"
-            case (None, Some(id)) => s"psp/$id"
-            case _                => throw new RuntimeException("User Authorisation failed")
-          }
+          psaid.orElse(ppid).fold(Future.successful(Results.Redirect(ExternalUrls.signIn)))(id => block(AuthenticatedRequest(id, request)))
 
-          block(AuthenticatedRequest(link, request))
         }
         case _ => throw new RuntimeException("Can't find credentials for user")
       }
   } recover {
     case ex: NoActiveSession => Results.Redirect(ExternalUrls.signIn)
 
-    case _ => Results.Redirect(controllers.routes.ApplicationController.unauthorised().url)
+    case ex: InsufficientConfidenceLevel => Results.Redirect(controllers.routes.ApplicationController.unauthorised().url)
+
+    case ex: InsufficientEnrolments => Results.Redirect(controllers.routes.ApplicationController.unauthorised().url)
   }
 }
 

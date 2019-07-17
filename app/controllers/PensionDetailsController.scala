@@ -46,7 +46,7 @@ class PensionDetailsController @Inject()(authAction: AuthAction,
 
   def post = authAction.async {
       implicit request => {
-        val link = request.link
+        val link = request.linkId
         Logger.debug(s"[PensionDetailsController][post][POST] : ${request.body}")
 
         pensionDetailsForm.bindFromRequest().fold(

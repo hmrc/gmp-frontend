@@ -27,7 +27,7 @@ import play.api.http.Status._
 import play.api.mvc.{Action, AnyContent, Controller}
 import play.api.test.FakeRequest
 import play.api.test.Helpers.{redirectLocation, status}
-import uk.gov.hmrc.auth.core.{Enrolment, EnrolmentIdentifier, Enrolments, InsufficientConfidenceLevel, MissingBearerToken}
+import uk.gov.hmrc.auth.core.{Enrolment, EnrolmentIdentifier, Enrolments, InsufficientConfidenceLevel, InsufficientEnrolments, MissingBearerToken}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -36,7 +36,7 @@ import scala.concurrent.duration._
 class AuthActionSpec extends PlaySpec with GuiceOneAppPerSuite with MockitoSugar with ScalaFutures {
 
   class Harness(authAction: AuthAction) extends Controller {
-    def onPageLoad(): Action[AnyContent] = authAction { request => Ok.withHeaders("link" -> request.link) }
+    def onPageLoad(): Action[AnyContent] = authAction { request => Ok.withHeaders("link" -> request.linkId) }
   }
 
   implicit val timeout: Timeout = 5 seconds
@@ -80,8 +80,8 @@ class AuthActionSpec extends PlaySpec with GuiceOneAppPerSuite with MockitoSugar
       "redirect the user to the unauthorised page" in {
         val mockAuthConnector = mock[GmpAuthConnector]
 
-        when(mockAuthConnector.authorise(any(),any())(any(), any()))
-          .thenReturn(Future.failed(new RuntimeException("User Authorisation failed")))
+        when(mockAuthConnector.authorise[Enrolments](any(), any())(any(), any()))
+          .thenReturn(Future.failed(new InsufficientEnrolments))
 
         val authAction = new AuthActionImpl(mockAuthConnector, app.configuration)
         val controller = new Harness(authAction)
@@ -109,7 +109,7 @@ class AuthActionSpec extends PlaySpec with GuiceOneAppPerSuite with MockitoSugar
         val result = controller.onPageLoad()(FakeRequest("", ""))
         status(result) mustBe OK
         whenReady(result) {
-          _.header.headers("link") mustBe "psa/someID"
+          _.header.headers("link") mustBe "someID"
         }
       }
     }
@@ -129,7 +129,7 @@ class AuthActionSpec extends PlaySpec with GuiceOneAppPerSuite with MockitoSugar
           val result = controller.onPageLoad()(FakeRequest("", ""))
           status(result) mustBe OK
           whenReady(result) {
-            _.header.headers("link") mustBe "psp/someID"
+            _.header.headers("link") mustBe "someID"
           }
         }
       }

@@ -41,8 +41,6 @@ class DateOfLeavingController @Inject()(authAction: AuthAction,
           }
           case _ => Ok(views.html.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/dashboard"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title")))
         }
-
-
   }
 
   def post = authAction.async {

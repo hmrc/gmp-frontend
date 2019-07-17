@@ -20,22 +20,15 @@ package controllers
 import com.google.inject.Inject
 import config.GmpContext
 import controllers.auth.GmpAuthConnector
-import metrics.ApplicationMetrics
 import models.{CalculationType, GmpSession, Leaving}
 import play.api.Play
 import play.api.mvc.Result
 import services.SessionService
-import uk.gov.hmrc.play.frontend.auth.IdentityConfidencePredicate
-import uk.gov.hmrc.play.frontend.auth.connectors.domain.ConfidenceLevel
 import uk.gov.hmrc.play.frontend.controller.FrontendController
 import uk.gov.hmrc.time.TaxYear
 
-import scala.concurrent.Future
-
 trait GmpController extends FrontendController{
-  val pageVisibilityPredicate = new IdentityConfidencePredicate(ConfidenceLevel.L50, Future.successful(Forbidden))
-  val sessionService: SessionService = new SessionService(Play.current.injector.instanceOf[ApplicationMetrics])
-
+  val sessionService: SessionService = Play.current.injector.instanceOf[SessionService]
   implicit val context: config.GmpContext = Play.current.injector.instanceOf[GmpContext]
 }
 
