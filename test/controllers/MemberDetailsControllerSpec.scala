@@ -24,12 +24,11 @@ import org.mockito.Mockito._
 import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
 import play.api.i18n.Messages
+import play.api.i18n.Messages.Implicits._
 import play.api.libs.json.Json
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.SessionService
-import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
-import play.api.i18n.Messages.Implicits._
 
 import scala.concurrent.Future
 

@@ -18,8 +18,8 @@ package controllers
 
 import java.util.UUID
 
-import config.ApplicationConfig
 import config.ApplicationConfig.globalErrors
+import config.{ApplicationConfig, GmpFrontendAuditConnector}
 import connectors.GmpConnector
 import controllers.auth.{AuthAction, FakeAuthAction, GmpAuthConnector}
 import helpers.RandomNino
@@ -39,7 +39,7 @@ import play.twirl.api.HtmlFormat
 import services.SessionService
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.logging.SessionId
-import uk.gov.hmrc.play.audit.http.connector.{AuditConnector, AuditResult}
+import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import views.helpers.GmpDateFormatter._
 
 import scala.concurrent.Future
@@ -50,7 +50,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
   val mockSessionService = mock[SessionService]
   val mockCalculationConnector = mock[GmpConnector]
   val mockApplicationConfig = mock[ApplicationConfig]
-  val mockAuditConnector = mock[AuditConnector]
+  val mockAuditConnector = mock[GmpFrontendAuditConnector]
   val mockAuthAction = mock[AuthAction]
   val metrics = app.injector.instanceOf[ApplicationMetrics]
 

@@ -24,17 +24,16 @@ import org.mockito.Mockito._
 import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
 import play.api.i18n.Messages
-import play.api.libs.json.{JsValue, Json}
+import play.api.i18n.Messages.Implicits._
+import play.api.libs.json.Json
 import play.api.mvc.{AnyContentAsEmpty, Result}
-import play.api.test.{FakeHeaders, FakeRequest}
 import play.api.test.Helpers._
+import play.api.test.{FakeHeaders, FakeRequest}
 import play.twirl.api.Html
 import services.SessionService
-import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
 import uk.gov.hmrc.play.partials.HtmlPartial
 
 import scala.concurrent.Future
-import play.api.i18n.Messages.Implicits._
 
 class FileUploadControllerSpec extends PlaySpec with OneServerPerSuite with MockitoSugar {
   val mockAuthConnector = mock[GmpAuthConnector]

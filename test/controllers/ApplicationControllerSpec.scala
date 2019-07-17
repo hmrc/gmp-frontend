@@ -17,6 +17,7 @@
 package controllers
 
 import com.google.inject.Singleton
+import config.GmpFrontendAuditConnector
 import controllers.auth.{AuthAction, FakeAuthAction, GmpAuthConnector, UUIDGenerator}
 import org.mockito.ArgumentCaptor
 import org.mockito.Matchers._
@@ -29,7 +30,6 @@ import play.api.i18n.Messages
 import play.api.i18n.Messages.Implicits._
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.audit.model.DataEvent
 
 @Singleton
@@ -41,7 +41,7 @@ class ApplicationControllerSpec extends PlaySpec
   {
 
   val mockAuthConnector: GmpAuthConnector = mock[GmpAuthConnector]
-  val mockAuditConnector: AuditConnector = mock[AuditConnector]
+  val mockAuditConnector: GmpFrontendAuditConnector = mock[GmpFrontendAuditConnector]
   val mockUUIDGenerator: UUIDGenerator = mock[UUIDGenerator]
   val mockAuthAction: AuthAction = mock[AuthAction]
 

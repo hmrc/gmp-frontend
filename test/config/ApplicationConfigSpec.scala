@@ -16,8 +16,8 @@
 
 package config
 
-import org.scalatestplus.play.{PlaySpec, OneServerPerSuite}
-import ApplicationConfig.globalErrors
+import config.ApplicationConfig.globalErrors
+import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
 
 class ApplicationConfigSpec extends PlaySpec with OneServerPerSuite{
 

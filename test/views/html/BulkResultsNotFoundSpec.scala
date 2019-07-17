@@ -16,7 +16,6 @@
 
 package views.html
 
-import org.scalatestplus.play.OneAppPerSuite
 import play.twirl.api.Html
 import utils.GmpViewSpec
 

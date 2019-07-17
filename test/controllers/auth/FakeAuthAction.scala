@@ -16,7 +16,7 @@
 
 package controllers.auth
 
-import play.api.mvc.{Request, Result, Results}
+import play.api.mvc.{Request, Result}
 
 import scala.concurrent.Future
 

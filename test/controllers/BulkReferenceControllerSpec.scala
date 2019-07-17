@@ -18,34 +18,32 @@ package controllers
 
 import java.util.UUID
 
-import controllers.auth.{AuthAction, FakeAuthAction, GmpAuthConnector}
+import config.GmpFrontendAuditConnector
+import controllers.auth.{FakeAuthAction, GmpAuthConnector}
 import models._
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
 import play.api.i18n.Messages
+import play.api.i18n.Messages.Implicits._
 import play.api.libs.json.Json
-import play.api.mvc.{AnyContentAsEmpty, Result}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.SessionService
 import uk.gov.hmrc.domain.PsaId
-import uk.gov.hmrc.play.frontend.auth.AuthContext
-import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
-import uk.gov.hmrc.play.frontend.auth.connectors.domain._
-import play.api.i18n.Messages.Implicits._
-
-import scala.concurrent.Future
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.logging.SessionId
-import uk.gov.hmrc.play.audit.http.connector.AuditConnector
+import uk.gov.hmrc.play.frontend.auth.AuthContext
+import uk.gov.hmrc.play.frontend.auth.connectors.domain._
+
+import scala.concurrent.Future
 
 class BulkReferenceControllerSpec extends PlaySpec with OneServerPerSuite with MockitoSugar {
 
   val mockAuthConnector: GmpAuthConnector = mock[GmpAuthConnector]
   val mockSessionService: SessionService = mock[SessionService]
-  val mockAuditConnector: AuditConnector = mock[AuditConnector]
+  val mockAuditConnector: GmpFrontendAuditConnector = mock[GmpFrontendAuditConnector]
 
   implicit val user = AuthContext(authority = Authority("1234", Accounts(psa = Some(PsaAccount("link", PsaId("B1234567")))),
                                             None, None, CredentialStrength.None, ConfidenceLevel.L50, None, None,None, legacyOid= ""))

@@ -29,8 +29,8 @@ import play.api.Environment
 import play.api.libs.json.Json
 import play.api.test.Helpers._
 import uk.gov.hmrc.domain.PsaId
-import uk.gov.hmrc.http.logging.SessionId
 import uk.gov.hmrc.http._
+import uk.gov.hmrc.http.logging.SessionId
 import uk.gov.hmrc.play.frontend.auth.AuthContext
 import uk.gov.hmrc.play.frontend.auth.connectors.domain._
 

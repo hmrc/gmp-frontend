@@ -22,9 +22,9 @@ import org.scalatest.BeforeAndAfterEach
 import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.Mode.Mode
-import play.api.{Application, Configuration, Environment, Play}
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.Helpers._
+import play.api.{Application, Configuration, Environment, Play}
 import uk.gov.hmrc.http.{BadGatewayException, HeaderCarrier, HttpGet, HttpResponse}
 import uk.gov.hmrc.play.config.ServicesConfig
 

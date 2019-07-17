@@ -19,9 +19,9 @@ package controllers
 import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
 import play.api.i18n.Messages
+import play.api.i18n.Messages.Implicits._
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import play.api.i18n.Messages.Implicits._
 
 class ServiceUnavailableControllerSpec extends PlaySpec with OneServerPerSuite with MockitoSugar {
 

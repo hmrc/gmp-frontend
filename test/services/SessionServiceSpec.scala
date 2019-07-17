@@ -29,7 +29,7 @@ import play.api.libs.json._
 import play.api.test.FakeRequest
 import uk.gov.hmrc.emailaddress.EmailAddress
 import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.http.cache.client.{CacheMap, SessionCache}
+import uk.gov.hmrc.http.cache.client.CacheMap
 
 import scala.concurrent.duration._
 import scala.concurrent.{Await, Future}

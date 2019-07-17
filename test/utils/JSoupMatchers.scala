@@ -20,8 +20,6 @@ import org.jsoup.nodes.{Attributes, Document, Element}
 import org.jsoup.select.Elements
 import org.scalatest.matchers.{MatchResult, Matcher}
 
-import scala.collection.JavaConversions._
-
 trait JSoupMatchers {
   import scala.collection.JavaConversions._
 

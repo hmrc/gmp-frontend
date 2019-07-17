@@ -19,22 +19,20 @@ package controllers
 import java.util.UUID
 
 import connectors.GmpBulkConnector
-import controllers.auth.{AuthAction, FakeAuthAction, GmpAuthConnector}
+import controllers.auth.{FakeAuthAction, GmpAuthConnector}
 import models.BulkResultsSummary
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
 import play.api.i18n.Messages
+import play.api.i18n.Messages.Implicits._
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
-import play.api.i18n.Messages.Implicits._
-import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.logging.SessionId
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, NotFoundException, Upstream4xxResponse}
 
 import scala.concurrent.Future
-import uk.gov.hmrc.http.{HttpResponse, NotFoundException, Upstream4xxResponse}
 
 class BulkResultsControllerSpec extends PlaySpec with OneServerPerSuite with MockitoSugar {
 

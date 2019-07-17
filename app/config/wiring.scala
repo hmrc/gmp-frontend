@@ -31,17 +31,17 @@ import uk.gov.hmrc.play.config.{AppName, RunMode, ServicesConfig}
 import uk.gov.hmrc.play.frontend.config.LoadAuditingConfig
 import uk.gov.hmrc.play.http.ws._
 
-object GmpFrontendAuditConnector extends AuditConnector with AppName with RunMode {
+class GmpFrontendAuditConnector @Inject()(environment: Environment, configuration: Configuration) extends AuditConnector with AppName with RunMode {
   lazy val auditingConfig: AuditingConfig = LoadAuditingConfig(s"auditing")
 
-  override protected def appNameConfiguration: Configuration = Play.current.configuration
-  override protected def mode: Mode = Play.current.mode
-  override protected def runModeConfiguration: Configuration = Play.current.configuration
+  override protected def appNameConfiguration: Configuration = configuration
+  override protected def mode: Mode = environment.mode
+  override protected def runModeConfiguration: Configuration = configuration
 }
 
 trait Hooks extends uk.gov.hmrc.http.hooks.HttpHooks with HttpAuditing {
   override val hooks: Seq[HttpHook] = Seq.empty[HttpHook]
-  override lazy val auditConnector: AuditConnector = GmpFrontendAuditConnector
+  override lazy val auditConnector: AuditConnector = Play.current.injector.instanceOf[GmpFrontendAuditConnector]
 }
 
 trait WSHttp extends HttpGet with WSGet with HttpPut with WSPut with HttpPost with WSPost with HttpDelete with WSDelete with Hooks with AppName {

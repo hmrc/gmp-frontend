@@ -22,7 +22,6 @@ import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
 import play.api.test.Helpers._
 import services.SessionService
-import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
 
 
 class GmpControllerSpec extends PlaySpec with OneServerPerSuite with MockitoSugar {

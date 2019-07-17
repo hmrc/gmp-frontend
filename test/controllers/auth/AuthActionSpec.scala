@@ -27,7 +27,7 @@ import play.api.http.Status._
 import play.api.mvc.{Action, AnyContent, Controller}
 import play.api.test.FakeRequest
 import play.api.test.Helpers.{redirectLocation, status}
-import uk.gov.hmrc.auth.core.{Enrolment, EnrolmentIdentifier, Enrolments, InsufficientConfidenceLevel, InsufficientEnrolments, MissingBearerToken}
+import uk.gov.hmrc.auth.core._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future

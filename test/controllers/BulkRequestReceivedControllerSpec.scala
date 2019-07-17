@@ -29,19 +29,17 @@ import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
 import play.api.i18n.Messages
 import play.api.i18n.Messages.Implicits._
-import play.api.mvc.{AnyContentAsEmpty, Result}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.{BulkRequestCreationService, DataLimitExceededException, SessionService}
 import uk.gov.hmrc.domain.PsaId
 import uk.gov.hmrc.emailaddress.EmailAddress
+import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.http.logging.SessionId
 import uk.gov.hmrc.play.frontend.auth.AuthContext
-import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
 import uk.gov.hmrc.play.frontend.auth.connectors.domain._
 
 import scala.concurrent.Future
-import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.http.logging.SessionId
 
 class BulkRequestReceivedControllerSpec extends PlaySpec with OneServerPerSuite with MockitoSugar {
   val mockAuthConnector = mock[GmpAuthConnector]
