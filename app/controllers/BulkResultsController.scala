@@ -16,17 +16,18 @@
 
 package controllers
 
-import config.GmpFrontendAuthConnector
+import com.google.inject.Inject
 import connectors.GmpBulkConnector
 import controllers.auth.GmpRegime
 import play.api.Logger
 import play.api.Play.current
 import play.api.i18n.Messages.Implicits._
-import uk.gov.hmrc.http.{ NotFoundException, Upstream4xxResponse }
+import uk.gov.hmrc.http.{NotFoundException, Upstream4xxResponse}
+import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
 
-trait BulkResultsController extends GmpController {
-
-  val gmpBulkConnector: GmpBulkConnector
+class BulkResultsController @Inject()(val authConnector: AuthConnector,
+                                      gmpBulkConnector: GmpBulkConnector
+                                     ) extends GmpController {
 
   def get(uploadReference: String, comingFromPage: Int) = AuthorisedFor(GmpRegime, pageVisibilityPredicate).async {
 
@@ -66,7 +67,6 @@ trait BulkResultsController extends GmpController {
       }
   }
 
-
   def getContributionsAndEarningsAsCsv(uploadReference: String) = AuthorisedFor(GmpRegime, pageVisibilityPredicate).async {
     implicit user =>
       implicit request => {
@@ -75,10 +75,4 @@ trait BulkResultsController extends GmpController {
         }
       }
   }
-}
-
-
-object BulkResultsController extends BulkResultsController {
-  val authConnector = GmpFrontendAuthConnector
-  val gmpBulkConnector = GmpBulkConnector
 }

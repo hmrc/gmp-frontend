@@ -19,7 +19,7 @@ package controllers
 import models._
 import org.mockito.Matchers
 import org.mockito.Mockito._
-import org.scalatest.mock.MockitoSugar
+import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
 import play.api.i18n.Messages
 import play.api.libs.json.Json
@@ -37,10 +37,8 @@ class EqualiseControllerSpec extends PlaySpec with OneServerPerSuite with Mockit
   val mockAuthConnector = mock[AuthConnector]
   val mockSessionService = mock[SessionService]
 
-  object TestEqualiseController extends EqualiseController {
-    override val authConnector = mockAuthConnector
-    override val sessionService = mockSessionService
-    override val context = FakeGmpContext()
+  object TestEqualiseController extends EqualiseController(mockAuthConnector, mockSessionService) {
+    override val context = FakeGmpContext
   }
 
   "EqualiseController GET" must {

@@ -16,8 +16,17 @@
 
 package config
 
-import uk.gov.hmrc.http.cache.client.SessionCache
+import play.api.inject.{Binding, Module}
+import play.api.{Configuration, Environment}
+import uk.gov.hmrc.http.{HttpGet, HttpPost, HttpPut}
+import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
 
-trait SessionCacheWiring {
-  def sessionCache: SessionCache = GmpSessionCache
+class GmpModule extends Module{
+  override def bindings(environment: Environment, configuration: Configuration): Seq[Binding[_]] = Seq(
+    bind[AuthConnector].to(GmpFrontendAuthConnector),
+    bind[HttpGet].to(WSHttp),
+    bind[HttpPost].to(WSHttp),
+    bind[HttpPut].to(WSHttp),
+    bind[WSHttp].to(WSHttp)
+  )
 }

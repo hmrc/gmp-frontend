@@ -16,33 +16,35 @@
 
 package controllers
 
-import config.{ApplicationGlobal, GmpContext, GmpFrontendAuthConnector}
+import com.google.inject.{Inject, Singleton}
+import config.{GmpContext, GmpFrontendAuditConnector}
 import connectors.GmpConnector
 import controllers.auth.GmpRegime
 import events.ContributionsAndEarningsEvent
-import metrics.Metrics
+import metrics.ApplicationMetrics
 import models._
 import org.joda.time.LocalDate
 import play.api.Logger
+import play.api.Play.current
 import play.api.i18n.Messages
+import play.api.i18n.Messages.Implicits._
 import play.api.mvc.Request
 import play.twirl.api.HtmlFormat
 import services.SessionService
-import uk.gov.hmrc.play.audit.http.connector.AuditConnector
-import play.api.i18n.Messages.Implicits._
-import play.api.Play.current
+import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
 
 import scala.concurrent.Future
 
-trait ResultsController extends GmpPageFlow {
+@Singleton
+class ResultsController @Inject()(override val authConnector: AuthConnector,
+                                  sessionService: SessionService,
+                                  calculationConnector: GmpConnector,
+                                  auditConnector: GmpFrontendAuditConnector,
+                                  metrics: ApplicationMetrics) extends GmpPageFlow(authConnector) {
 
-  val sessionService: SessionService
-  val calculationConnector: GmpConnector
-  val auditConnector : AuditConnector = ApplicationGlobal.auditConnector
-
-  def resultsView(response: CalculationResponse, revalRateSubheader: Option[String], survivorSubheader: Option[String])(implicit request: Request[_], context: GmpContext): HtmlFormat.Appendable
-
-  def metrics: Metrics
+   def resultsView(response: CalculationResponse, revalRateSubheader: Option[String], survivorSubheader: Option[String])(implicit request: Request[_], context: GmpContext): HtmlFormat.Appendable = {
+    views.html.results(applicationConfig = config.ApplicationConfig, response, revalRateSubheader, survivorSubheader)
+  }
 
   def get = AuthorisedFor(GmpRegime, pageVisibilityPredicate).async {
     implicit user =>
@@ -203,16 +205,3 @@ trait ResultsController extends GmpPageFlow {
 }
 
 
-object ResultsController extends ResultsController {
-  val authConnector = GmpFrontendAuthConnector
-  override val calculationConnector = GmpConnector
-
-  // $COVERAGE-OFF$Trivial and never going to be called by a test that uses it's own object implementation
-  override def metrics = Metrics
-
-  override def resultsView(response: CalculationResponse, revalRateSubheader: Option[String], survivorSubheader: Option[String])(implicit request: Request[_], context: GmpContext): HtmlFormat.Appendable = {
-    views.html.results(applicationConfig = config.ApplicationConfig, response, revalRateSubheader, survivorSubheader)
-  }
-
-  // $COVERAGE-ON$
-}

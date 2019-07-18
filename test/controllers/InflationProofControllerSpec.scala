@@ -19,7 +19,7 @@ package controllers
 import models._
 import org.mockito.Matchers
 import org.mockito.Mockito._
-import org.scalatest.mock.MockitoSugar
+import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
 import play.api.i18n.Messages
 import play.api.libs.json.Json
@@ -36,10 +36,9 @@ class InflationProofControllerSpec extends PlaySpec with OneServerPerSuite with 
   val mockAuthConnector = mock[AuthConnector]
   val mockSessionService = mock[SessionService]
 
-  object TestInflationProofController extends InflationProofController {
-    val authConnector = mockAuthConnector
+  object TestInflationProofController extends InflationProofController(mockAuthConnector) {
     override val sessionService = mockSessionService
-    override val context = FakeGmpContext()
+    override val context = FakeGmpContext
   }
 
   "InflationProofController" must {

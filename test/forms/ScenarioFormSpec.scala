@@ -18,7 +18,7 @@ package forms
 
 import forms.ScenarioForm._
 import models.CalculationType
-import org.scalatest.mock.MockitoSugar
+import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.data.FormError
 import play.api.i18n.Messages

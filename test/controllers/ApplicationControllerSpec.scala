@@ -16,13 +16,15 @@
 
 package controllers
 
+import com.google.inject.Singleton
+import config.GmpFrontendAuditConnector
 import controllers.auth.UUIDGenerator
 import org.mockito.ArgumentCaptor
 import org.mockito.Matchers._
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.concurrent.ScalaFutures
-import org.scalatest.mock.MockitoSugar
+import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
 import play.api.i18n.Messages
 import play.api.i18n.Messages.Implicits._
@@ -32,6 +34,7 @@ import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.audit.model.DataEvent
 import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
 
+@Singleton
 class ApplicationControllerSpec extends PlaySpec
   with OneServerPerSuite
   with BeforeAndAfterEach
@@ -40,14 +43,11 @@ class ApplicationControllerSpec extends PlaySpec
   with GmpUsers {
 
   override implicit val mockAuthConnector: AuthConnector = mock[AuthConnector]
-  val mockAuditConnector: AuditConnector = mock[AuditConnector]
+  val mockAuditConnector: GmpFrontendAuditConnector = mock[GmpFrontendAuditConnector]
   val mockUUIDGenerator = mock[UUIDGenerator]
 
-  object TestController extends ApplicationController {
-    override val auditConnector: AuditConnector = mockAuditConnector
-    override val authConnector: AuthConnector = mockAuthConnector
-    override val uuidGenerator: UUIDGenerator = mockUUIDGenerator
-    override val context = FakeGmpContext()
+  object TestController extends ApplicationController(mockAuditConnector, mockAuthConnector, mockUUIDGenerator) {
+    override val context = FakeGmpContext
   }
 
   override def beforeEach(): Unit = {

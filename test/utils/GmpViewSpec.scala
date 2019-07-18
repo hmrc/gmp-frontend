@@ -30,7 +30,7 @@ trait GmpViewSpec extends PlaySpec with JSoupMatchers with OneServerPerSuite {
   override def haveBackLink = new CssSelector("a[id=back-link]")
 
   implicit val request = FakeRequest()
-  implicit val context = FakeGmpContext()
+  implicit val context = FakeGmpContext
   implicit val messages: Messages = play.api.i18n.Messages.Implicits.applicationMessages
 
   def view: Html

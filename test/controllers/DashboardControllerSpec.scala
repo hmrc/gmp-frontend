@@ -21,7 +21,7 @@ import models._
 import org.joda.time.LocalDateTime
 import org.mockito.Matchers
 import org.mockito.Mockito._
-import org.scalatest.mock.MockitoSugar
+import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
 import play.api.i18n.Messages
 import play.api.i18n.Messages.Implicits._
@@ -41,11 +41,9 @@ class DashboardControllerSpec extends PlaySpec with OneServerPerSuite with Mocki
   val mockSessionService = mock[SessionService]
   val mockGmpBulkConnector = mock[GmpBulkConnector]
 
-  object TestDashboardController extends DashboardController {
-    val authConnector = mockAuthConnector
+  object TestDashboardController extends DashboardController(mockAuthConnector, mockGmpBulkConnector) {
     override val sessionService = mockSessionService
-    override val gmpBulkConnector = mockGmpBulkConnector
-    override val context = FakeGmpContext()
+    override val context = FakeGmpContext
   }
 
   "DashboardController" must {
@@ -128,11 +126,9 @@ class DashboardControllerSpec extends PlaySpec with OneServerPerSuite with Mocki
 
         val brokenGmpBulkConnector = mock[GmpBulkConnector]
 
-        object BrokenDashboardController extends DashboardController {
-          val authConnector = mockAuthConnector
+        object BrokenDashboardController extends DashboardController(mockAuthConnector, brokenGmpBulkConnector) {
           override val sessionService = mockSessionService
-          override val gmpBulkConnector = brokenGmpBulkConnector
-          override val context = FakeGmpContext()
+          override val context = FakeGmpContext
         }
 
         when(brokenGmpBulkConnector.getPreviousBulkRequests()(Matchers.any(), Matchers.any())).thenReturn(Future.failed(new Upstream5xxResponse("failed",503,503)))

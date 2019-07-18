@@ -21,7 +21,7 @@ import models._
 import org.joda.time.{DateTime, DateTimeUtils}
 import org.mockito.Matchers
 import org.mockito.Mockito._
-import org.scalatest.mock.MockitoSugar
+import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
 import play.api.i18n.Messages
 import play.api.libs.json.Json
@@ -41,10 +41,8 @@ class DateOfLeavingControllerSpec extends PlaySpec with OneServerPerSuite with M
 
   val baseValidDate = GmpDate(day = Some("31"), month = Some("1"), year = Some("2015"))
 
-  object TestDateOfLeavingController extends DateOfLeavingController {
-    val authConnector = mockAuthConnector
-    override val sessionService = mockSessionService
-    override val context = FakeGmpContext()
+  object TestDateOfLeavingController extends DateOfLeavingController(mockAuthConnector, mockSessionService) {
+    override val context = FakeGmpContext
   }
 
   val nino = RandomNino.generate

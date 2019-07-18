@@ -18,7 +18,7 @@ package forms
 
 import forms.RevaluationRateForm._
 import models.RevaluationRate
-import org.scalatest.mock.MockitoSugar
+import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.libs.json.Json
 

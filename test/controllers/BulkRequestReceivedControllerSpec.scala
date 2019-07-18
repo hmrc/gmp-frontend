@@ -24,7 +24,7 @@ import models._
 import org.joda.time.{LocalDate, LocalDateTime}
 import org.mockito.Matchers
 import org.mockito.Mockito._
-import org.scalatest.mock.MockitoSugar
+import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
 import play.api.i18n.Messages
 import play.api.i18n.Messages.Implicits._
@@ -60,12 +60,12 @@ class BulkRequestReceivedControllerSpec extends PlaySpec with OneServerPerSuite 
   val inputLine1 = lineListFromCalculationRequestLine(calcLine1)
   val bulkRequest1 = BulkCalculationRequest("1", "bill@bixby.com", "uploadRef1", List(calcLine1), "userid", LocalDateTime.now() )
 
-  object TestBulkRequestReceivedController extends BulkRequestReceivedController {
-    val authConnector = mockAuthConnector
-    override val sessionService = mockSessionService
-    override val bulkRequestCreationService = mockBulkRequestCreationService
-    override val gmpBulkConnector = mockGmpBulkConnector
-    override val context = FakeGmpContext()
+  object TestBulkRequestReceivedController extends BulkRequestReceivedController(
+    mockAuthConnector,
+    mockSessionService,
+    mockBulkRequestCreationService,
+    mockGmpBulkConnector){
+    override val context = FakeGmpContext
   }
 
   "BulkRequestReceivedController" must {

@@ -20,7 +20,7 @@ import connectors.GmpBulkConnector
 import models.BulkResultsSummary
 import org.mockito.Matchers
 import org.mockito.Mockito._
-import org.scalatest.mock.MockitoSugar
+import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
@@ -35,10 +35,8 @@ class BulkResultsControllerSpec extends PlaySpec with OneServerPerSuite with Moc
   val mockAuthConnector = mock[AuthConnector]
   val mockGmpBulkConnector = mock[GmpBulkConnector]
 
-  object TestBulkResultsController extends BulkResultsController {
-    override protected def authConnector: AuthConnector = mockAuthConnector
-    override val gmpBulkConnector: GmpBulkConnector = mockGmpBulkConnector
-    override val context = FakeGmpContext()
+  object TestBulkResultsController extends BulkResultsController(mockAuthConnector, mockGmpBulkConnector) {
+    override val context = FakeGmpContext
   }
 
   "Bulk Results Controller" must {

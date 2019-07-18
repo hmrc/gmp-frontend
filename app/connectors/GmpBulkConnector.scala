@@ -16,11 +16,12 @@
 
 package connectors
 
+import com.google.inject.Inject
 import config.WSHttp
 import models.{BulkCalculationRequest, BulkPreviousRequest, BulkResultsSummary}
 import org.joda.time.LocalDateTime
 import play.api.Mode.Mode
-import play.api.{Configuration, Logger, Play}
+import play.api.{Configuration, Environment, Logger, Play}
 import uk.gov.hmrc.play.config.ServicesConfig
 import uk.gov.hmrc.play.frontend.auth.AuthContext
 import uk.gov.hmrc.play.http._
@@ -29,13 +30,12 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import uk.gov.hmrc.http.{HeaderCarrier, HttpGet, HttpPost, HttpResponse, Upstream4xxResponse}
 
-trait GmpBulkConnector extends ServicesConfig {
+class GmpBulkConnector @Inject()(environment: Environment,
+                                 val runModeConfiguration: Configuration,
+                                 httpGet: HttpGet,
+                                 httpPost: HttpPost) extends ServicesConfig {
 
-  override protected def mode: Mode = Play.current.mode
-  override protected def runModeConfiguration: Configuration = Play.current.configuration
-
-  val httpPost: HttpPost = WSHttp
-  val httpGet: HttpGet = WSHttp
+  override protected def mode: Mode = environment.mode
 
   lazy val serviceURL = baseUrl("gmp-bulk")
 
@@ -161,5 +161,3 @@ trait GmpBulkConnector extends ServicesConfig {
   }
 
 }
-
-object GmpBulkConnector extends GmpBulkConnector

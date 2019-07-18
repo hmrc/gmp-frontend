@@ -17,21 +17,18 @@
 package controllers
 
 
-import config.GmpFrontendAuthConnector
+import com.google.inject.{Inject, Singleton}
 import controllers.auth.GmpRegime
 import forms.RevaluationRateForm._
 import play.api.Logger
 import play.api.Play.current
 import play.api.i18n.Messages
 import play.api.i18n.Messages.Implicits._
+import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
 
 
-object RevaluationRateController extends RevaluationRateController {
-  val authConnector = GmpFrontendAuthConnector
-
-}
-
-trait RevaluationRateController extends GmpPageFlow {
+@Singleton
+class RevaluationRateController @Inject()(override val authConnector: AuthConnector) extends GmpPageFlow(authConnector) {
 
   def get = AuthorisedFor(GmpRegime, pageVisibilityPredicate).async {
     implicit user =>

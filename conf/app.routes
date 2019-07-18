@@ -2,7 +2,7 @@
 
 ->          /template                                     template.Routes
 
-GET         /assets/*file                                 @controllers.AssetsController.at(path="/public", file)
+GET         /assets/*file                                 controllers.AssetsController.at(path="/public", file)
 
 GET         /pension-details                              controllers.PensionDetailsController.get
 POST        /pension-details                              controllers.PensionDetailsController.post

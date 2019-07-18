@@ -16,33 +16,24 @@
 
 package controllers
 
-import config.GmpFrontendAuthConnector
+import com.google.inject.{Inject, Singleton}
 import connectors.GmpConnector
 import controllers.auth.GmpRegime
 import forms.PensionDetailsForm._
-import metrics.Metrics
+import metrics.ApplicationMetrics
 import models.{PensionDetails, ValidateSconRequest}
 import play.api.Logger
 import play.api.Play.current
 import play.api.i18n.Messages
 import play.api.i18n.Messages.Implicits._
+import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
 
 import scala.concurrent.Future
 
-object PensionDetailsController extends PensionDetailsController {
-  val authConnector = GmpFrontendAuthConnector
-  val gmpConnector = GmpConnector
-
-  // $COVERAGE-OFF$ Trivial and never going to be called by a test that uses it's own object implementation
-  override def metrics = Metrics
-  // $COVERAGE-ON$
-}
-
-trait PensionDetailsController extends GmpPageFlow {
-
-  val gmpConnector: GmpConnector
-
-  def metrics: Metrics
+@Singleton
+class PensionDetailsController @Inject()(override val authConnector: AuthConnector,
+                                         gmpConnector: GmpConnector,
+                                         metrics: ApplicationMetrics) extends GmpPageFlow(authConnector) {
 
   def get = AuthorisedFor(GmpRegime, pageVisibilityPredicate).async {
     implicit user =>

@@ -20,7 +20,7 @@ import connectors.AttachmentsConnector
 import models._
 import org.mockito.Matchers
 import org.mockito.Mockito._
-import org.scalatest.mock.MockitoSugar
+import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
 import play.api.i18n.Messages
 import play.api.libs.json.{JsValue, Json}
@@ -44,11 +44,8 @@ class FileUploadControllerSpec extends PlaySpec with OneServerPerSuite with Mock
 
   val fakeRequest = FakeRequest(method = "POST", uri = "", headers = FakeHeaders(Seq("Content-type" -> ("application/json"))), body = Json.toJson(gmpBulkSession.callBackData.get))
 
-  object TestFileUploadController extends FileUploadController {
-    val authConnector = mockAuthConnector
-    val attachmentsConnector = mockAttachmentsConnector
-    override val sessionService = mockSessionService
-    override val context = FakeGmpContext()
+  object TestFileUploadController extends FileUploadController(mockAuthConnector, mockSessionService, mockAttachmentsConnector) {
+    override val context = FakeGmpContext
   }
 
   "File upload controller" must {
