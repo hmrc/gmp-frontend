@@ -250,7 +250,7 @@ class RevaluationRateControllerSpec extends PlaySpec with OneServerPerSuite with
               RevaluationRate(None)
             )
             val result = TestRevaluationRateController.post.apply(request.withJsonBody(postData))
-            contentAsString(result) must include(Messages("gmp.error.reason.mandatory"))
+            contentAsString(result) must include(Messages("gmp.error.revaluation.rate.error"))
           }
         }
 
