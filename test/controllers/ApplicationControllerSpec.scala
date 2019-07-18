@@ -17,6 +17,7 @@
 package controllers
 
 import com.google.inject.Singleton
+import config.GmpFrontendAuditConnector
 import controllers.auth.UUIDGenerator
 import org.mockito.ArgumentCaptor
 import org.mockito.Matchers._
@@ -42,11 +43,11 @@ class ApplicationControllerSpec extends PlaySpec
   with GmpUsers {
 
   override implicit val mockAuthConnector: AuthConnector = mock[AuthConnector]
-  val mockAuditConnector: AuditConnector = mock[AuditConnector]
+  val mockAuditConnector: GmpFrontendAuditConnector = mock[GmpFrontendAuditConnector]
   val mockUUIDGenerator = mock[UUIDGenerator]
 
   object TestController extends ApplicationController(mockAuditConnector, mockAuthConnector, mockUUIDGenerator) {
-    override val context = FakeGmpContext()
+    override val context = FakeGmpContext
   }
 
   override def beforeEach(): Unit = {

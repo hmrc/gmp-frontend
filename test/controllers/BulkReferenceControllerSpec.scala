@@ -18,6 +18,7 @@ package controllers
 
 import java.util.UUID
 
+import config.GmpFrontendAuditConnector
 import models._
 import org.mockito.Matchers
 import org.mockito.Mockito._
@@ -44,7 +45,7 @@ class BulkReferenceControllerSpec extends PlaySpec with OneServerPerSuite with M
 
   val mockAuthConnector: AuthConnector = mock[AuthConnector]
   val mockSessionService: SessionService = mock[SessionService]
-  val mockAuditConnector: AuditConnector = mock[AuditConnector]
+  val mockAuditConnector: GmpFrontendAuditConnector = mock[GmpFrontendAuditConnector]
 
   implicit val user = AuthContext(authority = Authority("1234", Accounts(psa = Some(PsaAccount("link", PsaId("B1234567")))),
                                             None, None, CredentialStrength.None, ConfidenceLevel.L50, None, None,None, legacyOid= ""))
@@ -53,7 +54,7 @@ class BulkReferenceControllerSpec extends PlaySpec with OneServerPerSuite with M
 
   object TestBulkReferenceController extends BulkReferenceController(mockAuthConnector, mockAuditConnector) {
     override val sessionService = mockSessionService
-    override val context = FakeGmpContext()
+    override val context = FakeGmpContext
   }
 
   "BulkRerefenceController" must {

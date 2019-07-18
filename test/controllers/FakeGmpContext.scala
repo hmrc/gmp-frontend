@@ -17,23 +17,11 @@
 package controllers
 
 import config.GmpContext
-import connectors.ContactFrontendConnector
-import org.scalatest.mockito.MockitoSugar._
-import org.mockito.Matchers._
-import org.mockito.Mockito.when
-import play.api.Play
-
-import scala.concurrent.Future
 import uk.gov.hmrc.http.HeaderCarrier
 
-object FakeGmpContext extends GmpContext(Play.current.injector.instanceOf[ContactFrontendConnector]){
+import scala.concurrent.Future
 
-  def apply() = {
-    val m = mock[GmpContext]
+object FakeGmpContext extends GmpContext {
 
-    when(m.getPageHelpPartial()(any[HeaderCarrier])) thenReturn Future.successful("<div id=\"help_partial\"></div>")
-
-    m
-  }
-
+  override def getPageHelpPartial()(implicit hc: HeaderCarrier): Future[String] = Future.successful("<div id=\"help_partial\"></div>")
 }

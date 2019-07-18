@@ -31,7 +31,7 @@ class GmpControllerSpec extends PlaySpec with OneServerPerSuite with MockitoSuga
 
   object TestGmpController extends GmpPageFlow(mockAuthConnector) {
     override val sessionService = mockSessionService
-    override val context = FakeGmpContext()
+    override val context = FakeGmpContext
   }
 
   val gmpSession = GmpSession(MemberDetails("", "", ""), "", "", None, None, Leaving(GmpDate(None, None, None), None), None)

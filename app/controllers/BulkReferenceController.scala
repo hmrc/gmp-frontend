@@ -17,6 +17,7 @@
 package controllers
 
 import com.google.inject.{Inject, Singleton}
+import config.GmpFrontendAuditConnector
 import controllers.auth.GmpRegime
 import forms.BulkReferenceForm
 import play.api.Logger
@@ -27,7 +28,7 @@ import scala.concurrent.Future
 
 @Singleton
 class BulkReferenceController @Inject()(val authConnector: AuthConnector,
-                                        auditConnector : AuditConnector) extends GmpController {
+                                        auditConnector : GmpFrontendAuditConnector) extends GmpController {
 
   def get = AuthorisedFor(GmpRegime, pageVisibilityPredicate).async {
     implicit user =>

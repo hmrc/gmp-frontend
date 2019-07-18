@@ -17,6 +17,7 @@
 package controllers
 
 import com.google.inject.{Inject, Singleton}
+import config.GmpFrontendAuditConnector
 import controllers.auth.{ExternalUrls, GmpRegime, UUIDGenerator}
 import play.api.Play.current
 import play.api.i18n.Messages.Implicits._
@@ -26,7 +27,7 @@ import uk.gov.hmrc.play.audit.model.DataEvent
 import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
 
 @Singleton
-class ApplicationController @Inject()(auditConnector: AuditConnector,
+class ApplicationController @Inject()(auditConnector: GmpFrontendAuditConnector,
                                        val authConnector: AuthConnector,
                                        uuidGenerator: UUIDGenerator) extends GmpController {
   

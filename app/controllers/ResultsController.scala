@@ -17,21 +17,20 @@
 package controllers
 
 import com.google.inject.{Inject, Singleton}
-import config.{ApplicationGlobal, GmpContext, GmpFrontendAuthConnector}
+import config.{GmpContext, GmpFrontendAuditConnector}
 import connectors.GmpConnector
 import controllers.auth.GmpRegime
 import events.ContributionsAndEarningsEvent
-import metrics.Metrics
+import metrics.ApplicationMetrics
 import models._
 import org.joda.time.LocalDate
 import play.api.Logger
+import play.api.Play.current
 import play.api.i18n.Messages
+import play.api.i18n.Messages.Implicits._
 import play.api.mvc.Request
 import play.twirl.api.HtmlFormat
 import services.SessionService
-import uk.gov.hmrc.play.audit.http.connector.AuditConnector
-import play.api.i18n.Messages.Implicits._
-import play.api.Play.current
 import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
 
 import scala.concurrent.Future
@@ -40,8 +39,8 @@ import scala.concurrent.Future
 class ResultsController @Inject()(override val authConnector: AuthConnector,
                                   sessionService: SessionService,
                                   calculationConnector: GmpConnector,
-                                  auditConnector: AuditConnector,
-                                  metrics: Metrics) extends GmpPageFlow(authConnector) {
+                                  auditConnector: GmpFrontendAuditConnector,
+                                  metrics: ApplicationMetrics) extends GmpPageFlow(authConnector) {
 
    def resultsView(response: CalculationResponse, revalRateSubheader: Option[String], survivorSubheader: Option[String])(implicit request: Request[_], context: GmpContext): HtmlFormat.Appendable = {
     views.html.results(applicationConfig = config.ApplicationConfig, response, revalRateSubheader, survivorSubheader)

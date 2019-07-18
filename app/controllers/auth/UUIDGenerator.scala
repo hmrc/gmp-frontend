@@ -18,10 +18,6 @@ package controllers.auth
 
 import java.util.UUID
 
-trait UUIDGenerator {
-  def generate: String
-}
-
-object UUIDGenerator extends UUIDGenerator {
-  override def generate: String = UUID.randomUUID().toString()
+class UUIDGenerator {
+  def generate: String = UUID.randomUUID().toString()
 }

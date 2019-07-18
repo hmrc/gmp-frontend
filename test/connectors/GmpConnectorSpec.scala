@@ -18,9 +18,8 @@ package connectors
 
 import java.util.UUID
 
-import config.ApplicationConfig
 import helpers.RandomNino
-import metrics.Metrics
+import metrics.ApplicationMetrics
 import models._
 import org.mockito.Matchers
 import org.mockito.Mockito._
@@ -31,8 +30,8 @@ import play.api.Environment
 import play.api.libs.json.{JsValue, Json}
 import play.api.test.Helpers._
 import uk.gov.hmrc.domain.PsaId
-import uk.gov.hmrc.http.logging.SessionId
 import uk.gov.hmrc.http._
+import uk.gov.hmrc.http.logging.SessionId
 import uk.gov.hmrc.play.frontend.auth.AuthContext
 import uk.gov.hmrc.play.frontend.auth.connectors.domain._
 
@@ -52,11 +51,12 @@ class GmpConnectorSpec extends PlaySpec with OneServerPerSuite with MockitoSugar
   val mockHttpPost = mock[HttpPost]
   val mockHttpGet = mock[HttpGet]
   val mockHttpPut = mock[HttpPut]
+  val metrics = app.injector.instanceOf[ApplicationMetrics]
 
   object TestGmpConnector extends GmpConnector(
     app.injector.instanceOf[Environment],
     app.configuration,
-    Metrics,
+    metrics,
     mockHttpPost,
     mockHttpGet,
     mockHttpPut
@@ -113,7 +113,7 @@ class GmpConnectorSpec extends PlaySpec with OneServerPerSuite with MockitoSugar
       "return a calculation response when practitioner" in {
 
         val calcResponseJson = Json.parse(
-          """
+          s"""
              {"name":"Adam Coles",
              "nino":"$nino",
              "scon":"S1234567T",
