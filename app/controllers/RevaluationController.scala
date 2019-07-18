@@ -16,6 +16,7 @@
 
 package controllers
 
+import com.google.inject.{Inject, Singleton}
 import config.GmpFrontendAuthConnector
 import controllers.auth.GmpRegime
 import forms.RevaluationForm._
@@ -23,14 +24,12 @@ import models.{GmpDate, RevaluationDate}
 import play.api.Logger
 import play.api.Play.current
 import play.api.i18n.Messages.Implicits._
+import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
+
 import scala.concurrent.Future
 
-object RevaluationController extends RevaluationController {
-  val authConnector = GmpFrontendAuthConnector
-
-}
-
-trait RevaluationController extends GmpPageFlow {
+@Singleton
+class RevaluationController @Inject()( override val authConnector: AuthConnector) extends GmpPageFlow(authConnector) {
 
   def get = AuthorisedFor(GmpRegime, pageVisibilityPredicate).async {
     implicit user =>

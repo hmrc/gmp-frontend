@@ -22,7 +22,7 @@ import controllers.{FakeGmpContext, GmpController}
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
-import org.scalatest.mock.MockitoSugar
+import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -69,7 +69,7 @@ class GmpRegimeSpec extends PlaySpec with OneServerPerSuite with MockitoSugar wi
 
     object TestController extends GmpController with Actions {
       val authConnector = mockAuthConnector
-      override val context = FakeGmpContext()
+      override val context = FakeGmpContext
 
       def testRoute = AuthorisedFor(GmpRegime, pageVisibilityPredicate) {
         implicit user =>

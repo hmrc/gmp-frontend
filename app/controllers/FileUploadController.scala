@@ -16,28 +16,23 @@
 
 package controllers
 
-import config.GmpFrontendAuthConnector
+import com.google.inject.{Inject, Singleton}
 import connectors.AttachmentsConnector
 import controllers.auth.GmpRegime
 import models.{CallBackData, GmpBulkSession}
+import play.api.Play.current
 import play.api.i18n.Messages
+import play.api.i18n.Messages.Implicits._
 import play.api.mvc.Action
 import services.SessionService
-import uk.gov.hmrc.play.frontend.auth.Actions
-import play.api.i18n.Messages.Implicits._
-import play.api.Play.current
 import uk.gov.hmrc.http.logging.SessionId
+import uk.gov.hmrc.play.frontend.auth.Actions
+import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
 
-object FileUploadController extends FileUploadController {
-  val authConnector = GmpFrontendAuthConnector
-  override val attachmentsConnector = AttachmentsConnector
-  override val sessionService = SessionService
-}
-
-trait FileUploadController extends GmpController with Actions {
-
-  val attachmentsConnector: AttachmentsConnector
-  val sessionService: SessionService
+@Singleton
+class FileUploadController @Inject()(val authConnector: AuthConnector,
+                                     sessionService: SessionService,
+                                     attachmentsConnector: AttachmentsConnector) extends GmpController with Actions {
 
   def get = AuthorisedFor(GmpRegime, pageVisibilityPredicate).async {
 

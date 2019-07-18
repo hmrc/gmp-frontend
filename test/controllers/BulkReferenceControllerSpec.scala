@@ -18,14 +18,15 @@ package controllers
 
 import java.util.UUID
 
+import config.GmpFrontendAuditConnector
 import models._
 import org.mockito.Matchers
 import org.mockito.Mockito._
-import org.scalatest.mock.MockitoSugar
+import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
 import play.api.i18n.Messages
 import play.api.libs.json.Json
-import play.api.mvc.{Result, AnyContentAsEmpty}
+import play.api.mvc.{AnyContentAsEmpty, Result}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.SessionService
@@ -34,35 +35,38 @@ import uk.gov.hmrc.play.frontend.auth.AuthContext
 import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
 import uk.gov.hmrc.play.frontend.auth.connectors.domain._
 import play.api.i18n.Messages.Implicits._
+
 import scala.concurrent.Future
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.logging.SessionId
+import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 
 class BulkReferenceControllerSpec extends PlaySpec with OneServerPerSuite with MockitoSugar with GmpUsers {
 
-  val mockAuthConnector = mock[AuthConnector]
-  val mockSessionService = mock[SessionService]
+  val mockAuthConnector: AuthConnector = mock[AuthConnector]
+  val mockSessionService: SessionService = mock[SessionService]
+  val mockAuditConnector: GmpFrontendAuditConnector = mock[GmpFrontendAuditConnector]
 
   implicit val user = AuthContext(authority = Authority("1234", Accounts(psa = Some(PsaAccount("link", PsaId("B1234567")))),
                                             None, None, CredentialStrength.None, ConfidenceLevel.L50, None, None,None, legacyOid= ""))
+
   implicit val hc = new HeaderCarrier(sessionId = Some(SessionId(s"session-${UUID.randomUUID}")))
 
-  object TestBulkReferenceController extends BulkReferenceController {
-    val authConnector = mockAuthConnector
+  object TestBulkReferenceController extends BulkReferenceController(mockAuthConnector, mockAuditConnector) {
     override val sessionService = mockSessionService
-    override val context = FakeGmpContext()
+    override val context = FakeGmpContext
   }
 
   "BulkRerefenceController" must {
 
     "respond to GET /guaranteed-minimum-pension/getting-results" in {
       val result = route(FakeRequest(GET, "/guaranteed-minimum-pension/getting-results"))
-      status(result.get) must not equal (NOT_FOUND)
+      status(result.get) must not equal NOT_FOUND
     }
 
     "respond to POST /guaranteed-minimum-pension/getting-results" in {
       val result = route(FakeRequest(POST, "/guaranteed-minimum-pension/getting-results"))
-      status(result.get) must not equal (NOT_FOUND)
+      status(result.get) must not equal NOT_FOUND
     }
 
     "bulk reference GET " must {

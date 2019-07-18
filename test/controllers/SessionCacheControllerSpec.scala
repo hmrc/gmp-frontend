@@ -16,28 +16,29 @@
 
 package controllers
 
+import config.GmpSessionCache
+import metrics.ApplicationMetrics
 import org.mockito.Matchers
 import org.mockito.Mockito._
-import org.scalatest.mock.MockitoSugar
+import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
-import scala.concurrent.duration._
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.SessionService
 import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
-import play.api.i18n.Messages.Implicits._
 
-import scala.concurrent.{Await, Future}
+import scala.concurrent.Future
 
 class SessionCacheControllerSpec extends PlaySpec with OneServerPerSuite with MockitoSugar with GmpUsers {
 
   val mockAuthConnector = mock[AuthConnector]
   val mockSessionService = mock[SessionService]
+  val metrics = app.injector.instanceOf[ApplicationMetrics]
+  val gmpSessionCache = app.injector.instanceOf[GmpSessionCache]
 
-  object TestSessionCacheController extends SessionCacheController {
-    val authConnector = mockAuthConnector
+  object TestSessionCacheController extends SessionCacheController(mockAuthConnector) {
     override val sessionService = mockSessionService
-    override val context = FakeGmpContext()
+    override val context = FakeGmpContext
   }
 
   "SessionCacheController" must {
@@ -58,7 +59,7 @@ class SessionCacheControllerSpec extends PlaySpec with OneServerPerSuite with Mo
 
     "reset the cached calculation parameters except for scon" in {
       withAuthorisedUser { request =>
-        when(mockSessionService.resetGmpSessionWithScon()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(SessionService.cleanSession)))
+        when(mockSessionService.resetGmpSessionWithScon()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(new SessionService(metrics, gmpSessionCache).cleanSession)))
         await(TestSessionCacheController.newCalculation.apply(request))
         verify(mockSessionService, atLeastOnce()).resetGmpSessionWithScon()(Matchers.any(), Matchers.any())
       }
@@ -66,7 +67,7 @@ class SessionCacheControllerSpec extends PlaySpec with OneServerPerSuite with Mo
 
     "redirect to the pension details page" in {
       withAuthorisedUser { request =>
-        when(mockSessionService.resetGmpSessionWithScon()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(SessionService.cleanSession)))
+        when(mockSessionService.resetGmpSessionWithScon()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(new SessionService(metrics, gmpSessionCache).cleanSession)))
         val result = TestSessionCacheController.newCalculation.apply(request)
         status(result) must be(SEE_OTHER)
         redirectLocation(result).get must be("/guaranteed-minimum-pension/pension-details")
@@ -93,7 +94,7 @@ class SessionCacheControllerSpec extends PlaySpec with OneServerPerSuite with Mo
 
     "reset the cached calculation parameters" in {
       withAuthorisedUser { request =>
-        when(mockSessionService.resetGmpBulkSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(SessionService.cleanBulkSession)))
+        when(mockSessionService.resetGmpBulkSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(new SessionService(metrics, gmpSessionCache).cleanBulkSession)))
         await(TestSessionCacheController.newBulkCalculation.apply(request))
         verify(mockSessionService, atLeastOnce()).resetGmpBulkSession()(Matchers.any(), Matchers.any())
       }
@@ -101,7 +102,7 @@ class SessionCacheControllerSpec extends PlaySpec with OneServerPerSuite with Mo
 
     "redirect to the upload csv page" in {
       withAuthorisedUser { request =>
-        when(mockSessionService.resetGmpBulkSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(SessionService.cleanBulkSession)))
+        when(mockSessionService.resetGmpBulkSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(new SessionService(metrics, gmpSessionCache).cleanBulkSession)))
         val result = TestSessionCacheController.newBulkCalculation.apply(request)
         status(result) must be(SEE_OTHER)
         redirectLocation(result).get must be("/guaranteed-minimum-pension/upload-csv")

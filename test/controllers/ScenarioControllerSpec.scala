@@ -16,23 +16,20 @@
 
 package controllers
 
-import config.ApplicationConfig
+import helpers.RandomNino
 import models._
 import org.mockito.Matchers
 import org.mockito.Mockito._
-import org.scalatest.mock.MockitoSugar
+import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
-import play.api.data.Form
 import play.api.i18n.Messages
+import play.api.i18n.Messages.Implicits._
 import play.api.libs.json.Json
-import play.api.mvc.{Request, AnyContentAsEmpty, Result}
+import play.api.mvc.{AnyContentAsEmpty, Result}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import play.twirl.api.HtmlFormat
 import services.SessionService
 import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
-import helpers.RandomNino
-import play.api.i18n.Messages.Implicits._
 
 import scala.concurrent.Future
 
@@ -41,10 +38,9 @@ class ScenarioControllerSpec extends PlaySpec with OneServerPerSuite with Mockit
   val mockAuthConnector = mock[AuthConnector]
   val mockSessionService = mock[SessionService]
 
-  object TestScenarioController extends ScenarioController {
-    override val authConnector = mockAuthConnector
+  object TestScenarioController extends ScenarioController(mockAuthConnector) {
     override val sessionService = mockSessionService
-    override val context = FakeGmpContext()
+    override val context = FakeGmpContext
   }
 
   private val nino: String = RandomNino.generate

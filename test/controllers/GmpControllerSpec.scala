@@ -17,7 +17,7 @@
 package controllers
 
 import models._
-import org.scalatest.mock.MockitoSugar
+import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
 import play.api.test.Helpers._
 import services.SessionService
@@ -29,10 +29,9 @@ class GmpControllerSpec extends PlaySpec with OneServerPerSuite with MockitoSuga
   val mockAuthConnector = mock[AuthConnector]
   val mockSessionService = mock[SessionService]
 
-  object TestGmpController extends GmpPageFlow {
-    val authConnector = mockAuthConnector
+  object TestGmpController extends GmpPageFlow(mockAuthConnector) {
     override val sessionService = mockSessionService
-    override val context = FakeGmpContext()
+    override val context = FakeGmpContext
   }
 
   val gmpSession = GmpSession(MemberDetails("", "", ""), "", "", None, None, Leaving(GmpDate(None, None, None), None), None)

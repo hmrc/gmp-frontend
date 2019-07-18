@@ -17,21 +17,11 @@
 package controllers
 
 import config.GmpContext
-import org.scalatest.mock.MockitoSugar._
-import org.mockito.Matchers._
-import org.mockito.Mockito.when
-
-import scala.concurrent.Future
 import uk.gov.hmrc.http.HeaderCarrier
 
-object FakeGmpContext {
+import scala.concurrent.Future
 
-  def apply() = {
-    val m = mock[GmpContext]
+object FakeGmpContext extends GmpContext {
 
-    when(m.getPageHelpPartial()(any[HeaderCarrier])) thenReturn Future.successful("<div id=\"help_partial\"></div>")
-
-    m
-  }
-
+  override def getPageHelpPartial()(implicit hc: HeaderCarrier): Future[String] = Future.successful("<div id=\"help_partial\"></div>")
 }

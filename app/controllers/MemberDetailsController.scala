@@ -16,20 +16,19 @@
 
 package controllers
 
+import com.google.inject.{Inject, Singleton}
 import config.GmpFrontendAuthConnector
 import controllers.auth.GmpRegime
 import forms.MemberDetailsForm._
 import play.api.Play.current
 import play.api.i18n.Messages.Implicits._
 import play.api.Logger
+import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
 
 import scala.concurrent.Future
 
-object MemberDetailsController extends MemberDetailsController {
-  val authConnector = GmpFrontendAuthConnector
-}
-
-trait MemberDetailsController extends GmpPageFlow {
+@Singleton
+class MemberDetailsController @Inject()(override val authConnector: AuthConnector) extends GmpPageFlow(authConnector) {
 
   def get = AuthorisedFor(GmpRegime, pageVisibilityPredicate).async {
     implicit user =>

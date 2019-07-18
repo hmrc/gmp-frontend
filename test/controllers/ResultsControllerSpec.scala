@@ -16,27 +16,28 @@
 
 package controllers
 
-import config.ApplicationConfig
 import config.ApplicationConfig.globalErrors
+import config.{ApplicationConfig, GmpFrontendAuditConnector}
 import connectors.GmpConnector
 import helpers.RandomNino
-import metrics.Metrics
+import metrics.ApplicationMetrics
 import models._
 import org.joda.time.LocalDate
 import org.mockito.Matchers
 import org.mockito.Mockito._
-import org.scalatest.mock.MockitoSugar
+import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
 import play.api.i18n.Messages
+import play.api.i18n.Messages.Implicits._
 import play.api.mvc.Request
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import play.twirl.api.{Html, HtmlFormat}
+import play.twirl.api.HtmlFormat
 import services.SessionService
-import uk.gov.hmrc.play.audit.http.connector.{AuditResult, AuditConnector}
+import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
 import views.helpers.GmpDateFormatter._
-import play.api.i18n.Messages.Implicits._
+
 import scala.concurrent.Future
 
 class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with MockitoSugar with GmpUsers {
@@ -45,20 +46,16 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
   val mockSessionService = mock[SessionService]
   val mockCalculationConnector = mock[GmpConnector]
   val mockApplicationConfig = mock[ApplicationConfig]
-  val mockAuditConnector = mock[AuditConnector]
+  val mockAuditConnector = mock[GmpFrontendAuditConnector]
+  val metrics = app.injector.instanceOf[ApplicationMetrics]
 
-  object TestResultsController extends ResultsController {
-    override val auditConnector = mockAuditConnector
-    val authConnector = mockAuthConnector
-    override val sessionService = mockSessionService
-    override val calculationConnector = mockCalculationConnector
-    override val context = FakeGmpContext()
+  object TestResultsController extends ResultsController(mockAuthConnector, mockSessionService, mockCalculationConnector, mockAuditConnector, metrics) {
+    override val context = FakeGmpContext
 
     override def resultsView(response: CalculationResponse, subheader: Option[String], revalSubheader: Option[String])(implicit request: Request[_], context: config.GmpContext): HtmlFormat.Appendable = {
       views.html.results(applicationConfig = mockApplicationConfig, response, subheader, revalSubheader)
     }
 
-    override def metrics = Metrics
   }
 
   private val nino: String = RandomNino.generate

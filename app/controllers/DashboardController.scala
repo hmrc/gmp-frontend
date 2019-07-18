@@ -16,21 +16,17 @@
 
 package controllers
 
-import config.GmpFrontendAuthConnector
+import com.google.inject.{Inject, Singleton}
 import connectors.GmpBulkConnector
 import controllers.auth.GmpRegime
 import play.api.Logger
-import play.api.i18n.Messages.Implicits._
 import play.api.Play.current
+import play.api.i18n.Messages.Implicits._
+import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
 
-object DashboardController extends DashboardController {
-  val authConnector = GmpFrontendAuthConnector
-  val gmpBulkConnector = GmpBulkConnector
-}
-
-trait DashboardController extends GmpPageFlow {
-
-  val gmpBulkConnector: GmpBulkConnector
+@Singleton
+class DashboardController @Inject()(override val authConnector: AuthConnector,
+                                    gmpBulkConnector: GmpBulkConnector) extends GmpPageFlow(authConnector) {
 
   def get = AuthorisedFor(GmpRegime, pageVisibilityPredicate).async {
     implicit user =>

@@ -17,11 +17,12 @@
 package services
 
 import helpers.RandomNino
-import models.{BulkCalculationRequestLine, CalculationRequestLine, BulkCalculationRequest}
-import org.joda.time.{LocalDateTime, LocalDate}
+import models.{BulkCalculationRequest, BulkCalculationRequestLine, CalculationRequestLine}
+import org.joda.time.{LocalDate, LocalDateTime}
 import org.scalatest.concurrent.ScalaFutures
-import org.scalatest.mock.MockitoSugar
+import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
+import play.api.Environment
 import play.api.i18n.Messages
 import play.api.i18n.Messages.Implicits._
 
@@ -93,7 +94,7 @@ class BulkRequestCreationServiceSpec extends PlaySpec with ScalaFutures with Moc
     def getFirstValid = request.calculationRequests.head.validCalculationRequest.get
   }
 
-  object TestBulkRequestCreationService extends BulkRequestCreationService {
+  object TestBulkRequestCreationService extends BulkRequestCreationService(app.injector.instanceOf[Environment], app.configuration) {
 
     override val MAX_LINES: Int = 2
 
@@ -336,7 +337,7 @@ class BulkRequestCreationServiceSpec extends PlaySpec with ScalaFutures with Moc
 
     "return an exception when uploading more than the max number of lines" in {
 
-      object TestService extends BulkRequestCreationService {
+      object TestService extends BulkRequestCreationService(app.injector.instanceOf[Environment], app.configuration) {
         override val MAX_LINES = 2
         override def sourceData(resourceLocation: String): Iterator[Char] = dataLineWith3Calcs.iterator
       }
@@ -348,7 +349,7 @@ class BulkRequestCreationServiceSpec extends PlaySpec with ScalaFutures with Moc
 
     "allow uploading right up to the line limit" in {
 
-      object TestService extends BulkRequestCreationService {
+      object TestService extends BulkRequestCreationService(app.injector.instanceOf[Environment], app.configuration) {
         override val MAX_LINES = 3
         override def sourceData(resourceLocation: String): Iterator[Char] = dataLineWith3Calcs.iterator
       }

@@ -16,6 +16,7 @@
 
 package controllers
 
+import com.google.inject.{Inject, Singleton}
 import config.GmpFrontendAuthConnector
 import connectors.GmpBulkConnector
 import controllers.auth.GmpRegime
@@ -24,14 +25,16 @@ import play.api.i18n.Messages
 import services.{BulkRequestCreationService, DataLimitExceededException, SessionService}
 import play.api.i18n.Messages.Implicits._
 import play.api.Play.current
+import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
+
 import scala.concurrent.Future
 
-
-trait BulkRequestReceivedController extends GmpController {
-
-  val sessionService: SessionService
-  val bulkRequestCreationService: BulkRequestCreationService
-  val gmpBulkConnector: GmpBulkConnector
+@Singleton
+class BulkRequestReceivedController @Inject()(val authConnector: AuthConnector,
+                                              sessionService: SessionService,
+                                              bulkRequestCreationService: BulkRequestCreationService,
+                                              gmpBulkConnector: GmpBulkConnector
+                                             ) extends GmpController {
 
   def get = AuthorisedFor(GmpRegime, pageVisibilityPredicate).async {
     implicit user =>
@@ -61,9 +64,3 @@ trait BulkRequestReceivedController extends GmpController {
   }
 }
 
-object BulkRequestReceivedController extends BulkRequestReceivedController {
-  val authConnector = GmpFrontendAuthConnector
-  override val sessionService = SessionService
-  override val bulkRequestCreationService = BulkRequestCreationService
-  override val gmpBulkConnector = GmpBulkConnector
-}

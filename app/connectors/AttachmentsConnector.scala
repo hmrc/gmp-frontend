@@ -18,29 +18,29 @@ package connectors
 
 import java.net.URLEncoder
 
-import javax.inject.Inject
-import com.typesafe.config.Config
+import com.google.inject.Inject
 import config.{ApplicationConfig, WSHttp}
 import controllers.routes
 import play.api.Mode.Mode
-import play.api.{Configuration, Logger, Play}
+import play.api.Play.current
 import play.api.i18n.Messages
+import play.api.i18n.Messages.Implicits._
 import play.api.mvc.Request
-import uk.gov.hmrc.http.hooks.HttpHook
-import uk.gov.hmrc.http.{HeaderCarrier, HttpGet, HttpResponse}
+import play.api.{Configuration, Environment, Logger, Play}
+import uk.gov.hmrc.crypto.ApplicationCrypto
+import uk.gov.hmrc.http.HttpGet
 import uk.gov.hmrc.play.config.ServicesConfig
 import uk.gov.hmrc.play.frontend.filters.SessionCookieCryptoFilter
-import uk.gov.hmrc.play.http.ws.WSGet
-import uk.gov.hmrc.play.partials.{HeaderCarrierForPartialsConverter, HtmlPartial}
 import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext._
-import play.api.i18n.{I18nSupport, Messages, MessagesApi}
-import play.api.i18n.Messages.Implicits._
+import uk.gov.hmrc.play.partials.{HeaderCarrierForPartialsConverter, HtmlPartial}
 
 import scala.concurrent.Future
-import play.api.Play.current
-import uk.gov.hmrc.crypto.ApplicationCrypto
 
-trait UploadConfig  extends ServicesConfig {
+class UploadConfig @Inject()( environment: Environment,
+                              val runModeConfiguration: Configuration
+                            ) extends ServicesConfig {
+
+  override protected def mode: Mode = environment.mode
 
   def apply(implicit request: Request[_]): String = {
     lazy val url = s"${baseUrl("attachments")}/attachments-internal/uploader"
@@ -63,19 +63,16 @@ trait UploadConfig  extends ServicesConfig {
 
 }
 
-object UploadConfig extends UploadConfig {
-  override protected def mode: Mode = Play.current.mode
+class AttachmentsConnector @Inject()(
+                                      uploadConfig: UploadConfig,
+                                      http: HttpGet,
+                                      configuration: Configuration
+                                    ) extends HeaderCarrierForPartialsConverter {
 
-  override protected def runModeConfiguration: Configuration = Play.current.configuration
-}
-
-
-trait AttachmentsConnector extends HeaderCarrierForPartialsConverter {
-
-  val http: HttpGet = WSHttp
+  override val crypto = new SessionCookieCryptoFilter(new ApplicationCrypto(configuration.underlying)).encrypt _
 
   def getFileUploadPartial()(implicit request: Request[_]): Future[HtmlPartial] = {
-    val partial = http.GET[HtmlPartial](UploadConfig(request))
+    val partial = http.GET[HtmlPartial](uploadConfig(request))
 
     // $COVERAGE-OFF$
     partial onSuccess {
@@ -85,16 +82,8 @@ trait AttachmentsConnector extends HeaderCarrierForPartialsConverter {
     partial.onFailure {
       case e: Exception => Logger.error(s"[AttachmentsConnector][getFileUploadPartial] Failed to get upload partial", e)
     }
-
     // $COVERAGE-ON$
 
     partial
   }
-
-}
-
-object AttachmentsConnector extends AttachmentsConnector{
-  // $COVERAGE-OFF$Trivial and never going to be called by a test that uses it's own object implementation
-  override val crypto = new SessionCookieCryptoFilter(new ApplicationCrypto(Play.current.configuration.underlying)).encrypt _
-  // $COVERAGE-ON$
 }

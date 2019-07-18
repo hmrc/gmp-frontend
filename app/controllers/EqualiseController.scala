@@ -16,23 +16,20 @@
 
 package controllers
 
-import config.GmpFrontendAuthConnector
+import com.google.inject.{Inject, Singleton}
 import controllers.auth.GmpRegime
 import forms.EqualiseForm._
 import play.api.Logger
+import play.api.Play.current
+import play.api.i18n.Messages.Implicits._
 import services.SessionService
+import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
 
 import scala.concurrent.Future
-import play.api.i18n.Messages.Implicits._
-import play.api.Play.current
 
-object EqualiseController extends EqualiseController {
-  val authConnector = GmpFrontendAuthConnector
-}
-
-trait EqualiseController extends GmpPageFlow {
-
-  val sessionService: SessionService
+@Singleton
+class EqualiseController @Inject()(override val authConnector: AuthConnector,
+                                   sessionService: SessionService) extends GmpPageFlow(authConnector) {
 
   def get = AuthorisedFor(GmpRegime, pageVisibilityPredicate).async {
     implicit user => implicit request => Future.successful(Ok(views.html.equalise(equaliseForm)))

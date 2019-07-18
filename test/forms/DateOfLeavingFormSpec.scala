@@ -19,7 +19,7 @@ package forms
 import forms.DateOfLeavingForm._
 import models.{GmpDate, Leaving}
 import org.joda.time.{DateTime, DateTimeUtils}
-import org.scalatest.mock.MockitoSugar
+import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.data.FormError
 import play.api.i18n.Messages

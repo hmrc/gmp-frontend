@@ -18,39 +18,30 @@ package connectors
 
 import java.util.UUID
 
-import akka.actor.ActorSystem
-import com.typesafe.config.Config
-import config.{Hooks, WSHttp}
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
-import org.scalatest.mock.MockitoSugar
+import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
-import play.api.{Configuration, Play}
 import play.api.http.HeaderNames
 import play.api.test.FakeRequest
 import uk.gov.hmrc.crypto.ApplicationCrypto
+import uk.gov.hmrc.http.logging.RequestId
+import uk.gov.hmrc.http.{HeaderCarrier, HttpGet, HttpResponse}
 import uk.gov.hmrc.play.frontend.filters.SessionCookieCryptoFilter
-import uk.gov.hmrc.play.http.ws.{WSGet, WSPost}
 import uk.gov.hmrc.play.partials.HeaderCarrierForPartials
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
-import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
-import uk.gov.hmrc.http.hooks.HttpHook
-import uk.gov.hmrc.http.logging.RequestId
 
 class AttachmentsConnectorSpec extends PlaySpec with OneAppPerSuite with MockitoSugar with BeforeAndAfterEach {
 
-  class MockHttp extends WSHttp with Hooks {
-    override val hooks: Seq[HttpHook] = Nil
-  }
 
-  val mockHttp = mock[MockHttp]
+  val mockHttp = mock[HttpGet]
+  val uploadConfig = app.injector.instanceOf[UploadConfig]
 
-  class TestAttachmentsConnector extends AttachmentsConnector {
-    val crypto = new SessionCookieCryptoFilter(new ApplicationCrypto(Play.current.configuration.underlying)).encrypt _
-    override val http = mockHttp
+  class TestAttachmentsConnector extends AttachmentsConnector(uploadConfig, mockHttp, app.configuration) {
+    override val crypto = new SessionCookieCryptoFilter(new ApplicationCrypto(app.configuration.underlying)).encrypt _
   }
 
   override def beforeEach = {
@@ -85,12 +76,12 @@ class AttachmentsConnectorSpec extends PlaySpec with OneAppPerSuite with Mockito
 
 
     "have the collection" in {
-      val config = UploadConfig(request)
+      val config = uploadConfig(request)
       config must include("collection=gmp")
     }
 
     "have a the attachments service url" in {
-      val config = UploadConfig(request)
+      val config = uploadConfig(request)
       config must include("http://localhost:8895/attachments-internal/uploader")
     }
 
@@ -107,7 +98,7 @@ class AttachmentsConnectorSpec extends PlaySpec with OneAppPerSuite with Mockito
 //    }
 
     "accept .csv" in {
-      val config = UploadConfig(request)
+      val config = uploadConfig(request)
       config must include("accepts=.csv")
     }
 
