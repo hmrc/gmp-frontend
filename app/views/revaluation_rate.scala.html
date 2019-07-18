@@ -54,16 +54,16 @@
                     session.leaving.leaving match{
                     case Some(Leaving.YES_AFTER) | Some(Leaving.NO) =>
                     Seq(
-                    "hmrc"  -> "hmrc"  -> Messages("gmp.revaluation_rate.rate_held_by_hmrc"),
                     "fixed" -> "fixed"  -> Messages("gmp.revaluation_rate.fixed"),
+                    "hmrc"  -> "hmrc"  -> Messages("gmp.revaluation_rate.rate_held_by_hmrc"),
                     "s148"  -> "s148"  -> Messages("gmp.revaluation_rate.s148")
                     )
                     case _ =>
                   Seq(
-                    "hmrc"  -> "hmrc"  -> Messages("gmp.revaluation_rate.rate_held_by_hmrc"),
                     "fixed" -> "fixed"  -> Messages("gmp.revaluation_rate.fixed"),
-                    "s148"  -> "s148"  -> Messages("gmp.revaluation_rate.s148"),
-                    "limited" -> "limited" -> Messages("gmp.revaluation_rate.limited")
+                    "hmrc"  -> "hmrc"  -> Messages("gmp.revaluation_rate.rate_held_by_hmrc"),
+                    "limited" -> "limited" -> Messages("gmp.revaluation_rate.limited"),
+                    "s148"  -> "s148"  -> Messages("gmp.revaluation_rate.s148")
                   )},
                   session.scenario match {
                     case CalculationType.PAYABLE_AGE | CalculationType.SPA | CalculationType.SURVIVOR => '_legend -> Messages("gmp.revaluation_rate_spa.header")
