@@ -46,13 +46,13 @@ class SessionCacheControllerSpec extends PlaySpec with OneServerPerSuite with Mo
 
     "reset the cached calculation parameters except for scon" in {
         when(mockSessionService.resetGmpSessionWithScon()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(new SessionService(metrics, gmpSessionCache).cleanSession)))
-        await(TestSessionCacheController.newCalculation.apply(FakeRequest()))
+        await(TestSessionCacheController.newCalculation(FakeRequest()))
         verify(mockSessionService, atLeastOnce()).resetGmpSessionWithScon()(Matchers.any(), Matchers.any())
     }
 
     "redirect to the pension details page" in {
         when(mockSessionService.resetGmpSessionWithScon()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(new SessionService(metrics, gmpSessionCache).cleanSession)))
-        val result = TestSessionCacheController.newCalculation.apply(FakeRequest())
+        val result = TestSessionCacheController.newCalculation(FakeRequest())
         status(result) must be(SEE_OTHER)
         redirectLocation(result).get must be("/guaranteed-minimum-pension/pension-details")
     }
@@ -61,7 +61,7 @@ class SessionCacheControllerSpec extends PlaySpec with OneServerPerSuite with Mo
 
         when(mockSessionService.resetGmpSessionWithScon()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(None))
         intercept[RuntimeException]{
-          await(TestSessionCacheController.newCalculation.apply(FakeRequest()))
+          await(TestSessionCacheController.newCalculation(FakeRequest()))
       }
     }
   }
@@ -71,14 +71,14 @@ class SessionCacheControllerSpec extends PlaySpec with OneServerPerSuite with Mo
     "reset the cached calculation parameters" in {
 
         when(mockSessionService.resetGmpBulkSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(new SessionService(metrics, gmpSessionCache).cleanBulkSession)))
-        await(TestSessionCacheController.newBulkCalculation.apply(FakeRequest()))
+        await(TestSessionCacheController.newBulkCalculation(FakeRequest()))
         verify(mockSessionService, atLeastOnce()).resetGmpBulkSession()(Matchers.any(), Matchers.any())
     }
 
     "redirect to the upload csv page" in {
 
         when(mockSessionService.resetGmpBulkSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(new SessionService(metrics, gmpSessionCache).cleanBulkSession)))
-        val result = TestSessionCacheController.newBulkCalculation.apply(FakeRequest())
+        val result = TestSessionCacheController.newBulkCalculation(FakeRequest())
         status(result) must be(SEE_OTHER)
         redirectLocation(result).get must be("/guaranteed-minimum-pension/upload-csv")
     }
@@ -87,7 +87,7 @@ class SessionCacheControllerSpec extends PlaySpec with OneServerPerSuite with Mo
 
         when(mockSessionService.resetGmpBulkSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(None))
         intercept[RuntimeException]{
-          await(TestSessionCacheController.newBulkCalculation.apply(FakeRequest()))
+          await(TestSessionCacheController.newBulkCalculation(FakeRequest()))
       }
     }
   }

@@ -65,7 +65,7 @@ class FileUploadControllerSpec extends PlaySpec with OneServerPerSuite with Mock
 
       "be shown correct title for DOL" in {
 
-          val result = TestFileUploadController.get.apply(FakeRequest())
+          val result = TestFileUploadController.get(FakeRequest())
           status(result) must equal(OK)
           contentAsString(result) must include(Messages("gmp.fileupload.header"))
       }
@@ -76,21 +76,21 @@ class FileUploadControllerSpec extends PlaySpec with OneServerPerSuite with Mock
 
       "authorised users" must {
         "have a status of OK for generic error" in {
-            val result = TestFileUploadController.failure().apply(FakeRequest())
+            val result = TestFileUploadController.failure()(FakeRequest())
               status(result) must be(OK)
               contentAsString(result) must include(Messages("gmp.bulk.failure.generic"))
               contentAsString(result) must include(Messages("gmp.bulk.problem.header"))
         }
 
         "show correct message for virus error" in {
-          val result = TestFileUploadController.failure().apply(FakeRequest("GET", "/upload-csv/failure?error_message=VIRUS"))
+          val result = TestFileUploadController.failure()(FakeRequest("GET", "/upload-csv/failure?error_message=VIRUS"))
               status(result) must be(OK)
               contentAsString(result) must include(Messages("gmp.bulk.failure.antivirus"))
               contentAsString(result) must include(Messages("gmp.bulk.problem.header"))
         }
 
         "show correct message for missing file error" in {
-          val result = TestFileUploadController.failure().apply(FakeRequest("GET", "/upload-csv/failure?error_message=SELECT"))
+          val result = TestFileUploadController.failure()(FakeRequest("GET", "/upload-csv/failure?error_message=SELECT"))
               status(result) must be(OK)
               contentAsString(result) must include(Messages("gmp.bulk.failure.missing"))
               contentAsString(result) must include(Messages("gmp.bulk.problem.header"))
@@ -104,7 +104,7 @@ class FileUploadControllerSpec extends PlaySpec with OneServerPerSuite with Mock
 
     "successfully store callback data in session cache" in {
       when(mockSessionService.cacheCallBackData(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpBulkSession)))
-      val result = TestFileUploadController.callback.apply(fakeRequest)
+      val result = TestFileUploadController.callback()(fakeRequest)
       status(result) must be(OK)
 
     }
@@ -112,14 +112,14 @@ class FileUploadControllerSpec extends PlaySpec with OneServerPerSuite with Mock
     "throw exception when doesn't store callback data" in {
       when(mockSessionService.cacheCallBackData(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(None))
       intercept[RuntimeException]{
-       await(TestFileUploadController.callback.apply(fakeRequest))
+       await(TestFileUploadController.callback()(fakeRequest))
       }
     }
 
     "recover from failures more" in {
       when(mockSessionService.cacheCallBackData(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.failed(new RuntimeException))
       intercept[RuntimeException]{
-        await(TestFileUploadController.callback.apply(fakeRequest))
+        await(TestFileUploadController.callback()(fakeRequest))
       }
     }
 
@@ -129,7 +129,7 @@ class FileUploadControllerSpec extends PlaySpec with OneServerPerSuite with Mock
       val fakeRequest = FakeRequest(method = "POST", uri = "", headers = FakeHeaders(Seq("Content-type" -> ("application/json"))), body = Json.toJson(callbackData))
       when(mockSessionService.cacheCallBackData(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.failed(new RuntimeException))
       intercept[RuntimeException]{
-        await(TestFileUploadController.callback.apply(fakeRequest))
+        await(TestFileUploadController.callback()(fakeRequest))
       }
     }
 
@@ -138,7 +138,7 @@ class FileUploadControllerSpec extends PlaySpec with OneServerPerSuite with Mock
 
       val fakeRequest = FakeRequest(method = "POST", uri = "", headers = FakeHeaders(Seq("Content-type" -> ("application/json"))), body = Json.toJson(gmpBulkSession.callBackData))
       when(mockSessionService.cacheCallBackData(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpBulkSession)))
-      val result = TestFileUploadController.callback.apply(fakeRequest)
+      val result = TestFileUploadController.callback()(fakeRequest)
       status(result) must be(OK)
 
     }
@@ -158,7 +158,7 @@ class FileUploadControllerSpec extends PlaySpec with OneServerPerSuite with Mock
 
     when(mockAttachmentsConnector.getFileUploadPartial()(Matchers.any())).thenReturn(Future.successful(HtmlPartial.Success(Some("thepartial"), Html(""))))
 
-    handler(TestFileUploadController.get.apply(request))
+    handler(TestFileUploadController.get()(request))
   }
 
 }

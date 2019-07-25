@@ -45,7 +45,7 @@ class EqualiseControllerSpec extends PlaySpec with OneServerPerSuite with Mockit
 
     "respond with ok" in {
 
-      val result = TestEqualiseController.get.apply(FakeRequest())
+      val result = TestEqualiseController.get(FakeRequest())
       status(result) must equal(OK)
       contentAsString(result) must include(Messages("gmp.equalise_header"))
     }
@@ -53,7 +53,7 @@ class EqualiseControllerSpec extends PlaySpec with OneServerPerSuite with Mockit
     "present the equalise page" in {
       when(mockSessionService.fetchMemberDetails()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(None))
 
-        val result = TestEqualiseController.get.apply(FakeRequest())
+        val result = TestEqualiseController.get(FakeRequest())
         contentAsString(result) must include(Messages("gmp.equalise_header"))
         contentAsString(result) must include(Messages("gmp.back.link"))
         contentAsString(result) must include(Messages("gmp.continue.button"))
@@ -69,14 +69,14 @@ class EqualiseControllerSpec extends PlaySpec with OneServerPerSuite with Mockit
       val session = GmpSession(memberDetails, "", CalculationType.REVALUATION, None, None, Leaving(GmpDate(None, None, None), None), None)
 
         when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(session)))
-        val result = TestEqualiseController.back.apply(FakeRequest())
+        val result = TestEqualiseController.back(FakeRequest())
         status(result) must equal(SEE_OTHER)
     }
 
     "throw an exception when session not fetched" in {
 
         when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(None))
-        val result = TestEqualiseController.back.apply(FakeRequest())
+        val result = TestEqualiseController.back(FakeRequest())
         intercept[RuntimeException] {
           status(result)
       }
@@ -113,7 +113,7 @@ class EqualiseControllerSpec extends PlaySpec with OneServerPerSuite with Mockit
               val postData = Json.toJson(
                 Equalise(Some(1))
               )
-              val result = TestEqualiseController.post.apply(FakeRequest().withJsonBody(postData))
+              val result = TestEqualiseController.post(FakeRequest().withJsonBody(postData))
               status(result) must equal(SEE_OTHER)
           }
 
@@ -123,7 +123,7 @@ class EqualiseControllerSpec extends PlaySpec with OneServerPerSuite with Mockit
                 Equalise(Some(1))
               )
               intercept[RuntimeException] {
-                await(TestEqualiseController.post.apply(FakeRequest().withJsonBody(postData)))
+                await(TestEqualiseController.post(FakeRequest().withJsonBody(postData)))
             }
           }
         }

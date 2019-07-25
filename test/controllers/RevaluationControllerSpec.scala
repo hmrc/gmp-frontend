@@ -51,7 +51,7 @@ class RevaluationControllerSpec extends PlaySpec with OneServerPerSuite with Moc
       "respond with ok" in {
 
           when(mockSessionService.fetchLeaving()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(Leaving(GmpDate(None, None, None), None))))
-          val result = TestRevaluationController.get.apply(FakeRequest())
+          val result = TestRevaluationController.get(FakeRequest())
             status(result) must equal(OK)
             contentAsString(result) must include("When would you like the calculation made to?")
             contentAsString(result) must include(Messages("gmp.revaluation.question"))
@@ -60,7 +60,7 @@ class RevaluationControllerSpec extends PlaySpec with OneServerPerSuite with Moc
 
       "respond with ok when no leaving" in {
         when(mockSessionService.fetchLeaving()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(None))
-        val result = TestRevaluationController.get.apply(FakeRequest())
+        val result = TestRevaluationController.get(FakeRequest())
             status(result) must equal(OK)
             contentAsString(result) must include("When would you like the calculation made to?")
             contentAsString(result) must include(Messages("gmp.revaluation.question"))
@@ -78,7 +78,7 @@ class RevaluationControllerSpec extends PlaySpec with OneServerPerSuite with Moc
       "redirect to the date of leaving page" in {
 
           when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(session)))
-          val result = TestRevaluationController.back.apply(FakeRequest())
+          val result = TestRevaluationController.back(FakeRequest())
           status(result) must equal(SEE_OTHER)
           redirectLocation(result).get must include("/left-scheme")
       }
@@ -87,7 +87,7 @@ class RevaluationControllerSpec extends PlaySpec with OneServerPerSuite with Moc
     "throw an exception when session not fetched" in {
 
         when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(None))
-        val result = TestRevaluationController.back.apply(FakeRequest())
+        val result = TestRevaluationController.back(FakeRequest())
         intercept[RuntimeException] {
           status(result)
       }
@@ -105,7 +105,7 @@ class RevaluationControllerSpec extends PlaySpec with OneServerPerSuite with Moc
             val postData = Json.toJson(
               RevaluationDate(Leaving(GmpDate(None, None, None), None), baseValidDate.copy(day = Some("31"), month = Some("2"), year = Some("2015")))
             )
-            val result = TestRevaluationController.post.apply(FakeRequest().withJsonBody(postData))
+            val result = TestRevaluationController.post(FakeRequest().withJsonBody(postData))
             status(result) must equal(BAD_REQUEST)
         }
 
@@ -114,7 +114,7 @@ class RevaluationControllerSpec extends PlaySpec with OneServerPerSuite with Moc
             val postData = Json.toJson(
               RevaluationDate(Leaving(GmpDate(None, None, None), None), baseValidDate.copy(day = Some("31"), month = Some("2"), year = Some("2015")))
             )
-            val result = TestRevaluationController.post.apply(FakeRequest().withJsonBody(postData))
+            val result = TestRevaluationController.post(FakeRequest().withJsonBody(postData))
             contentAsString(result) must include(Messages("gmp.error.date.invalid"))
         }
       }
@@ -129,7 +129,7 @@ class RevaluationControllerSpec extends PlaySpec with OneServerPerSuite with Moc
             val postData = Json.toJson(
               RevaluationDate(Leaving(GmpDate(None, None, None), None), baseValidDate.copy(day = Some("31"), month = Some("3"), year = Some("2015")))
             )
-            val result = TestRevaluationController.post.apply(FakeRequest().withJsonBody(postData))
+            val result = TestRevaluationController.post(FakeRequest().withJsonBody(postData))
             status(result) must equal(SEE_OTHER)
         }
 
@@ -140,7 +140,7 @@ class RevaluationControllerSpec extends PlaySpec with OneServerPerSuite with Moc
               RevaluationDate(Leaving(GmpDate(None, None, None), None), baseValidDate.copy(day = Some("31"), month = Some("3"), year = Some("2015")))
             )
             intercept[RuntimeException] {
-              await(TestRevaluationController.post.apply(FakeRequest().withJsonBody(postData)))
+              await(TestRevaluationController.post(FakeRequest().withJsonBody(postData)))
           }
         }
       }

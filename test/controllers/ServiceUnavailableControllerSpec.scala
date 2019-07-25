@@ -32,13 +32,13 @@ class ServiceUnavailableControllerSpec extends PlaySpec with OneServerPerSuite w
   "GET" must {
 
     "be accessible without authorisation" in {
-      val result = TestController.get.apply(FakeRequest())
+      val result = TestController.get(FakeRequest())
 
       status(result) must be(OK)
     }
 
     "display the service unavailable message" in {
-      val result = TestController.get.apply(FakeRequest())
+      val result = TestController.get(FakeRequest())
 
       contentAsString(result) must include(Messages("gmp.serviceunavailable.message"))
       contentAsString(result) must include(Messages("gmp.serviceunavailable.title"))

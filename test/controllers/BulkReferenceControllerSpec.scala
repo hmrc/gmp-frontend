@@ -62,7 +62,7 @@ class BulkReferenceControllerSpec extends PlaySpec with OneServerPerSuite with M
 
       "authenticated users" must {
         "respond with ok" in {
-          val result = TestBulkReferenceController.get.apply(FakeRequest())
+          val result = TestBulkReferenceController.get(FakeRequest())
           status(result) must equal(OK)
               contentAsString(result) must include(Messages("gmp.bulk_reference.header"))
               contentAsString(result) must include(Messages("gmp.reference.calcname"))
@@ -118,7 +118,7 @@ class BulkReferenceControllerSpec extends PlaySpec with OneServerPerSuite with M
 
       "authorised users redirect" in {
 
-          val result = TestBulkReferenceController.back.apply(FakeRequest())
+          val result = TestBulkReferenceController.back(FakeRequest())
           status(result) must equal(SEE_OTHER)
           redirectLocation(result).get must include("/upload-csv")
       }

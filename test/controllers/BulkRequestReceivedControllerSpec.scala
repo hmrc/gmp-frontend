@@ -81,7 +81,7 @@ class BulkRequestReceivedControllerSpec extends PlaySpec with OneServerPerSuite 
           when(mockBulkRequestCreationService.createBulkRequest(Matchers.any(),Matchers.any(),Matchers.any(),Matchers.any())).thenReturn(Left(bulkRequest1))
           when(mockGmpBulkConnector.sendBulkRequest(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful(OK))
 
-          val result = TestBulkRequestReceivedController.get.apply(FakeRequest())
+          val result = TestBulkRequestReceivedController.get(FakeRequest())
               status(result) must equal(OK)
               contentAsString(result) must include(Messages("gmp.bulk_request_received.banner"))
               contentAsString(result) must include(Messages("gmp.bulk_request_received.banner"))
@@ -96,7 +96,7 @@ class BulkRequestReceivedControllerSpec extends PlaySpec with OneServerPerSuite 
           when(mockBulkRequestCreationService.createBulkRequest(Matchers.any(),Matchers.any(),Matchers.any(),Matchers.any())).thenReturn(Left(bulkRequest1))
           when(mockGmpBulkConnector.sendBulkRequest(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful(CONFLICT))
 
-          val result = TestBulkRequestReceivedController.get.apply(FakeRequest())
+          val result = TestBulkRequestReceivedController.get(FakeRequest())
               status(result) must equal(OK)
               contentAsString(result) must include(Messages("gmp.bulk.problem.header"))
               contentAsString(result) must include(Messages("gmp.bulk.problem.header"))
@@ -108,7 +108,7 @@ class BulkRequestReceivedControllerSpec extends PlaySpec with OneServerPerSuite 
           when(mockBulkRequestCreationService.createBulkRequest(Matchers.any(),Matchers.any(),Matchers.any(),Matchers.any())).thenReturn(Left(bulkRequest1))
           when(mockGmpBulkConnector.sendBulkRequest(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful(REQUEST_ENTITY_TOO_LARGE))
 
-          val result = TestBulkRequestReceivedController.get.apply(FakeRequest())
+          val result = TestBulkRequestReceivedController.get(FakeRequest())
               status(result) must equal(OK)
               contentAsString(result) must include(Messages("gmp.bulk.failure.too_large"))
               contentAsString(result) must include(Messages("gmp.bulk.file_too_large.header"))
@@ -119,7 +119,7 @@ class BulkRequestReceivedControllerSpec extends PlaySpec with OneServerPerSuite 
           when(mockSessionService.fetchGmpBulkSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpBulkSession)))
           when(mockBulkRequestCreationService.createBulkRequest(Matchers.any(),Matchers.any(),Matchers.any(),Matchers.any())).thenReturn(Right(new DataLimitExceededException))
 
-          val result = TestBulkRequestReceivedController.get.apply(FakeRequest())
+          val result = TestBulkRequestReceivedController.get(FakeRequest())
               status(result) must equal(OK)
               contentAsString(result) must include(Messages("gmp.bulk.failure.too_large"))
               contentAsString(result) must include(Messages("gmp.bulk.file_too_large.header"))
@@ -131,7 +131,7 @@ class BulkRequestReceivedControllerSpec extends PlaySpec with OneServerPerSuite 
           when(mockBulkRequestCreationService.createBulkRequest(Matchers.any(),Matchers.any(),Matchers.any(),Matchers.any())).thenReturn(Left(bulkRequest1))
           when(mockGmpBulkConnector.sendBulkRequest(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful(500))
 
-          val result = TestBulkRequestReceivedController.get.apply(FakeRequest())
+          val result = TestBulkRequestReceivedController.get(FakeRequest())
               status(result) must equal(OK)
               contentAsString(result) must include(Messages("gmp.bulk.failure.generic"))
               contentAsString(result) must include(Messages("gmp.bulk.problem.header"))
@@ -141,7 +141,7 @@ class BulkRequestReceivedControllerSpec extends PlaySpec with OneServerPerSuite 
 
           when(mockSessionService.fetchGmpBulkSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(None))
 
-          val result = TestBulkRequestReceivedController.get.apply(FakeRequest())
+          val result = TestBulkRequestReceivedController.get(FakeRequest())
               contentAsString(result)replaceAll("&#x27;", "'") must include (Messages("gmp.cannot_calculate.gmp"))
               contentAsString(result) must include (Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/upload-csv"))
         }

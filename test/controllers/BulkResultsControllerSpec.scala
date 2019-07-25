@@ -57,14 +57,14 @@ class BulkResultsControllerSpec extends PlaySpec with OneServerPerSuite with Moc
         "respond with a status of OK" in {
           when(mockGmpBulkConnector.getBulkResultsSummary(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful(bulkResultsSummary))
 
-            val result = TestBulkResultsController.get("",comingFromDashboard).apply(FakeRequest())
+            val result = TestBulkResultsController.get("",comingFromDashboard)(FakeRequest())
             status(result) must equal(OK)
         }
 
         "load the results page" in {
           when(mockGmpBulkConnector.getBulkResultsSummary(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful(bulkResultsSummary))
 
-            val result = TestBulkResultsController.get("",comingFromDashboard).apply(FakeRequest())
+            val result = TestBulkResultsController.get("",comingFromDashboard)(FakeRequest())
 
             contentAsString(result) must include(Messages("gmp.bulk.results.banner"))
             contentAsString(result) must include(Messages("gmp.back.link"))
@@ -78,7 +78,7 @@ class BulkResultsControllerSpec extends PlaySpec with OneServerPerSuite with Moc
 
           when(mockGmpBulkConnector.getBulkResultsSummary(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful(bulkResultsSummary))
 
-            val result = TestBulkResultsController.get("",comingFromDashboard).apply(FakeRequest())
+            val result = TestBulkResultsController.get("",comingFromDashboard)(FakeRequest())
 
             contentAsString(result) must include(Messages("gmp.bulk.subheaders.successfulcalculations") + " (" + (bulkResultsSummary.total - bulkResultsSummary.failed) + ")")
 
@@ -86,7 +86,7 @@ class BulkResultsControllerSpec extends PlaySpec with OneServerPerSuite with Moc
 
         "show the incorrect user page" in {
           when(mockGmpBulkConnector.getBulkResultsSummary(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.failed(new Upstream4xxResponse("", FORBIDDEN, 0, Map())))
-            val result = TestBulkResultsController.get("",comingFromDashboard).apply(FakeRequest())
+            val result = TestBulkResultsController.get("",comingFromDashboard)(FakeRequest())
 
             contentAsString(result) must include(Messages("gmp.bulk.wrong_user.login_text"))
         }
@@ -94,7 +94,7 @@ class BulkResultsControllerSpec extends PlaySpec with OneServerPerSuite with Moc
         "show the calc not found page" in {
           when(mockGmpBulkConnector.getBulkResultsSummary(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.failed(new NotFoundException("")))
 
-            val result = TestBulkResultsController.get("",comingFromDashboard).apply(FakeRequest())
+            val result = TestBulkResultsController.get("",comingFromDashboard)(FakeRequest())
 
             contentAsString(result) must include(Messages("gmp.bulk.results_not_found"))
         }
@@ -107,7 +107,7 @@ class BulkResultsControllerSpec extends PlaySpec with OneServerPerSuite with Moc
 
         when(mockGmpBulkConnector.getResultsAsCsv(Matchers.any(),Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful(HttpResponse(responseStatus = 200,responseString = Some("CSV STRING"))))
 
-          val result = TestBulkResultsController.getResultsAsCsv("","").apply(FakeRequest())
+          val result = TestBulkResultsController.getResultsAsCsv("","")(FakeRequest())
 
           contentAsString(result) must be("CSV STRING")
       }
@@ -121,7 +121,7 @@ class BulkResultsControllerSpec extends PlaySpec with OneServerPerSuite with Moc
 
         when(mockGmpBulkConnector.getContributionsAndEarningsAsCsv(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful(HttpResponse(responseStatus = 200,responseString = Some("CSV STRING"))))
 
-          val result = TestBulkResultsController.getContributionsAndEarningsAsCsv("").apply(FakeRequest())
+          val result = TestBulkResultsController.getContributionsAndEarningsAsCsv("")(FakeRequest())
 
           contentAsString(result) must be("CSV STRING")
       }

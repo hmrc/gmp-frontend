@@ -62,7 +62,7 @@ class PensionDetailsControllerSpec extends PlaySpec with OneServerPerSuite with 
 
       "respond with ok" in {
         when(mockSessionService.fetchPensionDetails()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(None))
-        val result = TestPensionDetailsController.get.apply(FakeRequest())
+        val result = TestPensionDetailsController.get(FakeRequest())
             status(result) must equal(OK)
             contentAsString(result) must include(Messages("gmp.pension_details.header"))
             contentAsString(result) must include(Messages("gmp.scon"))
@@ -73,7 +73,7 @@ class PensionDetailsControllerSpec extends PlaySpec with OneServerPerSuite with 
 
       "get page containing scon when retrieved" in {
         when(mockSessionService.fetchPensionDetails()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some("S1301234T")))
-        val result = TestPensionDetailsController.get.apply(FakeRequest())
+        val result = TestPensionDetailsController.get(FakeRequest())
             contentAsString(result) must include("S1301234T")
       }
     }

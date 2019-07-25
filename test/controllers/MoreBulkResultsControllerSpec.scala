@@ -53,7 +53,7 @@ class MoreBulkResultsControllerSpec extends PlaySpec with OneServerPerSuite with
     "authenticated users" must {
 
       "respond with ok" in {
-        val result = TestMoreBulkResultsController.retrieveMoreBulkResults.apply(FakeRequest())
+        val result = TestMoreBulkResultsController.retrieveMoreBulkResults(FakeRequest())
             status(result) must equal(OK)
             contentAsString(result) must include(Messages("gmp.more_bulk_results.header"))
             contentAsString(result) must include(Messages("gmp.signout"))
@@ -62,7 +62,7 @@ class MoreBulkResultsControllerSpec extends PlaySpec with OneServerPerSuite with
       }
 
       "display table with more recent bulk calculation links" in {
-        val result = TestMoreBulkResultsController.retrieveMoreBulkResults.apply(FakeRequest())
+        val result = TestMoreBulkResultsController.retrieveMoreBulkResults(FakeRequest())
             status(result) must equal(OK)
             contentAsString(result) must include(Messages("gmp.more_bulk_results.header"))
       }

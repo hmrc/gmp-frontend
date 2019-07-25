@@ -134,5 +134,33 @@ class AuthActionSpec extends PlaySpec with GuiceOneAppPerSuite with MockitoSugar
         }
       }
 
+    "the user is authorised with both psa and psp" must {
+      "create an authenticated link for psa" in {
+        val mockAuthConnector = mock[GmpAuthConnector]
+
+        val retrievalResult: Future[Enrolments] =
+          Future.successful(
+            Enrolments(
+              Set(
+                Enrolment("HMRC-PSA-ORG", Seq(EnrolmentIdentifier("PSAID", "somePsaID")), ""),
+                Enrolment("HMRC-PP-ORG", Seq(EnrolmentIdentifier("PPID", "somePspID")), "")
+              )
+            )
+          )
+
+        when(mockAuthConnector.authorise[Enrolments](any(), any())(any(), any()))
+          .thenReturn(retrievalResult)
+
+        val authAction = new AuthActionImpl(mockAuthConnector, app.configuration)
+        val controller = new Harness(authAction)
+
+        val result = controller.onPageLoad()(FakeRequest("", ""))
+        status(result) mustBe OK
+        whenReady(result) {
+          _.header.headers("link") mustBe "somePsaID"
+        }
+      }
+    }
+
   }
 }

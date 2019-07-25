@@ -59,17 +59,17 @@ class ApplicationControllerSpec extends PlaySpec
     "get /unauthorised" must {
 
       "have a status of OK" in {
-        val result = TestController.unauthorised.apply(FakeRequest())
+        val result = TestController.unauthorised(FakeRequest())
         status(result) must be(OK)
       }
 
       "have a title of Unauthorised" in {
-        val result = TestController.unauthorised.apply(FakeRequest())
+        val result = TestController.unauthorised(FakeRequest())
         contentAsString(result) must include(Messages("gmp.unauthorised.message"))
       }
 
       "have some text on the page" in {
-        val result = TestController.unauthorised.apply(FakeRequest())
+        val result = TestController.unauthorised(FakeRequest())
         contentAsString(result) must include("You are not authorised to view this page")
       }
     }

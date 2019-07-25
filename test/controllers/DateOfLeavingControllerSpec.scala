@@ -54,7 +54,7 @@ class DateOfLeavingControllerSpec extends PlaySpec with OneServerPerSuite with M
       val session = GmpSession(memberDetails, "S1234567T", CalculationType.DOL, None, None, Leaving(GmpDate(None, None, None), None), None)
       "respond with ok" in {
 
-        val result = TestDateOfLeavingController.get.apply(FakeRequest())
+        val result = TestDateOfLeavingController.get(FakeRequest())
             when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(session)))
             status(result) must equal(OK)
             contentAsString(result) must include("Did the member leave the scheme before 6 April 2016?\n - Guaranteed Minimum Pension - GOV.UK")
@@ -68,14 +68,14 @@ class DateOfLeavingControllerSpec extends PlaySpec with OneServerPerSuite with M
 
 
           when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(None))
-          val result = TestDateOfLeavingController.get.apply(FakeRequest())
+          val result = TestDateOfLeavingController.get(FakeRequest())
           contentAsString(result) must include (Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/dashboard"))
       }
 
       "be shown correct title for DOL" in {
 
           when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(session)))
-          val result = TestDateOfLeavingController.get.apply(FakeRequest())
+          val result = TestDateOfLeavingController.get(FakeRequest())
           status(result) must equal(OK)
           contentAsString(result) must include(Messages("gmp.leaving.dol.question"))
 
@@ -84,7 +84,7 @@ class DateOfLeavingControllerSpec extends PlaySpec with OneServerPerSuite with M
       "be shown correct title for SPA" in {
 
           when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(session.copy(scenario = CalculationType.SPA))))
-          val result = TestDateOfLeavingController.get.apply(FakeRequest())
+          val result = TestDateOfLeavingController.get(FakeRequest())
           status(result) must equal(OK)
           contentAsString(result) must include(Messages("gmp.other.dol.left.question"))
 
@@ -93,7 +93,7 @@ class DateOfLeavingControllerSpec extends PlaySpec with OneServerPerSuite with M
       "be shown correct title for PAYABLE_AGE" in {
 
           when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(session.copy(scenario = CalculationType.PAYABLE_AGE))))
-          val result = TestDateOfLeavingController.get.apply(FakeRequest())
+          val result = TestDateOfLeavingController.get(FakeRequest())
           status(result) must equal(OK)
           contentAsString(result) must include(Messages("gmp.other.dol.left.question"))
 
@@ -102,7 +102,7 @@ class DateOfLeavingControllerSpec extends PlaySpec with OneServerPerSuite with M
       "be shown correct title for REVALUATION" in {
 
           when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(session.copy(scenario = CalculationType.REVALUATION))))
-          val result = TestDateOfLeavingController.get.apply(FakeRequest())
+          val result = TestDateOfLeavingController.get(FakeRequest())
           status(result) must equal(OK)
           contentAsString(result) must include(Messages("gmp.other.dol.left.question"))
 
@@ -111,7 +111,7 @@ class DateOfLeavingControllerSpec extends PlaySpec with OneServerPerSuite with M
       "be shown correct title for SURVIVOR" in {
 
           when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(session.copy(scenario = CalculationType.SURVIVOR))))
-          val result = TestDateOfLeavingController.get.apply(FakeRequest())
+          val result = TestDateOfLeavingController.get(FakeRequest())
           status(result) must equal(OK)
           contentAsString(result) must include(Messages("gmp.survivor.dol.question"))
 
@@ -120,7 +120,7 @@ class DateOfLeavingControllerSpec extends PlaySpec with OneServerPerSuite with M
       "be shown correct options for DOL" in {
 
           when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(session.copy(scenario = CalculationType.DOL))))
-          val result = TestDateOfLeavingController.get.apply(FakeRequest())
+          val result = TestDateOfLeavingController.get(FakeRequest())
           status(result) must equal(OK)
           contentAsString(result) must include(Messages("gmp.generic.yes"))
           contentAsString(result) must include(Messages("gmp.generic.no"))
@@ -130,7 +130,7 @@ class DateOfLeavingControllerSpec extends PlaySpec with OneServerPerSuite with M
       "be shown correct options for Anything Else" in {
 
           when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(session.copy(scenario = CalculationType.SPA))))
-          val result = TestDateOfLeavingController.get.apply(FakeRequest())
+          val result = TestDateOfLeavingController.get(FakeRequest())
           status(result) must equal(OK)
           contentAsString(result) must include(Messages("gmp.dol.threequestions.before2016"))
           contentAsString(result) must include(Messages("gmp.dol.threequestions.after2016"))
@@ -142,7 +142,7 @@ class DateOfLeavingControllerSpec extends PlaySpec with OneServerPerSuite with M
         val emptySession = GmpSession(MemberDetails("", "", ""), "", "", None, None, Leaving(GmpDate(None, None, None), None), None)
         when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(emptySession)))
 
-          val result = TestDateOfLeavingController.get.apply(FakeRequest())
+          val result = TestDateOfLeavingController.get(FakeRequest())
           contentAsString(result)replaceAll("&#x27;", "'") must include (Messages("gmp.cannot_calculate.gmp"))
           contentAsString(result) must include (Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/pension-details"))
       }
@@ -151,7 +151,7 @@ class DateOfLeavingControllerSpec extends PlaySpec with OneServerPerSuite with M
         val emptySession = GmpSession(MemberDetails("", "", ""), "S1234567T", "", None, None, Leaving(GmpDate(None, None, None), None), None)
         when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(emptySession)))
 
-          val result = TestDateOfLeavingController.get.apply(FakeRequest())
+          val result = TestDateOfLeavingController.get(FakeRequest())
           contentAsString(result)replaceAll("&#x27;", "'") must include (Messages("gmp.cannot_calculate.gmp"))
           contentAsString(result) must include (Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/member-details"))
       }
@@ -159,7 +159,7 @@ class DateOfLeavingControllerSpec extends PlaySpec with OneServerPerSuite with M
       "go to failure page when session missing firstname" in {
         val emptySession = GmpSession(MemberDetails(nino, "", ""), "S1234567T", "", None, None, Leaving(GmpDate(None, None, None), None), None)
 
-          val result = TestDateOfLeavingController.get.apply(FakeRequest())
+          val result = TestDateOfLeavingController.get(FakeRequest())
           contentAsString(result)replaceAll("&#x27;", "'") must include (Messages("gmp.cannot_calculate.gmp"))
           contentAsString(result) must include (Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/member-details"))
       }
@@ -168,7 +168,7 @@ class DateOfLeavingControllerSpec extends PlaySpec with OneServerPerSuite with M
         val emptySession = GmpSession(MemberDetails(nino, "A", ""), "S1234567T", "", None, None, Leaving(GmpDate(None, None, None), None), None)
         when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(emptySession)))
 
-          val result = TestDateOfLeavingController.get.apply(FakeRequest())
+          val result = TestDateOfLeavingController.get(FakeRequest())
           contentAsString(result)replaceAll("&#x27;", "'") must include (Messages("gmp.cannot_calculate.gmp"))
           contentAsString(result) must include (Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/member-details"))
       }
@@ -177,7 +177,7 @@ class DateOfLeavingControllerSpec extends PlaySpec with OneServerPerSuite with M
         val emptySession = GmpSession(MemberDetails(nino, "A", "AAA"), "S1234567T", "", None, None, Leaving(GmpDate(None, None, None), None), None)
         when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(emptySession)))
 
-          val result = TestDateOfLeavingController.get.apply(FakeRequest())
+          val result = TestDateOfLeavingController.get(FakeRequest())
           contentAsString(result)replaceAll("&#x27;", "'") must include (Messages("gmp.cannot_calculate.gmp"))
           contentAsString(result) must include (Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/calculation-reason"))
       }
@@ -192,14 +192,14 @@ class DateOfLeavingControllerSpec extends PlaySpec with OneServerPerSuite with M
       val session = GmpSession(memberDetails, "S1234567T", CalculationType.DOL, None, None, Leaving(GmpDate(None, None, None), None), None)
 
         when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(session)))
-        val result = TestDateOfLeavingController.back.apply(FakeRequest())
+        val result = TestDateOfLeavingController.back(FakeRequest())
         status(result) must equal(SEE_OTHER)
     }
 
     "throw an exception when session not fetched" in {
 
         when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(None))
-        val result = TestDateOfLeavingController.back.apply(FakeRequest())
+        val result = TestDateOfLeavingController.back(FakeRequest())
         intercept[RuntimeException] {
           status(result) must equal(SEE_OTHER)
       }
@@ -221,7 +221,7 @@ class DateOfLeavingControllerSpec extends PlaySpec with OneServerPerSuite with M
               Leaving(baseValidDate.copy(day = Some("31"), month = Some("2"), year = Some("2015")), Some("Yes"))
             )
             when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
-            val result = TestDateOfLeavingController.post.apply(FakeRequest().withJsonBody(postData))
+            val result = TestDateOfLeavingController.post(FakeRequest().withJsonBody(postData))
             status(result) must equal(BAD_REQUEST)
         }
 
@@ -230,7 +230,7 @@ class DateOfLeavingControllerSpec extends PlaySpec with OneServerPerSuite with M
               Leaving(baseValidDate.copy(day = Some("31"), month = Some("2"), year = Some("2015")), Some(Leaving.YES_AFTER))
             )
             when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
-            val result = TestDateOfLeavingController.post.apply(FakeRequest().withJsonBody(postData))
+            val result = TestDateOfLeavingController.post(FakeRequest().withJsonBody(postData))
             contentAsString(result) must include(Messages("gmp.error.date.leaving.invalid"))
         }
 
@@ -240,7 +240,7 @@ class DateOfLeavingControllerSpec extends PlaySpec with OneServerPerSuite with M
               Leaving(baseValidDate.copy(day = Some("31"), month = Some("2"), year = Some("2015")), Some(Leaving.YES_AFTER))
             )
             when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(None))
-            val result = TestDateOfLeavingController.post.apply(FakeRequest().withJsonBody(postData))
+            val result = TestDateOfLeavingController.post(FakeRequest().withJsonBody(postData))
             intercept[RuntimeException] {
               contentAsString(result) must include(Messages("gmp.error.date.invalid"))
           }
@@ -309,7 +309,7 @@ class DateOfLeavingControllerSpec extends PlaySpec with OneServerPerSuite with M
             val postData = Json.toJson(
               Leaving(baseValidDate.copy(day = Some("06"), month = Some("4"), year = Some("2016")), Some(Leaving.YES_AFTER))
             )
-            val result = TestDateOfLeavingController.post.apply(FakeRequest().withJsonBody(postData))
+            val result = TestDateOfLeavingController.post(FakeRequest().withJsonBody(postData))
             status(result) must equal(SEE_OTHER)
             redirectLocation(result).get must include("/equalise")
         }
@@ -320,7 +320,7 @@ class DateOfLeavingControllerSpec extends PlaySpec with OneServerPerSuite with M
             val postData = Json.toJson(
               Leaving(baseValidDate.copy(day = Some("20"), month = Some("4"), year = Some("2015")), Some(Leaving.YES_BEFORE))
             )
-            val result = TestDateOfLeavingController.post.apply(FakeRequest().withJsonBody(postData))
+            val result = TestDateOfLeavingController.post(FakeRequest().withJsonBody(postData))
             status(result) must equal(SEE_OTHER)
             redirectLocation(result).get must be(routes.RevaluationRateController.get.url)
         }
@@ -331,7 +331,7 @@ class DateOfLeavingControllerSpec extends PlaySpec with OneServerPerSuite with M
             val postData = Json.toJson(
               Leaving(baseValidDate.copy(day = Some("6"), month = Some("4"), year = Some("2016")), Some(Leaving.YES_AFTER))
             )
-            val result = TestDateOfLeavingController.post.apply(FakeRequest().withJsonBody(postData))
+            val result = TestDateOfLeavingController.post(FakeRequest().withJsonBody(postData))
             status(result) must equal(SEE_OTHER)
             redirectLocation(result).get must be(routes.RevaluationRateController.get.url)
         }
@@ -343,7 +343,7 @@ class DateOfLeavingControllerSpec extends PlaySpec with OneServerPerSuite with M
             val postData = Json.toJson(
               Leaving(baseValidDate.copy(day = Some("6"), month = Some("4"), year = Some("2016")), Some(Leaving.YES_AFTER))
             )
-            val result = TestDateOfLeavingController.post.apply(FakeRequest().withJsonBody(postData))
+            val result = TestDateOfLeavingController.post(FakeRequest().withJsonBody(postData))
             status(result) must equal(SEE_OTHER)
             redirectLocation(result).get must be(routes.InflationProofController.get.url)
         }

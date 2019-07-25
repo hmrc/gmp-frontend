@@ -54,7 +54,7 @@ class DashboardControllerSpec extends PlaySpec with OneServerPerSuite with Mocki
 
       val dashboard = new Dashboard(Nil)
 
-        val result = TestDashboardController.get.apply(FakeRequest())
+        val result = TestDashboardController.get(FakeRequest())
         contentAsString(result) must include(Messages("urbanner.message.text"))
         contentAsString(result) must include(Messages("urbanner.message.open.new.window"))
         contentAsString(result) must include(Messages("urbanner.message.reject"))
@@ -70,7 +70,7 @@ class DashboardControllerSpec extends PlaySpec with OneServerPerSuite with Mocki
     "authenticated users" must {
 
       "respond with ok" in {
-        val result = TestDashboardController.get.apply(FakeRequest())
+        val result = TestDashboardController.get(FakeRequest())
             status(result) must equal(OK)
             contentAsString(result) must include(Messages("gmp.dashboard_header"))
             contentAsString(result) must include(Messages("gmp.signout"))
@@ -80,7 +80,7 @@ class DashboardControllerSpec extends PlaySpec with OneServerPerSuite with Mocki
 
       "contain required links to single/bulk calculation, the template file download link and more bulk calculations link" in {
 
-          val result = TestDashboardController.get.apply(FakeRequest())
+          val result = TestDashboardController.get(FakeRequest())
             status(result) must equal(OK)
             contentAsString(result) must include(Messages("gmp.dashboard_header"))
             contentAsString(result) must include(Messages("gmp.dashboard.choose_calculation_type"))
@@ -94,7 +94,7 @@ class DashboardControllerSpec extends PlaySpec with OneServerPerSuite with Mocki
 
       "load the dashboard from the bulk service if present but empty" in {
         val dashboard = new Dashboard(Nil)
-          val result = TestDashboardController.get.apply(FakeRequest())
+          val result = TestDashboardController.get(FakeRequest())
           contentAsString(result) must include(Messages("gmp.previous_calculations"))
       }
 
@@ -110,13 +110,13 @@ class DashboardControllerSpec extends PlaySpec with OneServerPerSuite with Mocki
         when(brokenGmpBulkConnector.getPreviousBulkRequests(Matchers.any())(Matchers.any())).thenReturn(Future.failed(new Upstream5xxResponse("failed",503,503)))
         val dashboard = new Dashboard(Nil)
 
-          val result = BrokenDashboardController.get.apply(FakeRequest())
+          val result = BrokenDashboardController.get(FakeRequest())
           contentAsString(result) must include(Messages("gmp.previous_calculations"))
       }
 
       "load the dashboard from the bulk service if present and complete" in {
 
-          val result = TestDashboardController.get.apply(FakeRequest())
+          val result = TestDashboardController.get(FakeRequest())
           contentAsString(result) must include(Messages("gmp.previous_calculations"))
           contentAsString(result) must include("1234")
           contentAsString(result) must include("5678")

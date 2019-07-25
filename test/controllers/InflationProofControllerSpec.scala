@@ -49,7 +49,7 @@ class InflationProofControllerSpec extends PlaySpec with OneServerPerSuite with 
       "authorised users" must {
 
         "load the inflation proofing page" in {
-            val result = TestInflationProofController.get.apply(FakeRequest())
+            val result = TestInflationProofController.get(FakeRequest())
             status(result) must equal(OK)
             contentAsString(result) must include(Messages("gmp.inflation_proof.question"))
             contentAsString(result) must include(Messages("gmp.back.link"))
@@ -71,7 +71,7 @@ class InflationProofControllerSpec extends PlaySpec with OneServerPerSuite with 
           "redirect to the results" in {
 
               when(mockSessionService.cacheRevaluationDate(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(session)))
-              val result = TestInflationProofController.post.apply(FakeRequest().withJsonBody(Json.toJson(inflationProof)))
+              val result = TestInflationProofController.post(FakeRequest().withJsonBody(Json.toJson(inflationProof)))
               status(result) must equal(SEE_OTHER)
               redirectLocation(result).get must be(routes.ResultsController.get().url)
 
@@ -80,7 +80,7 @@ class InflationProofControllerSpec extends PlaySpec with OneServerPerSuite with 
           "redirect to the results when not revaluated" in {
 
               when(mockSessionService.cacheRevaluationDate(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(session)))
-              val result = TestInflationProofController.post.apply(FakeRequest().withJsonBody(Json.toJson(inflationProof.copy(revaluate = Some("No")))))
+              val result = TestInflationProofController.post(FakeRequest().withJsonBody(Json.toJson(inflationProof.copy(revaluate = Some("No")))))
               status(result) must equal(SEE_OTHER)
               redirectLocation(result).get must be(routes.ResultsController.get().url)
 
@@ -89,7 +89,7 @@ class InflationProofControllerSpec extends PlaySpec with OneServerPerSuite with 
           "save revaluation date to session cache" in {
 
               when(mockSessionService.cacheRevaluationDate(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(session)))
-              val result = TestInflationProofController.post.apply(FakeRequest().withJsonBody(Json.toJson(inflationProof)))
+              val result = TestInflationProofController.post(FakeRequest().withJsonBody(Json.toJson(inflationProof)))
               verify(mockSessionService, atLeastOnce()).cacheRevaluationDate(Matchers.any())(Matchers.any(), Matchers.any())
 
           }
@@ -98,7 +98,7 @@ class InflationProofControllerSpec extends PlaySpec with OneServerPerSuite with 
             reset(mockSessionService)
             when(mockSessionService.cacheRevaluationDate(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(None))
               intercept[RuntimeException] {
-                await(TestInflationProofController.post.apply(FakeRequest().withJsonBody(Json.toJson(inflationProof))))
+                await(TestInflationProofController.post(FakeRequest().withJsonBody(Json.toJson(inflationProof))))
             }
           }
         }
@@ -110,13 +110,13 @@ class InflationProofControllerSpec extends PlaySpec with OneServerPerSuite with 
 
           "respond with BAD_REQUEST" in {
 
-              val result = TestInflationProofController.post.apply(FakeRequest().withJsonBody(Json.toJson(inflationProof)))
+              val result = TestInflationProofController.post(FakeRequest().withJsonBody(Json.toJson(inflationProof)))
               status(result) must equal(BAD_REQUEST)
           }
 
           "display the errors" in {
 
-              val result = TestInflationProofController.post.apply(FakeRequest().withJsonBody(Json.toJson(inflationProof)))
+              val result = TestInflationProofController.post(FakeRequest().withJsonBody(Json.toJson(inflationProof)))
               contentAsString(result) must include(Messages("gmp.error.date.nonnumber"))
           }
         }
@@ -128,7 +128,7 @@ class InflationProofControllerSpec extends PlaySpec with OneServerPerSuite with 
       "throw an exception when session not fetched" in {
 
           when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(None))
-          val result = TestInflationProofController.back.apply(FakeRequest())
+          val result = TestInflationProofController.back(FakeRequest())
           intercept[RuntimeException] {
             status(result)
         }
@@ -138,7 +138,7 @@ class InflationProofControllerSpec extends PlaySpec with OneServerPerSuite with 
         val revaluationDate = GmpDate(Some("1"), Some("1"), Some("2000"))
         val session = GmpSession(MemberDetails("", "", ""), "", "3", Some(revaluationDate), None, Leaving(GmpDate(None, None, None), Some(Leaving.NO)), None)
           when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(session)))
-          val result = TestInflationProofController.back.apply(FakeRequest())
+          val result = TestInflationProofController.back(FakeRequest())
           status(result) must equal(SEE_OTHER)
           redirectLocation(result).get must be(routes.DateOfLeavingController.get().url)
       }
@@ -147,7 +147,7 @@ class InflationProofControllerSpec extends PlaySpec with OneServerPerSuite with 
         val revaluationDate = GmpDate(Some("1"), Some("1"), Some("2000"))
         val session = GmpSession(MemberDetails("", "", ""), "", "3", Some(revaluationDate), None, Leaving(GmpDate(None, None, None), Some(Leaving.YES_BEFORE)), None)
           when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(session)))
-          val result = TestInflationProofController.back.apply(FakeRequest())
+          val result = TestInflationProofController.back(FakeRequest())
           status(result) must equal(SEE_OTHER)
           redirectLocation(result).get must be(routes.RevaluationRateController.get().url)
       }
@@ -156,7 +156,7 @@ class InflationProofControllerSpec extends PlaySpec with OneServerPerSuite with 
         val revaluationDate = GmpDate(Some("1"), Some("1"), Some("2000"))
         val session = GmpSession(MemberDetails("", "", ""), "", "3", Some(revaluationDate), None, Leaving(GmpDate(None, None, None), Some(Leaving.YES_AFTER)), None)
           when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(session)))
-          val result = TestInflationProofController.back.apply(FakeRequest())
+          val result = TestInflationProofController.back(FakeRequest())
           status(result) must equal(SEE_OTHER)
           redirectLocation(result).get must be(routes.RevaluationRateController.get().url)
       }
