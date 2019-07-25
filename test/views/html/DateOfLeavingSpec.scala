@@ -47,7 +47,6 @@ class DateOfLeavingScenarioDolSpec extends DateOfLeavingSpec {
     }
 
     "have correct paragraph with text" in {
-      println(doc);
       doc must haveSpanWithText(messages("gmp.date.example"))
     }
 
