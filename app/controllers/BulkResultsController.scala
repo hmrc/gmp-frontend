@@ -18,14 +18,15 @@ package controllers
 
 import com.google.inject.Inject
 import connectors.GmpBulkConnector
-import controllers.auth.{AuthAction, GmpAuthConnector}
+import controllers.auth.AuthAction
 import play.api.Logger
 import play.api.Play.current
 import play.api.i18n.Messages.Implicits._
+import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.http.{NotFoundException, Upstream4xxResponse}
 
 class BulkResultsController @Inject()(authAction: AuthAction,
-                                      val authConnector: GmpAuthConnector,
+                                      val authConnector: AuthConnector,
                                       gmpBulkConnector: GmpBulkConnector
                                      ) extends GmpController {
 

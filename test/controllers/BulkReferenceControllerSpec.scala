@@ -19,7 +19,7 @@ package controllers
 import java.util.UUID
 
 import config.GmpFrontendAuditConnector
-import controllers.auth.{FakeAuthAction, GmpAuthConnector}
+import controllers.auth.FakeAuthAction
 import models._
 import org.mockito.Matchers
 import org.mockito.Mockito._
@@ -31,22 +31,17 @@ import play.api.libs.json.Json
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.SessionService
-import uk.gov.hmrc.domain.PsaId
+import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.logging.SessionId
-import uk.gov.hmrc.play.frontend.auth.AuthContext
-import uk.gov.hmrc.play.frontend.auth.connectors.domain._
 
 import scala.concurrent.Future
 
 class BulkReferenceControllerSpec extends PlaySpec with OneServerPerSuite with MockitoSugar {
 
-  val mockAuthConnector: GmpAuthConnector = mock[GmpAuthConnector]
+  val mockAuthConnector: AuthConnector = mock[AuthConnector]
   val mockSessionService: SessionService = mock[SessionService]
   val mockAuditConnector: GmpFrontendAuditConnector = mock[GmpFrontendAuditConnector]
-
-  implicit val user = AuthContext(authority = Authority("1234", Accounts(psa = Some(PsaAccount("link", PsaId("B1234567")))),
-                                            None, None, CredentialStrength.None, ConfidenceLevel.L50, None, None,None, legacyOid= ""))
 
   implicit val hc = new HeaderCarrier(sessionId = Some(SessionId(s"session-${UUID.randomUUID}")))
 

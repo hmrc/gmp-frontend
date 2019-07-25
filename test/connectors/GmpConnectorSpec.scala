@@ -29,11 +29,8 @@ import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
 import play.api.Environment
 import play.api.libs.json.{JsValue, Json}
 import play.api.test.Helpers._
-import uk.gov.hmrc.domain.PsaId
 import uk.gov.hmrc.http._
 import uk.gov.hmrc.http.logging.SessionId
-import uk.gov.hmrc.play.frontend.auth.AuthContext
-import uk.gov.hmrc.play.frontend.auth.connectors.domain._
 
 import scala.concurrent.Future
 
@@ -70,7 +67,6 @@ class GmpConnectorSpec extends PlaySpec with OneServerPerSuite with MockitoSugar
   "The GMP Connector" must {
 
     implicit val hc = new HeaderCarrier(sessionId = Some(SessionId(s"session-${UUID.randomUUID}")))
-    implicit val user = AuthContext(authority = Authority("1234", Accounts(psa = Some(PsaAccount(link, PsaId(psaId)))), None, None, CredentialStrength.None, ConfidenceLevel.L50, None, None, None, ""))
 
     "performing a single calculation" must {
 
@@ -258,7 +254,6 @@ class GmpConnectorSpec extends PlaySpec with OneServerPerSuite with MockitoSugar
       }
 
       "throw an exception with invalid user" in {
-        implicit val user = AuthContext(authority = Authority("1234", Accounts(psa = None), None, None, CredentialStrength.None, ConfidenceLevel.L200, None, None, None, ""))
         val validateSconRequest: ValidateSconRequest = ValidateSconRequest(scon = "S1401234Z")
 
         intercept[RuntimeException] {

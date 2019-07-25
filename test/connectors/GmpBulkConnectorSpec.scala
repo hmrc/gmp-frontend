@@ -28,11 +28,8 @@ import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
 import play.api.Environment
 import play.api.libs.json.Json
 import play.api.test.Helpers._
-import uk.gov.hmrc.domain.PsaId
 import uk.gov.hmrc.http._
 import uk.gov.hmrc.http.logging.SessionId
-import uk.gov.hmrc.play.frontend.auth.AuthContext
-import uk.gov.hmrc.play.frontend.auth.connectors.domain._
 
 import scala.concurrent.Future
 
@@ -48,7 +45,6 @@ class GmpBulkConnectorSpec extends PlaySpec with OneServerPerSuite with MockitoS
   "The GMP Bulk Connector" must {
 
     implicit val hc = new HeaderCarrier(sessionId = Some(SessionId(s"session-${UUID.randomUUID}")))
-    implicit val user = AuthContext(authority = Authority("1234", Accounts(psa = Some(PsaAccount(link, PsaId(psaId)))), None, None, CredentialStrength.None, ConfidenceLevel.L50, None, None, None, ""))
 
     "send a bulk request with valid data" in {
 

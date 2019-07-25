@@ -16,7 +16,7 @@
 
 package controllers
 
-import controllers.auth.{AuthAction, FakeAuthAction, GmpAuthConnector}
+import controllers.auth.{AuthAction, FakeAuthAction}
 import helpers.RandomNino
 import models._
 import org.mockito.Matchers
@@ -29,12 +29,13 @@ import play.api.libs.json.Json
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.SessionService
+import uk.gov.hmrc.auth.core.AuthConnector
 
 import scala.concurrent.Future
 
 class MemberDetailsControllerSpec extends PlaySpec with OneServerPerSuite with MockitoSugar {
 
-  val mockAuthConnector = mock[GmpAuthConnector]
+  val mockAuthConnector = mock[AuthConnector]
   val mockSessionService = mock[SessionService]
   val mockAuthAction = mock[AuthAction]
 
