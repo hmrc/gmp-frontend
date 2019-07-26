@@ -21,6 +21,7 @@ import play.api.Play.current
 import play.api.{Configuration, Play}
 import uk.gov.hmrc.play.config.RunMode
 
+// TODO tidy/remove this
 object ExternalUrls extends RunMode {
   val companyAuthHost = Play.configuration.getString("gg-urls.company-auth.host").getOrElse("")
   val loginCallback = Play.configuration.getString("gg-urls.login-callback.url").getOrElse("")
@@ -29,7 +30,6 @@ object ExternalUrls extends RunMode {
   val signOutPath = Play.configuration.getString("gg-urls.signout_path").getOrElse("")
   val signIn = s"$companyAuthHost/gg/$loginPath?continue=$loginCallback"
   val signOut = s"$companyAuthHost/gg/$signOutPath?continue=$signOutCallback"
-  val continue = Play.configuration.getString("gg-urls.continue.url").getOrElse("")
 
   override protected def mode: Mode = Play.current.mode
 

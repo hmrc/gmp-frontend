@@ -55,7 +55,7 @@ class AuthActionSpec extends PlaySpec with GuiceOneAppPerSuite with MockitoSugar
 
         val result = controller.onPageLoad()(FakeRequest("", ""))
         status(result) mustBe SEE_OTHER
-        redirectLocation(result).get must include("/gg/sign-in")
+        redirectLocation(result).get must include(ExternalUrls.signIn)
       }
     }
 
