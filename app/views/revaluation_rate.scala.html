@@ -35,35 +35,30 @@
 }
 @gmp_main(title = heading + " - " + Messages("service.title") + " - " + Messages("gov.uk")) {
 
-@views.html.helpers.errorSummary(revaluationRateForm)
+        @includes.back_link(Messages("gmp.revaluation_rate_spa.header"))
 
-  <div class="grid">
-      @includes.back_link(Messages("gmp.revaluation_rate_spa.header"))
-      <div class="grid-2-3">
+        @views.html.helpers.errorSummary(revaluationRateForm)
+
           <h1>@heading</h1>
-      </div>
-  </div>
 
-  <div class="grid">
-      <div class="grid-2-3">
 
           @form(action = routes.RevaluationRateController.post) {
-            <div class="form-group" id="rateType">
+            <div class="form-group @if(revaluationRateForm.hasErrors) {form-field--error}" id="rateType">
               @gmpRadioGroup(
                   revaluationRateForm("rateType"),
                     session.leaving.leaving match{
                     case Some(Leaving.YES_AFTER) | Some(Leaving.NO) =>
                     Seq(
-                    "hmrc"  -> "hmrc"  -> Messages("gmp.revaluation_rate.rate_held_by_hmrc"),
-                    "fixed" -> "fixed"  -> Messages("gmp.revaluation_rate.fixed"),
-                    "s148"  -> "s148"  -> Messages("gmp.revaluation_rate.s148")
+                    ("hmrc", "hmrc", "none")  -> Messages("gmp.revaluation_rate.rate_held_by_hmrc"),
+                    ("fixed", "fixed", "none")  -> Messages("gmp.revaluation_rate.fixed"),
+                    ("s148", "s148", "none")  -> Messages("gmp.revaluation_rate.s148")
                     )
                     case _ =>
                   Seq(
-                    "hmrc"  -> "hmrc"  -> Messages("gmp.revaluation_rate.rate_held_by_hmrc"),
-                    "fixed" -> "fixed"  -> Messages("gmp.revaluation_rate.fixed"),
-                    "s148"  -> "s148"  -> Messages("gmp.revaluation_rate.s148"),
-                    "limited" -> "limited" -> Messages("gmp.revaluation_rate.limited")
+                    ("hmrc", "hmrc", "none")  -> Messages("gmp.revaluation_rate.rate_held_by_hmrc"),
+                    ("fixed", "fixed", "none")  -> Messages("gmp.revaluation_rate.fixed"),
+                    ("s148", "s148", "none")  -> Messages("gmp.revaluation_rate.s148"),
+                    ("limited", "limited", "none") -> Messages("gmp.revaluation_rate.limited")
                   )},
                   session.scenario match {
                     case CalculationType.PAYABLE_AGE | CalculationType.SPA | CalculationType.SURVIVOR => '_legend -> Messages("gmp.revaluation_rate_spa.header")
@@ -87,10 +82,4 @@
                 <button class="button" type="submit" id="submit-button">@Messages("gmp.continue.button")</button>
             </div>
           }
-
-      </div>
-
-  </div>
-
-
 }

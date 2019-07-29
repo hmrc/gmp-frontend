@@ -22,14 +22,10 @@
 
 @gmp_main(title = Messages("gmp.bulk.problem.header") + " - " + Messages("service.title") + " - " + Messages("gov.uk"), supportLinkEnabled = false) {
 
-<div class="grid">
     @includes.back_link(Messages("gmp.bulk.problem.header"))
-    <div class="grid-2-3">
 
         <h1 id="wrong_user-heading" class="heading-xlarge">@Messages("gmp.bulk.problem.header")</h1>
         <p id="wrong_user-login_text">@Html(Messages("gmp.bulk.wrong_user.login_text"))</p>
         <p id="wrong_user.signout_text"><a id="bulk_wrong_user_sign_out" data-journey-click="gmp-bulk:click:bulk_wrong_user_sign_out" href="@ExternalUrls.signOut">@Messages("gmp.signout")</a> @Html(Messages("gmp.bulk.wrong_user.signout_text"))</p>
 
-    </div>
-</div>
 }

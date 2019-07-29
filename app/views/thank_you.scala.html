@@ -23,9 +23,8 @@
 
 @gmp_main(title = Messages("gmp.thank_you.header") + " - " + Messages("service.title") + " - " + Messages("gov.uk"),supportLinkEnabled = false, dashboardLinkEnabled = false) {
 
-  <div class="grid" id="thank-you-page">
+  <div id="thank-you-page">
       @includes.back_link(Messages("gmp.thank_you.header"))
-      <div class="grid-2-3">
           <h1>@Messages("gmp.thank_you.header")</h1>
 
           <h2>@Messages("gmp.thank_you.what_now")</h2>
@@ -34,6 +33,5 @@
               <button class="button" type="submit" id="request-another">@Messages("gmp.button.check_another")</button>
           </form>
           <p>@Messages("gmp.or.go.to") <a href="https://www.gov.uk/">@Messages("gmp.gov.uk.homepage")</a>.</p>
-      </div>
   </div>
 }

@@ -20,8 +20,7 @@
 @import config.ApplicationConfig.globalErrors
 @import org.joda.time.LocalDate
 
-<div class="grid" id="multi-error-grid">
-    <div class="grid-2-3">
+<div id="multi-error-grid">
         <div class="global-error">
 
             <h1 id="part-problem">@{ Messages("gmp.part_problem") }</h1>
@@ -45,7 +44,6 @@
 
             <p id="multi-solution">@Messages("gmp.queryhandling.resultsmessage")</p>
         </div>
-    </div>
 
     @includes.print_page()
 

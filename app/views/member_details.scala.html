@@ -24,49 +24,44 @@
 
 @gmp_main(title = Messages("gmp.member_details.header") + " - " + Messages("service.title") + " - " + Messages("gov.uk")) {
 
-  @views.html.helpers.errorSummary(memberDetailsForm, formHeaderKey = "gmp.member_details.header")
+    @includes.back_link(Messages("gmp.bulk.results.banner"))
 
-  <div class="grid">
-      @includes.back_link(Messages("gmp.bulk.results.banner"))
-      <div class="grid-2-3">
-          <h1>@Messages("gmp.member_details.header")</h1>
+    @views.html.helpers.errorSummary(memberDetailsForm, formHeaderKey = "gmp.member_details.header")
+
+    <h1>@Messages("gmp.member_details.header")</h1>
+
+    @form(action = routes.MemberDetailsController.post) {
+
+    <div class="form-group">
+      <div class="form-field">
+
+          @gmpInput(memberDetailsForm("nino"),
+          '_label -> Html(Messages("gmp.nino")),
+          '_labelClass -> "form-label-bold",
+          '_id -> "nino",
+          '_maxLength -> 13,
+          '_hintText -> Messages("gmp.nino.hint"))
+
       </div>
-  </div>
+        <div class="form-field">
 
-  <div class="grid">
-      <div class="grid-2-3">
+          @gmpInput(memberDetailsForm("firstForename"),
+          '_label -> Html(Messages("gmp.firstname")),
+          '_labelClass -> "form-label-bold",
+          '_id -> "firstForename")
+        </div>
+        <div class="form-field">
 
-          @form(action = routes.MemberDetailsController.post) {
+          @gmpInput(memberDetailsForm("surname"),
+          '_label -> Html(Messages("gmp.lastname")),
+          '_labelClass -> "form-label-bold",
+          '_id -> "surname")
 
-              <div class="form-group">
-
-                  @gmpInput(memberDetailsForm("nino"),
-                  '_label -> Html(Messages("gmp.nino")),
-                  '_labelClass -> "form-label-bold",
-                  '_id -> "nino",
-                  '_maxLength -> 13,
-                  '_hintText -> Messages("gmp.nino.hint"))
-
-                  @gmpInput(memberDetailsForm("firstForename"),
-                  '_label -> Html(Messages("gmp.firstname")),
-                  '_labelClass -> "form-label-bold",
-                  '_id -> "firstForename")
-
-                  @gmpInput(memberDetailsForm("surname"),
-                  '_label -> Html(Messages("gmp.lastname")),
-                  '_labelClass -> "form-label-bold",
-                  '_id -> "surname")
-
-              </div>
-
-              <div>
-                  <button data-journey-click='@Messages("gmp.ga-track.button.click"):@Messages("gmp.member_details.header"):@Messages("gmp.continue.button")'
-                          class="button" type="submit" id="submit-button">@Messages("gmp.continue.button")</button>
-              </div>
-          }
-
-      </div><br>
-
-  </div>
-
+      </div>
+    </div>
+      <div>
+          <button data-journey-click='@Messages("gmp.ga-track.button.click"):@Messages("gmp.member_details.header"):@Messages("gmp.continue.button")'
+                  class="button" type="submit" id="submit-button">@Messages("gmp.continue.button")</button>
+      </div>
+  }
 }

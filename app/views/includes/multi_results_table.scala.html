@@ -88,7 +88,7 @@
                 </td>
             }
         } else {
-            <td id="error-@count" colspan="5" class="error-message">
+            <td id="error-@count" colspan="5" class="table-error-message">
                 @if(globalErrors.hasPath(s"${period.errorCode}.reason")){
                     <p id="reason-@count">@Messages(globalErrors.getString(s"${period.errorCode}.reason"))</p>
                 } else {

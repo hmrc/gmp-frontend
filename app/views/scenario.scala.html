@@ -25,47 +25,36 @@
 
 @gmp_main(title = Messages("gmp.scenarios.title") + " - " + Messages("service.title") + " - " + Messages("gov.uk")) {
 
-  @views.html.helpers.errorSummary(calculationType, formHeaderKey = "gmp.scenarios.title")
+    @includes.back_link(Messages("gmp.scenarios.title"))
 
-  <div class="grid">
-      @includes.back_link(Messages("gmp.scenarios.title"))
-      <div class="grid-2-3">
-          <h1 id="calc-type">@Messages("gmp.scenarios.title")</h1>
-      </div>
-  </div>
-  <div class="grid">
-      <div class="grid-2-3">
+    @views.html.helpers.errorSummary(calculationType, formHeaderKey = "gmp.scenarios.title")
 
-          @form(action = routes.ScenarioController.post) {
+    <h1 id="calc-type">@Messages("gmp.scenarios.title")</h1>
 
-              <div class="form-group">
-                  @gmpRadioGroup(
-                    calculationType("calcType"),
-                    Seq(
-                        "2"  -> "payableage" -> Messages("gmp.scenarios.payable_age"),
-                        "4"  ->  "spa" -> Messages("gmp.scenarios.spa"),
-                        "3"  -> "survivor" -> Messages("gmp.scenarios.survivor"),
-                        "0"  -> "leaving" -> Messages("gmp.scenarios.leaving"),
-                        "1"  -> "specificdate" -> Messages("gmp.scenarios.specific_date")
-                    ),
-                    '_fieldsetAttributesLegend -> "calcType",
-                    '_legend -> Messages("gmp.scenarios.title"),
-                    '_legendClass -> "visuallyhidden",
-                    '_labelAfter -> true,
-                    '_labelClass -> "block-label",
-                    '_groupClass -> "inline-block",
-                    '_trackGA -> true,
-                    '_formHeaderKey -> "gmp.scenarios.title"
-                  )
-              </div>
+      @form(action = routes.ScenarioController.post) {
+          <div class="form-field @if(!calculationType.errors.isEmpty) {form-field--error}">
+              @gmpRadioGroup(
+                calculationType("calcType"),
+                Seq(
+                    ("2", "payableage",  "none") -> Messages("gmp.scenarios.payable_age"),
+                    ("4", "spa", "none") -> Messages("gmp.scenarios.spa"),
+                    ("3", "survivor", "none") -> Messages("gmp.scenarios.survivor"),
+                    ("0", "leaving", "none") -> Messages("gmp.scenarios.leaving"),
+                    ("1", "specificdate",  "none") -> Messages("gmp.scenarios.specific_date")
+                ),
+                '_fieldsetAttributesLegend -> "calcType",
+                '_legend -> Messages("gmp.scenarios.title"),
+                '_legendClass -> "visuallyhidden",
+                '_labelAfter -> true,
+                '_trackGA -> true,
+                '_formHeaderKey -> "gmp.scenarios.title"
+              )
+          </div>
 
-              <div>
-                  <button data-journey-click='@Messages("gmp.ga-track.button.click"):@Messages("gmp.scenarios.title"):@Messages("gmp.continue.button")'
-                          class="button" type="submit" id="submit-button">@Messages("gmp.continue.button")</button>
-              </div>
+          <div>
+              <button data-journey-click='@Messages("gmp.ga-track.button.click"):@Messages("gmp.scenarios.title"):@Messages("gmp.continue.button")'
+                      class="button" type="submit" id="submit-button">@Messages("gmp.continue.button")</button>
+          </div>
 
-          }
-      </div>
-  </div>
-
+      }
 }

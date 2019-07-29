@@ -47,7 +47,7 @@ class DateOfLeavingScenarioDolSpec extends DateOfLeavingSpec {
     }
 
     "have correct paragraph with text" in {
-      doc must haveParagraphWithText(messages("gmp.date.example"))
+      doc must haveSpanWithText(messages("gmp.date.example"))
     }
 
     "have correct input labels with text" in {

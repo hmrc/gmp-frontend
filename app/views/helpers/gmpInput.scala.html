@@ -41,13 +41,12 @@
 @hintId = {@if(elements.args.get('_id)){@elements.args.get('_id)_hint}}
 
 
-<div class="form-group">
 
     @if(errors.nonEmpty) {
         <div class="@if(errors.nonEmpty || (parentElements.isDefined && parentElements.get.hasErrors)) {form-field--error}">
     }
 
-    <label for="@labelFor" class="@labelClass" id="@labelId">
+    <label for="@labelFor" class="form-label" id="@labelId">
         @commonHelper(field, errors)
         @if(labelHighlight) {<strong>}
         @if(elements.args.contains('_label)) {@elements.label}
@@ -63,7 +62,7 @@
     <input @if(elements.args.contains('_type)){type="@elements.args.get('_type)"}else{type="text"}
     @if(elements.args.contains('_maxLength)){
           maxlength="@elements.args.get('_maxLength)"
-    }else{}
+    }
 
     class="@if( elements.args.get('_inputClass)){@elements.args.get('_inputClass)}else{form-control}"
 
@@ -86,5 +85,4 @@
     @if(errors.nonEmpty) {
 
   </div>
-    }
-</div>
+  }

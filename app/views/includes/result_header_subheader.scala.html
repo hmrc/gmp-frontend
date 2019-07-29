@@ -19,24 +19,20 @@
 
 @(calculationResponse:CalculationResponse, revalRateSubheader: Option[String], survivorSubheader: Option[String])(implicit request: Request[_])
 
+@includes.back_to_dashboard_link(Messages("gmp.results.h1"))
+<h1 id="page-title">@Messages("gmp.results.h1")</h1>
 
+<p id="value-revealed">@Messages("gmp.results.p1")</p>
 
-<div class="grid grid-2-3">
-    @includes.back_to_dashboard_link(Messages("gmp.results.h1"))
-    <h1 id="page-title">@Messages("gmp.results.h1")</h1>
+<h2  id="results-header">@calculationResponse.header</h2>
 
-    <p id="value-revealed">@Messages("gmp.results.p1")</p>
+@if(revalRateSubheader.isDefined) {
+    <div id="revaluation-subheader">@revalRateSubheader</div>
+}
 
-    <h2  id="results-header">@calculationResponse.header</h2>
+@if(survivorSubheader.isDefined) {
+  <br/>
+  <div id="survivor-subheader" class="panel-indent">@survivorSubheader</div>
+}
 
-	@if(revalRateSubheader.isDefined) {
-		<div id="revaluation-subheader">@revalRateSubheader</div>
-    }
-
-    @if(survivorSubheader.isDefined) {
-      <br/>
-      <div id="survivor-subheader" class="panel-indent">@survivorSubheader</div>
-    }
-
-    <br/>
-</div>
+<br/>

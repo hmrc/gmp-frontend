@@ -27,46 +27,46 @@
 @successful = @{"successful"}
 @failed = @{"failed"}
 
-<div class="grid grid-2-3 divider--top">
+<div class="divider--top clearfix">
   <h3 id="all-calculations">@Messages("gmp.bulk.subheaders.allcalculations") (@bulkResultsSummary.total)</h3>
-  <div class="grid grid-3-4">
+  <div class="column-three-quarters">
     <ul class="bullets font-xsmall">
       <li id="exp-all-1" class="font-xsmall">@Messages("gmp.bulk.explanations.all.1")</li>
       <li id="exp-all-2" class="font-xsmall">@Messages("gmp.bulk.explanations.all.2")</li>
     </ul>
   </div>
-  <div class="grid grid-1-4 text--right"><a id="download-all" data-journey-click="gmp-bulk:click:download_all" href="@routes.BulkResultsController.getResultsAsCsv(uploadReference, all)">@Messages("gmp.download.link")</a></div>
+  <div class="column-one-quarter text--right"><a id="download-all" data-journey-click="gmp-bulk:click:download_all" href="@routes.BulkResultsController.getResultsAsCsv(uploadReference, all)">@Messages("gmp.download.link")</a></div>
 </div>
 
-<div class="grid grid-2-3 divider--top">
+<div class="divider--top clearfix">
   <h3 id="successful-calculations">@Messages("gmp.bulk.subheaders.successfulcalculations") (@{bulkResultsSummary.getNumberOfSuccessfulCalculations})</h3>
-  <div class="grid grid-3-4">
+  <div class="column-three-quarters">
     <ul class="bullets font-xsmall">
       <li id="exp-success-1" class="font-xsmall">@Messages("gmp.bulk.explanations.successful.1")</li>
       <li id="exp-success-2" class="font-xsmall">@Messages("gmp.bulk.explanations.successful.2")</li>
     </ul>
   </div>
-  <div class="grid grid-1-4 text--right"><a id="download-success" data-journey-click="gmp-bulk:click:download_successful" href="@routes.BulkResultsController.getResultsAsCsv(uploadReference, successful)">@Messages("gmp.download.link")</a></div>
+  <div class="column-one-quarter text--right"><a id="download-success" data-journey-click="gmp-bulk:click:download_successful" href="@routes.BulkResultsController.getResultsAsCsv(uploadReference, successful)">@Messages("gmp.download.link")</a></div>
 </div>
 
-<div class="grid grid-2-3 divider--top">
+<div class="divider--top clearfix">
   <h3 id="failed-calculations">@Messages("gmp.bulk.subheaders.failedcalculations") (@bulkResultsSummary.failed)</h3>
-  <div class="grid grid-3-4">
+  <div class="column-three-quarters">
     <ul class="bullets font-xsmall">
       <li id="exp-failed-1" class="font-xsmall">@Messages("gmp.bulk.explanations.failed.1")</li>
       <li id="exp-failed-2" class="font-xsmall">@Messages("gmp.bulk.explanations.failed.2")</li>
       <li id="exp-failed-3" class="font-xsmall">@Messages("gmp.bulk.explanations.failed.3")</li>
     </ul>
   </div>
-  <div class="grid grid-1-4 text--right"><a id="download-failed" data-journey-click="gmp-bulk:click:download_failed" href="@routes.BulkResultsController.getResultsAsCsv(uploadReference, failed)">@Messages("gmp.download.link")</a></div>
+  <div class="column-one-quarter text--right"><a id="download-failed" data-journey-click="gmp-bulk:click:download_failed" href="@routes.BulkResultsController.getResultsAsCsv(uploadReference, failed)">@Messages("gmp.download.link")</a></div>
 </div>
 
-<div class="grid grid-2-3 divider--top divider--bottom">
+<div class="divider--top divider--bottom clearfix">
   <h3 id="conts-and-earnings">@Messages("gmp.bulk.subheaders.contsandearnings")</h3>
-  <div class="grid grid-3-4">
+  <div class="column-three-quarters">
     <ul class="bullets font-xsmall">
       <li id="exp-conts" class="font-xsmall">@Messages("gmp.bulk.explanations.contsandearnings")</li>
     </ul>
   </div>
-  <div class="grid grid-1-4 text--right"><a id="download-conts" data-journey-click="gmp-bulk:click:download_ce" href="@routes.BulkResultsController.getContributionsAndEarningsAsCsv(uploadReference)">@Messages("gmp.download.link")</a></div>
+  <div class="column-one-quarter text--right"><a id="download-conts" data-journey-click="gmp-bulk:click:download_ce" href="@routes.BulkResultsController.getContributionsAndEarningsAsCsv(uploadReference)">@Messages("gmp.download.link")</a></div>
 </div>
