@@ -101,6 +101,7 @@
 .icon-file-download {
   background-image: url("../images/icon-file-download.png");
   background-repeat: no-repeat;
+  background-size: auto;
   padding-left: 40px;
   padding-bottom: 20px;
   padding-top: 10px;
