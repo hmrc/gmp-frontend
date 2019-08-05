@@ -19,9 +19,9 @@ package controllers
 import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
 import play.api.i18n.Messages
+import play.api.i18n.Messages.Implicits._
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import play.api.i18n.Messages.Implicits._
 
 class ServiceUnavailableControllerSpec extends PlaySpec with OneServerPerSuite with MockitoSugar {
 
@@ -29,25 +29,16 @@ class ServiceUnavailableControllerSpec extends PlaySpec with OneServerPerSuite w
     override implicit val context = FakeGmpContext
   }
 
-  "Service unavailable controller" must {
-
-    "respond to GET /guaranteed-minimum-pension/service-unavailable" in {
-      val result = route(FakeRequest(GET, "/guaranteed-minimum-pension/service-unavailable"))
-      status(result.get) must not equal (NOT_FOUND)
-
-    }
-  }
-
   "GET" must {
 
     "be accessible without authorisation" in {
-      val result = TestController.get.apply(FakeRequest())
+      val result = TestController.get(FakeRequest())
 
       status(result) must be(OK)
     }
 
     "display the service unavailable message" in {
-      val result = TestController.get.apply(FakeRequest())
+      val result = TestController.get(FakeRequest())
 
       contentAsString(result) must include(Messages("gmp.serviceunavailable.message"))
       contentAsString(result) must include(Messages("gmp.serviceunavailable.title"))

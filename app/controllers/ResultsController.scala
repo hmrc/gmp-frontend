@@ -19,7 +19,7 @@ package controllers
 import com.google.inject.{Inject, Singleton}
 import config.{GmpContext, GmpFrontendAuditConnector}
 import connectors.GmpConnector
-import controllers.auth.GmpRegime
+import controllers.auth.AuthAction
 import events.ContributionsAndEarningsEvent
 import metrics.ApplicationMetrics
 import models._
@@ -31,12 +31,13 @@ import play.api.i18n.Messages.Implicits._
 import play.api.mvc.Request
 import play.twirl.api.HtmlFormat
 import services.SessionService
-import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
+import uk.gov.hmrc.auth.core.AuthConnector
 
 import scala.concurrent.Future
 
 @Singleton
-class ResultsController @Inject()(override val authConnector: AuthConnector,
+class ResultsController @Inject()(authAction: AuthAction,
+                                  override val authConnector: AuthConnector,
                                   sessionService: SessionService,
                                   calculationConnector: GmpConnector,
                                   auditConnector: GmpFrontendAuditConnector,
@@ -46,9 +47,9 @@ class ResultsController @Inject()(override val authConnector: AuthConnector,
     views.html.results(applicationConfig = config.ApplicationConfig, response, revalRateSubheader, survivorSubheader)
   }
 
-  def get = AuthorisedFor(GmpRegime, pageVisibilityPredicate).async {
-    implicit user =>
+  def get = authAction.async {
       implicit request => {
+        val link = request.linkId
         sessionService.fetchGmpSession() flatMap {
           sessionOpt: Option[GmpSession] =>
             sessionOpt match {
@@ -59,7 +60,7 @@ class ResultsController @Inject()(override val authConnector: AuthConnector,
                 case _ if session.leaving.leaving.isEmpty => Future.successful(Ok(views.html.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/left-scheme"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title"))))
                 case _ =>
                   val calcRequest = createCalculationRequest(session)
-                  calculationConnector.calculateSingle(calcRequest) map { response: CalculationResponse => {
+                  calculationConnector.calculateSingle(calcRequest, link) map { response: CalculationResponse => {
                     if (response.globalErrorCode != 0) metrics.countNpsError(response.globalErrorCode.toString)
                     for (period <- response.calculationPeriods) {
                       if (period.errorCode != 0) metrics.countNpsError(period.errorCode.toString)
@@ -74,9 +75,10 @@ class ResultsController @Inject()(override val authConnector: AuthConnector,
       }
   }
 
-  def getContributionsAndEarnings = AuthorisedFor(GmpRegime, pageVisibilityPredicate).async {
-    implicit user =>
+  def getContributionsAndEarnings = authAction.async {
       implicit request => {
+        val link = request.linkId
+
         sessionService.fetchGmpSession() flatMap {
           sessionOpt: Option[GmpSession] =>
             sessionOpt match {
@@ -87,13 +89,13 @@ class ResultsController @Inject()(override val authConnector: AuthConnector,
                 case _ if !session.leaving.leaving.isDefined => Future.successful(Ok(views.html.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/left-scheme"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title"))))
                 case _ =>
                   val calcRequest = createCalculationRequest(session)
-                  calculationConnector.calculateSingle(calcRequest) map { response: CalculationResponse => {
+                  calculationConnector.calculateSingle(calcRequest, link) map { response: CalculationResponse => {
                     if (response.globalErrorCode != 0) metrics.countNpsError(response.globalErrorCode.toString)
                     for (period <- response.calculationPeriods) {
                       if (period.errorCode != 0) metrics.countNpsError(period.errorCode.toString)
                     }
 
-                    val contsAndEarningsResult = auditConnector.sendEvent(new ContributionsAndEarningsEvent(calculationConnector.getUser(user), response.nino))
+                    val contsAndEarningsResult = auditConnector.sendEvent(new ContributionsAndEarningsEvent(link, response.nino))
 
                     contsAndEarningsResult.onFailure {
                       case e: Throwable => Logger.error(s"[ResultsController][post] contsAndEarningsResult ${e.getMessage}", e)

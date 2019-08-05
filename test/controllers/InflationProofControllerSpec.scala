@@ -16,77 +16,50 @@
 
 package controllers
 
+import controllers.auth.{AuthAction, FakeAuthAction, GmpAuthConnector}
 import models._
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
 import play.api.i18n.Messages
+import play.api.i18n.Messages.Implicits._
 import play.api.libs.json.Json
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.SessionService
-import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
-import play.api.i18n.Messages.Implicits._
+import uk.gov.hmrc.auth.core.AuthConnector
 
 import scala.concurrent.Future
 
-class InflationProofControllerSpec extends PlaySpec with OneServerPerSuite with MockitoSugar with GmpUsers {
+class InflationProofControllerSpec extends PlaySpec with OneServerPerSuite with MockitoSugar {
 
   val mockAuthConnector = mock[AuthConnector]
   val mockSessionService = mock[SessionService]
+  val mockAuthAction = mock[AuthAction]
 
-  object TestInflationProofController extends InflationProofController(mockAuthConnector) {
+  object TestInflationProofController extends InflationProofController(FakeAuthAction, mockAuthConnector) {
     override val sessionService = mockSessionService
     override val context = FakeGmpContext
   }
 
   "InflationProofController" must {
 
-    "respond to GET /guaranteed-minimum-pension/inflation-proof" in {
-      val result = route(FakeRequest(GET, "/guaranteed-minimum-pension/inflation-proof"))
-      status(result.get) must not equal (NOT_FOUND)
-    }
-
-    "respond to POST /guaranteed-minimum-pension/inflation-proof" in {
-      val result = route(FakeRequest(POST, "/guaranteed-minimum-pension/inflation-proof"))
-      status(result.get) must not equal (NOT_FOUND)
-    }
-
-    "respond to GET /guaranteed-minimum-pension/inflation-proof/back" in {
-      val result = route(FakeRequest(GET, "/guaranteed-minimum-pension/inflation-proof/back"))
-      status(result.get) must not equal (NOT_FOUND)
-    }
-
     "GET" must {
-
-      "be authorised" in {
-        val result = TestInflationProofController.get.apply(FakeRequest())
-        status(result) must equal(SEE_OTHER)
-        redirectLocation(result).get must include("/gg/sign-in")
-      }
 
       "authorised users" must {
 
         "load the inflation proofing page" in {
-          withAuthorisedUser { request =>
-            val result = TestInflationProofController.get.apply(request)
+            val result = TestInflationProofController.get(FakeRequest())
             status(result) must equal(OK)
             contentAsString(result) must include(Messages("gmp.inflation_proof.question"))
             contentAsString(result) must include(Messages("gmp.back.link"))
             contentAsString(result) must include(Messages("gmp.check_gmp.button"))
-          }
         }
       }
     }
 
     "POST" must {
-
-      "be authorised" in {
-        val result = TestInflationProofController.post.apply(FakeRequest())
-        status(result) must equal(SEE_OTHER)
-        redirectLocation(result).get must include("/gg/sign-in")
-      }
 
       "authorised users" must {
 
@@ -97,38 +70,36 @@ class InflationProofControllerSpec extends PlaySpec with OneServerPerSuite with 
           val session = GmpSession(MemberDetails("", "", ""), "", "3", Some(revaluationDate), None, Leaving(GmpDate(None, None, None), None), None)
 
           "redirect to the results" in {
-            withAuthorisedUser { request =>
+
               when(mockSessionService.cacheRevaluationDate(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(session)))
-              val result = TestInflationProofController.post.apply(request.withJsonBody(Json.toJson(inflationProof)))
+              val result = TestInflationProofController.post(FakeRequest().withJsonBody(Json.toJson(inflationProof)))
               status(result) must equal(SEE_OTHER)
               redirectLocation(result).get must be(routes.ResultsController.get().url)
-            }
+
           }
 
           "redirect to the results when not revaluated" in {
-            withAuthorisedUser { request =>
+
               when(mockSessionService.cacheRevaluationDate(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(session)))
-              val result = TestInflationProofController.post.apply(request.withJsonBody(Json.toJson(inflationProof.copy(revaluate = Some("No")))))
+              val result = TestInflationProofController.post(FakeRequest().withJsonBody(Json.toJson(inflationProof.copy(revaluate = Some("No")))))
               status(result) must equal(SEE_OTHER)
               redirectLocation(result).get must be(routes.ResultsController.get().url)
-            }
+
           }
 
           "save revaluation date to session cache" in {
-            withAuthorisedUser { request =>
+
               when(mockSessionService.cacheRevaluationDate(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(session)))
-              val result = TestInflationProofController.post.apply(request.withJsonBody(Json.toJson(inflationProof)))
+              val result = TestInflationProofController.post(FakeRequest().withJsonBody(Json.toJson(inflationProof)))
               verify(mockSessionService, atLeastOnce()).cacheRevaluationDate(Matchers.any())(Matchers.any(), Matchers.any())
-            }
+
           }
 
           "respond with an exception when the session cache is unavailable" in {
             reset(mockSessionService)
             when(mockSessionService.cacheRevaluationDate(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(None))
-            withAuthorisedUser { request =>
               intercept[RuntimeException] {
-                await(TestInflationProofController.post.apply(request.withJsonBody(Json.toJson(inflationProof))))
-              }
+                await(TestInflationProofController.post(FakeRequest().withJsonBody(Json.toJson(inflationProof))))
             }
           }
         }
@@ -139,17 +110,15 @@ class InflationProofControllerSpec extends PlaySpec with OneServerPerSuite with 
           val inflationProof = InflationProof(revaluationDate, Some("yes"))
 
           "respond with BAD_REQUEST" in {
-            withAuthorisedUser { request =>
-              val result = TestInflationProofController.post.apply(request.withJsonBody(Json.toJson(inflationProof)))
+
+              val result = TestInflationProofController.post(FakeRequest().withJsonBody(Json.toJson(inflationProof)))
               status(result) must equal(BAD_REQUEST)
-            }
           }
 
           "display the errors" in {
-            withAuthorisedUser { request =>
-              val result = TestInflationProofController.post.apply(request.withJsonBody(Json.toJson(inflationProof)))
+
+              val result = TestInflationProofController.post(FakeRequest().withJsonBody(Json.toJson(inflationProof)))
               contentAsString(result) must include(Messages("gmp.error.date.nonnumber"))
-            }
           }
         }
       }
@@ -157,54 +126,40 @@ class InflationProofControllerSpec extends PlaySpec with OneServerPerSuite with 
 
     "back" must {
 
-      "be authorised" in {
-        val result = TestInflationProofController.back.apply(FakeRequest())
-        status(result) must equal(SEE_OTHER)
-        redirectLocation(result).get must include("/gg/sign-in")
-      }
-
       "throw an exception when session not fetched" in {
 
-        withAuthorisedUser { request =>
           when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(None))
-          val result = TestInflationProofController.back.apply(request)
+          val result = TestInflationProofController.back(FakeRequest())
           intercept[RuntimeException] {
             status(result)
-          }
         }
       }
 
       "redirect to the termination date page if the member has not left the scheme" in {
         val revaluationDate = GmpDate(Some("1"), Some("1"), Some("2000"))
         val session = GmpSession(MemberDetails("", "", ""), "", "3", Some(revaluationDate), None, Leaving(GmpDate(None, None, None), Some(Leaving.NO)), None)
-        withAuthorisedUser { request =>
           when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(session)))
-          val result = TestInflationProofController.back.apply(request)
+          val result = TestInflationProofController.back(FakeRequest())
           status(result) must equal(SEE_OTHER)
           redirectLocation(result).get must be(routes.DateOfLeavingController.get().url)
-        }
       }
 
       "redirect to the revaluation rate page if the member has left the scheme before 5/4/16" in {
         val revaluationDate = GmpDate(Some("1"), Some("1"), Some("2000"))
         val session = GmpSession(MemberDetails("", "", ""), "", "3", Some(revaluationDate), None, Leaving(GmpDate(None, None, None), Some(Leaving.YES_BEFORE)), None)
-        withAuthorisedUser { request =>
           when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(session)))
-          val result = TestInflationProofController.back.apply(request)
+          val result = TestInflationProofController.back(FakeRequest())
           status(result) must equal(SEE_OTHER)
           redirectLocation(result).get must be(routes.RevaluationRateController.get().url)
-        }
       }
 
       "redirect to the revaluation rate page if the member has left the scheme after 5/4/16" in {
         val revaluationDate = GmpDate(Some("1"), Some("1"), Some("2000"))
         val session = GmpSession(MemberDetails("", "", ""), "", "3", Some(revaluationDate), None, Leaving(GmpDate(None, None, None), Some(Leaving.YES_AFTER)), None)
-        withAuthorisedUser { request =>
           when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(session)))
-          val result = TestInflationProofController.back.apply(request)
+          val result = TestInflationProofController.back(FakeRequest())
           status(result) must equal(SEE_OTHER)
           redirectLocation(result).get must be(routes.RevaluationRateController.get().url)
-        }
       }
     }
   }

@@ -16,95 +16,60 @@
 
 package controllers
 
+import controllers.auth.{AuthAction, FakeAuthAction, GmpAuthConnector}
 import models._
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
 import play.api.i18n.Messages
+import play.api.i18n.Messages.Implicits._
 import play.api.libs.json.Json
-import play.api.mvc.{AnyContentAsEmpty, Result}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.SessionService
-import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
-import play.api.i18n.Messages.Implicits._
+import uk.gov.hmrc.auth.core.AuthConnector
+
 import scala.concurrent.Future
 
-class RevaluationControllerSpec extends PlaySpec with OneServerPerSuite with MockitoSugar with GmpUsers {
+class RevaluationControllerSpec extends PlaySpec with OneServerPerSuite with MockitoSugar {
 
   val mockAuthConnector = mock[AuthConnector]
   val mockSessionService = mock[SessionService]
+  val mockAuthAction = mock[AuthAction]
 
   val baseValidDate = GmpDate(day = Some("31"), month = Some("1"), year = Some("2015"))
 
-  object TestRevaluationController extends RevaluationController(mockAuthConnector) {
+  object TestRevaluationController extends RevaluationController(FakeAuthAction, mockAuthConnector) {
     override val sessionService = mockSessionService
     override val context = FakeGmpContext
   }
 
   "Revaluation controller" must {
 
-    "respond to GET /guaranteed-minimum-pension/relevant-date" in {
-      val result = route(FakeRequest(GET, "/guaranteed-minimum-pension/relevant-date"))
-      status(result.get) must not equal (NOT_FOUND)
-    }
-
-    "respond to POST /guaranteed-minimum-pension/relevant-date" in {
-      val result = route(FakeRequest(POST, "/guaranteed-minimum-pension/relevant-date"))
-      status(result.get) must not equal (NOT_FOUND)
-    }
-
-    "respond to GET /guaranteed-minimum-pension/relevant-date/back" in {
-      val result = route(FakeRequest(GET, "/guaranteed-minimum-pension/relevant-date/back"))
-      status(result.get) must not equal (NOT_FOUND)
-    }
-  }
-
-  "Revaluation controller GET " must {
-
-    "be authorised" in {
-      get() { result =>
-        status(result) must equal(SEE_OTHER)
-        redirectLocation(result).get must include("/gg/sign-in")
-      }
-    }
-
     "authenticated users" must {
 
       "respond with ok" in {
-        withAuthorisedUser { user =>
+
           when(mockSessionService.fetchLeaving()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(Leaving(GmpDate(None, None, None), None))))
-          get(user) { result =>
+          val result = TestRevaluationController.get(FakeRequest())
             status(result) must equal(OK)
             contentAsString(result) must include("When would you like the calculation made to?")
             contentAsString(result) must include(Messages("gmp.revaluation.question"))
             contentAsString(result) must include(Messages("gmp.back.link"))
-          }
-        }
       }
 
       "respond with ok when no leaving" in {
         when(mockSessionService.fetchLeaving()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(None))
-        withAuthorisedUser { user =>
-          get(user) { result =>
+        val result = TestRevaluationController.get(FakeRequest())
             status(result) must equal(OK)
             contentAsString(result) must include("When would you like the calculation made to?")
             contentAsString(result) must include(Messages("gmp.revaluation.question"))
-
-          }
-        }
       }
     }
   }
 
   "RevaluationController back" must {
-
-    "be authorised" in {
-      val result = TestRevaluationController.get.apply(FakeRequest())
-      status(result) must equal(SEE_OTHER)
-      redirectLocation(result).get must include("/gg/sign-in")
-    }
 
     "authenticated users" must {
 
@@ -112,57 +77,46 @@ class RevaluationControllerSpec extends PlaySpec with OneServerPerSuite with Moc
       val session = GmpSession(memberDetails, "", CalculationType.REVALUATION, None, None, Leaving(GmpDate(None, None, None), None), None)
 
       "redirect to the date of leaving page" in {
-        withAuthorisedUser { request =>
+
           when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(session)))
-          val result = TestRevaluationController.back.apply(request)
+          val result = TestRevaluationController.back(FakeRequest())
           status(result) must equal(SEE_OTHER)
           redirectLocation(result).get must include("/left-scheme")
-        }
       }
     }
 
     "throw an exception when session not fetched" in {
 
-      withAuthorisedUser { request =>
         when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(None))
-        val result = TestRevaluationController.back.apply(request)
+        val result = TestRevaluationController.back(FakeRequest())
         intercept[RuntimeException] {
           status(result)
-        }
       }
     }
 
   }
 
   "Revaluation controller POST" must {
-    "be authorised" in {
-      val result = TestRevaluationController.get.apply(FakeRequest())
-      status(result) must equal(SEE_OTHER)
-      redirectLocation(result).get must include("/gg/sign-in")
-    }
 
     "authenticated users" must {
 
       "with invalid data" must {
 
         "respond with BAD_REQUEST" in {
-          withAuthorisedUser { request =>
             val postData = Json.toJson(
               RevaluationDate(Leaving(GmpDate(None, None, None), None), baseValidDate.copy(day = Some("31"), month = Some("2"), year = Some("2015")))
             )
-            val result = TestRevaluationController.post.apply(request.withJsonBody(postData))
+            val result = TestRevaluationController.post(FakeRequest().withJsonBody(postData))
             status(result) must equal(BAD_REQUEST)
-          }
         }
 
         "display the errors" in {
-          withAuthorisedUser { request =>
+
             val postData = Json.toJson(
               RevaluationDate(Leaving(GmpDate(None, None, None), None), baseValidDate.copy(day = Some("31"), month = Some("2"), year = Some("2015")))
             )
-            val result = TestRevaluationController.post.apply(request.withJsonBody(postData))
+            val result = TestRevaluationController.post(FakeRequest().withJsonBody(postData))
             contentAsString(result) must include(Messages("gmp.error.date.invalid"))
-          }
         }
       }
 
@@ -173,33 +127,24 @@ class RevaluationControllerSpec extends PlaySpec with OneServerPerSuite with Moc
         "redirect" in {
 
           when(mockSessionService.cacheRevaluationDate(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
-          withAuthorisedUser { request =>
             val postData = Json.toJson(
               RevaluationDate(Leaving(GmpDate(None, None, None), None), baseValidDate.copy(day = Some("31"), month = Some("3"), year = Some("2015")))
             )
-            val result = TestRevaluationController.post.apply(request.withJsonBody(postData))
+            val result = TestRevaluationController.post(FakeRequest().withJsonBody(postData))
             status(result) must equal(SEE_OTHER)
-          }
         }
 
 
         "respond with error when rate not stored" in {
           when(mockSessionService.cacheRevaluationDate(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(None))
-          withAuthorisedUser { request =>
             val postData = Json.toJson(
               RevaluationDate(Leaving(GmpDate(None, None, None), None), baseValidDate.copy(day = Some("31"), month = Some("3"), year = Some("2015")))
             )
             intercept[RuntimeException] {
-              await(TestRevaluationController.post.apply(request.withJsonBody(postData)))
-            }
+              await(TestRevaluationController.post(FakeRequest().withJsonBody(postData)))
           }
         }
       }
     }
   }
-
-  def get(request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest())(handler: Future[Result] => Any): Unit = {
-    handler(TestRevaluationController.get.apply(request))
-  }
-
 }

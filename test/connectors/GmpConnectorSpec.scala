@@ -29,11 +29,8 @@ import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
 import play.api.Environment
 import play.api.libs.json.{JsValue, Json}
 import play.api.test.Helpers._
-import uk.gov.hmrc.domain.PsaId
 import uk.gov.hmrc.http._
 import uk.gov.hmrc.http.logging.SessionId
-import uk.gov.hmrc.play.frontend.auth.AuthContext
-import uk.gov.hmrc.play.frontend.auth.connectors.domain._
 
 import scala.concurrent.Future
 
@@ -52,7 +49,6 @@ class GmpConnectorSpec extends PlaySpec with OneServerPerSuite with MockitoSugar
   val mockHttpGet = mock[HttpGet]
   val mockHttpPut = mock[HttpPut]
   val metrics = app.injector.instanceOf[ApplicationMetrics]
-
   object TestGmpConnector extends GmpConnector(
     app.injector.instanceOf[Environment],
     app.configuration,
@@ -71,7 +67,6 @@ class GmpConnectorSpec extends PlaySpec with OneServerPerSuite with MockitoSugar
   "The GMP Connector" must {
 
     implicit val hc = new HeaderCarrier(sessionId = Some(SessionId(s"session-${UUID.randomUUID}")))
-    implicit val user = AuthContext(authority = Authority("1234", Accounts(psa = Some(PsaAccount(link, PsaId(psaId)))), None, None, CredentialStrength.None, ConfidenceLevel.L50, None, None, None, ""))
 
     "performing a single calculation" must {
 
@@ -103,7 +98,7 @@ class GmpConnectorSpec extends PlaySpec with OneServerPerSuite with MockitoSugar
           1, None, Some(1))
         when(mockHttpPost.POST[CalculationRequest, CalculationResponse](Matchers.any(), Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful((calcResponseJson.as[CalculationResponse])))
 
-        val result = TestGmpConnector.calculateSingle(calculationRequest)
+        val result = TestGmpConnector.calculateSingle(calculationRequest,link)
         val calcResponse = await(result)
 
         calcResponse.calculationPeriods.length must be(1)
@@ -138,7 +133,7 @@ class GmpConnectorSpec extends PlaySpec with OneServerPerSuite with MockitoSugar
           1, None, Some(1))
         when(mockHttpPost.POST[CalculationRequest, CalculationResponse](Matchers.any(), Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful((calcResponseJson.as[CalculationResponse])))
 
-        val result = TestGmpConnector.calculateSingle(calculationRequest)
+        val result = TestGmpConnector.calculateSingle(calculationRequest,link)
         val calcResponse = await(result)
 
         calcResponse.calculationPeriods.length must be(1)
@@ -173,7 +168,7 @@ class GmpConnectorSpec extends PlaySpec with OneServerPerSuite with MockitoSugar
           1, None, Some(1))
         when(mockHttpPost.POST[CalculationRequest, CalculationResponse](Matchers.any(), Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful((calcResponseJson.as[CalculationResponse])))
 
-        val result = TestGmpConnector.calculateSingle(calculationRequest)
+        val result = TestGmpConnector.calculateSingle(calculationRequest,link)
         val calcResponse = await(result)
 
         calcResponse.calculationPeriods.length must be(1)
@@ -195,7 +190,7 @@ class GmpConnectorSpec extends PlaySpec with OneServerPerSuite with MockitoSugar
 
         when(mockHttpPost.POST[CalculationRequest, CalculationResponse](Matchers.any(), Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.failed(new Upstream5xxResponse("Scon not found", 500, 500)))
 
-        val result = TestGmpConnector.calculateSingle(Json.fromJson[CalculationRequest](Json.parse(calcRequestBody)).get)
+        val result = TestGmpConnector.calculateSingle(Json.fromJson[CalculationRequest](Json.parse(calcRequestBody)).get,link)
         intercept[Upstream5xxResponse] {
                 await(result)
               }
@@ -208,7 +203,7 @@ class GmpConnectorSpec extends PlaySpec with OneServerPerSuite with MockitoSugar
         val calculationRequest: CalculationRequest = CalculationRequest(scon = "S1401234Z", nino = nino, surname = "Smith", firstForename = "Bill", 1)
 
         intercept[RuntimeException] {
-          val result = TestGmpConnector.calculateSingle(calculationRequest)
+          val result = TestGmpConnector.calculateSingle(calculationRequest,link)
         }
       }
     }
@@ -225,7 +220,7 @@ class GmpConnectorSpec extends PlaySpec with OneServerPerSuite with MockitoSugar
         val validateSconRequest: ValidateSconRequest = ValidateSconRequest(scon = "S1401234Z")
         when(mockHttpPost.POST[ValidateSconRequest, ValidateSconResponse](Matchers.any(), Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful((validateSconResponseJson.as[ValidateSconResponse])))
 
-        val result = TestGmpConnector.validateScon(validateSconRequest)
+        val result = TestGmpConnector.validateScon(validateSconRequest,link)
         val validateSconResponse = await(result)
 
         validateSconResponse.sconExists must be(false)
@@ -235,7 +230,7 @@ class GmpConnectorSpec extends PlaySpec with OneServerPerSuite with MockitoSugar
         val validateSconRequest: ValidateSconRequest = ValidateSconRequest(scon = "S1401234Z")
 
         intercept[RuntimeException] {
-          val result = TestGmpConnector.validateScon(validateSconRequest)
+          val result = TestGmpConnector.validateScon(validateSconRequest,link)
         }
       }
     }
@@ -252,18 +247,17 @@ class GmpConnectorSpec extends PlaySpec with OneServerPerSuite with MockitoSugar
         val validateSconRequest: ValidateSconRequest = ValidateSconRequest(scon = "S1401234Z")
         when(mockHttpPost.POST[ValidateSconRequest, ValidateSconResponse](Matchers.any(), Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful((validateSconResponseJson.as[ValidateSconResponse])))
 
-        val result = TestGmpConnector.validateScon(validateSconRequest)
+        val result = TestGmpConnector.validateScon(validateSconRequest,link)
         val validateSconResponse = await(result)
 
         validateSconResponse.sconExists must be(false)
       }
 
       "throw an exception with invalid user" in {
-        implicit val user = AuthContext(authority = Authority("1234", Accounts(psa = None), None, None, CredentialStrength.None, ConfidenceLevel.L200, None, None, None, ""))
         val validateSconRequest: ValidateSconRequest = ValidateSconRequest(scon = "S1401234Z")
 
         intercept[RuntimeException] {
-          val result = TestGmpConnector.validateScon(validateSconRequest)
+          val result = TestGmpConnector.validateScon(validateSconRequest,link)
         }
       }
     }
@@ -297,7 +291,7 @@ class GmpConnectorSpec extends PlaySpec with OneServerPerSuite with MockitoSugar
           1, None, Some(1), dualCalc = Some(1))
         when(mockHttpPost.POST[CalculationRequest, CalculationResponse](Matchers.any(), Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful((calcResponseJson.as[CalculationResponse])))
 
-        val result = TestGmpConnector.calculateSingle(calculationRequest)
+        val result = TestGmpConnector.calculateSingle(calculationRequest,link)
         val calcResponse = await(result)
 
         calcResponse.dualCalc must be(true)

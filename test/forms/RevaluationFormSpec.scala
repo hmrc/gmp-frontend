@@ -24,8 +24,6 @@ import play.api.i18n.Messages
 import play.api.i18n.Messages.Implicits._
 import play.api.libs.json.Json
 
-import scala.collection.mutable
-
 class RevaluationFormSpec extends PlaySpec with OneAppPerSuite {
 
   val revaluationDate = GmpDate(Some("01"), Some("02"), Some("2010"))

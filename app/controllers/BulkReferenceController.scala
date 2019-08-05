@@ -18,25 +18,23 @@ package controllers
 
 import com.google.inject.{Inject, Singleton}
 import config.GmpFrontendAuditConnector
-import controllers.auth.GmpRegime
+import controllers.auth.AuthAction
 import forms.BulkReferenceForm
 import play.api.Logger
-import uk.gov.hmrc.play.audit.http.connector.AuditConnector
-import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
+import uk.gov.hmrc.auth.core.AuthConnector
 
 import scala.concurrent.Future
 
 @Singleton
-class BulkReferenceController @Inject()(val authConnector: AuthConnector,
+class BulkReferenceController @Inject()(authAction: AuthAction,
+                                        val authConnector: AuthConnector,
                                         auditConnector : GmpFrontendAuditConnector) extends GmpController {
 
-  def get = AuthorisedFor(GmpRegime, pageVisibilityPredicate).async {
-    implicit user =>
+  def get = authAction.async {
       implicit request =>  Future.successful(Ok(views.html.bulk_reference(BulkReferenceForm.bulkReferenceForm)))
   }
 
-  def post = AuthorisedFor(GmpRegime, pageVisibilityPredicate).async {
-    implicit user =>
+  def post = authAction.async {
       implicit request => {
         Logger.debug(s"[BulkReferenceController][post]: ${request.body}")
 
@@ -53,8 +51,7 @@ class BulkReferenceController @Inject()(val authConnector: AuthConnector,
       }
   }
 
-  def back = AuthorisedFor(GmpRegime, pageVisibilityPredicate).async {
-    implicit user =>
+  def back = authAction.async {
       implicit request => {
         Future.successful(Redirect(routes.FileUploadController.get()))
       }

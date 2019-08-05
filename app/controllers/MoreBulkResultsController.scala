@@ -18,19 +18,20 @@ package controllers
 
 import com.google.inject.{Inject, Singleton}
 import connectors.GmpBulkConnector
-import controllers.auth.GmpRegime
+import controllers.auth.AuthAction
 import play.api.Play.current
 import play.api.i18n.Messages.Implicits._
-import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
+import uk.gov.hmrc.auth.core.AuthConnector
 
 @Singleton
-class MoreBulkResultsController @Inject()(override val authConnector: AuthConnector,
+class MoreBulkResultsController @Inject()(authAction: AuthAction,
+                                          override val authConnector: AuthConnector,
                                           gmpBulkConnector: GmpBulkConnector) extends GmpPageFlow(authConnector) {
 
-  def retrieveMoreBulkResults = AuthorisedFor(GmpRegime, pageVisibilityPredicate).async {
-    implicit user =>
+  def retrieveMoreBulkResults = authAction.async {
       implicit request => {
-        gmpBulkConnector.getPreviousBulkRequests().map {
+        val link = request.linkId
+        gmpBulkConnector.getPreviousBulkRequests(link).map {
           bulkPreviousRequests => {
             Ok(views.html.more_bulk_results(bulkPreviousRequests.sorted))
           }

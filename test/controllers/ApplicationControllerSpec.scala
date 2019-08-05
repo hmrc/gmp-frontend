@@ -18,7 +18,7 @@ package controllers
 
 import com.google.inject.Singleton
 import config.GmpFrontendAuditConnector
-import controllers.auth.UUIDGenerator
+import controllers.auth.{AuthAction, FakeAuthAction, GmpAuthConnector, UUIDGenerator}
 import org.mockito.ArgumentCaptor
 import org.mockito.Matchers._
 import org.mockito.Mockito._
@@ -30,9 +30,8 @@ import play.api.i18n.Messages
 import play.api.i18n.Messages.Implicits._
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.play.audit.http.connector.AuditConnector
+import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.play.audit.model.DataEvent
-import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
 
 @Singleton
 class ApplicationControllerSpec extends PlaySpec
@@ -40,13 +39,14 @@ class ApplicationControllerSpec extends PlaySpec
   with BeforeAndAfterEach
   with ScalaFutures
   with MockitoSugar
-  with GmpUsers {
+  {
 
-  override implicit val mockAuthConnector: AuthConnector = mock[AuthConnector]
+  val mockAuthConnector: AuthConnector = mock[AuthConnector]
   val mockAuditConnector: GmpFrontendAuditConnector = mock[GmpFrontendAuditConnector]
-  val mockUUIDGenerator = mock[UUIDGenerator]
+  val mockUUIDGenerator: UUIDGenerator = mock[UUIDGenerator]
+  val mockAuthAction: AuthAction = mock[AuthAction]
 
-  object TestController extends ApplicationController(mockAuditConnector, mockAuthConnector, mockUUIDGenerator) {
+  object TestController extends ApplicationController(FakeAuthAction, mockAuditConnector, mockAuthConnector, mockUUIDGenerator) {
     override val context = FakeGmpContext
   }
 
@@ -60,34 +60,31 @@ class ApplicationControllerSpec extends PlaySpec
     "get /unauthorised" must {
 
       "have a status of OK" in {
-        val result = TestController.unauthorised.apply(FakeRequest())
+        val result = TestController.unauthorised(FakeRequest())
         status(result) must be(OK)
       }
 
       "have a title of Unauthorised" in {
-        val result = TestController.unauthorised.apply(FakeRequest())
+        val result = TestController.unauthorised(FakeRequest())
         contentAsString(result) must include(Messages("gmp.unauthorised.message"))
       }
 
       "have some text on the page" in {
-        val result = TestController.unauthorised.apply(FakeRequest())
+        val result = TestController.unauthorised(FakeRequest())
         contentAsString(result) must include("You are not authorised to view this page")
       }
     }
 
     "get /signout" must {
       "redirect to feedback survey" in {
-        withAuthorisedUser { request =>
-          val result = TestController.signout(request)
+          val result = TestController.signout(FakeRequest())
           redirectLocation(result) must be(Some("http://localhost:9514/feedback/GMP"))
-        }
       }
 
       "send the data to splunk" in {
         when(mockUUIDGenerator.generate).thenReturn("test-uuid")
 
-        withAuthorisedUser { request =>
-          val result = TestController.signout(request)
+          val result = TestController.signout(FakeRequest())
 
           whenReady(result) { _ =>
             val argument = ArgumentCaptor.forClass(classOf[DataEvent])
@@ -97,7 +94,6 @@ class ApplicationControllerSpec extends PlaySpec
             argument.getValue.auditSource mustBe "GMP"
             argument.getValue.auditType mustBe "signout"
             argument.getValue.detail mustBe Map("feedbackId" -> "test-uuid")
-          }
         }
       }
     }

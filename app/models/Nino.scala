@@ -16,7 +16,7 @@
 
 package models
 
-import uk.gov.hmrc.domain.{TaxIdentifier, SimpleName}
+import uk.gov.hmrc.domain.{SimpleName, TaxIdentifier}
 import validation.NinoValidate
 
 case class Nino(nino: String) extends TaxIdentifier with SimpleName {

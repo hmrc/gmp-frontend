@@ -17,13 +17,13 @@
 package forms
 
 import models.BulkReference
+import play.api.Play.current
 import play.api.data.Form
 import play.api.data.Forms._
-import play.api.data.validation.{Valid, ValidationError, Invalid, Constraint}
+import play.api.data.validation.{Constraint, Invalid, Valid, ValidationError}
 import play.api.i18n.Messages
-import uk.gov.hmrc.emailaddress.EmailAddress
 import play.api.i18n.Messages.Implicits._
-import play.api.Play.current
+import uk.gov.hmrc.emailaddress.EmailAddress
 
 object BulkReferenceForm {
   val MAX_REFERENCE_LENGTH: Int = 99

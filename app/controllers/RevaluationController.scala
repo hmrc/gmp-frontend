@@ -17,22 +17,22 @@
 package controllers
 
 import com.google.inject.{Inject, Singleton}
-import config.GmpFrontendAuthConnector
-import controllers.auth.GmpRegime
+import controllers.auth.AuthAction
 import forms.RevaluationForm._
 import models.{GmpDate, RevaluationDate}
 import play.api.Logger
 import play.api.Play.current
 import play.api.i18n.Messages.Implicits._
-import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
+import uk.gov.hmrc.auth.core.AuthConnector
 
 import scala.concurrent.Future
 
 @Singleton
-class RevaluationController @Inject()( override val authConnector: AuthConnector) extends GmpPageFlow(authConnector) {
+class RevaluationController @Inject()( authAction: AuthAction,
+                                       override val authConnector: AuthConnector
+                                     ) extends GmpPageFlow(authConnector) {
 
-  def get = AuthorisedFor(GmpRegime, pageVisibilityPredicate).async {
-    implicit user =>
+  def get = authAction.async {
       implicit request => sessionService.fetchLeaving.map {
         case Some(leaving) => {
           Ok(views.html.revaluation(revaluationForm.fill(RevaluationDate(leaving, GmpDate(None, None, None)))))
@@ -41,8 +41,7 @@ class RevaluationController @Inject()( override val authConnector: AuthConnector
       }
   }
 
-  def post = AuthorisedFor(GmpRegime, pageVisibilityPredicate).async {
-    implicit user =>
+  def post = authAction.async {
       implicit request => {
         Logger.debug(s"[RevaluationController][post][POST] : ${request.body}")
         revaluationForm.bindFromRequest.fold(
@@ -59,9 +58,7 @@ class RevaluationController @Inject()( override val authConnector: AuthConnector
       }
   }
 
-  def back = AuthorisedFor(GmpRegime, pageVisibilityPredicate).async {
-
-    implicit user =>
+  def back = authAction.async {
       implicit request =>{
         sessionService.fetchGmpSession() map {
           case Some(session) => previousPage("RevaluationController", session)
