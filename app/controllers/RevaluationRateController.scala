@@ -18,17 +18,18 @@ package controllers
 
 
 import com.google.inject.{Inject, Singleton}
-import controllers.auth.{AuthAction, GmpAuthConnector}
+import controllers.auth.AuthAction
 import forms.RevaluationRateForm._
 import play.api.Logger
 import play.api.Play.current
 import play.api.i18n.Messages
 import play.api.i18n.Messages.Implicits._
+import uk.gov.hmrc.auth.core.AuthConnector
 
 
 @Singleton
 class RevaluationRateController @Inject()( authAction: AuthAction,
-                                           override val authConnector: GmpAuthConnector
+                                           override val authConnector: AuthConnector
                                          ) extends GmpPageFlow(authConnector) {
 
   def get = authAction.async {

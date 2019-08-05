@@ -18,18 +18,19 @@ package controllers
 
 import com.google.inject.{Inject, Singleton}
 import connectors.AttachmentsConnector
-import controllers.auth.{AuthAction, GmpAuthConnector}
+import controllers.auth.AuthAction
 import models.{CallBackData, GmpBulkSession}
 import play.api.Play.current
 import play.api.i18n.Messages
 import play.api.i18n.Messages.Implicits._
 import play.api.mvc.Action
 import services.SessionService
+import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.http.logging.SessionId
 
 @Singleton
 class FileUploadController @Inject()(authAction: AuthAction,
-                                     val authConnector: GmpAuthConnector,
+                                     val authConnector: AuthConnector,
                                      sessionService: SessionService,
                                      attachmentsConnector: AttachmentsConnector) extends GmpController {
 

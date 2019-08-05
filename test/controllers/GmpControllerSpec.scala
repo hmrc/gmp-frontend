@@ -16,17 +16,18 @@
 
 package controllers
 
-import controllers.auth.{AuthAction, GmpAuthConnector}
+import controllers.auth.AuthAction
 import models._
 import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
 import play.api.test.Helpers._
 import services.SessionService
+import uk.gov.hmrc.auth.core.AuthConnector
 
 
 class GmpControllerSpec extends PlaySpec with OneServerPerSuite with MockitoSugar {
 
-  val mockAuthConnector = mock[GmpAuthConnector]
+  val mockAuthConnector = mock[AuthConnector]
   val mockSessionService = mock[SessionService]
   val mockAuthAction = mock[AuthAction]
 

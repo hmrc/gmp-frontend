@@ -18,18 +18,19 @@ package controllers
 
 import com.google.inject.{Inject, Singleton}
 import connectors.GmpBulkConnector
-import controllers.auth.{AuthAction, GmpAuthConnector}
+import controllers.auth.AuthAction
 import play.api.Logger
 import play.api.Play.current
 import play.api.i18n.Messages
 import play.api.i18n.Messages.Implicits._
 import services.{BulkRequestCreationService, DataLimitExceededException, SessionService}
+import uk.gov.hmrc.auth.core.AuthConnector
 
 import scala.concurrent.Future
 
 @Singleton
 class BulkRequestReceivedController @Inject()(authAction: AuthAction,
-                                              val authConnector: GmpAuthConnector,
+                                              val authConnector: AuthConnector,
                                               sessionService: SessionService,
                                               bulkRequestCreationService: BulkRequestCreationService,
                                               gmpBulkConnector: GmpBulkConnector

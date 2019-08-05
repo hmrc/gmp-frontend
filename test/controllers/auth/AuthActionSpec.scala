@@ -45,7 +45,7 @@ class AuthActionSpec extends PlaySpec with GuiceOneAppPerSuite with MockitoSugar
     "the user is not logged in" must {
       "redirect the user to log in" in {
 
-        val mockAuthConnector = mock[GmpAuthConnector]
+        val mockAuthConnector = mock[AuthConnector]
 
         when(mockAuthConnector.authorise(any(),any())(any(), any()))
           .thenReturn(Future.failed(new MissingBearerToken))
@@ -62,7 +62,7 @@ class AuthActionSpec extends PlaySpec with GuiceOneAppPerSuite with MockitoSugar
     "the user has a confidence level too low" must {
       "redirect the user to the unauthorised page" in {
 
-        val mockAuthConnector = mock[GmpAuthConnector]
+        val mockAuthConnector = mock[AuthConnector]
 
         when(mockAuthConnector.authorise(any(),any())(any(), any()))
           .thenReturn(Future.failed(new InsufficientConfidenceLevel))
@@ -78,7 +78,7 @@ class AuthActionSpec extends PlaySpec with GuiceOneAppPerSuite with MockitoSugar
 
     "the user has no psa/psp account " must {
       "redirect the user to the unauthorised page" in {
-        val mockAuthConnector = mock[GmpAuthConnector]
+        val mockAuthConnector = mock[AuthConnector]
 
         when(mockAuthConnector.authorise[Enrolments](any(), any())(any(), any()))
           .thenReturn(Future.failed(new InsufficientEnrolments))
@@ -95,7 +95,7 @@ class AuthActionSpec extends PlaySpec with GuiceOneAppPerSuite with MockitoSugar
 
     "the user is authorised with psa " must {
       "create an authenticated link for psa" in {
-        val mockAuthConnector = mock[GmpAuthConnector]
+        val mockAuthConnector = mock[AuthConnector]
 
         val retrievalResult: Future[Enrolments] =
           Future.successful(Enrolments(Set(Enrolment("HMRC-PSA-ORG", Seq(EnrolmentIdentifier("PSAID", "someID")), ""))))
@@ -115,7 +115,7 @@ class AuthActionSpec extends PlaySpec with GuiceOneAppPerSuite with MockitoSugar
     }
       "the user is authorised with psp " must {
         "create an authenticated link for psp" in {
-          val mockAuthConnector = mock[GmpAuthConnector]
+          val mockAuthConnector = mock[AuthConnector]
 
           val retrievalResult: Future[Enrolments] =
             Future.successful(Enrolments(Set(Enrolment("HMRC-PP-ORG", Seq(EnrolmentIdentifier("PPID", "someID")), ""))))
@@ -136,7 +136,7 @@ class AuthActionSpec extends PlaySpec with GuiceOneAppPerSuite with MockitoSugar
 
     "the user is authorised with both psa and psp" must {
       "create an authenticated link for psa" in {
-        val mockAuthConnector = mock[GmpAuthConnector]
+        val mockAuthConnector = mock[AuthConnector]
 
         val retrievalResult: Future[Enrolments] =
           Future.successful(

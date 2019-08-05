@@ -19,7 +19,7 @@ package controllers
 import java.util.UUID
 
 import connectors.GmpConnector
-import controllers.auth.{AuthAction, FakeAuthAction, GmpAuthConnector}
+import controllers.auth.{AuthAction, FakeAuthAction}
 import metrics.ApplicationMetrics
 import models._
 import org.mockito.Matchers
@@ -32,23 +32,20 @@ import play.api.libs.json.Json
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.SessionService
-import uk.gov.hmrc.domain.PsaId
+import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.logging.SessionId
-import uk.gov.hmrc.play.frontend.auth.AuthContext
-import uk.gov.hmrc.play.frontend.auth.connectors.domain._
 
 import scala.concurrent.Future
 
 class PensionDetailsControllerSpec extends PlaySpec with OneServerPerSuite with MockitoSugar {
 
-  val mockAuthConnector = mock[GmpAuthConnector]
+  val mockAuthConnector = mock[AuthConnector]
   val mockSessionService = mock[SessionService]
   val mockGmpConnector = mock[GmpConnector]
   val mockAuthAction = mock[AuthAction]
   val metrics = app.injector.instanceOf[ApplicationMetrics]
 
-  implicit val user = AuthContext(authority = Authority("1234", Accounts(psa = Some(PsaAccount("link", PsaId("B1234567")))), None, None, CredentialStrength.None, ConfidenceLevel.L50, None, None, None, ""))
   implicit val hc = new HeaderCarrier(sessionId = Some(SessionId(s"session-${UUID.randomUUID}")))
 
   object TestPensionDetailsController extends PensionDetailsController(FakeAuthAction, mockAuthConnector, mockGmpConnector, metrics) {

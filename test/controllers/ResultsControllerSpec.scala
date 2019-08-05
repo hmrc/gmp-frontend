@@ -37,6 +37,7 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import play.twirl.api.HtmlFormat
 import services.SessionService
+import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.logging.SessionId
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
@@ -46,7 +47,7 @@ import scala.concurrent.Future
 
 class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with MockitoSugar {
 
-  val mockAuthConnector = mock[GmpAuthConnector]
+  val mockAuthConnector = mock[AuthConnector]
   val mockSessionService = mock[SessionService]
   val mockCalculationConnector = mock[GmpConnector]
   val mockApplicationConfig = mock[ApplicationConfig]

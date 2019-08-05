@@ -30,6 +30,7 @@ import play.api.i18n.Messages
 import play.api.i18n.Messages.Implicits._
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.play.audit.model.DataEvent
 
 @Singleton
@@ -40,7 +41,7 @@ class ApplicationControllerSpec extends PlaySpec
   with MockitoSugar
   {
 
-  val mockAuthConnector: GmpAuthConnector = mock[GmpAuthConnector]
+  val mockAuthConnector: AuthConnector = mock[AuthConnector]
   val mockAuditConnector: GmpFrontendAuditConnector = mock[GmpFrontendAuditConnector]
   val mockUUIDGenerator: UUIDGenerator = mock[UUIDGenerator]
   val mockAuthAction: AuthAction = mock[AuthAction]

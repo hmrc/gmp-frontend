@@ -17,7 +17,7 @@
 package controllers
 
 import connectors.GmpBulkConnector
-import controllers.auth.{AuthAction, FakeAuthAction, GmpAuthConnector}
+import controllers.auth.{AuthAction, FakeAuthAction}
 import models._
 import org.joda.time.LocalDateTime
 import org.mockito.Matchers
@@ -30,13 +30,14 @@ import play.api.libs.json.Json
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.SessionService
+import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.http.Upstream5xxResponse
 
 import scala.concurrent.Future
 
 class DashboardControllerSpec extends PlaySpec with OneServerPerSuite with MockitoSugar {
 
-  val mockAuthConnector = mock[GmpAuthConnector]
+  val mockAuthConnector = mock[AuthConnector]
   val mockSessionService = mock[SessionService]
   val mockGmpBulkConnector = mock[GmpBulkConnector]
   val mockAuthAction = mock[AuthAction]

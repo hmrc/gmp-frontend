@@ -18,15 +18,16 @@ package controllers
 
 import com.google.inject.{Inject, Singleton}
 import config.GmpFrontendAuditConnector
-import controllers.auth.{AuthAction, GmpAuthConnector}
+import controllers.auth.AuthAction
 import forms.BulkReferenceForm
 import play.api.Logger
+import uk.gov.hmrc.auth.core.AuthConnector
 
 import scala.concurrent.Future
 
 @Singleton
 class BulkReferenceController @Inject()(authAction: AuthAction,
-                                        val authConnector: GmpAuthConnector,
+                                        val authConnector: AuthConnector,
                                         auditConnector : GmpFrontendAuditConnector) extends GmpController {
 
   def get = authAction.async {

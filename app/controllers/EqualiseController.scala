@@ -17,18 +17,19 @@
 package controllers
 
 import com.google.inject.{Inject, Singleton}
-import controllers.auth.{AuthAction, GmpAuthConnector}
+import controllers.auth.AuthAction
 import forms.EqualiseForm._
 import play.api.Logger
 import play.api.Play.current
 import play.api.i18n.Messages.Implicits._
 import services.SessionService
+import uk.gov.hmrc.auth.core.AuthConnector
 
 import scala.concurrent.Future
 
 @Singleton
 class EqualiseController @Inject()(authAction: AuthAction,
-                                   override val authConnector: GmpAuthConnector,
+                                   override val authConnector: AuthConnector,
                                    sessionService: SessionService) extends GmpPageFlow(authConnector) {
 
   def get = authAction.async {

@@ -19,7 +19,7 @@ package controllers
 import java.util.UUID
 
 import connectors.GmpBulkConnector
-import controllers.auth.{FakeAuthAction, GmpAuthConnector}
+import controllers.auth.FakeAuthAction
 import models.BulkResultsSummary
 import org.mockito.Matchers
 import org.mockito.Mockito._
@@ -29,6 +29,7 @@ import play.api.i18n.Messages
 import play.api.i18n.Messages.Implicits._
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.http.logging.SessionId
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, NotFoundException, Upstream4xxResponse}
 
@@ -36,7 +37,7 @@ import scala.concurrent.Future
 
 class BulkResultsControllerSpec extends PlaySpec with OneServerPerSuite with MockitoSugar {
 
-  val mockAuthConnector = mock[GmpAuthConnector]
+  val mockAuthConnector = mock[AuthConnector]
   val mockGmpBulkConnector = mock[GmpBulkConnector]
 
   implicit val hc = new HeaderCarrier(sessionId = Some(SessionId(s"session-${UUID.randomUUID}")))

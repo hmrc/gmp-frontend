@@ -17,7 +17,7 @@
 package controllers
 
 import connectors.AttachmentsConnector
-import controllers.auth.{AuthAction, FakeAuthAction, GmpAuthConnector}
+import controllers.auth.{AuthAction, FakeAuthAction}
 import models._
 import org.mockito.Matchers
 import org.mockito.Mockito._
@@ -31,12 +31,13 @@ import play.api.test.Helpers._
 import play.api.test.{FakeHeaders, FakeRequest}
 import play.twirl.api.Html
 import services.SessionService
+import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.play.partials.HtmlPartial
 
 import scala.concurrent.Future
 
 class FileUploadControllerSpec extends PlaySpec with OneServerPerSuite with MockitoSugar {
-  val mockAuthConnector = mock[GmpAuthConnector]
+  val mockAuthConnector = mock[AuthConnector]
   val mockAttachmentsConnector = mock[AttachmentsConnector]
   val mockSessionService = mock[SessionService]
   val mockAuthAction = mock[AuthAction]

@@ -18,16 +18,17 @@ package controllers
 
 import com.google.inject.{Inject, Singleton}
 import config.GmpFrontendAuditConnector
-import controllers.auth.{AuthAction, ExternalUrls, GmpAuthConnector, UUIDGenerator}
+import controllers.auth.{AuthAction, ExternalUrls, UUIDGenerator}
 import play.api.Play.current
 import play.api.i18n.Messages.Implicits._
 import play.api.mvc.{Action, AnyContent}
+import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.play.audit.model.DataEvent
 
 @Singleton
 class ApplicationController @Inject()(authAction: AuthAction,
                                       auditConnector: GmpFrontendAuditConnector,
-                                      val authConnector: GmpAuthConnector,
+                                      val authConnector: AuthConnector,
                                       uuidGenerator: UUIDGenerator) extends GmpController {
   
   def unauthorised: Action[AnyContent] = Action {

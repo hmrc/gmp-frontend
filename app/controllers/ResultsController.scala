@@ -19,7 +19,7 @@ package controllers
 import com.google.inject.{Inject, Singleton}
 import config.{GmpContext, GmpFrontendAuditConnector}
 import connectors.GmpConnector
-import controllers.auth.{AuthAction, GmpAuthConnector}
+import controllers.auth.AuthAction
 import events.ContributionsAndEarningsEvent
 import metrics.ApplicationMetrics
 import models._
@@ -31,12 +31,13 @@ import play.api.i18n.Messages.Implicits._
 import play.api.mvc.Request
 import play.twirl.api.HtmlFormat
 import services.SessionService
+import uk.gov.hmrc.auth.core.AuthConnector
 
 import scala.concurrent.Future
 
 @Singleton
 class ResultsController @Inject()(authAction: AuthAction,
-                                  override val authConnector: GmpAuthConnector,
+                                  override val authConnector: AuthConnector,
                                   sessionService: SessionService,
                                   calculationConnector: GmpConnector,
                                   auditConnector: GmpFrontendAuditConnector,

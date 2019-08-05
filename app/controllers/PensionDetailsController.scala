@@ -18,7 +18,7 @@ package controllers
 
 import com.google.inject.{Inject, Singleton}
 import connectors.GmpConnector
-import controllers.auth.{AuthAction, GmpAuthConnector}
+import controllers.auth.AuthAction
 import forms.PensionDetailsForm._
 import metrics.ApplicationMetrics
 import models.{PensionDetails, ValidateSconRequest}
@@ -26,12 +26,13 @@ import play.api.Logger
 import play.api.Play.current
 import play.api.i18n.Messages
 import play.api.i18n.Messages.Implicits._
+import uk.gov.hmrc.auth.core.AuthConnector
 
 import scala.concurrent.Future
 
 @Singleton
 class PensionDetailsController @Inject()(authAction: AuthAction,
-                                         override val authConnector: GmpAuthConnector,
+                                         override val authConnector: AuthConnector,
                                          gmpConnector: GmpConnector,
                                          metrics: ApplicationMetrics) extends GmpPageFlow(authConnector) {
 
