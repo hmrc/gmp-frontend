@@ -29,10 +29,13 @@
 @import uk.gov.hmrc.play.views.html.{layouts => uiLayouts}
 @import controllers.auth.ExternalUrls
 
+@headScript = {
+    <script src="https://cdn.optimizely.com/js/@{applicationConfig.optimizelyProjectId}.js"></script>
+}
 @head = {
     @uiLayouts.head(
         linkElem = linkElement,
-        headScripts = None)
+        headScripts = Some(headScript))
     <meta name="format-detection" content="telephone=no"/>
 }
 
