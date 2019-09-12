@@ -18,7 +18,7 @@ package controllers
 
 import com.google.inject.{Inject, Singleton}
 import connectors.GmpConnector
-import controllers.auth.GmpRegime
+import controllers.auth.AuthAction
 import forms.PensionDetailsForm._
 import metrics.ApplicationMetrics
 import models.{PensionDetails, ValidateSconRequest}
@@ -26,17 +26,17 @@ import play.api.Logger
 import play.api.Play.current
 import play.api.i18n.Messages
 import play.api.i18n.Messages.Implicits._
-import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
+import uk.gov.hmrc.auth.core.AuthConnector
 
 import scala.concurrent.Future
 
 @Singleton
-class PensionDetailsController @Inject()(override val authConnector: AuthConnector,
+class PensionDetailsController @Inject()(authAction: AuthAction,
+                                         override val authConnector: AuthConnector,
                                          gmpConnector: GmpConnector,
                                          metrics: ApplicationMetrics) extends GmpPageFlow(authConnector) {
 
-  def get = AuthorisedFor(GmpRegime, pageVisibilityPredicate).async {
-    implicit user =>
+  def get = authAction.async {
       implicit request => {
         sessionService.fetchPensionDetails.map {
           case Some(scon) => Ok(views.html.pension_details(pensionDetailsForm.fill(PensionDetails(scon))))
@@ -45,10 +45,9 @@ class PensionDetailsController @Inject()(override val authConnector: AuthConnect
       }
   }
 
-  def post = AuthorisedFor(GmpRegime, pageVisibilityPredicate).async {
-    implicit user =>
+  def post = authAction.async {
       implicit request => {
-
+        val link = request.linkId
         Logger.debug(s"[PensionDetailsController][post][POST] : ${request.body}")
 
         pensionDetailsForm.bindFromRequest().fold(
@@ -59,7 +58,7 @@ class PensionDetailsController @Inject()(override val authConnector: AuthConnect
 
             val validateSconRequest = ValidateSconRequest(pensionDetails.scon.toUpperCase)
 
-            gmpConnector.validateScon(validateSconRequest) flatMap {
+            gmpConnector.validateScon(validateSconRequest, link) flatMap {
               response => {
                 if (response.sconExists) {
                   sessionService.cachePensionDetails(pensionDetails.scon.toUpperCase).map {

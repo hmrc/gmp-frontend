@@ -31,14 +31,15 @@ class InflationProofSpec extends GmpViewSpec {
     behave like pageWithBackLink
 
     "have correct input labels with text" in {
-      doc must haveInputLabelWithText("revaluate-yes", messages("gmp.generic.yes"))
-      doc must haveInputLabelWithText("revaluate-no", messages("gmp.generic.no"))
+      println(doc);
+      doc must haveInputLabelWithText("revaluate-revaluation-date", messages("gmp.generic.yes"))
+      doc must haveInputLabelWithText("revaluate-none", messages("gmp.generic.no"))
       doc must haveLegendWithText(messages("gmp.inflation_proof.question"))
     }
 
     "have correct span and a paragraph" in {
       doc must haveSpanWithText(messages("gmp.inflation_proofed"))
-      doc must haveParagraphWithText(messages("gmp.date.example"))
+      doc must haveSpanWithText(messages("gmp.date.example"))
     }
 
     "have valid input labels" in {

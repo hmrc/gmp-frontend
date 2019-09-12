@@ -21,50 +21,38 @@
 @import views.html.helpers._
 @import org.joda.time.{Days, LocalDate, LocalDateTime}
 
-@gmp_main(title = Messages("gmp.dashboard_header") + " - " + Messages("service.title") + " - " + Messages("gov.uk"), dashboardLinkEnabled = false, showUserResearchBanner = true) {
+@gmp_main(title = Messages("gmp.dashboard_header") + " - " + Messages("service.title") + " - " + Messages("gov.uk"), dashboardLinkEnabled = false, showUserResearchBanner = true, mainClass=Some("gmp-dashboard")) {
 
-<br/>
-<div class="grid">
-  <div class="grid grid-2-3">
     <h1 id="gmp-dashboard-header">@Messages("gmp.dashboard_header")</h1>
     <h2 id="choose-calculation-type">@Messages("gmp.dashboard.choose_calculation_type")</h2>
-  </div>
-</div>
 
 
-<div class="grid">
-  <br/>
-  <div class="grid-1-2">
-    <a data-journey-click='@Messages("gmp.ga-track.link.click"):@Messages("gmp.dashboard_header"):@Messages("gmp.single_calculation_link")'
-       class ="large-underlined-link" id="single-calculation-link" href="@routes.PensionDetailsController.get">
-       @Messages("gmp.single_calculation_link")</a></br></br>
-    <p id="single-calculation-description">@Html(Messages("gmp.single_calculation_text"))</p>
-  </div>
+    <div class="grid-row">
+      <br/>
+      <div class="column-one-half">
+        <a data-journey-click='@Messages("gmp.ga-track.link.click"):@Messages("gmp.dashboard_header"):@Messages("gmp.single_calculation_link")'
+           class ="large-underlined-link" id="single-calculation-link" href="@routes.PensionDetailsController.get">
+           @Messages("gmp.single_calculation_link")</a></br></br>
+        <p id="single-calculation-description">@Html(Messages("gmp.single_calculation_text"))</p>
+      </div>
 
-  <div class="grid-1-2">
-    <a class ="large-underlined-link" id="bulk-calculation-link"
-       data-journey-click='@Messages("gmp.ga-track.link.click"):@Messages("gmp.dashboard_header"):@Messages("gmp.bulk_calculation_link")'
-       href="@routes.FileUploadController.get">@Messages("gmp.bulk_calculation_link")</a></br></br>
-    <p id="bulk-calculation-description">@Html(Messages("gmp.bulk_calculation_text"))</p>
-  </div>
-</div>
+      <div class="column-one-half">
+        <a class ="large-underlined-link" id="bulk-calculation-link"
+           data-journey-click='@Messages("gmp.ga-track.link.click"):@Messages("gmp.dashboard_header"):@Messages("gmp.bulk_calculation_link")'
+           href="@routes.FileUploadController.get">@Messages("gmp.bulk_calculation_link")</a></br></br>
+        <p id="bulk-calculation-description">@Html(Messages("gmp.bulk_calculation_text"))</p>
+      </div>
+    </div>
 
-<div class="grid">
-  <br/>
     <a id="download-template-link" class="icon-file-download"
        data-journey-click='@messages("gmp.ga-track.link.click"):@Messages("gmp.dashboard_header"):@messages("gmp.download_templates_link")'
        href="@routes.AssetsController.at("csv/GMP_template_and_instructions.zip")">@Messages("gmp.download_templates_link")</a>
-  <br/>
-</div>
 
 @if(previousBulkCalculations.size > 0) {
 
-  <div class="grid">
     <h2 id="previous-calculations">@Messages("gmp.previous_calculations")</h2>
     <p id="previous-calculations-description">@Messages("gmp.previous_calculations_text")</p>
-  </div>
 
-  <div class="grid">
 
     <table id="recent-calculations-table">
 
@@ -98,20 +86,13 @@
 
       </tbody>
     </table>
-  </div>
 
   @if(previousBulkCalculations.size > 3) {
-    <div class="grid">
-      <br/>
       <a id="more-calculations" href="@routes.MoreBulkResultsController.retrieveMoreBulkResults">@Messages("gmp.more_results_link")</a>
-      <br/>
-    </div>
   }
 
 } else {
-    <div class="grid">
       <h2 id="no-previous-calculations">@Messages("gmp.previous_calculations")</h2>
       <p id="no-previous-calculations-description">@Messages("gmp.no_previous_calculations_text")</p>
-    </div>
 }
 }

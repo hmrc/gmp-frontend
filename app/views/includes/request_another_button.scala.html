@@ -19,10 +19,8 @@
 
 @()(implicit request: Request[_])
 
-<div class="grid" id="request-another-div">
-  <div class="grid-1-3">
+<div id="request-another-div">
     <form action="@routes.SessionCacheController.newCalculation">
       <button class="button" type="submit" id="request-another" data-journey-click="gmp:click:request_another">@Messages("gmp.button.request-another")</button>
     </form>
-  </div>
 </div>

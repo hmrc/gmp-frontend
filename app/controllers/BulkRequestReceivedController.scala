@@ -17,28 +17,29 @@
 package controllers
 
 import com.google.inject.{Inject, Singleton}
-import config.GmpFrontendAuthConnector
 import connectors.GmpBulkConnector
-import controllers.auth.GmpRegime
+import controllers.auth.AuthAction
 import play.api.Logger
-import play.api.i18n.Messages
-import services.{BulkRequestCreationService, DataLimitExceededException, SessionService}
-import play.api.i18n.Messages.Implicits._
 import play.api.Play.current
-import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
+import play.api.i18n.Messages
+import play.api.i18n.Messages.Implicits._
+import services.{BulkRequestCreationService, DataLimitExceededException, SessionService}
+import uk.gov.hmrc.auth.core.AuthConnector
 
 import scala.concurrent.Future
 
 @Singleton
-class BulkRequestReceivedController @Inject()(val authConnector: AuthConnector,
+class BulkRequestReceivedController @Inject()(authAction: AuthAction,
+                                              val authConnector: AuthConnector,
                                               sessionService: SessionService,
                                               bulkRequestCreationService: BulkRequestCreationService,
                                               gmpBulkConnector: GmpBulkConnector
                                              ) extends GmpController {
 
-  def get = AuthorisedFor(GmpRegime, pageVisibilityPredicate).async {
-    implicit user =>
+  def get = authAction.async {
       implicit request => {
+        val link = request.linkId
+
         Logger.debug(s"[BulkRequestReceivedController][get][GET] : ${request.body}")
         sessionService.fetchGmpBulkSession().flatMap {
           case Some(session) if session.callBackData.isDefined =>
@@ -47,7 +48,7 @@ class BulkRequestReceivedController @Inject()(val authConnector: AuthConnector,
             bulkRequestCreationService.createBulkRequest(callbackData.collection, callbackData.id, session.emailAddress.getOrElse(""), session.reference.getOrElse("")) match {
 
               case Left(bulkRequest) =>
-                gmpBulkConnector.sendBulkRequest(bulkRequest).map {
+                gmpBulkConnector.sendBulkRequest(bulkRequest, link).map {
                   case OK => Ok(views.html.bulk_request_received(bulkRequest.reference))
                   case CONFLICT => Ok(views.html.failure(Messages("gmp.bulk.failure.duplicate_upload"), Messages("gmp.bulk.problem.header"), Messages("gmp.bulk_failure_duplicate.title")))
                   case REQUEST_ENTITY_TOO_LARGE => Ok(views.html.failure(Messages("gmp.bulk.failure.too_large"), Messages("gmp.bulk.file_too_large.header"), Messages("gmp.bulk_failure_file_too_large.title")))

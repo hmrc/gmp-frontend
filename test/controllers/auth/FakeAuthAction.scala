@@ -16,17 +16,18 @@
 
 package controllers.auth
 
-import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
+import play.api.mvc.{Request, Result}
+import uk.gov.hmrc.domain.Generator
 
-class GmpGovernmentGatewaySpec extends PlaySpec with OneServerPerSuite {
-  
-  "GmpGovernmentGateway" must {
-    
-    "have values overridden" in {
-      GmpGovernmentGateway.loginURL must be(ExternalUrls.signIn)
-      GmpGovernmentGateway.continueURL must be(ExternalUrls.continue)
-    }
-    
+import scala.concurrent.Future
+import scala.util.Random
+
+object FakeAuthAction extends AuthAction {
+
+  val nino = new Generator(new Random).nextNino
+
+  override def invokeBlock[A](request: Request[A], block: AuthenticatedRequest[A] => Future[Result]): Future[Result] = {
+
+    block(AuthenticatedRequest("testID", request))
   }
-  
 }

@@ -23,10 +23,8 @@ import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.data.FormError
 import play.api.i18n.Messages
-import play.api.libs.json.Json
 import play.api.i18n.Messages.Implicits._
-
-import scala.collection.mutable
+import play.api.libs.json.Json
 
 class DateOfLeavingFormSpec extends PlaySpec with OneAppPerSuite with MockitoSugar{
   DateTimeUtils.setCurrentMillisFixed(new DateTime(2016,1,1,1,1).toDate.getTime)

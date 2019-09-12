@@ -17,6 +17,7 @@
 package controllers
 
 import config.GmpSessionCache
+import controllers.auth.{AuthAction, FakeAuthAction}
 import metrics.ApplicationMetrics
 import org.mockito.Matchers
 import org.mockito.Mockito._
@@ -25,98 +26,70 @@ import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.SessionService
-import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
+import uk.gov.hmrc.auth.core.AuthConnector
 
 import scala.concurrent.Future
 
-class SessionCacheControllerSpec extends PlaySpec with OneServerPerSuite with MockitoSugar with GmpUsers {
+class SessionCacheControllerSpec extends PlaySpec with OneServerPerSuite with MockitoSugar {
 
   val mockAuthConnector = mock[AuthConnector]
   val mockSessionService = mock[SessionService]
+  val mockAuthAction = mock[AuthAction]
   val metrics = app.injector.instanceOf[ApplicationMetrics]
   val gmpSessionCache = app.injector.instanceOf[GmpSessionCache]
 
-  object TestSessionCacheController extends SessionCacheController(mockAuthConnector) {
+  object TestSessionCacheController extends SessionCacheController(FakeAuthAction, mockAuthConnector) {
     override val sessionService = mockSessionService
     override val context = FakeGmpContext
   }
 
-  "SessionCacheController" must {
-
-    "respond to GET /guaranteed-minimum-pension/new-calculation" in {
-      val result = route(FakeRequest(GET, "/guaranteed-minimum-pension/new-calculation"))
-      status(result.get) must not equal (NOT_FOUND)
-    }
-  }
-
   "new-calculation" must {
 
-    "be an authorised route" in {
-      val result = TestSessionCacheController.newCalculation.apply(FakeRequest())
-      status(result) must equal(SEE_OTHER)
-      redirectLocation(result).get must include("/gg/sign-in")
-    }
-
     "reset the cached calculation parameters except for scon" in {
-      withAuthorisedUser { request =>
         when(mockSessionService.resetGmpSessionWithScon()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(new SessionService(metrics, gmpSessionCache).cleanSession)))
-        await(TestSessionCacheController.newCalculation.apply(request))
+        await(TestSessionCacheController.newCalculation(FakeRequest()))
         verify(mockSessionService, atLeastOnce()).resetGmpSessionWithScon()(Matchers.any(), Matchers.any())
-      }
     }
 
     "redirect to the pension details page" in {
-      withAuthorisedUser { request =>
         when(mockSessionService.resetGmpSessionWithScon()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(new SessionService(metrics, gmpSessionCache).cleanSession)))
-        val result = TestSessionCacheController.newCalculation.apply(request)
+        val result = TestSessionCacheController.newCalculation(FakeRequest())
         status(result) must be(SEE_OTHER)
         redirectLocation(result).get must be("/guaranteed-minimum-pension/pension-details")
-      }
     }
 
     "raise an error when the session service is unreachable" in {
-      withAuthorisedUser { request =>
+
         when(mockSessionService.resetGmpSessionWithScon()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(None))
         intercept[RuntimeException]{
-          await(TestSessionCacheController.newCalculation.apply(request))
-        }
+          await(TestSessionCacheController.newCalculation(FakeRequest()))
       }
     }
   }
 
   "new-bulk-calculation" must {
 
-    "be an authorised route" in {
-      val result = TestSessionCacheController.newBulkCalculation.apply(FakeRequest())
-      status(result) must equal(SEE_OTHER)
-      redirectLocation(result).get must include("/gg/sign-in")
-    }
-
     "reset the cached calculation parameters" in {
-      withAuthorisedUser { request =>
+
         when(mockSessionService.resetGmpBulkSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(new SessionService(metrics, gmpSessionCache).cleanBulkSession)))
-        await(TestSessionCacheController.newBulkCalculation.apply(request))
+        await(TestSessionCacheController.newBulkCalculation(FakeRequest()))
         verify(mockSessionService, atLeastOnce()).resetGmpBulkSession()(Matchers.any(), Matchers.any())
-      }
     }
 
     "redirect to the upload csv page" in {
-      withAuthorisedUser { request =>
+
         when(mockSessionService.resetGmpBulkSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(new SessionService(metrics, gmpSessionCache).cleanBulkSession)))
-        val result = TestSessionCacheController.newBulkCalculation.apply(request)
+        val result = TestSessionCacheController.newBulkCalculation(FakeRequest())
         status(result) must be(SEE_OTHER)
         redirectLocation(result).get must be("/guaranteed-minimum-pension/upload-csv")
-      }
     }
 
     "raise an error when the session service is unreachable" in {
-      withAuthorisedUser { request =>
+
         when(mockSessionService.resetGmpBulkSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(None))
         intercept[RuntimeException]{
-          await(TestSessionCacheController.newBulkCalculation.apply(request))
-        }
+          await(TestSessionCacheController.newBulkCalculation(FakeRequest()))
       }
     }
   }
-
 }

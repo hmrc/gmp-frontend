@@ -37,9 +37,6 @@
   supportLinkEnabled = false,
   dashboardLinkEnabled = !calculationResponse.hasErrors) {
 
-  @if(!calculationResponse.hasErrors) {
-    @includes.print_page()
-  }
 
 @{
   if(calculationResponse.globalErrorCode > 0) {
@@ -58,14 +55,12 @@
   @includes.member_details_result(calculationResponse)
 
   @if(!calculationResponse.hasErrors){
-    <div class="grid">
-      <div class="grid-2-3">
-        <span id="queryhandling">@Messages("gmp.queryhandling.resultsmessage")</span>
-        <br/>
-        <br/>
-      </div>
-    </div>
+        <p id="queryhandling">@Messages("gmp.queryhandling.resultsmessage")</p>
   }
+
+@if(!calculationResponse.hasErrors) {
+    @includes.print_page()
+}
 
   @includes.request_another_button()
 

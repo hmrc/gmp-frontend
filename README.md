@@ -6,7 +6,7 @@ Frontend service for the Guaranteed Minimum Pension service
 This service provides the frontend application for the Guaranteed Minimum Pension service.
 
 Summary
--------
+--------
 
 This service is designed for Pension Scheme Administrators and Pension Scheme Practitioners to request a [GMP] calculation
 for a member of a contracted-out scheme under the following circumstances:

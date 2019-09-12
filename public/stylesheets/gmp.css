@@ -1,41 +1,69 @@
-.bottom-blue-border {
-  border-bottom: 5px solid #005ea5;
+#choose-calculation-type{
+  font-weight: normal;
 }
 
-.top-blue-border {
-  border-top: 5px solid #005ea5;
+.large-underlined-link {
+  font-size: 24px;
+  text-decoration: underline;
+  font-weight: bold;
 }
 
-.grid-1-2{
-  float: left;
+#previous-calculations {
+  padding-top:40px;
+}
+
+.r-padding {
   padding-right: 20px;
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
 }
 
-.grid-2-3{
-  display: inline-block;
+.numeric {
+  text-align: right;
+  padding-right: 0;
 }
 
-.form-group{
-  display: inline-block;
+#more-calculations {
+ float:right;
 }
 
-.form-group-leaving-options{
- display: inline-block;
- margin-bottom: 0px;
- }
-
-.print-style{
-  float: right;
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
-  margin-top: 70px;
-  padding-top: 15px;
-  width: 30%;
+.gmp-dashboard .content__body, .gmp-results .content__body {
+    width: 100%
 }
+
+.clearfix:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+#results-heading, #csv-heading {
+  font-size:24px;
+  font-weight:bold;
+}
+
+#print-link {
+    margin: 3rem 0;
+}
+
+#queryhandling {
+    margin-top: 2rem;
+}
+
+
+@media ( min-width: 641px) {
+    .column-three-quarters {
+        float: left;
+        width: 75%;
+    }
+}
+
+
+
+
+
+
+
+
+
 
 #multi-error-grid .print-style,
 #global-results-grid .print-style {
@@ -44,22 +72,7 @@
 
 .error-list {
     color: #B10E1E;
-}
-
-.confirmation {
-  background-color: #28A197;
-  text-align: center;
-  color: #FFF;
-  padding: 2px 80px 20px;
-  height: 100px;
-}
-
-.confirmation-bulk {
-  background-color: #28A197;
-  text-align: center;
-  color: #FFF;
-  padding: 2px 80px 20px;
-  height: 150px;
+    font-weight: bold;
 }
 
 .panel-indent {
@@ -69,36 +82,13 @@
   margin: 2px 15px 15px 0px;
 }
 
-.panel-indent-leaving-date{
- clear: both;
-   border-left: 4px solid #bfc1c3;
-   padding: 10px 15px;
-   margin-bottom: 0;
-   height: 140px;
-}
-
-.conts-earnings-period-@count{
-  margin-top: 0.5px;
-}
-
-.panel-indent-red {
-  clear: both;
-  border-left: 4px solid #df3034;
-  padding: 10px 0 10px 15px;
-  margin: 30px 15px 45px 0;
-}
-
-.gmp-js-hidden {
-  display: none;
-}
-
 #subheader {
   margin-bottom: 20px;
 }
 
 .global-error {
-  border: 5px solid #df3034;
-  padding: 15px 30px;
+  border: 5px solid #b10e1e;
+  padding: 20px 15px 15px;
   margin-bottom: 30px;
   margin-top: 30px;
 }
@@ -107,38 +97,21 @@
   color: #df3034;
 }
 
-.panel-indent-info {
-  clear: both;
-  background-image: url("../images/icon-information.png");
-  background-repeat: no-repeat;
-  background-position: 0% 0%;
-  font-weight: bold;
-  margin: 30px 15px 45px 0;
-  padding-left: 45px;
-}
 
 .icon-file-download {
   background-image: url("../images/icon-file-download.png");
   background-repeat: no-repeat;
+  background-size: auto;
   padding-left: 40px;
   padding-bottom: 20px;
   padding-top: 10px;
 }
 
-.button-get-started {
-  font-size: 24px;
-  font-weight: 700;
-  padding: 0.4em 2.2em 0.2em 0.8em;
-}
 
 .year-input {
   width: 130% !important;
 }
 
-.numeric {
-  text-align: right;
-  padding-right: 0;
-}
 
 .error-row {
   border-left: 5px solid #B10E1E;
@@ -154,13 +127,7 @@ tr.error-row td {
   font-weight: bold;
 }
 
-#link-to-gov{
-  padding-top:20px;
-}
 
-.custom-back-link{
-  padding-top:20px;
-}
 
 .continue-button {
   padding-top:20px;
@@ -173,16 +140,6 @@ tr.error-row td {
 .table-background {
   background-color: #DEE0E2;
   padding-left: 20px;
-}
-
-.noborder{
-  border-bottom: none;
-}
-
-#post-1990-table-header {
-  text-align: center;
-  font-style: italic;
-  font-weight: normal;
 }
 
 #results-header{
@@ -222,17 +179,25 @@ caption {
   #footer,
   #request-another-div,
   #what-did-you-think-div,
+  #print-link,
   #conts-earnings-link-div {
     display: none;
   }
 
-  .grid-2-3 {
-    width: 100%
-  }
 }
 
-.error-h1{
+.global-error #part-problem {
+    margin-top: auto;
+}
+
+.error-row .table-error-message p{
+    color: #B10E1E;
+    font-weight: bold;
+}
+
+.error-h1 {
  font-size: 24px;
+ margin-top: auto;
 }
 
 .error-h2 {
@@ -252,68 +217,15 @@ caption {
  margin-top: 20px
 }
 
-#download-template-link {
-  margin-left: 50%;
+#request-another-div {
+    margin-top: 2rem;
 }
 
-.large-underlined-link {
-  font-size: 24px;
-  text-decoration: underline;
-  font-weight: bold;
-}
-
-#more-calculations {
- float:right;
-}
-
-.r-padding {
-  padding-right: 20px;
-}
-
-#previous-calculations {
-  padding-top:40px;
-}
-
-.dashboard-back {
-  display: inline-block;
-  position: relative;
-  font-family: "nta", Arial, sans-serif;
-  font-size: 14px;
-  line-height: 1.1428571429;
-  font-weight: 400;
-  text-transform: none;
-  font-size-adjust: 0.5;
-  margin-top: 15px;
-  margin-bottom: 15px;
-  padding-left: 14px;
-  color: #0b0c0c;
-  text-decoration: none;
-  border-bottom: 1px solid #0b0c0c;
-}
-
-.dashboard-back::before {
-    content: '';
-    display: block;
-    width: 0;
-    height: 0;
-    border-top: 5px solid transparent;
-    border-right: 6px solid #0b0c0c;
-    border-bottom: 5px solid transparent;
-    position: absolute;
-    left: 0;
-    top: 50%;
-    margin-top: -6px;
-}
 
 #query-handling-body{
   font-size:16px;
 }
 
-#results-heading,
-#csv-heading{
-  font-size:16px;
-  font-weight:bold;
-}
 
 #conts-earnings-link-div {
   margin: 10px 0 20px 0;
@@ -354,9 +266,6 @@ caption {
   font-weight:bold;
 }
 
-#scon-form-group{
-  margin-bottom: 0px;
-}
 
 .table-caption {
     font-size: 19px;
@@ -370,9 +279,6 @@ caption {
     list-style-position: inside;
 }
 
-div.noMarginBottom {
-  margin-bottom: 0px;
-}
 
 #thank-you-page h1 {
     margin-bottom: 48px;
@@ -383,57 +289,48 @@ div.noMarginBottom {
     font-weight: normal;
 }
 
-#choose-calculation-type{
-  font-weight: normal;
-}
 
-#global-header.with-proposition .header-wrapper .header-proposition{
-  width:73%;
-}
-#global-header.with-proposition .header-wrapper .header-global{
-  width:27%;
-}
 
-.js-hidden {
-    display:none;
+
+/*
+=====================================
+Error styling to bring in line with GDS
+=====================================
+*/
+.form-field--error {
+    border-left: 5px solid #b10e1e;
 }
- /*--custom back --*/
- .link-back {
-    display: -moz-inline-stack;
-    display: inline-block;
-    position: relative;
-    font-family: "nta", Arial, sans-serif;
-    font-weight: 400;
-    text-transform: none;
-    font-size: 14px;
-    line-height: 1.14286;
-    margin-top: 15px;
-    margin-bottom: 15px;
-    padding-left: 14px;
-    color: #0b0c0c;
-    text-decoration: none;
-    border-bottom: 1px solid #0b0c0c;
+    .panel-indent .form-field--error {
+        margin-left: 0;
+    }
+.form-field--error .error-notification {
+    font-weight: 700;
+    color: #b10e1e;
 }
- @media (min-width: 641px) {
-    .link-back {
-        font-size: 16px;
-        line-height: 1.25;
+@media screen and (min-width: 640px){
+    .form-field--error .error-notification {
+        font-size: 19px;
     }
 }
- .link-back:link, .link-back:visited, .link-back:hover,
-.link-back a.link-back:focus, .link-back:active {
-    color: #0b0c0c;
+.form-field--error .form-control {
+    border: 4px solid #b10e1e;
 }
- .link-back::before {
-    content: '';
-    display: block;
-    width: 0;
-    height: 0;
-    border-top: 5px solid transparent;
-    border-right: 6px solid #0b0c0c;
-    border-bottom: 5px solid transparent;
-    position: absolute;
-    left: 0;
-    top: 50%;
-    margin-top: -6px;
+.error-summary {
+    border: 4px solid #b10e1e;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    padding: 15px 10px;
+}
+@media (min-width: 641px){
+    .error-summary {
+        border: 5px solid #b10e1e;
+        margin-top: 30px;
+        margin-bottom: 30px;
+        padding: 20px 15px 15px;
+    }
+}
+.error-summary .error-summary-list a {
+    color: #b10e1e;
+    font-weight: bold;
+    text-decoration: underline;
 }

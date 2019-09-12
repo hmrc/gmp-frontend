@@ -21,8 +21,8 @@ import models.{GmpDate, InflationProof}
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.data.FormError
 import play.api.i18n.Messages
-import play.api.libs.json.Json
 import play.api.i18n.Messages.Implicits._
+import play.api.libs.json.Json
 
 class inflationProofFormSpec extends PlaySpec with OneAppPerSuite {
 

@@ -17,7 +17,7 @@
 package models
 
 import org.joda.time.LocalDateTime
-import play.api.libs.json.{JsString, Writes, Reads, Json}
+import play.api.libs.json.{JsString, Json, Reads, Writes}
 
 case class BulkPreviousRequest(uploadReference: String, reference: String, timestamp: LocalDateTime, processedDateTime: LocalDateTime)
 

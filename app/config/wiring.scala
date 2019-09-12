@@ -23,14 +23,13 @@ import play.api.Mode.Mode
 import play.api.{Configuration, Environment, Play}
 import uk.gov.hmrc.http._
 import uk.gov.hmrc.http.cache.client.SessionCache
-import uk.gov.hmrc.http.hooks.{HttpHook, HttpHooks}
+import uk.gov.hmrc.http.hooks.HttpHook
 import uk.gov.hmrc.play.audit.http.HttpAuditing
 import uk.gov.hmrc.play.audit.http.config.AuditingConfig
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.config.{AppName, RunMode, ServicesConfig}
-import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
-import uk.gov.hmrc.play.http.ws._
 import uk.gov.hmrc.play.frontend.config.LoadAuditingConfig
+import uk.gov.hmrc.play.http.ws._
 
 class GmpFrontendAuditConnector @Inject()(environment: Environment, configuration: Configuration) extends AuditConnector with AppName with RunMode {
   lazy val auditingConfig: AuditingConfig = LoadAuditingConfig(s"auditing")
@@ -52,14 +51,6 @@ trait WSHttp extends HttpGet with WSGet with HttpPut with WSPut with HttpPost wi
 }
 
 object WSHttp extends WSHttp with Hooks
-
-object GmpFrontendAuthConnector extends AuthConnector with ServicesConfig {
-  val serviceUrl = baseUrl("auth")
-  lazy val http = WSHttp
-
-  override protected def mode: Mode = Play.current.mode
-  override protected def runModeConfiguration: Configuration = Play.current.configuration
-}
 
 class GmpSessionCache @Inject()(environment: Environment,
                                 configuration: Configuration,

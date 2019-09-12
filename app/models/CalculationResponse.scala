@@ -17,12 +17,12 @@
 package models
 
 import org.joda.time.LocalDate
+import play.api.Play.current
+import play.api.i18n.Messages
+import play.api.i18n.Messages.Implicits._
 import play.api.libs.json.Json
 import uk.gov.hmrc.time.TaxYear
-import play.api.i18n.Messages
 import views.helpers.GmpDateFormatter._
-import play.api.i18n.Messages.Implicits._
-import play.api.Play.current
 
 case class ContributionsAndEarnings(taxYear: Int, contEarnings: String)
 

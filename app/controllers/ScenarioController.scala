@@ -17,22 +17,22 @@
 package controllers
 
 import com.google.inject.{Inject, Singleton}
-import connectors.GmpConnector
-import controllers.auth.GmpRegime
+import controllers.auth.AuthAction
 import forms.ScenarioForm._
 import play.api.Logger
 import play.api.Play.current
 import play.api.i18n.Messages
 import play.api.i18n.Messages.Implicits._
-import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
+import uk.gov.hmrc.auth.core.AuthConnector
 
 import scala.concurrent.Future
 
 @Singleton
-class ScenarioController @Inject()(override val authConnector: AuthConnector) extends GmpPageFlow(authConnector) {
+class ScenarioController @Inject()(authAction: AuthAction,
+                                   override val authConnector: AuthConnector
+                                  ) extends GmpPageFlow(authConnector) {
 
-  def get = AuthorisedFor(GmpRegime, pageVisibilityPredicate).async {
-    implicit user =>
+  def get = authAction.async {
       implicit request => sessionService.fetchGmpSession() map {
         case Some(session) => session match {
           case _ if session.scon == "" => Ok(views.html.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/pension-details"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title")))
@@ -43,10 +43,8 @@ class ScenarioController @Inject()(override val authConnector: AuthConnector) ex
       }      
   }
 
-  def post = AuthorisedFor(GmpRegime, pageVisibilityPredicate).async {
-
-    implicit user =>
-      implicit request => {
+  def post = authAction.async {
+     implicit request => {
 
         Logger.debug(s"[ScenarioController][post][POST] : ${request.body}")
 
@@ -64,10 +62,8 @@ class ScenarioController @Inject()(override val authConnector: AuthConnector) ex
       }
   }
 
-  def back = AuthorisedFor(GmpRegime, pageVisibilityPredicate).async {
-
-    implicit user =>
-      implicit request => {
+  def back = authAction.async {
+     implicit request => {
         sessionService.fetchGmpSession() map {
           case Some(session) => previousPage("ScenarioController", session)
           case _ => throw new RuntimeException

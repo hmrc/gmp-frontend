@@ -39,84 +39,71 @@
 
 @gmp_main(title = heading + " - " + Messages("service.title") + " - " + Messages("gov.uk"), pageScripts = Some(pageScripts)) {
 
-@views.html.helpers.errorSummary(dateOfLeavingForm, formHeaderKey=heading.toString)
+        @includes.back_link(Messages("gmp.bulk.problem.header"))
 
-  <div class="grid">
-      @includes.back_link(Messages("gmp.bulk.problem.header"))
-      <div class="grid-2-3">
-          <h1>
-              @heading
-          </h1>
-      </div>
-  </div>
+        @views.html.helpers.errorSummary(dateOfLeavingForm, formHeaderKey=heading.toString)
 
-    <div class="grid">
-        <div class="grid-2-3">
+          <h1>@heading</h1>
 
             @form(action = routes.DateOfLeavingController.post) {
 
-                <div class="form-group-leaving-options">
-                    @if(scenario == CalculationType.DOL){
-                        <div class="form-group-leaving-options inline">
-                            @dolRadioGroup(
-                                dateOfLeavingForm("leaving"),
-                                Seq(
-                                  (Leaving.YES_BEFORE, "none", Leaving.YES_BEFORE) -> Messages("gmp.generic.yes"),
-                                  (Leaving.YES_AFTER, "leaving-date", Leaving.YES_AFTER) -> Messages("gmp.generic.no")
-                                ),
-                                '_fieldsetAttributesLegend -> "leaving",
-                                '_legend -> Messages("gmp.leaving.dol.question"),
-                                '_legendClass -> "visuallyhidden",
-                                '_labelAfter -> true,
-                                '_labelClass -> "block-label",
-                                '_groupClass -> "inline-block",
-                                '_trackGA -> true)
-                        </div>
-                    } else{
-                        <div class="form-group-leaving-options">
-                            @dolRadioGroup(
+            <div class="form-field @if(dateOfLeavingForm.hasErrors && !dateOfLeavingForm.hasGlobalErrors) {form-field--error}" id="leaving">
+
+                @if(scenario == CalculationType.DOL){
+                        @gmpRadioGroup(
                             dateOfLeavingForm("leaving"),
-                            scenario match {
-                            case CalculationType.SURVIVOR =>
                             Seq(
-                            (Leaving.NO  , "none" , Leaving.NO) -> Messages("gmp.dol.threequestions.no.survivor"),
-                            (Leaving.YES_BEFORE  , "none" , Leaving.YES_BEFORE) -> Messages("gmp.dol.threequestions.before2016"),
-                            (Leaving.YES_AFTER  , "leaving-date" ,  Leaving.YES_AFTER) -> Messages("gmp.dol.threequestions.after2016")
-                            )
-                            case _ =>
-                            Seq(
-                            (Leaving.NO  , "none" , Leaving.NO) -> Messages("gmp.dol.threequestions.no"),
-                            (Leaving.YES_BEFORE  , "none" , Leaving.YES_BEFORE) -> Messages("gmp.dol.threequestions.before2016"),
-                            (Leaving.YES_AFTER  , "leaving-date" ,  Leaving.YES_AFTER) -> Messages("gmp.dol.threequestions.after2016")
-                            )
-                            },
-                            '_fieldsetAttributesLegend -> "leaving",
-                            scenario match {
-                                case CalculationType.SURVIVOR => '_legend -> Messages("gmp.survivor.dol.question")
-                                case _ => '_legend -> Messages("gmp.other.dol.left.question")
-                            },
+                              (Leaving.YES_BEFORE, Leaving.YES_BEFORE, "none") -> Messages("gmp.generic.yes"),
+                              (Leaving.YES_AFTER, Leaving.YES_AFTER, "leaving-date") -> Messages("gmp.generic.no")
+                            ),
+                            '_fieldsetAttributes -> "class=inline",
+                            '_legend -> Messages("gmp.leaving.dol.question"),
                             '_legendClass -> "visuallyhidden",
                             '_labelAfter -> true,
                             '_labelClass -> "block-label",
                             '_groupClass -> "inline-block",
-                            '_trackGA -> true
-                            )
-                        </div>
-                    }
-                </div>
-
-                @if(dateOfLeavingForm.hasErrors || dateOfLeavingForm.hasGlobalErrors) {
-                  <div class="form-field--error gmp-js-hidden form-date" id="leaving-date">
-                } else {
-                  <div class="panel-indent-leaving-date gmp-js-hidden form-date" id="leaving-date">
+                            '_trackGA -> true)
+                } else{
+                        @gmpRadioGroup(
+                        dateOfLeavingForm("leaving"),
+                        scenario match {
+                        case CalculationType.SURVIVOR =>
+                        Seq(
+                        (Leaving.NO , Leaving.NO, "none") -> Messages("gmp.dol.threequestions.no.survivor"),
+                        (Leaving.YES_BEFORE, Leaving.YES_BEFORE, "none") -> Messages("gmp.dol.threequestions.before2016"),
+                        (Leaving.YES_AFTER, Leaving.YES_AFTER, "leaving-date") -> Messages("gmp.dol.threequestions.after2016")
+                        )
+                        case _ =>
+                        Seq(
+                        (Leaving.NO, Leaving.NO, "none") -> Messages("gmp.dol.threequestions.no"),
+                        (Leaving.YES_BEFORE, Leaving.YES_BEFORE, "none") -> Messages("gmp.dol.threequestions.before2016"),
+                        (Leaving.YES_AFTER,  Leaving.YES_AFTER, "leaving-date") -> Messages("gmp.dol.threequestions.after2016")
+                        )
+                        },
+                        scenario match {
+                            case CalculationType.SURVIVOR => '_legend -> Messages("gmp.survivor.dol.question")
+                            case _ => '_legend -> Messages("gmp.other.dol.left.question")
+                        },
+                        '_legendClass -> "visuallyhidden",
+                        '_labelAfter -> true,
+                        '_labelClass -> "block-label",
+                        '_groupClass -> "inline-block",
+                        '_trackGA -> true
+                        )
                 }
+            </div>
 
+            @if(dateOfLeavingForm.hasGlobalErrors) {
+              <div class="form-field--error form-field js-hidden" id="leaving-date">
+            } else {
+              <div class="form-field js-hidden" id="leaving-date">
+            }
                     <fieldset id="termination-date">
 
                         <legend id="leavingDate">
                             <span class="form-label-bold" id="date_header">@Messages("gmp.date.header_text")</span>
+                            <span class="form-hint" id="date_hint">@Messages("gmp.date.example")</span>
                         </legend>
-                        <p class="form-hint" id="date_hint">@Messages("gmp.date.example")</p>
 
                         <div class="form-date">
 
@@ -127,39 +114,38 @@
                                 }
                             }
 
-                            <div class="form-group-leaving-options">
+                            <div class="form-group form-group-day">
                               @gmpInput(dateOfLeavingForm("leavingDate.day"),
                               '_label -> Html(Messages("gmp.day")),
                               '_id -> "leavingDate_day",
-                              '_maxLength -> 2)
+                              '_maxLength -> 2,
+                              '_dataAttributes -> "aria-describedby=date_hint")
                             </div>
-                            <div class="form-group-leaving-options">
+                            <div class="form-group form-group-month">
                               @gmpInput(dateOfLeavingForm("leavingDate.month"),
                               '_label -> Html(Messages("gmp.month")),
                               '_id -> "leavingDate_month",
-                              '_maxLength -> 2)
+                              '_maxLength -> 2,
+                              '_dataAttributes -> "aria-describedby=date_hint")
                             </div>
-                            <div class="form-group-leaving-options">
+                            <div class="form-group form-group-year">
                               @gmpInput(dateOfLeavingForm("leavingDate.year"),
                               '_label -> Html(Messages("gmp.year")),
                               '_id -> "leavingDate_year",
                               '_maxLength ->4,
+                              '_dataAttributes -> "aria-describedby=date_hint",
                               '_inputClass -> " form-control year-input")
                             </div>
-                            <br/>
-                            <br/>
 
                         </div>
                     </fieldset>
-                </div>
+            </div>
 
-                <div>
-                  <br/>
-                  <button class="button" data-journey-click='@Messages("gmp.ga-track.button.click"):@heading:@Messages("gmp.continue.button")'
-                          type="submit" id="submit-button">@Messages("gmp.continue.button")</button>
-                </div>
+            <div>
+              <br/>
+              <button class="button" data-journey-click='@Messages("gmp.ga-track.button.click"):@heading:@Messages("gmp.continue.button")'
+                      type="submit" id="submit-button">@Messages("gmp.continue.button")</button>
+            </div>
 
-            }
-        </div>
-    </div>
+      }
 }

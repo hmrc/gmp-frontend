@@ -28,11 +28,8 @@ import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
 import play.api.Environment
 import play.api.libs.json.Json
 import play.api.test.Helpers._
-import uk.gov.hmrc.domain.PsaId
-import uk.gov.hmrc.http.logging.SessionId
 import uk.gov.hmrc.http._
-import uk.gov.hmrc.play.frontend.auth.AuthContext
-import uk.gov.hmrc.play.frontend.auth.connectors.domain._
+import uk.gov.hmrc.http.logging.SessionId
 
 import scala.concurrent.Future
 
@@ -48,7 +45,6 @@ class GmpBulkConnectorSpec extends PlaySpec with OneServerPerSuite with MockitoS
   "The GMP Bulk Connector" must {
 
     implicit val hc = new HeaderCarrier(sessionId = Some(SessionId(s"session-${UUID.randomUUID}")))
-    implicit val user = AuthContext(authority = Authority("1234", Accounts(psa = Some(PsaAccount(link, PsaId(psaId)))), None, None, CredentialStrength.None, ConfidenceLevel.L50, None, None, None, ""))
 
     "send a bulk request with valid data" in {
 
@@ -60,7 +56,7 @@ class GmpBulkConnectorSpec extends PlaySpec with OneServerPerSuite with MockitoS
           "bob", "bobbleton", Some("bobby"), Some(0), Some("2012-02-02"), None, None, 0)),
           None, None)))
 
-      val result = testGmpBulkConnector.sendBulkRequest(bcr)
+      val result = testGmpBulkConnector.sendBulkRequest(bcr,link)
       (await(result)) must be(OK)
 
     }
@@ -75,7 +71,7 @@ class GmpBulkConnectorSpec extends PlaySpec with OneServerPerSuite with MockitoS
           "bob", "bobbleton", Some("bobby"), Some(0), Some("2012-02-02"), None, None, 0)),
           None, None)))
 
-      val result = testGmpBulkConnector.sendBulkRequest(bcr)
+      val result = testGmpBulkConnector.sendBulkRequest(bcr,link)
       (await(result)) must be(CONFLICT)
     }
 
@@ -89,7 +85,7 @@ class GmpBulkConnectorSpec extends PlaySpec with OneServerPerSuite with MockitoS
           "bob", "bobbleton", Some("bobby"), Some(0), Some("2012-02-02"), None, None, 0)),
           None, None)))
 
-      val result = testGmpBulkConnector.sendBulkRequest(bcr)
+      val result = testGmpBulkConnector.sendBulkRequest(bcr,link)
       (await(result)) must be(REQUEST_ENTITY_TOO_LARGE)
     }
 
@@ -103,7 +99,7 @@ class GmpBulkConnectorSpec extends PlaySpec with OneServerPerSuite with MockitoS
           "bob", "bobbleton", Some("bobby"), Some(0), Some("2012-02-02"), None, None, 0)),
           None, None)))
 
-      val result = testGmpBulkConnector.sendBulkRequest(bcr)
+      val result = testGmpBulkConnector.sendBulkRequest(bcr,link)
       (await(result)) must be(500)
     }
 
@@ -116,7 +112,7 @@ class GmpBulkConnectorSpec extends PlaySpec with OneServerPerSuite with MockitoS
       when(mockHttpGet.GET[List[BulkPreviousRequest]]( Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any()))
         .thenReturn(Future.successful(bulkPreviousRequest.as[List[BulkPreviousRequest]]))
 
-      val result = testGmpBulkConnector.getPreviousBulkRequests
+      val result = testGmpBulkConnector.getPreviousBulkRequests(link)
       val resolvedResult = await(result)
 
       resolvedResult.head.uploadReference must be("uploadRef")
@@ -127,7 +123,7 @@ class GmpBulkConnectorSpec extends PlaySpec with OneServerPerSuite with MockitoS
 
       when(mockHttpGet.GET[BulkResultsSummary](Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(BulkResultsSummary("test",1,1)))
 
-      val result = testGmpBulkConnector.getBulkResultsSummary("")
+      val result = testGmpBulkConnector.getBulkResultsSummary("",link)
       (await(result)).reference must be("test")
     }
 
@@ -135,7 +131,7 @@ class GmpBulkConnectorSpec extends PlaySpec with OneServerPerSuite with MockitoS
 
       when(mockHttpGet.GET[HttpResponse](Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(HttpResponse(responseStatus = OK,responseString = Some("THIS IS A CSV STRING"))))
 
-      val result = testGmpBulkConnector.getResultsAsCsv("","")
+      val result = testGmpBulkConnector.getResultsAsCsv("","",link)
       val resolvedResult = await(result)
 
       resolvedResult.body must be("THIS IS A CSV STRING")
@@ -145,7 +141,7 @@ class GmpBulkConnectorSpec extends PlaySpec with OneServerPerSuite with MockitoS
 
       when(mockHttpGet.GET[HttpResponse](Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(HttpResponse(responseStatus = OK,responseString = Some("THIS IS A CSV STRING"))))
 
-      val result = testGmpBulkConnector.getContributionsAndEarningsAsCsv("")
+      val result = testGmpBulkConnector.getContributionsAndEarningsAsCsv("",link)
       val resolvedResult = await(result)
 
       resolvedResult.body must be("THIS IS A CSV STRING")

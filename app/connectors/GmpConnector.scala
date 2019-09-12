@@ -23,7 +23,6 @@ import play.api.Mode.Mode
 import play.api.{Configuration, Environment, Logger}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpGet, HttpPost, HttpPut}
 import uk.gov.hmrc.play.config.ServicesConfig
-import uk.gov.hmrc.play.frontend.auth.AuthContext
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -39,15 +38,9 @@ class GmpConnector @Inject()(environment: Environment,
 
   lazy val serviceURL = baseUrl("gmp")
 
-  def getUser(user: AuthContext): String = {
-    user.principal.accounts.psa.map(_.link).getOrElse(
-      user.principal.accounts.psp.map(_.link).getOrElse(
-        throw new RuntimeException("User Authorisation failed"))).substring(5)
-  }
+  def calculateSingle(calculationRequest: CalculationRequest, link: String)(implicit headerCarrier: HeaderCarrier): Future[CalculationResponse] = {
 
-  def calculateSingle(calculationRequest: CalculationRequest)(implicit user: AuthContext, headerCarrier: HeaderCarrier): Future[CalculationResponse] = {
-
-    val gmpLink = "/gmp/" + getUser(user)
+    val gmpLink = "/gmp/" + link
 
     val baseURI = "gmp/calculate"
     val calculateUri = s"$serviceURL$gmpLink/$baseURI"
@@ -74,9 +67,9 @@ class GmpConnector @Inject()(environment: Environment,
     result
   }
 
-  def validateScon(validateSconRequest: ValidateSconRequest)(implicit user: AuthContext, headerCarrier: HeaderCarrier): Future[ValidateSconResponse] = {
+  def validateScon(validateSconRequest: ValidateSconRequest, link: String)(implicit headerCarrier: HeaderCarrier): Future[ValidateSconResponse] = {
 
-    val gmpLink = "/gmp/" + getUser(user)
+    val gmpLink = "/gmp/" + link
 
     val baseURI = "gmp/validateScon"
     val validateSconUri = s"$serviceURL$gmpLink/$baseURI"

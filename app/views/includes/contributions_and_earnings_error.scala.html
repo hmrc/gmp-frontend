@@ -18,27 +18,23 @@
 
 @import config.ApplicationConfig.globalErrors
 
-<div class="grid">
-    <div class="grid-2-3">
 
-        <div class="global-error">
+    <div class="global-error">
 
-            <h2 id="conts-and-earnings-error-header">@{Messages("gmp.only_part_problem")}</h2>
+        <h2 id="conts-and-earnings-error-header">@{Messages("gmp.only_part_problem")}</h2>
 
-            <div id="conts-and-earnings-error-message">
-                @for((period, count) <- calculationResponse.calculationPeriods.zipWithIndex){
-                    @if(period.errorCode != 0){
-                        <a class="error-message" href="#period-row-in-error-@count">@{Messages("gmp.contracted_out_period_error" ,s"${period.startDate.get.toString("dd/MM/yyyy")} to ${period.endDate.toString("dd/MM/yyyy")}")}</a><br/>
-                    }
+        <div id="conts-and-earnings-error-message">
+            @for((period, count) <- calculationResponse.calculationPeriods.zipWithIndex){
+                @if(period.errorCode != 0){
+                    <a class="error-message" href="#period-row-in-error-@count">@{Messages("gmp.contracted_out_period_error" ,s"${period.startDate.get.toString("dd/MM/yyyy")} to ${period.endDate.toString("dd/MM/yyyy")}")}</a><br/>
                 }
-            </div>
-
-            <p id="conts-and-earnings-error-reason">@Messages("gmp.error.no_conts_and_earnings").</p>
-
+            }
         </div>
 
+        <p id="conts-and-earnings-error-reason">@Messages("gmp.error.no_conts_and_earnings").</p>
+
     </div>
-</div>
+
 
 <br/>
 

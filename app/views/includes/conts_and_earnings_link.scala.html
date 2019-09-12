@@ -20,12 +20,10 @@
 @(calculationResponse:CalculationResponse)(implicit request: Request[_])
 
 @if(calculationResponse.globalErrorCode == 0 && calculationResponse.numPeriodsInError < calculationResponse.calculationPeriods.size) {
-    <div class="grid" id="conts-earnings-link-div">
-        <div class="grid-2-3">
+    <div id="conts-earnings-link-div">
             <a href="@routes.ResultsController.getContributionsAndEarnings" id="conts-earnings-link">
                 @Html(Messages("gmp.link.contributions-earnings"))
             </a>
 
-        </div>
     </div>
 }

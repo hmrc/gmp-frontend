@@ -22,29 +22,24 @@
 
 @gmp_main(title = Messages("gmp.equalise_header")+ " - " + Messages("service.title") + " - " + Messages("gov.uk")) {
 
-  @views.html.helpers.errorSummary(equaliseForm, formHeaderKey = "gmp.equalise_header")
-
-  <div class="grid">
       @includes.back_link(Messages("gmp.equalise_header"))
-      <div class="grid-2-3">
-          <h1>@Messages("gmp.equalise_header")</h1>
-      </div>
-  </div> <br>
 
-  <div class="grid">
-    <div class="grid-2-3">
+      @views.html.helpers.errorSummary(equaliseForm, formHeaderKey = "gmp.equalise_header")
+
+
+      <h1>@Messages("gmp.equalise_header")</h1>
+
 
       @form(action = routes.EqualiseController.post) {
 
-      <div class="form-group">
 
-        <div class="form-group inline">
+        <div class="form-field inline @if(equaliseForm.hasErrors) {form-field--error}">
 
           @gmpRadioGroup(
             equaliseForm("equalise"),
             Seq(
-              "1"  -> "yes" -> Messages("gmp.generic.yes"),
-              "0"  -> "no" -> Messages("gmp.generic.no")
+              ("1", "yes", "none") -> Messages("gmp.generic.yes"),
+              ("0", "no", "none") -> Messages("gmp.generic.no")
             ),
             '_fieldsetAttributesLegend -> "equalise",
             '_legend -> Messages("gmp.equalise_header"),
@@ -56,16 +51,9 @@
 
         </div>
 
-        <div>
           <button data-journey-click='@Messages("gmp.ga-track.button.click"):@Messages("gmp.equalise_header"):@Messages("gmp.continue.button")'
                   class="button" type="submit" id="submit-button">@Messages("gmp.continue.button")</button>
-        </div>
 
-      </div>
 
-      }
-
-    </div>
-  </div>
-
+   }
 }

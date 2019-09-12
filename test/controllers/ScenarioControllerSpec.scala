@@ -16,6 +16,7 @@
 
 package controllers
 
+import controllers.auth.{AuthAction, FakeAuthAction}
 import helpers.RandomNino
 import models._
 import org.mockito.Matchers
@@ -29,16 +30,17 @@ import play.api.mvc.{AnyContentAsEmpty, Result}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.SessionService
-import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
+import uk.gov.hmrc.auth.core.AuthConnector
 
 import scala.concurrent.Future
 
-class ScenarioControllerSpec extends PlaySpec with OneServerPerSuite with MockitoSugar with GmpUsers {
+class ScenarioControllerSpec extends PlaySpec with OneServerPerSuite with MockitoSugar {
 
   val mockAuthConnector = mock[AuthConnector]
   val mockSessionService = mock[SessionService]
+  val mockAuthAction = mock[AuthAction]
 
-  object TestScenarioController extends ScenarioController(mockAuthConnector) {
+  object TestScenarioController extends ScenarioController(FakeAuthAction, mockAuthConnector) {
     override val sessionService = mockSessionService
     override val context = FakeGmpContext
   }
@@ -49,40 +51,16 @@ class ScenarioControllerSpec extends PlaySpec with OneServerPerSuite with Mockit
 
   "ScenarioController GET" must {
 
-    "respond to GET /guaranteed-minimum-pension/calculation-reason" in {
-      val result = route(FakeRequest(GET, "/guaranteed-minimum-pension/calculation-reason"))
-      status(result.get) must not equal (NOT_FOUND)
-    }
-
-    "be authorised" in {
-      getCalculationReason() { result =>
-        status(result) must equal(SEE_OTHER)
-        redirectLocation(result).get must include("/gg/sign-in")
-      }
-    }
-
     "respond with ok" in {
       when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
-      withAuthorisedUser { user =>
-        getCalculationReason(user) { result =>
+      val result = TestScenarioController.get(FakeRequest())
           status(result) must equal(OK)
           contentAsString(result) must include(Messages("gmp.scenarios.title"))
-        }
-      }
-    }
-
-    "respond with a Forbidden response when the users confidence level is to low" in {
-      withAuthorisedUserLowConfidenceLevel { user =>
-        getCalculationReason(user) { result =>
-          status(result) must equal(FORBIDDEN)
-        }
-      }
     }
 
     "return the correct scenarios" in {
       when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
-      withAuthorisedUser { user =>
-        getCalculationReason(user) { result =>
+      val result = TestScenarioController.get(FakeRequest())
           status(result) must equal(OK)
           contentAsString(result) must include(Messages("gmp.scenarios.payable_age"))
           contentAsString(result) must include(Messages("gmp.scenarios.spa"))
@@ -90,71 +68,50 @@ class ScenarioControllerSpec extends PlaySpec with OneServerPerSuite with Mockit
           contentAsString(result) must include(Messages("gmp.scenarios.leaving"))
           contentAsString(result) must include(Messages("gmp.scenarios.specific_date"))
           contentAsString(result) must include(Messages("gmp.back.link"))
-        }
-      }
     }
 
     "go to failure page when session missing scon" in {
       when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(emptySession)))
-      withAuthorisedUser { request =>
-        val result = TestScenarioController.get.apply(request)
+        val result = TestScenarioController.get(FakeRequest())
         contentAsString(result)replaceAll("&#x27;", "'") must include (Messages("gmp.cannot_calculate.gmp"))
         contentAsString(result) must include (Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/pension-details"))
-      }
     }
 
     "go to failure page when session missing member details" in {
       when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(emptySession.copy(scon="S1234567T"))))
-      withAuthorisedUser { request =>
-        val result = TestScenarioController.get.apply(request)
+
+        val result = TestScenarioController.get(FakeRequest())
         contentAsString(result)replaceAll("&#x27;", "'") must include (Messages("gmp.cannot_calculate.gmp"))
         contentAsString(result) must include (Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/member-details"))
-      }
     }
 
     "go to failure page when no session" in {
       when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(None))
-      withAuthorisedUser { request =>
-        val result = TestScenarioController.get.apply(request)
+
+        val result = TestScenarioController.get(FakeRequest())
         contentAsString(result)replaceAll("&#x27;", "'") must include (Messages("gmp.cannot_calculate.gmp"))
         contentAsString(result) must include (Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/dashboard"))
-      }
     }
 
   }
 
   "ScenarioController back" must {
 
-    "respond to GET guaranteed-minimum-pension/calculation-reason/back" in {
-      val result = route(FakeRequest(GET, "/guaranteed-minimum-pension/calculation-reason/back"))
-      status(result.get) must not equal (NOT_FOUND)
-    }
-
-    "be authorised" in {
-      val result = TestScenarioController.back.apply(FakeRequest())
-      status(result) must equal(SEE_OTHER)
-      redirectLocation(result).get must include("/gg/sign-in")
-    }
-
     "redirect when authorised" in {
       val memberDetails = MemberDetails("", "", "")
       val session = GmpSession(memberDetails, "", "", None, None, Leaving(GmpDate(None, None, None), None), None)
 
-      withAuthorisedUser { request =>
         when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(session)))
-        val result = TestScenarioController.back.apply(request)
+        val result = TestScenarioController.back(FakeRequest())
         status(result) must equal(SEE_OTHER)
-      }
     }
 
     "throw an exception when session not fetched" in {
 
-      withAuthorisedUser { request =>
         when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(None))
-        val result = TestScenarioController.back.apply(request)
+        val result = TestScenarioController.back(FakeRequest())
         intercept[RuntimeException] {
           status(result)
-        }
       }
     }
 
@@ -163,22 +120,12 @@ class ScenarioControllerSpec extends PlaySpec with OneServerPerSuite with Mockit
 
   "ScenarioController POST" must {
 
-    "be authorised" in {
-      postCalculationReason() { result =>
-        status(result) must equal(SEE_OTHER)
-        redirectLocation(result).get must include("/gg/sign-in")
-      }
-    }
-
     "respond with bad request must choose option" in {
-      withAuthorisedUser {
-        request =>
-          val result = TestScenarioController.post()(request)
 
+          val result = TestScenarioController.post()(FakeRequest())
 
           status(result) must equal(BAD_REQUEST)
           contentAsString(result) must include(Messages("gmp.error.scenario.mandatory"))
-      }
     }
 
     "redirect when a choice is made" in {
@@ -187,29 +134,23 @@ class ScenarioControllerSpec extends PlaySpec with OneServerPerSuite with Mockit
       when(mockSessionService.cacheScenario(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
 
       val validReason = Json.toJson(CalculationType(Some(CalculationType.DOL)))
-      withAuthorisedUser { request =>
-        val result = TestScenarioController.post()(request.withJsonBody(validReason))
+
+        val result = TestScenarioController.post()(FakeRequest().withJsonBody(validReason))
         status(result) must equal(SEE_OTHER)
-      }
     }
 
     "respond with exception when session cache fails" in {
       when(mockSessionService.cacheScenario(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(None))
       val validReason = Json.toJson(CalculationType(Some(CalculationType.DOL)))
-      withAuthorisedUser { request =>
         intercept[RuntimeException]{
-          await(TestScenarioController.post()(request.withJsonBody(validReason)))
-        }
+          await(TestScenarioController.post()(FakeRequest().withJsonBody(validReason)))
+
       }
     }
   }
 
-  def getCalculationReason(request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest())(handler: Future[Result] => Any): Unit = {
-    handler(TestScenarioController.get.apply(request))
-  }
-
   def postCalculationReason(request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest())(handler: Future[Result] => Any): Unit = {
-    handler(TestScenarioController.post.apply(request))
+    handler(TestScenarioController.post(request))
   }
 
 }

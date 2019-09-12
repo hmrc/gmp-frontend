@@ -16,96 +16,70 @@
 
 package controllers
 
+import controllers.auth.{AuthAction, FakeAuthAction}
 import models._
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
 import play.api.i18n.Messages
+import play.api.i18n.Messages.Implicits._
 import play.api.libs.json.Json
-import play.api.mvc.{Result, AnyContentAsEmpty}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import play.api.i18n.Messages.Implicits._
 import services.SessionService
-import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
+import uk.gov.hmrc.auth.core.AuthConnector
 
 import scala.concurrent.Future
 
-class EqualiseControllerSpec extends PlaySpec with OneServerPerSuite with MockitoSugar with GmpUsers {
+class EqualiseControllerSpec extends PlaySpec with OneServerPerSuite with MockitoSugar {
 
   val mockAuthConnector = mock[AuthConnector]
   val mockSessionService = mock[SessionService]
+  val mockAuthAction = mock[AuthAction]
 
-  object TestEqualiseController extends EqualiseController(mockAuthConnector, mockSessionService) {
+  object TestEqualiseController extends EqualiseController(FakeAuthAction, mockAuthConnector, mockSessionService) {
     override val context = FakeGmpContext
   }
 
   "EqualiseController GET" must {
 
-    "respond to GET /guaranteed-minimum-pension/equalise" in {
-      val result = route(FakeRequest(GET, "/guaranteed-minimum-pension/equalise"))
-      status(result.get) must not equal (NOT_FOUND)
-    }
-
-    "be authorised" in {
-      getEqualise() { result =>
-        status(result) must equal(SEE_OTHER)
-        redirectLocation(result).get must include("/gg/sign-in")
-      }
-    }
-
     "respond with ok" in {
 
-      withAuthorisedUser { user =>
-        getEqualise(user) { result =>
-          status(result) must equal(OK)
-          contentAsString(result) must include(Messages("gmp.equalise_header"))
-        }
-      }
+      val result = TestEqualiseController.get(FakeRequest())
+      status(result) must equal(OK)
+      contentAsString(result) must include(Messages("gmp.equalise_header"))
     }
 
     "present the equalise page" in {
       when(mockSessionService.fetchMemberDetails()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(None))
-      withAuthorisedUser { request =>
-        val result = TestEqualiseController.get.apply(request)
+
+        val result = TestEqualiseController.get(FakeRequest())
         contentAsString(result) must include(Messages("gmp.equalise_header"))
         contentAsString(result) must include(Messages("gmp.back.link"))
         contentAsString(result) must include(Messages("gmp.continue.button"))
-      }
     }
 
   }
 
   "BACK" must {
 
-    "be authorised" in {
-      val result = TestEqualiseController.back.apply(FakeRequest())
-      status(result) must equal(SEE_OTHER)
-      redirectLocation(result).get must include("/gg/sign-in")
-    }
-
-
     "authorised users redirect" in {
 
       val memberDetails = MemberDetails("", "", "")
       val session = GmpSession(memberDetails, "", CalculationType.REVALUATION, None, None, Leaving(GmpDate(None, None, None), None), None)
 
-      withAuthorisedUser { request =>
         when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(session)))
-        val result = TestEqualiseController.back.apply(request)
+        val result = TestEqualiseController.back(FakeRequest())
         status(result) must equal(SEE_OTHER)
-      }
     }
 
     "throw an exception when session not fetched" in {
 
-      withAuthorisedUser { request =>
         when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(None))
-        val result = TestEqualiseController.back.apply(request)
+        val result = TestEqualiseController.back(FakeRequest())
         intercept[RuntimeException] {
           status(result)
-        }
       }
     }
 
@@ -116,24 +90,16 @@ class EqualiseControllerSpec extends PlaySpec with OneServerPerSuite with Mockit
 
     "with invalid data" must {
 
-      "be authorised" in {
-        val result = TestEqualiseController.post.apply(FakeRequest())
-        status(result) must equal(SEE_OTHER)
-        redirectLocation(result).get must include("/gg/sign-in")
-      }
-
       "authenticated users" must {
 
         "with invalid data" must {
 
           "respond with bad request must choose option" in {
-            withAuthorisedUser {
-              request =>
-                val result = TestEqualiseController.post()(request)
+
+                val result = TestEqualiseController.post()(FakeRequest())
 
                 status(result) must equal(BAD_REQUEST)
                 contentAsString(result) must include(Messages("gmp.error.equalise.error_message"))
-            }
           }
         }
 
@@ -144,24 +110,21 @@ class EqualiseControllerSpec extends PlaySpec with OneServerPerSuite with Mockit
           "redirect" in {
 
             when(mockSessionService.cacheEqualise(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
-            withAuthorisedUser { request =>
+
               val postData = Json.toJson(
                 Equalise(Some(1))
               )
-              val result = TestEqualiseController.post.apply(request.withJsonBody(postData))
+              val result = TestEqualiseController.post(FakeRequest().withJsonBody(postData))
               status(result) must equal(SEE_OTHER)
-            }
           }
 
           "respond with error when rate not stored" in {
             when(mockSessionService.cacheEqualise(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(None))
-            withAuthorisedUser { request =>
               val postData = Json.toJson(
                 Equalise(Some(1))
               )
               intercept[RuntimeException] {
-                await(TestEqualiseController.post.apply(request.withJsonBody(postData)))
-              }
+                await(TestEqualiseController.post(FakeRequest().withJsonBody(postData)))
             }
           }
         }
@@ -169,9 +132,4 @@ class EqualiseControllerSpec extends PlaySpec with OneServerPerSuite with Mockit
       }
     }
   }
-
-  def getEqualise(request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest())(handler: Future[Result] => Any): Unit = {
-    handler(TestEqualiseController.get.apply(request))
-  }
-
 }

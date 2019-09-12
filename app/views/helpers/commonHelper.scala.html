@@ -18,7 +18,6 @@
 
 @errors.zipWithIndex.map { case (error, index) =>
 <span class="error-notification"
-      role="tooltip"
       data-journey="gmp:error:@field.name"
       id="@(field.name)-error-@index">
                     @Messages(error.message)

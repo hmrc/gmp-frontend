@@ -23,18 +23,12 @@ import models.{CalculationType, GmpSession, Leaving}
 import play.api.Play
 import play.api.mvc.Result
 import services.SessionService
-import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
-import uk.gov.hmrc.play.frontend.auth.connectors.domain.ConfidenceLevel
-import uk.gov.hmrc.play.frontend.auth.{Actions, IdentityConfidencePredicate}
+import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.play.frontend.controller.FrontendController
 import uk.gov.hmrc.time.TaxYear
 
-import scala.concurrent.Future
-
-trait GmpController extends FrontendController with Actions{
-  val pageVisibilityPredicate = new IdentityConfidencePredicate(ConfidenceLevel.L50, Future.successful(Forbidden))
+trait GmpController extends FrontendController{
   val sessionService: SessionService = Play.current.injector.instanceOf[SessionService]
-
   implicit val context: config.GmpContext = Play.current.injector.instanceOf[GmpContext]
 }
 

@@ -25,18 +25,14 @@
 @gmp_main(title = Messages("gmp.fileupload.header") + " - " + Messages("service.title") + " - " + Messages("gov.uk")) {
 
 
-<div class="grid">
-    @includes.back_link(Messages("gmp.bulk_reference.header"))
-    <div class="grid-2-3">
-        <h1>@Messages("gmp.fileupload.header")</h1>
+@includes.back_link(Messages("gmp.bulk_reference.header"))
+    <h1>@Messages("gmp.fileupload.header")</h1>
 
-        <br>
-        <p>@Html(Messages("gmp.fileupload.hint", routes.AssetsController.at("csv/GMP_template_and_instructions.zip"), Messages("gmp.fileupload.header")))</p>
+    <br>
+    <p>@Html(Messages("gmp.fileupload.hint", routes.AssetsController.at("csv/GMP_template_and_instructions.zip"), Messages("gmp.fileupload.header")))</p>
 
-    </div>
-    <label for="fileToUpload" class="hidden">@Html(Messages("gmp.fileupload.header"))</label>
-    @uploadForm
-</div>
+<label for="fileToUpload" class="hidden">@Html(Messages("gmp.fileupload.header"))</label>
+@uploadForm
 
 
 
