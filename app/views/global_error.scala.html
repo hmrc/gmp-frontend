@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@(pageTitle: String, heading: String, message: String, applicationConfig: config.ApplicationConfig = config.ApplicationConfig)(implicit messages: Messages)
+@(pageTitle: String, heading: String, message: String, applicationConfig: config.ApplicationConfig = config.ApplicationConfig)(implicit request: Request[_], context: config.GmpContext, messages: Messages)
 
 @import play.api.Play.current
 @import uk.gov.hmrc.play.config.RunMode._
@@ -22,49 +22,68 @@
 @import layouts.{govuk_template => hmrcGovUkTemplate}
 @import uk.gov.hmrc.play.views.html.{layouts => uiLayouts}
 
-@contentHeader = {
-<h1>@heading</h1>
-}
+@gmpPageTitle = {@pageTitle - @Messages("service.title") - @Messages("gov.uk")}
 
 @mainContent = {
-<p>@message</p>
+    @includes.back_link(heading)
+    <h1 class="heading-xlarge">@heading</h1>
+    <p>@message</p>
 }
 
 @head = {
-@uiLayouts.head(
-linkElem = None,
-headScripts = None)
-<meta name="format-detection" content="telephone=no"/>
+    @uiLayouts.head(
+    linkElem = None,
+    headScripts = None)
+    <meta name="format-detection" content="telephone=no"/>
 }
 
 @serviceInfo = {
-@uiLayouts.serviceInfo(
-betaBanner = HtmlFormat.empty,
-includeGridWrapper = false,
-serviceInfoContent = None,
-includeHMRCBranding = false)
+    @uiLayouts.serviceInfo(
+    betaBanner = HtmlFormat.empty,
+    includeGridWrapper = false,
+    serviceInfoContent = None,
+    includeHMRCBranding = false)
+}
+
+@getHelpForm = {
+    @includes.report_problem(true)
 }
 
 @content = {
-@uiLayouts.main_content(
-article = uiLayouts.article(mainContent),
-serviceInfo = serviceInfo,
-mainContentHeader = contentHeader)
+    @uiLayouts.main_content(
+    article = uiLayouts.article(mainContent),
+    serviceInfo = serviceInfo,
+    getHelpForm = getHelpForm)
 }
 
+
 @bodyEnd = {
-@uiLayouts.footer(
-analyticsToken = applicationConfig.analyticsToken,
-analyticsHost = applicationConfig.analyticsHost,
-ssoUrl = None,
-scriptElem = None,
-gaCalls = None)
+    @uiLayouts.footer(
+    analyticsToken = applicationConfig.analyticsToken,
+    analyticsHost = applicationConfig.analyticsHost,
+    ssoUrl = None,
+    scriptElem = None,
+    gaCalls = None)
+
+    <script src='@routes.AssetsController.at("javascripts/back.js")'> </script>
 }
 
 @footerTop = {}
 @footerLinks = {}
 
-@insideHeader = {}
+@signOutLink = {
+    <li><a id="logOutStatusHref" href="@controllers.routes.ApplicationController.signout">@Messages("gmp.signout")</a></li>
+}
+
+@insideHeader = {
+    @uiLayouts.header_nav(
+        navTitle = Some(Messages("gmp.title")),
+        navTitleLink = None,
+        showBetaLink = false,
+        navLinks = Some(signOutLink)
+    )
+}
+
 @afterHeader = {}
 
-@hmrcGovUkTemplate(Some(pageTitle), None)(head, bodyEnd, insideHeader, afterHeader, footerTop, Some(uiLayouts.footer_links()), true)(content)
+@hmrcGovUkTemplate(Some(gmpPageTitle.toString), None)(head, bodyEnd, insideHeader, afterHeader, footerTop, Some(uiLayouts.footer_links()), true)(content)
