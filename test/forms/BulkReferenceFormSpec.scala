@@ -52,7 +52,7 @@ class BulkReferenceFormSpec extends PlaySpec with OneAppPerSuite {
         .foreach { email =>
           s"return an error if $email invalid" in {
             val postData = Json.obj(
-              "email" -> "dantathmrcdotcom",
+              "email" -> s"$email",
               "reference" -> "Reference"
             )
             val validatedForm = bulkReferenceForm.bind(postData)
