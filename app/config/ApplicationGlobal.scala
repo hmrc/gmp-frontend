@@ -42,6 +42,18 @@ object ApplicationGlobal extends DefaultFrontendGlobal with RunMode {
   override def standardErrorTemplate(pageTitle: String, heading: String, message: String)(implicit request: Request[_]): Html =
     views.html.global_error(pageTitle, heading, message)
 
+  override def notFoundTemplate(implicit request: Request[_]): Html = {
+    views.html.global_page_not_found(
+      "gmp.page_not_found.tabtitle",
+      "gmp.page_not_found.heading",
+      "gmp.page.not.found.error.check.web.address.correct",
+      "gmp.page.not.found.error.check.web.address.full",
+      "gmp.page.not.found.error.contact",
+      "gmp.page.not.found.error.pension.scheme.url",
+      "gmp.page.not.found.error.contact.end",
+      "gmp.page.not.found.error.service"
+    )
+  }
   override def microserviceMetricsConfig(implicit app: Application): Option[Configuration] = app.configuration.getConfig("microservice.metrics")
 
   override protected def mode: Mode = Play.current.mode

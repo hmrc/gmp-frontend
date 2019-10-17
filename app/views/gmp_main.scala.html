@@ -28,7 +28,7 @@ signOutEnabled: Boolean = true,
 showSignOutLink: Boolean = true,
 showUserResearchBanner: Boolean = false,
 dashboardLinkEnabled:Boolean = false,
-pageHeading: Option[String] = None)(mainContent: Html)(implicit request: Request[_], context: config.GmpContext,messages: Messages)
+pageHeading: Option[String] = None)(mainContent: Html)(implicit request: Request[_], context: config.GmpContext, messages: Messages)
 
 @getHelpForm = {
     @includes.report_problem(supportLinkEnabled)

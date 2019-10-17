@@ -1,0 +1,116 @@
+@*
+ * Copyright 2019 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@(applicationConfig: config.ApplicationConfig = config.ApplicationConfig,
+    title: String,
+    heading: String, 
+    message1: String,
+    message2: String,
+    message3: String,
+    contentHeader: Option[Html] = None,
+    userLoggedIn: Boolean = false,
+    getHelpForm: Html  = HtmlFormat.empty,
+    linkElement : Option[Html] = None,
+    mainClass : Option[String] = None,
+    scriptElement : Option[Html] = None,
+    isUserResearchBannerVisible:Boolean = false,
+    signOutEnabled:Boolean)(mainContent: Html = HtmlFormat.empty)(implicit request: Request[_], context: config.GmpContext, messages: Messages)
+
+@import layouts.{govuk_template => hmrcGovUkTemplate}
+@import uk.gov.hmrc.play.views.html.{layouts => uiLayouts}
+@import controllers.auth.ExternalUrls
+
+@headScript = {
+    <script src="https://cdn.optimizely.com/js/@{applicationConfig.optimizelyProjectId}.js"></script>
+}
+@head = {
+    @uiLayouts.head(
+        linkElem = linkElement,
+        headScripts = Some(headScript))
+    <meta name="format-detection" content="telephone=no"/>
+}
+
+@urToggle = @{
+    true
+}
+
+@signOutLink = {
+    <li><a id="logOutStatusHref" href="@controllers.routes.ApplicationController.signout">@Messages("gmp.signout")</a></li>
+}
+
+@insideHeader = {
+    @uiLayouts.header_nav(
+        navTitle = Some(Messages("gmp.title")),
+        navTitleLink = None,
+        showBetaLink = false,
+        navLinks = if(signOutEnabled) Some(signOutLink) else None
+    )
+}
+
+@afterHeader = @{
+    if(isUserResearchBannerVisible && urToggle) {
+            helpers.fullWidthBanner(
+                    Messages("urbanner.message.text"),
+                    applicationConfig.urBannerLink
+            )
+        }
+        else HtmlFormat.empty
+}
+
+@bodyEnd = {
+    @uiLayouts.footer(
+        analyticsToken = applicationConfig.analyticsToken,
+        analyticsHost = applicationConfig.analyticsHost,
+        ssoUrl = None,
+        scriptElem = scriptElement,
+        gaCalls = None
+    )
+    <script src='@routes.AssetsController.at("javascripts/urBanner.js")'> </script>
+    <script src='@routes.AssetsController.at("javascripts/back.js")'> </script>
+}
+
+@footerTop = {}
+@footerLinks = {}
+
+@serviceInfo = {
+    @uiLayouts.serviceInfo(
+        betaBanner = HtmlFormat.empty,
+        includeGridWrapper = false,
+        serviceInfoContent = None,
+        includeHMRCBranding = false
+    )
+}
+
+@mainContentHeader = {
+    @contentHeader.map { contentHeaderVal =>
+        @uiLayouts.main_content_header(contentHeader = contentHeaderVal)
+    }
+    <h1>@messages(heading)</h1>
+}
+
+@content = {
+    <p>@messages(message1)</p>
+    <p>@messages(message2)</p>
+    <p>@messages(message3)</p>
+    @uiLayouts.main_content(
+        article = uiLayouts.article(mainContent),
+        mainClass = mainClass,
+        mainContentHeader = mainContentHeader,
+        serviceInfo = serviceInfo,
+        getHelpForm = getHelpForm)
+}
+
+@hmrcGovUkTemplate(Some(title), None)(head, bodyEnd, insideHeader, afterHeader, footerTop, Some(uiLayouts.footer_links()), true)(content)
