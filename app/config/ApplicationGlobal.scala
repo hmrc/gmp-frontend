@@ -28,9 +28,11 @@ import uk.gov.hmrc.crypto.ApplicationCrypto
 import uk.gov.hmrc.play.config.{AppName, ControllerConfig, RunMode}
 import uk.gov.hmrc.play.frontend.bootstrap.DefaultFrontendGlobal
 import uk.gov.hmrc.play.frontend.filters.{FrontendAuditFilter, FrontendLoggingFilter, MicroserviceFilterSupport}
+
 object ApplicationGlobal extends DefaultFrontendGlobal with RunMode {
 
   override lazy val auditConnector = Play.current.injector.instanceOf[GmpFrontendAuditConnector]
+  implicit lazy val gmpContext = Play.current.injector.instanceOf[GmpContext]
   override val loggingFilter = GmpFrontendLoggingFilter
   override val frontendAuditFilter = GmpFrontendAuditFilter
 
