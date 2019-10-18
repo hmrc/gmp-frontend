@@ -23,14 +23,6 @@
 @import play.api.i18n.Messages
 
 @(
-    pageTitle: String, 
-    heading: String, 
-    message1: String,
-    message2: String,
-    message3: String,
-    url: String,
-    message4: String, 
-    serviceName: String,
     applicationConfig: config.ApplicationConfig = config.ApplicationConfig,
     signOutEnabled: Boolean = true,
     getHelpForm: Html  = HtmlFormat.empty,
@@ -46,25 +38,24 @@
     <a href="@url">@serviceName</a>
 }
 
+@head = {
+    @uiLayouts.head(
+    linkElem = None,
+    headScripts = None)
+    <meta name="format-detection" content="telephone=no"/>
+}
+
 @contentHeader = {
-    <h1>@messages(heading)</h1>
+    <h1>@messages("gmp.page_not_found.heading")</h1>
 }
 
 @mainContent = {
-    <p>@messages(message1)</p>
-    <p>@messages(message2)</p>
-    <p>@messages(message3)
-        @anchor(Messages(serviceName), Messages(url))
-        @messages(message4)
+    <p>@messages("gmp.page.not.found.error.check.web.address.correct")</p>
+    <p>@messages("gmp.page.not.found.error.check.web.address.full")</p>
+    <p>@messages("gmp.page.not.found.error.contact")
+        @anchor(Messages("gmp.page.not.found.error.service"), Messages("gmp.page.not.found.error.pension.scheme.url"))
+        @messages("gmp.page.not.found.error.contact.end")
     </p>
-}
-
-@head = {
-    @uiLayouts.head(
-        linkElem = None,
-        headScripts = None
-    )
-<meta name="format-detection" content="telephone=no"/>
 }
 
 @serviceInfo = {
@@ -85,18 +76,6 @@
     )
 }
 
-@bodyEnd = {
-    @uiLayouts.footer(
-        analyticsToken = applicationConfig.analyticsToken,
-        analyticsHost = applicationConfig.analyticsHost,
-        ssoUrl = None,
-        scriptElem = None,
-        gaCalls = None
-    )
-}
-
-@footerTop = {}
-@footerLinks = {}
 
 @signOutLink = {
     <li><a id="logOutStatusHref" href="@controllers.routes.ApplicationController.signout">@messages("gmp.signout")</a></li>
@@ -111,6 +90,9 @@
     )
 }
 
+@footerTop = {}
+@footerLinks = {}
 @afterHeader = {}
+@bodyEnd = {}
 
-@hmrcGovUkTemplate(Some(messages(pageTitle)), None)(head, bodyEnd, insideHeader, afterHeader, footerTop, Some(uiLayouts.footer_links()), true)(content)
+@hmrcGovUkTemplate(Some(messages("gmp.page_not_found.tabtitle")), None)(head, bodyEnd, insideHeader, afterHeader, footerTop, Some(uiLayouts.footer_links()), true)(content)
