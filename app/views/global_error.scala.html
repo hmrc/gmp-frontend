@@ -23,42 +23,46 @@
 @import uk.gov.hmrc.play.views.html.{layouts => uiLayouts}
 
 @contentHeader = {
-<h1>@heading</h1>
+    <h1>@heading</h1>
 }
 
 @mainContent = {
-<p>@message</p>
+    <p>@message</p>
 }
 
 @head = {
-@uiLayouts.head(
-linkElem = None,
-headScripts = None)
-<meta name="format-detection" content="telephone=no"/>
+    @uiLayouts.head(
+        linkElem = None,
+        headScripts = None
+    )
+    <meta name="format-detection" content="telephone=no"/>
 }
 
 @serviceInfo = {
-@uiLayouts.serviceInfo(
-betaBanner = HtmlFormat.empty,
-includeGridWrapper = false,
-serviceInfoContent = None,
-includeHMRCBranding = false)
+    @uiLayouts.serviceInfo(
+        betaBanner = HtmlFormat.empty,
+        includeGridWrapper = false,
+        serviceInfoContent = None,
+        includeHMRCBranding = false
+    )
 }
 
 @content = {
-@uiLayouts.main_content(
-article = uiLayouts.article(mainContent),
-serviceInfo = serviceInfo,
-mainContentHeader = contentHeader)
+    @uiLayouts.main_content(
+        article = uiLayouts.article(mainContent),
+        serviceInfo = serviceInfo,
+        mainContentHeader = contentHeader
+    )
 }
 
 @bodyEnd = {
-@uiLayouts.footer(
-analyticsToken = applicationConfig.analyticsToken,
-analyticsHost = applicationConfig.analyticsHost,
-ssoUrl = None,
-scriptElem = None,
-gaCalls = None)
+    @uiLayouts.footer(
+        analyticsToken = applicationConfig.analyticsToken,
+        analyticsHost = applicationConfig.analyticsHost,
+        ssoUrl = None,
+        scriptElem = None,
+        gaCalls = None
+    )
 }
 
 @footerTop = {}

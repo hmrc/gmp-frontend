@@ -29,70 +29,26 @@
     supportLinkEnabled: Boolean = true
 )(implicit messages: Messages, request: Request[_], context: config.GmpContext)
 
-@getHelpForm = {
-    @includes.report_problem(supportLinkEnabled)
-}
-
-
 @anchor(serviceName: String, url: String) = {
     <a href="@url">@serviceName</a>
 }
 
-@head = {
-    @uiLayouts.head(
-    linkElem = None,
-    headScripts = None)
-    <meta name="format-detection" content="telephone=no"/>
-}
+@gmp_main(title = Messages("gmp.page_not_found.tabtitle")) {
+    <div class="grid-row">
+        <div class="content">
 
-@contentHeader = {
-    <h1>@messages("gmp.page_not_found.heading")</h1>
-}
+            <div class="row">
+                <h1 id="header" class="heading-xlarge">@Messages("gmp.page_not_found.heading")</h1>
+            </div>
 
-@mainContent = {
-    <p>@messages("gmp.page.not.found.error.check.web.address.correct")</p>
-    <p>@messages("gmp.page.not.found.error.check.web.address.full")</p>
-    <p>@messages("gmp.page.not.found.error.contact")
-        @anchor(Messages("gmp.page.not.found.error.service"), Messages("gmp.page.not.found.error.pension.scheme.url"))
-        @messages("gmp.page.not.found.error.contact.end")
-    </p>
-}
-
-@serviceInfo = {
-    @uiLayouts.serviceInfo(
-        betaBanner = HtmlFormat.empty,
-        includeGridWrapper = false,
-        serviceInfoContent = None,
-        includeHMRCBranding = false
-    )
-}
-
-@content = {
-    @uiLayouts.main_content(
-        article = uiLayouts.article(mainContent),
-        serviceInfo = serviceInfo,
-        mainContentHeader = contentHeader,
-        getHelpForm = getHelpForm
-    )
-}
-
-
-@signOutLink = {
-    <li><a id="logOutStatusHref" href="@controllers.routes.ApplicationController.signout">@messages("gmp.signout")</a></li>
-}
-
-@insideHeader = {
-    @uiLayouts.header_nav(
-        navTitle = Some(messages("service.title")),
-        navTitleLink = None,
-        showBetaLink = false,
-        navLinks = if(signOutEnabled) Some(signOutLink) else None
-    )
-}
-
-@footerTop = {}
-@footerLinks = {}
-@afterHeader = {}
-@bodyEnd = {}
-
-@hmrcGovUkTemplate(Some(messages("gmp.page_not_found.tabtitle")), None)(head, bodyEnd, insideHeader, afterHeader, footerTop, Some(uiLayouts.footer_links()), true)(content)
+            <div class="row">
+                <p>@messages("gmp.page.not.found.error.check.web.address.correct")</p>
+                <p>@messages("gmp.page.not.found.error.check.web.address.full")</p>
+                <p>@messages("gmp.page.not.found.error.contact")
+                    @anchor(Messages("gmp.page.not.found.error.service"), Messages("gmp.page.not.found.error.pension.scheme.url"))
+                    @messages("gmp.page.not.found.error.contact.end")
+                </p>
+            </div>
+        </div>
+    </div>
+} 
