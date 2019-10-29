@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@(pageTitle: String, heading: String, message: String, applicationConfig: config.ApplicationConfig = config.ApplicationConfig)(implicit messages: Messages)
+@(pageTitle: String, heading: String, message: String, applicationConfig: config.ApplicationConfig = config.ApplicationConfig)(implicit request: Request[_], context: config.GmpContext, messages: Messages)
 
 @import play.api.Play.current
 @import uk.gov.hmrc.play.config.RunMode._
@@ -55,6 +55,7 @@
     )
 }
 
+
 @bodyEnd = {
     @uiLayouts.footer(
         analyticsToken = applicationConfig.analyticsToken,
@@ -68,7 +69,19 @@
 @footerTop = {}
 @footerLinks = {}
 
-@insideHeader = {}
+@signOutLink = {
+    <li><a id="logOutStatusHref" href="@controllers.routes.ApplicationController.signout">@Messages("gmp.signout")</a></li>
+}
+
+@insideHeader = {
+    @uiLayouts.header_nav(
+        navTitle = Some(Messages("gmp.title")),
+        navTitleLink = None,
+        showBetaLink = false,
+        navLinks = Some(signOutLink)
+    )
+}
+
 @afterHeader = {}
 
-@hmrcGovUkTemplate(Some(pageTitle), None)(head, bodyEnd, insideHeader, afterHeader, footerTop, Some(uiLayouts.footer_links()), true)(content)
+@hmrcGovUkTemplate(Some(gmpPageTitle.toString), None)(head, bodyEnd, insideHeader, afterHeader, footerTop, Some(uiLayouts.footer_links()), true)(content)

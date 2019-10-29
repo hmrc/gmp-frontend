@@ -35,6 +35,7 @@ object ApplicationGlobal extends DefaultFrontendGlobal with RunMode {
   implicit lazy val gmpContext = Play.current.injector.instanceOf[GmpContext]
   override val loggingFilter = GmpFrontendLoggingFilter
   override val frontendAuditFilter = GmpFrontendAuditFilter
+  implicit lazy val gmpConfig = Play.current.injector.instanceOf[config.GmpContext]
 
   override def onStart(app: Application) {
     super.onStart(app)

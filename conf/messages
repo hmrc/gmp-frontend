@@ -364,8 +364,8 @@ gmp.queryhandling.changedetails.link = <a href="https://www.gov.uk/tell-hmrc-cha
 ############################################################################
 # Service unavailable
 ############################################################################
-gmp.serviceunavailable.title = Service unavailable
-gmp.serviceunavailable.message = Sorry, we are experiencing technical problems. <br><p><a href="/guaranteed-minimum-pension">Try again</a> later or go to <a href="https://www.gov.uk">GOV.UK homepage</a>.
+gmp.serviceunavailable.title = Sorry, there is a problem with the service
+gmp.serviceunavailable.message = Try again later.
 
 ############################################################################
 # CSV
@@ -383,3 +383,7 @@ urbanner.message.reject = No thanks
 
 gmp.ga-track.link.click=link - click
 gmp.ga-track.button.click=button - click
+
+global.error.InternalServerError500.title = Sorry, there is a problem with the service
+global.error.InternalServerError500.heading = Sorry, there is a problem with the service
+global.error.InternalServerError500.message = Try again later.
