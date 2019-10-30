@@ -14,56 +14,54 @@
  * limitations under the License.
  *@
 
-@(pageTitle: String, heading: String, message: String, applicationConfig: config.ApplicationConfig = config.ApplicationConfig)(implicit request: Request[_], context: config.GmpContext, messages: Messages)
+@(pageTitle: String, heading: String, message: String, applicationConfig: config.ApplicationConfig = config.ApplicationConfig)(implicit request: Request[_], messages: Messages)
 
 @import play.api.Play.current
 @import uk.gov.hmrc.play.config.RunMode._
-
+@import config.GmpContext
 @import layouts.{govuk_template => hmrcGovUkTemplate}
 @import uk.gov.hmrc.play.views.html.{layouts => uiLayouts}
 
-@contentHeader = {
-    <h1>@heading</h1>
-}
+@gmpPageTitle = {@pageTitle - @Messages("service.title") - @Messages("gov.uk")}
 
 @mainContent = {
+    @includes.back_link(heading)
+    <h1 class="heading-xlarge">@heading</h1>
     <p>@message</p>
 }
 
 @head = {
     @uiLayouts.head(
-        linkElem = None,
-        headScripts = None
-    )
+    linkElem = None,
+    headScripts = None)
     <meta name="format-detection" content="telephone=no"/>
 }
 
 @serviceInfo = {
     @uiLayouts.serviceInfo(
-        betaBanner = HtmlFormat.empty,
-        includeGridWrapper = false,
-        serviceInfoContent = None,
-        includeHMRCBranding = false
-    )
+    betaBanner = HtmlFormat.empty,
+    includeGridWrapper = false,
+    serviceInfoContent = None,
+    includeHMRCBranding = false)
 }
+
 
 @content = {
     @uiLayouts.main_content(
-        article = uiLayouts.article(mainContent),
-        serviceInfo = serviceInfo,
-        mainContentHeader = contentHeader
-    )
+    article = uiLayouts.article(mainContent),
+    serviceInfo = serviceInfo)
 }
 
 
 @bodyEnd = {
     @uiLayouts.footer(
-        analyticsToken = applicationConfig.analyticsToken,
-        analyticsHost = applicationConfig.analyticsHost,
-        ssoUrl = None,
-        scriptElem = None,
-        gaCalls = None
-    )
+    analyticsToken = applicationConfig.analyticsToken,
+    analyticsHost = applicationConfig.analyticsHost,
+    ssoUrl = None,
+    scriptElem = None,
+    gaCalls = None)
+
+    <script src='@routes.AssetsController.at("javascripts/back.js")'> </script>
 }
 
 @footerTop = {}

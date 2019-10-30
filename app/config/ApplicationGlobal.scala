@@ -32,10 +32,9 @@ import uk.gov.hmrc.play.frontend.filters.{FrontendAuditFilter, FrontendLoggingFi
 object ApplicationGlobal extends DefaultFrontendGlobal with RunMode {
 
   override lazy val auditConnector = Play.current.injector.instanceOf[GmpFrontendAuditConnector]
-  implicit lazy val gmpContext = Play.current.injector.instanceOf[GmpContext]
   override val loggingFilter = GmpFrontendLoggingFilter
   override val frontendAuditFilter = GmpFrontendAuditFilter
-  implicit lazy val gmpConfig = Play.current.injector.instanceOf[config.GmpContext]
+  implicit lazy val gmpContext = Play.current.injector.instanceOf[GmpContext]
 
   override def onStart(app: Application) {
     super.onStart(app)
