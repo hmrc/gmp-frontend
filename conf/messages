@@ -375,6 +375,6 @@ urbanner.message.reject = No thanks
 gmp.ga-track.link.click=link - click
 gmp.ga-track.button.click=button - click
 
-global.error.InternalServerError500.title = Sorry, there is a problem with the service
-global.error.InternalServerError500.heading = Sorry, there is a problem with the service
+global.error.InternalServerError500.title = XXXXXXXXXXXXXXXXXXXXXXX
+global.error.InternalServerError500.heading = YYYYYYYYYYYYYYYYYYYYYY
 global.error.InternalServerError500.message = Try again later.

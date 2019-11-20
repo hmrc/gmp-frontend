@@ -36,6 +36,7 @@ class SessionService @Inject()(metrics: ApplicationMetrics, sessionCache: GmpSes
   val cleanBulkSession = GmpBulkSession(None, None, None)
 
   def fetchGmpBulkSession()(implicit request: Request[_], hc: HeaderCarrier): Future[Option[GmpBulkSession]] = {
+
     val timer = metrics.keystoreStoreTimer.time()
 
     Logger.debug(s"[SessionService][fetchGmpBulkSession]")
