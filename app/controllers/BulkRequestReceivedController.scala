@@ -44,6 +44,7 @@ class BulkRequestReceivedController @Inject()(authAction: AuthAction,
           case Some(session) if session.callBackData.isDefined =>
             val callbackData = session.callBackData.get
             bulkRequestCreationService.createBulkRequest(callbackData.collection, callbackData.id, session.emailAddress.getOrElse(""), session.reference.getOrElse("")) match {
+
               case Left(bulkRequest) => gmpBulkConnector.sendBulkRequest(bulkRequest, link).map {
                   case OK => Ok(views.html.bulk_request_received(bulkRequest.reference))
                   case CONFLICT => Ok(views.html.failure(Messages("gmp.bulk.failure.duplicate_upload"), Messages("gmp.bulk.problem.header"), Messages("gmp.bulk_failure_duplicate.title")))
@@ -53,10 +54,10 @@ class BulkRequestReceivedController @Inject()(authAction: AuthAction,
 
               case Right(e: DataLimitExceededException) => Future.successful(Ok(views.html.failure(Messages("gmp.bulk.failure.too_large"), Messages("gmp.bulk.file_too_large.header"), Messages("gmp.bulk_failure_file_too_large.title"))))
 
-              case Right(_) => Future.successful(InternalServerError(views.html.failure(Messages("gmp.bulk.failure.generic"), Messages("gmp.bulk.problem.header"), Messages("gmp.bulk_failure_generic.title"))))
+              case Right(_) => Future.successful(InternalServerError(views.html.incorrectlyEncoded(Messages("gmp.bulk.incorrectlyEncoded"), Messages("gmp.bulk.incorrectlyEncoded.header"), Messages("gmp.bulk_failure_incorrectlyEncoded.title"))))
             }
 
-          case _ => Future.successful(Ok(views.html.incorrectlyEncoded(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/upload-csv"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title"))))
+          case _ => Future.successful(Ok(views.html.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/upload-csv"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title"))))
         }
       }
   }

@@ -49,6 +49,7 @@ object BulkRequestCsvColumn {
 }
 
 class DataLimitExceededException extends Throwable
+class IncorrectlyEncodedException extends Throwable
 
 class BulkRequestCreationService @Inject()( environment: Environment,
                                             val runModeConfiguration: Configuration
@@ -112,7 +113,8 @@ class BulkRequestCreationService @Inject()( environment: Environment,
           }
         }
 
-      case Failure(exception) => Right(exception)
+
+      case Failure(_) => Right(new IncorrectlyEncodedException)
     }
   }
 

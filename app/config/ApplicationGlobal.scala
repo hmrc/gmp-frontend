@@ -43,7 +43,6 @@ object ApplicationGlobal extends DefaultFrontendGlobal with RunMode {
   override def standardErrorTemplate(pageTitle: String, heading: String, message: String)(implicit request: Request[_]): Html =
       views.html.global_error(pageTitle, heading, message)
 
-
   override def microserviceMetricsConfig(implicit app: Application): Option[Configuration] = app.configuration.getConfig("microservice.metrics")
 
   override protected def mode: Mode = Play.current.mode
