@@ -54,7 +54,7 @@ class BulkRequestReceivedController @Inject()(authAction: AuthAction,
 
               case Right(e: DataLimitExceededException) => Future.successful(Ok(views.html.failure(Messages("gmp.bulk.failure.too_large"), Messages("gmp.bulk.file_too_large.header"), Messages("gmp.bulk_failure_file_too_large.title"))))
 
-              case Right(_) => Future.successful(InternalServerError(views.html.incorrectlyEncoded(Messages("gmp.bulk.incorrectlyEncoded"), Messages("gmp.bulk.incorrectlyEncoded.header"), Messages("gmp.bulk_failure_incorrectlyEncoded.title"))))
+              case Right(_) => Future.successful((Redirect(controllers.routes.IncorrectlyEncodedController.get())))
             }
 
           case _ => Future.successful(Ok(views.html.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/upload-csv"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title"))))

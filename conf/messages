@@ -15,9 +15,9 @@ gmp.bulk.results.title = Download GMP calculation - GOV.UK
 gmp.bulk.results_not_found.title = GMP calculation no longer available - GOV.UK
 gmp.bulk.wrong_user.title = Wrong GMP checker login - GOV.UK
 
-gmp.bulk.incorrectlyEncoded = Your file is incorrectly encoded. To get a calculation it must be UTF-8 encoded (modern standard)
+gmp.bulk.incorrectlyEncoded = Your file is incorrectly encoded. To get a calculation it must be UTF-8 encoded (modern standard).
 gmp.bulk.incorrectlyEncoded.header = Sorry, there is a problem
-gmp.bulk_failure_incorrectlyEncoded.title = zz
+gmp.bulk_failure_incorrectlyEncoded.title = Sorry, there is a problem
 
 
 gmp.contributions_earnings.title = Contributions and earnings - GOV.UK
