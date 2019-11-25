@@ -89,7 +89,7 @@ class BulkRequestCreationService @Inject()( environment: Environment,
     for ((x, i) <- bulkCalculationRequestLines.zipWithIndex) yield x.copy(lineId = i + 1)
   }
 
-  def createBulkRequest(collection: String, id: String, email: String, reference: String): Either[BulkCalculationRequest, Throwable] = {
+  def createBulkRequest(collection: String, id: String, email: String, reference: String): Either[Throwable, BulkCalculationRequest] = {
     val attachmentUrl = s"${baseUrl("attachments")}/attachments-internal/$collection/$id"
     val enumerator = new LimitingEnumerator(MAX_LINES, LINE_FEED.toByte.toChar, sourceData(attachmentUrl))
 
@@ -98,23 +98,24 @@ class BulkRequestCreationService @Inject()( environment: Environment,
 
         if (enumerator.hasDataBeyondLimit) {
           Logger.debug(s"[BulkRequestCreationService][createBulkRequest] size: ${enumerator.getCount} (too large, throwing DataLimitExceededException)")
-          Right(new DataLimitExceededException)
+          Left(new DataLimitExceededException)
         } else {
           if (bulkCalculationRequestLines.size == 1) {
             val emptyFileLines = List(BulkCalculationRequestLine(1, None, None, Some(Map(BulkRequestCsvColumn.LINE_ERROR_EMPTY.toString -> Messages("gmp.error.parsing.empty_file")))))
             val req = BulkCalculationRequest(id, email, reference, enterLineNumbers(emptyFileLines))
             Logger.debug(s"[BulkRequestCreationService][createBulkRequest] size : empty")
-            Left(req)
+            Right(req)
           }
           else {
             val req = BulkCalculationRequest(id, email, reference, enterLineNumbers(bulkCalculationRequestLines.drop(1)))
             Logger.debug(s"[BulkRequestCreationService][createBulkRequest] size : ${req.calculationRequests.size}")
-            Left(req)
+            Right(req)
           }
         }
 
 
-      case Failure(_) => Right(new IncorrectlyEncodedException)
+      case Failure(_) => Left(new IncorrectlyEncodedException
+      )
     }
   }
 
