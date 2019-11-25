@@ -48,8 +48,8 @@ object BulkRequestCsvColumn {
   val LINE_ERROR_EMPTY = -3
 }
 
-class DataLimitExceededException extends Throwable
-class IncorrectlyEncodedException extends Throwable
+case object DataLimitExceededException extends Throwable
+case object IncorrectlyEncodedException extends Throwable
 
 class BulkRequestCreationService @Inject()( environment: Environment,
                                             val runModeConfiguration: Configuration
@@ -98,7 +98,7 @@ class BulkRequestCreationService @Inject()( environment: Environment,
 
         if (enumerator.hasDataBeyondLimit) {
           Logger.debug(s"[BulkRequestCreationService][createBulkRequest] size: ${enumerator.getCount} (too large, throwing DataLimitExceededException)")
-          Left(new DataLimitExceededException)
+          Left(DataLimitExceededException)
         } else {
           if (bulkCalculationRequestLines.size == 1) {
             val emptyFileLines = List(BulkCalculationRequestLine(1, None, None, Some(Map(BulkRequestCsvColumn.LINE_ERROR_EMPTY.toString -> Messages("gmp.error.parsing.empty_file")))))
@@ -114,7 +114,7 @@ class BulkRequestCreationService @Inject()( environment: Environment,
         }
 
 
-      case Failure(_) => Left(new IncorrectlyEncodedException
+      case Failure(_) => Left(IncorrectlyEncodedException
       )
     }
   }

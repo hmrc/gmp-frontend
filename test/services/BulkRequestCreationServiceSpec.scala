@@ -16,15 +16,24 @@
 
 package services
 
+import java.io.{ByteArrayInputStream, InputStream}
+import java.nio.charset.Charset
+
 import helpers.RandomNino
 import models.{BulkCalculationRequest, BulkCalculationRequestLine, CalculationRequestLine}
 import org.joda.time.{LocalDate, LocalDateTime}
+import org.mockito.Matchers
+import org.mockito.Mockito.when
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
 import play.api.Environment
 import play.api.i18n.Messages
 import play.api.i18n.Messages.Implicits._
+
+import scala.concurrent.Future
+import scala.io.Source
+import scala.reflect.api.Position
 
 class BulkRequestCreationServiceSpec extends PlaySpec with ScalaFutures with MockitoSugar with OneServerPerSuite {
 
@@ -357,6 +366,20 @@ class BulkRequestCreationServiceSpec extends PlaySpec with ScalaFutures with Moc
       val result = TestService.createBulkRequest(collection, "26", "tim@burton.com", "uploadRef123")
 
       result.isRight mustBe true
+    }
+
+    "IncorrectlyEncodedException should be thrown when Incorrectly encoded file is uploaded" in {
+
+      object TestService extends BulkRequestCreationService(app.injector.instanceOf[Environment], app.configuration) {
+        override def sourceData(resourceLocation: String): Iterator[Char] = {
+          val is = new ByteArrayInputStream(Charset.forName("utf-16").encode("test-data").array())
+          Source.fromInputStream(is, "utf-8")
+        }
+
+      }
+
+      val bulkRequest = TestService.createBulkRequest(collection, "26", "tim@burton.com", "uploadRef123")
+      assert(bulkRequest == Left(IncorrectlyEncodedException))
     }
   }
 

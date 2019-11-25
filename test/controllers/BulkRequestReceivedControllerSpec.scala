@@ -115,7 +115,7 @@ class BulkRequestReceivedControllerSpec extends PlaySpec with OneServerPerSuite 
         "respond with ok and failure page if file row limit exceeded" in {
 
           when(mockSessionService.fetchGmpBulkSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpBulkSession)))
-          when(mockBulkRequestCreationService.createBulkRequest(Matchers.any(),Matchers.any(),Matchers.any(),Matchers.any())).thenReturn(Left(new DataLimitExceededException))
+          when(mockBulkRequestCreationService.createBulkRequest(Matchers.any(),Matchers.any(),Matchers.any(),Matchers.any())).thenReturn(Left(DataLimitExceededException))
 
           val result = TestBulkRequestReceivedController.get(FakeRequest())
               status(result) must equal(OK)

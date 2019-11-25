@@ -53,7 +53,7 @@ class BulkRequestReceivedController @Inject()(authAction: AuthAction,
                   case _ => Ok(views.html.failure(Messages("gmp.bulk.failure.generic"), Messages("gmp.bulk.problem.header"), Messages("gmp.bulk_failure_generic.title")))
                 }
 
-              case Left(e: DataLimitExceededException) => Future.successful(errorPageForToMuchData)
+              case Left(DataLimitExceededException) => Future.successful(errorPageForToMuchData)
 
               case Left(_) => Future.successful((Redirect(controllers.routes.IncorrectlyEncodedController.get())))
             }
