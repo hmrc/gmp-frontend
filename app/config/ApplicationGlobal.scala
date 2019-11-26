@@ -28,12 +28,13 @@ import uk.gov.hmrc.crypto.ApplicationCrypto
 import uk.gov.hmrc.play.config.{AppName, ControllerConfig, RunMode}
 import uk.gov.hmrc.play.frontend.bootstrap.DefaultFrontendGlobal
 import uk.gov.hmrc.play.frontend.filters.{FrontendAuditFilter, FrontendLoggingFilter, MicroserviceFilterSupport}
+
 object ApplicationGlobal extends DefaultFrontendGlobal with RunMode {
 
   override lazy val auditConnector = Play.current.injector.instanceOf[GmpFrontendAuditConnector]
   override val loggingFilter = GmpFrontendLoggingFilter
   override val frontendAuditFilter = GmpFrontendAuditFilter
-  implicit lazy val gmpConfig = Play.current.injector.instanceOf[config.GmpContext]
+  implicit lazy val gmpContext = Play.current.injector.instanceOf[GmpContext]
 
   override def onStart(app: Application) {
     super.onStart(app)
@@ -43,6 +44,9 @@ object ApplicationGlobal extends DefaultFrontendGlobal with RunMode {
   override def standardErrorTemplate(pageTitle: String, heading: String, message: String)(implicit request: Request[_]): Html =
     views.html.global_error(pageTitle, heading, message)
 
+  override def notFoundTemplate(implicit request: Request[_]): Html = {
+    views.html.global_page_not_found()
+  }
   override def microserviceMetricsConfig(implicit app: Application): Option[Configuration] = app.configuration.getConfig("microservice.metrics")
 
   override protected def mode: Mode = Play.current.mode
