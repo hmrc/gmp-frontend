@@ -14,11 +14,11 @@
  * limitations under the License.
  *@
 
-@(pageTitle: String, heading: String, message: String, applicationConfig: config.ApplicationConfig = config.ApplicationConfig)(implicit request: Request[_], context: config.GmpContext, messages: Messages)
+@(pageTitle: String, heading: String, message: String, applicationConfig: config.ApplicationConfig = config.ApplicationConfig)(implicit request: Request[_], messages: Messages)
 
 @import play.api.Play.current
 @import uk.gov.hmrc.play.config.RunMode._
-
+@import config.GmpContext
 @import layouts.{govuk_template => hmrcGovUkTemplate}
 @import uk.gov.hmrc.play.views.html.{layouts => uiLayouts}
 
@@ -45,15 +45,11 @@
     includeHMRCBranding = false)
 }
 
-@getHelpForm = {
-    @includes.report_problem(true)
-}
 
 @content = {
     @uiLayouts.main_content(
     article = uiLayouts.article(mainContent),
-    serviceInfo = serviceInfo,
-    getHelpForm = getHelpForm)
+    serviceInfo = serviceInfo)
 }
 
 
