@@ -20,10 +20,10 @@
 @import uk.gov.hmrc.play.views.html.helpers._
 @import views.html.helpers._
 
-@gmp_main(title = header + " - " + Messages("service.title") + " - " + Messages("gov.uk"), supportLinkEnabled = false) {
+@gmp_main(title = header + " - " + Messages("service.title") + " - " + Messages("gov.uk"), supportLinkEnabled = true) {
 
 @includes.back_link(header)
-<h1>@header</h1>
+<h1 class="heading-xlarge">@header</h1>
 
 <p>@Html(message)</p>
 
