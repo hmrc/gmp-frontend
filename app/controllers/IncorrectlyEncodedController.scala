@@ -16,20 +16,13 @@
 
 package controllers
 
+import play.api.i18n.Messages.Implicits._
 import com.google.inject.Inject
 import controllers.auth.AuthAction
-import forms.InflationProofForm.inflationProofForm
-import uk.gov.hmrc.auth.core.AuthConnector
-import play.api.i18n.Messages.Implicits._
-import com.google.inject.{Inject, Singleton}
-import controllers.auth.AuthAction
-import forms.InflationProofForm._
-import play.api.Logger
 import play.api.Play.current
 import play.api.i18n.Messages
 import uk.gov.hmrc.auth.core.AuthConnector
 
-import scala.concurrent.Future
 import scala.concurrent.Future
 
 class IncorrectlyEncodedController @Inject()( authAction: AuthAction,
@@ -37,7 +30,7 @@ class IncorrectlyEncodedController @Inject()( authAction: AuthAction,
                                             ) extends GmpPageFlow(authConnector){
   def get = authAction.async {
     implicit request => {
-      Future.successful(InternalServerError(views.html.incorrectlyEncoded(Messages("gmp.bulk.incorrectlyEncoded"), Messages("gmp.bulk.incorrectlyEncoded.header"), Messages("gmp.bulk_failure_incorrectlyEncoded.title"))))
+      Future.successful(InternalServerError(views.html.incorrectlyEncoded(Messages("gmp.bulk.incorrectlyEncoded"), Messages("gmp.bulk.incorrectlyEncoded.header"))))
     }
   }
 }

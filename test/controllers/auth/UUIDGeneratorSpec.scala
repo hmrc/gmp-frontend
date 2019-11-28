@@ -1,4 +1,4 @@
-@*
+/*
  * Copyright 2019 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,19 +12,23 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *@
+ */
 
-@(message: String, header: String)(implicit request: Request[_], context: config.GmpContext,messages: Messages)
+package controllers.auth
 
-@import uk.gov.hmrc.play.views.html._
-@import uk.gov.hmrc.play.views.html.helpers._
-@import views.html.helpers._
+import org.scalatestplus.play.PlaySpec
 
-@gmp_main(title = s"$header - ${Messages("service.title")} - ${Messages("gov.uk")}") {
+class UUIDGeneratorSpec extends PlaySpec {
 
-@includes.back_link(header)
-<h1 class="heading-xlarge">@header</h1>
+  object TestUUIDGenerator extends UUIDGenerator
 
-<p>@Html(message)</p>
+  "UUIDGenerator.generate" should {
 
+    "generate a random UUID" in {
+
+      val uuids = (1 to 100).toList.map(_ => TestUUIDGenerator.generate)
+
+      assert(uuids.distinct.size == uuids.size)
+    }
+  }
 }
