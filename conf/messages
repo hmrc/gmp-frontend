@@ -14,6 +14,10 @@ gmp.bulk_request_received.title = GMP bulk file received - GOV.UK
 gmp.bulk.results.title = Download GMP calculation - GOV.UK
 gmp.bulk.results_not_found.title = GMP calculation no longer available - GOV.UK
 gmp.bulk.wrong_user.title = Wrong GMP checker login - GOV.UK
+
+gmp.bulk.incorrectlyEncoded = Your file is incorrectly encoded. To get a calculation it must be UTF-8 encoded (modern standard).
+gmp.bulk.incorrectlyEncoded.header = Sorry, there is a problem
+
 gmp.contributions_earnings.title = Contributions and earnings - GOV.UK
 gmp.dashboard.title = Guaranteed Minimum Pension (GMP) checker
 gmp.leaving.title = Left pension scheme - GOV.UK
@@ -346,6 +350,15 @@ gmp.only_part_problem = There is a problem with part of the calculation
 gmp.part_problem = There is a problem with all or part of the calculation
 gmp.unavailable = No GMP available
 
+gmp.page_not_found.tabtitle = Page not found - Guaranteed Minimum Pension - GOV.UK
+gmp.page_not_found.heading = Page not found
+gmp.page.not.found.error.check.web.address.correct = If you typed the web address, check it is correct.
+gmp.page.not.found.error.check.web.address.full = If you pasted the web address, check you copied the entire address.
+gmp.page.not.found.error.contact = If the web address is correct or you selected a link or button,
+gmp.page.not.found.error.pension.scheme.url = https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries
+gmp.page.not.found.error.contact.end = if you need to speak to someone about your pension scheme.
+gmp.page.not.found.error.service =  contact the pension schemes helpline
+
 ############################################################################
 # Query handling
 ############################################################################
@@ -356,8 +369,8 @@ gmp.queryhandling.changedetails.link = <a href="https://www.gov.uk/tell-hmrc-cha
 ############################################################################
 # Service unavailable
 ############################################################################
-gmp.serviceunavailable.title = Service unavailable
-gmp.serviceunavailable.message = Sorry, we are experiencing technical problems. <br><p><a href="/guaranteed-minimum-pension">Try again</a> later or go to <a href="https://www.gov.uk">GOV.UK homepage</a>.
+gmp.serviceunavailable.title = Sorry, there is a problem with the service
+gmp.serviceunavailable.message = Try again later.
 
 ############################################################################
 # CSV
@@ -375,3 +388,8 @@ urbanner.message.reject = No thanks
 
 gmp.ga-track.link.click=link - click
 gmp.ga-track.button.click=button - click
+
+global.error.InternalServerError500.title = Sorry, there is a problem with the service
+global.error.InternalServerError500.heading = Sorry, there is a problem with the service
+global.error.InternalServerError500.message = Try again later.
+

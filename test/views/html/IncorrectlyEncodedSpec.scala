@@ -14,17 +14,28 @@
  * limitations under the License.
  */
 
-package views.html
-
+import play.api.i18n.Messages
 import play.twirl.api.Html
 import utils.GmpViewSpec
 
-class ServiceUnavailableSpec extends GmpViewSpec{
-  override def view: Html = views.html.service_unavailable()
+class IncorrectlyEncodedSpec extends GmpViewSpec {
 
-  "ServiceUnavailable page" must {
-    behave like pageWithTitle("Sorry, there is a problem with the service - Guaranteed Minimum Pension - GOV.UK")
-    behave like pageWithHeader(messages("gmp.serviceunavailable.title"))
+  val header = Messages("gmp.bulk.incorrectlyEncoded.header")
+  val title = s"$header - ${Messages("service.title")} - ${Messages("gov.uk")}"
+  val message = Messages("gmp.bulk.incorrectlyEncoded")
+  
+  override def view: Html = views.html.incorrectlyEncoded(message, header)
 
+  "Incorrectly encoded page" must {
+    behave like pageWithTitle(title)
+    behave like pageWithHeader(header)
+
+    "have correct paragraph text" in {
+      doc must haveParagraphWithText(message)
+    }
+
+    "have a back link" in {
+      doc must haveBackLink
+    }
   }
 }

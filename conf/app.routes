@@ -42,6 +42,8 @@ GET         /new-bulk-calculation                         controllers.SessionCac
 GET         /                                             controllers.DashboardController.get
 GET         /service-unavailable                          controllers.ServiceUnavailableController.get
 
+GET         /incorrectly-encoded                          controllers.IncorrectlyEncodedController.get
+
 GET         /contributions-earnings                       controllers.ResultsController.getContributionsAndEarnings
 
 GET         /equalise                                     controllers.EqualiseController.get

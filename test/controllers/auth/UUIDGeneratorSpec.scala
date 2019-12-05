@@ -14,17 +14,21 @@
  * limitations under the License.
  */
 
-package views.html
+package controllers.auth
 
-import play.twirl.api.Html
-import utils.GmpViewSpec
+import org.scalatestplus.play.PlaySpec
 
-class ServiceUnavailableSpec extends GmpViewSpec{
-  override def view: Html = views.html.service_unavailable()
+class UUIDGeneratorSpec extends PlaySpec {
 
-  "ServiceUnavailable page" must {
-    behave like pageWithTitle("Sorry, there is a problem with the service - Guaranteed Minimum Pension - GOV.UK")
-    behave like pageWithHeader(messages("gmp.serviceunavailable.title"))
+  object TestUUIDGenerator extends UUIDGenerator
 
+  "UUIDGenerator.generate" should {
+
+    "generate a random UUID" in {
+
+      val uuids = (1 to 100).toList.map(_ => TestUUIDGenerator.generate)
+
+      assert(uuids.distinct.size == uuids.size)
+    }
   }
 }

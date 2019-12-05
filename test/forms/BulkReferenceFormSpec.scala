@@ -48,15 +48,18 @@ class BulkReferenceFormSpec extends PlaySpec with OneAppPerSuite {
         assert(validatedForm.errors.contains(FormError("email", List(Messages("gmp.error.mandatory.an", Messages("gmp.email"))))))
       }
 
-      "return an error if email invalid" in {
-        val postData = Json.obj(
-          "email" -> "dantathmrcdotcom",
-          "reference" -> "Reference"
-        )
-        val validatedForm = bulkReferenceForm.bind(postData)
+      List("dantathmrcdotcom", "tim.tim.com", "tim@gmail", "tim@.com", "tim.com")
+        .foreach { email =>
+          s"return an error if $email invalid" in {
+            val postData = Json.obj(
+              "email" -> s"$email",
+              "reference" -> "Reference"
+            )
+            val validatedForm = bulkReferenceForm.bind(postData)
 
-        assert(validatedForm.errors.contains(FormError("email", List(Messages("gmp.error.email.invalid")))))
-      }
+            assert(validatedForm.errors.contains(FormError("email", List(Messages("gmp.error.email.invalid")))))
+          }
+        }
     }
 
     "reference" must {
