@@ -38,15 +38,15 @@ class RevaluationRatePaySpaSurSpec extends RevaluationRateSpec {
     Leaving(GmpDate(Some("day"), Some("month"), Some("year")), Some(Leaving.YES_AFTER)), Some(1))
 
   "RevaluationRateRatePaySpaSur page" must {
-    behave like pageWithTitle(messages("gmp.revaluation_rate_spa.header"))
-    behave like pageWithHeader(messages("gmp.revaluation_rate_spa.header"))
+    behave like pageWithTitle(messages("gmp.revaluation_rate.header"))
+    behave like pageWithHeader(messages("gmp.revaluation_rate.header"))
     behave like pageWithBackLink
 
     "have correct input labels with text" in {
       doc must haveInputLabelWithText("rateType-hmrc", messages("gmp.revaluation_rate.rate_held_by_hmrc"))
       doc must haveInputLabelWithText("rateType-fixed", messages("gmp.revaluation_rate.fixed"))
       doc must haveInputLabelWithText("rateType-s148", messages("gmp.revaluation_rate.s148"))
-      doc must haveLegendWithText(messages("gmp.revaluation_rate_spa.header"))
+      doc must haveLegendWithText(messages("gmp.revaluation_rate.header"))
     }
 
     "have a submit button text" in {
@@ -61,14 +61,14 @@ class RevaluationRateRevaSpec extends RevaluationRateSpec {
     Leaving(GmpDate(Some("12"), Some("12"), Some("2010")), Some("")), Some(1))
 
   "RevaluationRateReva page" must {
-    behave like pageWithHeader(messages("gmp.revaluation_rate_spa.header"))
+    behave like pageWithHeader(messages("gmp.revaluation_rate.header"))
 
     "have correct input labels with text" in {
       doc must haveInputLabelWithText("rateType-hmrc", messages("gmp.revaluation_rate.rate_held_by_hmrc"))
       doc must haveInputLabelWithText("rateType-fixed", messages("gmp.revaluation_rate.fixed"))
       doc must haveInputLabelWithText("rateType-s148", messages("gmp.revaluation_rate.s148"))
       doc must haveInputLabelWithText("rateType-limited", messages("gmp.revaluation_rate.limited"))
-      doc must haveLegendWithText(messages("gmp.revaluation_rate_spa.header"))
+      doc must haveLegendWithText(messages("gmp.revaluation_rate.header"))
     }
   }
 }
