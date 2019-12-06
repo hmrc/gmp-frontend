@@ -27,7 +27,7 @@ object RevaluationRateForm {
 
   val revaluationRateForm = Form(
     mapping(
-      "rateType" -> optional(text).verifying(Messages("gmp.error.reason.mandatory"), { x => x.isDefined &&
+      "rateType" -> optional(text).verifying(Messages("gmp.error.revaluation.rate.error"), { x => x.isDefined &&
         List(RevaluationRate.FIXED, RevaluationRate.HMRC, RevaluationRate.LIMITED, RevaluationRate.S148).contains(x.get) })
     )(RevaluationRate.apply)(RevaluationRate.unapply)
   )

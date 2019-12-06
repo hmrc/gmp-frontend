@@ -23,10 +23,10 @@
 @import models.CalculationType
 @heading = {
         @{session.scenario match {
-        case CalculationType.PAYABLE_AGE | CalculationType.SPA | CalculationType.SURVIVOR => Messages("gmp.revaluation_rate_spa.header")
+        case CalculationType.PAYABLE_AGE | CalculationType.SPA | CalculationType.SURVIVOR => Messages("gmp.revaluation_rate.header")
         case CalculationType.REVALUATION => {
         session.revaluationDate match {
-        case Some(rd) if(!rd.isOnOrAfter06042016) => Messages("gmp.revaluation_rate_spa.header")
+        case Some(rd) if(!rd.isOnOrAfter06042016) => Messages("gmp.revaluation_rate.header")
         case _ => Messages("gmp.revaluation_rate.header")
         }
         }
@@ -35,7 +35,7 @@
 }
 @gmp_main(title = heading + " - " + Messages("service.title") + " - " + Messages("gov.uk")) {
 
-        @includes.back_link(Messages("gmp.revaluation_rate_spa.header"))
+        @includes.back_link(Messages("gmp.revaluation_rate.header"))
 
         @views.html.helpers.errorSummary(revaluationRateForm)
 
@@ -49,22 +49,22 @@
                     session.leaving.leaving match{
                     case Some(Leaving.YES_AFTER) | Some(Leaving.NO) =>
                     Seq(
-                    ("hmrc", "hmrc", "none")  -> Messages("gmp.revaluation_rate.rate_held_by_hmrc"),
-                    ("fixed", "fixed", "none")  -> Messages("gmp.revaluation_rate.fixed"),
-                    ("s148", "s148", "none")  -> Messages("gmp.revaluation_rate.s148")
+                        ("fixed", "fixed", "none")  -> Messages("gmp.revaluation_rate.fixed"),
+                        ("hmrc", "hmrc", "none")  -> Messages("gmp.revaluation_rate.rate_held_by_hmrc"),
+                        ("s148", "s148", "none")  -> Messages("gmp.revaluation_rate.s148")
                     )
                     case _ =>
                   Seq(
-                    ("hmrc", "hmrc", "none")  -> Messages("gmp.revaluation_rate.rate_held_by_hmrc"),
-                    ("fixed", "fixed", "none")  -> Messages("gmp.revaluation_rate.fixed"),
-                    ("s148", "s148", "none")  -> Messages("gmp.revaluation_rate.s148"),
-                    ("limited", "limited", "none") -> Messages("gmp.revaluation_rate.limited")
+                        ("fixed", "fixed", "none")  -> Messages("gmp.revaluation_rate.fixed"),
+                        ("hmrc", "hmrc", "none")  -> Messages("gmp.revaluation_rate.rate_held_by_hmrc"),
+                        ("limited", "limited", "none") -> Messages("gmp.revaluation_rate.limited"),
+                        ("s148", "s148", "none")  -> Messages("gmp.revaluation_rate.s148")
                   )},
                   session.scenario match {
-                    case CalculationType.PAYABLE_AGE | CalculationType.SPA | CalculationType.SURVIVOR => '_legend -> Messages("gmp.revaluation_rate_spa.header")
+                    case CalculationType.PAYABLE_AGE | CalculationType.SPA | CalculationType.SURVIVOR => '_legend -> Messages("gmp.revaluation_rate.header")
                     case CalculationType.REVALUATION => {
                         session.revaluationDate match {
-                            case Some(rd) if(!rd.isOnOrAfter06042016) => '_legend -> Messages("gmp.revaluation_rate_spa.header")
+                            case Some(rd) if(!rd.isOnOrAfter06042016) => '_legend -> Messages("gmp.revaluation_rate.header")
                             case _ => '_legend -> Messages("gmp.revaluation_rate.header")
                         }
                     }

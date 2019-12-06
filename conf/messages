@@ -59,8 +59,7 @@ gmp.survivor.dol.question = Had the member already left the scheme at date of de
 gmp.fileupload.header = Upload your file
 gmp.bulk.results.banner = Calculation ready
 gmp.bulk_request_received.banner = Your request has been received
-gmp.revaluation_rate.header = Which revaluation rate would you like to use?
-gmp.revaluation_rate_spa.header = If HMRC needs to revalue this calculation which rate would you like to use?
+gmp.revaluation_rate.header = What revaluation rate do you want HMRC to use?
 gmp.thank_you.header = Thank you
 gmp.thank_you.what_now = What do you want to do now?
 gmp.contracted_out_period_table_header = Contracted-out period {0}
@@ -148,9 +147,9 @@ gmp.year = Year
 gmp.inflation_proofed = Enter the date.
 gmp.caption = Recent calculations
 gmp.revaluation.rate = Revaluation rate
-gmp.revaluation_rate.rate_held_by_hmrc = The rate held by HMRC
+gmp.revaluation_rate.rate_held_by_hmrc = HMRC’s rate
 gmp.revaluation_rate.fixed = Fixed rate
-gmp.revaluation_rate.s148 = S148 or full rate revaluation
+gmp.revaluation_rate.s148 = S148 or full rate
 gmp.revaluation_rate.limited = Limited rate
 
 gmp.total = Total GMP
@@ -247,6 +246,7 @@ gmp.error.member.lastname.mandatory = Enter member’s last name
 gmp.error.nino.temporary = This is a temporary National Insurance number. You need a permanent one to calculate a GMP.
 gmp.error.reval_date.mandatory = Enter when you would like the calculation made to
 gmp.error.leaving_date.mandatory = Enter a leaving date
+gmp.error.revaluation.rate.error = Select the revaluation rate you want HMRC to use
 
 gmp.error.csv.date.invalid = Enter a date in the same format as the example given in the instructions file
 gmp.error.csv.termination.invalid = Enter a date If the member left after 5 April 2016 or ‘SM’ if the member is still in the scheme
@@ -391,3 +391,4 @@ gmp.ga-track.button.click=button - click
 global.error.InternalServerError500.title = Sorry, there is a problem with the service
 global.error.InternalServerError500.heading = Sorry, there is a problem with the service
 global.error.InternalServerError500.message = Try again later.
+

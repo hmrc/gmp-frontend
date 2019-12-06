@@ -126,13 +126,13 @@ class RevaluationRateControllerSpec extends PlaySpec with OneServerPerSuite with
       "include the correct header when Payable Date scenario selected" in {
         when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession.copy(scenario = CalculationType.PAYABLE_AGE))))
         val result = TestRevaluationRateController.get(FakeRequest())
-            contentAsString(result) must include(Messages("gmp.revaluation_rate_spa.header"))
+            contentAsString(result) must include(Messages("gmp.revaluation_rate.header"))
       }
 
       "include the correct header when Survivor scenario selected" in {
         when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession.copy(scenario = CalculationType.SURVIVOR))))
         val result = TestRevaluationRateController.get(FakeRequest())
-            contentAsString(result) must include(Messages("gmp.revaluation_rate_spa.header"))
+            contentAsString(result) must include(Messages("gmp.revaluation_rate.header"))
       }
 
       "include the correct header when non Payable Date scenario selected" in {
@@ -145,7 +145,7 @@ class RevaluationRateControllerSpec extends PlaySpec with OneServerPerSuite with
         val gmpSession = GmpSession(MemberDetails(nino, "A", "AAA"), "S1234567T", CalculationType.REVALUATION, Some(GmpDate(Some("1"), Some("1"), Some("2015"))), None, Leaving(GmpDate(None, None, None), Some(Leaving.YES_BEFORE)), None)
         when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
         val result = TestRevaluationRateController.get(FakeRequest())
-            contentAsString(result) must include(Messages("gmp.revaluation_rate_spa.header"))
+            contentAsString(result) must include(Messages("gmp.revaluation_rate.header"))
       }
 
       "include the correct header when non revaluation Scenario after 06/04/2016 selected" in {
@@ -195,7 +195,7 @@ class RevaluationRateControllerSpec extends PlaySpec with OneServerPerSuite with
               RevaluationRate(None)
             )
             val result = TestRevaluationRateController.post(FakeRequest().withJsonBody(postData))
-            contentAsString(result) must include(Messages("gmp.error.reason.mandatory"))
+            contentAsString(result) must include(Messages("gmp.error.revaluation.rate.error"))
         }
 
         "respond with error when can't get session" in {
