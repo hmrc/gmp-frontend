@@ -28,11 +28,12 @@ import uk.gov.hmrc.play.audit.http.HttpAuditing
 import uk.gov.hmrc.play.audit.http.config.AuditingConfig
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.config.{AppName, RunMode, ServicesConfig}
-import uk.gov.hmrc.play.frontend.config.LoadAuditingConfig
+import uk.gov.hmrc.play.bootstrap.config.LoadAuditingConfig
+import uk.gov.hmrc.play.bootstrap.http.HttpClient
 import uk.gov.hmrc.play.http.ws._
 
 class GmpFrontendAuditConnector @Inject()(environment: Environment, configuration: Configuration) extends AuditConnector with AppName with RunMode {
-  lazy val auditingConfig: AuditingConfig = LoadAuditingConfig(s"auditing")
+  lazy val auditingConfig: AuditingConfig = LoadAuditingConfig(appNameConfiguration, mode,s"auditing")
 
   override protected def appNameConfiguration: Configuration = configuration
   override protected def mode: Mode = environment.mode
@@ -54,7 +55,7 @@ object WSHttp extends WSHttp with Hooks
 
 class GmpSessionCache @Inject()(environment: Environment,
                                 configuration: Configuration,
-                                val http: WSHttp) extends SessionCache with AppName with ServicesConfig {
+                                val http: HttpClient) extends SessionCache with AppName with ServicesConfig {
 
   override lazy val defaultSource = appName
   override lazy val baseUri = baseUrl("keystore")

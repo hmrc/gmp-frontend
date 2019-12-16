@@ -27,10 +27,11 @@ import play.api.i18n.Messages
 import play.api.i18n.Messages.Implicits._
 import play.api.mvc.Request
 import play.api.{Configuration, Environment, Logger}
-import uk.gov.hmrc.crypto.ApplicationCrypto
+import uk.gov.hmrc.crypto.{ApplicationCrypto, PlainText}
 import uk.gov.hmrc.http.HttpGet
+import uk.gov.hmrc.play.bootstrap.filters.frontend.crypto.SessionCookieCrypto
 import uk.gov.hmrc.play.config.ServicesConfig
-import uk.gov.hmrc.play.frontend.filters.SessionCookieCryptoFilter
+//import uk.gov.hmrc.play.frontend.filters.SessionCookieCryptoFilter
 import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext._
 import uk.gov.hmrc.play.partials.{HeaderCarrierForPartialsConverter, HtmlPartial}
 
@@ -64,12 +65,13 @@ class UploadConfig @Inject()( environment: Environment,
 }
 
 class AttachmentsConnector @Inject()(
-                                      uploadConfig: UploadConfig,
+                                      uploadConfig: UploadConfig,sessionCookieCrypto: SessionCookieCrypto,
                                       http: HttpGet,
                                       configuration: Configuration
                                     ) extends HeaderCarrierForPartialsConverter {
 
-  override val crypto = new SessionCookieCryptoFilter(new ApplicationCrypto(configuration.underlying)).encrypt _
+  override val crypto: (String) => String = cookie =>
+    sessionCookieCrypto.crypto.encrypt(PlainText(cookie)).value
 
   def getFileUploadPartial()(implicit request: Request[_]): Future[HtmlPartial] = {
     val partial = http.GET[HtmlPartial](uploadConfig(request))

@@ -16,35 +16,38 @@
 
 package config
 
+import akka.stream.Materializer
+import com.google.inject.Singleton
 import com.typesafe.config.Config
+import javax.inject.Inject
 import net.ceedubs.ficus.Ficus._
 import play.api.Mode.Mode
 import play.api.Play.current
 import play.api.i18n.Messages.Implicits._
+import play.api.i18n.MessagesApi
 import play.api.mvc.Request
 import play.api.{Application, Configuration, Play}
 import play.twirl.api.Html
 import uk.gov.hmrc.crypto.ApplicationCrypto
+import uk.gov.hmrc.play.bootstrap.config.ControllerConfigs
+import uk.gov.hmrc.play.bootstrap.http.FrontendErrorHandler
 import uk.gov.hmrc.play.config.{AppName, ControllerConfig, RunMode}
-import uk.gov.hmrc.play.frontend.bootstrap.DefaultFrontendGlobal
-import uk.gov.hmrc.play.frontend.filters.{FrontendAuditFilter, FrontendLoggingFilter, MicroserviceFilterSupport}
+import uk.gov.hmrc.play.bootstrap.filters.DefaultLoggingFilter
+import uk.gov.hmrc.play.bootstrap.filters.frontend.FrontendAuditFilter
+@Singleton
+class MyErrorHandler @Inject()(
+                                val messagesApi: MessagesApi, val configuration: Configuration,
+                                val loggingFilter:GmpFrontendLoggingFilter,
+                                val frontendAuditFilter:GmpFrontendAuditFilter,
+                                auditConnector:GmpFrontendAuditConnector,
+                                val gmpContext:GmpContext
+                              ) extends FrontendErrorHandler {
 
-object ApplicationGlobal extends DefaultFrontendGlobal with RunMode {
 
-  override lazy val auditConnector = Play.current.injector.instanceOf[GmpFrontendAuditConnector]
-  override val loggingFilter = GmpFrontendLoggingFilter
-  override val frontendAuditFilter = GmpFrontendAuditFilter
-  implicit lazy val gmpContext = Play.current.injector.instanceOf[GmpContext]
+  override def standardErrorTemplate(pageTitle: String, heading: String, message: String)
+                                    (implicit request: Request[_]) = ??? // put the code from your old global object here.
 
-  override def onStart(app: Application) {
-    super.onStart(app)
-    new ApplicationCrypto(Play.current.configuration.underlying).verifyConfiguration()
-  }
-
-  override def standardErrorTemplate(pageTitle: String, heading: String, message: String)(implicit request: Request[_]): Html =
-      views.html.global_error(pageTitle, heading, message)
-
-  override def notFoundTemplate(implicit request: Request[_]): Html = {
+  /*override def notFoundTemplate(implicit request: Request[_]): Html = {
     views.html.global_page_not_found()
   }
   override def microserviceMetricsConfig(implicit app: Application): Option[Configuration] = app.configuration.getConfig("microservice.metrics")
@@ -52,17 +55,18 @@ object ApplicationGlobal extends DefaultFrontendGlobal with RunMode {
   override protected def mode: Mode = Play.current.mode
 
   override protected def runModeConfiguration: Configuration = Play.current.configuration
+}*/
 }
-
 object ControllerConfiguration extends ControllerConfig {
   lazy val controllerConfigs = Play.current.configuration.underlying.as[Config]("controllers")
 }
 
-object GmpFrontendLoggingFilter extends FrontendLoggingFilter with MicroserviceFilterSupport {
+class GmpFrontendLoggingFilter @Inject()(config: Configuration)(implicit override val mat: Materializer)
+  extends DefaultLoggingFilter(ControllerConfigs.fromConfig(config)) {
   override def controllerNeedsLogging(controllerName: String): Boolean = ControllerConfiguration.paramsForController(controllerName).needsLogging
 }
 
-object GmpFrontendAuditFilter extends FrontendAuditFilter with RunMode with AppName with MicroserviceFilterSupport {
+class GmpFrontendAuditFilter @Inject()(config: Configuration)(implicit override val mat: Materializer) extends FrontendAuditFilter with RunMode with AppName {
 
   override lazy val maskedFormFields = Seq.empty[String]
 

@@ -18,6 +18,7 @@ package connectors
 
 import java.util.UUID
 
+import com.google.inject.Inject
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
@@ -25,10 +26,12 @@ import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.http.HeaderNames
 import play.api.test.FakeRequest
-import uk.gov.hmrc.crypto.ApplicationCrypto
+import org.mockito.Mockito.when
+import org.mockito.Matchers.any
+import uk.gov.hmrc.crypto.{ApplicationCrypto, Crypted, Decrypter, Encrypter,PlainText}
 import uk.gov.hmrc.http.logging.RequestId
 import uk.gov.hmrc.http.{HeaderCarrier, HttpGet, HttpResponse}
-import uk.gov.hmrc.play.frontend.filters.SessionCookieCryptoFilter
+import uk.gov.hmrc.play.bootstrap.filters.frontend.crypto.SessionCookieCrypto
 import uk.gov.hmrc.play.partials.HeaderCarrierForPartials
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -39,9 +42,15 @@ class AttachmentsConnectorSpec extends PlaySpec with OneAppPerSuite with Mockito
 
   val mockHttp = mock[HttpGet]
   val uploadConfig = app.injector.instanceOf[UploadConfig]
+  val encrypter = mock[Encrypter with Decrypter]
+  when(encrypter.encrypt(any[PlainText])).thenReturn(Crypted("foo"))
+  val sessionCookieCrypto = mock[SessionCookieCrypto]
+  when(sessionCookieCrypto.crypto).thenReturn(encrypter)
 
-  class TestAttachmentsConnector extends AttachmentsConnector(uploadConfig, mockHttp, app.configuration) {
-    override val crypto = new SessionCookieCryptoFilter(new ApplicationCrypto(app.configuration.underlying)).encrypt _
+  class TestAttachmentsConnector extends AttachmentsConnector(uploadConfig,sessionCookieCrypto, mockHttp, app.configuration) {
+    val sessionCookieCrypto: SessionCookieCrypto = app.injector.instanceOf[SessionCookieCrypto]
+    override val crypto: (String) => String = cookie =>
+      sessionCookieCrypto.crypto.encrypt(PlainText(cookie)).value
   }
 
   override def beforeEach = {

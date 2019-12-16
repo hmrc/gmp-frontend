@@ -16,7 +16,7 @@
 
 package connectors
 
-import com.google.inject.Inject
+import com.google.inject.{Inject, Singleton}
 import play.api.Mode.Mode
 import play.api.{Configuration, Environment, Logger}
 import uk.gov.hmrc.http.{BadGatewayException, HeaderCarrier, HttpGet}
@@ -24,10 +24,12 @@ import uk.gov.hmrc.play.config.ServicesConfig
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
+import uk.gov.hmrc.play.bootstrap.http.HttpClient
 
-class ContactFrontendConnector @Inject()(http: HttpGet,
+@Singleton
+class ContactFrontendConnector @Inject()(http: HttpClient,
                                          environment: Environment,
-                                         val runModeConfiguration: Configuration) extends ServicesConfig {
+                                         override val runModeConfiguration: Configuration) extends ServicesConfig {
 
   override protected def mode: Mode = environment.mode
 
