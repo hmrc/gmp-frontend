@@ -24,11 +24,12 @@ import play.api.mvc.Request
 import uk.gov.hmrc.play.bootstrap.http.FrontendErrorHandler
 @Singleton
 class MyErrorHandler @Inject()(
-                                val messagesApi: MessagesApi, val configuration: Configuration,
-                                val gmpContext:GmpContext
-                              ) extends FrontendErrorHandler {
+                                val messagesApi: MessagesApi, val configuration: Configuration
+                              ) (implicit val gmpContext: GmpContext)extends FrontendErrorHandler {
 
 
   override def standardErrorTemplate(pageTitle: String, heading: String, message: String)
-                                    (implicit request: Request[_]) = ??? // put the code from your old global object here.
+                                    (implicit request: Request[_])=
+    views.html.failure(pageTitle, heading, message)
+
 }
