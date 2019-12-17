@@ -22,18 +22,14 @@ import com.typesafe.config.Config
 import javax.inject.Inject
 import net.ceedubs.ficus.Ficus._
 import play.api.Mode.Mode
-import play.api.Play.current
-import play.api.i18n.Messages.Implicits._
 import play.api.i18n.MessagesApi
 import play.api.mvc.Request
-import play.api.{Application, Configuration, Play}
-import play.twirl.api.Html
-import uk.gov.hmrc.crypto.ApplicationCrypto
+import play.api.{Configuration, Play}
 import uk.gov.hmrc.play.bootstrap.config.ControllerConfigs
-import uk.gov.hmrc.play.bootstrap.http.FrontendErrorHandler
-import uk.gov.hmrc.play.config.{AppName, ControllerConfig, RunMode}
 import uk.gov.hmrc.play.bootstrap.filters.DefaultLoggingFilter
 import uk.gov.hmrc.play.bootstrap.filters.frontend.FrontendAuditFilter
+import uk.gov.hmrc.play.bootstrap.http.FrontendErrorHandler
+import uk.gov.hmrc.play.config.{AppName, ControllerConfig, RunMode}
 @Singleton
 class MyErrorHandler @Inject()(
                                 val messagesApi: MessagesApi, val configuration: Configuration,

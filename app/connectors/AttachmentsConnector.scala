@@ -30,8 +30,8 @@ import play.api.{Configuration, Environment, Logger}
 import uk.gov.hmrc.crypto.{ApplicationCrypto, PlainText}
 import uk.gov.hmrc.http.HttpGet
 import uk.gov.hmrc.play.bootstrap.filters.frontend.crypto.SessionCookieCrypto
+import uk.gov.hmrc.play.bootstrap.http.HttpClient
 import uk.gov.hmrc.play.config.ServicesConfig
-//import uk.gov.hmrc.play.frontend.filters.SessionCookieCryptoFilter
 import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext._
 import uk.gov.hmrc.play.partials.{HeaderCarrierForPartialsConverter, HtmlPartial}
 
@@ -65,8 +65,8 @@ class UploadConfig @Inject()( environment: Environment,
 }
 
 class AttachmentsConnector @Inject()(
-                                      uploadConfig: UploadConfig,sessionCookieCrypto: SessionCookieCrypto,
-                                      http: HttpGet,
+                                      uploadConfig: UploadConfig, sessionCookieCrypto: SessionCookieCrypto,
+                                      http: HttpClient,
                                       configuration: Configuration
                                     ) extends HeaderCarrierForPartialsConverter {
 

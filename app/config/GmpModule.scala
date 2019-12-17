@@ -16,7 +16,6 @@
 
 package config
 
-import controllers.auth.GmpAuthConnector
 import play.api.inject.{Binding, Module}
 import play.api.{Configuration, Environment}
 import uk.gov.hmrc.auth.core.AuthConnector
@@ -31,11 +30,9 @@ class GmpModule extends Module{
     bind(classOf[HttpClient]).to(classOf[DefaultHttpClient]),
       bind(classOf[AuthConnector]).to(classOf[DefaultAuthConnector]),
       bind(classOf[AuditConnector]).to(classOf[DefaultAuditConnector]),
-     /* bind(classOf[CalculationRepository]).toProvider(classOf[CalculationRepositoryProvider]),
-      bind(classOf[ValidateSconRepository]).toProvider(classOf[ValidateSconRepositoryProvider]),
- */   bind[HttpGet].to(WSHttp),
-    bind[HttpPost].to(WSHttp),
-    bind[HttpPut].to(WSHttp),
-    bind[WSHttp].to(WSHttp)
+      bind[HttpGet].to(WSHttp),
+      bind[HttpPost].to(WSHttp),
+      bind[HttpPut].to(WSHttp),
+      bind[WSHttp].to(WSHttp)
   )
 }

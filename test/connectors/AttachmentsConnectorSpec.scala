@@ -28,10 +28,11 @@ import play.api.http.HeaderNames
 import play.api.test.FakeRequest
 import org.mockito.Mockito.when
 import org.mockito.Matchers.any
-import uk.gov.hmrc.crypto.{ApplicationCrypto, Crypted, Decrypter, Encrypter,PlainText}
+import uk.gov.hmrc.crypto.{ApplicationCrypto, Crypted, Decrypter, Encrypter, PlainText}
 import uk.gov.hmrc.http.logging.RequestId
 import uk.gov.hmrc.http.{HeaderCarrier, HttpGet, HttpResponse}
 import uk.gov.hmrc.play.bootstrap.filters.frontend.crypto.SessionCookieCrypto
+import uk.gov.hmrc.play.bootstrap.http.HttpClient
 import uk.gov.hmrc.play.partials.HeaderCarrierForPartials
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -40,7 +41,7 @@ import scala.concurrent.Future
 class AttachmentsConnectorSpec extends PlaySpec with OneAppPerSuite with MockitoSugar with BeforeAndAfterEach {
 
 
-  val mockHttp = mock[HttpGet]
+  val mockHttp = mock[HttpClient]
   val uploadConfig = app.injector.instanceOf[UploadConfig]
   val encrypter = mock[Encrypter with Decrypter]
   when(encrypter.encrypt(any[PlainText])).thenReturn(Crypted("foo"))
