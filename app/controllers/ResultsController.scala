@@ -17,7 +17,7 @@
 package controllers
 
 import com.google.inject.{Inject, Singleton}
-import config.{GmpContext, GmpFrontendAuditConnector}
+import config.{GmpContext}
 import connectors.GmpConnector
 import controllers.auth.AuthAction
 import events.ContributionsAndEarningsEvent
@@ -32,6 +32,7 @@ import play.api.mvc.Request
 import play.twirl.api.HtmlFormat
 import services.SessionService
 import uk.gov.hmrc.auth.core.AuthConnector
+import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 
 import scala.concurrent.Future
 
@@ -40,7 +41,7 @@ class ResultsController @Inject()(authAction: AuthAction,
                                   override val authConnector: AuthConnector,
                                   sessionService: SessionService,
                                   calculationConnector: GmpConnector,
-                                  auditConnector: GmpFrontendAuditConnector,
+                                  auditConnector: AuditConnector,
                                   metrics: ApplicationMetrics) extends GmpPageFlow(authConnector) {
 
    def resultsView(response: CalculationResponse, revalRateSubheader: Option[String], survivorSubheader: Option[String])(implicit request: Request[_], context: GmpContext): HtmlFormat.Appendable = {

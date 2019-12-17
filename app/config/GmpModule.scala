@@ -29,10 +29,6 @@ class GmpModule extends Module{
   override def bindings(environment: Environment, configuration: Configuration): Seq[Binding[_]] = Seq(
     bind(classOf[HttpClient]).to(classOf[DefaultHttpClient]),
       bind(classOf[AuthConnector]).to(classOf[DefaultAuthConnector]),
-      bind(classOf[AuditConnector]).to(classOf[DefaultAuditConnector]),
-      bind[HttpGet].to(WSHttp),
-      bind[HttpPost].to(WSHttp),
-      bind[HttpPut].to(WSHttp),
-      bind[WSHttp].to(WSHttp)
+      bind(classOf[AuditConnector]).to(classOf[DefaultAuditConnector])
   )
 }

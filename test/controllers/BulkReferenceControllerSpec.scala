@@ -18,7 +18,6 @@ package controllers
 
 import java.util.UUID
 
-import config.GmpFrontendAuditConnector
 import controllers.auth.FakeAuthAction
 import models._
 import org.mockito.Matchers
@@ -34,6 +33,7 @@ import services.SessionService
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.logging.SessionId
+import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 
 import scala.concurrent.Future
 
@@ -41,7 +41,7 @@ class BulkReferenceControllerSpec extends PlaySpec with OneServerPerSuite with M
 
   val mockAuthConnector: AuthConnector = mock[AuthConnector]
   val mockSessionService: SessionService = mock[SessionService]
-  val mockAuditConnector: GmpFrontendAuditConnector = mock[GmpFrontendAuditConnector]
+  val mockAuditConnector: AuditConnector = mock[AuditConnector]
 
   implicit val hc = new HeaderCarrier(sessionId = Some(SessionId(s"session-${UUID.randomUUID}")))
 
