@@ -16,23 +16,25 @@
 
 package connectors
 
-import com.google.inject.Inject
+import com.google.inject.{Inject, Singleton}
 import metrics.ApplicationMetrics
 import models._
 import play.api.Mode.Mode
 import play.api.{Configuration, Environment, Logger}
-import uk.gov.hmrc.http.{HeaderCarrier, HttpGet, HttpPost, HttpPut}
+import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.play.bootstrap.http.HttpClient
 import uk.gov.hmrc.play.config.ServicesConfig
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
+@Singleton
 class GmpConnector @Inject()(environment: Environment,
                              val runModeConfiguration: Configuration,
                              metrics: ApplicationMetrics,
-                             httpPost: HttpPost,
-                             httpGet: HttpGet,
-                             httpPut: HttpPut) extends ServicesConfig {
+                             httpPost: HttpClient,
+                             httpGet: HttpClient,
+                             httpPut: HttpClient) extends ServicesConfig {
 
   override protected def mode: Mode = environment.mode
 

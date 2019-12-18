@@ -17,7 +17,6 @@
 package controllers.auth
 
 import com.google.inject.{ImplementedBy, Inject}
-import config.WSHttp
 import play.api.Mode.Mode
 import play.api.mvc._
 import play.api.{Configuration, Environment}
@@ -25,6 +24,7 @@ import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.HeaderCarrierConverter
+import uk.gov.hmrc.play.bootstrap.http.HttpClient
 import uk.gov.hmrc.play.config.ServicesConfig
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -67,9 +67,9 @@ class AuthActionImpl @Inject()(val authConnector: AuthConnector, configuration: 
 trait AuthAction extends ActionBuilder[AuthenticatedRequest] with ActionFunction[Request, AuthenticatedRequest]
 
 
-class GmpAuthConnector @Inject()( val http: WSHttp,
-                                  environment: Environment,
-                                  val runModeConfiguration: Configuration
+class GmpAuthConnector @Inject()(val http: HttpClient,
+                                 environment: Environment,
+                                 val runModeConfiguration: Configuration
                                 ) extends PlayAuthConnector with ServicesConfig {
 
   val serviceUrl: String = baseUrl("auth")

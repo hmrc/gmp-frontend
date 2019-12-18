@@ -31,6 +31,7 @@ import play.api.libs.json.{JsValue, Json}
 import play.api.test.Helpers._
 import uk.gov.hmrc.http._
 import uk.gov.hmrc.http.logging.SessionId
+import uk.gov.hmrc.play.bootstrap.http.HttpClient
 
 import scala.concurrent.Future
 
@@ -45,9 +46,9 @@ class GmpConnectorSpec extends PlaySpec with OneServerPerSuite with MockitoSugar
   val pspId = "11111111"
   val nino = RandomNino.generate
 
-  val mockHttpPost = mock[HttpPost]
-  val mockHttpGet = mock[HttpGet]
-  val mockHttpPut = mock[HttpPut]
+  val mockHttpPost = mock[HttpClient]
+  val mockHttpGet = mock[HttpClient]
+  val mockHttpPut = mock[HttpClient]
   val metrics = app.injector.instanceOf[ApplicationMetrics]
   object TestGmpConnector extends GmpConnector(
     app.injector.instanceOf[Environment],

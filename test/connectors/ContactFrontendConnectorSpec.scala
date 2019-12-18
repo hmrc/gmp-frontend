@@ -26,6 +26,7 @@ import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.Helpers._
 import play.api.{Application, Configuration, Environment, Play}
 import uk.gov.hmrc.http.{BadGatewayException, HeaderCarrier, HttpGet, HttpResponse}
+import uk.gov.hmrc.play.bootstrap.http.HttpClient
 import uk.gov.hmrc.play.config.ServicesConfig
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -39,7 +40,7 @@ class ContactFrontendConnectorSpec extends PlaySpec with OneAppPerSuite with Moc
   override protected def runModeConfiguration: Configuration = Play.current.configuration
 
   implicit val headerCarrier = HeaderCarrier()
-  val mockHttp = mock[HttpGet]
+  val mockHttp = mock[HttpClient]
 
   object TestConnector extends ContactFrontendConnector(mockHttp, app.injector.instanceOf[Environment], app.configuration)
 

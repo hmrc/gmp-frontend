@@ -22,6 +22,7 @@ import org.joda.time.LocalDateTime
 import play.api.Mode.Mode
 import play.api.{Configuration, Environment, Logger}
 import uk.gov.hmrc.http._
+import uk.gov.hmrc.play.bootstrap.http.HttpClient
 import uk.gov.hmrc.play.config.ServicesConfig
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -29,8 +30,8 @@ import scala.concurrent.Future
 
 class GmpBulkConnector @Inject()(environment: Environment,
                                  val runModeConfiguration: Configuration,
-                                 httpGet: HttpGet,
-                                 httpPost: HttpPost) extends ServicesConfig {
+                                 httpGet: HttpClient,
+                                 httpPost: HttpClient) extends ServicesConfig {
 
   override protected def mode: Mode = environment.mode
 

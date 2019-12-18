@@ -30,13 +30,14 @@ import play.api.libs.json.Json
 import play.api.test.Helpers._
 import uk.gov.hmrc.http._
 import uk.gov.hmrc.http.logging.SessionId
+import uk.gov.hmrc.play.bootstrap.http.HttpClient
 
 import scala.concurrent.Future
 
 class GmpBulkConnectorSpec extends PlaySpec with OneServerPerSuite with MockitoSugar with BeforeAndAfter {
 
-  val mockHttpPost = mock[HttpPost]
-  val mockHttpGet = mock[HttpGet]
+  val mockHttpPost = mock[HttpClient]
+  val mockHttpGet = mock[HttpClient]
   val link = "some-link"
   val psaId = "B1234567"
 

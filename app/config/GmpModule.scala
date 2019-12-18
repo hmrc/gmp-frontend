@@ -16,18 +16,19 @@
 
 package config
 
-import controllers.auth.GmpAuthConnector
 import play.api.inject.{Binding, Module}
 import play.api.{Configuration, Environment}
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.http.{HttpGet, HttpPost, HttpPut}
+import uk.gov.hmrc.play.audit.http.connector.AuditConnector
+import uk.gov.hmrc.play.bootstrap.audit.DefaultAuditConnector
+import uk.gov.hmrc.play.bootstrap.auth.DefaultAuthConnector
+import uk.gov.hmrc.play.bootstrap.http.{DefaultHttpClient, HttpClient}
 
 class GmpModule extends Module{
   override def bindings(environment: Environment, configuration: Configuration): Seq[Binding[_]] = Seq(
-    bind[AuthConnector].to(classOf[GmpAuthConnector]),
-    bind[HttpGet].to(WSHttp),
-    bind[HttpPost].to(WSHttp),
-    bind[HttpPut].to(WSHttp),
-    bind[WSHttp].to(WSHttp)
+    bind(classOf[HttpClient]).to(classOf[DefaultHttpClient]),
+      bind(classOf[AuthConnector]).to(classOf[DefaultAuthConnector]),
+      bind(classOf[AuditConnector]).to(classOf[DefaultAuditConnector])
   )
 }
