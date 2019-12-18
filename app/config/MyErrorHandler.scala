@@ -21,6 +21,7 @@ import javax.inject.Inject
 import play.api.Configuration
 import play.api.i18n.MessagesApi
 import play.api.mvc.Request
+import play.twirl.api.Html
 import uk.gov.hmrc.play.bootstrap.http.FrontendErrorHandler
 @Singleton
 class MyErrorHandler @Inject()(
@@ -30,6 +31,10 @@ class MyErrorHandler @Inject()(
 
   override def standardErrorTemplate(pageTitle: String, heading: String, message: String)
                                     (implicit request: Request[_])=
-    views.html.service_unavailable()
+    views.html.global_error(pageTitle, heading, message)
+
+  override def notFoundTemplate(implicit request: Request[_]): Html = {
+    views.html.global_page_not_found()
+  }
 
 }
