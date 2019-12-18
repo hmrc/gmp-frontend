@@ -30,6 +30,6 @@ class MyErrorHandler @Inject()(
 
   override def standardErrorTemplate(pageTitle: String, heading: String, message: String)
                                     (implicit request: Request[_])=
-    views.html.failure(pageTitle, heading, message)
+    views.html.service_unavailable()
 
 }
