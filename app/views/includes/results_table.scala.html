@@ -14,13 +14,10 @@
  * limitations under the License.
  *@
 
-@import play.api.Play.current
-@import play.api.i18n.Messages.Implicits._
-
-@(calculationResponse:CalculationResponse)(implicit request: Request[_])
+@(calculationResponse:CalculationResponse)(implicit request: Request[_],messages: Messages)
 
 @import org.joda.time.LocalDate
-@import config.ApplicationConfig.globalErrors
+
 
 <table id="gmp-periods">
     <thead>

@@ -34,7 +34,6 @@ lazy val microservice = Project(appName, file("."))
     fork in Test := false,
     retrieveManaged := true,
     PlayKeys.playDefaultPort := 9941,
-    routesGenerator := InjectedRoutesGenerator,
     resolvers ++= Seq(
       Resolver.bintrayRepo("hmrc", "releases"),
       Resolver.jcenterRepo,

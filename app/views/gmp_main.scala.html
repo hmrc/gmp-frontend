@@ -17,8 +17,7 @@
 @import uk.gov.hmrc.http.HeaderCarrier
 @import scala.concurrent.ExecutionContext
 
-@(applicationConfig: config.ApplicationConfig = config.ApplicationConfig,
-title: String,
+@(title: String,
 pageScripts: Option[Html] = None,
 scriptElem: Option[Html] = None,
 userLoggedIn: Boolean = false,
@@ -28,7 +27,7 @@ signOutEnabled: Boolean = true,
 showSignOutLink: Boolean = true,
 showUserResearchBanner: Boolean = false,
 dashboardLinkEnabled:Boolean = false,
-pageHeading: Option[String] = None)(mainContent: Html)(implicit request: Request[_], context: config.GmpContext, messages: Messages)
+pageHeading: Option[String] = None)(mainContent: Html)(implicit request: Request[_], context: config.GmpContext, messages: Messages,applicationconfig:config.ApplicationConfig)
 
 @getHelpForm = {
     @includes.report_problem(supportLinkEnabled)
@@ -40,7 +39,7 @@ pageHeading: Option[String] = None)(mainContent: Html)(implicit request: Request
 }
 
 @main(
-  applicationConfig = config.ApplicationConfig,
+  applicationConfig = applicationconfig,
   title = title,
   userLoggedIn = userLoggedIn,
   getHelpForm = getHelpForm,

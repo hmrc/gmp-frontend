@@ -17,7 +17,8 @@
 @import play.api.Play.current
 @import play.api.i18n.Messages.Implicits._
 
-@()(implicit request: Request[_], context: config.GmpContext)
+@import config.ApplicationConfig
+@()(implicit request: Request[_], context: config.GmpContext,messages: Messages)
 
 @import uk.gov.hmrc.play.views.html._
 @import uk.gov.hmrc.play.views.html.helpers._

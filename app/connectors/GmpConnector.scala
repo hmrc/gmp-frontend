@@ -19,11 +19,14 @@ package connectors
 import com.google.inject.{Inject, Singleton}
 import metrics.ApplicationMetrics
 import models._
-import play.api.Mode.Mode
+import play.api.Mode
 import play.api.{Configuration, Environment, Logger}
 import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
-import uk.gov.hmrc.play.config.ServicesConfig
+import play.api.libs.json.JodaWrites._
+import play.api.libs.json.JodaReads._
+import play.api.libs.json.Json
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -34,11 +37,12 @@ class GmpConnector @Inject()(environment: Environment,
                              metrics: ApplicationMetrics,
                              httpPost: HttpClient,
                              httpGet: HttpClient,
-                             httpPut: HttpClient) extends ServicesConfig {
+                             httpPut: HttpClient,
+                             val servicesConfig: ServicesConfig)  {
 
-  override protected def mode: Mode = environment.mode
+   def mode: Mode = environment.mode
 
-  lazy val serviceURL = baseUrl("gmp")
+  lazy val serviceURL = servicesConfig.baseUrl("gmp")
 
   def calculateSingle(calculationRequest: CalculationRequest, link: String)(implicit headerCarrier: HeaderCarrier): Future[CalculationResponse] = {
 

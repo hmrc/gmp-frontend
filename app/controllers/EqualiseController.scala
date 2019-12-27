@@ -20,17 +20,21 @@ import com.google.inject.{Inject, Singleton}
 import controllers.auth.AuthAction
 import forms.EqualiseForm._
 import play.api.Logger
-import play.api.Play.current
-import play.api.i18n.Messages.Implicits._
+import play.api.i18n.MessagesProvider
+import play.api.mvc.MessagesControllerComponents
 import services.SessionService
 import uk.gov.hmrc.auth.core.AuthConnector
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class EqualiseController @Inject()(authAction: AuthAction,
                                    override val authConnector: AuthConnector,
-                                   sessionService: SessionService) extends GmpPageFlow(authConnector) {
+                                   sessionService: SessionService,
+                                   messagesControllerComponents: MessagesControllerComponents,
+                                   implicit val executionContext: ExecutionContext,
+                                   override implicit val messagesProvider: MessagesProvider)
+                                  extends GmpPageFlow(authConnector,messagesControllerComponents) {
 
   def get = authAction.async {
     implicit request => Future.successful(Ok(views.html.equalise(equaliseForm)))

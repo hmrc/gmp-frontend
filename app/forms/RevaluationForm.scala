@@ -16,6 +16,7 @@
 
 package forms
 
+import com.google.inject.Singleton
 import models.{GmpDate, Leaving, RevaluationDate}
 import play.api.Play.current
 import play.api.data.Form
@@ -23,8 +24,10 @@ import play.api.data.Forms._
 import play.api.data.validation.{Constraint, Invalid, Valid, ValidationError}
 import play.api.i18n.Messages
 import play.api.i18n.Messages.Implicits._
+import play.api.inject.guice.GuiceApplicationBuilder
 
-object RevaluationForm {
+@Singleton
+class BaseRevaluationForm(messages: Messages) {
 
   val YEAR_FIELD_LENGTH: Int = 4
 
@@ -39,10 +42,10 @@ object RevaluationForm {
             revaluationDate.leaving.leaving.get.equals(Leaving.NO) &&
             !revaluationDate.revaluationDate.isOnOrAfter06042016)
         {
-          Seq(ValidationError(Messages("gmp.error.revaluation_pre2016_not_left"), "revaluationDate")) // 2016
+          Seq(ValidationError(messages("gmp.error.revaluation_pre2016_not_left"), "revaluationDate")) // 2016
         }
         else if (revaluationDate.revaluationDate.isBefore(revaluationDate.leaving.leavingDate)) {
-          Seq(ValidationError(Messages("gmp.error.revaluation_before_leaving", revaluationDate.leaving.leavingDate.getAsText), "revaluationDate"))
+          Seq(ValidationError(messages("gmp.error.revaluation_before_leaving", revaluationDate.leaving.leavingDate.getAsText), "revaluationDate"))
         }
         else {
           Nil
@@ -61,10 +64,10 @@ object RevaluationForm {
       "month" -> optional(text),
       "year" -> optional(text)
     )(GmpDate.apply)(GmpDate.unapply)
-      .verifying(Messages("gmp.error.reval_date.mandatory"), x => mandatoryDate(x))
-      .verifying(Messages("gmp.error.date.invalid"), x => checkValidDate(x))
-      .verifying(Messages("gmp.error.reval_date.from"), x => checkDateOnOrAfterGMPStart(x)) // 1978
-      .verifying(Messages("gmp.error.reval_date.to"), x => checkDateOnOBeforeGMPEnd(x)
+      .verifying(messages("gmp.error.reval_date.mandatory"), x => mandatoryDate(x))
+      .verifying(messages("gmp.error.date.invalid"), x => checkValidDate(x))
+      .verifying(messages("gmp.error.reval_date.from"), x => checkDateOnOrAfterGMPStart(x)) // 1978
+      .verifying(messages("gmp.error.reval_date.to"), x => checkDateOnOBeforeGMPEnd(x)
   )
 
   val leavingMapping = mapping(
@@ -84,3 +87,8 @@ object RevaluationForm {
       .verifying(revaluationDateConstraint)
   )
 }
+
+case object RevaluationForm extends BaseRevaluationForm( {
+  new GuiceApplicationBuilder().injector().instanceOf[Messages]
+}
+)

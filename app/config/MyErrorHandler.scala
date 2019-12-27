@@ -25,7 +25,8 @@ import play.twirl.api.Html
 import uk.gov.hmrc.play.bootstrap.http.FrontendErrorHandler
 @Singleton
 class MyErrorHandler @Inject()(
-                                val messagesApi: MessagesApi, val configuration: Configuration
+                                val messagesApi: MessagesApi, val configuration: Configuration,
+                                implicit val applicationConfig:config.ApplicationConfig
                               ) (implicit val gmpContext: GmpContext)extends FrontendErrorHandler {
 
 

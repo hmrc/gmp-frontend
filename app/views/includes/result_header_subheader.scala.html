@@ -14,10 +14,7 @@
  * limitations under the License.
  *@
 
-@import play.api.Play.current
-@import play.api.i18n.Messages.Implicits._
-
-@(calculationResponse:CalculationResponse, revalRateSubheader: Option[String], survivorSubheader: Option[String])(implicit request: Request[_])
+@(calculationResponse:CalculationResponse, revalRateSubheader: Option[String], survivorSubheader: Option[String])(implicit request: Request[_],messages: Messages)
 
 @includes.back_to_dashboard_link(Messages("gmp.results.h1"))
 <h1 id="page-title">@Messages("gmp.results.h1")</h1>

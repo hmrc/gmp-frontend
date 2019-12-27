@@ -21,12 +21,19 @@ import connectors.GmpBulkConnector
 import controllers.auth.AuthAction
 import play.api.Play.current
 import play.api.i18n.Messages.Implicits._
+import play.api.i18n.MessagesProvider
+import play.api.mvc.MessagesControllerComponents
 import uk.gov.hmrc.auth.core.AuthConnector
+
+import scala.concurrent.ExecutionContext
 
 @Singleton
 class MoreBulkResultsController @Inject()(authAction: AuthAction,
                                           override val authConnector: AuthConnector,
-                                          gmpBulkConnector: GmpBulkConnector) extends GmpPageFlow(authConnector) {
+                                          gmpBulkConnector: GmpBulkConnector,
+                                          override val messagesControllerComponents: MessagesControllerComponents,
+                                          implicit val executionContext: ExecutionContext,
+                                          override implicit val messagesProvider: MessagesProvider) extends GmpPageFlow(authConnector,messagesControllerComponents) {
 
   def retrieveMoreBulkResults = authAction.async {
       implicit request => {

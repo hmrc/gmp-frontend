@@ -30,7 +30,7 @@ trait FieldValidator {
   val DATE_FORMAT_PATTERN = "dd/MM/yyyy"
   val DATE_FORMAT = DateTimeFormat.forPattern(DATE_FORMAT_PATTERN)
 
-  def validateScon(scon: String): Option[String] = {
+  def validateScon(scon: String)(implicit messages: Messages): Option[String] = {
     scon match {
       case "" => Some(Messages("gmp.error.mandatory", Messages("gmp.scon")))
       case x if !SconValidate.isValid(x) => Some(Messages("gmp.error.scon.bulk.invalid"))
@@ -38,7 +38,7 @@ trait FieldValidator {
     }
   }
 
-  def validateNino(nino: String): Option[String] = {
+  def validateNino(nino: String)(implicit messages: Messages): Option[String] = {
     val TEMP_NINO = "TN"
     nino match {
       case "" => Some(Messages("gmp.error.mandatory", Messages("gmp.nino")))
@@ -48,7 +48,7 @@ trait FieldValidator {
     }
   }
 
-  def validateFirstName(name: String) = {
+  def validateFirstName(name: String)(implicit messages: Messages) = {
     name match {
       case "" => Some(Messages("gmp.error.firstnameorinitial"))
       case x if x.length >= MAX_NAME_LENGTH => Some(Messages("gmp.error.firstname.toolong"))
@@ -60,7 +60,7 @@ trait FieldValidator {
     }
   }
 
-  def validateLastName(name: String) = {
+  def validateLastName(name: String)(implicit messages: Messages) = {
     name match {
       case "" => Some(Messages("gmp.error.mandatory", Messages("gmp.lowercase.lastname")))
       case x if x.length >= MAX_NAME_LENGTH => Some(Messages("gmp.error.lastname.toolong"))
@@ -73,7 +73,7 @@ trait FieldValidator {
     }
   }
 
-  def validateCalcType(calcType: String) = {
+  def validateCalcType(calcType: String)(implicit messages: Messages) = {
     calcType match {
       case "" => Some(Messages("gmp.error.calctype.out_of_range"))
       case x if !(x matches """\d+""") => Some(Messages("gmp.error.calctype.invalid"))
@@ -82,7 +82,7 @@ trait FieldValidator {
     }
   }
 
-  def validateDate(value: String) = {
+  def validateDate(value: String)(implicit messages: Messages) = {
     value match {
       case "" => None
       case x if !DateValidate.isValid(value) => Some(Messages("gmp.error.csv.date.invalid"))
@@ -90,7 +90,7 @@ trait FieldValidator {
     }
   }
 
-  def validateTerminationDate(value: String) = value match {
+  def validateTerminationDate(value: String)(implicit messages: Messages) = value match {
     case "" => None
     case sm if SMValidate.isValid(sm) => None
     case x => tryParseDate(x) match {
@@ -100,7 +100,7 @@ trait FieldValidator {
     }
   }
 
-  def validateRevalRate(value: String) = {
+  def validateRevalRate(value: String)(implicit messages: Messages) = {
     value match {
       case "" => None
       case x if !(x matches """\d+""") => Some(Messages("gmp.error.revaluation_rate.invalid"))
@@ -109,7 +109,7 @@ trait FieldValidator {
     }
   }
 
-  def validateDualCalc(value: String) = {
+  def validateDualCalc(value: String)(implicit messages: Messages) = {
     value match {
       case "" => Some(Messages("gmp.error.csv.dual_calc.invalid"))
       case x if !(x matches "(?i)y(es)?|no?") => Some(Messages("gmp.error.csv.dual_calc.invalid"))
@@ -117,7 +117,7 @@ trait FieldValidator {
     }
   }
 
-  private def tryParseDate(date: String): Option[LocalDate] =
+  private def tryParseDate(date: String)(implicit messages: Messages): Option[LocalDate] =
     if (!DateValidate.isValid(date))
       None
     else
@@ -130,7 +130,7 @@ object CsvLineValidator extends FieldValidator {
 
   val CSV_COLUMN_COUNT = 10
 
-  def validateLine(line: String) = {
+  def validateLine(line: String)(implicit messages: Messages) = {
 
     val columns = line.split(",", -1).map {
       _.trim

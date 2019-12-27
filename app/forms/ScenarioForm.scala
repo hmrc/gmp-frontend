@@ -16,19 +16,27 @@
 
 package forms
 
+import com.google.inject.Singleton
 import models.CalculationType
 import play.api.Play.current
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.i18n.Messages
 import play.api.i18n.Messages.Implicits._
+import play.api.inject.guice.GuiceApplicationBuilder
 
-object ScenarioForm {
+@Singleton
+class BaseScenarioForm(messages: Messages) {
 
   val scenarioForm = Form(
     mapping(
-      "calcType" -> optional(text).verifying(Messages("gmp.error.scenario.mandatory"), {x => {x.isDefined && x.get.matches("[0-4]{1}")}})
+      "calcType" -> optional(text).verifying(messages("gmp.error.scenario.mandatory"), {x => {x.isDefined && x.get.matches("[0-4]{1}")}})
     )(CalculationType.apply)(CalculationType.unapply)
   )
 
 }
+
+case object ScenarioForm extends BaseScenarioForm( {
+  new GuiceApplicationBuilder().injector().instanceOf[Messages]
+}
+)

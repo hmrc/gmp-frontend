@@ -20,15 +20,20 @@ import com.google.inject.Inject
 import connectors.GmpBulkConnector
 import controllers.auth.AuthAction
 import play.api.Logger
-import play.api.Play.current
-import play.api.i18n.Messages.Implicits._
+import play.api.i18n.Messages
+import play.api.mvc.MessagesControllerComponents
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.http.{NotFoundException, Upstream4xxResponse}
 
+import scala.concurrent.ExecutionContext
+
 class BulkResultsController @Inject()(authAction: AuthAction,
                                       val authConnector: AuthConnector,
-                                      gmpBulkConnector: GmpBulkConnector
-                                     ) extends GmpController {
+                                      gmpBulkConnector: GmpBulkConnector,
+                                      messagesControllerComponents: MessagesControllerComponents,
+                                      implicit val executionContext: ExecutionContext,
+                                      implicit val messages:Messages
+                                     ) extends GmpController(messagesControllerComponents) {
 
   def get(uploadReference: String, comingFromPage: Int) = authAction.async {
     implicit request => {

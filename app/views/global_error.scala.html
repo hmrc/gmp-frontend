@@ -14,11 +14,9 @@
  * limitations under the License.
  *@
 
-@(pageTitle: String, heading: String, message: String, applicationConfig: config.ApplicationConfig = config.ApplicationConfig)(implicit request: Request[_], messages: Messages)
+@(pageTitle: String, heading: String, message: String)(implicit request: Request[_], messages: Messages, applicationConfig :config.ApplicationConfig)
 
-@import play.api.Play.current
-@import uk.gov.hmrc.play.config.RunMode._
-@import config.GmpContext
+
 @import layouts.{govuk_template => hmrcGovUkTemplate}
 @import uk.gov.hmrc.play.views.html.{layouts => uiLayouts}
 

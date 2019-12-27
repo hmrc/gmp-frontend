@@ -17,9 +17,12 @@
 package models
 
 import org.joda.time.LocalDate
+import play.api.libs.json.JodaWrites._
+import play.api.libs.json.JodaReads._
 import play.api.Play.current
 import play.api.i18n.Messages
 import play.api.i18n.Messages.Implicits._
+import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Json
 import uk.gov.hmrc.time.TaxYear
 import views.helpers.GmpDateFormatter._
@@ -123,6 +126,10 @@ case class CalculationResponse(
   }
 
   def header: String = {
+    implicit val messages:Messages={
+      new GuiceApplicationBuilder().injector().instanceOf[Messages]
+    }
+
     if(calcType == CalculationType.SURVIVOR.toInt && revaluationDate.isDefined){
       Messages("gmp.results.survivor.revaluation.header", formatDate(revaluationDate.get))
     }else if(calcType == CalculationType.SURVIVOR.toInt && dateOfDeath.isDefined){

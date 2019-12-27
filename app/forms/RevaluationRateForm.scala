@@ -16,20 +16,27 @@
 
 package forms
 
+import com.google.inject.Singleton
 import models.RevaluationRate
 import play.api.Play.current
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.i18n.Messages
 import play.api.i18n.Messages.Implicits._
-
-object RevaluationRateForm {
+import play.api.inject.guice.GuiceApplicationBuilder
+@Singleton
+class BaseRevaluationRateForm(messages: Messages) {
 
   val revaluationRateForm = Form(
     mapping(
-      "rateType" -> optional(text).verifying(Messages("gmp.error.revaluation.rate.error"), { x => x.isDefined &&
+      "rateType" -> optional(text).verifying(messages("gmp.error.revaluation.rate.error"), { x => x.isDefined &&
         List(RevaluationRate.FIXED, RevaluationRate.HMRC, RevaluationRate.LIMITED, RevaluationRate.S148).contains(x.get) })
     )(RevaluationRate.apply)(RevaluationRate.unapply)
   )
 
 }
+
+case object RevaluationRateForm extends BaseRevaluationRateForm( {
+  new GuiceApplicationBuilder().injector().instanceOf[Messages]
+}
+)

@@ -21,18 +21,23 @@ import connectors.AttachmentsConnector
 import controllers.auth.AuthAction
 import models.{CallBackData, GmpBulkSession}
 import play.api.Play.current
-import play.api.i18n.Messages
+import play.api.i18n.{Messages, MessagesProvider}
 import play.api.i18n.Messages.Implicits._
-import play.api.mvc.Action
+import play.api.mvc.{Action, MessagesControllerComponents}
 import services.SessionService
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.http.logging.SessionId
+
+import scala.concurrent.ExecutionContext
 
 @Singleton
 class FileUploadController @Inject()(authAction: AuthAction,
                                      val authConnector: AuthConnector,
                                      sessionService: SessionService,
-                                     attachmentsConnector: AttachmentsConnector) extends GmpController {
+                                     attachmentsConnector: AttachmentsConnector,
+                                     messagesControllerComponents: MessagesControllerComponents,
+                                     implicit val executionContext: ExecutionContext,
+                                     implicit val messagesProvider: MessagesProvider) extends GmpController(messagesControllerComponents) {
 
   def get = authAction.async {
       implicit request =>

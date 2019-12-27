@@ -14,10 +14,7 @@
  * limitations under the License.
  *@
 
-@import play.api.Play.current
-@import play.api.i18n.Messages.Implicits._
-
-@()(implicit request: Request[_])
+@()(implicit request: Request[_],messages: Messages)
 
   <div class="query-handling-message">
     <br>

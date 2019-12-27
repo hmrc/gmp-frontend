@@ -20,12 +20,9 @@ import com.google.inject.Inject
 import models.{BulkCalculationRequest, BulkCalculationRequestLine, CalculationRequestLine}
 import org.joda.time.LocalDate
 import org.joda.time.format.DateTimeFormat
-import play.api.Mode.Mode
-import play.api.Play.current
 import play.api.i18n.Messages
-import play.api.i18n.Messages.Implicits._
-import play.api.{Configuration, Environment, Logger}
-import uk.gov.hmrc.play.config.ServicesConfig
+import play.api.{Configuration, Environment, Logger, Mode}
+import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import uk.gov.hmrc.stream.BulkEntityProcessor
 import uk.gov.hmrc.time.TaxYear
 import validation.{CsvLineValidator, DateValidate, SMValidate}
@@ -52,10 +49,12 @@ case object DataLimitExceededException extends Throwable
 case object IncorrectlyEncodedException extends Throwable
 
 class BulkRequestCreationService @Inject()( environment: Environment,
-                                            val runModeConfiguration: Configuration
-                                          ) extends BulkEntityProcessor[BulkCalculationRequestLine] with ServicesConfig {
+                                            val runModeConfiguration: Configuration,
+                                            servicesConfig: ServicesConfig,
+                                            messages: Messages
+                                          ) extends BulkEntityProcessor[BulkCalculationRequestLine]  {
 
-  override protected def mode: Mode = environment.mode
+  protected def mode: Mode = environment.mode
 
   private class LimitingEnumerator(limit: Int, delimiter: Char, iterator: Iterator[Char]) extends Iterator[Char] {
 
@@ -90,7 +89,7 @@ class BulkRequestCreationService @Inject()( environment: Environment,
   }
 
   def createBulkRequest(collection: String, id: String, email: String, reference: String): Either[Throwable, BulkCalculationRequest] = {
-    val attachmentUrl = s"${baseUrl("attachments")}/attachments-internal/$collection/$id"
+    val attachmentUrl = s"${servicesConfig.baseUrl("attachments")}/attachments-internal/$collection/$id"
     val enumerator = new LimitingEnumerator(MAX_LINES, LINE_FEED.toByte.toChar, sourceData(attachmentUrl))
 
     Try(list(enumerator, LINE_FEED.toByte.toChar, constructBulkCalculationRequestLine(_))) match {
@@ -101,7 +100,7 @@ class BulkRequestCreationService @Inject()( environment: Environment,
           Left(DataLimitExceededException)
         } else {
           if (bulkCalculationRequestLines.size == 1) {
-            val emptyFileLines = List(BulkCalculationRequestLine(1, None, None, Some(Map(BulkRequestCsvColumn.LINE_ERROR_EMPTY.toString -> Messages("gmp.error.parsing.empty_file")))))
+            val emptyFileLines = List(BulkCalculationRequestLine(1, None, None, Some(Map(BulkRequestCsvColumn.LINE_ERROR_EMPTY.toString -> messages("gmp.error.parsing.empty_file")))))
             val req = BulkCalculationRequest(id, email, reference, enterLineNumbers(emptyFileLines))
             Logger.debug(s"[BulkRequestCreationService][createBulkRequest] size : empty")
             Right(req)
@@ -198,7 +197,7 @@ class BulkRequestCreationService @Inject()( environment: Environment,
 
   private def constructBulkCalculationRequestLine(line: String): BulkCalculationRequestLine = {
 
-    val validationErrors = CsvLineValidator.validateLine(line) match {
+    val validationErrors = CsvLineValidator.validateLine(line)(messages) match {
       case Some(m) => Some(m.collect {
         case (k, v) => (k.toString, v)
       })

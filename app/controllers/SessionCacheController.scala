@@ -19,12 +19,19 @@ package controllers
 import com.google.inject.{Inject, Singleton}
 import controllers.auth.AuthAction
 import play.api.Logger
+import play.api.i18n.MessagesProvider
+import play.api.mvc.MessagesControllerComponents
 import uk.gov.hmrc.auth.core.AuthConnector
+
+import scala.concurrent.ExecutionContext
 
 @Singleton
 class SessionCacheController @Inject()(authAction: AuthAction,
-                                       override val authConnector: AuthConnector
-                                      ) extends GmpPageFlow(authConnector) {
+                                       override val authConnector: AuthConnector,
+                                       override val messagesControllerComponents: MessagesControllerComponents,
+                                       implicit val executionContext: ExecutionContext,
+                                       override implicit val messagesProvider: MessagesProvider
+                                      ) extends GmpPageFlow(authConnector,messagesControllerComponents) {
 
   def newCalculation = authAction.async {
       implicit request => {

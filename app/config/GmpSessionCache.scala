@@ -16,22 +16,27 @@
 
 package config
 
-import com.google.inject.Inject
-import play.api.Mode.Mode
+import com.google.inject.name.Named
+import com.google.inject.{Inject, Singleton}
+import play.api.Mode
 import play.api.{Configuration, Environment}
 import uk.gov.hmrc.http.cache.client.SessionCache
+import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
-import uk.gov.hmrc.play.config.{AppName, ServicesConfig}
 
-class GmpSessionCache @Inject()(environment: Environment,
+@Singleton
+class GmpSessionCache @Inject()(@Named("appName") appName: String,
+                                environment: Environment,
                                 configuration: Configuration,
-                                val http: HttpClient) extends SessionCache with AppName with ServicesConfig {
+                                val http: HttpClient,
+                               val serviceConfig: ServicesConfig,
+                               val sessionCache: SessionCache )  {
 
-  override lazy val defaultSource = appName
-  override lazy val baseUri = baseUrl("keystore")
-  override lazy val domain = getConfString("cachable.session-cache.domain", throw new Exception(s"Could not find config 'cachable.session-cache.domain'"))
+   val defaultSource = appName
+   val baseUri = serviceConfig.baseUrl("keystore")
+   val domain = serviceConfig.getConfString("cachable.session-cache.domain", throw new Exception(s"Could not find config 'cachable.session-cache.domain'"))
 
-  override protected def appNameConfiguration: Configuration = configuration
-  override protected def mode: Mode = environment.mode
-  override protected def runModeConfiguration: Configuration = configuration
+   def appNameConfiguration: Configuration = configuration
+   def mode: Mode = environment.mode
+   def runModeConfiguration: Configuration = configuration
 }

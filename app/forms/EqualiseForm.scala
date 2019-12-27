@@ -16,18 +16,29 @@
 
 package forms
 
+import com.google.inject.{Inject, Singleton}
 import models.Equalise
 import play.api.Play.current
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.i18n.Messages
+import play.api.i18n.Messages._
 import play.api.i18n.Messages.Implicits._
-object EqualiseForm {
+import play.api.inject.guice.GuiceApplicationBuilder
+
+@Singleton
+class BaseEqualiseForm(messages: Messages) {
+
 
   val equaliseForm = Form(
     mapping(
-      "equalise" -> optional(number).verifying(Messages("gmp.error.equalise.error_message"), {_.isDefined})
+      "equalise" -> optional(number).verifying(messages("gmp.error.equalise.error_message"), {_.isDefined})
     )(Equalise.apply)(Equalise.unapply)
   )
 
 }
+
+case object EqualiseForm extends BaseEqualiseForm( {
+  new GuiceApplicationBuilder().injector().instanceOf[Messages]
+}
+)

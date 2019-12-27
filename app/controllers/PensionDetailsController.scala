@@ -24,17 +24,21 @@ import metrics.ApplicationMetrics
 import models.{PensionDetails, ValidateSconRequest}
 import play.api.Logger
 import play.api.Play.current
-import play.api.i18n.Messages
+import play.api.i18n.{Messages, MessagesProvider}
 import play.api.i18n.Messages.Implicits._
+import play.api.mvc.MessagesControllerComponents
 import uk.gov.hmrc.auth.core.AuthConnector
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class PensionDetailsController @Inject()(authAction: AuthAction,
                                          override val authConnector: AuthConnector,
                                          gmpConnector: GmpConnector,
-                                         metrics: ApplicationMetrics) extends GmpPageFlow(authConnector) {
+                                         metrics: ApplicationMetrics,
+                                         override val messagesControllerComponents: MessagesControllerComponents,
+                                         implicit val executionContext: ExecutionContext,
+                                         override implicit val messagesProvider: MessagesProvider) extends GmpPageFlow(authConnector,messagesControllerComponents) {
 
   def get = authAction.async {
       implicit request => {

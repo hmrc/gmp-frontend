@@ -14,10 +14,7 @@
  * limitations under the License.
  *@
 
-@import play.api.Play.current
-@import play.api.i18n.Messages.Implicits._
-
-@(survivorCalc: Boolean)(implicit request: Request[_])
+@(survivorCalc: Boolean)(implicit request: Request[_],messages: Messages)
 
 @if(survivorCalc){
     <p id="survivor-disclaimer">@Html({Messages("gmp.results.survivior.disclaimer")})</p>
