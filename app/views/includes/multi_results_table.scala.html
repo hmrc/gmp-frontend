@@ -14,7 +14,8 @@
  * limitations under the License.
  *@
 
-@(calculationResponse:CalculationResponse)(implicit request: Request[_],messages: Messages,application:config.ApplicationConfig)
+@import config.ApplicationConfig
+@(calculationResponse:CalculationResponse)(implicit request: Request[_],messages: Messages,applicationConfig: ApplicationConfig)
 
 @import org.joda.time.LocalDate
 

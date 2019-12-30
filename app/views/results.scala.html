@@ -25,7 +25,6 @@
 @import config.ApplicationConfig.globalErrors
 
 @gmp_main(
-  applicationConfig = applicationConfig,
   title = {
     if(calculationResponse.globalErrorCode > 0 ||
       (calculationResponse.calculationPeriods.length == 1 && calculationResponse.calculationPeriods.head.errorCode > 0)){
