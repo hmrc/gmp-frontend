@@ -18,9 +18,11 @@ package controllers
 
 import play.api.i18n.Messages.Implicits._
 import com.google.inject.Inject
+import config.ApplicationConfig
 import controllers.auth.AuthAction
 import play.api.Play.current
 import play.api.i18n.{Messages, MessagesProvider}
+import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.MessagesControllerComponents
 import uk.gov.hmrc.auth.core.AuthConnector
 
@@ -32,6 +34,8 @@ class IncorrectlyEncodedController @Inject()( authAction: AuthAction,
                                               override implicit val messagesProvider: MessagesProvider,
                                               implicit val executionContext: ExecutionContext
                                             ) extends GmpPageFlow(authConnector,messagesControllerComponents){
+
+
   def get = authAction.async {
     implicit request => {
       Future.successful(InternalServerError(views.html.incorrectlyEncoded(Messages("gmp.bulk.incorrectlyEncoded"), Messages("gmp.bulk.incorrectlyEncoded.header"))))

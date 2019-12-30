@@ -17,12 +17,14 @@
 package controllers
 
 import com.google.inject.{Inject, Singleton}
+import config.ApplicationConfig
 import controllers.auth.AuthAction
 import forms.DateOfLeavingForm._
 import play.api.Logger
 import play.api.Play.current
 import play.api.i18n.{Messages, MessagesProvider}
 import play.api.i18n.Messages.Implicits._
+import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.MessagesControllerComponents
 import services.SessionService
 import uk.gov.hmrc.auth.core.AuthConnector
@@ -36,6 +38,8 @@ class DateOfLeavingController @Inject()(authAction: AuthAction,
                                         messagesControllerComponents: MessagesControllerComponents,
                                         implicit val executionContext: ExecutionContext,
                                         override implicit val messagesProvider: MessagesProvider) extends GmpPageFlow(authConnector,messagesControllerComponents) {
+
+  //implicit val applicationConfig: config.ApplicationConfig  = (GuiceApplicationBuilder().injector().instanceOf[ApplicationConfig])
 
   def get = authAction.async {
       implicit request =>

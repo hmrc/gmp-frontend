@@ -18,10 +18,11 @@ package controllers
 
 
 import com.google.inject.{Inject, Singleton}
-import config.GmpContext
+import config.{ApplicationConfig, GmpContext}
 import models.{CalculationType, GmpSession, Leaving}
 import play.api.Play
 import play.api.i18n.MessagesProvider
+import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.{MessagesControllerComponents, Result}
 import services.SessionService
 import uk.gov.hmrc.auth.core.AuthConnector
@@ -33,6 +34,7 @@ import scala.concurrent.ExecutionContext
 @Singleton
 class GmpController @Inject()(val messagesControllerComponents: MessagesControllerComponents)
                   extends FrontendController(messagesControllerComponents){
+  implicit val applicationConfig: config.ApplicationConfig  = ApplicationConfig
   val sessionService: SessionService = Play.current.injector.instanceOf[SessionService]
   implicit val context: config.GmpContext = Play.current.injector.instanceOf[GmpContext]
 }
@@ -54,6 +56,7 @@ class GmpPageFlow @Inject()(val authConnector: AuthConnector,
                            (implicit ec: ExecutionContext,
                             implicit val messagesProvider: MessagesProvider)
                           extends GmpController(messagesControllerComponents) {
+
 
   val forwardNavigation: Map[String, GmpSession => Result] = Map(
     PageType.INFLATION_PROOF -> { (session: GmpSession) => Redirect(routes.ResultsController.get) },

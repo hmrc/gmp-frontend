@@ -17,12 +17,14 @@
 package controllers
 
 import com.google.inject.{Inject, Singleton}
+import config.ApplicationConfig
 import connectors.AttachmentsConnector
 import controllers.auth.AuthAction
 import models.{CallBackData, GmpBulkSession}
 import play.api.Play.current
 import play.api.i18n.{Messages, MessagesProvider}
 import play.api.i18n.Messages.Implicits._
+import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.{Action, MessagesControllerComponents}
 import services.SessionService
 import uk.gov.hmrc.auth.core.AuthConnector
@@ -38,6 +40,8 @@ class FileUploadController @Inject()(authAction: AuthAction,
                                      messagesControllerComponents: MessagesControllerComponents,
                                      implicit val executionContext: ExecutionContext,
                                      implicit val messagesProvider: MessagesProvider) extends GmpController(messagesControllerComponents) {
+
+  //implicit val applicationConfig: config.ApplicationConfig  = (GuiceApplicationBuilder().injector().instanceOf[ApplicationConfig])
 
   def get = authAction.async {
       implicit request =>

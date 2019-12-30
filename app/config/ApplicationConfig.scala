@@ -27,12 +27,12 @@ import play.api.{Configuration, Environment, Play}
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
 
-@Singleton
 class ApplicationConfig @Inject()(
   val runModeConfiguration: Configuration,
   val environment: Environment,
   servicesConfig: ServicesConfig) {
 
+  implicit val applicationConfig: config.ApplicationConfig  = ApplicationConfig
 
   private def loadConfig(key: String) = runModeConfiguration.getString(key).getOrElse(throw new Exception(s"Missing key: $key"))
 
@@ -51,9 +51,11 @@ class ApplicationConfig @Inject()(
 
 }
 
-/*
-case object ApplicationConfig extends BaseApplicationConfig(
+
+object ApplicationConfig extends ApplicationConfig (
   runModeConfiguration=new GuiceApplicationBuilder().injector().instanceOf[Configuration],
   environment=new GuiceApplicationBuilder().injector().instanceOf[Environment],
   servicesConfig=new GuiceApplicationBuilder().injector().instanceOf[ServicesConfig]
-){new GuiceApplicationBuilder().injector().instanceOf[Messages]}*/
+){new GuiceApplicationBuilder().injector().instanceOf[Messages]}
+
+
