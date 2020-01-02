@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,6 +29,7 @@ class RevaluationFormSpec extends PlaySpec with OneAppPerSuite {
   val revaluationDate = GmpDate(Some("01"), Some("02"), Some("2010"))
   val leavingDate = GmpDate(None, None, None)
   val leaving = Leaving(leavingDate, None)
+  val leavingBefore2016 = Leaving(leavingDate, Some(Leaving.YES_BEFORE))
   val leavingWithDate = Leaving(GmpDate(Some("01"), Some("01"), Some("2012")), None)
   val leavingWithDateAndNO = Leaving(GmpDate(Some("01"), Some("01"), Some("2012")), Some(Leaving.NO))
 
@@ -105,9 +106,9 @@ class RevaluationFormSpec extends PlaySpec with OneAppPerSuite {
 
     "entering a date outside valid GMP dates" must {
 
-      "return an error when before 05/04/1978" in {
-        val revaluationFormResults = revaluationForm.bind(Json.toJson(RevaluationDate(leaving, new GmpDate(Some("04"), Some("04"), Some("1978")))))
-        revaluationFormResults.errors must contain(FormError("revaluationDate", List(Messages("gmp.error.reval_date.from"))))
+      "return an error when before 05/04/1978 and also left the scheme before 2016" in {
+        val revaluationFormResults = revaluationForm.bind(Json.toJson(RevaluationDate(leavingBefore2016, new GmpDate(Some("04"), Some("04"), Some("1978")))))
+        revaluationFormResults.errors must contain(FormError("", List(Messages("gmp.error.reval_date.from")), List("revaluationDate")))
       }
 
       "not return an error when on 05/04/1978" in {

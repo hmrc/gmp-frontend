@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,6 +33,15 @@ case class GmpDate(day: Option[String], month: Option[String], year: Option[Stri
   def isOnOrAfter06042016: Boolean = {
     if (getAsLocalDate.isDefined) {
       val thatDate = new LocalDate(2016, 4, 6)
+      getAsLocalDate.get.isAfter(thatDate) || getAsLocalDate.get.isEqual(thatDate)
+    }
+    else
+      false
+  }
+
+  def isOnOrAfter05041978: Boolean = {
+    if (getAsLocalDate.isDefined) {
+      val thatDate = new LocalDate(1978, 4, 5)
       getAsLocalDate.get.isAfter(thatDate) || getAsLocalDate.get.isEqual(thatDate)
     }
     else
