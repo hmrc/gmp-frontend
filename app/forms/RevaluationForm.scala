@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,6 +44,11 @@ object RevaluationForm {
         else if (revaluationDate.revaluationDate.isBefore(revaluationDate.leaving.leavingDate)) {
           Seq(ValidationError(Messages("gmp.error.revaluation_before_leaving", revaluationDate.leaving.leavingDate.getAsText), "revaluationDate"))
         }
+        else if (revaluationDate.leaving.leaving.isDefined &&
+        revaluationDate.leaving.leaving.get.equals(Leaving.YES_BEFORE) &&
+        !revaluationDate.revaluationDate.isOnOrAfter05041978){
+          Seq(ValidationError(Messages("gmp.error.reval_date.from"), "revaluationDate"))
+        }
         else {
           Nil
         }
@@ -63,7 +68,6 @@ object RevaluationForm {
     )(GmpDate.apply)(GmpDate.unapply)
       .verifying(Messages("gmp.error.reval_date.mandatory"), x => mandatoryDate(x))
       .verifying(Messages("gmp.error.date.invalid"), x => checkValidDate(x))
-      .verifying(Messages("gmp.error.reval_date.from"), x => checkDateOnOrAfterGMPStart(x)) // 1978
       .verifying(Messages("gmp.error.reval_date.to"), x => checkDateOnOBeforeGMPEnd(x)
   )
 
