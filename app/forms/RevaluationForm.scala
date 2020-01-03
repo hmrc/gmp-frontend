@@ -41,7 +41,8 @@ object RevaluationForm {
         {
           Seq(ValidationError(Messages("gmp.error.revaluation_pre2016_not_left"), "revaluationDate")) // 2016
         }
-        else if (revaluationDate.revaluationDate.isBefore(revaluationDate.leaving.leavingDate)) {
+        else if (revaluationDate.revaluationDate.isBefore(revaluationDate.leaving.leavingDate) &&
+          revaluationDate.leaving.leaving != Some("no")) {
           Seq(ValidationError(Messages("gmp.error.revaluation_before_leaving", revaluationDate.leaving.leavingDate.getAsText), "revaluationDate"))
         }
         else if (revaluationDate.leaving.leaving.isDefined &&
