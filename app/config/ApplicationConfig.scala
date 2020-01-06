@@ -26,7 +26,7 @@ import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.{Configuration, Environment, Play}
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
-
+@Singleton
 class ApplicationConfig @Inject()(
   val runModeConfiguration: Configuration,
   val environment: Environment,

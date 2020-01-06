@@ -27,7 +27,7 @@ import play.api.i18n.Messages.Implicits._
 import play.api.inject.guice.GuiceApplicationBuilder
 
 @Singleton
-class BaseRevaluationForm(messages: Messages) {
+class BaseRevaluationForm extends BaseForm {
 
   val YEAR_FIELD_LENGTH: Int = 4
 
@@ -88,7 +88,4 @@ class BaseRevaluationForm(messages: Messages) {
   )
 }
 
-case object RevaluationForm extends BaseRevaluationForm( {
-  new GuiceApplicationBuilder().injector().instanceOf[Messages]
-}
-)
+case object RevaluationForm extends BaseRevaluationForm

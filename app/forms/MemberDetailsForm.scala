@@ -28,7 +28,7 @@ import play.api.inject.guice.GuiceApplicationBuilder
 import validation.NinoValidate
 
 @Singleton
-class BaseMemberDetailsForm(messages: Messages) {
+class BaseMemberDetailsForm extends BaseForm {
 
   val MAX_LENGTH = 99
   val NAME_REGEX = "^[a-zA-Z][a-zA-z\\s|'|-]*$"
@@ -56,7 +56,7 @@ class BaseMemberDetailsForm(messages: Messages) {
 
   })
 
-  val form = Form(
+  def form()(implicit messages: Messages) = Form(
     mapping(
       "nino" -> text
         .verifying(ninoConstraint),
@@ -72,7 +72,4 @@ class BaseMemberDetailsForm(messages: Messages) {
   )
 
 }
-case object MemberDetailsForm extends BaseMemberDetailsForm( {
-  new GuiceApplicationBuilder().injector().instanceOf[Messages]
-}
-)
+case object MemberDetailsForm extends BaseMemberDetailsForm

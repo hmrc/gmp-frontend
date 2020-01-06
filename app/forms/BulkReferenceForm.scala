@@ -26,7 +26,7 @@ import play.api.inject.guice.GuiceApplicationBuilder
 import uk.gov.hmrc.emailaddress.EmailAddress
 
 @Singleton
-class BaseBulkReferenceForm @Inject()(messages: Messages){
+class BaseBulkReferenceForm extends BaseForm {
 
   val MAX_REFERENCE_LENGTH: Int = 99
   val CHARS_ALLOWED = "^[\\s,a-zA-Z0-9_-]*$"
@@ -63,7 +63,4 @@ class BaseBulkReferenceForm @Inject()(messages: Messages){
 
 
 
-case object BulkReferenceForm extends BaseBulkReferenceForm( {
-  new GuiceApplicationBuilder().injector().instanceOf[Messages]
-}
-)
+object BulkReferenceForm extends BaseBulkReferenceForm

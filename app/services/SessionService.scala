@@ -59,9 +59,9 @@ class SessionService @Inject()(metrics: ApplicationMetrics){
     })
   }
 
-  def cacheCallBackData(_callBackData: Option[CallBackData])(implicit request: Request[_], hc: HeaderCarrier ): Future[Option[GmpBulkSession]] = {
+  def cacheCallBackData(_callBackData: Option[CallBackData])(implicit request: Request[_], hc: HeaderCarrier, gmpsessionCache: GmpSessionCache ): Future[Option[GmpBulkSession]] = {
     val timer = metrics.keystoreStoreTimer.time()
-implicit val gmpsessionCache: GmpSessionCache=GuiceApplicationBuilder().injector().instanceOf[GmpSessionCache]
+    //implicit val gmpsessionCache: GmpSessionCache=GuiceApplicationBuilder().injector().instanceOf[GmpSessionCache]
     Logger.debug(s"[SessionService][cacheCallBackData] : ${_callBackData}")
 
     val result = gmpsessionCache.fetchAndGetEntry[GmpBulkSession](GMP_BULK_SESSION_KEY) flatMap { currentSession =>

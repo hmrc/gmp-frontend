@@ -24,7 +24,7 @@ import play.api.data.validation.{Constraint, Invalid, Valid, ValidationError}
 import play.api.i18n.Messages
 import play.api.inject.guice.GuiceApplicationBuilder
 @Singleton
-class BaseDateOfLeavingForm(messages: Messages) {
+class BaseDateOfLeavingForm extends BaseForm {
 
   val YEAR_FIELD_LENGTH: Int = 4
 
@@ -83,7 +83,4 @@ class BaseDateOfLeavingForm(messages: Messages) {
 
 }
 
-case object DateOfLeavingForm extends BaseDateOfLeavingForm( {
-  new GuiceApplicationBuilder().injector().instanceOf[Messages]
-}
-)
+object DateOfLeavingForm extends BaseDateOfLeavingForm

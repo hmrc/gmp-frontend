@@ -18,18 +18,20 @@ package forms
 
 import com.google.inject.Singleton
 import models.PensionDetails
+import play.api.Play
 import play.api.Play.current
 import play.api.data.Form
 import play.api.data.Forms._
-import play.api.i18n.Messages
+import play.api.i18n.{I18nSupport, Messages, MessagesApi, MessagesImpl}
 import play.api.i18n.Messages.Implicits._
 import play.api.inject.guice.GuiceApplicationBuilder
+import play.api.mvc.MessagesControllerComponents
 import validation.SconValidate
 
 @Singleton
-class BasePensionDetailsForm (messages: Messages){
+class BasePensionDetailsForm extends BaseForm {
 
-  val pensionDetailsForm = Form(
+  def pensionDetailsForm = Form(
     mapping(
       "scon" -> text
         .verifying(messages("gmp.error.mandatory.new"), x => x.length != 0)
@@ -45,7 +47,4 @@ class BasePensionDetailsForm (messages: Messages){
     new PensionDetails(scon)
   }
 }
-case object PensionDetailsForm extends BasePensionDetailsForm( {
-  new GuiceApplicationBuilder().injector().instanceOf[Messages]
-}
-)
+object PensionDetailsForm extends BasePensionDetailsForm

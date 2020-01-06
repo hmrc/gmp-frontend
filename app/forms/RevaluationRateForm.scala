@@ -25,7 +25,7 @@ import play.api.i18n.Messages
 import play.api.i18n.Messages.Implicits._
 import play.api.inject.guice.GuiceApplicationBuilder
 @Singleton
-class BaseRevaluationRateForm(messages: Messages) {
+class BaseRevaluationRateForm extends BaseForm {
 
   val revaluationRateForm = Form(
     mapping(
@@ -36,7 +36,4 @@ class BaseRevaluationRateForm(messages: Messages) {
 
 }
 
-case object RevaluationRateForm extends BaseRevaluationRateForm( {
-  new GuiceApplicationBuilder().injector().instanceOf[Messages]
-}
-)
+case object RevaluationRateForm extends BaseRevaluationRateForm

@@ -18,16 +18,11 @@ package forms
 
 import com.google.inject.{Inject, Singleton}
 import models.Equalise
-import play.api.Play.current
 import play.api.data.Form
 import play.api.data.Forms._
-import play.api.i18n.Messages
-import play.api.i18n.Messages._
-import play.api.i18n.Messages.Implicits._
-import play.api.inject.guice.GuiceApplicationBuilder
 
 @Singleton
-class BaseEqualiseForm(messages: Messages) {
+class BaseEqualiseForm extends BaseForm {
 
 
   val equaliseForm = Form(
@@ -38,7 +33,4 @@ class BaseEqualiseForm(messages: Messages) {
 
 }
 
-case object EqualiseForm extends BaseEqualiseForm( {
-  new GuiceApplicationBuilder().injector().instanceOf[Messages]
-}
-)
+case object EqualiseForm extends BaseEqualiseForm

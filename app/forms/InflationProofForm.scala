@@ -25,7 +25,7 @@ import play.api.i18n.Messages
 import play.api.i18n.Messages.Implicits._
 import play.api.inject.guice.GuiceApplicationBuilder
 @Singleton
-class BaseInflationProofForm(messages: Messages) {
+class BaseInflationProofForm extends BaseForm {
 
   val YEAR_FIELD_LENGTH: Int = 4
 
@@ -58,7 +58,4 @@ class BaseInflationProofForm(messages: Messages) {
 
 }
 
-case object InflationProofForm extends BaseInflationProofForm( {
-  new GuiceApplicationBuilder().injector().instanceOf[Messages]
-}
-)
+object InflationProofForm extends BaseInflationProofForm
