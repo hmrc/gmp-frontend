@@ -16,7 +16,7 @@
 
 package controllers
 
-import config.{ApplicationConfig, GmpSessionCache}
+import config.{ApplicationConfig, GmpContext, GmpSessionCache}
 import connectors.GmpBulkConnector
 import controllers.auth.{AuthAction, FakeAuthAction}
 import models._
@@ -52,10 +52,10 @@ class DashboardControllerSpec extends PlaySpec with OneServerPerSuite with Mocki
 
 
 
-  object TestDashboardController extends DashboardController(FakeAuthAction, mockAuthConnector, mockGmpBulkConnector,ac,mcc,ec,gmpSessionCache) {
-    override val sessionService = mockSessionService
+  object TestDashboardController extends DashboardController(FakeAuthAction, mockAuthConnector, mockGmpBulkConnector,ac,mockSessionService,FakeGmpContext,mcc,ec,gmpSessionCache) {
+  /*  override val sessionService = mockSessionService
     override val context = FakeGmpContext
-  }
+*/  }
 
   "DashboardController" must {
 
@@ -111,9 +111,9 @@ class DashboardControllerSpec extends PlaySpec with OneServerPerSuite with Mocki
 
         val brokenGmpBulkConnector = mock[GmpBulkConnector]
 
-        object BrokenDashboardController extends DashboardController(FakeAuthAction, mockAuthConnector, brokenGmpBulkConnector,ac,mcc,ec,gmpSessionCache) {
-          override val sessionService = mockSessionService
-          override val context = FakeGmpContext
+        object BrokenDashboardController extends DashboardController(FakeAuthAction, mockAuthConnector, brokenGmpBulkConnector,ac,mockSessionService,FakeGmpContext,mcc,ec,gmpSessionCache) {
+         /* override val sessionService = mockSessionService
+          override val context = FakeGmpContext*/
         }
 
         when(brokenGmpBulkConnector.getPreviousBulkRequests(Matchers.any())(Matchers.any())).thenReturn(Future.failed(new Upstream5xxResponse("failed",503,503)))

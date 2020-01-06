@@ -17,7 +17,7 @@
 package controllers
 
 import com.google.inject.{Inject, Singleton}
-import config.{ApplicationConfig, GmpSessionCache}
+import config.{ApplicationConfig, GmpContext, GmpSessionCache}
 import controllers.auth.AuthAction
 import forms.RevaluationForm._
 import models.{GmpDate, RevaluationDate}
@@ -27,17 +27,18 @@ import play.api.i18n.Messages.Implicits._
 import play.api.i18n.MessagesProvider
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.MessagesControllerComponents
+import services.SessionService
 import uk.gov.hmrc.auth.core.AuthConnector
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class RevaluationController @Inject()( authAction: AuthAction,
-                                       override val authConnector: AuthConnector,
+                                       override val authConnector: AuthConnector,sessionService: SessionService,implicit val config:GmpContext,
                                        override val messagesControllerComponents: MessagesControllerComponents,
                                        ac:ApplicationConfig,
                                        implicit val executionContext: ExecutionContext,implicit val gmpSessionCache: GmpSessionCache
-                                     ) extends GmpPageFlow(authConnector,messagesControllerComponents,ac) {
+                                     ) extends GmpPageFlow(authConnector,sessionService,config,messagesControllerComponents,ac) {
 
 
   def get = authAction.async {

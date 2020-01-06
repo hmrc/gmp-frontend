@@ -17,11 +17,12 @@
 package controllers
 
 import com.google.inject.{Inject, Singleton}
-import config.{ApplicationConfig, GmpSessionCache}
+import config.{ApplicationConfig, GmpContext, GmpSessionCache}
 import controllers.auth.AuthAction
 import play.api.Logger
 import play.api.i18n.MessagesProvider
 import play.api.mvc.MessagesControllerComponents
+import services.SessionService
 import uk.gov.hmrc.auth.core.AuthConnector
 
 import scala.concurrent.ExecutionContext
@@ -29,10 +30,10 @@ import scala.concurrent.ExecutionContext
 @Singleton
 class SessionCacheController @Inject()(authAction: AuthAction,
                                        override val authConnector: AuthConnector,
-                                       ac:ApplicationConfig,
+                                       ac:ApplicationConfig,sessionService: SessionService,implicit val config:GmpContext,
                                        override val messagesControllerComponents: MessagesControllerComponents,
                                        implicit val executionContext: ExecutionContext,implicit val gmpSessionCache: GmpSessionCache
-                                      ) extends GmpPageFlow(authConnector,messagesControllerComponents,ac) {
+                                      ) extends GmpPageFlow(authConnector,sessionService,config,messagesControllerComponents,ac) {
 
   def newCalculation = authAction.async {
       implicit request => {

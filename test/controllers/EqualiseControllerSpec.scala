@@ -16,7 +16,7 @@
 
 package controllers
 
-import config.{ApplicationConfig, GmpSessionCache}
+import config.{ApplicationConfig, GmpContext, GmpSessionCache}
 import controllers.auth.{AuthAction, FakeAuthAction}
 import models._
 import org.mockito.Matchers
@@ -45,8 +45,8 @@ class EqualiseControllerSpec extends PlaySpec with OneServerPerSuite with Mockit
   implicit val ac=app.injector.instanceOf[ApplicationConfig]
   implicit val gmpSessionCache=app.injector.instanceOf[GmpSessionCache]
 
-  object TestEqualiseController extends EqualiseController(FakeAuthAction, mockAuthConnector, mockSessionService,mcc,ac,ec,gmpSessionCache) {
-    override val context = FakeGmpContext
+  object TestEqualiseController extends EqualiseController(FakeAuthAction, mockAuthConnector, mockSessionService,FakeGmpContext,mcc,ac,ec,gmpSessionCache) {
+  //  override val context = FakeGmpContext
   }
 
   "EqualiseController GET" must {

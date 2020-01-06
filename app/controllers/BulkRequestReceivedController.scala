@@ -17,7 +17,7 @@
 package controllers
 
 import com.google.inject.{Inject, Singleton}
-import config.{ApplicationConfig, GmpSessionCache}
+import config.{ApplicationConfig, GmpContext, GmpSessionCache}
 import connectors.GmpBulkConnector
 import controllers.auth.AuthAction
 import play.api.Logger
@@ -38,10 +38,11 @@ class BulkRequestReceivedController @Inject()(authAction: AuthAction,
                                               sessionService: SessionService,
                                               bulkRequestCreationService: BulkRequestCreationService,
                                               gmpBulkConnector: GmpBulkConnector, ac:ApplicationConfig,
+                                              implicit val config:GmpContext,
                                               messagesControllerComponents: MessagesControllerComponents,
                                               implicit val executionContext: ExecutionContext,
                                               implicit val sessionCache:GmpSessionCache
-                                             ) extends GmpController(messagesControllerComponents,ac) {
+                                             ) extends GmpController(messagesControllerComponents,ac,sessionService,config) {
 
 
 

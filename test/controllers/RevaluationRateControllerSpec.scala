@@ -48,10 +48,10 @@ class RevaluationRateControllerSpec extends PlaySpec with OneServerPerSuite with
   implicit val gmpSessionCache=app.injector.instanceOf[GmpSessionCache]
 
 
-  object TestRevaluationRateController extends RevaluationRateController(FakeAuthAction, mockAuthConnector,ac,mcc,ec,gmpSessionCache) {
-    override val sessionService = mockSessionService
+  object TestRevaluationRateController extends RevaluationRateController(FakeAuthAction, mockAuthConnector,ac,mockSessionService,FakeGmpContext,mcc,ec,gmpSessionCache) {
+  /*  override val sessionService = mockSessionService
     override val context = FakeGmpContext
-  }
+*/  }
 
   private val nino: String = RandomNino.generate
 

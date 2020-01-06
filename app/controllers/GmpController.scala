@@ -33,11 +33,11 @@ import scala.concurrent.ExecutionContext
 
 @Singleton
 class GmpController @Inject()(val messagesControllerComponents: MessagesControllerComponents,
-                              ac: ApplicationConfig)
+                              ac: ApplicationConfig, sessionService: SessionService,context: GmpContext)
                   extends FrontendController(messagesControllerComponents){
   implicit val applicationConfig: config.ApplicationConfig  = ac
-  val sessionService: SessionService = Play.current.injector.instanceOf[SessionService]
-  implicit val context: config.GmpContext = Play.current.injector.instanceOf[GmpContext]
+ // val sessionService: SessionService = Play.current.injector.instanceOf[SessionService]
+ // implicit val context: config.GmpContext = Play.current.injector.instanceOf[GmpContext]
   implicit lazy val messages: Messages = MessagesImpl(messagesControllerComponents.langs.availables.head, messagesApi)
 }
 
@@ -53,10 +53,10 @@ object PageType {
   val INFLATION_PROOF = "InflationProofController"
 }
 
-class GmpPageFlow @Inject()(val authConnector: AuthConnector,
+class GmpPageFlow @Inject()(val authConnector: AuthConnector,sessionService: SessionService,implicit val context: GmpContext,
                             messagesControllerComponents: MessagesControllerComponents,applicationConfig: ApplicationConfig)
                            (implicit ec: ExecutionContext)
-                          extends GmpController(messagesControllerComponents,applicationConfig) {
+                          extends GmpController(messagesControllerComponents,applicationConfig,sessionService,context) {
 
 
   val forwardNavigation: Map[String, GmpSession => Result] = Map(

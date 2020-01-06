@@ -47,9 +47,9 @@ class MemberDetailsControllerSpec extends PlaySpec with OneServerPerSuite with M
   implicit val gmpSessionCache=app.injector.instanceOf[GmpSessionCache]
 
 
-  object TestMemberDetailsController extends MemberDetailsController(FakeAuthAction, mockAuthConnector,mcc,ac,ec,gmpSessionCache) {
-    override val sessionService = mockSessionService
-    override val context = FakeGmpContext
+  object TestMemberDetailsController extends MemberDetailsController(FakeAuthAction, mockAuthConnector,mockSessionService,FakeGmpContext,mcc,ac,ec,gmpSessionCache) {
+//    override val sessionService = mockSessionService
+//    override val context = FakeGmpContext
   }
 
   "GET" must {

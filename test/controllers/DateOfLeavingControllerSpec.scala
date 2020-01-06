@@ -16,7 +16,7 @@
 
 package controllers
 
-import config.{ApplicationConfig, GmpSessionCache}
+import config.{ApplicationConfig, GmpContext, GmpSessionCache}
 import controllers.auth.{AuthAction, FakeAuthAction}
 import helpers.RandomNino
 import models._
@@ -51,7 +51,7 @@ class DateOfLeavingControllerSpec extends PlaySpec with OneServerPerSuite with M
   implicit val gmpSessionCache=app.injector.instanceOf[GmpSessionCache]
 
 
-  object TestDateOfLeavingController extends DateOfLeavingController(FakeAuthAction, mockAuthConnector, mockSessionService,ac,mcc,ec,gmpSessionCache) {
+  object TestDateOfLeavingController extends DateOfLeavingController(FakeAuthAction, mockAuthConnector, mockSessionService,ac,FakeGmpContext,mcc,ec,gmpSessionCache) {
     override val context = FakeGmpContext
   }
 

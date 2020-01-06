@@ -17,13 +17,14 @@
 package controllers
 
 import com.google.inject.Inject
-import config.ApplicationConfig
+import config.{ApplicationConfig, GmpContext}
 import connectors.GmpBulkConnector
 import controllers.auth.AuthAction
 import play.api.Logger
 import play.api.i18n.Messages
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.MessagesControllerComponents
+import services.SessionService
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.http.{NotFoundException, Upstream4xxResponse}
 
@@ -33,9 +34,9 @@ class BulkResultsController @Inject()(authAction: AuthAction,
                                       val authConnector: AuthConnector,
                                       gmpBulkConnector: GmpBulkConnector,
                                       messagesControllerComponents: MessagesControllerComponents,
-                                      ac:ApplicationConfig,
+                                      ac:ApplicationConfig,sessionService: SessionService,implicit val config:GmpContext,
                                       implicit val executionContext: ExecutionContext
-                                     ) extends GmpController(messagesControllerComponents,ac) {
+                                     ) extends GmpController(messagesControllerComponents,ac,sessionService,config) {
    def get(uploadReference: String, comingFromPage: Int) = authAction.async {
     implicit request => {
 

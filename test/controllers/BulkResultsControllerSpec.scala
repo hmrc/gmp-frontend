@@ -18,7 +18,7 @@ package controllers
 
 import java.util.UUID
 
-import config.ApplicationConfig
+import config.{ApplicationConfig, GmpContext}
 import connectors.GmpBulkConnector
 import controllers.auth.FakeAuthAction
 import models.BulkResultsSummary
@@ -31,6 +31,7 @@ import play.api.i18n.Messages.Implicits._
 import play.api.mvc.MessagesControllerComponents
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import services.SessionService
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.http.logging.SessionId
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, NotFoundException, Upstream4xxResponse}
@@ -47,10 +48,11 @@ class BulkResultsControllerSpec extends PlaySpec with OneServerPerSuite with Moc
   implicit val ec = app.injector.instanceOf[ExecutionContext]
   implicit val messages = app.injector.instanceOf[Messages]
   implicit val ac=app.injector.instanceOf[ApplicationConfig]
+  implicit val ss=app.injector.instanceOf[SessionService]
 
 
-  object TestBulkResultsController extends BulkResultsController(FakeAuthAction,mockAuthConnector, mockGmpBulkConnector,mcc,ac,ec) {
-    override val context = FakeGmpContext
+  object TestBulkResultsController extends BulkResultsController(FakeAuthAction,mockAuthConnector, mockGmpBulkConnector,mcc,ac,ss,FakeGmpContext,ec) {
+   // override val context = FakeGmpContext
   }
 
   "Bulk Results Controller" must {

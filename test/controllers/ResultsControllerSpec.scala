@@ -61,8 +61,8 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
 
   implicit val hc = new HeaderCarrier(sessionId = Some(SessionId(s"session-${UUID.randomUUID}")))
 
-  object TestResultsController extends ResultsController(FakeAuthAction, mockAuthConnector, mockSessionService, mockCalculationConnector, mockAuditConnector, metrics,applicationConfig,mcc,ec,gmpSessionCache) {
-    override val context = FakeGmpContext
+  object TestResultsController extends ResultsController(FakeAuthAction, mockAuthConnector, mockSessionService,FakeGmpContext, mockCalculationConnector, mockAuditConnector, metrics,applicationConfig,mcc,ec,gmpSessionCache) {
+//    override val context = FakeGmpContext
 
     override def resultsView(response: CalculationResponse, subheader: Option[String], revalSubheader: Option[String])(implicit request: Request[_], context: config.GmpContext): HtmlFormat.Appendable = {
       views.html.results(response, subheader, revalSubheader)

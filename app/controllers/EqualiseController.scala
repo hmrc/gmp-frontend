@@ -17,7 +17,7 @@
 package controllers
 
 import com.google.inject.{Inject, Singleton}
-import config.{ApplicationConfig, GmpSessionCache}
+import config.{ApplicationConfig, GmpContext, GmpSessionCache}
 import controllers.auth.AuthAction
 import forms.EqualiseForm._
 import play.api.Logger
@@ -32,10 +32,10 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class EqualiseController @Inject()(authAction: AuthAction,
                                    override val authConnector: AuthConnector,
-                                   sessionService: SessionService,
+                                   sessionService: SessionService,implicit val config:GmpContext,
                                    messagesControllerComponents: MessagesControllerComponents,ac:ApplicationConfig,
                                    implicit val executionContext: ExecutionContext,implicit val gmpSessionCache: GmpSessionCache)
-                                  extends GmpPageFlow(authConnector,messagesControllerComponents,ac) {
+                                  extends GmpPageFlow(authConnector,sessionService,config,messagesControllerComponents,ac) {
 
 
   def get = authAction.async {

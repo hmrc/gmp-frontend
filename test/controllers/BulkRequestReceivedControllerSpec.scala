@@ -19,7 +19,7 @@ package controllers
 import java.util.UUID
 
 import akka.util.OptionVal
-import config.{ApplicationConfig, GmpSessionCache}
+import config.{ApplicationConfig, GmpContext, GmpSessionCache}
 import connectors.GmpBulkConnector
 import controllers.auth.{AuthAction, FakeAuthAction}
 import helpers.RandomNino
@@ -57,7 +57,6 @@ class BulkRequestReceivedControllerSpec extends PlaySpec with OneServerPerSuite 
   implicit val messagesProvider=app.injector.instanceOf[MessagesProvider]
   implicit val ac=app.injector.instanceOf[ApplicationConfig]
   implicit val sc=app.injector.instanceOf[GmpSessionCache]
- // implicit val messages=app.injector.instanceOf[Messages]
 
   val callBackData = CallBackData("AAAAA", "11111", 1L, Some("Ted"), Some("application/json"), "YYYYYYY", None)
   val gmpBulkSession = GmpBulkSession(Some(callBackData), Some(EmailAddress("somebody@somewhere.com")), Some("reference"))
@@ -73,8 +72,8 @@ class BulkRequestReceivedControllerSpec extends PlaySpec with OneServerPerSuite 
     mockAuthConnector,
     mockSessionService,
     mockBulkRequestCreationService,
-    mockGmpBulkConnector,ac,mcc,ec,sc){
-    override val context = FakeGmpContext
+    mockGmpBulkConnector,ac,FakeGmpContext,mcc,ec,sc){
+  //  override val context = FakeGmpContext
   }
 
   "BulkRequestReceivedController" must {

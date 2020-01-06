@@ -18,21 +18,23 @@ package controllers
 
 import play.api.i18n.Messages.Implicits._
 import com.google.inject.Inject
-import config.ApplicationConfig
+import config.{ApplicationConfig, GmpContext}
 import controllers.auth.AuthAction
 import play.api.Play.current
 import play.api.i18n.{Messages, MessagesProvider}
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.MessagesControllerComponents
+import services.SessionService
 import uk.gov.hmrc.auth.core.AuthConnector
 
 import scala.concurrent.{ExecutionContext, Future}
 
 class IncorrectlyEncodedController @Inject()( authAction: AuthAction,
                                               override val authConnector: AuthConnector,
+                                              sessionService: SessionService,implicit val config:GmpContext,
                                               override val messagesControllerComponents: MessagesControllerComponents,ac:ApplicationConfig,
                                               implicit val executionContext: ExecutionContext
-                                            ) extends GmpPageFlow(authConnector,messagesControllerComponents,ac){
+                                            ) extends GmpPageFlow(authConnector,sessionService,config,messagesControllerComponents,ac){
 
 
 

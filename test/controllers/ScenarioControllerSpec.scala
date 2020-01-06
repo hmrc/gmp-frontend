@@ -48,10 +48,10 @@ class ScenarioControllerSpec extends PlaySpec with OneServerPerSuite with Mockit
   implicit val gmpSessionCache=app.injector.instanceOf[GmpSessionCache]
 
 
-  object TestScenarioController extends ScenarioController(FakeAuthAction, mockAuthConnector,ac,mcc,ec,gmpSessionCache) {
-    override val sessionService = mockSessionService
+  object TestScenarioController extends ScenarioController(FakeAuthAction, mockAuthConnector,ac,mockSessionService,FakeGmpContext,mcc,ec,gmpSessionCache) {
+  /*  override val sessionService = mockSessionService
     override val context = FakeGmpContext
-  }
+*/  }
 
   private val nino: String = RandomNino.generate
   val gmpSession = GmpSession(MemberDetails(nino, "A", "AAA"), "S1301234T", CalculationType.REVALUATION, None, None, Leaving(GmpDate(None, None, None), None), None)

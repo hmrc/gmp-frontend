@@ -17,7 +17,7 @@
 package controllers
 
 import com.google.inject.{Inject, Singleton}
-import config.ApplicationConfig
+import config.{ApplicationConfig, GmpContext}
 import connectors.GmpBulkConnector
 import controllers.auth.AuthAction
 import play.api.Play.current
@@ -25,6 +25,7 @@ import play.api.i18n.Messages.Implicits._
 import play.api.i18n.MessagesProvider
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.MessagesControllerComponents
+import services.SessionService
 import uk.gov.hmrc.auth.core.AuthConnector
 
 import scala.concurrent.ExecutionContext
@@ -32,9 +33,10 @@ import scala.concurrent.ExecutionContext
 @Singleton
 class MoreBulkResultsController @Inject()(authAction: AuthAction,
                                           override val authConnector: AuthConnector,
+                                          sessionService: SessionService,implicit val config:GmpContext,
                                           gmpBulkConnector: GmpBulkConnector,ac:ApplicationConfig,
                                           override val messagesControllerComponents: MessagesControllerComponents,
-                                          implicit val executionContext: ExecutionContext) extends GmpPageFlow(authConnector,messagesControllerComponents,ac) {
+                                          implicit val executionContext: ExecutionContext) extends GmpPageFlow(authConnector,sessionService,config,messagesControllerComponents,ac) {
 
 
 

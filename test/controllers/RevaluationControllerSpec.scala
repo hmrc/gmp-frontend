@@ -48,9 +48,9 @@ class RevaluationControllerSpec extends PlaySpec with OneServerPerSuite with Moc
 
   val baseValidDate = GmpDate(day = Some("31"), month = Some("1"), year = Some("2015"))
 
-  object TestRevaluationController extends RevaluationController(FakeAuthAction, mockAuthConnector,mcc,ac,ec,gmpSessionCache) {
-    override val sessionService = mockSessionService
-    override val context = FakeGmpContext
+  object TestRevaluationController extends RevaluationController(FakeAuthAction, mockAuthConnector,mockSessionService,FakeGmpContext,mcc,ac,ec,gmpSessionCache) {
+//    override val sessionService = mockSessionService
+//    override val context = FakeGmpContext
   }
 
   "Revaluation controller" must {

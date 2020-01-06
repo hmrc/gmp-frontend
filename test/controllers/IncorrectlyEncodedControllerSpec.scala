@@ -26,12 +26,14 @@ import play.api.mvc.MessagesControllerComponents
 import play.api.test.FakeRequest
 import uk.gov.hmrc.auth.core.AuthConnector
 import play.api.test.Helpers._
+import services.SessionService
 
 import scala.concurrent.ExecutionContext
 
 class IncorrectlyEncodedControllerSpec extends PlaySpec with OneServerPerSuite with MockitoSugar {
 
   val mockAuthConnector = mock[AuthConnector]
+  val mockSessionService = mock[SessionService]
 
   implicit val mcc = app.injector.instanceOf[MessagesControllerComponents]
   implicit val ec = app.injector.instanceOf[ExecutionContext]
@@ -39,7 +41,7 @@ class IncorrectlyEncodedControllerSpec extends PlaySpec with OneServerPerSuite w
   implicit val ac=app.injector.instanceOf[ApplicationConfig]
 
 
-  object TestIncorrectlyEncodedController extends IncorrectlyEncodedController(FakeAuthAction,mockAuthConnector,mcc,ac,ec)
+  object TestIncorrectlyEncodedController extends IncorrectlyEncodedController(FakeAuthAction,mockAuthConnector,mockSessionService,FakeGmpContext,mcc,ac,ec)
 
   "IncorrectlyEncodedController.get" should {
 

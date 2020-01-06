@@ -17,7 +17,7 @@
 package controllers
 
 import com.google.inject.{Inject, Singleton}
-import config.{ApplicationConfig, GmpSessionCache}
+import config.{ApplicationConfig, GmpContext, GmpSessionCache}
 import connectors.AttachmentsConnector
 import controllers.auth.AuthAction
 import models.{CallBackData, GmpBulkSession}
@@ -33,13 +33,11 @@ import scala.concurrent.ExecutionContext
 @Singleton
 class FileUploadController @Inject()(authAction: AuthAction,
                                      val authConnector: AuthConnector,
-                                     sessionService: SessionService,
+                                     sessionService: SessionService,implicit val config:GmpContext,
                                      attachmentsConnector: AttachmentsConnector,
                                      messagesControllerComponents: MessagesControllerComponents,ac:ApplicationConfig,
-                                     implicit val executionContext: ExecutionContext,implicit val gmpSessionCache: GmpSessionCache) extends GmpController(messagesControllerComponents,ac) {
+                                     implicit val executionContext: ExecutionContext,implicit val gmpSessionCache: GmpSessionCache) extends GmpController(messagesControllerComponents,ac,sessionService,config) {
 
-
-  implicit val messagesProvider:MessagesProvider=GuiceApplicationBuilder().injector().instanceOf[MessagesProvider]
 
   def get = authAction.async {
       implicit request =>

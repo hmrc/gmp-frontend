@@ -40,13 +40,13 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class ResultsController @Inject()(authAction: AuthAction,
                                   override val authConnector: AuthConnector,
-                                  sessionService: SessionService,
+                                  sessionService: SessionService,implicit override val context: GmpContext,
                                   calculationConnector: GmpConnector,
                                   auditConnector: AuditConnector,
                                   metrics: ApplicationMetrics,ac:ApplicationConfig,
                                   override val messagesControllerComponents: MessagesControllerComponents,
                                   implicit val executionContext: ExecutionContext,
-                                  implicit val gmpSessionCache: GmpSessionCache) extends GmpPageFlow(authConnector,messagesControllerComponents,ac) {
+                                  implicit val gmpSessionCache: GmpSessionCache) extends GmpPageFlow(authConnector,sessionService,context,messagesControllerComponents,ac) {
 
 
 

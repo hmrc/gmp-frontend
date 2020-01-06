@@ -45,10 +45,10 @@ class SessionCacheControllerSpec extends PlaySpec with OneServerPerSuite with Mo
   implicit val gmpSessionCache=app.injector.instanceOf[GmpSessionCache]
 
 
-  object TestSessionCacheController extends SessionCacheController(FakeAuthAction, mockAuthConnector,ac,mcc,ec,gmpSessionCache) {
-    override val sessionService = mockSessionService
+  object TestSessionCacheController extends SessionCacheController(FakeAuthAction, mockAuthConnector,ac,mockSessionService,FakeGmpContext,mcc,ec,gmpSessionCache) {
+ /*   override val sessionService = mockSessionService
     override val context = FakeGmpContext
-  }
+*/  }
 
   "new-calculation" must {
 

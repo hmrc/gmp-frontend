@@ -18,7 +18,7 @@ package controllers
 
 import java.util.UUID
 
-import config.{ApplicationConfig, GmpSessionCache}
+import config.{ApplicationConfig, GmpContext, GmpSessionCache}
 import controllers.auth.FakeAuthAction
 import models._
 import org.mockito.Matchers
@@ -52,12 +52,13 @@ class BulkReferenceControllerSpec extends PlaySpec with OneServerPerSuite with M
   implicit val messagesProvider=app.injector.instanceOf[MessagesProvider]
   implicit val ac=app.injector.instanceOf[ApplicationConfig]
   implicit val gmpSessionCache=app.injector.instanceOf[GmpSessionCache]
+  implicit val ss=app.injector.instanceOf[SessionService]
 
-  object TestBulkReferenceController extends BulkReferenceController(FakeAuthAction, mockAuthConnector, mockAuditConnector,
-  mcc,ec,ac,gmpSessionCache) {
-    override val sessionService = mockSessionService
+  object TestBulkReferenceController extends BulkReferenceController(FakeAuthAction, mockAuthConnector, mockAuditConnector,ss,FakeGmpContext
+  ,mcc,ec,ac,gmpSessionCache) {
+    /*override val sessionService = mockSessionService
     override val context = FakeGmpContext
-
+*/
   }
 
   "BulkRerefenceController" must {
