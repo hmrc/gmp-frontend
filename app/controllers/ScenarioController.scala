@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,12 +17,14 @@
 package controllers
 
 import com.google.inject.{Inject, Singleton}
+import config.{ApplicationConfig, GmpSessionCache}
 import controllers.auth.AuthAction
 import forms.ScenarioForm._
 import play.api.Logger
 import play.api.Play.current
 import play.api.i18n.{Messages, MessagesProvider}
 import play.api.i18n.Messages.Implicits._
+import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.MessagesControllerComponents
 import uk.gov.hmrc.auth.core.AuthConnector
 
@@ -31,10 +33,11 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class ScenarioController @Inject()(authAction: AuthAction,
                                    override val authConnector: AuthConnector,
+                                   ac:ApplicationConfig,
                                    override val messagesControllerComponents: MessagesControllerComponents,
-                                   implicit val executionContext: ExecutionContext,
-                                   override implicit val messagesProvider: MessagesProvider
-                                  ) extends GmpPageFlow(authConnector,messagesControllerComponents) {
+                                   implicit val executionContext: ExecutionContext,implicit val gmpSessionCache: GmpSessionCache
+                                  ) extends GmpPageFlow(authConnector,messagesControllerComponents,ac) {
+
 
   def get = authAction.async {
       implicit request => sessionService.fetchGmpSession() map {

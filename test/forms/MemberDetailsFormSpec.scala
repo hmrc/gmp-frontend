@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,12 +20,13 @@ import forms.MemberDetailsForm._
 import helpers.RandomNino
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.data.FormError
-import play.api.i18n.Messages
+import play.api.i18n.{Messages, MessagesProvider}
 import play.api.i18n.Messages.Implicits._
 import play.api.libs.json.Json
 
 class MemberDetailsFormSpec extends PlaySpec with OneAppPerSuite {
 
+  implicit val messagesProvider=app.injector.instanceOf[MessagesProvider]
 
   "Member details form" must {
 

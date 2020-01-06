@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@ import helpers.RandomNino
 import models.CalculationRequestLine
 import org.scalatest.{FlatSpec, Matchers}
 import org.scalatestplus.play.OneAppPerSuite
-import play.api.i18n.Messages
+import play.api.i18n.{Messages, MessagesProvider}
 import play.api.i18n.Messages.Implicits._
 import services.BulkRequestCsvColumn
 
@@ -28,6 +28,8 @@ import services.BulkRequestCsvColumn
   * Created by stevenhobbs on 12/05/2016.
   */
 class CsvLineValidatorSpec extends FlatSpec with Matchers with OneAppPerSuite {
+  implicit val messagesProvider=app.injector.instanceOf[MessagesProvider]
+
 
   object CsvLine extends CalculationRequestLine(
     "S1301234T", // SCON

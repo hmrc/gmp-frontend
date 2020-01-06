@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,13 +17,11 @@
 package controllers
 
 import com.google.inject.{Inject, Singleton}
-import config.ApplicationConfig
+import config.{ApplicationConfig, GmpSessionCache}
 import controllers.auth.AuthAction
 import forms.DateOfLeavingForm._
 import play.api.Logger
-import play.api.Play.current
 import play.api.i18n.{Messages, MessagesProvider}
-import play.api.i18n.Messages.Implicits._
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.MessagesControllerComponents
 import services.SessionService
@@ -34,12 +32,10 @@ import scala.concurrent.ExecutionContext
 @Singleton
 class DateOfLeavingController @Inject()(authAction: AuthAction,
                                         override val authConnector: AuthConnector,
-                                        sessionService: SessionService,
+                                        sessionService: SessionService,ac:ApplicationConfig,
                                         messagesControllerComponents: MessagesControllerComponents,
-                                        implicit val executionContext: ExecutionContext,
-                                        override implicit val messagesProvider: MessagesProvider) extends GmpPageFlow(authConnector,messagesControllerComponents) {
+                                        implicit val executionContext: ExecutionContext,implicit val gmpSessionCache: GmpSessionCache) extends GmpPageFlow(authConnector,messagesControllerComponents,ac) {
 
-  //implicit val applicationConfig: config.ApplicationConfig  = (GuiceApplicationBuilder().injector().instanceOf[ApplicationConfig])
 
   def get = authAction.async {
       implicit request =>

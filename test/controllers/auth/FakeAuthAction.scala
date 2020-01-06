@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,13 +16,21 @@
 
 package controllers.auth
 
-import play.api.mvc.{Request, Result}
+import play.api.inject.guice.GuiceApplicationBuilder
+import play.api.{Configuration, Environment}
+import play.api.mvc.{MessagesControllerComponents, Request, Result}
+import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.domain.Generator
+import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext.Implicits._
 import scala.util.Random
 
-object FakeAuthAction extends AuthAction {
+object FakeAuthAction extends AuthAction(authConnector=new GuiceApplicationBuilder().injector().instanceOf[AuthConnector],
+  configuration=new GuiceApplicationBuilder().injector().instanceOf[Configuration],
+  messagesControllerComponents=new GuiceApplicationBuilder().injector().instanceOf[MessagesControllerComponents]) {
+
 
   val nino = new Generator(new Random).nextNino
 

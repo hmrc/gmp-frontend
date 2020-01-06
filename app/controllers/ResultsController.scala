@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 package controllers
 
 import com.google.inject.{Inject, Singleton}
-import config.{ApplicationConfig, GmpContext}
+import config.{ApplicationConfig, GmpContext, GmpSessionCache}
 import connectors.GmpConnector
 import controllers.auth.AuthAction
 import events.ContributionsAndEarningsEvent
@@ -28,6 +28,7 @@ import play.api.Logger
 import play.api.Play.current
 import play.api.i18n.{Messages, MessagesProvider}
 import play.api.i18n.Messages.Implicits._
+import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.{MessagesControllerComponents, Request}
 import play.twirl.api.HtmlFormat
 import services.SessionService
@@ -42,15 +43,15 @@ class ResultsController @Inject()(authAction: AuthAction,
                                   sessionService: SessionService,
                                   calculationConnector: GmpConnector,
                                   auditConnector: AuditConnector,
-                                  metrics: ApplicationMetrics,
+                                  metrics: ApplicationMetrics,ac:ApplicationConfig,
                                   override val messagesControllerComponents: MessagesControllerComponents,
                                   implicit val executionContext: ExecutionContext,
-                                  implicit val applicationConfig: ApplicationConfig,
-                                  implicit val messages: Messages,
-                                  override implicit val messagesProvider: MessagesProvider) extends GmpPageFlow(authConnector,messagesControllerComponents) {
+                                  implicit val gmpSessionCache: GmpSessionCache) extends GmpPageFlow(authConnector,messagesControllerComponents,ac) {
+
+
 
    def resultsView(response: CalculationResponse, revalRateSubheader: Option[String], survivorSubheader: Option[String])(implicit request: Request[_], context: GmpContext): HtmlFormat.Appendable = {
-    views.html.results(applicationConfig,response, revalRateSubheader,survivorSubheader)
+    views.html.results(response, revalRateSubheader,survivorSubheader)
   }
 
   def get = authAction.async {

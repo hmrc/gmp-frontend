@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,29 +16,37 @@
 
 package controllers
 
+import config.{ApplicationConfig, GmpSessionCache}
 import controllers.auth.{AuthAction, FakeAuthAction, GmpAuthConnector}
 import models._
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
-import play.api.i18n.Messages
+import play.api.i18n.{Messages, MessagesProvider}
 import play.api.i18n.Messages.Implicits._
 import play.api.libs.json.Json
+import play.api.mvc.MessagesControllerComponents
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.SessionService
 import uk.gov.hmrc.auth.core.AuthConnector
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 class InflationProofControllerSpec extends PlaySpec with OneServerPerSuite with MockitoSugar {
 
   val mockAuthConnector = mock[AuthConnector]
   val mockSessionService = mock[SessionService]
   val mockAuthAction = mock[AuthAction]
+  implicit val mcc = app.injector.instanceOf[MessagesControllerComponents]
+  implicit val ec = app.injector.instanceOf[ExecutionContext]
+  implicit val messagesProvider=app.injector.instanceOf[MessagesProvider]
+  implicit val ac=app.injector.instanceOf[ApplicationConfig]
+  implicit val gmpSessionCache=app.injector.instanceOf[GmpSessionCache]
 
-  object TestInflationProofController extends InflationProofController(FakeAuthAction, mockAuthConnector) {
+
+  object TestInflationProofController extends InflationProofController(FakeAuthAction, mockAuthConnector,mcc,ac,ec,gmpSessionCache) {
     override val sessionService = mockSessionService
     override val context = FakeGmpContext
   }
@@ -71,7 +79,7 @@ class InflationProofControllerSpec extends PlaySpec with OneServerPerSuite with 
 
           "redirect to the results" in {
 
-              when(mockSessionService.cacheRevaluationDate(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(session)))
+              when(mockSessionService.cacheRevaluationDate(Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(session)))
               val result = TestInflationProofController.post(FakeRequest().withJsonBody(Json.toJson(inflationProof)))
               status(result) must equal(SEE_OTHER)
               redirectLocation(result).get must be(routes.ResultsController.get().url)
@@ -80,7 +88,7 @@ class InflationProofControllerSpec extends PlaySpec with OneServerPerSuite with 
 
           "redirect to the results when not revaluated" in {
 
-              when(mockSessionService.cacheRevaluationDate(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(session)))
+              when(mockSessionService.cacheRevaluationDate(Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(session)))
               val result = TestInflationProofController.post(FakeRequest().withJsonBody(Json.toJson(inflationProof.copy(revaluate = Some("No")))))
               status(result) must equal(SEE_OTHER)
               redirectLocation(result).get must be(routes.ResultsController.get().url)
@@ -89,15 +97,15 @@ class InflationProofControllerSpec extends PlaySpec with OneServerPerSuite with 
 
           "save revaluation date to session cache" in {
 
-              when(mockSessionService.cacheRevaluationDate(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(session)))
+              when(mockSessionService.cacheRevaluationDate(Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(session)))
               val result = TestInflationProofController.post(FakeRequest().withJsonBody(Json.toJson(inflationProof)))
-              verify(mockSessionService, atLeastOnce()).cacheRevaluationDate(Matchers.any())(Matchers.any(), Matchers.any())
+              verify(mockSessionService, atLeastOnce()).cacheRevaluationDate(Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any())
 
           }
 
           "respond with an exception when the session cache is unavailable" in {
             reset(mockSessionService)
-            when(mockSessionService.cacheRevaluationDate(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(None))
+            when(mockSessionService.cacheRevaluationDate(Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(None))
               intercept[RuntimeException] {
                 await(TestInflationProofController.post(FakeRequest().withJsonBody(Json.toJson(inflationProof))))
             }
@@ -128,7 +136,7 @@ class InflationProofControllerSpec extends PlaySpec with OneServerPerSuite with 
 
       "throw an exception when session not fetched" in {
 
-          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(None))
+          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(None))
           val result = TestInflationProofController.back(FakeRequest())
           intercept[RuntimeException] {
             status(result)
@@ -138,7 +146,7 @@ class InflationProofControllerSpec extends PlaySpec with OneServerPerSuite with 
       "redirect to the termination date page if the member has not left the scheme" in {
         val revaluationDate = GmpDate(Some("1"), Some("1"), Some("2000"))
         val session = GmpSession(MemberDetails("", "", ""), "", "3", Some(revaluationDate), None, Leaving(GmpDate(None, None, None), Some(Leaving.NO)), None)
-          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(session)))
+          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(session)))
           val result = TestInflationProofController.back(FakeRequest())
           status(result) must equal(SEE_OTHER)
           redirectLocation(result).get must be(routes.DateOfLeavingController.get().url)
@@ -147,7 +155,7 @@ class InflationProofControllerSpec extends PlaySpec with OneServerPerSuite with 
       "redirect to the revaluation rate page if the member has left the scheme before 5/4/16" in {
         val revaluationDate = GmpDate(Some("1"), Some("1"), Some("2000"))
         val session = GmpSession(MemberDetails("", "", ""), "", "3", Some(revaluationDate), None, Leaving(GmpDate(None, None, None), Some(Leaving.YES_BEFORE)), None)
-          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(session)))
+          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(session)))
           val result = TestInflationProofController.back(FakeRequest())
           status(result) must equal(SEE_OTHER)
           redirectLocation(result).get must be(routes.RevaluationRateController.get().url)
@@ -156,7 +164,7 @@ class InflationProofControllerSpec extends PlaySpec with OneServerPerSuite with 
       "redirect to the revaluation rate page if the member has left the scheme after 5/4/16" in {
         val revaluationDate = GmpDate(Some("1"), Some("1"), Some("2000"))
         val session = GmpSession(MemberDetails("", "", ""), "", "3", Some(revaluationDate), None, Leaving(GmpDate(None, None, None), Some(Leaving.YES_AFTER)), None)
-          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(session)))
+          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(session)))
           val result = TestInflationProofController.back(FakeRequest())
           status(result) must equal(SEE_OTHER)
           redirectLocation(result).get must be(routes.RevaluationRateController.get().url)

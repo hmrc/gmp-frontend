@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@ import com.google.inject.{Inject, Singleton}
 import config.{ApplicationConfig, GmpContext}
 import models.{CalculationType, GmpSession, Leaving}
 import play.api.Play
-import play.api.i18n.MessagesProvider
+import play.api.i18n.{Messages, MessagesImpl, MessagesProvider}
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.{MessagesControllerComponents, Result}
 import services.SessionService
@@ -32,11 +32,13 @@ import uk.gov.hmrc.time.TaxYear
 import scala.concurrent.ExecutionContext
 
 @Singleton
-class GmpController @Inject()(val messagesControllerComponents: MessagesControllerComponents)
+class GmpController @Inject()(val messagesControllerComponents: MessagesControllerComponents,
+                              ac: ApplicationConfig)
                   extends FrontendController(messagesControllerComponents){
-  implicit val applicationConfig: config.ApplicationConfig  = ApplicationConfig
+  implicit val applicationConfig: config.ApplicationConfig  = ac
   val sessionService: SessionService = Play.current.injector.instanceOf[SessionService]
   implicit val context: config.GmpContext = Play.current.injector.instanceOf[GmpContext]
+  implicit lazy val messages: Messages = MessagesImpl(messagesControllerComponents.langs.availables.head, messagesApi)
 }
 
 object PageType {
@@ -52,10 +54,9 @@ object PageType {
 }
 
 class GmpPageFlow @Inject()(val authConnector: AuthConnector,
-                            messagesControllerComponents: MessagesControllerComponents)
-                           (implicit ec: ExecutionContext,
-                            implicit val messagesProvider: MessagesProvider)
-                          extends GmpController(messagesControllerComponents) {
+                            messagesControllerComponents: MessagesControllerComponents,applicationConfig: ApplicationConfig)
+                           (implicit ec: ExecutionContext)
+                          extends GmpController(messagesControllerComponents,applicationConfig) {
 
 
   val forwardNavigation: Map[String, GmpSession => Result] = Map(

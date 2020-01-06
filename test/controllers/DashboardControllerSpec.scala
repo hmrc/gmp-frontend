@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 
 package controllers
 
+import config.{ApplicationConfig, GmpSessionCache}
 import connectors.GmpBulkConnector
 import controllers.auth.{AuthAction, FakeAuthAction}
 import models._
@@ -24,16 +25,17 @@ import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
-import play.api.i18n.Messages
+import play.api.i18n.{Messages, MessagesApi, MessagesProvider}
 import play.api.i18n.Messages.Implicits._
 import play.api.libs.json.Json
+import play.api.mvc.MessagesControllerComponents
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.SessionService
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.http.Upstream5xxResponse
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 class DashboardControllerSpec extends PlaySpec with OneServerPerSuite with MockitoSugar {
 
@@ -42,9 +44,15 @@ class DashboardControllerSpec extends PlaySpec with OneServerPerSuite with Mocki
   val mockGmpBulkConnector = mock[GmpBulkConnector]
   val mockAuthAction = mock[AuthAction]
 
+  implicit val mcc = app.injector.instanceOf[MessagesControllerComponents]
+  implicit val ec = app.injector.instanceOf[ExecutionContext]
+  implicit val messagesProvider=app.injector.instanceOf[MessagesProvider]
+  implicit val ac=app.injector.instanceOf[ApplicationConfig]
+  implicit val gmpSessionCache=app.injector.instanceOf[GmpSessionCache]
 
 
-  object TestDashboardController extends DashboardController(FakeAuthAction, mockAuthConnector, mockGmpBulkConnector) {
+
+  object TestDashboardController extends DashboardController(FakeAuthAction, mockAuthConnector, mockGmpBulkConnector,ac,mcc,ec,gmpSessionCache) {
     override val sessionService = mockSessionService
     override val context = FakeGmpContext
   }
@@ -103,7 +111,7 @@ class DashboardControllerSpec extends PlaySpec with OneServerPerSuite with Mocki
 
         val brokenGmpBulkConnector = mock[GmpBulkConnector]
 
-        object BrokenDashboardController extends DashboardController(FakeAuthAction, mockAuthConnector, brokenGmpBulkConnector) {
+        object BrokenDashboardController extends DashboardController(FakeAuthAction, mockAuthConnector, brokenGmpBulkConnector,ac,mcc,ec,gmpSessionCache) {
           override val sessionService = mockSessionService
           override val context = FakeGmpContext
         }

@@ -1,5 +1,5 @@
 @*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,8 @@
  * limitations under the License.
  *@
 
-@()(implicit request: Request[_], context: config.GmpContext,messages: Messages)
+@import config.ApplicationConfig
+@()(implicit request: Request[_], context: config.GmpContext,messages: Messages,ac:ApplicationConfig)
 
 @gmp_main(title = Messages("gmp.serviceunavailable.title") + " - " + Messages("service.title") + " - " + Messages("gov.uk"),supportLinkEnabled = true, dashboardLinkEnabled = false) {
 

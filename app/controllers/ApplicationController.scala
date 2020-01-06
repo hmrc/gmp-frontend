@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,10 @@
 package controllers
 
 import com.google.inject.{Inject, Singleton}
+import config.ApplicationConfig
 import controllers.auth.{AuthAction, ExternalUrls, UUIDGenerator}
+import play.api.i18n.{Messages, MessagesProvider}
+import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
@@ -31,9 +34,12 @@ class ApplicationController @Inject()(authAction: AuthAction,
                                       val authConnector: AuthConnector,
                                       uuidGenerator: UUIDGenerator,
                                       messagesControllerComponents: MessagesControllerComponents,
-                                      implicit val executionContext: ExecutionContext)
-                                      extends GmpController(messagesControllerComponents) {
-  
+                                      implicit val executionContext: ExecutionContext,
+                                      ac:ApplicationConfig)
+                                      extends GmpController(messagesControllerComponents,ac) {
+
+
+
   def unauthorised: Action[AnyContent] = Action {
     implicit request =>
       Ok(views.html.unauthorised())

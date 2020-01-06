@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,10 +17,12 @@
 package controllers
 
 import com.google.inject.Inject
+import config.ApplicationConfig
 import connectors.GmpBulkConnector
 import controllers.auth.AuthAction
 import play.api.Logger
 import play.api.i18n.Messages
+import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.MessagesControllerComponents
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.http.{NotFoundException, Upstream4xxResponse}
@@ -31,11 +33,10 @@ class BulkResultsController @Inject()(authAction: AuthAction,
                                       val authConnector: AuthConnector,
                                       gmpBulkConnector: GmpBulkConnector,
                                       messagesControllerComponents: MessagesControllerComponents,
-                                      implicit val executionContext: ExecutionContext,
-                                      implicit val messages:Messages
-                                     ) extends GmpController(messagesControllerComponents) {
-
-  def get(uploadReference: String, comingFromPage: Int) = authAction.async {
+                                      ac:ApplicationConfig,
+                                      implicit val executionContext: ExecutionContext
+                                     ) extends GmpController(messagesControllerComponents,ac) {
+   def get(uploadReference: String, comingFromPage: Int) = authAction.async {
     implicit request => {
 
       val log = (e: Throwable) => Logger.error(s"[BulkResultsController][GET] ${e.getMessage}", e)

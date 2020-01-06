@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,15 +18,17 @@ package controllers
 
 import java.util.UUID
 
+import config.{ApplicationConfig, GmpSessionCache}
 import controllers.auth.FakeAuthAction
 import models._
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
-import play.api.i18n.Messages
+import play.api.i18n.{Messages, MessagesApi, MessagesProvider}
 import play.api.i18n.Messages.Implicits._
 import play.api.libs.json.Json
+import play.api.mvc.MessagesControllerComponents
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.SessionService
@@ -35,7 +37,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.logging.SessionId
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 class BulkReferenceControllerSpec extends PlaySpec with OneServerPerSuite with MockitoSugar {
 
@@ -44,8 +46,15 @@ class BulkReferenceControllerSpec extends PlaySpec with OneServerPerSuite with M
   val mockAuditConnector: AuditConnector = mock[AuditConnector]
 
   implicit val hc = new HeaderCarrier(sessionId = Some(SessionId(s"session-${UUID.randomUUID}")))
+  implicit val mcc = app.injector.instanceOf[MessagesControllerComponents]
+  implicit val ec = app.injector.instanceOf[ExecutionContext]
+  implicit val messagesApi = app.injector.instanceOf[MessagesApi]
+  implicit val messagesProvider=app.injector.instanceOf[MessagesProvider]
+  implicit val ac=app.injector.instanceOf[ApplicationConfig]
+  implicit val gmpSessionCache=app.injector.instanceOf[GmpSessionCache]
 
-  object TestBulkReferenceController extends BulkReferenceController(FakeAuthAction, mockAuthConnector, mockAuditConnector) {
+  object TestBulkReferenceController extends BulkReferenceController(FakeAuthAction, mockAuthConnector, mockAuditConnector,
+  mcc,ec,ac,gmpSessionCache) {
     override val sessionService = mockSessionService
     override val context = FakeGmpContext
 
@@ -84,7 +93,7 @@ class BulkReferenceControllerSpec extends PlaySpec with OneServerPerSuite with M
       }
 
       "throw an exception when can't cache email and reference" in {
-        when(mockSessionService.cacheEmailAndReference(Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(None))
+        when(mockSessionService.cacheEmailAndReference(Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any(),Matchers.any())).thenReturn(Future.successful(None))
 
           val result = TestBulkReferenceController.post()(FakeRequest().withJsonBody(Json.toJson(validRequest)))
           intercept[RuntimeException]{
@@ -93,7 +102,7 @@ class BulkReferenceControllerSpec extends PlaySpec with OneServerPerSuite with M
       }
 
       "validate email and reference, cache and redirect" in {
-        when(mockSessionService.cacheEmailAndReference(Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpBulkSession)))
+        when(mockSessionService.cacheEmailAndReference(Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any(),Matchers.any())).thenReturn(Future.successful(Some(gmpBulkSession)))
 
           val result = TestBulkReferenceController.post()(FakeRequest().withJsonBody(Json.toJson(validRequest)))
           status(result) must equal(SEE_OTHER)
@@ -101,7 +110,7 @@ class BulkReferenceControllerSpec extends PlaySpec with OneServerPerSuite with M
       }
 
       "validate email and reference with spaces, cache and redirect" in {
-        when(mockSessionService.cacheEmailAndReference(Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpBulkSession)))
+        when(mockSessionService.cacheEmailAndReference(Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any(),Matchers.any())).thenReturn(Future.successful(Some(gmpBulkSession)))
 
           val result = TestBulkReferenceController.post()(FakeRequest().withJsonBody(Json.toJson(validRequestWithSpaces)))
           status(result) must equal(SEE_OTHER)

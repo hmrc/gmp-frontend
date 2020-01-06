@@ -1,5 +1,5 @@
 @*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@
 @import play.api.i18n.Messages.Implicits._
 
 @import config.ApplicationConfig
-@(bulkReferenceForm: Form[models.BulkReference])(implicit request: Request[_], context: config.GmpContext,messages: Messages)
+@(bulkReferenceForm: Form[models.BulkReference])(implicit request: Request[_], context: config.GmpContext,messages: Messages,ac:ApplicationConfig)
 
 @import uk.gov.hmrc.play.views.html._
 @import uk.gov.hmrc.play.views.html.helpers._

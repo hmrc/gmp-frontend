@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,15 +17,13 @@
 package controllers
 
 import com.google.inject.{Inject, Singleton}
-import config.ApplicationConfig
+import config.{ApplicationConfig, GmpSessionCache}
 import connectors.AttachmentsConnector
 import controllers.auth.AuthAction
 import models.{CallBackData, GmpBulkSession}
-import play.api.Play.current
 import play.api.i18n.{Messages, MessagesProvider}
-import play.api.i18n.Messages.Implicits._
 import play.api.inject.guice.GuiceApplicationBuilder
-import play.api.mvc.{Action, MessagesControllerComponents}
+import play.api.mvc.MessagesControllerComponents
 import services.SessionService
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.http.logging.SessionId
@@ -37,11 +35,11 @@ class FileUploadController @Inject()(authAction: AuthAction,
                                      val authConnector: AuthConnector,
                                      sessionService: SessionService,
                                      attachmentsConnector: AttachmentsConnector,
-                                     messagesControllerComponents: MessagesControllerComponents,
-                                     implicit val executionContext: ExecutionContext,
-                                     implicit val messagesProvider: MessagesProvider) extends GmpController(messagesControllerComponents) {
+                                     messagesControllerComponents: MessagesControllerComponents,ac:ApplicationConfig,
+                                     implicit val executionContext: ExecutionContext,implicit val gmpSessionCache: GmpSessionCache) extends GmpController(messagesControllerComponents,ac) {
 
-  //implicit val applicationConfig: config.ApplicationConfig  = (GuiceApplicationBuilder().injector().instanceOf[ApplicationConfig])
+
+  implicit val messagesProvider:MessagesProvider=GuiceApplicationBuilder().injector().instanceOf[MessagesProvider]
 
   def get = authAction.async {
       implicit request =>

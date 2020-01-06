@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ package controllers
 
 import java.util.UUID
 
+import config.{ApplicationConfig, GmpSessionCache}
 import connectors.GmpConnector
 import controllers.auth.{AuthAction, FakeAuthAction}
 import metrics.ApplicationMetrics
@@ -26,9 +27,10 @@ import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
-import play.api.i18n.Messages
+import play.api.i18n.{Messages, MessagesProvider}
 import play.api.i18n.Messages.Implicits._
 import play.api.libs.json.Json
+import play.api.mvc.MessagesControllerComponents
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.SessionService
@@ -36,7 +38,7 @@ import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.logging.SessionId
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 class PensionDetailsControllerSpec extends PlaySpec with OneServerPerSuite with MockitoSugar {
 
@@ -45,10 +47,16 @@ class PensionDetailsControllerSpec extends PlaySpec with OneServerPerSuite with 
   val mockGmpConnector = mock[GmpConnector]
   val mockAuthAction = mock[AuthAction]
   val metrics = app.injector.instanceOf[ApplicationMetrics]
+  implicit val mcc = app.injector.instanceOf[MessagesControllerComponents]
+  implicit val ec = app.injector.instanceOf[ExecutionContext]
+  implicit val messagesProvider=app.injector.instanceOf[MessagesProvider]
+  implicit val ac=app.injector.instanceOf[ApplicationConfig]
+  implicit val gmpSessionCache=app.injector.instanceOf[GmpSessionCache]
+
 
   implicit val hc = new HeaderCarrier(sessionId = Some(SessionId(s"session-${UUID.randomUUID}")))
 
-  object TestPensionDetailsController extends PensionDetailsController(FakeAuthAction, mockAuthConnector, mockGmpConnector, metrics) {
+  object TestPensionDetailsController extends PensionDetailsController(FakeAuthAction, mockAuthConnector, mockGmpConnector, metrics,ac,mcc,ec,gmpSessionCache) {
     override val sessionService = mockSessionService
     override val context = FakeGmpContext
   }
@@ -58,7 +66,7 @@ class PensionDetailsControllerSpec extends PlaySpec with OneServerPerSuite with 
     "authenticated users" must {
 
       "respond with ok" in {
-        when(mockSessionService.fetchPensionDetails()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(None))
+        when(mockSessionService.fetchPensionDetails()(Matchers.any(), Matchers.any(),Matchers.any())).thenReturn(Future.successful(None))
         val result = TestPensionDetailsController.get(FakeRequest())
             status(result) must equal(OK)
             contentAsString(result) must include(Messages("gmp.pension_details.header"))
@@ -69,7 +77,7 @@ class PensionDetailsControllerSpec extends PlaySpec with OneServerPerSuite with 
       }
 
       "get page containing scon when retrieved" in {
-        when(mockSessionService.fetchPensionDetails()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some("S1301234T")))
+        when(mockSessionService.fetchPensionDetails()(Matchers.any(), Matchers.any(),Matchers.any())).thenReturn(Future.successful(Some("S1301234T")))
         val result = TestPensionDetailsController.get(FakeRequest())
             contentAsString(result) must include("S1301234T")
       }
@@ -85,7 +93,7 @@ class PensionDetailsControllerSpec extends PlaySpec with OneServerPerSuite with 
       val gmpSession = GmpSession(MemberDetails("", "", ""), "S1301234T", "", None, None, Leaving(GmpDate(None, None, None), None), None)
 
       "validate scon and store scon and redirect" in {
-        when(mockSessionService.cachePensionDetails(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
+        when(mockSessionService.cachePensionDetails(Matchers.any())(Matchers.any(), Matchers.any(),Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
         when(mockGmpConnector.validateScon(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful(ValidateSconResponse(true)))
           val result = TestPensionDetailsController.post()(FakeRequest().withJsonBody(Json.toJson(validGmpRequest)))
           status(result) must equal(SEE_OTHER)
@@ -105,7 +113,7 @@ class PensionDetailsControllerSpec extends PlaySpec with OneServerPerSuite with 
       }
 
       "respond with exception when scon service throws exception" in {
-        when(mockSessionService.cachePensionDetails(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
+        when(mockSessionService.cachePensionDetails(Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
         when(mockGmpConnector.validateScon(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful(null))
           intercept[RuntimeException]{
             await(TestPensionDetailsController.post()(FakeRequest().withJsonBody(Json.toJson(validGmpRequest))))
@@ -113,7 +121,7 @@ class PensionDetailsControllerSpec extends PlaySpec with OneServerPerSuite with 
       }
 
       "respond with exception when cache service throws exception" in {
-        when(mockSessionService.cachePensionDetails(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(None))
+        when(mockSessionService.cachePensionDetails(Matchers.any())(Matchers.any(), Matchers.any(),Matchers.any())).thenReturn(Future.successful(None))
         when(mockGmpConnector.validateScon(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful(ValidateSconResponse(true)))
           intercept[RuntimeException]{
             await(TestPensionDetailsController.post()(FakeRequest().withJsonBody(Json.toJson(validGmpRequest))))

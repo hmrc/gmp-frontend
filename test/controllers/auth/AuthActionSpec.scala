@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.http.Status._
-import play.api.mvc.{Action, AnyContent, Controller}
+import play.api.mvc.{Action, AnyContent, Controller, MessagesControllerComponents}
 import play.api.test.FakeRequest
 import play.api.test.Helpers.{redirectLocation, status}
 import uk.gov.hmrc.auth.core._
@@ -40,6 +40,7 @@ class AuthActionSpec extends PlaySpec with GuiceOneAppPerSuite with MockitoSugar
   }
 
   implicit val timeout: Timeout = 5 seconds
+  val mcc = app.injector.instanceOf[MessagesControllerComponents]
 
   "Auth Action" when {
     "the user is not logged in" must {
@@ -47,10 +48,12 @@ class AuthActionSpec extends PlaySpec with GuiceOneAppPerSuite with MockitoSugar
 
         val mockAuthConnector = mock[AuthConnector]
 
+
+
         when(mockAuthConnector.authorise(any(),any())(any(), any()))
           .thenReturn(Future.failed(new MissingBearerToken))
 
-        val authAction = new AuthActionImpl(mockAuthConnector,app.configuration)
+        val authAction = new AuthAction(mockAuthConnector,app.configuration,mcc)
         val controller = new Harness(authAction)
 
         val result = controller.onPageLoad()(FakeRequest("", ""))
@@ -67,7 +70,7 @@ class AuthActionSpec extends PlaySpec with GuiceOneAppPerSuite with MockitoSugar
         when(mockAuthConnector.authorise(any(),any())(any(), any()))
           .thenReturn(Future.failed(new InsufficientConfidenceLevel))
 
-        val authAction = new AuthActionImpl(mockAuthConnector,app.configuration)
+        val authAction = new AuthAction(mockAuthConnector,app.configuration,mcc)
         val controller = new Harness(authAction)
 
         val result = controller.onPageLoad()(FakeRequest("", ""))
@@ -83,7 +86,7 @@ class AuthActionSpec extends PlaySpec with GuiceOneAppPerSuite with MockitoSugar
         when(mockAuthConnector.authorise[Enrolments](any(), any())(any(), any()))
           .thenReturn(Future.failed(new InsufficientEnrolments))
 
-        val authAction = new AuthActionImpl(mockAuthConnector, app.configuration)
+        val authAction = new AuthAction(mockAuthConnector, app.configuration,mcc)
         val controller = new Harness(authAction)
 
         val result = controller.onPageLoad()(FakeRequest("", ""))
@@ -103,7 +106,7 @@ class AuthActionSpec extends PlaySpec with GuiceOneAppPerSuite with MockitoSugar
         when(mockAuthConnector.authorise[Enrolments](any(), any())(any(), any()))
           .thenReturn(retrievalResult)
 
-        val authAction = new AuthActionImpl(mockAuthConnector, app.configuration)
+        val authAction = new AuthAction(mockAuthConnector, app.configuration,mcc)
         val controller = new Harness(authAction)
 
         val result = controller.onPageLoad()(FakeRequest("", ""))
@@ -123,7 +126,7 @@ class AuthActionSpec extends PlaySpec with GuiceOneAppPerSuite with MockitoSugar
           when(mockAuthConnector.authorise[Enrolments](any(), any())(any(), any()))
             .thenReturn(retrievalResult)
 
-          val authAction = new AuthActionImpl(mockAuthConnector, app.configuration)
+          val authAction = new AuthAction(mockAuthConnector, app.configuration,mcc)
           val controller = new Harness(authAction)
 
           val result = controller.onPageLoad()(FakeRequest("", ""))
@@ -151,7 +154,7 @@ class AuthActionSpec extends PlaySpec with GuiceOneAppPerSuite with MockitoSugar
         when(mockAuthConnector.authorise[Enrolments](any(), any())(any(), any()))
           .thenReturn(retrievalResult)
 
-        val authAction = new AuthActionImpl(mockAuthConnector, app.configuration)
+        val authAction = new AuthAction(mockAuthConnector, app.configuration,mcc)
         val controller = new Harness(authAction)
 
         val result = controller.onPageLoad()(FakeRequest("", ""))

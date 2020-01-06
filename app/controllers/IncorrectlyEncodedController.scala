@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,10 +30,10 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class IncorrectlyEncodedController @Inject()( authAction: AuthAction,
                                               override val authConnector: AuthConnector,
-                                              override val messagesControllerComponents: MessagesControllerComponents,
-                                              override implicit val messagesProvider: MessagesProvider,
+                                              override val messagesControllerComponents: MessagesControllerComponents,ac:ApplicationConfig,
                                               implicit val executionContext: ExecutionContext
-                                            ) extends GmpPageFlow(authConnector,messagesControllerComponents){
+                                            ) extends GmpPageFlow(authConnector,messagesControllerComponents,ac){
+
 
 
   def get = authAction.async {

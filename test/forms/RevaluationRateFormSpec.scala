@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,9 +20,12 @@ import forms.RevaluationRateForm._
 import models.RevaluationRate
 import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
+import play.api.i18n.MessagesProvider
 import play.api.libs.json.Json
 
 class RevaluationRateFormSpec extends PlaySpec with OneAppPerSuite with MockitoSugar {
+  implicit val messagesProvider=app.injector.instanceOf[MessagesProvider]
+
   "Revaluation Rate Form" must {
     "return no errors when valid values are entered" in {
 

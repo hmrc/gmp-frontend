@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,8 @@ package config
 import com.google.inject.name.Named
 import com.google.inject.{Inject, Singleton}
 import play.api.Mode
+import play.api.i18n.MessagesProvider
+import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.{Configuration, Environment}
 import uk.gov.hmrc.http.cache.client.SessionCache
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
@@ -29,8 +31,9 @@ class GmpSessionCache @Inject()(@Named("appName") appName: String,
                                 environment: Environment,
                                 configuration: Configuration,
                                 val http: HttpClient,
-                               val serviceConfig: ServicesConfig,
-                               val sessionCache: SessionCache )  {
+                               val serviceConfig: ServicesConfig)  extends SessionCache{
+
+
 
    val defaultSource = appName
    val baseUri = serviceConfig.baseUrl("keystore")

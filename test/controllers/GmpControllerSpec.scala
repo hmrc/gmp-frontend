@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,13 +16,18 @@
 
 package controllers
 
+import config.ApplicationConfig
 import controllers.auth.AuthAction
 import models._
 import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
+import play.api.i18n.{MessagesApi, MessagesProvider}
+import play.api.mvc.MessagesControllerComponents
 import play.api.test.Helpers._
 import services.SessionService
 import uk.gov.hmrc.auth.core.AuthConnector
+
+import scala.concurrent.ExecutionContext
 
 
 class GmpControllerSpec extends PlaySpec with OneServerPerSuite with MockitoSugar {
@@ -30,8 +35,14 @@ class GmpControllerSpec extends PlaySpec with OneServerPerSuite with MockitoSuga
   val mockAuthConnector = mock[AuthConnector]
   val mockSessionService = mock[SessionService]
   val mockAuthAction = mock[AuthAction]
+  implicit val mcc = app.injector.instanceOf[MessagesControllerComponents]
+  implicit val ec = app.injector.instanceOf[ExecutionContext]
+  implicit val messagesApi = app.injector.instanceOf[MessagesApi]
+  implicit val messagesProvider=app.injector.instanceOf[MessagesProvider]
+  implicit val ac=app.injector.instanceOf[ApplicationConfig]
 
-  object TestGmpController extends GmpPageFlow(mockAuthConnector) {
+
+  object TestGmpController extends GmpPageFlow(mockAuthConnector,mcc,ac)(ec) {
     override val sessionService = mockSessionService
     override val context = FakeGmpContext
   }

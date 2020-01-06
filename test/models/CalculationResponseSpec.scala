@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,11 +20,14 @@ import helpers.RandomNino
 import org.joda.time.LocalDate
 import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
-import play.api.i18n.Messages
+import play.api.i18n.{Messages, MessagesProvider}
 import play.api.i18n.Messages.Implicits._
 import views.helpers.GmpDateFormatter._
 
 class CalculationResponseSpec extends PlaySpec with MockitoSugar with OneServerPerSuite {
+
+  implicit val messagesProvider=app.injector.instanceOf[MessagesProvider]
+
 
   val nino = RandomNino.generate
 

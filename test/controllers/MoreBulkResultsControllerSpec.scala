@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 
 package controllers
 
+import config.ApplicationConfig
 import connectors.GmpBulkConnector
 import controllers.auth.{AuthAction, FakeAuthAction}
 import models._
@@ -24,14 +25,15 @@ import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
-import play.api.i18n.Messages
+import play.api.i18n.{Messages, MessagesProvider}
 import play.api.i18n.Messages.Implicits._
+import play.api.mvc.MessagesControllerComponents
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.SessionService
 import uk.gov.hmrc.auth.core.AuthConnector
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 class MoreBulkResultsControllerSpec extends PlaySpec with OneServerPerSuite with MockitoSugar {
 
@@ -39,8 +41,13 @@ class MoreBulkResultsControllerSpec extends PlaySpec with OneServerPerSuite with
   val mockSessionService = mock[SessionService]
   val mockGmpBulkConnector = mock[GmpBulkConnector]
   val mockAuthAction = mock[AuthAction]
+  implicit val mcc = app.injector.instanceOf[MessagesControllerComponents]
+  implicit val ec = app.injector.instanceOf[ExecutionContext]
+  implicit val messagesProvider=app.injector.instanceOf[MessagesProvider]
+  implicit val ac=app.injector.instanceOf[ApplicationConfig]
 
-  object TestMoreBulkResultsController extends MoreBulkResultsController(FakeAuthAction, mockAuthConnector, mockGmpBulkConnector) {
+
+  object TestMoreBulkResultsController extends MoreBulkResultsController(FakeAuthAction, mockAuthConnector, mockGmpBulkConnector,ac,mcc,ec) {
     override val sessionService = mockSessionService
     override val context = FakeGmpContext
   }

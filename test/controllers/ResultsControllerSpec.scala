@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,8 +18,7 @@ package controllers
 
 import java.util.UUID
 
-import config.ApplicationConfig.globalErrors
-import config.{ApplicationConfig}
+import config.{ApplicationConfig, GmpSessionCache}
 import connectors.GmpConnector
 import controllers.auth.{AuthAction, FakeAuthAction, GmpAuthConnector}
 import helpers.RandomNino
@@ -30,9 +29,9 @@ import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
-import play.api.i18n.Messages
+import play.api.i18n.{Messages, MessagesProvider}
 import play.api.i18n.Messages.Implicits._
-import play.api.mvc.Request
+import play.api.mvc.{MessagesControllerComponents, Request}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import play.twirl.api.HtmlFormat
@@ -43,7 +42,7 @@ import uk.gov.hmrc.http.logging.SessionId
 import uk.gov.hmrc.play.audit.http.connector.{AuditConnector, AuditResult}
 import views.helpers.GmpDateFormatter._
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with MockitoSugar {
 
@@ -54,14 +53,19 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
   val mockAuditConnector = mock[AuditConnector]
   val mockAuthAction = mock[AuthAction]
   val metrics = app.injector.instanceOf[ApplicationMetrics]
+  implicit val mcc = app.injector.instanceOf[MessagesControllerComponents]
+  implicit val ec = app.injector.instanceOf[ExecutionContext]
+  implicit val messagesProvider=app.injector.instanceOf[MessagesProvider]
+  implicit val applicationConfig=app.injector.instanceOf[ApplicationConfig]
+  implicit val gmpSessionCache=app.injector.instanceOf[GmpSessionCache]
 
   implicit val hc = new HeaderCarrier(sessionId = Some(SessionId(s"session-${UUID.randomUUID}")))
 
-  object TestResultsController extends ResultsController(FakeAuthAction, mockAuthConnector, mockSessionService, mockCalculationConnector, mockAuditConnector, metrics) {
+  object TestResultsController extends ResultsController(FakeAuthAction, mockAuthConnector, mockSessionService, mockCalculationConnector, mockAuditConnector, metrics,applicationConfig,mcc,ec,gmpSessionCache) {
     override val context = FakeGmpContext
 
     override def resultsView(response: CalculationResponse, subheader: Option[String], revalSubheader: Option[String])(implicit request: Request[_], context: config.GmpContext): HtmlFormat.Appendable = {
-      views.html.results(applicationConfig = mockApplicationConfig, response, subheader, revalSubheader)
+      views.html.results(response, subheader, revalSubheader)
     }
 
   }
@@ -245,7 +249,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
       "when authorised" must {
 
         "respond with a status of OK" in {
-          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
+          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
           when(mockCalculationConnector.calculateSingle(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful(validCalculationResponse))
             val result = TestResultsController.get(FakeRequest())
             status(result) must equal(OK)
@@ -254,7 +258,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
         }
 
         "load the results page without revalrate when dol" in {
-          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
+          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
           when(mockCalculationConnector.calculateSingle(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful(validCalculationResponse))
             val result = TestResultsController.get(FakeRequest())
             contentAsString(result) must not include (Messages("gmp.revaluation.rate"))
@@ -262,14 +266,14 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
         }
 
         "load the results page when revaluation date has been wiped" in {
-          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
+          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
           when(mockCalculationConnector.calculateSingle(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful(validCalculationResponse))
             val result = TestResultsController.get(FakeRequest())
             contentAsString(result) must include(Messages("gmp.back.link"))
         }
 
         "load the results page when revaluation date exists with revaluation S148" in {
-          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession.copy(rate = Some(RevaluationRate
+          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession.copy(rate = Some(RevaluationRate
             .S148)))))
           when(mockCalculationConnector.calculateSingle(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful(validCalculationResponse))
             val result = TestResultsController.get(FakeRequest())
@@ -280,7 +284,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
 
           val date = GmpDate(day = Some("24"), month = Some("08"), year = Some("2016"))
 
-          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(
+          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(
             Future.successful(Some(gmpSession.copy(revaluationDate = Some(date), rate = Some(RevaluationRate.HMRC), leaving = Leaving(date, Some(Leaving.NO))))))
 
           when(mockCalculationConnector.calculateSingle(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful(validRevaluationMultipleSameTaxYear))
@@ -294,7 +298,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
 
           val date = GmpDate(day = Some("24"), month = Some("08"), year = Some("2016"))
 
-          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(
+          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(
             Future.successful(Some(gmpSession.copy(revaluationDate = Some(date), leaving = Leaving(date, Some(Leaving.NO))))))
 
           when(mockCalculationConnector.calculateSingle(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful(validRevalSingleSameTaxYear))
@@ -307,7 +311,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
         //spa calculation
 
         "load the results page for spa" in {
-          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
+          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
           when(mockCalculationConnector.calculateSingle(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful(validCalculationSpaResponse))
             val result = TestResultsController.get(FakeRequest())
             contentAsString(result) must include(Messages("gmp.spa.header", "10 November 2015"))
@@ -316,7 +320,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
         //payable age calculation
 
         "load the results page for payable age" in {
-          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
+          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
           when(mockCalculationConnector.calculateSingle(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful(validCalculationPayableAgeResponse))
             val result = TestResultsController.get(FakeRequest())
             contentAsString(result) must include(Messages("gmp.payable_age.header", "10 November 2015"))
@@ -325,7 +329,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
         //survivor
 
         "show the correct header when survivor and not revaluing" in {
-          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession.copy(scenario = CalculationType.SURVIVOR))))
+          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession.copy(scenario = CalculationType.SURVIVOR))))
           when(mockCalculationConnector.calculateSingle(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful(survivorCalculationResponse))
             val result = TestResultsController.get(FakeRequest())
             contentAsString(result) must include("Surviving partner’s GMP entitlement at date of death")
@@ -334,7 +338,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
         }
 
         "show the correct header when survivor and revaluing" in {
-          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession.copy(scenario = CalculationType.SURVIVOR))))
+          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession.copy(scenario = CalculationType.SURVIVOR))))
           when(mockCalculationConnector.calculateSingle(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful(survivorRevaluationCalculationResponse))
             val result = TestResultsController.get(FakeRequest())
             contentAsString(result) must include("Surviving partner’s GMP entitlement at 10 November 2010")
@@ -342,21 +346,21 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
         }
 
         "show the correct subheader when survivor and no inflation proof" in {
-          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession.copy(scenario = CalculationType.SURVIVOR))))
+          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession.copy(scenario = CalculationType.SURVIVOR))))
           when(mockCalculationConnector.calculateSingle(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful(survivorRevaluationCalculationResponse))
             val result = TestResultsController.get(FakeRequest())
             contentAsString(result) must not include (Messages("gmp.no_inflation.subheader"))
         }
 
         "show the correct subheader when survivor and inflation proof" in {
-          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession.copy(scenario = CalculationType.SURVIVOR))))
+          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession.copy(scenario = CalculationType.SURVIVOR))))
           when(mockCalculationConnector.calculateSingle(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful(survivorRevaluationCalculationResponseNoInflation))
             val result = TestResultsController.get(FakeRequest())
             contentAsString(result) must include(Messages("gmp.no_inflation.subheader"))
         }
 
         "show the returned date of death and the correct header when survivor and no inflation proof" in {
-          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession.copy(scenario = CalculationType.SURVIVOR))))
+          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession.copy(scenario = CalculationType.SURVIVOR))))
           when(mockCalculationConnector.calculateSingle(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful(
             survivorRevaluationCalculationResponseNoInflation.copy(dateOfDeath = Some(new LocalDate("2017-01-01")), revaluationDate = None)))
             val result = TestResultsController.get(FakeRequest())
@@ -367,14 +371,14 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
         // Single/Multiple DOL
 
         "show the correct header and subheader when leaving the scheme with single result" in {
-          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
+          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
           when(mockCalculationConnector.calculateSingle(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful(validCalculationResponse.copy(calcType = 0)))
             val result = TestResultsController.get(FakeRequest())
             contentAsString(result) must include(Messages("gmp.notrevalued.subheader"))
         }
 
         "show the correct header and subheader when leaving the scheme with multiple results" in {
-          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
+          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
           when(mockCalculationConnector.calculateSingle(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful
           (validNonRevalMultipleCalculationResponse))
             val result = TestResultsController.get(FakeRequest())
@@ -386,7 +390,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
         // Non revaluation single transfer/divorce (DOL)
 
         "show the non-revalued header and subheader correctly when transferring with single result" in {
-          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
+          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
           when(mockCalculationConnector.calculateSingle(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful
           (revaluationNotRevaluedSingleResponse))
             val result = TestResultsController.get(FakeRequest())
@@ -397,7 +401,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
         // Non revaluation multiple transfer/divorce (DOL)
 
         "show the non-revalued header and subheader correctly when transferring with multiple result" in {
-          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
+          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
           when(mockCalculationConnector.calculateSingle(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful
           (validNonRevalMultipleCalculationResponse.copy(revaluationRate = None)))
             val result = TestResultsController.get(FakeRequest())
@@ -408,7 +412,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
         // Revaluation single transfer/divorce
 
         "show the revalued header correctly when transferring with single result" in {
-          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
+          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
           when(mockCalculationConnector.calculateSingle(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful
           (validCalculationResponse.copy(revaluationDate = Some(new LocalDate(2000, 11, 11)), revaluationRate = Some("1"))))
             val result = TestResultsController.get(FakeRequest())
@@ -416,7 +420,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
         }
 
         "show the dol header correctly when transferring with single result that was not revalued" in {
-          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
+          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
           when(mockCalculationConnector.calculateSingle(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful
           (revaluationNotRevaluedSingleResponse))
             val result = TestResultsController.get(FakeRequest())
@@ -425,7 +429,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
         }
 
         "not show the returned rate on member details table when transferring with single result" in {
-          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
+          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
           when(mockCalculationConnector.calculateSingle(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful
           (validCalculationResponse.copy(revaluationDate = Some(new LocalDate(2000, 11, 11)), revaluationRate = Some("1"))))
             val result = TestResultsController.get(FakeRequest())
@@ -434,7 +438,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
         }
 
         "show the revalued header correctly when divorcing with single result" in {
-          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
+          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
           when(mockCalculationConnector.calculateSingle(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful
           (validCalculationResponse.copy(revaluationDate = Some(new LocalDate(2000, 11, 11)), revaluationRate = Some("1"))))
             val result = TestResultsController.get(FakeRequest())
@@ -444,7 +448,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
         // Revaluation multiple transfer/divorce
 
         "show the revalued header correctly when transferring with multiple result" in {
-          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
+          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
           when(mockCalculationConnector.calculateSingle(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful
           (validNonRevalMultipleCalculationResponse.copy(revaluationDate = Some(new LocalDate(2000, 11, 11)), revaluationRate = Some("0"))))
             val result = TestResultsController.get(FakeRequest())
@@ -452,7 +456,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
         }
 
         "show the revalued header correctly when divorcing with multiple result" in {
-          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
+          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
           when(mockCalculationConnector.calculateSingle(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful
           (validNonRevalMultipleCalculationResponse.copy(revaluationDate = Some(new LocalDate(2000, 11, 11)), revaluationRate = Some("3"))))
             val result = TestResultsController.get(FakeRequest())
@@ -460,7 +464,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
         }
 
         "show non revalued sub-header when revaluation in the same tax year" in {
-          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSessionSameTaxYear)))
+          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSessionSameTaxYear)))
           when(mockCalculationConnector.calculateSingle(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful(revaluationNotRevaluedSingleResponse))
 
             val result = TestResultsController.get(FakeRequest())
@@ -469,7 +473,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
         }
 
         "not show non revalued sub-header when revaluation not in the same tax year" in {
-          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSessionDifferentTaxYear)))
+          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSessionDifferentTaxYear)))
           when(mockCalculationConnector.calculateSingle(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful(nonDualCalcResponse))
 
             val result = TestResultsController.get(FakeRequest())
@@ -477,7 +481,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
         }
 
         "show the rate column in the multiple results table, when hmrc held rate" in {
-          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
+          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
           when(mockCalculationConnector.calculateSingle(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful
           (validRevalCalculationResponseMultiplePeriod.copy(revaluationRate = Some("0"))))
             val result = TestResultsController.get(FakeRequest())
@@ -485,7 +489,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
         }
 
         "not show the rate column in the multiple results table, when not hmrc held rate" in {
-          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
+          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
           when(mockCalculationConnector.calculateSingle(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful
           (validRevalCalculationResponseMultiplePeriod.copy(revaluationRate = Some("1"))))
             val result = TestResultsController.get(FakeRequest())
@@ -493,14 +497,14 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
         }
 
         "show the actual rate in the single period results, when hmrc held rate" in {
-          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession.copy(rate = Some("0")))))
+          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession.copy(rate = Some("0")))))
           when(mockCalculationConnector.calculateSingle(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful(validRevalCalculationResponseSinglePeriod))
             val result = TestResultsController.get(FakeRequest())
             contentAsString(result) must include(Messages("gmp.revaluation_rate.type_2"))
         }
 
         "show correct error page title" in {
-          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
+          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
           when(mockCalculationConnector.calculateSingle(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful(single63123ErrorResponse))
             val result = TestResultsController.get(FakeRequest())
             val content = contentAsString(result).replaceAll("&#x27;", "'")
@@ -508,93 +512,93 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
         }
 
         "show error box with member details single period" in {
-          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
+          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
           when(mockCalculationConnector.calculateSingle(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful(single63123ErrorResponse))
             val result = TestResultsController.get(FakeRequest())
             val content = contentAsString(result).replaceAll("&#x27;", "'")
             content must include(Messages("gmp.cannot_calculate"))
-            content must include(Messages(globalErrors.getString("63123.reason")))
-            content must include(Messages(globalErrors.getString("63123.solution")))
-            content must include(Messages(globalErrors.getString("63123.also")))
+            content must include(Messages(mockApplicationConfig.globalErrors.getString("63123.reason")))
+            content must include(Messages(mockApplicationConfig.globalErrors.getString("63123.solution")))
+            content must include(Messages(mockApplicationConfig.globalErrors.getString("63123.also")))
             content must include(Messages("gmp.entered_details.title"))
             content must not include (Messages("gmp.rate"))
             content must not include (Messages("gmp.back_to_dashboard"))
         }
 
         "show error single period for 58161" in {
-          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
+          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
           when(mockCalculationConnector.calculateSingle(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful(single58161CalculationResponse))
             val result = TestResultsController.get(FakeRequest())
             val content = contentAsString(result).replaceAll("&#x27;", "'")
             content must include(Messages("gmp.cannot_calculate"))
-            content must include(Messages(globalErrors.getString("58161.reason")))
-            content must include(Messages(globalErrors.getString("58161.solution")))
+            content must include(Messages(mockApplicationConfig.globalErrors.getString("58161.reason")))
+            content must include(Messages(mockApplicationConfig.globalErrors.getString("58161.solution")))
             content must include(Messages("gmp.entered_details.title"))
             content must not include (Messages("gmp.rate"))
         }
 
         "show error single period for 63151" in {
-          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
+          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
           when(mockCalculationConnector.calculateSingle(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful(single63151CalculationResponse))
             val result = TestResultsController.get(FakeRequest())
             val content = contentAsString(result).replaceAll("&#x27;", "'")
             content must include(Messages("gmp.cannot_calculate"))
-            content must include(Messages(globalErrors.getString("63151.reason")))
-            content must include(Messages(globalErrors.getString("63151.solution")))
-            content must include(Messages(globalErrors.getString("63151.also")))
+            content must include(Messages(mockApplicationConfig.globalErrors.getString("63151.reason")))
+            content must include(Messages(mockApplicationConfig.globalErrors.getString("63151.solution")))
+            content must include(Messages(mockApplicationConfig.globalErrors.getString("63151.also")))
         }
 
         "show error single period for 63149" in {
-          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
+          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
           when(mockCalculationConnector.calculateSingle(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful(single63149CalculationResponse))
             val result = TestResultsController.get(FakeRequest())
             val content = contentAsString(result).replaceAll("&#x27;", "'")
             content must include(Messages("gmp.cannot_calculate"))
-            content must include(Messages(globalErrors.getString("63149.reason")))
-            content must include(Messages(globalErrors.getString("63149.solution")))
-            content must include(Messages(globalErrors.getString("63149.also")))
+            content must include(Messages(mockApplicationConfig.globalErrors.getString("63149.reason")))
+            content must include(Messages(mockApplicationConfig.globalErrors.getString("63149.solution")))
+            content must include(Messages(mockApplicationConfig.globalErrors.getString("63149.also")))
         }
 
         "show error single period for 63148" in {
-          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
+          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
           when(mockCalculationConnector.calculateSingle(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful(single63148CalculationResponse))
             val result = TestResultsController.get(FakeRequest())
             val content = contentAsString(result).replaceAll("&#x27;", "'")
             content must include(Messages("gmp.cannot_calculate"))
-            content must include(Messages(globalErrors.getString("63148.reason")))
-            content must include(Messages(globalErrors.getString("63148.solution")))
-            content must include(Messages(globalErrors.getString("63148.also")))
+            content must include(Messages(mockApplicationConfig.globalErrors.getString("63148.reason")))
+            content must include(Messages(mockApplicationConfig.globalErrors.getString("63148.solution")))
+            content must include(Messages(mockApplicationConfig.globalErrors.getString("63148.also")))
         }
 
         "show error single period for 63147" in {
-          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
+          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
           when(mockCalculationConnector.calculateSingle(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful(single63147CalculationResponse))
             val result = TestResultsController.get(FakeRequest())
             val content = contentAsString(result).replaceAll("&#x27;", "'")
             content must include(Messages("gmp.cannot_calculate"))
-            content must include(Messages(globalErrors.getString("63147.reason")))
-            content must include(Messages(globalErrors.getString("63147.solution")))
-            content must include(Messages(globalErrors.getString("63147.also")))
+            content must include(Messages(mockApplicationConfig.globalErrors.getString("63147.reason")))
+            content must include(Messages(mockApplicationConfig.globalErrors.getString("63147.solution")))
+            content must include(Messages(mockApplicationConfig.globalErrors.getString("63147.also")))
         }
 
         "show error single period for 63150" in {
-          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
+          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
           when(mockCalculationConnector.calculateSingle(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful(single63150CalculationResponse))
             val result = TestResultsController.get(FakeRequest())
             val content = contentAsString(result).replaceAll("&#x27;", "'")
             content must include(Messages("gmp.cannot_calculate"))
-            content must include(Messages(globalErrors.getString("63150.reason")))
-            content must include(Messages(globalErrors.getString("63150.solution")))
+            content must include(Messages(mockApplicationConfig.globalErrors.getString("63150.reason")))
+            content must include(Messages(mockApplicationConfig.globalErrors.getString("63150.solution")))
         }
 
         "show error single period for 63167" in {
-          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
+          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
           when(mockCalculationConnector.calculateSingle(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful(single63167CalculationResponse))
             val result = TestResultsController.get(FakeRequest())
             val content = contentAsString(result).replaceAll("&#x27;", "'")
             content must include(Messages("gmp.cannot_calculate"))
-            content must include(Messages(globalErrors.getString("63167.reason")))
-            content must include(Messages(globalErrors.getString("63167.solution")))
+            content must include(Messages(mockApplicationConfig.globalErrors.getString("63167.reason")))
+            content must include(Messages(mockApplicationConfig.globalErrors.getString("63167.solution")))
         }
 
         "show error box with member details global" in {
@@ -602,25 +606,25 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
             val result = TestResultsController.get(FakeRequest())
             val content = contentAsString(result).replaceAll("&#x27;", "'")
             content must include(Messages("gmp.cannot_calculate"))
-            content must include(Messages(globalErrors.getString("63119.reason")))
-            content must include(Messages(globalErrors.getString("63119.solution")))
+            content must include(Messages(mockApplicationConfig.globalErrors.getString("63119.reason")))
+            content must include(Messages(mockApplicationConfig.globalErrors.getString("63119.solution")))
             content must include(Messages("gmp.entered_details.title"))
         }
 
         "shows errors in multi results pages" in {
-          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
+          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
           when(mockCalculationConnector.calculateSingle(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful(multiErrorResponse))
             val result = TestResultsController.get(FakeRequest())
             val content = contentAsString(result).replaceAll("&#x27;", "'")
             content must include(Messages("gmp.part_problem"))
-            content must include(Messages(globalErrors.getString(s"${multiErrorResponse.calculationPeriods.head.errorCode}.reason")))
-            content must include(Messages(globalErrors.getString(s"${multiErrorResponse.calculationPeriods.tail.head.errorCode}.reason")))
+            content must include(Messages(mockApplicationConfig.globalErrors.getString(s"${multiErrorResponse.calculationPeriods.head.errorCode}.reason")))
+            content must include(Messages(mockApplicationConfig.globalErrors.getString(s"${multiErrorResponse.calculationPeriods.tail.head.errorCode}.reason")))
             content must include(Messages("gmp.queryhandling.resultsmessage"))
             content must not include (Messages("gmp.back_to_dashboard"))
         }
 
         "show the query handling message" in {
-          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
+          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
           when(mockCalculationConnector.calculateSingle(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful(validCalculationResponse))
             val result = TestResultsController.get(FakeRequest())
             contentAsString(result).replaceAll("&#x27;", "'") must include(Messages("gmp.queryhandling.resultsmessage"))
@@ -629,22 +633,22 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
         "when returns global error" must {
 
           "display global error message page" in {
-            when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
+            when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
             when(mockCalculationConnector.calculateSingle(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful
             (dobNotFoundCalculationResponse))
 
               val result = TestResultsController.get(FakeRequest())
               val content = contentAsString(result).replaceAll("&#x27;", "'")
               content must include(Messages("gmp.cannot_calculate"))
-              content.replaceAll("&#x27;", "'") must include(Messages(globalErrors.getString(s"${dobNotFoundCalculationResponse.globalErrorCode}.reason")))
+              content.replaceAll("&#x27;", "'") must include(Messages(mockApplicationConfig.globalErrors.getString(s"${dobNotFoundCalculationResponse.globalErrorCode}.reason")))
               content must include(Messages("gmp.what_now"))
-              content must include(Messages(globalErrors.getString(s"${dobNotFoundCalculationResponse.globalErrorCode}.solution")))
+              content must include(Messages(mockApplicationConfig.globalErrors.getString(s"${dobNotFoundCalculationResponse.globalErrorCode}.solution")))
               contentAsString(result) must include(Messages("gmp.button.request-another"))
               contentAsString(result) must include(Messages("gmp.entered_details.title"))
           }
 
           "display a different global error message page" in {
-            when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
+            when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
             when(mockCalculationConnector.calculateSingle(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful
             (transLinkErrorCalculationResponse))
 
@@ -652,13 +656,13 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
               val content = contentAsString(result).replaceAll("&#x27;", "'")
               content must include(Messages("gmp.cannot_calculate"))
               content must include(Messages("gmp.what_now"))
-              content must include(Messages(globalErrors.getString(s"${transLinkErrorCalculationResponse.globalErrorCode}.solution")))
+              content must include(Messages(mockApplicationConfig.globalErrors.getString(s"${transLinkErrorCalculationResponse.globalErrorCode}.solution")))
           }
 
         }
 
         "go to failure page when session not returned" in {
-          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(None))
+          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(None))
 
             val result = TestResultsController.get(FakeRequest())
             contentAsString(result)replaceAll("&#x27;", "'") must include (Messages("gmp.cannot_calculate.gmp"))
@@ -672,7 +676,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
 
         "be non existent when errors are returned" in {
           val date = GmpDate(day = Some("24"), month = Some("08"), year = Some("2016"))
-          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSessionWithHMRCRate.copy(leaving = Leaving(date, Some(Leaving.YES_AFTER))))))
+          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSessionWithHMRCRate.copy(leaving = Leaving(date, Some(Leaving.YES_AFTER))))))
           when(mockCalculationConnector.calculateSingle(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful(survivor63167CalculationResponse))
             val result = TestResultsController.get(FakeRequest())
             status(result) must equal(OK)
@@ -680,7 +684,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
 
         "show the correct subheader when gmp payable age and member left scheme and hmrc rate entered" in {
           val date = GmpDate(day = Some("24"), month = Some("08"), year = Some("2016"))
-          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSessionWithHMRCRate.copy(leaving = Leaving(date, Some(Leaving.YES_AFTER))))))
+          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSessionWithHMRCRate.copy(leaving = Leaving(date, Some(Leaving.YES_AFTER))))))
           when(mockCalculationConnector.calculateSingle(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful(validCalculationResponse.copy(revaluationRate = Some("0"), calcType = 2)))
             val result = TestResultsController.get(FakeRequest())
             contentAsString(result) must include("Revaluation rate chosen: HMRC held rate (S148).")
@@ -688,7 +692,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
 
         "show the correct subheader when gmp payable age and member left scheme and rate entered" in {
           val date = GmpDate(day = Some("24"), month = Some("08"), year = Some("2016"))
-          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSessionWithRate.copy(leaving = Leaving(date, Some(Leaving.YES_AFTER))))))
+          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSessionWithRate.copy(leaving = Leaving(date, Some(Leaving.YES_AFTER))))))
           when(mockCalculationConnector.calculateSingle(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful(validCalculationResponse.copy(revaluationRate = Some("1"), calcType = 2)))
             val result = TestResultsController.get(FakeRequest())
             contentAsString(result) must include(Messages("gmp.chosen_rate.subheader", "S148."))
@@ -696,7 +700,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
 
         "show the correct subheader when gmp payable age and member left scheme and rate not entered" in {
           val date = GmpDate(day = Some("24"), month = Some("08"), year = Some("2016"))
-          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSessionWithRate.copy(leaving = Leaving(date, Some(Leaving.YES_AFTER))))))
+          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSessionWithRate.copy(leaving = Leaving(date, Some(Leaving.YES_AFTER))))))
           when(mockCalculationConnector.calculateSingle(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful(validCalculationResponse.copy(calcType = 2)))
             val result = TestResultsController.get(FakeRequest())
             contentAsString(result) must include(Messages("gmp.held_rate.subheader", "S148."))
@@ -704,7 +708,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
 
         "show no subheader when gmp payable age and member still in scheme and rate" in {
           val date = GmpDate(day = Some("24"), month = Some("08"), year = Some("2016"))
-          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSessionWithRate.copy(leaving = Leaving(date, Some(Leaving.NO))))))
+          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSessionWithRate.copy(leaving = Leaving(date, Some(Leaving.NO))))))
           when(mockCalculationConnector.calculateSingle(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful(validCalculationResponse.copy(calcType = 2)))
             val result = TestResultsController.get(FakeRequest())
             contentAsString(result) must not include (Messages("gmp.held_rate.subheader", "S148."))
@@ -712,7 +716,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
 
         "show no subheader when gmp payable age and member still in scheme and no rate" in {
           val date = GmpDate(day = Some("24"), month = Some("08"), year = Some("2016"))
-          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession.copy(leaving = Leaving(date, Some(Leaving.NO))))))
+          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession.copy(leaving = Leaving(date, Some(Leaving.NO))))))
           when(mockCalculationConnector.calculateSingle(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful(validCalculationResponse.copy(calcType = 2)))
             val result = TestResultsController.get(FakeRequest())
             contentAsString(result) must not include (Messages("gmp.held_rate.subheader", "S148."))
@@ -720,7 +724,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
 
         "show the correct subheader when state pension age and member left scheme and rate entered" in {
           val date = GmpDate(day = Some("24"), month = Some("08"), year = Some("2016"))
-          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSessionWithRate.copy(leaving = Leaving(date, Some(Leaving.YES_AFTER))))))
+          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSessionWithRate.copy(leaving = Leaving(date, Some(Leaving.YES_AFTER))))))
           when(mockCalculationConnector.calculateSingle(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful(validCalculationResponse.copy(revaluationRate = Some("1"), calcType = 4)))
             val result = TestResultsController.get(FakeRequest())
             contentAsString(result) must include(Messages("gmp.chosen_rate.subheader", "S148."))
@@ -728,7 +732,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
 
         "show the correct subheader when state pension age and member left scheme and rate not entered" in {
           val date = GmpDate(day = Some("24"), month = Some("08"), year = Some("2016"))
-          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSessionWithRate.copy(leaving = Leaving(date, Some(Leaving.YES_AFTER))))))
+          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSessionWithRate.copy(leaving = Leaving(date, Some(Leaving.YES_AFTER))))))
           when(mockCalculationConnector.calculateSingle(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful(validCalculationResponse.copy(calcType = 4)))
             val result = TestResultsController.get(FakeRequest())
             contentAsString(result) must include(Messages("gmp.held_rate.subheader", "S148."))
@@ -736,7 +740,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
 
         "show no subheader when state pension age and member still in scheme" in {
           val date = GmpDate(day = Some("24"), month = Some("08"), year = Some("2016"))
-          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSessionWithRate.copy(leaving = Leaving(date, Some(Leaving.NO))))))
+          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSessionWithRate.copy(leaving = Leaving(date, Some(Leaving.NO))))))
           when(mockCalculationConnector.calculateSingle(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful(validCalculationResponse.copy(calcType = 4)))
             val result = TestResultsController.get(FakeRequest())
             contentAsString(result) must not include (Messages("gmp.held_rate.subheader", "S148."))
@@ -744,7 +748,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
 
         "show no subheader when state pension age and member still in scheme and no rate" in {
           val date = GmpDate(day = Some("24"), month = Some("08"), year = Some("2016"))
-          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession.copy(leaving = Leaving(date, Some(Leaving.NO))))))
+          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession.copy(leaving = Leaving(date, Some(Leaving.NO))))))
           when(mockCalculationConnector.calculateSingle(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful(validCalculationResponse.copy(calcType = 2)))
             val result = TestResultsController.get(FakeRequest())
             contentAsString(result) must not include (Messages("gmp.held_rate.subheader", "S148."))
@@ -752,7 +756,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
 
         "show the correct subheader when survivor and member left scheme and hmrc rate entered and no inflation proof" in {
           val date = GmpDate(day = Some("24"), month = Some("08"), year = Some("2016"))
-          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSessionWithHMRCRate.copy(leaving = Leaving(date, Some(Leaving.YES_AFTER))))))
+          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSessionWithHMRCRate.copy(leaving = Leaving(date, Some(Leaving.YES_AFTER))))))
           when(mockCalculationConnector.calculateSingle(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful(survivorRevaluationCalculationResponseNoInflation.copy(revaluationRate = Some("0"),
             calculationPeriods = List(CalculationPeriod(Some(new LocalDate(2015, 11, 10)), new LocalDate(2015, 11, 10), "1.11", "2.22", 1, 0, Some(0), inflationProofBeyondDod = Some(0))))))
             val result = TestResultsController.get(FakeRequest())
@@ -762,7 +766,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
 
         "show the correct subheader when survivor and member left scheme, rate entered and inflation proof" in {
           val date = GmpDate(day = Some("24"), month = Some("08"), year = Some("2016"))
-          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSessionWithHMRCRate.copy(leaving = Leaving(date, Some(Leaving.YES_AFTER))))))
+          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSessionWithHMRCRate.copy(leaving = Leaving(date, Some(Leaving.YES_AFTER))))))
           when(mockCalculationConnector.calculateSingle(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful(survivorRevaluationCalculationResponse.copy(revaluationRate = Some("1"), calculationPeriods = List(CalculationPeriod(Some(new
               LocalDate(2015, 11, 10)), new LocalDate(2015, 11, 10), "1.11", "2.22", 1, 0, Some(0), inflationProofBeyondDod = Some(1))))))
             val result = TestResultsController.get(FakeRequest())
@@ -772,7 +776,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
 
         "show no subheader when survivor and member still in scheme" in {
           val date = GmpDate(day = Some("24"), month = Some("08"), year = Some("2016"))
-          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSessionWithRate.copy(leaving = Leaving(date, Some(Leaving.NO))))))
+          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSessionWithRate.copy(leaving = Leaving(date, Some(Leaving.NO))))))
           when(mockCalculationConnector.calculateSingle(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful(survivorRevaluationCalculationResponseNoInflation.copy(revaluationRate = Some("0"),
             calculationPeriods = List(CalculationPeriod(Some(new LocalDate(2015, 11, 10)), new LocalDate(2015, 11, 10), "1.11", "2.22", 1, 0, Some(0), inflationProofBeyondDod = Some(0))))))
             val result = TestResultsController.get(FakeRequest())
@@ -787,7 +791,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
       "when authorised" must {
 
         "respond with a status of OK" in {
-          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
+          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
           when(mockCalculationConnector.calculateSingle(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful(validCalculationWithContsAndEarningsResponse))
           when(mockAuditConnector.sendEvent(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(AuditResult.Success))
             val result = TestResultsController.getContributionsAndEarnings(FakeRequest())
@@ -796,7 +800,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
         }
 
         "respond with a status of OK when auditconnector fails" in {
-          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
+          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
           when(mockCalculationConnector.calculateSingle(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful(validCalculationWithContsAndEarningsResponse))
           when(mockAuditConnector.sendEvent(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.failed(new Exception()))
             val result = TestResultsController.getContributionsAndEarnings(FakeRequest())
@@ -805,7 +809,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
         }
 
         "respond with a status of OK when response contains global error" in {
-          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
+          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
           when(mockCalculationConnector.calculateSingle(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful(validCalculationWithContsAndEarningsResponse.copy(globalErrorCode = 1)))
           when(mockAuditConnector.sendEvent(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(AuditResult.Success))
             val result = TestResultsController.getContributionsAndEarnings(FakeRequest())
@@ -814,7 +818,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
         }
 
         "go to failure page when session not returned" in {
-          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(None))
+          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(None))
             val result = TestResultsController.getContributionsAndEarnings(FakeRequest())
             contentAsString(result)replaceAll("&#x27;", "'") must include (Messages("gmp.cannot_calculate.gmp"))
             contentAsString(result) must include (Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/dashboard"))
@@ -822,7 +826,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
 
         "go to failure page when session missing scon" in {
           val emptySession = GmpSession(MemberDetails("", "", ""), "", "", None, None, Leaving(GmpDate(None, None, None), None), None)
-          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(emptySession)))
+          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(emptySession)))
             val result = TestResultsController.getContributionsAndEarnings(FakeRequest())
             contentAsString(result)replaceAll("&#x27;", "'") must include (Messages("gmp.cannot_calculate.gmp"))
             contentAsString(result) must include (Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/pension-details"))
@@ -830,7 +834,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
 
         "go to failure page when session missing nino" in {
           val emptySession = GmpSession(MemberDetails("", "", ""), "S1234567T", "", None, None, Leaving(GmpDate(None, None, None), None), None)
-          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(emptySession)))
+          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(emptySession)))
             val result = TestResultsController.getContributionsAndEarnings(FakeRequest())
             contentAsString(result)replaceAll("&#x27;", "'") must include (Messages("gmp.cannot_calculate.gmp"))
             contentAsString(result) must include (Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/member-details"))
@@ -838,7 +842,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
 
         "go to failure page when session missing firstname" in {
           val emptySession = GmpSession(MemberDetails(nino, "", ""), "S1234567T", "", None, None, Leaving(GmpDate(None, None, None), None), None)
-          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(emptySession)))
+          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(emptySession)))
 
             val result = TestResultsController.getContributionsAndEarnings(FakeRequest())
             contentAsString(result)replaceAll("&#x27;", "'") must include (Messages("gmp.cannot_calculate.gmp"))
@@ -848,7 +852,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
 
         "go to failure page when session missing lastname" in {
           val emptySession = GmpSession(MemberDetails(nino, "A", ""), "S1234567T", "", None, None, Leaving(GmpDate(None, None, None), None), None)
-          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(emptySession)))
+          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(emptySession)))
             val result = TestResultsController.getContributionsAndEarnings(FakeRequest())
             contentAsString(result)replaceAll("&#x27;", "'") must include (Messages("gmp.cannot_calculate.gmp"))
             contentAsString(result) must include (Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/member-details"))
@@ -856,7 +860,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
 
         "go to failure page when session missing scenario" in {
           val emptySession = GmpSession(MemberDetails(nino, "A", "AAA"), "S1234567T", "", None, None, Leaving(GmpDate(None, None, None), None), None)
-          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(emptySession)))
+          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(emptySession)))
             val result = TestResultsController.getContributionsAndEarnings(FakeRequest())
             contentAsString(result)replaceAll("&#x27;", "'") must include (Messages("gmp.cannot_calculate.gmp"))
             contentAsString(result) must include (Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/calculation-reason"))
@@ -864,14 +868,14 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
 
         "go to failure page when session missing leaving" in {
           val emptySession = GmpSession(MemberDetails(nino, "A", "AAA"), "S1234567T", "0", None, None, Leaving(GmpDate(None, None, None), None), None)
-          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(emptySession)))
+          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(emptySession)))
             val result = TestResultsController.getContributionsAndEarnings(FakeRequest())
             contentAsString(result)replaceAll("&#x27;", "'") must include (Messages("gmp.cannot_calculate.gmp"))
             contentAsString(result) must include (Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/left-scheme"))
         }
 
         "contain contributions and earnings" in {
-          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession2)))
+          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession2)))
           when(mockCalculationConnector.calculateSingle(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful(validCalculationWithContsAndEarningsResponse))
           when(mockAuditConnector.sendEvent(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(AuditResult.Success))
             val result = TestResultsController.getContributionsAndEarnings(FakeRequest())
@@ -889,7 +893,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
         }
 
         "contain contributions and earnings with periods in error present" in {
-          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession2)))
+          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession2)))
           when(mockCalculationConnector.calculateSingle(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful(validCalculationWithContsAndEarningsErroredResponse))
           when(mockAuditConnector.sendEvent(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(AuditResult.Success))
             val result = TestResultsController.getContributionsAndEarnings(FakeRequest())
@@ -901,7 +905,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
         }
 
         "contain memeber details, print and get another calculation button" in {
-          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
+          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
           when(mockCalculationConnector.calculateSingle(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful(validCalculationWithContsAndEarningsResponse))
           when(mockAuditConnector.sendEvent(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(AuditResult.Success))
             val result = TestResultsController.getContributionsAndEarnings(FakeRequest())
@@ -958,21 +962,21 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
     "Contributions and earning link" must {
 
       "have the contributions and earnings link" in {
-        when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
+        when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
         when(mockCalculationConnector.calculateSingle(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful(validCalculationWithContsAndEarningsResponse))
           val result = TestResultsController.get(FakeRequest())
           contentAsString(result) must include(Messages("gmp.link.contributions-earnings"))
       }
 
       "have the contribution and earnings link when multi period and not all periods are in error" in {
-        when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
+        when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
         when(mockCalculationConnector.calculateSingle(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful(validRevalCalculationResponseMultiplePeriod))
           val result = TestResultsController.get(FakeRequest())
           contentAsString(result) must include(Messages("gmp.link.contributions-earnings"))
       }
 
       "do not have the contribution and earnings link when multi period and all periods are in error" in {
-        when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
+        when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
         when(mockCalculationConnector.calculateSingle(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful(validRevalCalculationResponseMultiplePeriodErrors))
           val result = TestResultsController.get(FakeRequest())
           contentAsString(result) must not include(Messages("gmp.link.contributions-earnings"))
@@ -981,7 +985,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
 
     "DualCalc" must {
       "display dualcalc fields" in {
-        when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
+        when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
         when(mockCalculationConnector.calculateSingle(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful(dualCalcResponse))
 
           val result = TestResultsController.get(FakeRequest())
@@ -990,7 +994,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
       }
 
       "display dualcalc fields when requested" in {
-        when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession3)))
+        when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession3)))
         when(mockCalculationConnector.calculateSingle(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful(dualCalcResponse))
 
           val result = TestResultsController.get(FakeRequest())
@@ -999,7 +1003,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
       }
 
       "not display dualcalc fields when not requested" in {
-        when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession2)))
+        when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession2)))
         when(mockCalculationConnector.calculateSingle(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful(nonDualCalcResponse))
 
           val result = TestResultsController.get(FakeRequest())
@@ -1010,7 +1014,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
       }
 
       "display correct totals when dual calc" in {
-        when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession2)))
+        when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession2)))
         when(mockCalculationConnector.calculateSingle(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful(dualCalcResponse))
 
           val result = TestResultsController.get(FakeRequest())
@@ -1019,7 +1023,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
       }
 
       "display correct totals when dual calc with no total for period" in {
-        when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession2)))
+        when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession2)))
         when(mockCalculationConnector.calculateSingle(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful(dualCalcResponse2))
 
           val result = TestResultsController.get(FakeRequest())
@@ -1033,7 +1037,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
     "session missing info" must {
       "display error page when missing scon with correct back link" in {
         val emptySession = GmpSession(MemberDetails("", "", ""), "", "", None, None, Leaving(GmpDate(None, None, None), None), None)
-        when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(emptySession)))
+        when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(emptySession)))
 
           val result = TestResultsController.get(FakeRequest())
           contentAsString(result)replaceAll("&#x27;", "'") must include (Messages("gmp.cannot_calculate.gmp"))
@@ -1042,7 +1046,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
 
       "display error page when missing nino with correct back link" in {
         val emptySession = GmpSession(MemberDetails("", "", ""), "S1234567T", "", None, None, Leaving(GmpDate(None, None, None), None), None)
-        when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(emptySession)))
+        when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(emptySession)))
 
           val result = TestResultsController.get(FakeRequest())
           contentAsString(result)replaceAll("&#x27;", "'") must include (Messages("gmp.cannot_calculate.gmp"))
@@ -1051,7 +1055,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
 
       "display error page when missing firstName with correct back link" in {
         val emptySession = GmpSession(MemberDetails(nino, "", ""), "S1234567T", "", None, None, Leaving(GmpDate(None, None, None), None), None)
-        when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(emptySession)))
+        when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(emptySession)))
 
           val result = TestResultsController.get(FakeRequest())
           contentAsString(result)replaceAll("&#x27;", "'") must include (Messages("gmp.cannot_calculate.gmp"))
@@ -1060,7 +1064,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
 
       "display error page when missing surname with correct back link" in {
         val emptySession = GmpSession(MemberDetails(nino, "A", ""), "S1234567T", "", None, None, Leaving(GmpDate(None, None, None), None), None)
-        when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(emptySession)))
+        when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(emptySession)))
 
           val result = TestResultsController.get(FakeRequest())
           contentAsString(result)replaceAll("&#x27;", "'") must include (Messages("gmp.cannot_calculate.gmp"))
@@ -1069,7 +1073,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
 
       "display error page when missing scenario with correct back link" in {
         val emptySession = GmpSession(MemberDetails(nino, "A", "AAA"), "S1234567T", "", None, None, Leaving(GmpDate(None, None, None), None), None)
-        when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(emptySession)))
+        when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(emptySession)))
 
           val result = TestResultsController.get(FakeRequest())
           contentAsString(result)replaceAll("&#x27;", "'") must include (Messages("gmp.cannot_calculate.gmp"))
@@ -1078,7 +1082,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
 
       "display error page when missing leaving with correct back link" in {
         val emptySession = GmpSession(MemberDetails(nino, "A", "AAA"), "S1234567T", "0", None, None, Leaving(GmpDate(None, None, None), None), None)
-        when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(emptySession)))
+        when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(emptySession)))
 
         val result = TestResultsController.get(FakeRequest())
         contentAsString(result) replaceAll("&#x27;", "'") must include(Messages("gmp.cannot_calculate.gmp"))

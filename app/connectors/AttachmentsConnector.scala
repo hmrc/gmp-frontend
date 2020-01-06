@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,12 +36,11 @@ import scala.concurrent.Future
 class UploadConfig @Inject()( environment: Environment,
                               val runModeConfiguration: Configuration,
                               servicesConfig: ServicesConfig,
-                              applicationConfig: config.ApplicationConfig,
-                              messages: Messages)  {
+                              applicationConfig: config.ApplicationConfig)  {
 
    def mode: Mode = environment.mode
 
-  def apply(implicit request: Request[_]): String = {
+  def apply(implicit request: Request[_], messages: Messages): String = {
     lazy val url = s"${servicesConfig.baseUrl("attachments")}/attachments-internal/uploader"
     val onSuccess = applicationConfig.frontendHost+routes.BulkReferenceController.get()
     val onFailure = applicationConfig.frontendHost+routes.FileUploadController.failure()
@@ -71,8 +70,9 @@ class AttachmentsConnector @Inject()(
   override val crypto: (String) => String = cookie =>
     sessionCookieCrypto.crypto.encrypt(PlainText(cookie)).value
 
-  def getFileUploadPartial()(implicit request: Request[_]): Future[HtmlPartial] = {
-    val partial = http.GET[HtmlPartial](uploadConfig(request))
+  def getFileUploadPartial()(implicit request: Request[_],messages: Messages): Future[HtmlPartial] = {
+
+    val partial = http.GET[HtmlPartial](uploadConfig(request,messages))
 
     // $COVERAGE-OFF$
     partial onSuccess {

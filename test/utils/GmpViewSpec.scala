@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,22 +16,25 @@
 
 package utils
 
+import config.ApplicationConfig
 import controllers.FakeGmpContext
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
-import play.api.i18n.Messages
+import play.api.i18n.{Messages, MessagesProvider}
 import play.api.test.FakeRequest
 import play.twirl.api.Html
 
 trait GmpViewSpec extends PlaySpec with JSoupMatchers with OneServerPerSuite {
 
+  implicit val messages=app.injector.instanceOf[Messages]
+  implicit val applicationConfig=app.injector.instanceOf[ApplicationConfig]
 
   override def haveBackLink = new CssSelector("a[id=back-link]")
 
   implicit val request = FakeRequest()
   implicit val context = FakeGmpContext
-  implicit val messages: Messages = play.api.i18n.Messages.Implicits.applicationMessages
+ // implicit val messages: Messages = play.api.i18n.Messages.Implicits.applicationMessages
 
   def view: Html
   def doc: Document = Jsoup.parse(view.toString())

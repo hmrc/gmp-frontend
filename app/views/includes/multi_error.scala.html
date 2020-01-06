@@ -1,5 +1,5 @@
 @*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,8 @@
  * limitations under the License.
  *@
 
-@(calculationResponse:CalculationResponse)(implicit request: Request[_],messages: Messages)
+@import config.ApplicationConfig
+@(calculationResponse:CalculationResponse)(implicit request: Request[_],messages: Messages,ac:ApplicationConfig)
 
 
 @import org.joda.time.LocalDate

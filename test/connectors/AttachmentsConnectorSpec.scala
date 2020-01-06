@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,6 +28,7 @@ import play.api.http.HeaderNames
 import play.api.test.FakeRequest
 import org.mockito.Mockito.when
 import org.mockito.Matchers.any
+import play.api.i18n.Messages
 import uk.gov.hmrc.crypto.{ApplicationCrypto, Crypted, Decrypter, Encrypter, PlainText}
 import uk.gov.hmrc.http.logging.RequestId
 import uk.gov.hmrc.http.{HeaderCarrier, HttpGet, HttpResponse}
@@ -44,6 +45,8 @@ class AttachmentsConnectorSpec extends PlaySpec with OneAppPerSuite with Mockito
   val mockHttp = mock[HttpClient]
   val uploadConfig = app.injector.instanceOf[UploadConfig]
   val encrypter = mock[Encrypter with Decrypter]
+  val messages=app.injector.instanceOf[Messages]
+
   when(encrypter.encrypt(any[PlainText])).thenReturn(Crypted("foo"))
   val sessionCookieCrypto = mock[SessionCookieCrypto]
   when(sessionCookieCrypto.crypto).thenReturn(encrypter)
@@ -67,6 +70,7 @@ class AttachmentsConnectorSpec extends PlaySpec with OneAppPerSuite with Mockito
         implicit val request = FakeRequest()
         implicit val hc = HeaderCarrier()
         implicit val hcwc = HeaderCarrierForPartials(hc,"")
+        implicit val messages=app.injector.instanceOf[Messages]
         val html = "<h1>helloworld</h1>"
         when(mockHttp.GET[HttpResponse](Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(HttpResponse(200, responseString = Some
         (html))))
@@ -86,12 +90,12 @@ class AttachmentsConnectorSpec extends PlaySpec with OneAppPerSuite with Mockito
 
 
     "have the collection" in {
-      val config = uploadConfig(request)
+      val config = uploadConfig(request,messages)
       config must include("collection=gmp")
     }
 
     "have a the attachments service url" in {
-      val config = uploadConfig(request)
+      val config = uploadConfig(request,messages)
       config must include("http://localhost:8895/attachments-internal/uploader")
     }
 
@@ -108,7 +112,7 @@ class AttachmentsConnectorSpec extends PlaySpec with OneAppPerSuite with Mockito
 //    }
 
     "accept .csv" in {
-      val config = uploadConfig(request)
+      val config = uploadConfig(request,messages)
       config must include("accepts=.csv")
     }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,15 +17,16 @@
 package controllers
 
 import com.google.inject.{Inject, Singleton}
-import config.GmpContext
+import config.{ApplicationConfig, GmpContext}
 import play.api.Play.current
 import play.api.i18n.Messages.Implicits._
 import play.api.mvc.{Action, Controller}
 
 @Singleton
-class ServiceUnavailableController @Inject()(gmpContext: GmpContext) extends Controller {
+class ServiceUnavailableController @Inject()(gmpContext: GmpContext,ac:ApplicationConfig) extends Controller {
 
   implicit val context: GmpContext = gmpContext
+  implicit  val applicationConfig:ApplicationConfig=ac
 
   def get = Action {
     implicit request => {

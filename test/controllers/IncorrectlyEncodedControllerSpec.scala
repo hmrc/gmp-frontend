@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,20 +16,30 @@
 
 package controllers
 
+import config.ApplicationConfig
 import controllers.auth.FakeAuthAction
 import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
-import play.api.i18n.Messages
+import play.api.i18n.{Messages, MessagesApi, MessagesProvider}
 import play.api.i18n.Messages.Implicits._
+import play.api.mvc.MessagesControllerComponents
 import play.api.test.FakeRequest
 import uk.gov.hmrc.auth.core.AuthConnector
 import play.api.test.Helpers._
+
+import scala.concurrent.ExecutionContext
 
 class IncorrectlyEncodedControllerSpec extends PlaySpec with OneServerPerSuite with MockitoSugar {
 
   val mockAuthConnector = mock[AuthConnector]
 
-  object TestIncorrectlyEncodedController extends IncorrectlyEncodedController(FakeAuthAction, mockAuthConnector)
+  implicit val mcc = app.injector.instanceOf[MessagesControllerComponents]
+  implicit val ec = app.injector.instanceOf[ExecutionContext]
+  implicit val messagesProvider=app.injector.instanceOf[MessagesProvider]
+  implicit val ac=app.injector.instanceOf[ApplicationConfig]
+
+
+  object TestIncorrectlyEncodedController extends IncorrectlyEncodedController(FakeAuthAction,mockAuthConnector,mcc,ac,ec)
 
   "IncorrectlyEncodedController.get" should {
 

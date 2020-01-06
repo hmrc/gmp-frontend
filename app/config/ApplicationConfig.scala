@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ class ApplicationConfig @Inject()(
   val environment: Environment,
   servicesConfig: ServicesConfig) {
 
-  implicit val applicationConfig: config.ApplicationConfig  = ApplicationConfig
+//  implicit val applicationConfig: config.ApplicationConfig  = ApplicationConfig
 
   private def loadConfig(key: String) = runModeConfiguration.getString(key).getOrElse(throw new Exception(s"Missing key: $key"))
 
@@ -52,10 +52,10 @@ class ApplicationConfig @Inject()(
 }
 
 
-object ApplicationConfig extends ApplicationConfig (
-  runModeConfiguration=new GuiceApplicationBuilder().injector().instanceOf[Configuration],
-  environment=new GuiceApplicationBuilder().injector().instanceOf[Environment],
-  servicesConfig=new GuiceApplicationBuilder().injector().instanceOf[ServicesConfig]
-){new GuiceApplicationBuilder().injector().instanceOf[Messages]}
+//object ApplicationConfig extends ApplicationConfig (
+//  runModeConfiguration=new GuiceApplicationBuilder().injector().instanceOf[Configuration],
+//  environment=new GuiceApplicationBuilder().injector().instanceOf[Environment],
+//  servicesConfig=new GuiceApplicationBuilder().injector().instanceOf[ServicesConfig]
+//){new GuiceApplicationBuilder().injector().instanceOf[Messages]}
 
 

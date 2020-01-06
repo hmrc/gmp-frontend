@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,11 +17,13 @@
 package controllers
 
 import com.google.inject.{Inject, Singleton}
+import config.ApplicationConfig
 import connectors.GmpBulkConnector
 import controllers.auth.AuthAction
 import play.api.Play.current
 import play.api.i18n.Messages.Implicits._
 import play.api.i18n.MessagesProvider
+import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.MessagesControllerComponents
 import uk.gov.hmrc.auth.core.AuthConnector
 
@@ -30,10 +32,11 @@ import scala.concurrent.ExecutionContext
 @Singleton
 class MoreBulkResultsController @Inject()(authAction: AuthAction,
                                           override val authConnector: AuthConnector,
-                                          gmpBulkConnector: GmpBulkConnector,
+                                          gmpBulkConnector: GmpBulkConnector,ac:ApplicationConfig,
                                           override val messagesControllerComponents: MessagesControllerComponents,
-                                          implicit val executionContext: ExecutionContext,
-                                          override implicit val messagesProvider: MessagesProvider) extends GmpPageFlow(authConnector,messagesControllerComponents) {
+                                          implicit val executionContext: ExecutionContext) extends GmpPageFlow(authConnector,messagesControllerComponents,ac) {
+
+
 
   def retrieveMoreBulkResults = authAction.async {
       implicit request => {

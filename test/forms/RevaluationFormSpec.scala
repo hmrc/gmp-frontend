@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@ import forms.RevaluationForm._
 import models.{GmpDate, Leaving, RevaluationDate}
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.data.FormError
-import play.api.i18n.Messages
+import play.api.i18n.{Messages, MessagesProvider}
 import play.api.i18n.Messages.Implicits._
 import play.api.libs.json.Json
 
@@ -31,6 +31,7 @@ class RevaluationFormSpec extends PlaySpec with OneAppPerSuite {
   val leaving = Leaving(leavingDate, None)
   val leavingWithDate = Leaving(GmpDate(Some("01"), Some("01"), Some("2012")), None)
   val leavingWithDateAndNO = Leaving(GmpDate(Some("01"), Some("01"), Some("2012")), Some(Leaving.NO))
+  implicit val messagesProvider=app.injector.instanceOf[MessagesProvider]
 
   "Revaluation Form" must {
     "return no errors when valid values are entered" in {

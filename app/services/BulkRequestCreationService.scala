@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,9 @@ import com.google.inject.Inject
 import models.{BulkCalculationRequest, BulkCalculationRequestLine, CalculationRequestLine}
 import org.joda.time.LocalDate
 import org.joda.time.format.DateTimeFormat
-import play.api.i18n.Messages
+import play.api.i18n.{Messages, MessagesImpl}
+import play.api.inject.guice.GuiceApplicationBuilder
+import play.api.mvc.MessagesControllerComponents
 import play.api.{Configuration, Environment, Logger, Mode}
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import uk.gov.hmrc.stream.BulkEntityProcessor
@@ -48,11 +50,12 @@ object BulkRequestCsvColumn {
 case object DataLimitExceededException extends Throwable
 case object IncorrectlyEncodedException extends Throwable
 
-class BulkRequestCreationService @Inject()( environment: Environment,
-                                            val runModeConfiguration: Configuration,
-                                            servicesConfig: ServicesConfig,
-                                            messages: Messages
+class BulkRequestCreationService @Inject()(environment: Environment,
+                                           val runModeConfiguration: Configuration, mcc: MessagesControllerComponents,
+                                           servicesConfig: ServicesConfig,val messagesApi : play.api.i18n.MessagesApi
                                           ) extends BulkEntityProcessor[BulkCalculationRequestLine]  {
+
+  implicit lazy val messages: Messages = MessagesImpl(mcc.langs.availables.head, messagesApi)
 
   protected def mode: Mode = environment.mode
 

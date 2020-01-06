@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 package controllers
 
 import com.google.inject.{Inject, Singleton}
-import config.ApplicationConfig
+import config.{ApplicationConfig, GmpSessionCache}
 import controllers.auth.AuthAction
 import forms.EqualiseForm._
 import play.api.Logger
@@ -33,11 +33,10 @@ import scala.concurrent.{ExecutionContext, Future}
 class EqualiseController @Inject()(authAction: AuthAction,
                                    override val authConnector: AuthConnector,
                                    sessionService: SessionService,
-                                   messagesControllerComponents: MessagesControllerComponents,
-                                   implicit val executionContext: ExecutionContext,
-                                   override implicit val messagesProvider: MessagesProvider)
-                                  extends GmpPageFlow(authConnector,messagesControllerComponents) {
-  //implicit val applicationConfig: config.ApplicationConfig  = (GuiceApplicationBuilder().injector().instanceOf[ApplicationConfig])
+                                   messagesControllerComponents: MessagesControllerComponents,ac:ApplicationConfig,
+                                   implicit val executionContext: ExecutionContext,implicit val gmpSessionCache: GmpSessionCache)
+                                  extends GmpPageFlow(authConnector,messagesControllerComponents,ac) {
+
 
   def get = authAction.async {
     implicit request => Future.successful(Ok(views.html.equalise(equaliseForm)))

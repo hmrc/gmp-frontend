@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,15 +17,18 @@
 package controllers
 
 import com.google.inject.{Inject, Singleton}
+import config.{ApplicationConfig, GmpSessionCache}
 import connectors.GmpBulkConnector
 import controllers.auth.AuthAction
 import play.api.Logger
 import play.api.Play.current
 import play.api.i18n.{Messages, MessagesProvider}
 import play.api.i18n.Messages.Implicits._
+import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.MessagesControllerComponents
 import services.{BulkRequestCreationService, DataLimitExceededException, SessionService}
 import uk.gov.hmrc.auth.core.AuthConnector
+import uk.gov.hmrc.http.cache.client.SessionCache
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -34,11 +37,13 @@ class BulkRequestReceivedController @Inject()(authAction: AuthAction,
                                               val authConnector: AuthConnector,
                                               sessionService: SessionService,
                                               bulkRequestCreationService: BulkRequestCreationService,
-                                              gmpBulkConnector: GmpBulkConnector,
+                                              gmpBulkConnector: GmpBulkConnector, ac:ApplicationConfig,
                                               messagesControllerComponents: MessagesControllerComponents,
                                               implicit val executionContext: ExecutionContext,
-                                              implicit val messagesProvider: MessagesProvider
-                                             ) extends GmpController(messagesControllerComponents) {
+                                              implicit val sessionCache:GmpSessionCache
+                                             ) extends GmpController(messagesControllerComponents,ac) {
+
+
 
   def get = authAction.async {
       implicit request => {
