@@ -308,7 +308,7 @@ class SessionServiceSpec extends PlaySpec with OneServerPerSuite with ScalaFutur
         val json = Json.toJson[GmpBulkSession](expectedResult)
 
         when(mockSessionCache.cache[GmpBulkSession](any(), any())(any(), any(), any())).thenReturn(Future.successful(CacheMap("sessionValue", Map("gmp_bulk_session" -> json))))
-        val result = Await.result(TestSessionService.cacheCallBackData(Some(CallBackData("BBBBB", "222222", 2L, Some("Bill"), Some("application/json"), "XXXXXXX", None)))(request, hc), 10 seconds)
+        val result = Await.result(TestSessionService.cacheCallBackData(Some(CallBackData("BBBBB", "222222", 2L, Some("Bill"), Some("application/json"), "XXXXXXX", None)))(request, hc,mockSessionCache), 10 seconds)
         result must be(Some(expectedResult))
       }
 
@@ -319,7 +319,7 @@ class SessionServiceSpec extends PlaySpec with OneServerPerSuite with ScalaFutur
         val json = Json.toJson[GmpBulkSession](expectedResult)
 
         when(mockSessionCache.cache[GmpBulkSession](any(), any())(any(), any(), any())).thenReturn(Future.successful(CacheMap("sessionValue", Map("gmp_bulk_session" -> json))))
-        val result = Await.result(TestSessionService.cacheCallBackData(Some(CallBackData("BBBBB", "222222", 2L, Some("Bill"), Some("application/json"), "XXXXXXX", None)))(request, hc), 10 seconds)
+        val result = Await.result(TestSessionService.cacheCallBackData(Some(CallBackData("BBBBB", "222222", 2L, Some("Bill"), Some("application/json"), "XXXXXXX", None)))(request, hc,mockSessionCache), 10 seconds)
         result must be(Some(expectedResult))
       }
 
