@@ -19,13 +19,14 @@ package forms
 import forms.BulkReferenceForm._
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.data.FormError
-import play.api.i18n.{Messages, MessagesProvider}
+import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl, MessagesProvider}
 import play.api.i18n.Messages.Implicits._
 import play.api.libs.json.Json
 
 class BulkReferenceFormSpec extends PlaySpec with OneAppPerSuite {
 
-  implicit val messagesProvider=app.injector.instanceOf[MessagesProvider]
+  implicit val messagesAPI=app.injector.instanceOf[MessagesApi]
+  implicit val messagesProvider=MessagesImpl(Lang("en"), messagesAPI)
 
 
   "BulkReferenceForm" must {

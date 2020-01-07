@@ -21,13 +21,18 @@ import controllers.FakeGmpContext
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
-import play.api.i18n.{Messages, MessagesProvider}
+import play.api.Play
+import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl, MessagesProvider}
+import play.api.mvc.MessagesControllerComponents
 import play.api.test.FakeRequest
 import play.twirl.api.Html
 
 trait GmpViewSpec extends PlaySpec with JSoupMatchers with OneServerPerSuite {
 
-  implicit val messages=app.injector.instanceOf[Messages]
+  val messagesControllerComponents = app.injector.instanceOf[MessagesControllerComponents].langs.availables.head
+  val messagesApi =  app.injector.instanceOf[MessagesApi]
+  implicit lazy val messages: Messages = MessagesImpl(messagesControllerComponents, messagesApi)
+
   implicit val applicationConfig=app.injector.instanceOf[ApplicationConfig]
 
   override def haveBackLink = new CssSelector("a[id=back-link]")

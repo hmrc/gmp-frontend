@@ -23,7 +23,7 @@ import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
-import play.api.i18n.{Messages, MessagesApi, MessagesProvider}
+import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl, MessagesProvider}
 import play.api.i18n.Messages.Implicits._
 import play.api.libs.json.Json
 import play.api.mvc.MessagesControllerComponents
@@ -41,7 +41,8 @@ class EqualiseControllerSpec extends PlaySpec with OneServerPerSuite with Mockit
   val mockAuthAction = mock[AuthAction]
   implicit val mcc = app.injector.instanceOf[MessagesControllerComponents]
   implicit val ec = app.injector.instanceOf[ExecutionContext]
-  implicit val messagesProvider=app.injector.instanceOf[MessagesProvider]
+  implicit val messagesAPI=app.injector.instanceOf[MessagesApi]
+  implicit val messagesProvider=MessagesImpl(Lang("en"), messagesAPI)
   implicit val ac=app.injector.instanceOf[ApplicationConfig]
   implicit val gmpSessionCache=app.injector.instanceOf[GmpSessionCache]
 

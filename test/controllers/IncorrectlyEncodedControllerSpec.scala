@@ -20,7 +20,7 @@ import config.ApplicationConfig
 import controllers.auth.FakeAuthAction
 import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
-import play.api.i18n.{Messages, MessagesApi, MessagesProvider}
+import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl, MessagesProvider}
 import play.api.i18n.Messages.Implicits._
 import play.api.mvc.MessagesControllerComponents
 import play.api.test.FakeRequest
@@ -37,7 +37,8 @@ class IncorrectlyEncodedControllerSpec extends PlaySpec with OneServerPerSuite w
 
   implicit val mcc = app.injector.instanceOf[MessagesControllerComponents]
   implicit val ec = app.injector.instanceOf[ExecutionContext]
-  implicit val messagesProvider=app.injector.instanceOf[MessagesProvider]
+  implicit val messagesAPI=app.injector.instanceOf[MessagesApi]
+  implicit val messagesProvider=MessagesImpl(Lang("en"), messagesAPI)
   implicit val ac=app.injector.instanceOf[ApplicationConfig]
 
 

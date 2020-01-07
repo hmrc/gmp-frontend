@@ -18,16 +18,24 @@ package forms
 
 import com.google.inject.Singleton
 import models.{GmpDate, Leaving, RevaluationDate}
+import play.api.Play
 import play.api.Play.current
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.data.validation.{Constraint, Invalid, Valid, ValidationError}
-import play.api.i18n.Messages
+import play.api.i18n.{Messages, MessagesApi, MessagesImpl}
 import play.api.i18n.Messages.Implicits._
 import play.api.inject.guice.GuiceApplicationBuilder
+import play.api.mvc.MessagesControllerComponents
 
 @Singleton
-class BaseRevaluationForm extends BaseForm {
+class BaseRevaluationForm {
+
+  val messagesControllerComponents = Play.current.injector.instanceOf[MessagesControllerComponents]
+  val messagesApi =  Play.current.injector.instanceOf[MessagesApi]
+
+  implicit lazy val messages: Messages = MessagesImpl(messagesControllerComponents.langs.availables.head, messagesApi)
+
 
   val YEAR_FIELD_LENGTH: Int = 4
 

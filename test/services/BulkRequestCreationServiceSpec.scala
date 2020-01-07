@@ -29,7 +29,7 @@ import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
 import play.api.Environment
-import play.api.i18n.{Messages, MessagesApi, MessagesProvider}
+import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl, MessagesProvider}
 import play.api.i18n.Messages.Implicits._
 import play.api.mvc.MessagesControllerComponents
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
@@ -39,10 +39,10 @@ import scala.io.Source
 import scala.reflect.api.Position
 
 class BulkRequestCreationServiceSpec extends PlaySpec with ScalaFutures with MockitoSugar with OneServerPerSuite {
-  implicit val messagesProvider=app.injector.instanceOf[MessagesProvider]
   implicit val messages=app.injector.instanceOf[MessagesControllerComponents]
   implicit val servicesConfig=app.injector.instanceOf[ServicesConfig]
   implicit val messagesAPI=app.injector.instanceOf[MessagesApi]
+  implicit val messagesProvider=MessagesImpl(Lang("en"), messagesAPI)
 
   val nino1 = RandomNino.generate
   val nino2 = RandomNino.generate

@@ -18,11 +18,19 @@ package forms
 
 import com.google.inject.{Inject, Singleton}
 import models.Equalise
+import play.api.Play
 import play.api.data.Form
 import play.api.data.Forms._
+import play.api.i18n.{Messages, MessagesApi, MessagesImpl}
+import play.api.mvc.MessagesControllerComponents
 
 @Singleton
-class BaseEqualiseForm extends BaseForm {
+class BaseEqualiseForm  {
+
+  val messagesControllerComponents = Play.current.injector.instanceOf[MessagesControllerComponents]
+  val messagesApi =  Play.current.injector.instanceOf[MessagesApi]
+
+  implicit lazy val messages: Messages = MessagesImpl(messagesControllerComponents.langs.availables.head, messagesApi)
 
 
   val equaliseForm = Form(

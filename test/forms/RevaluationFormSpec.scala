@@ -20,7 +20,7 @@ import forms.RevaluationForm._
 import models.{GmpDate, Leaving, RevaluationDate}
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.data.FormError
-import play.api.i18n.{Messages, MessagesProvider}
+import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl, MessagesProvider}
 import play.api.i18n.Messages.Implicits._
 import play.api.libs.json.Json
 
@@ -31,7 +31,8 @@ class RevaluationFormSpec extends PlaySpec with OneAppPerSuite {
   val leaving = Leaving(leavingDate, None)
   val leavingWithDate = Leaving(GmpDate(Some("01"), Some("01"), Some("2012")), None)
   val leavingWithDateAndNO = Leaving(GmpDate(Some("01"), Some("01"), Some("2012")), Some(Leaving.NO))
-  implicit val messagesProvider=app.injector.instanceOf[MessagesProvider]
+  implicit val messagesAPI=app.injector.instanceOf[MessagesApi]
+  implicit val messagesProvider=MessagesImpl(Lang("en"), messagesAPI)
 
   "Revaluation Form" must {
     "return no errors when valid values are entered" in {

@@ -21,7 +21,7 @@ import play.api.Play
 import play.api.libs.json.JodaWrites._
 import play.api.libs.json.JodaReads._
 import play.api.Play.current
-import play.api.i18n.{Messages, MessagesApi, MessagesImpl}
+import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl}
 import play.api.i18n.Messages.Implicits._
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Json
@@ -80,10 +80,11 @@ case class CalculationResponse(
     if (revaluationDate.isDefined) revaluationDate.get
     else calculationPeriods.head.endDate
   }
-  val messagesControllerComponents = Play.current.injector.instanceOf[MessagesControllerComponents]
+ /* val messagesControllerComponents = Play.current.injector.instanceOf[MessagesControllerComponents]
   val messagesApi =  Play.current.injector.instanceOf[MessagesApi]
 
   implicit lazy val messages: Messages = MessagesImpl(messagesControllerComponents.langs.availables.head, messagesApi)
+*/
 
   def hasErrors: Boolean = calculationPeriods.foldLeft(globalErrorCode){_ + _.errorCode} > 0
 
@@ -132,6 +133,10 @@ case class CalculationResponse(
   }
 
   def header: String = {
+
+    implicit val messagesApi =  Play.current.injector.instanceOf[MessagesApi]
+    implicit val messagesProvider=MessagesImpl(Lang("en"), messagesApi)
+
 
     if(calcType == CalculationType.SURVIVOR.toInt && revaluationDate.isDefined){
       Messages("gmp.results.survivor.revaluation.header", formatDate(revaluationDate.get))

@@ -24,8 +24,9 @@ import models._
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
-import play.api.i18n.{Messages, MessagesApi, MessagesProvider}
+import play.api.i18n.{DefaultMessagesApi, Lang, Messages, MessagesApi, MessagesImpl, MessagesProvider}
 import play.api.i18n.Messages.Implicits._
 import play.api.libs.json.Json
 import play.api.mvc.MessagesControllerComponents
@@ -39,7 +40,7 @@ import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class BulkReferenceControllerSpec extends PlaySpec with OneServerPerSuite with MockitoSugar {
+class BulkReferenceControllerSpec extends PlaySpec  with MockitoSugar with GuiceOneAppPerSuite{
 
   val mockAuthConnector: AuthConnector = mock[AuthConnector]
   val mockSessionService: SessionService = mock[SessionService]
@@ -49,7 +50,7 @@ class BulkReferenceControllerSpec extends PlaySpec with OneServerPerSuite with M
   implicit val mcc = app.injector.instanceOf[MessagesControllerComponents]
   implicit val ec = app.injector.instanceOf[ExecutionContext]
   implicit val messagesApi = app.injector.instanceOf[MessagesApi]
-  implicit val messagesProvider=app.injector.instanceOf[MessagesProvider]
+  implicit val messagesProvider=MessagesImpl(Lang("en"), messagesApi)
   implicit val ac=app.injector.instanceOf[ApplicationConfig]
   implicit val gmpSessionCache=app.injector.instanceOf[GmpSessionCache]
   implicit val ss=app.injector.instanceOf[SessionService]

@@ -29,7 +29,13 @@ import play.api.mvc.MessagesControllerComponents
 import validation.SconValidate
 
 @Singleton
-class BasePensionDetailsForm extends BaseForm {
+class BasePensionDetailsForm {
+
+  val messagesControllerComponents = Play.current.injector.instanceOf[MessagesControllerComponents]
+  val messagesApi =  Play.current.injector.instanceOf[MessagesApi]
+
+  implicit lazy val messages: Messages = MessagesImpl(messagesControllerComponents.langs.availables.head, messagesApi)
+
 
   def pensionDetailsForm = Form(
     mapping(

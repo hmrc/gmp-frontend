@@ -26,7 +26,7 @@ import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
-import play.api.i18n.{Messages, MessagesApi, MessagesProvider}
+import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl, MessagesProvider}
 import play.api.i18n.Messages.Implicits._
 import play.api.mvc.MessagesControllerComponents
 import play.api.test.FakeRequest
@@ -46,7 +46,9 @@ class BulkResultsControllerSpec extends PlaySpec with OneServerPerSuite with Moc
   implicit val hc = new HeaderCarrier(sessionId = Some(SessionId(s"session-${UUID.randomUUID}")))
   implicit val mcc = app.injector.instanceOf[MessagesControllerComponents]
   implicit val ec = app.injector.instanceOf[ExecutionContext]
-  implicit val messages = app.injector.instanceOf[Messages]
+  implicit val messagesAPI=app.injector.instanceOf[MessagesApi]
+  implicit val messagesProvider=MessagesImpl(Lang("en"), messagesAPI)
+
   implicit val ac=app.injector.instanceOf[ApplicationConfig]
   implicit val ss=app.injector.instanceOf[SessionService]
 

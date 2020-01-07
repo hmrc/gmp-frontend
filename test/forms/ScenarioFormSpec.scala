@@ -21,13 +21,14 @@ import models.CalculationType
 import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.data.FormError
-import play.api.i18n.{Messages, MessagesProvider}
+import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl, MessagesProvider}
 import play.api.i18n.Messages.Implicits._
 import play.api.libs.json.Json
 
 class ScenarioFormSpec extends PlaySpec with OneAppPerSuite with MockitoSugar {
 
-  implicit val messagesProvider=app.injector.instanceOf[MessagesProvider]
+  implicit val messagesAPI=app.injector.instanceOf[MessagesApi]
+  implicit val messagesProvider=MessagesImpl(Lang("en"), messagesAPI)
 
   "Calculation Reason Form" must {
 
