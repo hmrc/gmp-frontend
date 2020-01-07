@@ -29,8 +29,8 @@ import play.twirl.api.Html
 
 trait GmpViewSpec extends PlaySpec with JSoupMatchers with OneServerPerSuite {
 
-  val messagesControllerComponents = app.injector.instanceOf[MessagesControllerComponents].langs.availables.head
-  val messagesApi =  app.injector.instanceOf[MessagesApi]
+  implicit val messagesControllerComponents = app.injector.instanceOf[MessagesControllerComponents].langs.availables.head
+  implicit val messagesApi =  app.injector.instanceOf[MessagesApi]
   implicit lazy val messages: Messages = MessagesImpl(messagesControllerComponents, messagesApi)
 
   implicit val applicationConfig=app.injector.instanceOf[ApplicationConfig]
