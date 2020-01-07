@@ -16,15 +16,40 @@
 
 package views.html
 
-import forms.InflationProofForm
+import forms.{InflationProofForm, checkDateOnOBeforeGMPEnd, checkDateOnOrAfterGMPStart, checkDayRange, checkForNumber, checkMonthRange, checkValidDate, checkYearLength}
+import models.{GmpDate, InflationProof}
 import play.api.data.Form
+import play.api.data.Forms.{mapping, optional, text}
 import play.twirl.api.Html
 import utils.GmpViewSpec
 
 class InflationProofSpec extends GmpViewSpec {
   override def view: Html = views.html.inflation_proof(inflationProofForm)
-  private val inflationProofForm: Form[models.InflationProof] = InflationProofForm.inflationProofForm
+ // private val inflationProofForm: Form[models.InflationProof] = InflationProofForm.inflationProofForm
 
+  val inflationProofForm = Form(
+    mapping(
+      "revaluationDate" -> mapping(
+        "day" -> optional(text),
+        "month" -> optional(text),
+        "year" -> optional(text)
+      )(GmpDate.apply)(GmpDate.unapply)
+        .verifying(messages("gmp.error.date.nonnumber"), x => checkForNumber(x.day) && checkForNumber(x.month) && checkForNumber(x.year))
+        .verifying(messages("gmp.error.day.invalid"), x => checkDayRange(x.day))
+        .verifying(messages("gmp.error.month.invalid"), x => checkMonthRange(x.month))
+        .verifying(messages("gmp.error.year.invalid.format"), x => checkYearLength(x.year))
+      ,
+      "revaluate" -> optional(text).verifying(messages("gmp.error.reason.mandatory"),{_.isDefined})
+    )(InflationProof.apply)(InflationProof.unapply)
+      .verifying(messages("gmp.error.reval_date.mandatory"), x => dateMustBePresentIfRevaluationWanted(x))
+
+  )
+  def dateMustBePresentIfRevaluationWanted(x: InflationProof): Boolean = {
+    x.revaluate match {
+      case Some("Yes") => x.revaluationDate.day.isDefined || x.revaluationDate.month.isDefined || x.revaluationDate.year.isDefined
+      case _ => true
+    }
+  }
   "Inflation Proof page" must {
     behave like pageWithTitle(messages("gmp.inflation_proof.question"))
     behave like pageWithHeader(messages("gmp.inflation_proof.question"))

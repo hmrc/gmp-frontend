@@ -17,13 +17,21 @@
 package views.html
 
 import forms.ScenarioForm
+import models.CalculationType
 import play.api.data.Form
+import play.api.data.Forms.{mapping, optional, text}
 import play.twirl.api.Html
 import utils.GmpViewSpec
 
 class ScenarioSpec extends GmpViewSpec{
-  override def view: Html = views.html.scenario(pensionDetailsForm)
-  private val pensionDetailsForm: Form[models.CalculationType] = ScenarioForm.scenarioForm
+  override def view: Html = views.html.scenario(scenarioForm)
+ // private val pensionDetailsForm: Form[models.CalculationType] = ScenarioForm.scenarioForm
+
+  val scenarioForm = Form(
+    mapping(
+      "calcType" -> optional(text).verifying(messages("gmp.error.scenario.mandatory"), {x => {x.isDefined && x.get.matches("[0-4]{1}")}})
+    )(CalculationType.apply)(CalculationType.unapply)
+  )
 
   "Scenario page" must {
     behave like pageWithTitle(messages("gmp.scenarios.title"))
