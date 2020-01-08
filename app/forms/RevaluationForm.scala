@@ -52,8 +52,14 @@ class BaseRevaluationForm {
         {
           Seq(ValidationError(messages("gmp.error.revaluation_pre2016_not_left"), "revaluationDate")) // 2016
         }
-        else if (revaluationDate.revaluationDate.isBefore(revaluationDate.leaving.leavingDate)) {
-          Seq(ValidationError(messages("gmp.error.revaluation_before_leaving", revaluationDate.leaving.leavingDate.getAsText), "revaluationDate"))
+        else if (revaluationDate.revaluationDate.isBefore(revaluationDate.leaving.leavingDate) &&
+          revaluationDate.leaving.leaving != Some("no")) {
+          Seq(ValidationError(Messages("gmp.error.revaluation_before_leaving", revaluationDate.leaving.leavingDate.getAsText), "revaluationDate"))
+        }
+        else if (revaluationDate.leaving.leaving.isDefined &&
+        revaluationDate.leaving.leaving.get.equals(Leaving.YES_BEFORE) &&
+        !revaluationDate.revaluationDate.isOnOrAfter05041978){
+          Seq(ValidationError(Messages("gmp.error.reval_date.from"), "revaluationDate"))
         }
         else {
           Nil
@@ -72,10 +78,9 @@ class BaseRevaluationForm {
       "month" -> optional(text),
       "year" -> optional(text)
     )(GmpDate.apply)(GmpDate.unapply)
-      .verifying(messages("gmp.error.reval_date.mandatory"), x => mandatoryDate(x))
-      .verifying(messages("gmp.error.date.invalid"), x => checkValidDate(x))
-      .verifying(messages("gmp.error.reval_date.from"), x => checkDateOnOrAfterGMPStart(x)) // 1978
-      .verifying(messages("gmp.error.reval_date.to"), x => checkDateOnOBeforeGMPEnd(x)
+      .verifying(Messages("gmp.error.reval_date.mandatory"), x => mandatoryDate(x))
+      .verifying(Messages("gmp.error.date.invalid"), x => checkValidDate(x))
+      .verifying(Messages("gmp.error.reval_date.to"), x => checkDateOnOBeforeGMPEnd(x)
   )
 
   val leavingMapping = mapping(
