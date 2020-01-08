@@ -43,7 +43,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class BulkReferenceControllerSpec extends PlaySpec  with MockitoSugar with GuiceOneAppPerSuite{
 
   val mockAuthConnector: AuthConnector = mock[AuthConnector]
-  val mockSessionService: SessionService = app.injector.instanceOf[SessionService]
+  val mockSessionService: SessionService = mock[SessionService]
   val mockAuditConnector: AuditConnector = mock[AuditConnector]
 
   implicit val hc = new HeaderCarrier(sessionId = Some(SessionId(s"session-${UUID.randomUUID}")))
@@ -53,9 +53,8 @@ class BulkReferenceControllerSpec extends PlaySpec  with MockitoSugar with Guice
   implicit val messagesProvider=MessagesImpl(Lang("en"), messagesApi)
   implicit val ac=app.injector.instanceOf[ApplicationConfig]
   implicit val gmpSessionCache=app.injector.instanceOf[GmpSessionCache]
-  implicit val ss=app.injector.instanceOf[SessionService]
 
-  object TestBulkReferenceController extends BulkReferenceController(FakeAuthAction, mockAuthConnector, mockAuditConnector,ss,FakeGmpContext
+  object TestBulkReferenceController extends BulkReferenceController(FakeAuthAction, mockAuthConnector, mockAuditConnector,mockSessionService,FakeGmpContext
   ,mcc,ec,ac,gmpSessionCache) {
     /*override val sessionService = mockSessionService
     override val context = FakeGmpContext
@@ -94,30 +93,30 @@ class BulkReferenceControllerSpec extends PlaySpec  with MockitoSugar with Guice
           contentAsString(result) must include(Messages("gmp.error.mandatory", Messages("gmp.reference")))
       }
 
-  /*    "throw an exception when can't cache email and reference" in {
+      "throw an exception when can't cache email and reference" in {
         when(mockSessionService.cacheEmailAndReference(Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any(),Matchers.any())).thenReturn(Future.successful(None))
 
           val result = TestBulkReferenceController.post()(FakeRequest().withJsonBody(Json.toJson(validRequest)))
           intercept[RuntimeException]{
             status(result) must equal(BAD_REQUEST)
         }
-      }*/
+      }
 
-   /*   "validate email and reference, cache and redirect" in {
+      "validate email and reference, cache and redirect" in {
         when(mockSessionService.cacheEmailAndReference(Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any(),Matchers.any())).thenReturn(Future.successful(Some(gmpBulkSession)))
 
           val result = TestBulkReferenceController.post()(FakeRequest().withJsonBody(Json.toJson(validRequest)))
           status(result) must equal(SEE_OTHER)
           redirectLocation(result).get must include("/request-received")
-      }*/
+      }
 
-   /*   "validate email and reference with spaces, cache and redirect" in {
+     "validate email and reference with spaces, cache and redirect" in {
         when(mockSessionService.cacheEmailAndReference(Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any(),Matchers.any())).thenReturn(Future.successful(Some(gmpBulkSession)))
 
           val result = TestBulkReferenceController.post()(FakeRequest().withJsonBody(Json.toJson(validRequestWithSpaces)))
           status(result) must equal(SEE_OTHER)
           redirectLocation(result).get must include("/request-received")
-      }*/
+      }
     }
 
     "BACK" must {
