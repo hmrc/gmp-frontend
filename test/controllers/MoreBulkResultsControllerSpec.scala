@@ -48,10 +48,9 @@ class MoreBulkResultsControllerSpec extends PlaySpec with OneServerPerSuite with
   implicit val ac=app.injector.instanceOf[ApplicationConfig]
 
 
-  object TestMoreBulkResultsController extends MoreBulkResultsController(FakeAuthAction, mockAuthConnector, mockSessionService,FakeGmpContext,mockGmpBulkConnector,ac,mcc,ec) {
-    /*override val sessionService = mockSessionService
-    override val context = FakeGmpContext*/
-  }
+  object TestMoreBulkResultsController extends MoreBulkResultsController(FakeAuthAction, mockAuthConnector, mockSessionService,
+                  FakeGmpContext,mockGmpBulkConnector,ac,mcc,ec)
+
 
   val recentBulkCalculations = List(new BulkPreviousRequest("1234","abcd",LocalDateTime.now(),LocalDateTime.now()), new BulkPreviousRequest("5678","efgh", LocalDateTime.now(),LocalDateTime.now()))
 

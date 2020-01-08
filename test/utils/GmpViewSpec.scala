@@ -21,8 +21,7 @@ import controllers.FakeGmpContext
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
-import play.api.Play
-import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl, MessagesProvider}
+import play.api.i18n.{Messages, MessagesApi, MessagesImpl}
 import play.api.mvc.MessagesControllerComponents
 import play.api.test.FakeRequest
 import play.twirl.api.Html
@@ -39,7 +38,6 @@ trait GmpViewSpec extends PlaySpec with JSoupMatchers with OneServerPerSuite {
 
   implicit val request = FakeRequest()
   implicit val context = FakeGmpContext
- // implicit val messages: Messages = play.api.i18n.Messages.Implicits.applicationMessages
 
   def view: Html
   def doc: Document = Jsoup.parse(view.toString())

@@ -20,10 +20,6 @@ import com.google.inject.{Inject, Singleton}
 import config.{ApplicationConfig, GmpContext}
 import connectors.GmpBulkConnector
 import controllers.auth.AuthAction
-import play.api.Play.current
-import play.api.i18n.Messages.Implicits._
-import play.api.i18n.MessagesProvider
-import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.MessagesControllerComponents
 import services.SessionService
 import uk.gov.hmrc.auth.core.AuthConnector

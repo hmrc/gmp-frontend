@@ -19,7 +19,6 @@ package controllers.auth
 import com.google.inject.{Inject, Singleton}
 import play.api.Mode
 import play.api.{Configuration, Play}
-import uk.gov.hmrc.play.bootstrap.config.RunMode
 
 // TODO tidy/remove this
 @Singleton
@@ -35,7 +34,6 @@ class BaseExternalUrls @Inject()(val runModeConfiguration: Configuration) {
 
    def mode: Mode = Play.current.mode
 
-  //protected def configuration: Configuration = Play.current.configuration
 }
 
 case object ExternalUrls extends BaseExternalUrls(Play.current.configuration)

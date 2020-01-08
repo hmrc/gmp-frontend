@@ -19,10 +19,9 @@ package connectors
 import java.net.URLEncoder
 
 import com.google.inject.Inject
-import config.ApplicationConfig
 import controllers.routes
 import play.api.i18n.Messages
-import play.api.mvc.{MessagesControllerComponents, Request}
+import play.api.mvc.Request
 import play.api.{Configuration, Environment, Logger, Mode}
 import uk.gov.hmrc.crypto.PlainText
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig

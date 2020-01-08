@@ -16,14 +16,13 @@
 
 package forms
 
-import com.google.inject.{Inject, Singleton}
+import com.google.inject.Singleton
 import models.BulkReference
 import play.api.Play
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.data.validation.{Constraint, Invalid, Valid, ValidationError}
 import play.api.i18n.{Messages, MessagesApi, MessagesImpl}
-import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.MessagesControllerComponents
 import uk.gov.hmrc.emailaddress.EmailAddress
 

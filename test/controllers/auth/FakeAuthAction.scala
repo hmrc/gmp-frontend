@@ -16,15 +16,14 @@
 
 package controllers.auth
 
+import play.api.Configuration
 import play.api.inject.guice.GuiceApplicationBuilder
-import play.api.{Configuration, Environment}
 import play.api.mvc.{MessagesControllerComponents, Request, Result}
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.domain.Generator
-import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
-import scala.concurrent.{ExecutionContext, Future}
 import scala.concurrent.ExecutionContext.Implicits._
+import scala.concurrent.Future
 import scala.util.Random
 
 object FakeAuthAction extends AuthAction(authConnector=new GuiceApplicationBuilder().injector().instanceOf[AuthConnector],

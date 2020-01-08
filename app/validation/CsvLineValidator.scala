@@ -18,9 +18,7 @@ package validation
 
 import org.joda.time.LocalDate
 import org.joda.time.format.DateTimeFormat
-import play.api.Play.current
 import play.api.i18n.Messages
-import play.api.i18n.Messages.Implicits._
 import services.BulkRequestCsvColumn
 import uk.gov.hmrc.time.TaxYear
 

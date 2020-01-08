@@ -21,14 +21,10 @@ import config.{ApplicationConfig, GmpContext, GmpSessionCache}
 import connectors.GmpBulkConnector
 import controllers.auth.AuthAction
 import play.api.Logger
-import play.api.Play.current
-import play.api.i18n.{Messages, MessagesProvider}
-import play.api.i18n.Messages.Implicits._
-import play.api.inject.guice.GuiceApplicationBuilder
+import play.api.i18n.Messages
 import play.api.mvc.MessagesControllerComponents
 import services.{BulkRequestCreationService, DataLimitExceededException, SessionService}
 import uk.gov.hmrc.auth.core.AuthConnector
-import uk.gov.hmrc.http.cache.client.SessionCache
 
 import scala.concurrent.{ExecutionContext, Future}
 

@@ -17,7 +17,7 @@
 package controllers
 
 import com.google.inject.Singleton
-import config.{ApplicationConfig, GmpContext}
+import config.ApplicationConfig
 import controllers.auth.{AuthAction, FakeAuthAction, UUIDGenerator}
 import org.mockito.ArgumentCaptor
 import org.mockito.Matchers._
@@ -26,8 +26,6 @@ import org.scalatest.BeforeAndAfterEach
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
-import play.api.i18n.{DefaultMessagesApiProvider, I18nSupport, Lang, Messages, MessagesApi, MessagesImpl, MessagesProvider}
-import play.api.i18n.Messages.Implicits._
 import play.api.mvc.MessagesControllerComponents
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -52,14 +50,12 @@ class ApplicationControllerSpec extends PlaySpec
   val mockAuthAction: AuthAction = mock[AuthAction]
     implicit val mcc = app.injector.instanceOf[MessagesControllerComponents]
     implicit val ec = app.injector.instanceOf[ExecutionContext]
-  //  implicit val messagesApi = app.injector.instanceOf[MessagesApi]
-   // val messagesProvider=MessagesImpl(Lang("en"), messagesApi)
-    implicit val ac=app.injector.instanceOf[ApplicationConfig]
+     implicit val ac=app.injector.instanceOf[ApplicationConfig]
     implicit val ss=app.injector.instanceOf[SessionService]
 
     object TestController extends ApplicationController(FakeAuthAction, mockAuditConnector, mockAuthConnector, mockUUIDGenerator,
                       ss,FakeGmpContext,mcc,ec,ac) {
-   // override val context = FakeGmpContext
+
   }
 
   override def beforeEach(): Unit = {
@@ -76,10 +72,6 @@ class ApplicationControllerSpec extends PlaySpec
         status(result) must be(OK)
       }
 
-    /*  "have a title of Unauthorised" in {
-        val result = TestController.unauthorised(FakeRequest())
-        contentAsString(result) must include(Messages("gmp.unauthorised.message")(messagesProvider))
-      }*/
 
       "have some text on the page" in {
         val result = TestController.unauthorised(FakeRequest())

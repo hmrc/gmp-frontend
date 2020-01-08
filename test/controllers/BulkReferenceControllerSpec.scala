@@ -18,16 +18,15 @@ package controllers
 
 import java.util.UUID
 
-import config.{ApplicationConfig, GmpContext, GmpSessionCache}
+import config.{ApplicationConfig, GmpSessionCache}
 import controllers.auth.FakeAuthAction
 import models._
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
-import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
-import play.api.i18n.{DefaultMessagesApi, Lang, Messages, MessagesApi, MessagesImpl, MessagesProvider}
-import play.api.i18n.Messages.Implicits._
+import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl}
 import play.api.libs.json.Json
 import play.api.mvc.MessagesControllerComponents
 import play.api.test.FakeRequest
@@ -56,9 +55,7 @@ class BulkReferenceControllerSpec extends PlaySpec  with MockitoSugar with Guice
 
   object TestBulkReferenceController extends BulkReferenceController(FakeAuthAction, mockAuthConnector, mockAuditConnector,mockSessionService,FakeGmpContext
   ,mcc,ec,ac,gmpSessionCache) {
-    /*override val sessionService = mockSessionService
-    override val context = FakeGmpContext
-*/
+
   }
 
   "BulkRerefenceController" must {

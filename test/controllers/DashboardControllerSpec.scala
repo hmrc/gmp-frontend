@@ -16,7 +16,7 @@
 
 package controllers
 
-import config.{ApplicationConfig, GmpContext, GmpSessionCache}
+import config.{ApplicationConfig, GmpSessionCache}
 import connectors.GmpBulkConnector
 import controllers.auth.{AuthAction, FakeAuthAction}
 import models._
@@ -25,8 +25,7 @@ import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
-import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl, MessagesProvider}
-import play.api.i18n.Messages.Implicits._
+import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl}
 import play.api.libs.json.Json
 import play.api.mvc.MessagesControllerComponents
 import play.api.test.FakeRequest
@@ -53,10 +52,9 @@ class DashboardControllerSpec extends PlaySpec with OneServerPerSuite with Mocki
 
 
 
-  object TestDashboardController extends DashboardController(FakeAuthAction, mockAuthConnector, mockGmpBulkConnector,ac,mockSessionService,FakeGmpContext,mcc,ec,gmpSessionCache) {
-  /*  override val sessionService = mockSessionService
-    override val context = FakeGmpContext
-*/  }
+  object TestDashboardController extends DashboardController(FakeAuthAction, mockAuthConnector, mockGmpBulkConnector,
+          ac,mockSessionService,FakeGmpContext,mcc,ec,gmpSessionCache) {
+   }
 
   "DashboardController" must {
 
@@ -112,10 +110,9 @@ class DashboardControllerSpec extends PlaySpec with OneServerPerSuite with Mocki
 
         val brokenGmpBulkConnector = mock[GmpBulkConnector]
 
-        object BrokenDashboardController extends DashboardController(FakeAuthAction, mockAuthConnector, brokenGmpBulkConnector,ac,mockSessionService,FakeGmpContext,mcc,ec,gmpSessionCache) {
-         /* override val sessionService = mockSessionService
-          override val context = FakeGmpContext*/
-        }
+        object BrokenDashboardController extends DashboardController(FakeAuthAction, mockAuthConnector, brokenGmpBulkConnector,
+                    ac,mockSessionService,FakeGmpContext,mcc,ec,gmpSessionCache) {
+         }
 
         when(brokenGmpBulkConnector.getPreviousBulkRequests(Matchers.any())(Matchers.any())).thenReturn(Future.failed(new Upstream5xxResponse("failed",503,503)))
         val dashboard = new Dashboard(Nil)

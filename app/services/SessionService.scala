@@ -21,7 +21,6 @@ import config.GmpSessionCache
 import metrics.ApplicationMetrics
 import models._
 import play.api.Logger
-import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.Request
 import uk.gov.hmrc.http.HeaderCarrier
 

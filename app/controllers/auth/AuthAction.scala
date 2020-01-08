@@ -70,8 +70,6 @@ class AuthAction @Inject()(override val authConnector: AuthConnector, configurat
   }
 }
 
-//@ImplementedBy(classOf[AuthActionImpl])
-//trait AuthAction extends ActionBuilder[AuthenticatedRequest] with ActionFunction[Request, AuthenticatedRequest]
 
 @Singleton
 class GmpAuthConnector @Inject()(val http: HttpClient,

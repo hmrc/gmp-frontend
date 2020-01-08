@@ -24,8 +24,7 @@ import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
-import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl, MessagesProvider}
-import play.api.i18n.Messages.Implicits._
+import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl}
 import play.api.libs.json.Json
 import play.api.mvc.MessagesControllerComponents
 import play.api.test.FakeRequest
@@ -48,11 +47,8 @@ class MemberDetailsControllerSpec extends PlaySpec with OneServerPerSuite with M
   implicit val gmpSessionCache=app.injector.instanceOf[GmpSessionCache]
 
 
-  object TestMemberDetailsController extends MemberDetailsController(FakeAuthAction, mockAuthConnector,mockSessionService,FakeGmpContext,mcc,ac,ec,gmpSessionCache) {
-//    override val sessionService = mockSessionService
-//    override val context = FakeGmpContext
-  }
-
+  object TestMemberDetailsController extends MemberDetailsController(FakeAuthAction, mockAuthConnector,mockSessionService,
+                      FakeGmpContext,mcc,ac,ec,gmpSessionCache)
   "GET" must {
 
     "authenticated users" must {

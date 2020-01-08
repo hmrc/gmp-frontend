@@ -20,7 +20,7 @@ import java.util.UUID
 
 import config.{ApplicationConfig, GmpSessionCache}
 import connectors.GmpConnector
-import controllers.auth.{AuthAction, FakeAuthAction, GmpAuthConnector}
+import controllers.auth.{AuthAction, FakeAuthAction}
 import helpers.RandomNino
 import metrics.ApplicationMetrics
 import models._
@@ -29,8 +29,7 @@ import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
-import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl, MessagesProvider}
-import play.api.i18n.Messages.Implicits._
+import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl}
 import play.api.mvc.{MessagesControllerComponents, Request}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -63,7 +62,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
   implicit val hc = new HeaderCarrier(sessionId = Some(SessionId(s"session-${UUID.randomUUID}")))
 
   object TestResultsController extends ResultsController(FakeAuthAction, mockAuthConnector, mockSessionService,FakeGmpContext, mockCalculationConnector, mockAuditConnector, metrics,applicationConfig,mcc,ec,gmpSessionCache) {
-//    override val context = FakeGmpContext
+
 
     override def resultsView(response: CalculationResponse, subheader: Option[String], revalSubheader: Option[String])(implicit request: Request[_], context: config.GmpContext): HtmlFormat.Appendable = {
       views.html.results(response, subheader, revalSubheader)

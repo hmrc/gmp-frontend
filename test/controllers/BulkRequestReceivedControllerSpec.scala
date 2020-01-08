@@ -18,8 +18,7 @@ package controllers
 
 import java.util.UUID
 
-import akka.util.OptionVal
-import config.{ApplicationConfig, GmpContext, GmpSessionCache}
+import config.{ApplicationConfig, GmpSessionCache}
 import connectors.GmpBulkConnector
 import controllers.auth.{AuthAction, FakeAuthAction}
 import helpers.RandomNino
@@ -29,8 +28,7 @@ import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
-import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl, MessagesProvider}
-import play.api.i18n.Messages.Implicits._
+import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl}
 import play.api.mvc.MessagesControllerComponents
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -38,7 +36,6 @@ import services.{BulkRequestCreationService, DataLimitExceededException, Session
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.emailaddress.EmailAddress
 import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.http.cache.client.SessionCache
 import uk.gov.hmrc.http.logging.SessionId
 
 import scala.concurrent.{ExecutionContext, Future}

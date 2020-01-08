@@ -20,9 +20,7 @@ package controllers
 import com.google.inject.{Inject, Singleton}
 import config.{ApplicationConfig, GmpContext}
 import models.{CalculationType, GmpSession, Leaving}
-import play.api.Play
-import play.api.i18n.{Messages, MessagesImpl, MessagesProvider}
-import play.api.inject.guice.GuiceApplicationBuilder
+import play.api.i18n.{Messages, MessagesImpl}
 import play.api.mvc.{MessagesControllerComponents, Result}
 import services.SessionService
 import uk.gov.hmrc.auth.core.AuthConnector
@@ -36,8 +34,6 @@ class GmpController @Inject()(val messagesControllerComponents: MessagesControll
                               ac: ApplicationConfig, sessionService: SessionService,context: GmpContext)
                   extends FrontendController(messagesControllerComponents){
   implicit val applicationConfig: config.ApplicationConfig  = ac
- // val sessionService: SessionService = Play.current.injector.instanceOf[SessionService]
- // implicit val context: config.GmpContext = Play.current.injector.instanceOf[GmpContext]
   implicit lazy val messages: Messages = MessagesImpl(messagesControllerComponents.langs.availables.head, messagesApi)
 }
 

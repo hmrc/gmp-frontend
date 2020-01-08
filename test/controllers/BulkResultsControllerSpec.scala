@@ -18,7 +18,7 @@ package controllers
 
 import java.util.UUID
 
-import config.{ApplicationConfig, GmpContext}
+import config.ApplicationConfig
 import connectors.GmpBulkConnector
 import controllers.auth.FakeAuthAction
 import models.BulkResultsSummary
@@ -26,8 +26,7 @@ import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
-import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl, MessagesProvider}
-import play.api.i18n.Messages.Implicits._
+import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl}
 import play.api.mvc.MessagesControllerComponents
 import play.api.test.FakeRequest
 import play.api.test.Helpers._

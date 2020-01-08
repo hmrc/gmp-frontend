@@ -21,7 +21,6 @@ import models.{BulkCalculationRequest, BulkCalculationRequestLine, CalculationRe
 import org.joda.time.LocalDate
 import org.joda.time.format.DateTimeFormat
 import play.api.i18n.{Messages, MessagesImpl}
-import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.MessagesControllerComponents
 import play.api.{Configuration, Environment, Logger, Mode}
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig

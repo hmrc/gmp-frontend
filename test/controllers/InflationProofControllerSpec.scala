@@ -17,14 +17,13 @@
 package controllers
 
 import config.{ApplicationConfig, GmpSessionCache}
-import controllers.auth.{AuthAction, FakeAuthAction, GmpAuthConnector}
+import controllers.auth.{AuthAction, FakeAuthAction}
 import models._
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
-import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl, MessagesProvider}
-import play.api.i18n.Messages.Implicits._
+import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl}
 import play.api.libs.json.Json
 import play.api.mvc.MessagesControllerComponents
 import play.api.test.FakeRequest
@@ -47,10 +46,9 @@ class InflationProofControllerSpec extends PlaySpec with OneServerPerSuite with 
   implicit val gmpSessionCache=app.injector.instanceOf[GmpSessionCache]
 
 
-  object TestInflationProofController extends InflationProofController(FakeAuthAction, mockAuthConnector,mockSessionService,FakeGmpContext,mcc,ac,ec,gmpSessionCache) {
-   /* override val sessionService = mockSessionService
-    override val context = FakeGmpContext
-*/  }
+  object TestInflationProofController extends InflationProofController(FakeAuthAction, mockAuthConnector,mockSessionService,
+    FakeGmpContext,mcc,ac,ec,gmpSessionCache)
+
 
   "InflationProofController" must {
 

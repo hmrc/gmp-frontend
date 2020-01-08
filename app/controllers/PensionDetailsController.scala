@@ -24,10 +24,7 @@ import forms.PensionDetailsForm._
 import metrics.ApplicationMetrics
 import models.{PensionDetails, ValidateSconRequest}
 import play.api.Logger
-import play.api.Play.current
-import play.api.i18n.{Messages, MessagesProvider}
-import play.api.i18n.Messages.Implicits._
-import play.api.inject.guice.GuiceApplicationBuilder
+import play.api.i18n.Messages
 import play.api.mvc.MessagesControllerComponents
 import services.SessionService
 import uk.gov.hmrc.auth.core.AuthConnector

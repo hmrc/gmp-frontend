@@ -21,8 +21,6 @@ import config.{ApplicationConfig, GmpContext, GmpSessionCache}
 import controllers.auth.AuthAction
 import forms.BulkReferenceForm
 import play.api.Logger
-import play.api.i18n.{Messages, MessagesApi, MessagesProvider}
-import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.MessagesControllerComponents
 import services.SessionService
 import uk.gov.hmrc.auth.core.AuthConnector

@@ -16,7 +16,7 @@
 
 package forms
 
-import com.google.inject.{Inject, Singleton}
+import com.google.inject.Singleton
 import models.Equalise
 import play.api.Play
 import play.api.data.Form
