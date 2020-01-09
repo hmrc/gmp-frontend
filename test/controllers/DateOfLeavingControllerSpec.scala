@@ -24,6 +24,7 @@ import org.joda.time.{DateTime, DateTimeUtils}
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
 import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl}
 import play.api.libs.json.Json
@@ -32,20 +33,20 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.SessionService
 import uk.gov.hmrc.auth.core.AuthConnector
+import uk.gov.hmrc.play.bootstrap.tools.Stubs.stubMessagesControllerComponents
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class DateOfLeavingControllerSpec extends PlaySpec with OneServerPerSuite with MockitoSugar {
+class DateOfLeavingControllerSpec extends PlaySpec with GuiceOneServerPerSuite with MockitoSugar {
   DateTimeUtils.setCurrentMillisFixed(new DateTime(2016, 1, 1, 1, 1).toDate.getTime)
   val mockAuthConnector = mock[AuthConnector]
   val mockSessionService = mock[SessionService]
   val mockAuthAction = mock[AuthAction]
 
   val baseValidDate = GmpDate(day = Some("31"), month = Some("1"), year = Some("2015"))
-  implicit val mcc = app.injector.instanceOf[MessagesControllerComponents]
+  implicit val mcc = stubMessagesControllerComponents()
   implicit val ec = app.injector.instanceOf[ExecutionContext]
-  implicit val messagesAPI=app.injector.instanceOf[MessagesApi]
-  implicit val messagesProvider=MessagesImpl(Lang("en"), messagesAPI)
+  implicit val messagesProvider=MessagesImpl(Lang("en"), mcc.messagesApi)
   implicit val ac=app.injector.instanceOf[ApplicationConfig]
   implicit val gmpSessionCache=app.injector.instanceOf[GmpSessionCache]
 

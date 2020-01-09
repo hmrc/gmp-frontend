@@ -28,6 +28,7 @@ import play.api.mvc.{Action, AnyContent, Controller, MessagesControllerComponent
 import play.api.test.FakeRequest
 import play.api.test.Helpers.{redirectLocation, status}
 import uk.gov.hmrc.auth.core._
+import uk.gov.hmrc.play.bootstrap.tools.Stubs.stubMessagesControllerComponents
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -40,7 +41,7 @@ class AuthActionSpec extends PlaySpec with GuiceOneAppPerSuite with MockitoSugar
   }
 
   implicit val timeout: Timeout = 5 seconds
-  val mcc = app.injector.instanceOf[MessagesControllerComponents]
+  val mcc = stubMessagesControllerComponents()
 
   "Auth Action" when {
     "the user is not logged in" must {

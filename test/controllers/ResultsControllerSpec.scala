@@ -28,6 +28,7 @@ import org.joda.time.LocalDate
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
 import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl}
 import play.api.mvc.{MessagesControllerComponents, Request}
@@ -39,11 +40,12 @@ import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.logging.SessionId
 import uk.gov.hmrc.play.audit.http.connector.{AuditConnector, AuditResult}
+import uk.gov.hmrc.play.bootstrap.tools.Stubs.stubMessagesControllerComponents
 import views.helpers.GmpDateFormatter._
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with MockitoSugar {
+class ResultsControllerSpec extends PlaySpec with GuiceOneServerPerSuite with MockitoSugar {
 
   val mockAuthConnector = mock[AuthConnector]
   val mockSessionService = mock[SessionService]
@@ -52,10 +54,10 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
   val mockAuditConnector = mock[AuditConnector]
   val mockAuthAction = mock[AuthAction]
   val metrics = app.injector.instanceOf[ApplicationMetrics]
-  implicit val mcc = app.injector.instanceOf[MessagesControllerComponents]
+  implicit val mcc = stubMessagesControllerComponents()
   implicit val ec = app.injector.instanceOf[ExecutionContext]
   implicit val messagesAPI=app.injector.instanceOf[MessagesApi]
-  implicit val messagesProvider=MessagesImpl(Lang("en"), messagesAPI)
+  implicit val messagesProvider=MessagesImpl(Lang("en"), mcc.messagesApi)
   implicit val applicationConfig=app.injector.instanceOf[ApplicationConfig]
   implicit val gmpSessionCache=app.injector.instanceOf[GmpSessionCache]
 

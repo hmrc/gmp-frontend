@@ -20,17 +20,17 @@ import config.ApplicationConfig
 import controllers.FakeGmpContext
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
+import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
 import play.api.i18n.{Messages, MessagesApi, MessagesImpl}
 import play.api.mvc.MessagesControllerComponents
 import play.api.test.FakeRequest
 import play.twirl.api.Html
+import uk.gov.hmrc.play.bootstrap.tools.Stubs.stubMessagesControllerComponents
+trait GmpViewSpec extends PlaySpec with JSoupMatchers with GuiceOneServerPerSuite {
 
-trait GmpViewSpec extends PlaySpec with JSoupMatchers with OneServerPerSuite {
-
-  implicit val messagesControllerComponents = app.injector.instanceOf[MessagesControllerComponents].langs.availables.head
-  implicit val messagesApi =  app.injector.instanceOf[MessagesApi]
-  implicit lazy val messages: Messages = MessagesImpl(messagesControllerComponents, messagesApi)
+  implicit val mcc = stubMessagesControllerComponents()
+  implicit lazy val messages: Messages = MessagesImpl(mcc.langs.availables.head, mcc.messagesApi)
 
   implicit val applicationConfig=app.injector.instanceOf[ApplicationConfig]
 

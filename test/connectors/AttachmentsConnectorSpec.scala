@@ -23,9 +23,10 @@ import org.mockito.Matchers.any
 import org.mockito.Mockito.{when, _}
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.http.HeaderNames
-import play.api.i18n.{Messages, MessagesApi, MessagesImpl}
+import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl}
 import play.api.mvc.MessagesControllerComponents
 import play.api.test.FakeRequest
 import uk.gov.hmrc.crypto.{Crypted, Decrypter, Encrypter, PlainText}
@@ -33,21 +34,22 @@ import uk.gov.hmrc.http.logging.RequestId
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import uk.gov.hmrc.play.bootstrap.filters.frontend.crypto.SessionCookieCrypto
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
+import uk.gov.hmrc.play.bootstrap.tools.Stubs.stubMessagesControllerComponents
 import uk.gov.hmrc.play.partials.HeaderCarrierForPartials
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class AttachmentsConnectorSpec extends PlaySpec with OneAppPerSuite with MockitoSugar with BeforeAndAfterEach {
+class AttachmentsConnectorSpec extends PlaySpec with GuiceOneAppPerSuite with MockitoSugar with BeforeAndAfterEach {
 
 
   val mockHttp = mock[HttpClient]
   val uploadConfig = app.injector.instanceOf[UploadConfig]
   val encrypter = mock[Encrypter with Decrypter]
 
-  implicit val messagesControllerComponents = app.injector.instanceOf[MessagesControllerComponents].langs.availables.head
-  implicit val messagesApi =  app.injector.instanceOf[MessagesApi]
-  implicit lazy val messages: Messages = MessagesImpl(messagesControllerComponents, messagesApi)
+  implicit val mcc = stubMessagesControllerComponents()
+  implicit val messagesProvider=MessagesImpl(Lang("en"), mcc.messagesApi)
+ // implicit lazy val messages: Messages = MessagesImpl(messagesControllerComponents, mcc.messagesApi)
 
   when(encrypter.encrypt(any[PlainText])).thenReturn(Crypted("foo"))
   val sessionCookieCrypto = mock[SessionCookieCrypto]
@@ -91,17 +93,17 @@ class AttachmentsConnectorSpec extends PlaySpec with OneAppPerSuite with Mockito
 
 
     "have the collection" in {
-      val config = uploadConfig(request,messages)
+      val config = uploadConfig(request,messagesProvider)
       config must include("collection=gmp")
     }
 
     "have a the attachments service url" in {
-      val config = uploadConfig(request,messages)
+      val config = uploadConfig(request,messagesProvider)
       config must include("http://localhost:8895/attachments-internal/uploader")
     }
 
     "accept .csv" in {
-      val config = uploadConfig(request,messages)
+      val config = uploadConfig(request,messagesProvider)
       config must include("accepts=.csv")
     }
 

@@ -19,13 +19,15 @@ package forms
 import forms.RevaluationRateForm._
 import models.RevaluationRate
 import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.i18n.{Lang, MessagesApi, MessagesImpl, MessagesProvider}
 import play.api.libs.json.Json
+import uk.gov.hmrc.play.bootstrap.tools.Stubs.stubMessagesControllerComponents
 
-class RevaluationRateFormSpec extends PlaySpec with OneAppPerSuite with MockitoSugar {
-  implicit val messagesAPI=app.injector.instanceOf[MessagesApi]
-  implicit val messagesProvider=MessagesImpl(Lang("en"), messagesAPI)
+class RevaluationRateFormSpec extends PlaySpec with GuiceOneAppPerSuite with MockitoSugar {
+  implicit val mcc = stubMessagesControllerComponents()
+  implicit val messagesProvider=MessagesImpl(Lang("en"), mcc.messagesApi)
 
   "Revaluation Rate Form" must {
     "return no errors when valid values are entered" in {

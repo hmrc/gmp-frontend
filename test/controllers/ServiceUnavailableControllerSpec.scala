@@ -18,20 +18,22 @@ package controllers
 
 import config.ApplicationConfig
 import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
 import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl}
 import play.api.mvc.MessagesControllerComponents
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import uk.gov.hmrc.play.bootstrap.tools.Stubs.stubMessagesControllerComponents
 
 import scala.concurrent.ExecutionContext
 
-class ServiceUnavailableControllerSpec extends PlaySpec with OneServerPerSuite with MockitoSugar {
+class ServiceUnavailableControllerSpec extends PlaySpec with GuiceOneServerPerSuite with MockitoSugar {
 
-  implicit val mcc = app.injector.instanceOf[MessagesControllerComponents]
+  implicit val mcc = stubMessagesControllerComponents()
   implicit val ec = app.injector.instanceOf[ExecutionContext]
   implicit val messagesAPI=app.injector.instanceOf[MessagesApi]
-  implicit val messagesProvider=MessagesImpl(Lang("en"), messagesAPI)
+  implicit val messagesProvider=MessagesImpl(Lang("en"), mcc.messagesApi)
   implicit val ac=app.injector.instanceOf[ApplicationConfig]
 
   object TestController extends ServiceUnavailableController(FakeGmpContext,ac) {

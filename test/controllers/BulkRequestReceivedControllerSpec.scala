@@ -37,6 +37,7 @@ import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.emailaddress.EmailAddress
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.logging.SessionId
+import uk.gov.hmrc.play.bootstrap.tools.Stubs.stubMessagesControllerComponents
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -48,10 +49,9 @@ class BulkRequestReceivedControllerSpec extends PlaySpec with OneServerPerSuite 
   val mockAuthAction = mock[AuthAction]
 
   implicit val hc = new HeaderCarrier(sessionId = Some(SessionId(s"session-${UUID.randomUUID}")))
-  implicit val mcc = app.injector.instanceOf[MessagesControllerComponents]
+  implicit val mcc = stubMessagesControllerComponents()
   implicit val ec = app.injector.instanceOf[ExecutionContext]
-  implicit val messagesApi = app.injector.instanceOf[MessagesApi]
-  implicit val messagesProvider=MessagesImpl(Lang("en"), messagesApi)
+  implicit val messagesProvider=MessagesImpl(Lang("en"), mcc.messagesApi)
   implicit val ac=app.injector.instanceOf[ApplicationConfig]
   implicit val sc=app.injector.instanceOf[GmpSessionCache]
 
@@ -87,11 +87,11 @@ class BulkRequestReceivedControllerSpec extends PlaySpec with OneServerPerSuite 
 
           val result = TestBulkRequestReceivedController.get(FakeRequest())
               status(result) must equal(OK)
-              contentAsString(result) must include(Messages("gmp.bulk_request_received.banner"))
-              contentAsString(result) must include(Messages("gmp.bulk_request_received.banner"))
-              contentAsString(result) must include(Messages("gmp.bulk_request_received.header"))
-              contentAsString(result) must include(Messages("gmp.bulk_request_received.text", bulkRequest1.reference))
-              contentAsString(result) must include(Messages("gmp.bulk_request_received.button"))
+              contentAsString(result) must include("gmp.bulk_request_received.banner")
+              contentAsString(result) must include("gmp.bulk_request_received.banner")
+              contentAsString(result) must include("gmp.bulk_request_received.header")
+              contentAsString(result) must include("gmp.bulk_request_received.text")
+              contentAsString(result) must include("gmp.bulk_request_received.button")
         }
 
         "respond with ok and failure page if conflict received usually for a duplicate record trying to be inserted" in {
@@ -102,8 +102,8 @@ class BulkRequestReceivedControllerSpec extends PlaySpec with OneServerPerSuite 
 
           val result = TestBulkRequestReceivedController.get(FakeRequest())
               status(result) must equal(OK)
-              contentAsString(result) must include(Messages("gmp.bulk.problem.header"))
-              contentAsString(result) must include(Messages("gmp.bulk.problem.header"))
+              contentAsString(result) must include("gmp.bulk.problem.header")
+              contentAsString(result) must include("gmp.bulk.problem.header")
         }
 
         "respond with ok and failure page if file too large" in {
@@ -114,8 +114,8 @@ class BulkRequestReceivedControllerSpec extends PlaySpec with OneServerPerSuite 
 
           val result = TestBulkRequestReceivedController.get(FakeRequest())
               status(result) must equal(OK)
-              contentAsString(result) must include(Messages("gmp.bulk.failure.too_large"))
-              contentAsString(result) must include(Messages("gmp.bulk.file_too_large.header"))
+              contentAsString(result) must include("gmp.bulk.failure.too_large")
+              contentAsString(result) must include("gmp.bulk.file_too_large.header")
         }
 
         "respond with ok and failure page if file row limit exceeded" in {
@@ -125,8 +125,8 @@ class BulkRequestReceivedControllerSpec extends PlaySpec with OneServerPerSuite 
 
           val result = TestBulkRequestReceivedController.get(FakeRequest())
               status(result) must equal(OK)
-              contentAsString(result) must include(Messages("gmp.bulk.failure.too_large"))
-              contentAsString(result) must include(Messages("gmp.bulk.file_too_large.header"))
+              contentAsString(result) must include("gmp.bulk.failure.too_large")
+              contentAsString(result) must include("gmp.bulk.file_too_large.header")
         }
 
         "generic failure page if bulk fails for 5XX reason" in {
@@ -137,8 +137,8 @@ class BulkRequestReceivedControllerSpec extends PlaySpec with OneServerPerSuite 
 
           val result = TestBulkRequestReceivedController.get(FakeRequest())
               status(result) must equal(OK)
-              contentAsString(result) must include(Messages("gmp.bulk.failure.generic"))
-              contentAsString(result) must include(Messages("gmp.bulk.problem.header"))
+              contentAsString(result) must include("gmp.bulk.failure.generic")
+              contentAsString(result) must include("gmp.bulk.problem.header")
         }
 
         "throw exception when fails to get session" in {
@@ -146,7 +146,7 @@ class BulkRequestReceivedControllerSpec extends PlaySpec with OneServerPerSuite 
           when(mockSessionService.fetchGmpBulkSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(None))
 
           val result = TestBulkRequestReceivedController.get(FakeRequest())
-              contentAsString(result)replaceAll("&#x27;", "'") must include (Messages("gmp.cannot_calculate.gmp"))
+              contentAsString(result)replaceAll("&#x27;", "'") must include ("gmp.cannot_calculate.gmp")
               contentAsString(result) must include (Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/upload-csv"))
         }
 

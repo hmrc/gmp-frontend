@@ -25,6 +25,7 @@ import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.play.guice.{GuiceOneAppPerSuite, GuiceOneServerPerSuite}
 import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
 import play.api.mvc.MessagesControllerComponents
 import play.api.test.FakeRequest
@@ -33,12 +34,13 @@ import services.SessionService
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.audit.model.DataEvent
+import uk.gov.hmrc.play.bootstrap.tools.Stubs.stubMessagesControllerComponents
 
 import scala.concurrent.ExecutionContext
 
 @Singleton
 class ApplicationControllerSpec extends PlaySpec
-  with OneServerPerSuite
+  with GuiceOneAppPerSuite
   with BeforeAndAfterEach
   with ScalaFutures
   with MockitoSugar
@@ -48,7 +50,7 @@ class ApplicationControllerSpec extends PlaySpec
   val mockAuditConnector: AuditConnector = mock[AuditConnector]
   val mockUUIDGenerator: UUIDGenerator = mock[UUIDGenerator]
   val mockAuthAction: AuthAction = mock[AuthAction]
-    implicit val mcc = app.injector.instanceOf[MessagesControllerComponents]
+    implicit val mcc = stubMessagesControllerComponents()
     implicit val ec = app.injector.instanceOf[ExecutionContext]
      implicit val ac=app.injector.instanceOf[ApplicationConfig]
     implicit val ss=app.injector.instanceOf[SessionService]
@@ -75,7 +77,7 @@ class ApplicationControllerSpec extends PlaySpec
 
       "have some text on the page" in {
         val result = TestController.unauthorised(FakeRequest())
-        contentAsString(result) must include("You are not authorised to view this page")
+        contentAsString(result) must include("gmp.unauthorised.message")
       }
     }
 

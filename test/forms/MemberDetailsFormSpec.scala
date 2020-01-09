@@ -18,16 +18,18 @@ package forms
 
 import forms.MemberDetailsForm._
 import helpers.RandomNino
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.data.FormError
 import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl, MessagesProvider}
 import play.api.i18n.Messages.Implicits._
 import play.api.libs.json.Json
+import uk.gov.hmrc.play.bootstrap.tools.Stubs.stubMessagesControllerComponents
 
-class MemberDetailsFormSpec extends PlaySpec with OneAppPerSuite {
+class MemberDetailsFormSpec extends PlaySpec with GuiceOneAppPerSuite {
 
-  implicit val messagesAPI=app.injector.instanceOf[MessagesApi]
-  implicit val messagesProvider=MessagesImpl(Lang("en"), messagesAPI)
+  implicit val mcc = stubMessagesControllerComponents()
+  implicit val messagesProvider=MessagesImpl(Lang("en"), mcc.messagesApi)
 
   "Member details form" must {
 

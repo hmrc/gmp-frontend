@@ -36,6 +36,7 @@ import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.logging.SessionId
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
+import uk.gov.hmrc.play.bootstrap.tools.Stubs.stubMessagesControllerComponents
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -46,10 +47,9 @@ class BulkReferenceControllerSpec extends PlaySpec  with MockitoSugar with Guice
   val mockAuditConnector: AuditConnector = mock[AuditConnector]
 
   implicit val hc = new HeaderCarrier(sessionId = Some(SessionId(s"session-${UUID.randomUUID}")))
-  implicit val mcc = app.injector.instanceOf[MessagesControllerComponents]
+  implicit val mcc = stubMessagesControllerComponents()
   implicit val ec = app.injector.instanceOf[ExecutionContext]
-  implicit val messagesApi = app.injector.instanceOf[MessagesApi]
-  implicit val messagesProvider=MessagesImpl(Lang("en"), messagesApi)
+  implicit val messagesProvider=MessagesImpl(Lang("en"), mcc.messagesApi)
   implicit val ac=app.injector.instanceOf[ApplicationConfig]
   implicit val gmpSessionCache=app.injector.instanceOf[GmpSessionCache]
 
@@ -66,9 +66,9 @@ class BulkReferenceControllerSpec extends PlaySpec  with MockitoSugar with Guice
         "respond with ok" in {
           val result = TestBulkReferenceController.get(FakeRequest())
           status(result) must equal(OK)
-              contentAsString(result) must include(Messages("gmp.bulk_reference.header"))
-              contentAsString(result) must include(Messages("gmp.reference.calcname"))
-              contentAsString(result) must include(Messages("gmp.back.link"))
+              contentAsString(result) must include("gmp.bulk_reference.header")
+              contentAsString(result) must include("gmp.reference.calcname")
+              contentAsString(result) must include("gmp.back.link")
 
 
         }
@@ -87,7 +87,8 @@ class BulkReferenceControllerSpec extends PlaySpec  with MockitoSugar with Guice
 
           val result = TestBulkReferenceController.post()(FakeRequest().withJsonBody(Json.toJson(emptyRequest)))
           status(result) must equal(BAD_REQUEST)
-          contentAsString(result) must include(Messages("gmp.error.mandatory", Messages("gmp.reference")))
+         contentAsString(result) must include("Enter a")
+        contentAsString(result) must include("gmp.reference")
       }
 
       "throw an exception when can't cache email and reference" in {

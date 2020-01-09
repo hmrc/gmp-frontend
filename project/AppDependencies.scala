@@ -20,16 +20,26 @@ object AppDependencies {
     "com.typesafe.play" %% "play-iteratees"   % "2.6.1"
   )
 
-  val test: Seq[ModuleID] = Seq(
-    "uk.gov.hmrc"             %% "hmrctest"           % "3.9.0-play-26",
-    "org.scalatest"           %% "scalatest"          % "3.0.8",
-    "org.scalatestplus.play"  %% "scalatestplus-play" % "3.1.2",
-    "org.pegdown"             %  "pegdown"            % "1.6.0",
-    "org.jsoup"               %  "jsoup"              % "1.11.3",
-    "com.typesafe.play"       %% "play-test"          % PlayVersion.current,
-    "org.mockito"             %  "mockito-core"       % "1.9.5"
-  ).map(_ % "test")
+  trait TestDependencies {
+    lazy val scope: String = "test,it"
+    lazy val test: Seq[ModuleID] = ???
+  }
 
-  val all: Seq[ModuleID] = compile ++ test
+  object Tests {
+    def apply(): Seq[ModuleID] = new TestDependencies {
+      override lazy val test: Seq[ModuleID] = Seq(
+        "uk.gov.hmrc" %% "hmrctest" % "3.9.0-play-26",
+        "org.scalatest" %% "scalatest" % "3.0.8",
+        "org.scalatestplus.play" %% "scalatestplus-play" % "3.1.2",
+        "org.pegdown" % "pegdown" % "1.6.0",
+        "org.jsoup" % "jsoup" % "1.11.3",
+        "com.typesafe.play" %% "play-test" % PlayVersion.current,
+        "org.mockito" % "mockito-core" % "1.9.5",
+        "uk.gov.hmrc" %% "bootstrap-play-26" % "1.3.0" % Test classifier "tests"
+      )
+    }.test
+  }
+
+  val all: Seq[ModuleID] = compile ++ Tests()
 
 }
