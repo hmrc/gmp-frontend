@@ -58,7 +58,7 @@ class EqualiseControllerSpec extends PlaySpec with OneServerPerSuite with Mockit
     }
 
     "present the equalise page" in {
-      when(mockSessionService.fetchMemberDetails()(Matchers.any(), Matchers.any(),Matchers.any())).thenReturn(Future.successful(None))
+      when(mockSessionService.fetchMemberDetails()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(None))
 
         val result = TestEqualiseController.get(FakeRequest())
         contentAsString(result) must include(Messages("gmp.equalise_header"))
@@ -75,14 +75,14 @@ class EqualiseControllerSpec extends PlaySpec with OneServerPerSuite with Mockit
       val memberDetails = MemberDetails("", "", "")
       val session = GmpSession(memberDetails, "", CalculationType.REVALUATION, None, None, Leaving(GmpDate(None, None, None), None), None)
 
-        when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any(),Matchers.any())).thenReturn(Future.successful(Some(session)))
+        when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(session)))
         val result = TestEqualiseController.back(FakeRequest())
         status(result) must equal(SEE_OTHER)
     }
 
     "throw an exception when session not fetched" in {
 
-        when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(None))
+        when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(None))
         val result = TestEqualiseController.back(FakeRequest())
         intercept[RuntimeException] {
           status(result)
@@ -115,7 +115,7 @@ class EqualiseControllerSpec extends PlaySpec with OneServerPerSuite with Mockit
 
           "redirect" in {
 
-            when(mockSessionService.cacheEqualise(Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
+            when(mockSessionService.cacheEqualise(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
 
               val postData = Json.toJson(
                 Equalise(Some(1))
@@ -125,7 +125,7 @@ class EqualiseControllerSpec extends PlaySpec with OneServerPerSuite with Mockit
           }
 
           "respond with error when rate not stored" in {
-            when(mockSessionService.cacheEqualise(Matchers.any())(Matchers.any(), Matchers.any(),Matchers.any())).thenReturn(Future.successful(None))
+            when(mockSessionService.cacheEqualise(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(None))
               val postData = Json.toJson(
                 Equalise(Some(1))
               )

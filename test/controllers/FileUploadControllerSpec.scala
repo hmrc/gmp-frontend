@@ -111,21 +111,21 @@ class FileUploadControllerSpec extends PlaySpec with OneServerPerSuite with Mock
 
 
     "successfully store callback data in session cache" in {
-      when(mockSessionService.cacheCallBackData(Matchers.any())(Matchers.any(), Matchers.any(),Matchers.any())).thenReturn(Future.successful(Some(gmpBulkSession)))
+      when(mockSessionService.cacheCallBackData(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpBulkSession)))
       val result = TestFileUploadController.callback()(fakeRequest)
       status(result) must be(OK)
 
     }
 
     "throw exception when doesn't store callback data" in {
-      when(mockSessionService.cacheCallBackData(Matchers.any())(Matchers.any(), Matchers.any(),Matchers.any())).thenReturn(Future.successful(None))
+      when(mockSessionService.cacheCallBackData(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(None))
       intercept[RuntimeException]{
        await(TestFileUploadController.callback()(fakeRequest))
       }
     }
 
     "recover from failures more" in {
-      when(mockSessionService.cacheCallBackData(Matchers.any())(Matchers.any(), Matchers.any(),Matchers.any())).thenReturn(Future.failed(new RuntimeException))
+      when(mockSessionService.cacheCallBackData(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.failed(new RuntimeException))
       intercept[RuntimeException]{
         await(TestFileUploadController.callback()(fakeRequest))
       }
@@ -135,7 +135,7 @@ class FileUploadControllerSpec extends PlaySpec with OneServerPerSuite with Mock
       val callbackData = gmpBulkSession.callBackData.get.copy(sessionId = "")
 
       val fakeRequest = FakeRequest(method = "POST", uri = "", headers = FakeHeaders(Seq("Content-type" -> ("application/json"))), body = Json.toJson(callbackData))
-      when(mockSessionService.cacheCallBackData(Matchers.any())(Matchers.any(), Matchers.any(),Matchers.any())).thenReturn(Future.failed(new RuntimeException))
+      when(mockSessionService.cacheCallBackData(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.failed(new RuntimeException))
       intercept[RuntimeException]{
         await(TestFileUploadController.callback()(fakeRequest))
       }
@@ -145,7 +145,7 @@ class FileUploadControllerSpec extends PlaySpec with OneServerPerSuite with Mock
 
 
       val fakeRequest = FakeRequest(method = "POST", uri = "", headers = FakeHeaders(Seq("Content-type" -> ("application/json"))), body = Json.toJson(gmpBulkSession.callBackData))
-      when(mockSessionService.cacheCallBackData(Matchers.any())(Matchers.any(), Matchers.any(),Matchers.any())).thenReturn(Future.successful(Some(gmpBulkSession)))
+      when(mockSessionService.cacheCallBackData(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpBulkSession)))
       val result = TestFileUploadController.callback()(fakeRequest)
       status(result) must be(OK)
 

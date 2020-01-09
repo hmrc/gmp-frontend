@@ -57,14 +57,14 @@ class ScenarioControllerSpec extends PlaySpec with OneServerPerSuite with Mockit
   "ScenarioController GET" must {
 
     "respond with ok" in {
-      when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
+      when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
       val result = TestScenarioController.get(FakeRequest())
           status(result) must equal(OK)
           contentAsString(result) must include(Messages("gmp.scenarios.title"))
     }
 
     "return the correct scenarios" in {
-      when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
+      when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
       val result = TestScenarioController.get(FakeRequest())
           status(result) must equal(OK)
           contentAsString(result) must include(Messages("gmp.scenarios.payable_age"))
@@ -76,14 +76,14 @@ class ScenarioControllerSpec extends PlaySpec with OneServerPerSuite with Mockit
     }
 
     "go to failure page when session missing scon" in {
-      when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(emptySession)))
+      when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(emptySession)))
         val result = TestScenarioController.get(FakeRequest())
         contentAsString(result)replaceAll("&#x27;", "'") must include (Messages("gmp.cannot_calculate.gmp"))
         contentAsString(result) must include (Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/pension-details"))
     }
 
     "go to failure page when session missing member details" in {
-      when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(emptySession.copy(scon="S1234567T"))))
+      when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(emptySession.copy(scon="S1234567T"))))
 
         val result = TestScenarioController.get(FakeRequest())
         contentAsString(result)replaceAll("&#x27;", "'") must include (Messages("gmp.cannot_calculate.gmp"))
@@ -91,7 +91,7 @@ class ScenarioControllerSpec extends PlaySpec with OneServerPerSuite with Mockit
     }
 
     "go to failure page when no session" in {
-      when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(None))
+      when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(None))
 
         val result = TestScenarioController.get(FakeRequest())
         contentAsString(result)replaceAll("&#x27;", "'") must include (Messages("gmp.cannot_calculate.gmp"))
@@ -106,14 +106,14 @@ class ScenarioControllerSpec extends PlaySpec with OneServerPerSuite with Mockit
       val memberDetails = MemberDetails("", "", "")
       val session = GmpSession(memberDetails, "", "", None, None, Leaving(GmpDate(None, None, None), None), None)
 
-        when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(session)))
+        when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(session)))
         val result = TestScenarioController.back(FakeRequest())
         status(result) must equal(SEE_OTHER)
     }
 
     "throw an exception when session not fetched" in {
 
-        when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(None))
+        when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(None))
         val result = TestScenarioController.back(FakeRequest())
         intercept[RuntimeException] {
           status(result)
@@ -136,7 +136,7 @@ class ScenarioControllerSpec extends PlaySpec with OneServerPerSuite with Mockit
     "redirect when a choice is made" in {
       val gmpSession = GmpSession(MemberDetails("", "", ""), "", CalculationType.DOL, None, None, Leaving(GmpDate(None, None, None), None), None)
 
-      when(mockSessionService.cacheScenario(Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
+      when(mockSessionService.cacheScenario(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
 
       val validReason = Json.toJson(CalculationType(Some(CalculationType.DOL)))
 
@@ -145,7 +145,7 @@ class ScenarioControllerSpec extends PlaySpec with OneServerPerSuite with Mockit
     }
 
     "respond with exception when session cache fails" in {
-      when(mockSessionService.cacheScenario(Matchers.any())(Matchers.any(), Matchers.any(),Matchers.any())).thenReturn(Future.successful(None))
+      when(mockSessionService.cacheScenario(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(None))
       val validReason = Json.toJson(CalculationType(Some(CalculationType.DOL)))
         intercept[RuntimeException]{
           await(TestScenarioController.post()(FakeRequest().withJsonBody(validReason)))

@@ -27,7 +27,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class SessionService @Inject()(metrics: ApplicationMetrics){
+class SessionService @Inject()(metrics: ApplicationMetrics,gmpSessionCache: GmpSessionCache){
 
   val GMP_SESSION_KEY = "gmp_session"
   val cleanSession = GmpSession(MemberDetails("", "", ""), "", "", None, None, Leaving(GmpDate(None, None, None), None), None)
@@ -35,36 +35,35 @@ class SessionService @Inject()(metrics: ApplicationMetrics){
   val GMP_BULK_SESSION_KEY = "gmp_bulk_session"
   val cleanBulkSession = GmpBulkSession(None, None, None)
 
-  def fetchGmpBulkSession()(implicit request: Request[_], hc: HeaderCarrier ,gmpsessionCache: GmpSessionCache): Future[Option[GmpBulkSession]] = {
+  def fetchGmpBulkSession()(implicit request: Request[_], hc: HeaderCarrier): Future[Option[GmpBulkSession]] = {
 
     val timer = metrics.keystoreStoreTimer.time()
 
     Logger.debug(s"[SessionService][fetchGmpBulkSession]")
 
-    gmpsessionCache.fetchAndGetEntry[GmpBulkSession](GMP_BULK_SESSION_KEY) map (gmpBulkSession => {
+    gmpSessionCache.fetchAndGetEntry[GmpBulkSession](GMP_BULK_SESSION_KEY) map (gmpBulkSession => {
       timer.stop()
       gmpBulkSession
     })
   }
 
-  def resetGmpBulkSession()(implicit request: Request[_], hc: HeaderCarrier ,gmpsessionCache: GmpSessionCache): Future[Option[GmpBulkSession]] = {
+  def resetGmpBulkSession()(implicit request: Request[_], hc: HeaderCarrier ): Future[Option[GmpBulkSession]] = {
     val timer = metrics.keystoreStoreTimer.time()
 
     Logger.debug(s"[SessionService][fetchGmpBulkSession]")
 
-    gmpsessionCache.cache[GmpBulkSession](GMP_BULK_SESSION_KEY, cleanBulkSession) map (cacheMap => {
+    gmpSessionCache.cache[GmpBulkSession](GMP_BULK_SESSION_KEY, cleanBulkSession) map (cacheMap => {
       timer.stop()
       Some(cleanBulkSession)
     })
   }
 
-  def cacheCallBackData(_callBackData: Option[CallBackData])(implicit request: Request[_], hc: HeaderCarrier, gmpsessionCache: GmpSessionCache ): Future[Option[GmpBulkSession]] = {
+  def cacheCallBackData(_callBackData: Option[CallBackData])(implicit request: Request[_], hc: HeaderCarrier): Future[Option[GmpBulkSession]] = {
     val timer = metrics.keystoreStoreTimer.time()
-    //implicit val gmpsessionCache: GmpSessionCache=GuiceApplicationBuilder().injector().instanceOf[GmpSessionCache]
-    Logger.debug(s"[SessionService][cacheCallBackData] : ${_callBackData}")
+      Logger.debug(s"[SessionService][cacheCallBackData] : ${_callBackData}")
 
-    val result = gmpsessionCache.fetchAndGetEntry[GmpBulkSession](GMP_BULK_SESSION_KEY) flatMap { currentSession =>
-      gmpsessionCache.cache[GmpBulkSession](GMP_BULK_SESSION_KEY,
+    val result = gmpSessionCache.fetchAndGetEntry[GmpBulkSession](GMP_BULK_SESSION_KEY) flatMap { currentSession =>
+      gmpSessionCache.cache[GmpBulkSession](GMP_BULK_SESSION_KEY,
         currentSession match {
           case Some(returnedSession) => returnedSession.copy(callBackData = _callBackData)
           case None => cleanBulkSession.copy(callBackData = _callBackData)
@@ -78,13 +77,13 @@ class SessionService @Inject()(metrics: ApplicationMetrics){
     })
   }
 
-  def cacheEmailAndReference(_email: Option[String], _reference: Option[String])(implicit request: Request[_], hc: HeaderCarrier ,gmpsessionCache: GmpSessionCache): Future[Option[GmpBulkSession]] = {
+  def cacheEmailAndReference(_email: Option[String], _reference: Option[String])(implicit request: Request[_], hc: HeaderCarrier ): Future[Option[GmpBulkSession]] = {
     val timer = metrics.keystoreStoreTimer.time()
 
     Logger.debug(s"[SessionService][cacheEmailAndReferencea] : email: ${_email}; reference: ${_reference}")
 
-    val result = gmpsessionCache.fetchAndGetEntry[GmpBulkSession](GMP_BULK_SESSION_KEY) flatMap { currentSession =>
-      gmpsessionCache.cache[GmpBulkSession](GMP_BULK_SESSION_KEY,
+    val result = gmpSessionCache.fetchAndGetEntry[GmpBulkSession](GMP_BULK_SESSION_KEY) flatMap { currentSession =>
+      gmpSessionCache.cache[GmpBulkSession](GMP_BULK_SESSION_KEY,
         currentSession match {
           case Some(returnedSession) => returnedSession.copy(emailAddress = _email, reference = _reference)
           case None => cleanBulkSession.copy(emailAddress = _email, reference = _reference)
@@ -99,49 +98,49 @@ class SessionService @Inject()(metrics: ApplicationMetrics){
   }
 
 
-  def fetchGmpSession()(implicit request: Request[_], hc: HeaderCarrier ,gmpsessionCache: GmpSessionCache): Future[Option[GmpSession]] = {
+  def fetchGmpSession()(implicit request: Request[_], hc: HeaderCarrier ): Future[Option[GmpSession]] = {
     val timer = metrics.keystoreStoreTimer.time()
 
     Logger.debug(s"[SessionService][fetchGmpSession]")
 
-    gmpsessionCache.fetchAndGetEntry[GmpSession](GMP_SESSION_KEY) map (gmpSession => {
+    gmpSessionCache.fetchAndGetEntry[GmpSession](GMP_SESSION_KEY) map (gmpSession => {
       timer.stop()
       gmpSession
     })
   }
 
-  def resetGmpSession()(implicit request: Request[_], hc: HeaderCarrier ,gmpsessionCache: GmpSessionCache): Future[Option[GmpSession]] = {
+  def resetGmpSession()(implicit request: Request[_], hc: HeaderCarrier ): Future[Option[GmpSession]] = {
     val timer = metrics.keystoreStoreTimer.time()
 
     Logger.debug(s"[SessionService][fetchGmpSession]")
 
-    gmpsessionCache.cache[GmpSession](GMP_SESSION_KEY, cleanSession) map (cacheMap => {
+    gmpSessionCache.cache[GmpSession](GMP_SESSION_KEY, cleanSession) map (cacheMap => {
       timer.stop()
       Some(cleanSession)
     })
   }
 
-  def resetGmpSessionWithScon()(implicit request: Request[_], hc: HeaderCarrier ,gmpsessionCache: GmpSessionCache): Future[Option[GmpSession]] = {
+  def resetGmpSessionWithScon()(implicit request: Request[_], hc: HeaderCarrier ): Future[Option[GmpSession]] = {
     val timer = metrics.keystoreStoreTimer.time()
 
     Logger.debug(s"[SessionService][fetchGmpSessionWithScon]")
 
     fetchPensionDetails.flatMap { s =>
       val session = cleanSession.copy(scon = s.getOrElse(""))
-      gmpsessionCache.cache[GmpSession](GMP_SESSION_KEY, session) map (cacheMap => {
+      gmpSessionCache.cache[GmpSession](GMP_SESSION_KEY, session) map (cacheMap => {
         timer.stop()
         Some(session)
       })
     }
   }
 
-  def cacheMemberDetails(memberDetails: MemberDetails)(implicit request: Request[_], hc: HeaderCarrier ,gmpsessionCache: GmpSessionCache): Future[Option[GmpSession]] = {
+  def cacheMemberDetails(memberDetails: MemberDetails)(implicit request: Request[_], hc: HeaderCarrier ): Future[Option[GmpSession]] = {
     val timer = metrics.keystoreStoreTimer.time()
 
     Logger.debug(s"[SessionService][cacheMemberDetails] : $memberDetails")
 
-    val result = gmpsessionCache.fetchAndGetEntry[GmpSession](GMP_SESSION_KEY) flatMap { currentSession =>
-      gmpsessionCache.cache[GmpSession](GMP_SESSION_KEY,
+    val result = gmpSessionCache.fetchAndGetEntry[GmpSession](GMP_SESSION_KEY) flatMap { currentSession =>
+      gmpSessionCache.cache[GmpSession](GMP_SESSION_KEY,
         currentSession match {
           case Some(returnedSession) => returnedSession.copy(memberDetails = memberDetails)
           case None => cleanSession.copy(memberDetails = memberDetails)
@@ -155,12 +154,12 @@ class SessionService @Inject()(metrics: ApplicationMetrics){
     })
   }
 
-  def fetchMemberDetails()(implicit request: Request[_], hc: HeaderCarrier ,gmpsessionCache: GmpSessionCache): Future[Option[MemberDetails]] = {
+  def fetchMemberDetails()(implicit request: Request[_], hc: HeaderCarrier ): Future[Option[MemberDetails]] = {
     val timer = metrics.keystoreStoreTimer.time()
 
     Logger.debug(s"[SessionService][fetchMemberDetails]")
 
-    gmpsessionCache.fetchAndGetEntry[GmpSession](GMP_SESSION_KEY).map { currentSession =>
+    gmpSessionCache.fetchAndGetEntry[GmpSession](GMP_SESSION_KEY).map { currentSession =>
       currentSession.map {
         timer.stop()
         _.memberDetails
@@ -168,13 +167,13 @@ class SessionService @Inject()(metrics: ApplicationMetrics){
     }
   }
 
-  def cachePensionDetails(scon: String)(implicit request: Request[_], hc: HeaderCarrier ,gmpsessionCache: GmpSessionCache): Future[Option[GmpSession]] = {
+  def cachePensionDetails(scon: String)(implicit request: Request[_], hc: HeaderCarrier ): Future[Option[GmpSession]] = {
     val timer = metrics.keystoreStoreTimer.time()
 
     Logger.debug(s"[SessionService][cachePensionDetails] : $scon")
 
-    val result = gmpsessionCache.fetchAndGetEntry[GmpSession](GMP_SESSION_KEY) flatMap { currentSession =>
-      gmpsessionCache.cache[GmpSession](GMP_SESSION_KEY,
+    val result = gmpSessionCache.fetchAndGetEntry[GmpSession](GMP_SESSION_KEY) flatMap { currentSession =>
+      gmpSessionCache.cache[GmpSession](GMP_SESSION_KEY,
         currentSession match {
           case Some(returnedSession) => returnedSession.copy(scon = scon)
           case None => cleanSession.copy(scon = scon)
@@ -188,12 +187,12 @@ class SessionService @Inject()(metrics: ApplicationMetrics){
     })
   }
 
-  def fetchPensionDetails()(implicit request: Request[_], hc: HeaderCarrier ,gmpsessionCache: GmpSessionCache): Future[Option[String]] = {
+  def fetchPensionDetails()(implicit request: Request[_], hc: HeaderCarrier ): Future[Option[String]] = {
     val timer = metrics.keystoreStoreTimer.time()
 
     Logger.debug(s"[SessionService][fetchPensionDetails]")
 
-    gmpsessionCache.fetchAndGetEntry[GmpSession](GMP_SESSION_KEY).map { currentSession =>
+    gmpSessionCache.fetchAndGetEntry[GmpSession](GMP_SESSION_KEY).map { currentSession =>
       currentSession.map {
         timer.stop()
         _.scon
@@ -201,13 +200,13 @@ class SessionService @Inject()(metrics: ApplicationMetrics){
     }
   }
 
-  def cacheScenario(scenario: String)(implicit request: Request[_], hc: HeaderCarrier ,gmpsessionCache: GmpSessionCache): Future[Option[GmpSession]] = {
+  def cacheScenario(scenario: String)(implicit request: Request[_], hc: HeaderCarrier ): Future[Option[GmpSession]] = {
     val timer = metrics.keystoreStoreTimer.time()
 
     Logger.debug(s"[SessionService][cacheScenario] : $scenario")
 
-    val result = gmpsessionCache.fetchAndGetEntry[GmpSession](GMP_SESSION_KEY) flatMap { currentSession =>
-      gmpsessionCache.cache[GmpSession](GMP_SESSION_KEY,
+    val result = gmpSessionCache.fetchAndGetEntry[GmpSession](GMP_SESSION_KEY) flatMap { currentSession =>
+      gmpSessionCache.cache[GmpSession](GMP_SESSION_KEY,
         currentSession match {
           case Some(returnedSession) => returnedSession.copy(scenario = scenario, rate = None, revaluationDate = None)
           case None => cleanSession.copy(scenario = scenario)
@@ -221,12 +220,12 @@ class SessionService @Inject()(metrics: ApplicationMetrics){
     })
   }
 
-  def fetchScenario()(implicit request: Request[_], hc: HeaderCarrier ,gmpsessionCache: GmpSessionCache): Future[Option[String]] = {
+  def fetchScenario()(implicit request: Request[_], hc: HeaderCarrier ): Future[Option[String]] = {
     val timer = metrics.keystoreStoreTimer.time()
 
     Logger.debug(s"[SessionService][fetchScenario]")
 
-    gmpsessionCache.fetchAndGetEntry[GmpSession](GMP_SESSION_KEY).map { currentSession =>
+    gmpSessionCache.fetchAndGetEntry[GmpSession](GMP_SESSION_KEY).map { currentSession =>
       currentSession.map {
         timer.stop()
         _.scenario
@@ -234,13 +233,13 @@ class SessionService @Inject()(metrics: ApplicationMetrics){
     }
   }
 
-  def cacheEqualise(_equalise: Option[Int])(implicit request: Request[_], hc: HeaderCarrier ,gmpsessionCache: GmpSessionCache): Future[Option[GmpSession]] = {
+  def cacheEqualise(_equalise: Option[Int])(implicit request: Request[_], hc: HeaderCarrier ): Future[Option[GmpSession]] = {
     val timer = metrics.keystoreStoreTimer.time()
 
     Logger.debug(s"[SessionService][cacheEqualise] : ${_equalise}")
 
-    val result = gmpsessionCache.fetchAndGetEntry[GmpSession](GMP_SESSION_KEY) flatMap { currentSession =>
-      gmpsessionCache.cache[GmpSession](GMP_SESSION_KEY,
+    val result = gmpSessionCache.fetchAndGetEntry[GmpSession](GMP_SESSION_KEY) flatMap { currentSession =>
+      gmpSessionCache.cache[GmpSession](GMP_SESSION_KEY,
         currentSession match {
           case Some(returnedSession) => returnedSession.copy(equalise = _equalise)
           case None => cleanSession.copy(equalise = _equalise)
@@ -254,13 +253,13 @@ class SessionService @Inject()(metrics: ApplicationMetrics){
     })
   }
 
-  def cacheRevaluationDate(date: Option[GmpDate])(implicit request: Request[_], hc: HeaderCarrier ,gmpsessionCache: GmpSessionCache): Future[Option[GmpSession]] = {
+  def cacheRevaluationDate(date: Option[GmpDate])(implicit request: Request[_], hc: HeaderCarrier): Future[Option[GmpSession]] = {
     val timer = metrics.keystoreStoreTimer.time()
 
     Logger.debug(s"[SessionService][cacheRevaluationDate] : $date")
 
-    val result = gmpsessionCache.fetchAndGetEntry[GmpSession](GMP_SESSION_KEY) flatMap { currentSession =>
-      gmpsessionCache.cache[GmpSession](GMP_SESSION_KEY,
+    val result = gmpSessionCache.fetchAndGetEntry[GmpSession](GMP_SESSION_KEY) flatMap { currentSession =>
+      gmpSessionCache.cache[GmpSession](GMP_SESSION_KEY,
         currentSession match {
           case Some(returnedSession) => {
             (returnedSession.scenario, returnedSession.leaving.leaving) match {
@@ -280,13 +279,13 @@ class SessionService @Inject()(metrics: ApplicationMetrics){
     })
   }
 
-  def cacheLeaving(leaving: Leaving)(implicit request: Request[_], hc: HeaderCarrier ,gmpsessionCache: GmpSessionCache): Future[Option[GmpSession]] = {
+  def cacheLeaving(leaving: Leaving)(implicit request: Request[_], hc: HeaderCarrier ): Future[Option[GmpSession]] = {
     val timer = metrics.keystoreStoreTimer.time()
 
     Logger.debug(s"[SessionService][cacheLeaving] : $leaving")
 
-    val result = gmpsessionCache.fetchAndGetEntry[GmpSession](GMP_SESSION_KEY) flatMap { currentSession =>
-      gmpsessionCache.cache[GmpSession](GMP_SESSION_KEY,
+    val result = gmpSessionCache.fetchAndGetEntry[GmpSession](GMP_SESSION_KEY) flatMap { currentSession =>
+      gmpSessionCache.cache[GmpSession](GMP_SESSION_KEY,
         currentSession match {
           case Some(returnedSession) => returnedSession.copy(leaving = leaving)
           case None => cleanSession.copy(leaving = leaving)
@@ -300,12 +299,12 @@ class SessionService @Inject()(metrics: ApplicationMetrics){
     })
   }
 
-  def fetchLeaving()(implicit request: Request[_], hc: HeaderCarrier ,gmpsessionCache: GmpSessionCache): Future[Option[Leaving]] = {
+  def fetchLeaving()(implicit request: Request[_], hc: HeaderCarrier ): Future[Option[Leaving]] = {
     val timer = metrics.keystoreStoreTimer.time()
 
     Logger.debug(s"[SessionService][fetchLeaving]")
 
-    gmpsessionCache.fetchAndGetEntry[GmpSession](GMP_SESSION_KEY).map { currentSession =>
+    gmpSessionCache.fetchAndGetEntry[GmpSession](GMP_SESSION_KEY).map { currentSession =>
       currentSession.map {
         timer.stop()
         _.leaving
@@ -313,13 +312,13 @@ class SessionService @Inject()(metrics: ApplicationMetrics){
     }
   }
 
-  def cacheRevaluationRate(rate: String)(implicit request: Request[_], hc: HeaderCarrier ,gmpsessionCache: GmpSessionCache): Future[Option[GmpSession]] = {
+  def cacheRevaluationRate(rate: String)(implicit request: Request[_], hc: HeaderCarrier ): Future[Option[GmpSession]] = {
     val timer = metrics.keystoreStoreTimer.time()
 
     Logger.debug(s"[SessionService][cacheRevaluationRate] : $rate")
 
-    val result = gmpsessionCache.fetchAndGetEntry[GmpSession](GMP_SESSION_KEY) flatMap { currentSession =>
-      gmpsessionCache.cache[GmpSession](GMP_SESSION_KEY,
+    val result = gmpSessionCache.fetchAndGetEntry[GmpSession](GMP_SESSION_KEY) flatMap { currentSession =>
+      gmpSessionCache.cache[GmpSession](GMP_SESSION_KEY,
         currentSession match {
           case Some(returnedSession) => returnedSession.copy(rate = Some(rate))
           case None => cleanSession.copy(rate = Some(rate))

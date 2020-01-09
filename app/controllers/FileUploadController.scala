@@ -64,8 +64,7 @@ class FileUploadController @Inject()(authAction: AuthAction,
         callBackData.sessionId match {
           case sid:String if !sid.isEmpty => hc.copy(sessionId = Some(SessionId(sid)))
           case _ => hc
-        },
-      gmpSessionCache)
+        })
       result.map {
         case callback: Option[GmpBulkSession] if callback.isDefined => Ok
         case _ => throw new RuntimeException
