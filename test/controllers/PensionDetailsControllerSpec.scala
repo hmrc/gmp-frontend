@@ -103,7 +103,7 @@ class PensionDetailsControllerSpec extends PlaySpec with GuiceOneServerPerSuite 
       "respond with bad request missing SCON" in {
           val result = TestPensionDetailsController.post()(FakeRequest().withJsonBody(Json.toJson(emptySconGmpRequest)))
           status(result) must equal(BAD_REQUEST)
-          contentAsString(result) must include(Messages("gmp.error.mandatory.new", Messages("gmp.scon")))
+          contentAsString(result) must include(Messages("Enter a Scheme Contracted Out Number in the correct format", Messages("gmp.scon")))
       }
 
       "respond with bad request when scon not validated" in {

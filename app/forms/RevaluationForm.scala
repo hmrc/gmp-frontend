@@ -17,6 +17,7 @@
 package forms
 
 import com.google.inject.Singleton
+import javax.inject.Inject
 import models.{GmpDate, Leaving, RevaluationDate}
 import play.api.Play
 import play.api.data.Form
@@ -26,13 +27,8 @@ import play.api.i18n.{Messages, MessagesApi, MessagesImpl}
 import play.api.mvc.MessagesControllerComponents
 
 @Singleton
-class BaseRevaluationForm {
-
-  val messagesControllerComponents = Play.current.injector.instanceOf[MessagesControllerComponents]
-  val messagesApi =  Play.current.injector.instanceOf[MessagesApi]
-
-  implicit lazy val messages: Messages = MessagesImpl(messagesControllerComponents.langs.availables.head, messagesApi)
-
+class RevaluationForm @Inject()(mcc: MessagesControllerComponents) {
+  implicit lazy val messages: Messages = MessagesImpl(mcc.langs.availables.head, mcc.messagesApi)
 
   val YEAR_FIELD_LENGTH: Int = 4
 
@@ -97,5 +93,3 @@ class BaseRevaluationForm {
       .verifying(revaluationDateConstraint)
   )
 }
-
-case object RevaluationForm extends BaseRevaluationForm

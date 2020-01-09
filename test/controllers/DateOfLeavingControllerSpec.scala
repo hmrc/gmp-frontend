@@ -67,10 +67,10 @@ class DateOfLeavingControllerSpec extends PlaySpec with GuiceOneServerPerSuite w
         val result = TestDateOfLeavingController.get(FakeRequest())
             when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(session)))
             status(result) must equal(OK)
-            contentAsString(result) must include("Did the member leave the scheme before 6 April 2016?\n - Guaranteed Minimum Pension - GOV.UK")
-            contentAsString(result) must include(Messages("gmp.date.header_text"))
-            contentAsString(result) must include(Messages("gmp.date.example"))
-            contentAsString(result) must include(Messages("gmp.back.link"))
+            contentAsString(result) must include("gmp.leaving.dol.question")
+            contentAsString(result) must include("gmp.date.header_text")
+            contentAsString(result) must include("gmp.date.example")
+            contentAsString(result) must include("gmp.back.link")
 
       }
 
@@ -241,7 +241,7 @@ class DateOfLeavingControllerSpec extends PlaySpec with GuiceOneServerPerSuite w
             )
             when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
             val result = TestDateOfLeavingController.post(FakeRequest().withJsonBody(postData))
-            contentAsString(result) must include(Messages("gmp.error.date.leaving.invalid"))
+            contentAsString(result) must include("Enter a real leaving date")
         }
 
         "throw an exception when session not fetched" in {

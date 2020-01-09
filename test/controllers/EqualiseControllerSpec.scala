@@ -106,7 +106,7 @@ class EqualiseControllerSpec extends PlaySpec with GuiceOneServerPerSuite with M
                 val result = TestEqualiseController.post()(FakeRequest())
 
                 status(result) must equal(BAD_REQUEST)
-                contentAsString(result) must include(Messages("gmp.error.equalise.error_message"))
+                contentAsString(result) must include(Messages("Select yes if you want an opposite gender calculation"))
           }
         }
 

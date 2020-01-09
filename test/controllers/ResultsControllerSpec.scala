@@ -256,7 +256,7 @@ class ResultsControllerSpec extends PlaySpec with GuiceOneServerPerSuite with Mo
             val result = TestResultsController.get(FakeRequest())
             status(result) must equal(OK)
             contentAsString(result) must include(Messages("gmp.button.request-another"))
-            contentAsString(result) must include(Messages("gmp.back.link"))
+            contentAsString(result) must include(Messages("Back"))
         }
 
         "load the results page without revalrate when dol" in {
@@ -264,14 +264,14 @@ class ResultsControllerSpec extends PlaySpec with GuiceOneServerPerSuite with Mo
           when(mockCalculationConnector.calculateSingle(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful(validCalculationResponse))
             val result = TestResultsController.get(FakeRequest())
             contentAsString(result) must not include (Messages("gmp.revaluation.rate"))
-            contentAsString(result) must include(Messages("gmp.leaving.scheme.header", formatDate(validCalculationResponse.leavingDate)))
+            contentAsString(result) must include(Messages("GMP value at {0}", formatDate(validCalculationResponse.leavingDate)))
         }
 
         "load the results page when revaluation date has been wiped" in {
           when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
           when(mockCalculationConnector.calculateSingle(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful(validCalculationResponse))
             val result = TestResultsController.get(FakeRequest())
-            contentAsString(result) must include(Messages("gmp.back.link"))
+            contentAsString(result) must include(Messages("Back"))
         }
 
         "load the results page when revaluation date exists with revaluation S148" in {
@@ -292,7 +292,7 @@ class ResultsControllerSpec extends PlaySpec with GuiceOneServerPerSuite with Mo
           when(mockCalculationConnector.calculateSingle(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful(validRevaluationMultipleSameTaxYear))
             val result = TestResultsController.get(FakeRequest())
             contentAsString(result) must not include (Messages("gmp.notrevalued.subheader"))
-            contentAsString(result) must include(Messages("gmp.leaving.revalued.header", "24 August 2016", "HMRC held"))
+            contentAsString(result) must include(Messages("GMP revalued to {0}", "24 August 2016", "HMRC held"))
             contentAsString(result) must include(Messages("--"))
         }
 
