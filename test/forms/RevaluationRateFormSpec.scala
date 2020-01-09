@@ -20,9 +20,13 @@ import forms.RevaluationRateForm._
 import models.RevaluationRate
 import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
+import play.api.i18n.{Lang, MessagesApi, MessagesImpl, MessagesProvider}
 import play.api.libs.json.Json
 
 class RevaluationRateFormSpec extends PlaySpec with OneAppPerSuite with MockitoSugar {
+  implicit val messagesAPI=app.injector.instanceOf[MessagesApi]
+  implicit val messagesProvider=MessagesImpl(Lang("en"), messagesAPI)
+
   "Revaluation Rate Form" must {
     "return no errors when valid values are entered" in {
 

@@ -17,6 +17,7 @@
 package controllers
 
 import com.google.inject.Singleton
+import config.ApplicationConfig
 import controllers.auth.{AuthAction, FakeAuthAction, UUIDGenerator}
 import org.mockito.ArgumentCaptor
 import org.mockito.Matchers._
@@ -25,13 +26,15 @@ import org.scalatest.BeforeAndAfterEach
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
-import play.api.i18n.Messages
-import play.api.i18n.Messages.Implicits._
+import play.api.mvc.MessagesControllerComponents
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import services.SessionService
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.audit.model.DataEvent
+
+import scala.concurrent.ExecutionContext
 
 @Singleton
 class ApplicationControllerSpec extends PlaySpec
@@ -45,9 +48,14 @@ class ApplicationControllerSpec extends PlaySpec
   val mockAuditConnector: AuditConnector = mock[AuditConnector]
   val mockUUIDGenerator: UUIDGenerator = mock[UUIDGenerator]
   val mockAuthAction: AuthAction = mock[AuthAction]
+    implicit val mcc = app.injector.instanceOf[MessagesControllerComponents]
+    implicit val ec = app.injector.instanceOf[ExecutionContext]
+     implicit val ac=app.injector.instanceOf[ApplicationConfig]
+    implicit val ss=app.injector.instanceOf[SessionService]
 
-  object TestController extends ApplicationController(FakeAuthAction, mockAuditConnector, mockAuthConnector, mockUUIDGenerator) {
-    override val context = FakeGmpContext
+    object TestController extends ApplicationController(FakeAuthAction, mockAuditConnector, mockAuthConnector, mockUUIDGenerator,
+                      ss,FakeGmpContext,mcc,ec,ac) {
+
   }
 
   override def beforeEach(): Unit = {
@@ -64,10 +72,6 @@ class ApplicationControllerSpec extends PlaySpec
         status(result) must be(OK)
       }
 
-      "have a title of Unauthorised" in {
-        val result = TestController.unauthorised(FakeRequest())
-        contentAsString(result) must include(Messages("gmp.unauthorised.message"))
-      }
 
       "have some text on the page" in {
         val result = TestController.unauthorised(FakeRequest())

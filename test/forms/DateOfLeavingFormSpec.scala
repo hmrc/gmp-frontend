@@ -22,11 +22,14 @@ import org.joda.time.{DateTime, DateTimeUtils}
 import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.data.FormError
-import play.api.i18n.Messages
-import play.api.i18n.Messages.Implicits._
+import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl}
 import play.api.libs.json.Json
 
 class DateOfLeavingFormSpec extends PlaySpec with OneAppPerSuite with MockitoSugar{
+
+  implicit val messagesAPI=app.injector.instanceOf[MessagesApi]
+  implicit val messagesProvider=MessagesImpl(Lang("en"), messagesAPI)
+
   DateTimeUtils.setCurrentMillisFixed(new DateTime(2016,1,1,1,1).toDate.getTime)
   val leavingDate = GmpDate(Some("06"), Some("04"), Some("2016"))
 

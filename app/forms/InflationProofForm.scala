@@ -16,14 +16,21 @@
 
 package forms
 
+import com.google.inject.Singleton
 import models.{GmpDate, InflationProof}
-import play.api.Play.current
+import play.api.Play
 import play.api.data.Form
 import play.api.data.Forms._
-import play.api.i18n.Messages
-import play.api.i18n.Messages.Implicits._
+import play.api.i18n.{Messages, MessagesApi, MessagesImpl}
+import play.api.mvc.MessagesControllerComponents
+@Singleton
+class BaseInflationProofForm  {
 
-object InflationProofForm {
+  val messagesControllerComponents = Play.current.injector.instanceOf[MessagesControllerComponents]
+  val messagesApi =  Play.current.injector.instanceOf[MessagesApi]
+
+  implicit lazy val messages: Messages = MessagesImpl(messagesControllerComponents.langs.availables.head, messagesApi)
+
 
   val YEAR_FIELD_LENGTH: Int = 4
 
@@ -41,17 +48,19 @@ object InflationProofForm {
         "month" -> optional(text),
         "year" -> optional(text)
       )(GmpDate.apply)(GmpDate.unapply)
-        .verifying(Messages("gmp.error.date.nonnumber"), x => checkForNumber(x.day) && checkForNumber(x.month) && checkForNumber(x.year))
-        .verifying(Messages("gmp.error.day.invalid"), x => checkDayRange(x.day))
-        .verifying(Messages("gmp.error.month.invalid"), x => checkMonthRange(x.month))
-        .verifying(Messages("gmp.error.year.invalid.format"), x => checkYearLength(x.year))
+        .verifying(messages("gmp.error.date.nonnumber"), x => checkForNumber(x.day) && checkForNumber(x.month) && checkForNumber(x.year))
+        .verifying(messages("gmp.error.day.invalid"), x => checkDayRange(x.day))
+        .verifying(messages("gmp.error.month.invalid"), x => checkMonthRange(x.month))
+        .verifying(messages("gmp.error.year.invalid.format"), x => checkYearLength(x.year))
       ,
-      "revaluate" -> optional(text).verifying(Messages("gmp.error.reason.mandatory"),{_.isDefined})
+      "revaluate" -> optional(text).verifying(messages("gmp.error.reason.mandatory"),{_.isDefined})
     )(InflationProof.apply)(InflationProof.unapply)
-      .verifying(Messages("gmp.error.reval_date.mandatory"), x => dateMustBePresentIfRevaluationWanted(x))
-      .verifying(Messages("gmp.error.date.invalid"), x => checkValidDate(x.revaluationDate))
-      .verifying(Messages("gmp.error.reval_date.from"), x => checkDateOnOrAfterGMPStart(x.revaluationDate))
-      .verifying(Messages("gmp.error.reval_date.to"), x => checkDateOnOBeforeGMPEnd(x.revaluationDate))
+      .verifying(messages("gmp.error.reval_date.mandatory"), x => dateMustBePresentIfRevaluationWanted(x))
+      .verifying(messages("gmp.error.date.invalid"), x => checkValidDate(x.revaluationDate))
+      .verifying(messages("gmp.error.reval_date.from"), x => checkDateOnOrAfterGMPStart(x.revaluationDate))
+      .verifying(messages("gmp.error.reval_date.to"), x => checkDateOnOBeforeGMPEnd(x.revaluationDate))
   )
 
 }
+
+object InflationProofForm extends BaseInflationProofForm

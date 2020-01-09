@@ -16,14 +16,22 @@
 
 package forms
 
+import com.google.inject.Singleton
 import models.{GmpDate, Leaving}
-import play.api.Play.current
+import play.api.Play
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.data.validation.{Constraint, Invalid, Valid, ValidationError}
-import play.api.i18n.Messages
-import play.api.i18n.Messages.Implicits._
-object DateOfLeavingForm {
+import play.api.i18n.{Messages, MessagesApi, MessagesImpl}
+import play.api.mvc.MessagesControllerComponents
+@Singleton
+class BaseDateOfLeavingForm  {
+
+  val messagesControllerComponents = Play.current.injector.instanceOf[MessagesControllerComponents]
+  val messagesApi =  Play.current.injector.instanceOf[MessagesApi]
+
+  implicit lazy val messages: Messages = MessagesImpl(messagesControllerComponents.langs.availables.head, messagesApi)
+
 
   val YEAR_FIELD_LENGTH: Int = 4
 
@@ -39,15 +47,15 @@ object DateOfLeavingForm {
     leaving => {
       val errors =
         if (!dateMustBePresentIfHaveDateOfLeavingAfterApril2016(leaving)) {
-          Seq(ValidationError(Messages("gmp.error.leaving_date.mandatory"), "leavingDate"))
+          Seq(ValidationError(messages("gmp.error.leaving_date.mandatory"), "leavingDate"))
         } else if (!checkValidDate(leaving.leavingDate)) {
-          Seq(ValidationError(Messages("gmp.error.date.leaving.invalid"), "leavingDate"))
+          Seq(ValidationError(messages("gmp.error.date.leaving.invalid"), "leavingDate"))
         }
         else if (leaving.leaving.isDefined && leaving.leaving.get.equals(Leaving.YES_AFTER) && !leaving.leavingDate.isOnOrAfter06042016) {
-          Seq(ValidationError(Messages("gmp.error.leaving_on_or_after.too_low"), "leavingDate"))
+          Seq(ValidationError(messages("gmp.error.leaving_on_or_after.too_low"), "leavingDate"))
         }
         else if (leaving.leaving.isDefined && leaving.leaving.get.equals(Leaving.YES_AFTER) && !leaving.leavingDate.isBefore05042046) {
-          Seq(ValidationError(Messages("gmp.error.leaving_on_or_after.too_high"), "leavingDate"))
+          Seq(ValidationError(messages("gmp.error.leaving_on_or_after.too_high"), "leavingDate"))
         }
         else {
           Nil
@@ -73,7 +81,7 @@ object DateOfLeavingForm {
 //        .verifying(Messages("gmp.error.month.invalid"), x => checkMonthRange(x.month))
 //        .verifying(Messages("gmp.error.year.invalid.format"), x => checkYearLength(x.year))
       ,
-      "leaving" -> optional(text).verifying(Messages("gmp.error.reason.mandatory"), {
+      "leaving" -> optional(text).verifying(messages("gmp.error.reason.mandatory"), {
         _.isDefined
       })
     )(Leaving.apply)(Leaving.unapply)
@@ -81,3 +89,5 @@ object DateOfLeavingForm {
   )
 
 }
+
+object DateOfLeavingForm extends BaseDateOfLeavingForm

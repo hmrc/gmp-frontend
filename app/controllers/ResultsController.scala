@@ -17,7 +17,7 @@
 package controllers
 
 import com.google.inject.{Inject, Singleton}
-import config.{GmpContext}
+import config.{ApplicationConfig, GmpContext, GmpSessionCache}
 import connectors.GmpConnector
 import controllers.auth.AuthAction
 import events.ContributionsAndEarningsEvent
@@ -25,27 +25,30 @@ import metrics.ApplicationMetrics
 import models._
 import org.joda.time.LocalDate
 import play.api.Logger
-import play.api.Play.current
 import play.api.i18n.Messages
-import play.api.i18n.Messages.Implicits._
-import play.api.mvc.Request
+import play.api.mvc.{MessagesControllerComponents, Request}
 import play.twirl.api.HtmlFormat
 import services.SessionService
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class ResultsController @Inject()(authAction: AuthAction,
                                   override val authConnector: AuthConnector,
-                                  sessionService: SessionService,
+                                  sessionService: SessionService,implicit override val context: GmpContext,
                                   calculationConnector: GmpConnector,
                                   auditConnector: AuditConnector,
-                                  metrics: ApplicationMetrics) extends GmpPageFlow(authConnector) {
+                                  metrics: ApplicationMetrics,ac:ApplicationConfig,
+                                  override val messagesControllerComponents: MessagesControllerComponents,
+                                  implicit val executionContext: ExecutionContext,
+                                  implicit val gmpSessionCache: GmpSessionCache) extends GmpPageFlow(authConnector,sessionService,context,messagesControllerComponents,ac) {
+
+
 
    def resultsView(response: CalculationResponse, revalRateSubheader: Option[String], survivorSubheader: Option[String])(implicit request: Request[_], context: GmpContext): HtmlFormat.Appendable = {
-    views.html.results(applicationConfig = config.ApplicationConfig, response, revalRateSubheader, survivorSubheader)
+    views.html.results(response, revalRateSubheader,survivorSubheader)
   }
 
   def get = authAction.async {

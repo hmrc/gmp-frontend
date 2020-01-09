@@ -16,23 +16,30 @@
 
 package controllers.auth
 
-import com.google.inject.{ImplementedBy, Inject}
-import play.api.Mode.Mode
+import com.google.inject.{ImplementedBy, Inject, Singleton}
+import play.api.Mode
 import play.api.mvc._
 import play.api.{Configuration, Environment}
 import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.HeaderCarrierConverter
+import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
-import uk.gov.hmrc.play.config.ServicesConfig
 
 import scala.concurrent.{ExecutionContext, Future}
 
 case class AuthenticatedRequest[A](linkId: String, request:Request[A]) extends WrappedRequest[A](request)
 
-class AuthActionImpl @Inject()(val authConnector: AuthConnector, configuration: Configuration)
-                              (implicit ec: ExecutionContext) extends AuthAction with AuthorisedFunctions {
+@Singleton
+class AuthAction @Inject()(override val authConnector: AuthConnector, configuration: Configuration,
+                           messagesControllerComponents: MessagesControllerComponents)
+                              (implicit ec: ExecutionContext) extends ActionBuilder[AuthenticatedRequest, AnyContent]
+                          with AuthorisedFunctions{
+
+  override val parser: BodyParser[AnyContent] = messagesControllerComponents.parsers.defaultBodyParser
+  override protected val executionContext: ExecutionContext = messagesControllerComponents.executionContext
+
 
   override def invokeBlock[A](request: Request[A], block: AuthenticatedRequest[A] => Future[Result]): Future[Result] = {
 
@@ -63,16 +70,14 @@ class AuthActionImpl @Inject()(val authConnector: AuthConnector, configuration: 
   }
 }
 
-@ImplementedBy(classOf[AuthActionImpl])
-trait AuthAction extends ActionBuilder[AuthenticatedRequest] with ActionFunction[Request, AuthenticatedRequest]
 
-
+@Singleton
 class GmpAuthConnector @Inject()(val http: HttpClient,
                                  environment: Environment,
-                                 val runModeConfiguration: Configuration
-                                ) extends PlayAuthConnector with ServicesConfig {
+                                 val runModeConfiguration: Configuration,
+                                servicesConfig: ServicesConfig) extends PlayAuthConnector {
 
-  val serviceUrl: String = baseUrl("auth")
+  val serviceUrl: String = servicesConfig.baseUrl("auth")
 
-  override protected def mode: Mode = environment.mode
+  protected def mode: Mode = environment.mode
 }

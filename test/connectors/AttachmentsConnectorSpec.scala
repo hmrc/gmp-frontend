@@ -18,19 +18,19 @@ package connectors
 
 import java.util.UUID
 
-import com.google.inject.Inject
 import org.mockito.Matchers
-import org.mockito.Mockito._
+import org.mockito.Matchers.any
+import org.mockito.Mockito.{when, _}
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.http.HeaderNames
+import play.api.i18n.{Messages, MessagesApi, MessagesImpl}
+import play.api.mvc.MessagesControllerComponents
 import play.api.test.FakeRequest
-import org.mockito.Mockito.when
-import org.mockito.Matchers.any
-import uk.gov.hmrc.crypto.{ApplicationCrypto, Crypted, Decrypter, Encrypter, PlainText}
+import uk.gov.hmrc.crypto.{Crypted, Decrypter, Encrypter, PlainText}
 import uk.gov.hmrc.http.logging.RequestId
-import uk.gov.hmrc.http.{HeaderCarrier, HttpGet, HttpResponse}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import uk.gov.hmrc.play.bootstrap.filters.frontend.crypto.SessionCookieCrypto
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
 import uk.gov.hmrc.play.partials.HeaderCarrierForPartials
@@ -44,6 +44,11 @@ class AttachmentsConnectorSpec extends PlaySpec with OneAppPerSuite with Mockito
   val mockHttp = mock[HttpClient]
   val uploadConfig = app.injector.instanceOf[UploadConfig]
   val encrypter = mock[Encrypter with Decrypter]
+
+  implicit val messagesControllerComponents = app.injector.instanceOf[MessagesControllerComponents].langs.availables.head
+  implicit val messagesApi =  app.injector.instanceOf[MessagesApi]
+  implicit lazy val messages: Messages = MessagesImpl(messagesControllerComponents, messagesApi)
+
   when(encrypter.encrypt(any[PlainText])).thenReturn(Crypted("foo"))
   val sessionCookieCrypto = mock[SessionCookieCrypto]
   when(sessionCookieCrypto.crypto).thenReturn(encrypter)
@@ -86,42 +91,19 @@ class AttachmentsConnectorSpec extends PlaySpec with OneAppPerSuite with Mockito
 
 
     "have the collection" in {
-      val config = uploadConfig(request)
+      val config = uploadConfig(request,messages)
       config must include("collection=gmp")
     }
 
     "have a the attachments service url" in {
-      val config = uploadConfig(request)
+      val config = uploadConfig(request,messages)
       config must include("http://localhost:8895/attachments-internal/uploader")
     }
 
-//    "have a success url parameter" in {
-//      config must include("onSuccess=http%3A%2F%2Ftest.com%2Fguaranteed-minimum-pension%2Ffile-upload%2Femail-and-reference")
-//    }
-//
-//    "have a failure url parameter" in {
-//      config must include("onFailure=http%3A%2F%2Ftest.com%2Fguaranteed-minimum-pension%2Ffile-upload%2Ffailure")
-//    }
-//
-//    "have a callback url parameter" in {
-//      config must include("callbackUrl=http%3A%2F%2Ftest.com%2Fguaranteed-minimum-pension%2Ffile-upload%2Fcallback")
-//    }
-
     "accept .csv" in {
-      val config = uploadConfig(request)
+      val config = uploadConfig(request,messages)
       config must include("accepts=.csv")
     }
-
-//    "returns the correct url with parameters" in {
-//      config must be(
-//        "http://localhost:8895/attachments-internal/uploader?" +
-//          "callbackUrl=http%3A%2F%2Ftest.com%2Fguaranteed-minimum-pension%2Ffile-upload%2Fcallback" +
-//          "&onSuccess=http%3A%2F%2Ftest.com%2Fguaranteed-minimum-pension%2Ffile-upload%2Femail-and-reference" +
-//          "&onFailure=http%3A%2F%2Ftest.com%2Fguaranteed-minimum-pension%2Ffile-upload%2Ffailure" +
-//          "&accepts=.csv" +
-//          "&collection=gmp"
-//      )
-//    }
 
   }
 

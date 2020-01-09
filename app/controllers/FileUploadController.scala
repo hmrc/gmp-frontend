@@ -17,22 +17,26 @@
 package controllers
 
 import com.google.inject.{Inject, Singleton}
+import config.{ApplicationConfig, GmpContext, GmpSessionCache}
 import connectors.AttachmentsConnector
 import controllers.auth.AuthAction
 import models.{CallBackData, GmpBulkSession}
-import play.api.Play.current
 import play.api.i18n.Messages
-import play.api.i18n.Messages.Implicits._
-import play.api.mvc.Action
+import play.api.mvc.MessagesControllerComponents
 import services.SessionService
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.http.logging.SessionId
 
+import scala.concurrent.ExecutionContext
+
 @Singleton
 class FileUploadController @Inject()(authAction: AuthAction,
                                      val authConnector: AuthConnector,
-                                     sessionService: SessionService,
-                                     attachmentsConnector: AttachmentsConnector) extends GmpController {
+                                     sessionService: SessionService,implicit val config:GmpContext,
+                                     attachmentsConnector: AttachmentsConnector,
+                                     messagesControllerComponents: MessagesControllerComponents,ac:ApplicationConfig,
+                                     implicit val executionContext: ExecutionContext,implicit val gmpSessionCache: GmpSessionCache) extends GmpController(messagesControllerComponents,ac,sessionService,config) {
+
 
   def get = authAction.async {
       implicit request =>
@@ -60,8 +64,7 @@ class FileUploadController @Inject()(authAction: AuthAction,
         callBackData.sessionId match {
           case sid:String if !sid.isEmpty => hc.copy(sessionId = Some(SessionId(sid)))
           case _ => hc
-        }
-      )
+        })
       result.map {
         case callback: Option[GmpBulkSession] if callback.isDefined => Ok
         case _ => throw new RuntimeException

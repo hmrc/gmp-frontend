@@ -16,40 +16,35 @@
 
 package config
 
+import com.google.inject.{Inject, Singleton}
 import com.typesafe.config.ConfigFactory
 import play.api.Mode.Mode
-import play.api.Play._
-import play.api.{Configuration, Play}
-import uk.gov.hmrc.play.config.ServicesConfig
+import play.api.{Configuration, Environment, Play}
+import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
-trait ApplicationConfig {
+@Singleton
+class ApplicationConfig @Inject()(
+  val runModeConfiguration: Configuration,
+  val environment: Environment,
+  servicesConfig: ServicesConfig) {
 
-  val assetsPrefix: String
-  val analyticsToken: Option[String]
-  val analyticsHost: String
-  val frontendHost: String
-  val urBannerToggle: Boolean
-  val urBannerLink: String
-  val optimizelyProjectId: String
 
-}
+  private def loadConfig(key: String) = runModeConfiguration.getString(key).getOrElse(throw new Exception(s"Missing key: $key"))
 
-object ApplicationConfig extends ApplicationConfig with ServicesConfig {
-
-  override lazy val frontendHost = loadConfig("platform.frontend.host")
-
-  private def loadConfig(key: String) = configuration.getString(key).getOrElse(throw new Exception(s"Missing key: $key"))
-
-  override lazy val assetsPrefix: String = loadConfig("assets.url") + loadConfig("assets.version")
-  override lazy val analyticsToken: Option[String] = configuration.getString("google-analytics.token")
-  override lazy val analyticsHost: String = configuration.getString("google-analytics.host").getOrElse("auto")
-  override lazy val urBannerToggle:Boolean = loadConfig("urBanner.toggle").toBoolean
-  override lazy val urBannerLink: String = loadConfig("urBanner.link")
-  override lazy val optimizelyProjectId: String = loadConfig("optimizely.projectId")
+   val assetsPrefix: String = loadConfig("assets.url") + loadConfig("assets.version")
+   val analyticsToken: Option[String] = runModeConfiguration.getString("google-analytics.token")
+   val analyticsHost: String = runModeConfiguration.getString("google-analytics.host").getOrElse("auto")
+   val urBannerToggle:Boolean = loadConfig("urBanner.toggle").toBoolean
+   val urBannerLink: String = loadConfig("urBanner.link")
+   val optimizelyProjectId: String = loadConfig("optimizely.projectId")
 
   val globalErrors = ConfigFactory.load("global-errors.properties")
   val contactFormServiceIdentifier = "GMP"
+  val frontendHost = loadConfig("platform.frontend.host")
 
-  override protected def mode: Mode = Play.current.mode
-  override protected def runModeConfiguration: Configuration = Play.current.configuration
+   protected def mode: Mode = Play.current.mode
+
 }
+
+
+

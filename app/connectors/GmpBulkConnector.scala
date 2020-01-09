@@ -19,11 +19,12 @@ package connectors
 import com.google.inject.Inject
 import models.{BulkCalculationRequest, BulkPreviousRequest, BulkResultsSummary}
 import org.joda.time.LocalDateTime
-import play.api.Mode.Mode
+import play.api.Mode
 import play.api.{Configuration, Environment, Logger}
 import uk.gov.hmrc.http._
+import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
-import uk.gov.hmrc.play.config.ServicesConfig
+
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -31,11 +32,12 @@ import scala.concurrent.Future
 class GmpBulkConnector @Inject()(environment: Environment,
                                  val runModeConfiguration: Configuration,
                                  httpGet: HttpClient,
-                                 httpPost: HttpClient) extends ServicesConfig {
+                                 httpPost: HttpClient,
+                                 servicesConfig: ServicesConfig)  {
 
-  override protected def mode: Mode = environment.mode
+   def mode: Mode = environment.mode
 
-  lazy val serviceURL = baseUrl("gmp-bulk")
+  lazy val serviceURL = servicesConfig.baseUrl("gmp-bulk")
 
   def sendBulkRequest(bcr: BulkCalculationRequest, link: String)(implicit headerCarrier: HeaderCarrier): Future[Int] = {
 

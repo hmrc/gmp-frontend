@@ -17,20 +17,25 @@
 package controllers
 
 import com.google.inject.{Inject, Singleton}
+import config.{ApplicationConfig, GmpContext, GmpSessionCache}
 import controllers.auth.AuthAction
 import forms.ScenarioForm._
 import play.api.Logger
-import play.api.Play.current
 import play.api.i18n.Messages
-import play.api.i18n.Messages.Implicits._
+import play.api.mvc.MessagesControllerComponents
+import services.SessionService
 import uk.gov.hmrc.auth.core.AuthConnector
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class ScenarioController @Inject()(authAction: AuthAction,
-                                   override val authConnector: AuthConnector
-                                  ) extends GmpPageFlow(authConnector) {
+                                   override val authConnector: AuthConnector,
+                                   ac:ApplicationConfig,sessionService: SessionService,implicit val config:GmpContext,
+                                   override val messagesControllerComponents: MessagesControllerComponents,
+                                   implicit val executionContext: ExecutionContext,implicit val gmpSessionCache: GmpSessionCache
+                                  ) extends GmpPageFlow(authConnector,sessionService,config,messagesControllerComponents,ac) {
+
 
   def get = authAction.async {
       implicit request => sessionService.fetchGmpSession() map {

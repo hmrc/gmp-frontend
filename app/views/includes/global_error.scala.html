@@ -14,12 +14,12 @@
  * limitations under the License.
  *@
 
-@(globalErrorCode: Integer)(implicit request: Request[_],messages: Messages)
+@(globalErrorCode: Integer)(implicit request: Request[_],messages: Messages,application:config.ApplicationConfig)
 
-@import config.ApplicationConfig.globalErrors
+
 
 @queryHandlingHeader = {
-    @if(globalErrors.hasPath(s"$globalErrorCode.solution")){
+    @if(application.globalErrors.hasPath(s"$globalErrorCode.solution")){
         <h2 class="error-h2" id="global-query-handling-header">@{ Messages("gmp.errors.query_handling.header") }</h2>
     }
 }
@@ -27,29 +27,29 @@
 <div id="global-results-grid">
 
         <div class="global-error">
-            @if(globalErrors.hasPath(s"$globalErrorCode.cannot_calculate")){
-                <h1 class="error-h1" id="cannot-calculate-header">@{ Messages(globalErrors.getString(s"$globalErrorCode.cannot_calculate")) }</h1>
+            @if(application.globalErrors.hasPath(s"$globalErrorCode.cannot_calculate")){
+                <h1 class="error-h1" id="cannot-calculate-header">@{ Messages(application.globalErrors.getString(s"$globalErrorCode.cannot_calculate")) }</h1>
             }
 
-            @if(globalErrors.hasPath(s"$globalErrorCode.reason")){
-                <div class="error-list" id="global-error-reason">@Messages(globalErrors.getString(s"$globalErrorCode.reason"))</div>
+            @if(application.globalErrors.hasPath(s"$globalErrorCode.reason")){
+                <div class="error-list" id="global-error-reason">@Messages(application.globalErrors.getString(s"$globalErrorCode.reason"))</div>
             }
         </div>
 
-        @if(globalErrors.hasPath(s"$globalErrorCode.solution")){
+        @if(application.globalErrors.hasPath(s"$globalErrorCode.solution")){
             <div>
                 <h2 class="error-h2" id="global-what-now">@Messages("gmp.what_now")</h2>
-                @Html(Messages(globalErrors.getString(s"$globalErrorCode.solution")))
+                @Html(Messages(application.globalErrors.getString(s"$globalErrorCode.solution")))
             </div>
         }
 
-        @if(globalErrors.hasPath(s"$globalErrorCode.also")){
+        @if(application.globalErrors.hasPath(s"$globalErrorCode.also")){
             <br/>
             @queryHandlingHeader
-            <div id="query-handling">@Html(Messages(globalErrors.getString(s"$globalErrorCode.also")))</div>
+            <div id="query-handling">@Html(Messages(application.globalErrors.getString(s"$globalErrorCode.also")))</div>
         }
-        @if(globalErrors.hasPath(s"$globalErrorCode.help_link")){
-            <p id="query-handling-link">@Html(Messages(globalErrors.getString(s"$globalErrorCode.help_link")))</p>
+        @if(application.globalErrors.hasPath(s"$globalErrorCode.help_link")){
+            <p id="query-handling-link">@Html(Messages(application.globalErrors.getString(s"$globalErrorCode.help_link")))</p>
         }
 
 

@@ -16,21 +16,29 @@
 
 package forms
 
+import com.google.inject.Singleton
 import models.PensionDetails
-import play.api.Play.current
+import play.api.Play
 import play.api.data.Form
 import play.api.data.Forms._
-import play.api.i18n.Messages
-import play.api.i18n.Messages.Implicits._
+import play.api.i18n.{Messages, MessagesApi, MessagesImpl}
+import play.api.mvc.MessagesControllerComponents
 import validation.SconValidate
 
-object PensionDetailsForm {
+@Singleton
+class BasePensionDetailsForm {
 
-  val pensionDetailsForm = Form(
+  val messagesControllerComponents = Play.current.injector.instanceOf[MessagesControllerComponents]
+  val messagesApi =  Play.current.injector.instanceOf[MessagesApi]
+
+  implicit lazy val messages: Messages = MessagesImpl(messagesControllerComponents.langs.availables.head, messagesApi)
+
+
+  def pensionDetailsForm = Form(
     mapping(
       "scon" -> text
-        .verifying(Messages("gmp.error.mandatory.new"), x => x.length != 0)
-        .verifying(Messages("gmp.error.scon.invalid"), x => x.length == 0 || SconValidate.isValid(x))
+        .verifying(messages("gmp.error.mandatory.new"), x => x.length != 0)
+        .verifying(messages("gmp.error.scon.invalid"), x => x.length == 0 || SconValidate.isValid(x))
 
     )(customApply)(customUnapply)
   )
@@ -42,3 +50,4 @@ object PensionDetailsForm {
     new PensionDetails(scon)
   }
 }
+object PensionDetailsForm extends BasePensionDetailsForm

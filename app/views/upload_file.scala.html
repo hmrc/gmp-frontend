@@ -14,7 +14,8 @@
  * limitations under the License.
  *@
 
-@(uploadForm: Html)(implicit request: Request[_], context: config.GmpContext, messages: Messages)
+@import config.ApplicationConfig
+@(uploadForm: Html)(implicit request: Request[_], context: config.GmpContext, messages: Messages,ac:ApplicationConfig)
 
 @import uk.gov.hmrc.play.views.html._
 @import uk.gov.hmrc.play.views.html.helpers._

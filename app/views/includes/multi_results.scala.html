@@ -14,10 +14,7 @@
  * limitations under the License.
  *@
 
-@import play.api.Play.current
-@import play.api.i18n.Messages.Implicits._
-
-@(calculationResponse:CalculationResponse, revalRateSubheader: Option[String], survivorSubheader: Option[String])(implicit request: Request[_])
+@(calculationResponse:CalculationResponse, revalRateSubheader: Option[String], survivorSubheader: Option[String])(implicit request: Request[_],messages: Messages)
 
 @includes.result_header_subheader(calculationResponse, revalRateSubheader, survivorSubheader)
 

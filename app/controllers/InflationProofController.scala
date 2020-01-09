@@ -17,19 +17,26 @@
 package controllers
 
 import com.google.inject.{Inject, Singleton}
+import config.{ApplicationConfig, GmpContext, GmpSessionCache}
 import controllers.auth.AuthAction
 import forms.InflationProofForm._
 import play.api.Logger
-import play.api.Play.current
-import play.api.i18n.Messages.Implicits._
+import play.api.mvc.MessagesControllerComponents
+import services.SessionService
 import uk.gov.hmrc.auth.core.AuthConnector
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class InflationProofController @Inject()( authAction: AuthAction,
-                                          override val authConnector: AuthConnector
-                                        ) extends GmpPageFlow(authConnector) {
+                                          override val authConnector: AuthConnector,
+                                          sessionService: SessionService,implicit val config:GmpContext,
+                                          override val messagesControllerComponents: MessagesControllerComponents,
+                                          ac:ApplicationConfig,
+                                          implicit val executionContext: ExecutionContext,implicit val gmpSessionCache: GmpSessionCache
+                                        ) extends GmpPageFlow(authConnector,sessionService,config,messagesControllerComponents,ac) {
+
+
 
   def get = authAction.async {
       implicit request => {

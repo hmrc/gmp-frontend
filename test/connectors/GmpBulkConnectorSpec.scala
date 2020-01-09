@@ -30,6 +30,7 @@ import play.api.libs.json.Json
 import play.api.test.Helpers._
 import uk.gov.hmrc.http._
 import uk.gov.hmrc.http.logging.SessionId
+import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
 
 import scala.concurrent.Future
@@ -41,7 +42,7 @@ class GmpBulkConnectorSpec extends PlaySpec with OneServerPerSuite with MockitoS
   val link = "some-link"
   val psaId = "B1234567"
 
-  object testGmpBulkConnector extends GmpBulkConnector(app.injector.instanceOf[Environment], app.configuration, mockHttpGet, mockHttpPost)
+  object testGmpBulkConnector extends GmpBulkConnector(app.injector.instanceOf[Environment], app.configuration, mockHttpGet, mockHttpPost,app.injector.instanceOf[ServicesConfig])
 
   "The GMP Bulk Connector" must {
 

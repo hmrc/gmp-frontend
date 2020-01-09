@@ -16,26 +16,27 @@
 
 package services
 
-import java.io.{ByteArrayInputStream, InputStream}
+import java.io.ByteArrayInputStream
 import java.nio.charset.Charset
 
 import helpers.RandomNino
 import models.{BulkCalculationRequest, BulkCalculationRequestLine, CalculationRequestLine}
 import org.joda.time.{LocalDate, LocalDateTime}
-import org.mockito.Matchers
-import org.mockito.Mockito.when
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
 import play.api.Environment
-import play.api.i18n.Messages
-import play.api.i18n.Messages.Implicits._
+import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl}
+import play.api.mvc.MessagesControllerComponents
+import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
-import scala.concurrent.Future
 import scala.io.Source
-import scala.reflect.api.Position
 
 class BulkRequestCreationServiceSpec extends PlaySpec with ScalaFutures with MockitoSugar with OneServerPerSuite {
+  implicit val messages=app.injector.instanceOf[MessagesControllerComponents]
+  implicit val servicesConfig=app.injector.instanceOf[ServicesConfig]
+  implicit val messagesAPI=app.injector.instanceOf[MessagesApi]
+  implicit val messagesProvider=MessagesImpl(Lang("en"), messagesAPI)
 
   val nino1 = RandomNino.generate
   val nino2 = RandomNino.generate
@@ -103,7 +104,7 @@ class BulkRequestCreationServiceSpec extends PlaySpec with ScalaFutures with Moc
     def getFirstValid = request.calculationRequests.head.validCalculationRequest.get
   }
 
-  object TestBulkRequestCreationService extends BulkRequestCreationService(app.injector.instanceOf[Environment], app.configuration) {
+  object TestBulkRequestCreationService extends BulkRequestCreationService(app.injector.instanceOf[Environment], app.configuration,messages,servicesConfig,messagesAPI) {
 
     override val MAX_LINES: Int = 2
 
@@ -346,7 +347,7 @@ class BulkRequestCreationServiceSpec extends PlaySpec with ScalaFutures with Moc
 
     "return an exception when uploading more than the max number of lines" in {
 
-      object TestService extends BulkRequestCreationService(app.injector.instanceOf[Environment], app.configuration) {
+      object TestService extends BulkRequestCreationService(app.injector.instanceOf[Environment], app.configuration,messages,servicesConfig,messagesAPI) {
         override val MAX_LINES = 2
         override def sourceData(resourceLocation: String): Iterator[Char] = dataLineWith3Calcs.iterator
       }
@@ -358,7 +359,7 @@ class BulkRequestCreationServiceSpec extends PlaySpec with ScalaFutures with Moc
 
     "allow uploading right up to the line limit" in {
 
-      object TestService extends BulkRequestCreationService(app.injector.instanceOf[Environment], app.configuration) {
+      object TestService extends BulkRequestCreationService(app.injector.instanceOf[Environment], app.configuration,messages,servicesConfig,messagesAPI) {
         override val MAX_LINES = 3
         override def sourceData(resourceLocation: String): Iterator[Char] = dataLineWith3Calcs.iterator
       }
@@ -370,7 +371,7 @@ class BulkRequestCreationServiceSpec extends PlaySpec with ScalaFutures with Moc
 
     "IncorrectlyEncodedException should be thrown when Incorrectly encoded file is uploaded" in {
 
-      object TestService extends BulkRequestCreationService(app.injector.instanceOf[Environment], app.configuration) {
+      object TestService extends BulkRequestCreationService(app.injector.instanceOf[Environment], app.configuration,messages,servicesConfig,messagesAPI) {
         override def sourceData(resourceLocation: String): Iterator[Char] = {
           val is = new ByteArrayInputStream(Charset.forName("utf-16").encode("test-data").array())
           Source.fromInputStream(is, "utf-8")

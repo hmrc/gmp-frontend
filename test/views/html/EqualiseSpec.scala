@@ -17,14 +17,21 @@
 package views.html
 
 import forms.EqualiseForm
+import models.Equalise
 import play.api.data.Form
+import play.api.data.Forms.{mapping, number, optional}
 import play.twirl.api.Html
 import utils.GmpViewSpec
 
 class EqualiseSpec extends GmpViewSpec {
   override def view: Html = views.html.equalise(equaliseForm)
-  val equaliseForm: Form[models.Equalise] = EqualiseForm.equaliseForm
+ // val equaliseForm: Form[models.Equalise] = EqualiseForm.equaliseForm
 
+  val equaliseForm = Form(
+    mapping(
+      "equalise" -> optional(number).verifying(messages("gmp.error.equalise.error_message"), {_.isDefined})
+    )(Equalise.apply)(Equalise.unapply)
+  )
   "Equalise page" must {
     behave like pageWithTitle("Do you also want an opposite gender calculation? - Guaranteed Minimum Pension - GOV.UK")
     behave like pageWithHeader(messages("gmp.equalise_header"))

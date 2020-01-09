@@ -16,20 +16,29 @@
 
 package forms
 
+import com.google.inject.Singleton
 import models.RevaluationRate
-import play.api.Play.current
+import play.api.Play
 import play.api.data.Form
 import play.api.data.Forms._
-import play.api.i18n.Messages
-import play.api.i18n.Messages.Implicits._
+import play.api.i18n.{Messages, MessagesApi, MessagesImpl}
+import play.api.mvc.MessagesControllerComponents
+@Singleton
+class BaseRevaluationRateForm {
 
-object RevaluationRateForm {
+  val messagesControllerComponents = Play.current.injector.instanceOf[MessagesControllerComponents]
+  val messagesApi =  Play.current.injector.instanceOf[MessagesApi]
+
+  implicit lazy val messages: Messages = MessagesImpl(messagesControllerComponents.langs.availables.head, messagesApi)
+
 
   val revaluationRateForm = Form(
     mapping(
-      "rateType" -> optional(text).verifying(Messages("gmp.error.revaluation.rate.error"), { x => x.isDefined &&
+      "rateType" -> optional(text).verifying(messages("gmp.error.revaluation.rate.error"), { x => x.isDefined &&
         List(RevaluationRate.FIXED, RevaluationRate.HMRC, RevaluationRate.LIMITED, RevaluationRate.S148).contains(x.get) })
     )(RevaluationRate.apply)(RevaluationRate.unapply)
   )
 
 }
+
+case object RevaluationRateForm extends BaseRevaluationRateForm

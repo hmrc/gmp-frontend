@@ -16,19 +16,21 @@
 
 package controllers
 
-import config.GmpSessionCache
+import config.{ApplicationConfig, GmpSessionCache}
 import controllers.auth.{AuthAction, FakeAuthAction}
 import metrics.ApplicationMetrics
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
+import play.api.i18n.{Lang, MessagesApi, MessagesImpl, MessagesProvider}
+import play.api.mvc.MessagesControllerComponents
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.SessionService
 import uk.gov.hmrc.auth.core.AuthConnector
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 class SessionCacheControllerSpec extends PlaySpec with OneServerPerSuite with MockitoSugar {
 
@@ -36,12 +38,18 @@ class SessionCacheControllerSpec extends PlaySpec with OneServerPerSuite with Mo
   val mockSessionService = mock[SessionService]
   val mockAuthAction = mock[AuthAction]
   val metrics = app.injector.instanceOf[ApplicationMetrics]
-  val gmpSessionCache = app.injector.instanceOf[GmpSessionCache]
+  implicit val mcc = app.injector.instanceOf[MessagesControllerComponents]
+  implicit val ec = app.injector.instanceOf[ExecutionContext]
+  implicit val messagesAPI=app.injector.instanceOf[MessagesApi]
+  implicit val messagesProvider=MessagesImpl(Lang("en"), messagesAPI)
+  implicit val ac=app.injector.instanceOf[ApplicationConfig]
+  implicit val gmpSessionCache=app.injector.instanceOf[GmpSessionCache]
 
-  object TestSessionCacheController extends SessionCacheController(FakeAuthAction, mockAuthConnector) {
-    override val sessionService = mockSessionService
+
+  object TestSessionCacheController extends SessionCacheController(FakeAuthAction, mockAuthConnector,ac,mockSessionService,FakeGmpContext,mcc,ec,gmpSessionCache) {
+ /*   override val sessionService = mockSessionService
     override val context = FakeGmpContext
-  }
+*/  }
 
   "new-calculation" must {
 

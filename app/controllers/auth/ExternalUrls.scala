@@ -16,22 +16,24 @@
 
 package controllers.auth
 
-import play.api.Mode.Mode
-import play.api.Play.current
+import com.google.inject.{Inject, Singleton}
+import play.api.Mode
 import play.api.{Configuration, Play}
-import uk.gov.hmrc.play.config.RunMode
 
 // TODO tidy/remove this
-object ExternalUrls extends RunMode {
-  val companyAuthHost = Play.configuration.getString("gg-urls.company-auth.host").getOrElse("")
-  val loginCallback = Play.configuration.getString("gg-urls.login-callback.url").getOrElse("")
-  val signOutCallback = Play.configuration.getString("gg-urls.signout-callback.url").getOrElse("")
-  val loginPath = Play.configuration.getString("gg-urls.login_path").getOrElse("")
-  val signOutPath = Play.configuration.getString("gg-urls.signout_path").getOrElse("")
+@Singleton
+class BaseExternalUrls @Inject()(val runModeConfiguration: Configuration) {
+
+  val companyAuthHost = runModeConfiguration.getString("gg-urls.company-auth.host").getOrElse("")
+  val loginCallback = runModeConfiguration.getString("gg-urls.login-callback.url").getOrElse("")
+  val signOutCallback = runModeConfiguration.getString("gg-urls.signout-callback.url").getOrElse("")
+  val loginPath = runModeConfiguration.getString("gg-urls.login_path").getOrElse("")
+  val signOutPath = runModeConfiguration.getString("gg-urls.signout_path").getOrElse("")
   val signIn = s"$companyAuthHost/gg/$loginPath?continue=$loginCallback"
   val signOut = s"$companyAuthHost/gg/$signOutPath?continue=$signOutCallback"
 
-  override protected def mode: Mode = Play.current.mode
+   def mode: Mode = Play.current.mode
 
-  override protected def runModeConfiguration: Configuration = Play.current.configuration
 }
+
+case object ExternalUrls extends BaseExternalUrls(Play.current.configuration)

@@ -14,10 +14,7 @@
  * limitations under the License.
  *@
 
-@import play.api.Play.current
-@import play.api.i18n.Messages.Implicits._
-
-@(calculationResponse:CalculationResponse)(implicit request: Request[_])
+@(calculationResponse:CalculationResponse)(implicit request: Request[_],messages: Messages)
 
 @if(calculationResponse.globalErrorCode == 0 && calculationResponse.numPeriodsInError < calculationResponse.calculationPeriods.size) {
     <div id="conts-earnings-link-div">

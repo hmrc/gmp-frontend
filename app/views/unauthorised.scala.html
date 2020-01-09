@@ -14,7 +14,8 @@
  * limitations under the License.
  *@
 
-@()(implicit request: Request[_], context: config.GmpContext,messages: Messages)
+@import config.ApplicationConfig
+@()(implicit request: Request[_], context: config.GmpContext,messages: Messages,ac:ApplicationConfig)
 
 @gmp_main(title = Messages("gmp.unauthorised.message") + " - " + Messages("service.title") + " - " + Messages("gov.uk")) {
 

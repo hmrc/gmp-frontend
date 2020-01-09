@@ -16,6 +16,7 @@
 
 package connectors
 
+import com.google.inject.Inject
 import org.mockito.Matchers.{eq => meq, _}
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
@@ -26,23 +27,25 @@ import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.Helpers._
 import play.api.{Application, Configuration, Environment, Play}
 import uk.gov.hmrc.http.{BadGatewayException, HeaderCarrier, HttpGet, HttpResponse}
+import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
-import uk.gov.hmrc.play.config.ServicesConfig
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class ContactFrontendConnectorSpec extends PlaySpec with OneAppPerSuite with MockitoSugar with BeforeAndAfterEach with ServicesConfig {
+class ContactFrontendConnectorSpec @Inject()(servicesConfig: ServicesConfig) extends PlaySpec with OneAppPerSuite with MockitoSugar with BeforeAndAfterEach{
   implicit override lazy val app: Application = new GuiceApplicationBuilder()
   .configure(Map("Test.microservice.assets.url" -> "test-url", "Test.microservice.assets.version" -> "test-version"))
   .build
 
-  override protected def mode: Mode = Play.current.mode
-  override protected def runModeConfiguration: Configuration = Play.current.configuration
+  protected def mode: Mode = Play.current.mode
+  protected def runModeConfiguration: Configuration = Play.current.configuration
+
 
   implicit val headerCarrier = HeaderCarrier()
   val mockHttp = mock[HttpClient]
 
-  object TestConnector extends ContactFrontendConnector(mockHttp, app.injector.instanceOf[Environment], app.configuration)
+  object TestConnector extends ContactFrontendConnector(mockHttp, app.injector.instanceOf[Environment],
+                                                          runModeConfiguration,app.injector.instanceOf[ServicesConfig])
 
   override def beforeEach() = {
     reset(mockHttp)
@@ -51,7 +54,7 @@ class ContactFrontendConnectorSpec extends PlaySpec with OneAppPerSuite with Moc
   "ContactFrontendConnector" must {
 
     val dummyResponseHtml = "<div id=\"contact-partial\"></div>"
-    lazy val serviceBase = s"${baseUrl("contact-frontend")}/contact"
+    lazy val serviceBase = s"${servicesConfig.baseUrl("contact-frontend")}/contact"
     lazy val serviceUrl = s"$serviceBase/problem_reports"
 
     "contact the front end service to download the 'get help' partial" in {

@@ -16,7 +16,7 @@
 
 @(calculationResponse:CalculationResponse)(implicit request: Request[_],messages: Messages)
 
-@import config.ApplicationConfig.globalErrors
+
 
 
     <div class="global-error">
@@ -31,10 +31,10 @@
             }
         </div>
 
-        <p id="conts-and-earnings-error-reason">@Messages("gmp.error.no_conts_and_earnings").</p>
+        <p id="conts-and-earnings-error-reason">@Messages("gmp.error.no_conts_and_earnings"). </p>
 
     </div>
 
 
-<br/>
+<br/> 
 

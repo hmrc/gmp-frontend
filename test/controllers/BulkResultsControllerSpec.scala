@@ -18,6 +18,7 @@ package controllers
 
 import java.util.UUID
 
+import config.ApplicationConfig
 import connectors.GmpBulkConnector
 import controllers.auth.FakeAuthAction
 import models.BulkResultsSummary
@@ -25,15 +26,16 @@ import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
-import play.api.i18n.Messages
-import play.api.i18n.Messages.Implicits._
+import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl}
+import play.api.mvc.MessagesControllerComponents
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import services.SessionService
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.http.logging.SessionId
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, NotFoundException, Upstream4xxResponse}
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 class BulkResultsControllerSpec extends PlaySpec with OneServerPerSuite with MockitoSugar {
 
@@ -41,9 +43,17 @@ class BulkResultsControllerSpec extends PlaySpec with OneServerPerSuite with Moc
   val mockGmpBulkConnector = mock[GmpBulkConnector]
 
   implicit val hc = new HeaderCarrier(sessionId = Some(SessionId(s"session-${UUID.randomUUID}")))
+  implicit val mcc = app.injector.instanceOf[MessagesControllerComponents]
+  implicit val ec = app.injector.instanceOf[ExecutionContext]
+  implicit val messagesAPI=app.injector.instanceOf[MessagesApi]
+  implicit val messagesProvider=MessagesImpl(Lang("en"), messagesAPI)
 
-  object TestBulkResultsController extends BulkResultsController(FakeAuthAction,mockAuthConnector, mockGmpBulkConnector) {
-    override val context = FakeGmpContext
+  implicit val ac=app.injector.instanceOf[ApplicationConfig]
+  implicit val ss=app.injector.instanceOf[SessionService]
+
+
+  object TestBulkResultsController extends BulkResultsController(FakeAuthAction,mockAuthConnector, mockGmpBulkConnector,mcc,ac,ss,FakeGmpContext,ec) {
+   // override val context = FakeGmpContext
   }
 
   "Bulk Results Controller" must {

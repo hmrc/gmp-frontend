@@ -19,36 +19,32 @@ package connectors
 import java.net.URLEncoder
 
 import com.google.inject.Inject
-import config.ApplicationConfig
 import controllers.routes
-import play.api.Mode.Mode
-import play.api.Play.current
 import play.api.i18n.Messages
-import play.api.i18n.Messages.Implicits._
 import play.api.mvc.Request
-import play.api.{Configuration, Environment, Logger}
-import uk.gov.hmrc.crypto.{ApplicationCrypto, PlainText}
-import uk.gov.hmrc.http.HttpGet
+import play.api.{Configuration, Environment, Logger, Mode}
+import uk.gov.hmrc.crypto.PlainText
+import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import uk.gov.hmrc.play.bootstrap.filters.frontend.crypto.SessionCookieCrypto
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
-import uk.gov.hmrc.play.config.ServicesConfig
 import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext._
 import uk.gov.hmrc.play.partials.{HeaderCarrierForPartialsConverter, HtmlPartial}
 
 import scala.concurrent.Future
 
 class UploadConfig @Inject()( environment: Environment,
-                              val runModeConfiguration: Configuration
-                            ) extends ServicesConfig {
+                              val runModeConfiguration: Configuration,
+                              servicesConfig: ServicesConfig,
+                              applicationConfig: config.ApplicationConfig)  {
 
-  override protected def mode: Mode = environment.mode
+   def mode: Mode = environment.mode
 
-  def apply(implicit request: Request[_]): String = {
-    lazy val url = s"${baseUrl("attachments")}/attachments-internal/uploader"
-    val onSuccess = ApplicationConfig.frontendHost+routes.BulkReferenceController.get()
-    val onFailure = ApplicationConfig.frontendHost+routes.FileUploadController.failure()
-    val callback = s"${baseUrl("gmp-frontend")}${routes.FileUploadController.callback()}"
-    val pageHeadingGA = Messages("gmp.fileupload.header")
+  def apply(implicit request: Request[_], messages: Messages): String = {
+    lazy val url = s"${servicesConfig.baseUrl("attachments")}/attachments-internal/uploader"
+    val onSuccess = applicationConfig.frontendHost+routes.BulkReferenceController.get()
+    val onFailure = applicationConfig.frontendHost+routes.FileUploadController.failure()
+    val callback = s"${servicesConfig.baseUrl("gmp-frontend")}${routes.FileUploadController.callback()}"
+    val pageHeadingGA = messages("gmp.fileupload.header")
     Logger.debug(s"[UploadConfig][onSuccessUrl : $onSuccess]")
     s"$url?" +
       s"callbackUrl=${encode(callback)}" +
@@ -73,8 +69,9 @@ class AttachmentsConnector @Inject()(
   override val crypto: (String) => String = cookie =>
     sessionCookieCrypto.crypto.encrypt(PlainText(cookie)).value
 
-  def getFileUploadPartial()(implicit request: Request[_]): Future[HtmlPartial] = {
-    val partial = http.GET[HtmlPartial](uploadConfig(request))
+  def getFileUploadPartial()(implicit request: Request[_],messages: Messages): Future[HtmlPartial] = {
+
+    val partial = http.GET[HtmlPartial](uploadConfig(request,messages))
 
     // $COVERAGE-OFF$
     partial onSuccess {

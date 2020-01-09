@@ -16,6 +16,7 @@
 
 package controllers
 
+import config.{ApplicationConfig, GmpSessionCache}
 import connectors.AttachmentsConnector
 import controllers.auth.{AuthAction, FakeAuthAction}
 import models._
@@ -23,10 +24,9 @@ import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
-import play.api.i18n.Messages
-import play.api.i18n.Messages.Implicits._
+import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl}
 import play.api.libs.json.Json
-import play.api.mvc.{AnyContentAsEmpty, Result}
+import play.api.mvc.{AnyContentAsEmpty, MessagesControllerComponents, Result}
 import play.api.test.Helpers._
 import play.api.test.{FakeHeaders, FakeRequest}
 import play.twirl.api.Html
@@ -34,22 +34,29 @@ import services.SessionService
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.play.partials.HtmlPartial
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 class FileUploadControllerSpec extends PlaySpec with OneServerPerSuite with MockitoSugar {
   val mockAuthConnector = mock[AuthConnector]
   val mockAttachmentsConnector = mock[AttachmentsConnector]
   val mockSessionService = mock[SessionService]
   val mockAuthAction = mock[AuthAction]
+  implicit val mcc = app.injector.instanceOf[MessagesControllerComponents]
+  implicit val ec = app.injector.instanceOf[ExecutionContext]
+  implicit val messagesAPI=app.injector.instanceOf[MessagesApi]
+  implicit val messagesProvider=MessagesImpl(Lang("en"), messagesAPI)
+  implicit val ac=app.injector.instanceOf[ApplicationConfig]
+  implicit val gmpSessionCache=app.injector.instanceOf[GmpSessionCache]
+
 
   val gmpBulkSession = GmpBulkSession(Some(CallBackData(collection = "gmp", id = "id", length = 1L, name = None,
     customMetadata = None, contentType = None, sessionId = "THING")), None, None)
 
   val fakeRequest = FakeRequest(method = "POST", uri = "", headers = FakeHeaders(Seq("Content-type" -> ("application/json"))), body = Json.toJson(gmpBulkSession.callBackData.get))
 
-  object TestFileUploadController extends FileUploadController(FakeAuthAction, mockAuthConnector, mockSessionService, mockAttachmentsConnector) {
-    override val context = FakeGmpContext
-  }
+  object TestFileUploadController extends FileUploadController(FakeAuthAction, mockAuthConnector, mockSessionService, FakeGmpContext,mockAttachmentsConnector,mcc,ac,ec,gmpSessionCache) {
+//
+ }
 
   "File upload controller GET " must {
 
@@ -146,6 +153,8 @@ class FileUploadControllerSpec extends PlaySpec with OneServerPerSuite with Mock
   }
 
   def getFileUploadPartial(request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest())(handler: Future[Result] => Any) {
+
+
     val html =
       """
     <form id="file-uploader" method="post" action="/attachments/attach/gmp" enctype="multipart/form-data">
@@ -157,7 +166,7 @@ class FileUploadControllerSpec extends PlaySpec with OneServerPerSuite with Mock
       <button type="submit">Upload</button>
     </form>"""
 
-    when(mockAttachmentsConnector.getFileUploadPartial()(Matchers.any())).thenReturn(Future.successful(HtmlPartial.Success(Some("thepartial"), Html(""))))
+    when(mockAttachmentsConnector.getFileUploadPartial()(Matchers.any(),Matchers.any[Messages]())).thenReturn(Future.successful(HtmlPartial.Success(Some("thepartial"), Html(""))))
 
     handler(TestFileUploadController.get()(request))
   }

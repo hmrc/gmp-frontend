@@ -22,9 +22,8 @@ import play.twirl.api.Html
 import utils.GmpViewSpec
 
 class ResultsSpec extends GmpViewSpec{
-  override def view: Html = views.html.results(applicationConfig, calculationResponse, Some("revalRateSubheader"), Some("survivorSubheader"))
+  override def view: Html = views.html.results( calculationResponse, Some("revalRateSubheader"), Some("survivorSubheader"))
 
-  private val applicationConfig: config.ApplicationConfig = config.ApplicationConfig
   private val calculationResponse : CalculationResponse = CalculationResponse(
     "name", "nino", "scon", Some("revaluationRate"), Some(LocalDate.now),
     List(CalculationPeriod(Some(LocalDate.now), LocalDate.now(), "gmpTotal", "post", 1, 2, Some(3), Some("string"),

@@ -16,15 +16,23 @@
 
 package forms
 
+import com.google.inject.Singleton
 import models.{GmpDate, Leaving, RevaluationDate}
-import play.api.Play.current
+import play.api.Play
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.data.validation.{Constraint, Invalid, Valid, ValidationError}
-import play.api.i18n.Messages
-import play.api.i18n.Messages.Implicits._
+import play.api.i18n.{Messages, MessagesApi, MessagesImpl}
+import play.api.mvc.MessagesControllerComponents
 
-object RevaluationForm {
+@Singleton
+class BaseRevaluationForm {
+
+  val messagesControllerComponents = Play.current.injector.instanceOf[MessagesControllerComponents]
+  val messagesApi =  Play.current.injector.instanceOf[MessagesApi]
+
+  implicit lazy val messages: Messages = MessagesImpl(messagesControllerComponents.langs.availables.head, messagesApi)
+
 
   val YEAR_FIELD_LENGTH: Int = 4
 
@@ -39,7 +47,7 @@ object RevaluationForm {
             revaluationDate.leaving.leaving.get.equals(Leaving.NO) &&
             !revaluationDate.revaluationDate.isOnOrAfter06042016)
         {
-          Seq(ValidationError(Messages("gmp.error.revaluation_pre2016_not_left"), "revaluationDate")) // 2016
+          Seq(ValidationError(messages("gmp.error.revaluation_pre2016_not_left"), "revaluationDate")) // 2016
         }
         else if (revaluationDate.revaluationDate.isBefore(revaluationDate.leaving.leavingDate) &&
           revaluationDate.leaving.leaving != Some("no")) {
@@ -89,3 +97,5 @@ object RevaluationForm {
       .verifying(revaluationDateConstraint)
   )
 }
+
+case object RevaluationForm extends BaseRevaluationForm

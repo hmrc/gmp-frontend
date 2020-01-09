@@ -18,7 +18,7 @@ package controllers
 
 import java.util.UUID
 
-import akka.util.OptionVal
+import config.{ApplicationConfig, GmpSessionCache}
 import connectors.GmpBulkConnector
 import controllers.auth.{AuthAction, FakeAuthAction}
 import helpers.RandomNino
@@ -28,8 +28,8 @@ import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
-import play.api.i18n.Messages
-import play.api.i18n.Messages.Implicits._
+import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl}
+import play.api.mvc.MessagesControllerComponents
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.{BulkRequestCreationService, DataLimitExceededException, SessionService}
@@ -38,7 +38,7 @@ import uk.gov.hmrc.emailaddress.EmailAddress
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.logging.SessionId
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 class BulkRequestReceivedControllerSpec extends PlaySpec with OneServerPerSuite with MockitoSugar {
   val mockAuthConnector = mock[AuthConnector]
@@ -48,6 +48,12 @@ class BulkRequestReceivedControllerSpec extends PlaySpec with OneServerPerSuite 
   val mockAuthAction = mock[AuthAction]
 
   implicit val hc = new HeaderCarrier(sessionId = Some(SessionId(s"session-${UUID.randomUUID}")))
+  implicit val mcc = app.injector.instanceOf[MessagesControllerComponents]
+  implicit val ec = app.injector.instanceOf[ExecutionContext]
+  implicit val messagesApi = app.injector.instanceOf[MessagesApi]
+  implicit val messagesProvider=MessagesImpl(Lang("en"), messagesApi)
+  implicit val ac=app.injector.instanceOf[ApplicationConfig]
+  implicit val sc=app.injector.instanceOf[GmpSessionCache]
 
   val callBackData = CallBackData("AAAAA", "11111", 1L, Some("Ted"), Some("application/json"), "YYYYYYY", None)
   val gmpBulkSession = GmpBulkSession(Some(callBackData), Some(EmailAddress("somebody@somewhere.com")), Some("reference"))
@@ -63,8 +69,8 @@ class BulkRequestReceivedControllerSpec extends PlaySpec with OneServerPerSuite 
     mockAuthConnector,
     mockSessionService,
     mockBulkRequestCreationService,
-    mockGmpBulkConnector){
-    override val context = FakeGmpContext
+    mockGmpBulkConnector,ac,FakeGmpContext,mcc,ec,sc){
+  //  override val context = FakeGmpContext
   }
 
   "BulkRequestReceivedController" must {

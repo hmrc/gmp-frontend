@@ -17,14 +17,33 @@
 package views.html
 
 import forms.PensionDetailsForm
+import models.PensionDetails
 import play.api.data.Form
+import play.api.data.Forms.{mapping, text}
 import play.twirl.api.Html
 import utils.GmpViewSpec
+import validation.SconValidate
 
 class PensionDetailsSpec extends GmpViewSpec {
   override def view: Html = views.html.pension_details(pensionDetailsForm)
 
-  private val pensionDetailsForm: Form[models.PensionDetails] = PensionDetailsForm.pensionDetailsForm
+ // private val pensionDetailsForm: Form[models.PensionDetails] = PensionDetailsForm.pensionDetailsForm
+
+  def pensionDetailsForm = Form(
+    mapping(
+      "scon" -> text
+        .verifying(messages("gmp.error.mandatory.new"), x => x.length != 0)
+        .verifying(messages("gmp.error.scon.invalid"), x => x.length == 0 || SconValidate.isValid(x))
+
+    )(customApply)(customUnapply)
+  )
+
+  def customUnapply (req:PensionDetails) = {
+    Some(req.scon)
+  }
+  def customApply(scon: String) = {
+    new PensionDetails(scon)
+  }
 
   "PensionDetails page" must {
     behave like pageWithTitle(messages("gmp.pension_details.header"))

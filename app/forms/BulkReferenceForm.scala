@@ -16,16 +16,25 @@
 
 package forms
 
+import com.google.inject.Singleton
 import models.BulkReference
-import play.api.Play.current
+import play.api.Play
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.data.validation.{Constraint, Invalid, Valid, ValidationError}
-import play.api.i18n.Messages
-import play.api.i18n.Messages.Implicits._
+import play.api.i18n.{Messages, MessagesApi, MessagesImpl}
+import play.api.mvc.MessagesControllerComponents
 import uk.gov.hmrc.emailaddress.EmailAddress
 
-object BulkReferenceForm {
+@Singleton
+class BaseBulkReferenceForm  {
+
+  val messagesControllerComponents = Play.current.injector.instanceOf[MessagesControllerComponents]
+  val messagesApi =  Play.current.injector.instanceOf[MessagesApi]
+
+  implicit lazy val messages: Messages = MessagesImpl(messagesControllerComponents.langs.availables.head, messagesApi)
+
+
   val MAX_REFERENCE_LENGTH: Int = 99
   val CHARS_ALLOWED = "^[\\s,a-zA-Z0-9_-]*$"
   val emailConstraintRegex = "^((?:[a-zA-Z][a-zA-Z0-9_]*))(.)((?:[a-zA-Z][a-zA-Z0-9_]*))*$"
@@ -34,13 +43,13 @@ object BulkReferenceForm {
   val emailConstraint : Constraint[String] = Constraint("constraints.email") ({
     text =>
       if (text.trim.length == 0){
-        Invalid(Seq(ValidationError(Messages("gmp.error.mandatory.an", Messages("gmp.email")))))
+        Invalid(Seq(ValidationError(messages("gmp.error.mandatory.an", messages("gmp.email")))))
       }
       else if (!EmailAddress.isValid(text.trim.toUpperCase())){
-        Invalid(Seq(ValidationError(Messages("gmp.error.email.invalid"))))
+        Invalid(Seq(ValidationError(messages("gmp.error.email.invalid"))))
       }
       else if(text.trim matches emailConstraintRegex){
-        Invalid(Seq(ValidationError(Messages("gmp.error.email.invalid"))))
+        Invalid(Seq(ValidationError(messages("gmp.error.email.invalid"))))
       }
       else {
         Valid
@@ -51,10 +60,14 @@ object BulkReferenceForm {
     mapping(
       "email" -> text.verifying(emailConstraint),
       "reference" -> text
-        .verifying(Messages("gmp.error.mandatory", Messages("gmp.reference")), x => x.trim.length != 0)
-        .verifying(Messages("gmp.error.csv.member_ref.length.invalid", Messages("gmp.reference")), x => x.trim.length <= MAX_REFERENCE_LENGTH)
-        .verifying(Messages("gmp.error.csv.member_ref.character.invalid", Messages("gmp.reference")), x => x.trim.matches(CHARS_ALLOWED))
-        .verifying(Messages("gmp.error.csv.member_ref.spaces.invalid", Messages("gmp.reference")), x => !(x.trim matches WHITE_SPACES))
+        .verifying(messages("gmp.error.mandatory", messages("gmp.reference")), x => x.trim.length != 0)
+        .verifying(messages("gmp.error.csv.member_ref.length.invalid", messages("gmp.reference")), x => x.trim.length <= MAX_REFERENCE_LENGTH)
+        .verifying(messages("gmp.error.csv.member_ref.character.invalid", messages("gmp.reference")), x => x.trim.matches(CHARS_ALLOWED))
+        .verifying(messages("gmp.error.csv.member_ref.spaces.invalid", messages("gmp.reference")), x => !(x.trim matches WHITE_SPACES))
     )(BulkReference.apply)(BulkReference.unapply)
   )
 }
+
+
+
+object BulkReferenceForm extends BaseBulkReferenceForm

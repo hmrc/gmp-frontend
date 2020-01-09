@@ -17,24 +17,30 @@
 package controllers
 
 import com.google.inject.{Inject, Singleton}
+import config.{ApplicationConfig, GmpContext, GmpSessionCache}
 import connectors.GmpBulkConnector
 import controllers.auth.AuthAction
 import play.api.Logger
-import play.api.Play.current
 import play.api.i18n.Messages
-import play.api.i18n.Messages.Implicits._
+import play.api.mvc.MessagesControllerComponents
 import services.{BulkRequestCreationService, DataLimitExceededException, SessionService}
 import uk.gov.hmrc.auth.core.AuthConnector
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class BulkRequestReceivedController @Inject()(authAction: AuthAction,
                                               val authConnector: AuthConnector,
                                               sessionService: SessionService,
                                               bulkRequestCreationService: BulkRequestCreationService,
-                                              gmpBulkConnector: GmpBulkConnector
-                                             ) extends GmpController {
+                                              gmpBulkConnector: GmpBulkConnector, ac:ApplicationConfig,
+                                              implicit val config:GmpContext,
+                                              messagesControllerComponents: MessagesControllerComponents,
+                                              implicit val executionContext: ExecutionContext,
+                                              implicit val sessionCache:GmpSessionCache
+                                             ) extends GmpController(messagesControllerComponents,ac,sessionService,config) {
+
+
 
   def get = authAction.async {
       implicit request => {

@@ -17,10 +17,10 @@
 package connectors
 
 import com.google.inject.{Inject, Singleton}
-import play.api.Mode.Mode
+import play.api.Mode
 import play.api.{Configuration, Environment, Logger}
 import uk.gov.hmrc.http.{BadGatewayException, HeaderCarrier, HttpGet}
-import uk.gov.hmrc.play.config.ServicesConfig
+import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -29,11 +29,12 @@ import uk.gov.hmrc.play.bootstrap.http.HttpClient
 @Singleton
 class ContactFrontendConnector @Inject()(http: HttpClient,
                                          environment: Environment,
-                                         override val runModeConfiguration: Configuration) extends ServicesConfig {
+                                         val runModeConfiguration: Configuration,
+                                         val servicesConfig: ServicesConfig) {
 
-  override protected def mode: Mode = environment.mode
+  val mode: Mode = environment.mode
 
-  lazy val serviceBase = s"${baseUrl("contact-frontend")}/contact"
+  lazy val serviceBase = s"${servicesConfig.baseUrl("contact-frontend")}/contact"
 
   def getHelpPartial(implicit hc: HeaderCarrier): Future[String] = {
 

@@ -1,4 +1,4 @@
-@*
+/*
  * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,20 +12,19 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *@
+ */
 
-@import config.ApplicationConfig
-@(message: String, header: String)(implicit request: Request[_], context: config.GmpContext,messages: Messages,applicationConfig: ApplicationConfig)
+package forms
 
-@import uk.gov.hmrc.play.views.html._
-@import uk.gov.hmrc.play.views.html.helpers._
-@import views.html.helpers._
+import play.api.Play
+import play.api.i18n.{Messages, MessagesApi, MessagesImpl}
+import play.api.mvc.MessagesControllerComponents
 
-@gmp_main(title = s"$header - ${Messages("service.title")} - ${Messages("gov.uk")}") {
+class BaseForm {
 
-@includes.back_link(header)
-<h1 class="heading-xlarge">@header</h1>
+  val messagesControllerComponents = Play.current.injector.instanceOf[MessagesControllerComponents]
+  val messagesApi =  Play.current.injector.instanceOf[MessagesApi]
 
-<p>@Html(message)</p>
+  implicit lazy val messages: Messages = MessagesImpl(messagesControllerComponents.langs.availables.head, messagesApi)
 
 }

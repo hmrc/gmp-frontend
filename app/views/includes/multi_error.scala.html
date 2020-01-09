@@ -14,10 +14,10 @@
  * limitations under the License.
  *@
 
-@(calculationResponse:CalculationResponse)(implicit request: Request[_],messages: Messages)
+@import config.ApplicationConfig
+@(calculationResponse:CalculationResponse)(implicit request: Request[_],messages: Messages,ac:ApplicationConfig)
 
 
-@import config.ApplicationConfig.globalErrors
 @import org.joda.time.LocalDate
 
 <div id="multi-error-grid">

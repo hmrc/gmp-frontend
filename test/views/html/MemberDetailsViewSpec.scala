@@ -17,14 +17,16 @@
 package views.html
 
 import forms.MemberDetailsForm
+import models.MemberDetails
 import play.api.data.Form
+import play.api.data.Forms.{mapping, text}
+import play.api.data.validation.{Constraint, Invalid, Valid, ValidationError}
+import play.api.i18n.Messages
 import play.twirl.api.Html
 import utils.GmpViewSpec
+import validation.NinoValidate
 
 class MemberDetailsViewSpec extends GmpViewSpec{
-
-  override def view: Html = views.html.member_details(memberDetailsForm)
-  private val memberDetailsForm: Form[models.MemberDetails] = MemberDetailsForm.form
 
   "MemberDetails page " must {
     behave like pageWithTitle(messages("gmp.member_details.header"))
@@ -41,5 +43,51 @@ class MemberDetailsViewSpec extends GmpViewSpec{
       doc must haveSubmitButton(messages("gmp.continue.button"))
     }
   }
+
+  override def view: Html = views.html.member_details(form)
+  //private val memberDetailsForm: Form[models.MemberDetails] = MemberDetailsForm.form
+
+  def form()(implicit messages: Messages) = Form(
+    mapping(
+      "nino" -> text
+        .verifying(ninoConstraint),
+      "firstForename" -> text
+        .verifying(messages("gmp.error.firstnameorinitial", messages("gmp.firstname")), _.length > 0)
+        .verifying(messages("gmp.error.length", messages("gmp.lowercase.firstname"), MAX_LENGTH), _.length <= MAX_LENGTH)
+        .verifying(messages("gmp.error.name.invalid", messages("gmp.lowercase.firstname")), x => x.length == 0 || x.matches(NAME_REGEX)),
+      "surname" -> text
+        .verifying(messages("gmp.error.member.lastname.mandatory"), x => x.length > 0)
+        .verifying(messages("gmp.error.length", messages("gmp.lowercase.lastname"), MAX_LENGTH), x => x.length <= MAX_LENGTH)
+        .verifying(messages("gmp.error.name.invalid", messages("gmp.lowercase.lastname")), x => x.length == 0 || x.matches(NAME_REGEX)))
+    (MemberDetails.apply)(MemberDetails.unapply)
+  )
+
+  val MAX_LENGTH = 99
+  val NAME_REGEX = "^[a-zA-Z][a-zA-z\\s|'|-]*$"
+  val NINO_SUFFIX_REGEX = "[A-D]"
+  val TEMP_NINO = "TN"
+
+  val ninoConstraint : Constraint[String] = Constraint("constraints.nino") ({
+    text =>
+      val ninoText = text.replaceAll("\\s", "")
+      if (ninoText.length == 0){
+        Invalid(Seq(ValidationError(messages("gmp.error.member.nino.mandatory"))))
+      }
+      else if (ninoText.toUpperCase().startsWith(TEMP_NINO)){
+        Invalid(Seq(ValidationError(messages("gmp.error.nino.temporary"))))
+      }
+      else if (!NinoValidate.isValid(ninoText.toUpperCase())){
+        Invalid(Seq(ValidationError(messages("gmp.error.nino.invalid"))))
+      }
+      else if (!ninoText.takeRight(1).toUpperCase().matches(NINO_SUFFIX_REGEX)){
+        Invalid(Seq(ValidationError(messages("gmp.error.nino.invalid"))))
+      }
+      else {
+        Valid
+      }
+
+  })
+
+
 
 }

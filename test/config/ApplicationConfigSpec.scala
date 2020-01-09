@@ -16,15 +16,17 @@
 
 package config
 
-import config.ApplicationConfig.globalErrors
 import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
 
 class ApplicationConfigSpec extends PlaySpec with OneServerPerSuite{
 
+  implicit val ac=app.injector.instanceOf[ApplicationConfig]
+
+
   "Application Config" must {
     "load errors properties file" in {
 
-      (globalErrors.getString("56010.reason")) must be("gmp.error.reason.56010")
+      (ac.globalErrors.getString("56010.reason")) must be("gmp.error.reason.56010")
     }
   }
 

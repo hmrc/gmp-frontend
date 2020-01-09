@@ -17,18 +17,27 @@
 package controllers
 
 import com.google.inject.{Inject, Singleton}
+import config.{ApplicationConfig, GmpContext, GmpSessionCache}
 import controllers.auth.AuthAction
 import forms.BulkReferenceForm
 import play.api.Logger
+import play.api.mvc.MessagesControllerComponents
+import services.SessionService
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class BulkReferenceController @Inject()(authAction: AuthAction,
                                         val authConnector: AuthConnector,
-                                        auditConnector : AuditConnector) extends GmpController {
+                                        auditConnector : AuditConnector,
+                                        sessionService: SessionService,implicit val config:GmpContext,
+                                        override val messagesControllerComponents: MessagesControllerComponents,
+                                        implicit val executionContext: ExecutionContext,ac:ApplicationConfig,
+                                        implicit val gmpSessionCache: GmpSessionCache) extends GmpController(messagesControllerComponents,ac,sessionService,config) {
+
+
 
   def get = authAction.async {
       implicit request =>  Future.successful(Ok(views.html.bulk_reference(BulkReferenceForm.bulkReferenceForm)))

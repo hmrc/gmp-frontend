@@ -18,10 +18,9 @@ package controllers
 
 import java.util.UUID
 
-import config.ApplicationConfig.globalErrors
-import config.{ApplicationConfig}
+import config.{ApplicationConfig, GmpSessionCache}
 import connectors.GmpConnector
-import controllers.auth.{AuthAction, FakeAuthAction, GmpAuthConnector}
+import controllers.auth.{AuthAction, FakeAuthAction}
 import helpers.RandomNino
 import metrics.ApplicationMetrics
 import models._
@@ -30,9 +29,8 @@ import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
-import play.api.i18n.Messages
-import play.api.i18n.Messages.Implicits._
-import play.api.mvc.Request
+import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl}
+import play.api.mvc.{MessagesControllerComponents, Request}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import play.twirl.api.HtmlFormat
@@ -43,25 +41,31 @@ import uk.gov.hmrc.http.logging.SessionId
 import uk.gov.hmrc.play.audit.http.connector.{AuditConnector, AuditResult}
 import views.helpers.GmpDateFormatter._
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with MockitoSugar {
 
   val mockAuthConnector = mock[AuthConnector]
   val mockSessionService = mock[SessionService]
   val mockCalculationConnector = mock[GmpConnector]
-  val mockApplicationConfig = mock[ApplicationConfig]
+  val mockApplicationConfig = app.injector.instanceOf[ApplicationConfig]
   val mockAuditConnector = mock[AuditConnector]
   val mockAuthAction = mock[AuthAction]
   val metrics = app.injector.instanceOf[ApplicationMetrics]
+  implicit val mcc = app.injector.instanceOf[MessagesControllerComponents]
+  implicit val ec = app.injector.instanceOf[ExecutionContext]
+  implicit val messagesAPI=app.injector.instanceOf[MessagesApi]
+  implicit val messagesProvider=MessagesImpl(Lang("en"), messagesAPI)
+  implicit val applicationConfig=app.injector.instanceOf[ApplicationConfig]
+  implicit val gmpSessionCache=app.injector.instanceOf[GmpSessionCache]
 
   implicit val hc = new HeaderCarrier(sessionId = Some(SessionId(s"session-${UUID.randomUUID}")))
 
-  object TestResultsController extends ResultsController(FakeAuthAction, mockAuthConnector, mockSessionService, mockCalculationConnector, mockAuditConnector, metrics) {
-    override val context = FakeGmpContext
+  object TestResultsController extends ResultsController(FakeAuthAction, mockAuthConnector, mockSessionService,FakeGmpContext, mockCalculationConnector, mockAuditConnector, metrics,applicationConfig,mcc,ec,gmpSessionCache) {
+
 
     override def resultsView(response: CalculationResponse, subheader: Option[String], revalSubheader: Option[String])(implicit request: Request[_], context: config.GmpContext): HtmlFormat.Appendable = {
-      views.html.results(applicationConfig = mockApplicationConfig, response, subheader, revalSubheader)
+      views.html.results(response, subheader, revalSubheader)
     }
 
   }
@@ -513,9 +517,9 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
             val result = TestResultsController.get(FakeRequest())
             val content = contentAsString(result).replaceAll("&#x27;", "'")
             content must include(Messages("gmp.cannot_calculate"))
-            content must include(Messages(globalErrors.getString("63123.reason")))
-            content must include(Messages(globalErrors.getString("63123.solution")))
-            content must include(Messages(globalErrors.getString("63123.also")))
+            content must include(Messages(mockApplicationConfig.globalErrors.getString("63123.reason")))
+            content must include(Messages(mockApplicationConfig.globalErrors.getString("63123.solution")))
+            content must include(Messages(mockApplicationConfig.globalErrors.getString("63123.also")))
             content must include(Messages("gmp.entered_details.title"))
             content must not include (Messages("gmp.rate"))
             content must not include (Messages("gmp.back_to_dashboard"))
@@ -527,8 +531,8 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
             val result = TestResultsController.get(FakeRequest())
             val content = contentAsString(result).replaceAll("&#x27;", "'")
             content must include(Messages("gmp.cannot_calculate"))
-            content must include(Messages(globalErrors.getString("58161.reason")))
-            content must include(Messages(globalErrors.getString("58161.solution")))
+            content must include(Messages(mockApplicationConfig.globalErrors.getString("58161.reason")))
+            content must include(Messages(mockApplicationConfig.globalErrors.getString("58161.solution")))
             content must include(Messages("gmp.entered_details.title"))
             content must not include (Messages("gmp.rate"))
         }
@@ -539,9 +543,9 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
             val result = TestResultsController.get(FakeRequest())
             val content = contentAsString(result).replaceAll("&#x27;", "'")
             content must include(Messages("gmp.cannot_calculate"))
-            content must include(Messages(globalErrors.getString("63151.reason")))
-            content must include(Messages(globalErrors.getString("63151.solution")))
-            content must include(Messages(globalErrors.getString("63151.also")))
+            content must include(Messages(mockApplicationConfig.globalErrors.getString("63151.reason")))
+            content must include(Messages(mockApplicationConfig.globalErrors.getString("63151.solution")))
+            content must include(Messages(mockApplicationConfig.globalErrors.getString("63151.also")))
         }
 
         "show error single period for 63149" in {
@@ -550,9 +554,9 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
             val result = TestResultsController.get(FakeRequest())
             val content = contentAsString(result).replaceAll("&#x27;", "'")
             content must include(Messages("gmp.cannot_calculate"))
-            content must include(Messages(globalErrors.getString("63149.reason")))
-            content must include(Messages(globalErrors.getString("63149.solution")))
-            content must include(Messages(globalErrors.getString("63149.also")))
+            content must include(Messages(mockApplicationConfig.globalErrors.getString("63149.reason")))
+            content must include(Messages(mockApplicationConfig.globalErrors.getString("63149.solution")))
+            content must include(Messages(mockApplicationConfig.globalErrors.getString("63149.also")))
         }
 
         "show error single period for 63148" in {
@@ -561,9 +565,9 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
             val result = TestResultsController.get(FakeRequest())
             val content = contentAsString(result).replaceAll("&#x27;", "'")
             content must include(Messages("gmp.cannot_calculate"))
-            content must include(Messages(globalErrors.getString("63148.reason")))
-            content must include(Messages(globalErrors.getString("63148.solution")))
-            content must include(Messages(globalErrors.getString("63148.also")))
+            content must include(Messages(mockApplicationConfig.globalErrors.getString("63148.reason")))
+            content must include(Messages(mockApplicationConfig.globalErrors.getString("63148.solution")))
+            content must include(Messages(mockApplicationConfig.globalErrors.getString("63148.also")))
         }
 
         "show error single period for 63147" in {
@@ -572,9 +576,9 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
             val result = TestResultsController.get(FakeRequest())
             val content = contentAsString(result).replaceAll("&#x27;", "'")
             content must include(Messages("gmp.cannot_calculate"))
-            content must include(Messages(globalErrors.getString("63147.reason")))
-            content must include(Messages(globalErrors.getString("63147.solution")))
-            content must include(Messages(globalErrors.getString("63147.also")))
+            content must include(Messages(mockApplicationConfig.globalErrors.getString("63147.reason")))
+            content must include(Messages(mockApplicationConfig.globalErrors.getString("63147.solution")))
+            content must include(Messages(mockApplicationConfig.globalErrors.getString("63147.also")))
         }
 
         "show error single period for 63150" in {
@@ -583,8 +587,8 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
             val result = TestResultsController.get(FakeRequest())
             val content = contentAsString(result).replaceAll("&#x27;", "'")
             content must include(Messages("gmp.cannot_calculate"))
-            content must include(Messages(globalErrors.getString("63150.reason")))
-            content must include(Messages(globalErrors.getString("63150.solution")))
+            content must include(Messages(mockApplicationConfig.globalErrors.getString("63150.reason")))
+            content must include(Messages(mockApplicationConfig.globalErrors.getString("63150.solution")))
         }
 
         "show error single period for 63167" in {
@@ -593,8 +597,8 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
             val result = TestResultsController.get(FakeRequest())
             val content = contentAsString(result).replaceAll("&#x27;", "'")
             content must include(Messages("gmp.cannot_calculate"))
-            content must include(Messages(globalErrors.getString("63167.reason")))
-            content must include(Messages(globalErrors.getString("63167.solution")))
+            content must include(Messages(mockApplicationConfig.globalErrors.getString("63167.reason")))
+            content must include(Messages(mockApplicationConfig.globalErrors.getString("63167.solution")))
         }
 
         "show error box with member details global" in {
@@ -602,8 +606,8 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
             val result = TestResultsController.get(FakeRequest())
             val content = contentAsString(result).replaceAll("&#x27;", "'")
             content must include(Messages("gmp.cannot_calculate"))
-            content must include(Messages(globalErrors.getString("63119.reason")))
-            content must include(Messages(globalErrors.getString("63119.solution")))
+            content must include(Messages(mockApplicationConfig.globalErrors.getString("63119.reason")))
+            content must include(Messages(mockApplicationConfig.globalErrors.getString("63119.solution")))
             content must include(Messages("gmp.entered_details.title"))
         }
 
@@ -613,8 +617,8 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
             val result = TestResultsController.get(FakeRequest())
             val content = contentAsString(result).replaceAll("&#x27;", "'")
             content must include(Messages("gmp.part_problem"))
-            content must include(Messages(globalErrors.getString(s"${multiErrorResponse.calculationPeriods.head.errorCode}.reason")))
-            content must include(Messages(globalErrors.getString(s"${multiErrorResponse.calculationPeriods.tail.head.errorCode}.reason")))
+            content must include(Messages(mockApplicationConfig.globalErrors.getString(s"${multiErrorResponse.calculationPeriods.head.errorCode}.reason")))
+            content must include(Messages(mockApplicationConfig.globalErrors.getString(s"${multiErrorResponse.calculationPeriods.tail.head.errorCode}.reason")))
             content must include(Messages("gmp.queryhandling.resultsmessage"))
             content must not include (Messages("gmp.back_to_dashboard"))
         }
@@ -636,9 +640,9 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
               val result = TestResultsController.get(FakeRequest())
               val content = contentAsString(result).replaceAll("&#x27;", "'")
               content must include(Messages("gmp.cannot_calculate"))
-              content.replaceAll("&#x27;", "'") must include(Messages(globalErrors.getString(s"${dobNotFoundCalculationResponse.globalErrorCode}.reason")))
+              content.replaceAll("&#x27;", "'") must include(Messages(mockApplicationConfig.globalErrors.getString(s"${dobNotFoundCalculationResponse.globalErrorCode}.reason")))
               content must include(Messages("gmp.what_now"))
-              content must include(Messages(globalErrors.getString(s"${dobNotFoundCalculationResponse.globalErrorCode}.solution")))
+              content must include(Messages(mockApplicationConfig.globalErrors.getString(s"${dobNotFoundCalculationResponse.globalErrorCode}.solution")))
               contentAsString(result) must include(Messages("gmp.button.request-another"))
               contentAsString(result) must include(Messages("gmp.entered_details.title"))
           }
@@ -652,7 +656,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
               val content = contentAsString(result).replaceAll("&#x27;", "'")
               content must include(Messages("gmp.cannot_calculate"))
               content must include(Messages("gmp.what_now"))
-              content must include(Messages(globalErrors.getString(s"${transLinkErrorCalculationResponse.globalErrorCode}.solution")))
+              content must include(Messages(mockApplicationConfig.globalErrors.getString(s"${transLinkErrorCalculationResponse.globalErrorCode}.solution")))
           }
 
         }

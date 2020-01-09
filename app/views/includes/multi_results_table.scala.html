@@ -14,13 +14,11 @@
  * limitations under the License.
  *@
 
-@import play.api.Play.current
-@import play.api.i18n.Messages.Implicits._
+@import config.ApplicationConfig
 
-@(calculationResponse:CalculationResponse)(implicit request: Request[_])
+@(calculationResponse:CalculationResponse)(implicit request: Request[_],messages: Messages,applicationConfig: ApplicationConfig)
 
 @import org.joda.time.LocalDate
-@import config.ApplicationConfig.globalErrors
 
 <table id="periods">
     <caption class="visuallyhidden">@Messages("gmp.results.table_caption")</caption>
@@ -89,8 +87,8 @@
             }
         } else {
             <td id="error-@count" colspan="5" class="table-error-message">
-                @if(globalErrors.hasPath(s"${period.errorCode}.reason")){
-                    <p id="reason-@count">@Messages(globalErrors.getString(s"${period.errorCode}.reason"))</p>
+                @if(applicationConfig.globalErrors.hasPath(s"${period.errorCode}.reason")){
+                    <p id="reason-@count">@Messages(applicationConfig.globalErrors.getString(s"${period.errorCode}.reason"))</p>
                 } else {
                     <p id="unavailable-@count">@Messages("gmp.unavailable")</p>
                 }

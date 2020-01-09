@@ -16,13 +16,18 @@
 
 package controllers
 
+import config.ApplicationConfig
 import controllers.auth.AuthAction
 import models._
 import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
+import play.api.i18n.{Lang, MessagesApi, MessagesImpl, MessagesProvider}
+import play.api.mvc.MessagesControllerComponents
 import play.api.test.Helpers._
 import services.SessionService
 import uk.gov.hmrc.auth.core.AuthConnector
+
+import scala.concurrent.ExecutionContext
 
 
 class GmpControllerSpec extends PlaySpec with OneServerPerSuite with MockitoSugar {
@@ -30,11 +35,14 @@ class GmpControllerSpec extends PlaySpec with OneServerPerSuite with MockitoSuga
   val mockAuthConnector = mock[AuthConnector]
   val mockSessionService = mock[SessionService]
   val mockAuthAction = mock[AuthAction]
+  implicit val mcc = app.injector.instanceOf[MessagesControllerComponents]
+  implicit val ec = app.injector.instanceOf[ExecutionContext]
+  implicit val messagesAPI=app.injector.instanceOf[MessagesApi]
+  implicit val messagesProvider=MessagesImpl(Lang("en"), messagesAPI)
+  implicit val ac=app.injector.instanceOf[ApplicationConfig]
 
-  object TestGmpController extends GmpPageFlow(mockAuthConnector) {
-    override val sessionService = mockSessionService
-    override val context = FakeGmpContext
-  }
+
+  object TestGmpController extends GmpPageFlow(mockAuthConnector,mockSessionService,FakeGmpContext,mcc,ac)(ec) 
 
   val gmpSession = GmpSession(MemberDetails("", "", ""), "", "", None, None, Leaving(GmpDate(None, None, None), None), None)
 

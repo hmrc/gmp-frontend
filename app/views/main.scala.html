@@ -14,8 +14,10 @@
  * limitations under the License.
  *@
 
-@(applicationConfig: config.ApplicationConfig = config.ApplicationConfig,
-    title: String,
+@import play.twirl.api.HtmlFormat
+
+@( applicationConfig: config.ApplicationConfig,
+        title: String,
     contentHeader: Option[Html] = None,
     userLoggedIn: Boolean = false,
     getHelpForm: Html  = HtmlFormat.empty,
