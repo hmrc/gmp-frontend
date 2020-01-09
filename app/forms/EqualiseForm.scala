@@ -17,6 +17,7 @@
 package forms
 
 import com.google.inject.Singleton
+import javax.inject.Inject
 import models.Equalise
 import play.api.Play
 import play.api.data.Form
@@ -25,12 +26,8 @@ import play.api.i18n.{Messages, MessagesApi, MessagesImpl}
 import play.api.mvc.MessagesControllerComponents
 
 @Singleton
-class BaseEqualiseForm  {
-
-  val messagesControllerComponents = Play.current.injector.instanceOf[MessagesControllerComponents]
-  val messagesApi =  Play.current.injector.instanceOf[MessagesApi]
-
-  implicit lazy val messages: Messages = MessagesImpl(messagesControllerComponents.langs.availables.head, messagesApi)
+class EqualiseForm  @Inject()(mcc: MessagesControllerComponents) {
+  implicit lazy val messages: Messages = MessagesImpl(mcc.langs.availables.head, mcc.messagesApi)
 
 
   val equaliseForm = Form(
@@ -41,4 +38,3 @@ class BaseEqualiseForm  {
 
 }
 
-case object EqualiseForm extends BaseEqualiseForm

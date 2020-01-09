@@ -16,18 +16,24 @@
 
 package forms
 
-import forms.MemberDetailsForm._
+import forms.MemberDetailsForm
 import helpers.RandomNino
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.data.FormError
 import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl, MessagesProvider}
 import play.api.i18n.Messages.Implicits._
 import play.api.libs.json.Json
+import play.api.mvc.MessagesControllerComponents
 
-class MemberDetailsFormSpec extends PlaySpec with OneAppPerSuite {
+class MemberDetailsFormSpec extends PlaySpec with GuiceOneAppPerSuite {
 
-  implicit val messagesAPI=app.injector.instanceOf[MessagesApi]
-  implicit val messagesProvider=MessagesImpl(Lang("en"), messagesAPI)
+  implicit lazy val messagesAPI=app.injector.instanceOf[MessagesApi]
+  implicit lazy val messagesProvider=MessagesImpl(Lang("en"), messagesAPI)
+  lazy val mcc = app.injector.instanceOf[MessagesControllerComponents]
+  lazy val form = new MemberDetailsForm(mcc).form()
+
+  val MAX_LENGTH = 99
 
   "Member details form" must {
 

@@ -18,6 +18,7 @@ package controllers
 
 import config.{ApplicationConfig, GmpSessionCache}
 import controllers.auth.{AuthAction, FakeAuthAction}
+import forms.ScenarioForm
 import helpers.RandomNino
 import models._
 import org.mockito.Matchers
@@ -40,15 +41,16 @@ class ScenarioControllerSpec extends PlaySpec with OneServerPerSuite with Mockit
   val mockSessionService = mock[SessionService]
   val mockAuthAction = mock[AuthAction]
 
-  implicit val mcc = app.injector.instanceOf[MessagesControllerComponents]
+  implicit lazy val mcc = app.injector.instanceOf[MessagesControllerComponents]
   implicit val ec = app.injector.instanceOf[ExecutionContext]
   implicit val messagesAPI=app.injector.instanceOf[MessagesApi]
   implicit val messagesProvider=MessagesImpl(Lang("en"), messagesAPI)
   implicit val ac=app.injector.instanceOf[ApplicationConfig]
   implicit val gmpSessionCache=app.injector.instanceOf[GmpSessionCache]
+  lazy val scenarioForm = new ScenarioForm(mcc)
 
 
-  object TestScenarioController extends ScenarioController(FakeAuthAction, mockAuthConnector,ac,mockSessionService,FakeGmpContext,mcc,ec,gmpSessionCache)
+  object TestScenarioController extends ScenarioController(FakeAuthAction, mockAuthConnector,ac,mockSessionService,FakeGmpContext,mcc,scenarioForm,ec,gmpSessionCache)
 
   private val nino: String = RandomNino.generate
   val gmpSession = GmpSession(MemberDetails(nino, "A", "AAA"), "S1301234T", CalculationType.REVALUATION, None, None, Leaving(GmpDate(None, None, None), None), None)

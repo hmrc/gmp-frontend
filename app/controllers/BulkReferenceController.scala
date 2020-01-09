@@ -32,22 +32,22 @@ import scala.concurrent.{ExecutionContext, Future}
 class BulkReferenceController @Inject()(authAction: AuthAction,
                                         val authConnector: AuthConnector,
                                         auditConnector : AuditConnector,
-                                        sessionService: SessionService,implicit val config:GmpContext,
+                                        sessionService: SessionService,implicit val config:GmpContext,brf:BulkReferenceForm,
                                         override val messagesControllerComponents: MessagesControllerComponents,
                                         implicit val executionContext: ExecutionContext,ac:ApplicationConfig,
                                         implicit val gmpSessionCache: GmpSessionCache) extends GmpController(messagesControllerComponents,ac,sessionService,config) {
 
-
+lazy val bulkReferenceForm=brf.bulkReferenceForm
 
   def get = authAction.async {
-      implicit request =>  Future.successful(Ok(views.html.bulk_reference(BulkReferenceForm.bulkReferenceForm)))
+      implicit request =>  Future.successful(Ok(views.html.bulk_reference(bulkReferenceForm)))
   }
 
   def post = authAction.async {
       implicit request => {
         Logger.debug(s"[BulkReferenceController][post]: ${request.body}")
 
-        BulkReferenceForm.bulkReferenceForm.bindFromRequest().fold(
+        bulkReferenceForm.bindFromRequest().fold(
           formWithErrors => {Future.successful(BadRequest(views.html.bulk_reference(formWithErrors)))},
           value => {
 

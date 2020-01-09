@@ -18,6 +18,7 @@ package controllers
 
 import config.{ApplicationConfig, GmpSessionCache}
 import controllers.auth.{AuthAction, FakeAuthAction}
+import forms.{RevaluationForm, RevaluationRateForm}
 import models._
 import org.mockito.Matchers
 import org.mockito.Mockito._
@@ -38,17 +39,18 @@ class RevaluationControllerSpec extends PlaySpec with OneServerPerSuite with Moc
   val mockAuthConnector = mock[AuthConnector]
   val mockSessionService = mock[SessionService]
   val mockAuthAction = mock[AuthAction]
-  implicit val mcc = app.injector.instanceOf[MessagesControllerComponents]
+  implicit lazy val mcc = app.injector.instanceOf[MessagesControllerComponents]
   implicit val ec = app.injector.instanceOf[ExecutionContext]
   implicit val messagesAPI=app.injector.instanceOf[MessagesApi]
   implicit val messagesProvider=MessagesImpl(Lang("en"), messagesAPI)
   implicit val ac=app.injector.instanceOf[ApplicationConfig]
   implicit val gmpSessionCache=app.injector.instanceOf[GmpSessionCache]
+  lazy val revaluationForm = new RevaluationForm(mcc)
 
 
   val baseValidDate = GmpDate(day = Some("31"), month = Some("1"), year = Some("2015"))
 
-  object TestRevaluationController extends RevaluationController(FakeAuthAction, mockAuthConnector,mockSessionService,FakeGmpContext,mcc,ac,ec,gmpSessionCache)
+  object TestRevaluationController extends RevaluationController(FakeAuthAction, mockAuthConnector,mockSessionService,FakeGmpContext,mcc,ac,revaluationForm,ec,gmpSessionCache)
 
   "Revaluation controller" must {
 

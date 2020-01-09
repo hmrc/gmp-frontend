@@ -19,7 +19,8 @@ package controllers
 import com.google.inject.{Inject, Singleton}
 import config.{ApplicationConfig, GmpContext, GmpSessionCache}
 import controllers.auth.AuthAction
-import forms.MemberDetailsForm._
+import forms.MemberDetailsForm
+
 import play.api.Logger
 import play.api.mvc.MessagesControllerComponents
 import services.SessionService
@@ -30,9 +31,11 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class MemberDetailsController @Inject()(authAction: AuthAction,
                                         override val authConnector: AuthConnector,sessionService: SessionService,implicit val config:GmpContext,
-                                        override val messagesControllerComponents: MessagesControllerComponents,ac:ApplicationConfig,
+                                        override val messagesControllerComponents: MessagesControllerComponents,ac:ApplicationConfig,mdf:MemberDetailsForm,
                                         implicit val executionContext: ExecutionContext,implicit val gmpSessionCache: GmpSessionCache) extends GmpPageFlow(authConnector,sessionService,config,messagesControllerComponents,ac) {
 
+
+  lazy val form=mdf.form()
 
   def get = authAction.async {
       implicit request => {

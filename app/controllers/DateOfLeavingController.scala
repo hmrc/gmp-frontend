@@ -19,7 +19,7 @@ package controllers
 import com.google.inject.{Inject, Singleton}
 import config.{ApplicationConfig, GmpContext, GmpSessionCache}
 import controllers.auth.AuthAction
-import forms.DateOfLeavingForm._
+import forms.DateOfLeavingForm
 import play.api.Logger
 import play.api.i18n.Messages
 import play.api.mvc.MessagesControllerComponents
@@ -32,11 +32,11 @@ import scala.concurrent.ExecutionContext
 class DateOfLeavingController @Inject()(authAction: AuthAction,
                                         override val authConnector: AuthConnector,
                                         sessionService: SessionService,ac:ApplicationConfig,
-                                        implicit val config:GmpContext,
+                                        implicit val config:GmpContext,dlf:DateOfLeavingForm,
                                         messagesControllerComponents: MessagesControllerComponents,
                                         implicit val executionContext: ExecutionContext,implicit val gmpSessionCache: GmpSessionCache) extends GmpPageFlow(authConnector,sessionService,config,messagesControllerComponents,ac) {
 
-
+  lazy val dateOfLeavingForm=dlf.dateOfLeavingForm
   def get = authAction.async {
       implicit request =>
         sessionService.fetchGmpSession.map {

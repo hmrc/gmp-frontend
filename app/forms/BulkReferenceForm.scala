@@ -16,7 +16,7 @@
 
 package forms
 
-import com.google.inject.Singleton
+import com.google.inject.{Inject, Singleton}
 import models.BulkReference
 import play.api.Play
 import play.api.data.Form
@@ -27,13 +27,8 @@ import play.api.mvc.MessagesControllerComponents
 import uk.gov.hmrc.emailaddress.EmailAddress
 
 @Singleton
-class BaseBulkReferenceForm  {
-
-  val messagesControllerComponents = Play.current.injector.instanceOf[MessagesControllerComponents]
-  val messagesApi =  Play.current.injector.instanceOf[MessagesApi]
-
-  implicit lazy val messages: Messages = MessagesImpl(messagesControllerComponents.langs.availables.head, messagesApi)
-
+class BulkReferenceForm  @Inject()(mcc: MessagesControllerComponents) {
+  implicit lazy val messages: Messages = MessagesImpl(mcc.langs.availables.head, mcc.messagesApi)
 
   val MAX_REFERENCE_LENGTH: Int = 99
   val CHARS_ALLOWED = "^[\\s,a-zA-Z0-9_-]*$"
@@ -70,4 +65,3 @@ class BaseBulkReferenceForm  {
 
 
 
-object BulkReferenceForm extends BaseBulkReferenceForm
