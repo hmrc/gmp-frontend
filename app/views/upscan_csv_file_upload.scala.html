@@ -15,7 +15,10 @@
  *@
 
 @import config.ApplicationConfig
-@(uploadForm: Html)(implicit request: Request[_], context: config.GmpContext, messages: Messages,ac:ApplicationConfig)
+@import models.upscan.UpscanInitiateResponse
+@import views.html.includes.upscan_file_upload_form
+
+@(upscanInitiateResponse: UpscanInitiateResponse)(implicit request: Request[_], context: config.GmpContext, messages: Messages,ac:ApplicationConfig)
 
 @import uk.gov.hmrc.play.views.html._
 @import uk.gov.hmrc.play.views.html.helpers._
@@ -33,7 +36,7 @@
     <p>@Html(Messages("gmp.fileupload.hint", routes.AssetsController.at("csv/GMP_template_and_instructions.zip"), Messages("gmp.fileupload.header")))</p>
 
 <label for="fileToUpload" class="hidden">@Html(Messages("gmp.fileupload.header"))</label>
-@uploadForm
+ @upscan_file_upload_form(".csv", upscanInitiateResponse.formFields, upscanInitiateResponse.postTarget)
 
 
 

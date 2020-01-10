@@ -21,6 +21,8 @@ import com.typesafe.config.ConfigFactory
 import play.api.Mode.Mode
 import play.api.{Configuration, Environment, Play}
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
+import scala.concurrent.duration._
+import scala.concurrent.duration.FiniteDuration
 
 @Singleton
 class ApplicationConfig @Inject()(
@@ -43,6 +45,13 @@ class ApplicationConfig @Inject()(
   val frontendHost = loadConfig("platform.frontend.host")
 
    protected def mode: Mode = Play.current.mode
+
+  val upscanInitiateHost: String = servicesConfig.baseUrl("upscan")
+  val upscanRedirectBase: String = runModeConfiguration.get[String]("microservice.services.upscan.redirect-base")
+
+  val csvCacheInProgressRetryAmount: Int = runModeConfiguration.getOptional[Int]("retry.csv-callback-cache.in-progress.amount").getOrElse(1)
+  val csvCacheCompletedRetryAmount: Int = runModeConfiguration.getOptional[Int]("retry.csv-callback-cache.completed-upload.amount").getOrElse(1)
+  val retryDelay: FiniteDuration = (runModeConfiguration.getMilliseconds("retry.delay").get) milliseconds
 
 }
 

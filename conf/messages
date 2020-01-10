@@ -37,6 +37,7 @@ gmp.offline.title = GMP checker offline - GOV.UK
 gmp.thank_you.title = GMP checker survey thanks - GOV.UK
 gmp.unauthorised.title = Wrong GMP checker login - GOV.UK
 gmp.fileupload.title = Upload GMP file - GOV.UK
+gmp.fileupload.success.title = File Uploaded - GOV.UK
 gmp.session_missing.title = Incomplete GMP checker information - GOV.UK
 
 ############################################################################
@@ -110,6 +111,8 @@ gmp.post90.true.value = True-gender value
 gmp.post90.opposite = Opposite gender
 gmp.post90.opposite.value = Opposite-gender value
 
+gmp.fileupload.success.header = File uploaded
+
 ############################################################################
 # Buttons
 ############################################################################
@@ -123,6 +126,7 @@ gmp.link.contributions-earnings = View contributions and earnings
 gmp.bulk_reference.button = Confirm and submit
 gmp.bulk_request_received.button = Upload another file
 gmp.download.link = Download
+gmp.upload = Upload
 
 ############################################################################
 # Fields

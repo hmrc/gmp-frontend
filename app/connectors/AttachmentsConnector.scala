@@ -43,7 +43,8 @@ class UploadConfig @Inject()( environment: Environment,
     lazy val url = s"${servicesConfig.baseUrl("attachments")}/attachments-internal/uploader"
     val onSuccess = applicationConfig.frontendHost+routes.BulkReferenceController.get()
     val onFailure = applicationConfig.frontendHost+routes.FileUploadController.failure()
-    val callback = s"${servicesConfig.baseUrl("gmp-frontend")}${routes.FileUploadController.callback()}"
+    //remove this
+    val callback = s"${servicesConfig.baseUrl("gmp-frontend")}${routes.FileUploadController.callback("fewfewfew")}"
     val pageHeadingGA = messages("gmp.fileupload.header")
     Logger.debug(s"[UploadConfig][onSuccessUrl : $onSuccess]")
     s"$url?" +

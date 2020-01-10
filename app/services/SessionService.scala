@@ -20,6 +20,7 @@ import com.google.inject.Inject
 import config.GmpSessionCache
 import metrics.ApplicationMetrics
 import models._
+import models.upscan.{NotStarted, UploadStatus, UploadedSuccessfully}
 import play.api.Logger
 import play.api.mvc.Request
 import uk.gov.hmrc.http.HeaderCarrier
@@ -331,5 +332,24 @@ class SessionService @Inject()(metrics: ApplicationMetrics,gmpSessionCache: GmpS
       cacheMap.getEntry[GmpSession](GMP_SESSION_KEY)
     })
   }
+
+  def createCallbackRecord(implicit request: Request[_], hc: HeaderCarrier): Future[Any] = {
+    gmpSessionCache.cache[UploadStatus](GMP_BULK_SESSION_KEY, NotStarted)
+  }
+
+  def updateCallbackRecord(sessionId: String, uploadStatus: UploadStatus)(implicit request: Request[_], hc: HeaderCarrier): Future[Any] = {
+    gmpSessionCache.cache(gmpSessionCache.defaultSource, sessionId, GMP_BULK_SESSION_KEY, uploadStatus)
+  }
+
+  def getCallbackRecord(implicit request: Request[_], hc: HeaderCarrier): Future[Option[UploadStatus]] = {
+    gmpSessionCache.fetchAndGetEntry[UploadStatus](GMP_BULK_SESSION_KEY)
+  }
+
+  def getSuccessfulCallbackRecord(implicit request: Request[_], hc: HeaderCarrier): Future[Option[UploadedSuccessfully]] = {
+    getCallbackRecord.map(_.flatMap {
+      case upload: UploadedSuccessfully => Some(upload)
+      case _ => None
+      })
+    }
 
 }
