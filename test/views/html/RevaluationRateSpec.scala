@@ -16,17 +16,22 @@
 
 package views.html
 
-import forms.RevaluationRateForm
+import forms.{DateOfLeavingForm, RevaluationRateForm}
 import models._
 import play.api.data.Form
+import play.api.mvc.MessagesControllerComponents
 import play.twirl.api.Html
 import utils.GmpViewSpec
 
 abstract class RevaluationRateSpec extends GmpViewSpec {
   override def view: Html = views.html.revaluation_rate(revaluationRateForm, session)
 
-  val revaluationRateForm: Form[models.RevaluationRate] = RevaluationRateForm.revaluationRateForm
-  val session: GmpSession = GmpSession(MemberDetails("nino", "firstname", "surname"), "scon", "scenario",
+  lazy val mcc = app.injector.instanceOf[MessagesControllerComponents]
+
+  lazy val revaluationRateForm = new RevaluationRateForm(mcc).revaluationRateForm
+
+
+   val session: GmpSession = GmpSession(MemberDetails("nino", "firstname", "surname"), "scon", "scenario",
     Some(GmpDate(Some("day"), Some("month"), Some("year"))), Some("rate"),
     Leaving(GmpDate(Some("day"), Some("month"), Some("year")), Some("leaving")), Some(1))
 

@@ -19,7 +19,7 @@ package controllers
 import com.google.inject.{Inject, Singleton}
 import config.{ApplicationConfig, GmpContext, GmpSessionCache}
 import controllers.auth.AuthAction
-import forms.EqualiseForm._
+import forms.EqualiseForm
 import play.api.Logger
 import play.api.mvc.MessagesControllerComponents
 import services.SessionService
@@ -30,12 +30,13 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class EqualiseController @Inject()(authAction: AuthAction,
                                    override val authConnector: AuthConnector,
-                                   sessionService: SessionService,implicit val config:GmpContext,
+                                   sessionService: SessionService,implicit val config:GmpContext,ef:EqualiseForm,
                                    messagesControllerComponents: MessagesControllerComponents,ac:ApplicationConfig,
                                    implicit val executionContext: ExecutionContext,implicit val gmpSessionCache: GmpSessionCache)
                                   extends GmpPageFlow(authConnector,sessionService,config,messagesControllerComponents,ac) {
 
 
+  lazy val equaliseForm = ef.equaliseForm
   def get = authAction.async {
     implicit request => Future.successful(Ok(views.html.equalise(equaliseForm)))
   }

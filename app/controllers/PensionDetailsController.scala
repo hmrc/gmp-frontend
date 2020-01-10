@@ -20,7 +20,7 @@ import com.google.inject.{Inject, Singleton}
 import config.{ApplicationConfig, GmpContext, GmpSessionCache}
 import connectors.GmpConnector
 import controllers.auth.AuthAction
-import forms.PensionDetailsForm._
+import forms.PensionDetailsForm
 import metrics.ApplicationMetrics
 import models.{PensionDetails, ValidateSconRequest}
 import play.api.Logger
@@ -36,10 +36,11 @@ class PensionDetailsController @Inject()(authAction: AuthAction,
                                          override val authConnector: AuthConnector,
                                          gmpConnector: GmpConnector,sessionService: SessionService,
                                          implicit val config:GmpContext,
-                                         metrics: ApplicationMetrics,ac:ApplicationConfig,
+                                         metrics: ApplicationMetrics,ac:ApplicationConfig,pdf:PensionDetailsForm,
                                          override val messagesControllerComponents: MessagesControllerComponents,
                                          implicit val executionContext: ExecutionContext,implicit val gmpSessionCache: GmpSessionCache) extends GmpPageFlow(authConnector,sessionService,config,messagesControllerComponents,ac) {
 
+  lazy val pensionDetailsForm=pdf.pensionDetailsForm
 
   def get = authAction.async {
       implicit request => {

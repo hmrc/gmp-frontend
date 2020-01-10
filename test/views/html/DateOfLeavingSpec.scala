@@ -18,14 +18,21 @@ package views.html
 
 import forms.DateOfLeavingForm
 import models.CalculationType
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.data.Form
+import play.api.mvc.MessagesControllerComponents
 import play.twirl.api.Html
 import utils.GmpViewSpec
 
-abstract class DateOfLeavingSpec extends GmpViewSpec {
+abstract class DateOfLeavingSpec extends GmpViewSpec  {
   override def view: Html = views.html.dateofleaving(dateOfLeavingForm, scenario)
+   val mcc = app.injector.instanceOf[MessagesControllerComponents]
 
-  val dateOfLeavingForm: Form[models.Leaving] = DateOfLeavingForm.dateOfLeavingForm
+   val dateOfLeavingForm = new DateOfLeavingForm(mcc).dateOfLeavingForm
+
+
+
+ // val dateOfLeavingForm: Form[models.Leaving] = DateOfLeavingFo.dateOfLeavingForm
   val scenario = CalculationType.DOL
 }
 

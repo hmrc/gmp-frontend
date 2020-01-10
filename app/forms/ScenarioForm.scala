@@ -16,7 +16,7 @@
 
 package forms
 
-import com.google.inject.Singleton
+import com.google.inject.{Inject, Singleton}
 import models.CalculationType
 import play.api.Play
 import play.api.data.Form
@@ -25,13 +25,8 @@ import play.api.i18n.{Messages, MessagesApi, MessagesImpl}
 import play.api.mvc.MessagesControllerComponents
 
 @Singleton
-class BaseScenarioForm {
-
-  val messagesControllerComponents = Play.current.injector.instanceOf[MessagesControllerComponents]
-  val messagesApi =  Play.current.injector.instanceOf[MessagesApi]
-
-  implicit lazy val messages: Messages = MessagesImpl(messagesControllerComponents.langs.availables.head, messagesApi)
-
+class ScenarioForm @Inject()(mcc: MessagesControllerComponents) {
+  implicit lazy val messages: Messages = MessagesImpl(mcc.langs.availables.head, mcc.messagesApi)
 
   val scenarioForm = Form(
     mapping(
@@ -41,4 +36,3 @@ class BaseScenarioForm {
 
 }
 
-case object ScenarioForm extends BaseScenarioForm

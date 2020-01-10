@@ -21,6 +21,7 @@ import java.util.UUID
 import config.{ApplicationConfig, GmpSessionCache}
 import connectors.GmpConnector
 import controllers.auth.{AuthAction, FakeAuthAction}
+import forms.PensionDetailsForm
 import metrics.ApplicationMetrics
 import models._
 import org.mockito.Matchers
@@ -46,17 +47,18 @@ class PensionDetailsControllerSpec extends PlaySpec with OneServerPerSuite with 
   val mockGmpConnector = mock[GmpConnector]
   val mockAuthAction = mock[AuthAction]
   val metrics = app.injector.instanceOf[ApplicationMetrics]
-  implicit val mcc = app.injector.instanceOf[MessagesControllerComponents]
+  implicit lazy val mcc = app.injector.instanceOf[MessagesControllerComponents]
   implicit val ec = app.injector.instanceOf[ExecutionContext]
   implicit val messagesAPI=app.injector.instanceOf[MessagesApi]
   implicit val messagesProvider=MessagesImpl(Lang("en"), messagesAPI)
   implicit val ac=app.injector.instanceOf[ApplicationConfig]
   implicit val gmpSessionCache=app.injector.instanceOf[GmpSessionCache]
+  lazy val pensionDetailsForm = new PensionDetailsForm(mcc)
 
 
   implicit val hc = new HeaderCarrier(sessionId = Some(SessionId(s"session-${UUID.randomUUID}")))
 
-  object TestPensionDetailsController extends PensionDetailsController(FakeAuthAction, mockAuthConnector, mockGmpConnector,mockSessionService,FakeGmpContext, metrics,ac,mcc,ec,gmpSessionCache) {
+  object TestPensionDetailsController extends PensionDetailsController(FakeAuthAction, mockAuthConnector, mockGmpConnector,mockSessionService,FakeGmpContext, metrics,ac,pensionDetailsForm,mcc,ec,gmpSessionCache) {
    /* override val sessionService = mockSessionService
     override val context = FakeGmpContext*/
   }

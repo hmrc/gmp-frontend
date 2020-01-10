@@ -18,6 +18,7 @@ package controllers
 
 import config.{ApplicationConfig, GmpSessionCache}
 import controllers.auth.{AuthAction, FakeAuthAction}
+import forms.RevaluationRateForm
 import helpers.RandomNino
 import models._
 import org.mockito.Matchers
@@ -41,15 +42,15 @@ class RevaluationRateControllerSpec extends PlaySpec with OneServerPerSuite with
   val mockSessionService = mock[SessionService]
   val mockAuthAction = mock[AuthAction]
 
-  implicit val mcc = app.injector.instanceOf[MessagesControllerComponents]
+  implicit lazy val mcc = app.injector.instanceOf[MessagesControllerComponents]
   implicit val ec = app.injector.instanceOf[ExecutionContext]
   implicit val messagesAPI=app.injector.instanceOf[MessagesApi]
   implicit val messagesProvider=MessagesImpl(Lang("en"), messagesAPI)
   implicit val ac=app.injector.instanceOf[ApplicationConfig]
   implicit val gmpSessionCache=app.injector.instanceOf[GmpSessionCache]
+  lazy val revaluationRateForm = new RevaluationRateForm(mcc)
 
-
-  object TestRevaluationRateController extends RevaluationRateController(FakeAuthAction, mockAuthConnector,ac,mockSessionService,FakeGmpContext,mcc,ec,gmpSessionCache)
+  object TestRevaluationRateController extends RevaluationRateController(FakeAuthAction, mockAuthConnector,ac,mockSessionService,FakeGmpContext,mcc,revaluationRateForm,ec,gmpSessionCache)
 
 
   private val nino: String = RandomNino.generate

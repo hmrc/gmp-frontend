@@ -18,12 +18,14 @@ package controllers
 
 import config.{ApplicationConfig, GmpSessionCache}
 import controllers.auth.{AuthAction, FakeAuthAction}
+import forms.DateOfLeavingForm
 import helpers.RandomNino
 import models._
 import org.joda.time.{DateTime, DateTimeUtils}
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
 import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl}
 import play.api.libs.json.Json
@@ -35,22 +37,24 @@ import uk.gov.hmrc.auth.core.AuthConnector
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class DateOfLeavingControllerSpec extends PlaySpec with OneServerPerSuite with MockitoSugar {
+class DateOfLeavingControllerSpec extends PlaySpec with GuiceOneServerPerSuite with MockitoSugar {
   DateTimeUtils.setCurrentMillisFixed(new DateTime(2016, 1, 1, 1, 1).toDate.getTime)
   val mockAuthConnector = mock[AuthConnector]
   val mockSessionService = mock[SessionService]
   val mockAuthAction = mock[AuthAction]
 
   val baseValidDate = GmpDate(day = Some("31"), month = Some("1"), year = Some("2015"))
-  implicit val mcc = app.injector.instanceOf[MessagesControllerComponents]
+  implicit lazy val mcc = app.injector.instanceOf[MessagesControllerComponents]
   implicit val ec = app.injector.instanceOf[ExecutionContext]
   implicit val messagesAPI=app.injector.instanceOf[MessagesApi]
   implicit val messagesProvider=MessagesImpl(Lang("en"), messagesAPI)
   implicit val ac=app.injector.instanceOf[ApplicationConfig]
   implicit val gmpSessionCache=app.injector.instanceOf[GmpSessionCache]
+  lazy val dateOfLeavingForm = new DateOfLeavingForm(mcc)
 
 
-  object TestDateOfLeavingController extends DateOfLeavingController(FakeAuthAction, mockAuthConnector, mockSessionService,ac,FakeGmpContext,mcc,ec,gmpSessionCache) {
+
+  object TestDateOfLeavingController extends DateOfLeavingController(FakeAuthAction, mockAuthConnector, mockSessionService,ac,FakeGmpContext,dateOfLeavingForm,mcc,ec,gmpSessionCache) {
     override val context = FakeGmpContext
   }
 

@@ -19,7 +19,7 @@ package controllers
 import com.google.inject.{Inject, Singleton}
 import config.{ApplicationConfig, GmpContext, GmpSessionCache}
 import controllers.auth.AuthAction
-import forms.InflationProofForm._
+import forms.InflationProofForm
 import play.api.Logger
 import play.api.mvc.MessagesControllerComponents
 import services.SessionService
@@ -31,11 +31,13 @@ import scala.concurrent.{ExecutionContext, Future}
 class InflationProofController @Inject()( authAction: AuthAction,
                                           override val authConnector: AuthConnector,
                                           sessionService: SessionService,implicit val config:GmpContext,
-                                          override val messagesControllerComponents: MessagesControllerComponents,
+                                          override val messagesControllerComponents: MessagesControllerComponents,ipf:InflationProofForm,
                                           ac:ApplicationConfig,
                                           implicit val executionContext: ExecutionContext,implicit val gmpSessionCache: GmpSessionCache
                                         ) extends GmpPageFlow(authConnector,sessionService,config,messagesControllerComponents,ac) {
 
+
+  lazy val inflationProofForm=ipf.inflationProofForm
 
 
   def get = authAction.async {

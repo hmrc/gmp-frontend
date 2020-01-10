@@ -16,16 +16,20 @@
 
 package forms
 
-import forms.InflationProofForm._
+import forms.InflationProofForm
 import models.{GmpDate, InflationProof}
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.data.FormError
 import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl}
 import play.api.libs.json.Json
+import play.api.mvc.MessagesControllerComponents
 
-class inflationProofFormSpec extends PlaySpec with OneAppPerSuite {
-  implicit val messagesAPI=app.injector.instanceOf[MessagesApi]
-  implicit val messagesProvider=MessagesImpl(Lang("en"), messagesAPI)
+class inflationProofFormSpec extends PlaySpec with GuiceOneAppPerSuite {
+  implicit lazy val messagesAPI=app.injector.instanceOf[MessagesApi]
+  implicit lazy val messagesProvider=MessagesImpl(Lang("en"), messagesAPI)
+  lazy val mcc = app.injector.instanceOf[MessagesControllerComponents]
+  lazy val inflationProofForm = new InflationProofForm(mcc).inflationProofForm
 
 
   val inflationProofDate = GmpDate(Some("01"), Some("02"), Some("2010"))

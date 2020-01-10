@@ -19,7 +19,7 @@ package controllers
 import com.google.inject.{Inject, Singleton}
 import config.{ApplicationConfig, GmpContext, GmpSessionCache}
 import controllers.auth.AuthAction
-import forms.RevaluationForm._
+import forms.RevaluationForm
 import models.{GmpDate, RevaluationDate}
 import play.api.Logger
 import play.api.mvc.MessagesControllerComponents
@@ -32,24 +32,24 @@ import scala.concurrent.{ExecutionContext, Future}
 class RevaluationController @Inject()( authAction: AuthAction,
                                        override val authConnector: AuthConnector,sessionService: SessionService,implicit val config:GmpContext,
                                        override val messagesControllerComponents: MessagesControllerComponents,
-                                       ac:ApplicationConfig,
+                                       ac:ApplicationConfig,rvform: RevaluationForm,
                                        implicit val executionContext: ExecutionContext,implicit val gmpSessionCache: GmpSessionCache
                                      ) extends GmpPageFlow(authConnector,sessionService,config,messagesControllerComponents,ac) {
 
-
+  lazy val revalForm = rvform.revaluationForm
   def get = authAction.async {
       implicit request => sessionService.fetchLeaving.map {
         case Some(leaving) => {
-          Ok(views.html.revaluation(revaluationForm.fill(RevaluationDate(leaving, GmpDate(None, None, None)))))
+          Ok(views.html.revaluation(revalForm.fill(RevaluationDate(leaving, GmpDate(None, None, None)))))
         }
-        case _ => Ok(views.html.revaluation(revaluationForm))
+        case _ => Ok(views.html.revaluation(revalForm))
       }
   }
 
   def post = authAction.async {
       implicit request => {
         Logger.debug(s"[RevaluationController][post][POST] : ${request.body}")
-        revaluationForm.bindFromRequest.fold(
+        revalForm.bindFromRequest.fold(
           formWithErrors => {
             Future.successful(BadRequest(views.html.revaluation(formWithErrors)))
           },

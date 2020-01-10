@@ -20,6 +20,7 @@ import java.util.UUID
 
 import config.{ApplicationConfig, GmpSessionCache}
 import controllers.auth.FakeAuthAction
+import forms.{BulkReferenceForm, DateOfLeavingForm}
 import models._
 import org.mockito.Matchers
 import org.mockito.Mockito._
@@ -45,16 +46,18 @@ class BulkReferenceControllerSpec extends PlaySpec  with MockitoSugar with Guice
   val mockSessionService: SessionService = mock[SessionService]
   val mockAuditConnector: AuditConnector = mock[AuditConnector]
 
-  implicit val hc = new HeaderCarrier(sessionId = Some(SessionId(s"session-${UUID.randomUUID}")))
+  implicit lazy val hc = new HeaderCarrier(sessionId = Some(SessionId(s"session-${UUID.randomUUID}")))
   implicit val mcc = app.injector.instanceOf[MessagesControllerComponents]
   implicit val ec = app.injector.instanceOf[ExecutionContext]
   implicit val messagesApi = app.injector.instanceOf[MessagesApi]
   implicit val messagesProvider=MessagesImpl(Lang("en"), messagesApi)
   implicit val ac=app.injector.instanceOf[ApplicationConfig]
   implicit val gmpSessionCache=app.injector.instanceOf[GmpSessionCache]
+  lazy val bulkReferenceForm = new BulkReferenceForm(mcc)
+
 
   object TestBulkReferenceController extends BulkReferenceController(FakeAuthAction, mockAuthConnector, mockAuditConnector,mockSessionService,FakeGmpContext
-  ,mcc,ec,ac,gmpSessionCache) {
+    ,bulkReferenceForm,mcc,ec,ac,gmpSessionCache) {
 
   }
 

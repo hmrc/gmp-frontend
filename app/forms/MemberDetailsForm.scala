@@ -16,7 +16,7 @@
 
 package forms
 
-import com.google.inject.Singleton
+import com.google.inject.{Inject, Singleton}
 import models.MemberDetails
 import play.api.Play
 import play.api.data.Form
@@ -27,12 +27,8 @@ import play.api.mvc.MessagesControllerComponents
 import validation.NinoValidate
 
 @Singleton
-class BaseMemberDetailsForm {
-
-  val messagesControllerComponents = Play.current.injector.instanceOf[MessagesControllerComponents]
-  val messagesApi =  Play.current.injector.instanceOf[MessagesApi]
-
-  implicit lazy val messages: Messages = MessagesImpl(messagesControllerComponents.langs.availables.head, messagesApi)
+class MemberDetailsForm @Inject()(mcc: MessagesControllerComponents) {
+  implicit lazy val messages: Messages = MessagesImpl(mcc.langs.availables.head, mcc.messagesApi)
 
 
   val MAX_LENGTH = 99
@@ -61,7 +57,7 @@ class BaseMemberDetailsForm {
 
   })
 
-  def form()(implicit messages: Messages) = Form(
+  def form() = Form(
     mapping(
       "nino" -> text
         .verifying(ninoConstraint),
@@ -77,4 +73,3 @@ class BaseMemberDetailsForm {
   )
 
 }
-case object MemberDetailsForm extends BaseMemberDetailsForm

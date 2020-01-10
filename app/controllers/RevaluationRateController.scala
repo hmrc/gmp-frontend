@@ -20,7 +20,7 @@ package controllers
 import com.google.inject.{Inject, Singleton}
 import config.{ApplicationConfig, GmpContext, GmpSessionCache}
 import controllers.auth.AuthAction
-import forms.RevaluationRateForm._
+import forms.RevaluationRateForm
 import play.api.Logger
 import play.api.i18n.Messages
 import play.api.mvc.MessagesControllerComponents
@@ -34,10 +34,12 @@ import scala.concurrent.ExecutionContext
 class RevaluationRateController @Inject()( authAction: AuthAction,
                                            override val authConnector: AuthConnector, ac:ApplicationConfig,
                                            sessionService: SessionService,implicit val config:GmpContext,
-                                           override val messagesControllerComponents: MessagesControllerComponents,
+                                           override val messagesControllerComponents: MessagesControllerComponents,rrf:RevaluationRateForm,
                                            implicit val executionContext: ExecutionContext,implicit val gmpSessionCache: GmpSessionCache
                                          ) extends GmpPageFlow(authConnector,sessionService,config,messagesControllerComponents,ac) {
 
+
+  lazy val revaluationRateForm=rrf.revaluationRateForm
 
   def get = authAction.async {
       implicit request => sessionService.fetchGmpSession() map {

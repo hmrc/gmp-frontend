@@ -19,7 +19,7 @@ package controllers
 import com.google.inject.{Inject, Singleton}
 import config.{ApplicationConfig, GmpContext, GmpSessionCache}
 import controllers.auth.AuthAction
-import forms.ScenarioForm._
+import forms.ScenarioForm
 import play.api.Logger
 import play.api.i18n.Messages
 import play.api.mvc.MessagesControllerComponents
@@ -32,10 +32,12 @@ import scala.concurrent.{ExecutionContext, Future}
 class ScenarioController @Inject()(authAction: AuthAction,
                                    override val authConnector: AuthConnector,
                                    ac:ApplicationConfig,sessionService: SessionService,implicit val config:GmpContext,
-                                   override val messagesControllerComponents: MessagesControllerComponents,
+                                   override val messagesControllerComponents: MessagesControllerComponents,sf:ScenarioForm,
                                    implicit val executionContext: ExecutionContext,implicit val gmpSessionCache: GmpSessionCache
                                   ) extends GmpPageFlow(authConnector,sessionService,config,messagesControllerComponents,ac) {
 
+
+  lazy val scenarioForm=sf.scenarioForm
 
   def get = authAction.async {
       implicit request => sessionService.fetchGmpSession() map {

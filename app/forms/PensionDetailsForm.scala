@@ -17,6 +17,7 @@
 package forms
 
 import com.google.inject.Singleton
+import javax.inject.Inject
 import models.PensionDetails
 import play.api.Play
 import play.api.data.Form
@@ -26,12 +27,8 @@ import play.api.mvc.MessagesControllerComponents
 import validation.SconValidate
 
 @Singleton
-class BasePensionDetailsForm {
-
-  val messagesControllerComponents = Play.current.injector.instanceOf[MessagesControllerComponents]
-  val messagesApi =  Play.current.injector.instanceOf[MessagesApi]
-
-  implicit lazy val messages: Messages = MessagesImpl(messagesControllerComponents.langs.availables.head, messagesApi)
+class PensionDetailsForm @Inject()(mcc: MessagesControllerComponents) {
+  implicit lazy val messages: Messages = MessagesImpl(mcc.langs.availables.head, mcc.messagesApi)
 
 
   def pensionDetailsForm = Form(
@@ -50,4 +47,4 @@ class BasePensionDetailsForm {
     new PensionDetails(scon)
   }
 }
-object PensionDetailsForm extends BasePensionDetailsForm
+

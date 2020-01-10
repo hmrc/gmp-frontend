@@ -16,18 +16,22 @@
 
 package forms
 
-import forms.PensionDetailsForm._
+import forms.PensionDetailsForm
 import models.PensionDetails
 import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.data.FormError
 import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl}
 import play.api.libs.json.Json
+import play.api.mvc.MessagesControllerComponents
 
-class PensionDetailsFormSpec extends PlaySpec with OneAppPerSuite with MockitoSugar{
+class PensionDetailsFormSpec extends PlaySpec with GuiceOneAppPerSuite with MockitoSugar{
 
-  implicit val messagesAPI=app.injector.instanceOf[MessagesApi]
-  implicit val messagesProvider=MessagesImpl(Lang("en"), messagesAPI)
+  implicit lazy val messagesAPI=app.injector.instanceOf[MessagesApi]
+  implicit lazy val messagesProvider=MessagesImpl(Lang("en"), messagesAPI)
+  lazy val mcc = app.injector.instanceOf[MessagesControllerComponents]
+  lazy val pensionDetailsForm = new PensionDetailsForm(mcc).pensionDetailsForm
 
   "Pension details form" must {
 
