@@ -24,15 +24,15 @@ import play.api.{Configuration, Play}
 @Singleton
 class BaseExternalUrls @Inject()(val runModeConfiguration: Configuration) {
 
-  val companyAuthHost = runModeConfiguration.getString("gg-urls.company-auth.host").getOrElse("")
-  val loginCallback = runModeConfiguration.getString("gg-urls.login-callback.url").getOrElse("")
-  val signOutCallback = runModeConfiguration.getString("gg-urls.signout-callback.url").getOrElse("")
-  val loginPath = runModeConfiguration.getString("gg-urls.login_path").getOrElse("")
-  val signOutPath = runModeConfiguration.getString("gg-urls.signout_path").getOrElse("")
+  val companyAuthHost = runModeConfiguration.getOptional[String]("gg-urls.company-auth.host").getOrElse("")
+  val loginCallback = runModeConfiguration.getOptional[String]("gg-urls.login-callback.url").getOrElse("")
+  val signOutCallback = runModeConfiguration.getOptional[String]("gg-urls.signout-callback.url").getOrElse("")
+  val loginPath = runModeConfiguration.getOptional[String]("gg-urls.login_path").getOrElse("")
+  val signOutPath = runModeConfiguration.getOptional[String]("gg-urls.signout_path").getOrElse("")
   val signIn = s"$companyAuthHost/gg/$loginPath?continue=$loginCallback"
   val signOut = s"$companyAuthHost/gg/$signOutPath?continue=$signOutCallback"
 
-   def mode: Mode = Play.current.mode
+  // def mode: Mode = Play.current.mode
 
 }
 

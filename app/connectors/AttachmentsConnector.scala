@@ -27,10 +27,9 @@ import uk.gov.hmrc.crypto.PlainText
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import uk.gov.hmrc.play.bootstrap.filters.frontend.crypto.SessionCookieCrypto
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
-import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext._
 import uk.gov.hmrc.play.partials.{HeaderCarrierForPartialsConverter, HtmlPartial}
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 class UploadConfig @Inject()( environment: Environment,
                               val runModeConfiguration: Configuration,
@@ -63,7 +62,8 @@ class UploadConfig @Inject()( environment: Environment,
 class AttachmentsConnector @Inject()(
                                       uploadConfig: UploadConfig, sessionCookieCrypto: SessionCookieCrypto,
                                       http: HttpClient,
-                                      configuration: Configuration
+                                      configuration: Configuration,
+                                      implicit val executionContext: ExecutionContext
                                     ) extends HeaderCarrierForPartialsConverter {
 
   override val crypto: (String) => String = cookie =>

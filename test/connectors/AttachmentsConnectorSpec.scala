@@ -36,7 +36,7 @@ import uk.gov.hmrc.play.bootstrap.http.HttpClient
 import uk.gov.hmrc.play.partials.HeaderCarrierForPartials
 
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 class AttachmentsConnectorSpec extends PlaySpec with OneAppPerSuite with MockitoSugar with BeforeAndAfterEach {
 
@@ -45,15 +45,16 @@ class AttachmentsConnectorSpec extends PlaySpec with OneAppPerSuite with Mockito
   val uploadConfig = app.injector.instanceOf[UploadConfig]
   val encrypter = mock[Encrypter with Decrypter]
 
-  implicit val messagesControllerComponents = app.injector.instanceOf[MessagesControllerComponents].langs.availables.head
+  implicit val messagesControllerComponents = app.injector.instanceOf[MessagesControllerComponents]
   implicit val messagesApi =  app.injector.instanceOf[MessagesApi]
-  implicit lazy val messages: Messages = MessagesImpl(messagesControllerComponents, messagesApi)
+  implicit lazy val messages: Messages = MessagesImpl(messagesControllerComponents.langs.availables.head, messagesApi)
+  implicit val ec = app.injector.instanceOf[ExecutionContext]
 
   when(encrypter.encrypt(any[PlainText])).thenReturn(Crypted("foo"))
   val sessionCookieCrypto = mock[SessionCookieCrypto]
   when(sessionCookieCrypto.crypto).thenReturn(encrypter)
 
-  class TestAttachmentsConnector extends AttachmentsConnector(uploadConfig,sessionCookieCrypto, mockHttp, app.configuration) {
+  class TestAttachmentsConnector extends AttachmentsConnector(uploadConfig,sessionCookieCrypto, mockHttp, app.configuration, ec) {
     val sessionCookieCrypto: SessionCookieCrypto = app.injector.instanceOf[SessionCookieCrypto]
     override val crypto: (String) => String = cookie =>
       sessionCookieCrypto.crypto.encrypt(PlainText(cookie)).value
