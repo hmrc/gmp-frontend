@@ -32,8 +32,6 @@ class BaseExternalUrls @Inject()(val runModeConfiguration: Configuration) {
   val signIn = s"$companyAuthHost/gg/$loginPath?continue=$loginCallback"
   val signOut = s"$companyAuthHost/gg/$signOutPath?continue=$signOutCallback"
 
-  // def mode: Mode = Play.current.mode
-
 }
 
 case object ExternalUrls extends BaseExternalUrls(Play.current.configuration)
