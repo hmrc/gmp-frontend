@@ -29,7 +29,7 @@ class ApplicationConfig @Inject()(
   servicesConfig: ServicesConfig) {
 
 
-  private def loadConfig(key: String) = runModeConfiguration.getString(key).getOrElse(throw new Exception(s"Missing key: $key"))
+  private def loadConfig(key: String) = runModeConfiguration.getOptional[String](key).getOrElse(throw new Exception(s"Missing key: $key"))
 
    val assetsPrefix: String = loadConfig("assets.url") + loadConfig("assets.version")
    val analyticsToken: Option[String] = runModeConfiguration.getOptional[String]("google-analytics.token")

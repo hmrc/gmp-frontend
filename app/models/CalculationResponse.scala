@@ -125,26 +125,22 @@ case class CalculationResponse(
 
   }
 
-  def header: String = {
-
-    implicit val messagesApi =  Play.current.injector.instanceOf[MessagesApi]
-    implicit val messagesProvider=MessagesImpl(Lang("en"), messagesApi)
-
+  def header(messages : Messages): String = {
 
     if(calcType == CalculationType.SURVIVOR.toInt && revaluationDate.isDefined){
-      Messages("gmp.results.survivor.revaluation.header", formatDate(revaluationDate.get))
+      messages("gmp.results.survivor.revaluation.header", formatDate(revaluationDate.get))
     }else if(calcType == CalculationType.SURVIVOR.toInt && dateOfDeath.isDefined){
-      Messages("gmp.results.survivor.header", formatDate(dateOfDeath.get))
+      messages("gmp.results.survivor.header", formatDate(dateOfDeath.get))
     }else if(calcType == CalculationType.SURVIVOR.toInt){
-      Messages("gmp.results.survivor.header")
+      messages("gmp.results.survivor.header")
     }else if(calcType == CalculationType.SPA.toInt && spaDate.isDefined) {
-      Messages("gmp.spa.header", formatDate(spaDate.get))
+      messages("gmp.spa.header", formatDate(spaDate.get))
     }else if(calcType == CalculationType.PAYABLE_AGE.toInt && payableAgeDate.isDefined) {
-      Messages("gmp.payable_age.header", formatDate(payableAgeDate.get))
+      messages("gmp.payable_age.header", formatDate(payableAgeDate.get))
     }else if(revaluationDate.isEmpty || revaluationUnsuccessful){
-      Messages("gmp.leaving.scheme.header", formatDate(leavingDate))
+      messages("gmp.leaving.scheme.header", formatDate(leavingDate))
     }else {
-      Messages("gmp.leaving.revalued.header", formatDate(leavingDate))
+      messages("gmp.leaving.revalued.header", formatDate(leavingDate))
     }
   }
 
