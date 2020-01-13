@@ -17,6 +17,7 @@
 package services
 
 import com.google.inject.Inject
+import models.upscan.{UpscanCallback, UpscanReadyCallback}
 import models.{BulkCalculationRequest, BulkCalculationRequestLine, CalculationRequestLine}
 import org.joda.time.LocalDate
 import org.joda.time.format.DateTimeFormat
@@ -90,9 +91,8 @@ class BulkRequestCreationService @Inject()(environment: Environment,
     for ((x, i) <- bulkCalculationRequestLines.zipWithIndex) yield x.copy(lineId = i + 1)
   }
 
-  def createBulkRequest(collection: String, id: String, email: String, reference: String): Either[Throwable, BulkCalculationRequest] = {
-    val attachmentUrl = s"${servicesConfig.baseUrl("attachments")}/attachments-internal/$collection/$id"
-    val enumerator = new LimitingEnumerator(MAX_LINES, LINE_FEED.toByte.toChar, sourceData(attachmentUrl))
+  def createBulkRequest(upscanCallback: UpscanReadyCallback, email: String, reference: String): Either[Throwable, BulkCalculationRequest] = {
+    val enumerator = new LimitingEnumerator(MAX_LINES, LINE_FEED.toByte.toChar, sourceData(upscanCallback.downloadUrl.toExternalForm))
 
     Try(list(enumerator, LINE_FEED.toByte.toChar, constructBulkCalculationRequestLine(_))) match {
       case Success(bulkCalculationRequestLines) =>
@@ -103,12 +103,12 @@ class BulkRequestCreationService @Inject()(environment: Environment,
         } else {
           if (bulkCalculationRequestLines.size == 1) {
             val emptyFileLines = List(BulkCalculationRequestLine(1, None, None, Some(Map(BulkRequestCsvColumn.LINE_ERROR_EMPTY.toString -> messages("gmp.error.parsing.empty_file")))))
-            val req = BulkCalculationRequest(id, email, reference, enterLineNumbers(emptyFileLines))
+            val req = BulkCalculationRequest(upscanCallback.reference, email, reference, enterLineNumbers(emptyFileLines))
             Logger.debug(s"[BulkRequestCreationService][createBulkRequest] size : empty")
             Right(req)
           }
           else {
-            val req = BulkCalculationRequest(id, email, reference, enterLineNumbers(bulkCalculationRequestLines.drop(1)))
+            val req = BulkCalculationRequest(upscanCallback.reference, email, reference, enterLineNumbers(bulkCalculationRequestLines.drop(1)))
             Logger.debug(s"[BulkRequestCreationService][createBulkRequest] size : ${req.calculationRequests.size}")
             Right(req)
           }

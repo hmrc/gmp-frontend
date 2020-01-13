@@ -19,12 +19,10 @@ package services
 import com.google.inject.Inject
 import config.ApplicationConfig
 import connectors.UpscanConnector
-import models.upscan.{UploadId, UpscanInitiateRequest, UpscanInitiateResponse}
+import models.upscan.{UpscanInitiateRequest, UpscanInitiateResponse}
 import play.api.{Environment, Mode}
-import play.api.Mode.Mode
 import play.api.mvc.{Call, Request}
 import uk.gov.hmrc.http.HeaderCarrier
-
 import scala.concurrent.Future
 
 class UpscanService @Inject()(
@@ -40,7 +38,7 @@ class UpscanService @Inject()(
     val callback = controllers.routes.FileUploadController.callback(hc.sessionId.get.value)
       .absoluteURL(environment.mode == Mode.Prod)
 
-    val success = controllers.routes.FileUploadController.success()
+    val success = controllers.routes.BulkReferenceController.get()
     val failure = controllers.routes.FileUploadController.failure()
     val upscanInitiateRequest = UpscanInitiateRequest(callback, success, failure)
     upscanConnector.getUpscanFormData(upscanInitiateRequest)

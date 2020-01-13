@@ -50,7 +50,7 @@ class BulkRequestReceivedController @Inject()(authAction: AuthAction,
           case Some(session) if session.callBackData.isDefined =>
             val callbackData = session.callBackData.get
             val errorPageForToMuchData = Ok(views.html.failure(Messages("gmp.bulk.failure.too_large"), Messages("gmp.bulk.file_too_large.header"), Messages("gmp.bulk_failure_file_too_large.title")))
-            bulkRequestCreationService.createBulkRequest(callbackData.collection, callbackData.id, session.emailAddress.getOrElse(""), session.reference.getOrElse("")) match {
+            bulkRequestCreationService.createBulkRequest(callbackData, session.emailAddress.getOrElse(""), session.reference.getOrElse("")) match {
 
               case Right(bulkRequest) => gmpBulkConnector.sendBulkRequest(bulkRequest, link).map {
                   case OK => Ok(views.html.bulk_request_received(bulkRequest.reference))

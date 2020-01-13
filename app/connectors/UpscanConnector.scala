@@ -40,7 +40,7 @@ class UpscanConnector @Inject()(
   )
 
   private val upscanInitiateHost: String = configuration.upscanInitiateHost
-  private[connectors] val upscanInitiatePath: String = "/upscan/initiate"
+  private[connectors] val upscanInitiatePath: String = "/upscan/v2/initiate"
   private val upscanInitiateUrl: String = upscanInitiateHost + upscanInitiatePath
 
   def getUpscanFormData(body: UpscanInitiateRequest)

@@ -49,10 +49,6 @@ class ApplicationConfig @Inject()(
   val upscanInitiateHost: String = servicesConfig.baseUrl("upscan")
   val upscanRedirectBase: String = runModeConfiguration.get[String]("microservice.services.upscan.redirect-base")
 
-  val csvCacheInProgressRetryAmount: Int = runModeConfiguration.getOptional[Int]("retry.csv-callback-cache.in-progress.amount").getOrElse(1)
-  val csvCacheCompletedRetryAmount: Int = runModeConfiguration.getOptional[Int]("retry.csv-callback-cache.completed-upload.amount").getOrElse(1)
-  val retryDelay: FiniteDuration = (runModeConfiguration.getMilliseconds("retry.delay").get) milliseconds
-
 }
 
 

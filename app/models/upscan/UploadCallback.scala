@@ -26,17 +26,18 @@ import models.upscan.Reference
 import scala.util.Try
 
 sealed trait UpscanCallback {
-  def reference: Reference
+  def reference: String
 }
 
 case class UpscanReadyCallback(
-                                reference: Reference,
+                                reference: String,
+                                fileStatus: String,
                                 downloadUrl: URL,
                                 uploadDetails: UploadDetails
                               ) extends UpscanCallback
 
 case class UpscanFailedCallback(
-                                 reference: Reference,
+                                 reference: String,
                                  failureDetails: ErrorDetails
                                ) extends UpscanCallback
 
@@ -55,7 +56,7 @@ object UpscanCallback {
     override def writes(o: URL): JsValue = JsString(o.toString)
   }
 
-  implicit val readyCallbackBodyFormat: Reads[UpscanReadyCallback] = Json.reads[UpscanReadyCallback]
+  implicit val readyCallbackBodyFormat: Format[UpscanReadyCallback] = Json.format[UpscanReadyCallback]
   implicit val failedCallbackBodyReads: Reads[UpscanFailedCallback] = Json.reads[UpscanFailedCallback]
 
   implicit val reads: Reads[UpscanCallback] = new Reads[UpscanCallback] {

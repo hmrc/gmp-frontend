@@ -20,7 +20,7 @@ import com.google.inject.Inject
 import config.GmpSessionCache
 import metrics.ApplicationMetrics
 import models._
-import models.upscan.{NotStarted, UploadStatus, UploadedSuccessfully}
+import models.upscan._
 import play.api.Logger
 import play.api.mvc.Request
 import uk.gov.hmrc.http.HeaderCarrier
@@ -59,7 +59,7 @@ class SessionService @Inject()(metrics: ApplicationMetrics,gmpSessionCache: GmpS
     })
   }
 
-  def cacheCallBackData(_callBackData: Option[CallBackData])(implicit request: Request[_], hc: HeaderCarrier): Future[Option[GmpBulkSession]] = {
+  def cacheCallBackData(_callBackData: Option[UpscanReadyCallback])(implicit request: Request[_], hc: HeaderCarrier): Future[Option[GmpBulkSession]] = {
     val timer = metrics.keystoreStoreTimer.time()
       Logger.debug(s"[SessionService][cacheCallBackData] : ${_callBackData}")
 
@@ -78,7 +78,8 @@ class SessionService @Inject()(metrics: ApplicationMetrics,gmpSessionCache: GmpS
     })
   }
 
-  def cacheEmailAndReference(_email: Option[String], _reference: Option[String])(implicit request: Request[_], hc: HeaderCarrier ): Future[Option[GmpBulkSession]] = {
+  def cacheEmailAndReference(_email: Option[String], _reference: Option[String])
+                            (implicit request: Request[_], hc: HeaderCarrier ): Future[Option[GmpBulkSession]] = {
     val timer = metrics.keystoreStoreTimer.time()
 
     Logger.debug(s"[SessionService][cacheEmailAndReferencea] : email: ${_email}; reference: ${_reference}")
@@ -344,12 +345,5 @@ class SessionService @Inject()(metrics: ApplicationMetrics,gmpSessionCache: GmpS
   def getCallbackRecord(implicit request: Request[_], hc: HeaderCarrier): Future[Option[UploadStatus]] = {
     gmpSessionCache.fetchAndGetEntry[UploadStatus](GMP_BULK_SESSION_KEY)
   }
-
-  def getSuccessfulCallbackRecord(implicit request: Request[_], hc: HeaderCarrier): Future[Option[UploadedSuccessfully]] = {
-    getCallbackRecord.map(_.flatMap {
-      case upload: UploadedSuccessfully => Some(upload)
-      case _ => None
-      })
-    }
 
 }

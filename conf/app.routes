@@ -51,7 +51,6 @@ POST        /equalise                                     controllers.EqualiseCo
 GET         /equalise/back                                controllers.EqualiseController.back
 
 GET         /upload-csv                                   controllers.FileUploadController.get
-GET         /upload-csv/success                           controllers.FileUploadController.success
 GET         /upload-csv/failure                           controllers.FileUploadController.failure
 POST        /upload-csv/callback/:sessionId               controllers.FileUploadController.callback(sessionId: String)
 
