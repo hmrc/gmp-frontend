@@ -34,7 +34,7 @@ class ServiceUnavailableControllerSpec extends PlaySpec with OneServerPerSuite w
   implicit val messagesProvider=MessagesImpl(Lang("en"), messagesAPI)
   implicit val ac=app.injector.instanceOf[ApplicationConfig]
 
-  object TestController extends ServiceUnavailableController(FakeGmpContext,ac) {
+  object TestController extends ServiceUnavailableController(mcc, FakeGmpContext,ac) {
     override implicit val context = FakeGmpContext
   }
 
