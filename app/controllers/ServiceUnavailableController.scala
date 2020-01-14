@@ -19,14 +19,16 @@ package controllers
 import com.google.inject.{Inject, Singleton}
 import config.{ApplicationConfig, GmpContext}
 import play.api.Play.current
+import play.api.i18n.{Messages, MessagesImpl}
 import play.api.i18n.Messages.Implicits._
-import play.api.mvc.{Action, Controller}
+import play.api.mvc.{AbstractController, Action, BaseController, Controller, MessagesControllerComponents}
 
 @Singleton
-class ServiceUnavailableController @Inject()(gmpContext: GmpContext,ac:ApplicationConfig) extends Controller {
+class ServiceUnavailableController @Inject()(val mcc: MessagesControllerComponents,gmpContext: GmpContext,ac:ApplicationConfig) extends AbstractController(mcc) {
 
   implicit val context: GmpContext = gmpContext
   implicit  val applicationConfig:ApplicationConfig=ac
+  implicit lazy val messages: Messages = MessagesImpl(mcc.langs.availables.head, mcc.messagesApi)
 
   def get = Action {
     implicit request => {
