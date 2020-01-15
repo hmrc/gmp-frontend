@@ -29,6 +29,8 @@ class CalculationResponseSpec extends PlaySpec with MockitoSugar with OneServerP
   implicit val messagesAPI=app.injector.instanceOf[MessagesApi]
   implicit val messagesProvider=MessagesImpl(Lang("en"), messagesAPI)
 
+  val messages = messagesProvider.messages
+
 
   val nino = RandomNino.generate
 
@@ -277,47 +279,47 @@ class CalculationResponseSpec extends PlaySpec with MockitoSugar with OneServerP
       "return correct header for survivor and revaluation" in {
         val revalDate = new LocalDate(2010, 1, 1)
         val response = CalculationResponse("John Johnson", nino, "S1234567T", None, Some(revalDate), Nil, 0, None, None, None, false, 3)
-        response.header must be(Messages("gmp.results.survivor.revaluation.header", formatDate(revalDate)))
+        response.header(messages) must be(Messages("gmp.results.survivor.revaluation.header", formatDate(revalDate)))
       }
 
       "return correct header for survivor and date of death" in {
         val dod = new LocalDate(2010, 1, 1)
         val response = CalculationResponse("John Johnson", nino, "S1234567T", None, None, Nil, 0, None, None, Some(dod), false, 3)
-        response.header must be(Messages("gmp.results.survivor.header", formatDate(dod)))
+        response.header(messages) must be(Messages("gmp.results.survivor.header", formatDate(dod)))
       }
 
       "return correct header for survivor" in {
         val response = CalculationResponse("John Johnson", nino, "S1234567T", None, None, Nil, 0, None, None, None, false, 3)
-        response.header must be(Messages("gmp.results.survivor.header"))
+        response.header(messages) must be(Messages("gmp.results.survivor.header"))
       }
 
       "return correct header for spa" in {
         val spaDate = new LocalDate(2010, 1, 1)
         val response = CalculationResponse("John Johnson", nino, "S1234567T", None, None, Nil, 0, Some(spaDate), None, None, false, 4)
-        response.header must be(Messages("gmp.spa.header", formatDate(spaDate)))
+        response.header(messages) must be(Messages("gmp.spa.header", formatDate(spaDate)))
       }
 
       "return correct header for pa" in {
         val paDate = new LocalDate(2010, 1, 1)
         val response = CalculationResponse("John Johnson", nino, "S1234567T", None, None, Nil, 0, None, Some(paDate), None, false, 2)
-        response.header must be(Messages("gmp.payable_age.header", formatDate(paDate)))
+        response.header(messages) must be(Messages("gmp.payable_age.header", formatDate(paDate)))
       }
 
       "return correct header with no revaluation" in {
         val response = CalculationResponse("John Johnson", nino, "S1234567T", None, None, List(CalculationPeriod(Some(new LocalDate(2015, 11, 10)),new LocalDate(2015, 11, 10), "0.00", "0.00", 0, 0, None)), 0, None, None, None, false, 1)
-        response.header must be(Messages("gmp.leaving.scheme.header", formatDate(new LocalDate(2015, 11, 10))))
+        response.header(messages) must be(Messages("gmp.leaving.scheme.header", formatDate(new LocalDate(2015, 11, 10))))
       }
 
       "return correct header with with revaluation date but revaluation unsuccessful" in {
         val revalDate = new LocalDate(2010, 1, 1)
         val response = CalculationResponse("John Johnson", nino, "S1234567T", None, Some(revalDate), List(CalculationPeriod(Some(new LocalDate(2015, 11, 10)),new LocalDate(2015, 11, 10), "0.00", "0.00", 0, 0, Some(1))), 0, None, None, None, false, 1)
-        response.header must be(Messages("gmp.leaving.scheme.header", formatDate(revalDate)))
+        response.header(messages) must be(Messages("gmp.leaving.scheme.header", formatDate(revalDate)))
       }
 
       "return correct header for revaluation" in {
         val revalDate = new LocalDate(2010, 1, 1)
         val response = CalculationResponse("John Johnson", nino, "S1234567T", None, Some(revalDate), List(CalculationPeriod(Some(new LocalDate(2015, 11, 10)),new LocalDate(2015, 11, 10), "0.00", "0.00", 0, 0, None)), 0, None, None, None, false, 1)
-        response.header must be(Messages("gmp.leaving.revalued.header", formatDate(revalDate)))
+        response.header(messages) must be(Messages("gmp.leaving.revalued.header", formatDate(revalDate)))
       }
 
     }
