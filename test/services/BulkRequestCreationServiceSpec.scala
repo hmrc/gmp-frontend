@@ -22,7 +22,7 @@ import java.nio.charset.Charset
 import java.time.Instant
 
 import helpers.RandomNino
-import models.upscan.{UploadDetails, UpscanReadyCallback}
+import models.upscan.{UploadDetails, UploadedSuccessfully, UpscanReadyCallback}
 import models.{BulkCalculationRequest, BulkCalculationRequestLine, CalculationRequestLine}
 import org.joda.time.{LocalDate, LocalDateTime}
 import org.scalatest.concurrent.ScalaFutures
@@ -44,8 +44,7 @@ class BulkRequestCreationServiceSpec extends PlaySpec with ScalaFutures with Moc
   val nino1 = RandomNino.generate
   val nino2 = RandomNino.generate
 
-  def upscanCallback(ref: String) = UpscanReadyCallback(ref, "READY", new URL("http://download"),
-    UploadDetails(Instant.now(), "checkSum", "CSV", "test1"))
+  def upscanCallback(ref: String) = UploadedSuccessfully("ref1", "file1", "http://download1")
 
   val calcLine1 = BulkCalculationRequestLine(1, Some(CalculationRequestLine("S1301234T", nino1, "Isambard", "Brunell", Some("IB"), Some(1), Some("2017-02-02"), Some("2010-01-01"), Some(1), 1)), None, None)
   val calcLine2 = BulkCalculationRequestLine(1, Some(CalculationRequestLine("S1301234T", nino2, "Tim", "O’Brien", Some("GS"), Some(1), Some("2017-02-02"), Some("2010-01-01"), Some(1), 1)), None, None)
@@ -339,12 +338,12 @@ class BulkRequestCreationServiceSpec extends PlaySpec with ScalaFutures with Moc
     }
 
     "not send term date when term date is on or before 05/04/2016" in {
-      val bulkRequest = TestBulkRequestCreationService.createBulkRequest(collection, "23", bulkRequest23.email, bulkRequest23.reference).right.get
+      val bulkRequest = TestBulkRequestCreationService.createBulkRequest(upscanCallback("23"), "23", bulkRequest23.email).right.get
       bulkRequest.getFirstValid.terminationDate mustBe None
     }
 
     "should send through a LINE_EMPTY validation error when there are no calculations to perform" in {
-      val bulkRequest = TestBulkRequestCreationService.createBulkRequest(collection, "25", "tim@burton.com", "uploadRef123").right.get
+      val bulkRequest = TestBulkRequestCreationService.createBulkRequest(upscanCallback("25"), "25", "tim@burton.com").right.get
       val errors = bulkRequest.calculationRequests.head.validationErrors
 
       errors mustBe defined
@@ -358,7 +357,7 @@ class BulkRequestCreationServiceSpec extends PlaySpec with ScalaFutures with Moc
         override def sourceData(resourceLocation: String): Iterator[Char] = dataLineWith3Calcs.iterator
       }
 
-      val result = TestService.createBulkRequest(collection, "26", "tim@burton.com", "uploadRef123")
+      val result = TestService.createBulkRequest(upscanCallback("ref26"), "26", "tim@burton.com")
 
       result.isLeft mustBe true
     }
@@ -370,7 +369,7 @@ class BulkRequestCreationServiceSpec extends PlaySpec with ScalaFutures with Moc
         override def sourceData(resourceLocation: String): Iterator[Char] = dataLineWith3Calcs.iterator
       }
 
-      val result = TestService.createBulkRequest(collection, "26", "tim@burton.com", "uploadRef123")
+      val result = TestService.createBulkRequest(upscanCallback("26"), "26", "tim@burton.com")
 
       result.isRight mustBe true
     }
@@ -385,7 +384,7 @@ class BulkRequestCreationServiceSpec extends PlaySpec with ScalaFutures with Moc
 
       }
 
-      val bulkRequest = TestService.createBulkRequest(collection, "26", "tim@burton.com", "uploadRef123")
+      val bulkRequest = TestService.createBulkRequest(upscanCallback("ref26"), "26", "tim@burton.com")
       assert(bulkRequest == Left(IncorrectlyEncodedException))
     }
   }

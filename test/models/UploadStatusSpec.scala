@@ -22,7 +22,7 @@ import uk.gov.hmrc.play.test.UnitSpec
 
 class UploadStatusSpec extends UnitSpec {
 
-  val statuses = List(NotStarted, Failed, InProgress)
+  val statuses = List(NotStarted, InProgress)
   "UploadStats json Reads" should {
     statuses.foreach { status =>
       s"return $status" when {
@@ -37,8 +37,8 @@ class UploadStatusSpec extends UnitSpec {
       "_type is UploadedSuccessfully" in {
         val expectedName = "fileName"
         val expectedUrl = "downloadUrl"
-        val json = s"""{"_type": "UploadedSuccessfully", "name": "$expectedName", "downloadUrl": "$expectedUrl"}"""
-        val expectedResponse = UploadedSuccessfully(expectedName, expectedUrl, None)
+        val json = s"""{"_type": "UploadedSuccessfully","reference": "ref1", "fileName": "$expectedName", "downloadUrl": "$expectedUrl"}"""
+        val expectedResponse = UploadedSuccessfully("ref1", expectedName, expectedUrl, None)
         Json.parse(json).as[UploadStatus] shouldBe expectedResponse
       }
     }
@@ -73,8 +73,8 @@ class UploadStatusSpec extends UnitSpec {
         val expectedUrl = "downloadUrl"
         val noOfRows = 2
         val expectedJson =
-          s"""{"name":"$expectedName","downloadUrl":"$expectedUrl","noOfRows":$noOfRows,"_type":"UploadedSuccessfully"}"""
-        val uploadStatus: UploadStatus = UploadedSuccessfully(expectedName, expectedUrl, Some(noOfRows))
+          s"""{"reference":"ref1","fileName":"$expectedName","downloadUrl":"$expectedUrl","_type":"UploadedSuccessfully","noOfRows":$noOfRows}"""
+        val uploadStatus: UploadStatus = UploadedSuccessfully("ref1", expectedName, expectedUrl, Some(noOfRows))
         Json.toJson(uploadStatus).toString() shouldBe expectedJson
       }
     }

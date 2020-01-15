@@ -17,9 +17,9 @@
 package controllers
 
 import config.{ApplicationConfig, GmpSessionCache}
-import connectors.AttachmentsConnector
 import controllers.auth.{AuthAction, FakeAuthAction}
 import models._
+import models.upscan.UploadedSuccessfully
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.mockito.MockitoSugar
@@ -30,7 +30,7 @@ import play.api.mvc.{AnyContentAsEmpty, MessagesControllerComponents, Result}
 import play.api.test.Helpers._
 import play.api.test.{FakeHeaders, FakeRequest}
 import play.twirl.api.Html
-import services.SessionService
+import services.{SessionService, UpscanService}
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.play.partials.HtmlPartial
 
@@ -38,9 +38,9 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class FileUploadControllerSpec extends PlaySpec with OneServerPerSuite with MockitoSugar {
   val mockAuthConnector = mock[AuthConnector]
-  val mockAttachmentsConnector = mock[AttachmentsConnector]
   val mockSessionService = mock[SessionService]
   val mockAuthAction = mock[AuthAction]
+  val upscanService = mock[UpscanService]
   implicit val mcc = app.injector.instanceOf[MessagesControllerComponents]
   implicit val ec = app.injector.instanceOf[ExecutionContext]
   implicit val messagesAPI=app.injector.instanceOf[MessagesApi]
@@ -49,13 +49,12 @@ class FileUploadControllerSpec extends PlaySpec with OneServerPerSuite with Mock
   implicit val gmpSessionCache=app.injector.instanceOf[GmpSessionCache]
 
 
-  val gmpBulkSession = GmpBulkSession(Some(CallBackData(collection = "gmp", id = "id", length = 1L, name = None,
-    customMetadata = None, contentType = None, sessionId = "THING")), None, None)
+  val gmpBulkSession = GmpBulkSession(Some(UploadedSuccessfully("ref1", "name1", "download1")), None, None)
 
   val fakeRequest = FakeRequest(method = "POST", uri = "", headers = FakeHeaders(Seq("Content-type" -> ("application/json"))), body = Json.toJson(gmpBulkSession.callBackData.get))
 
-  object TestFileUploadController extends FileUploadController(FakeAuthAction, mockAuthConnector, mockSessionService, FakeGmpContext,mockAttachmentsConnector,mcc,ac,ec,gmpSessionCache) {
-//
+  object TestFileUploadController extends FileUploadController(FakeAuthAction, mockAuthConnector, mockSessionService, FakeGmpContext,upscanService,mcc,ac,ec,gmpSessionCache) {
+
  }
 
   "File upload controller GET " must {
@@ -84,21 +83,14 @@ class FileUploadControllerSpec extends PlaySpec with OneServerPerSuite with Mock
 
       "authorised users" must {
         "have a status of OK for generic error" in {
-            val result = TestFileUploadController.failure()(FakeRequest())
+            val result = TestFileUploadController.failure("", "", "")(FakeRequest())
               status(result) must be(OK)
               contentAsString(result) must include(Messages("gmp.bulk.failure.generic"))
               contentAsString(result) must include(Messages("gmp.bulk.problem.header"))
         }
 
-        "show correct message for virus error" in {
-          val result = TestFileUploadController.failure()(FakeRequest("GET", "/upload-csv/failure?error_message=VIRUS"))
-              status(result) must be(OK)
-              contentAsString(result) must include(Messages("gmp.bulk.failure.antivirus"))
-              contentAsString(result) must include(Messages("gmp.bulk.problem.header"))
-        }
-
         "show correct message for missing file error" in {
-          val result = TestFileUploadController.failure()(FakeRequest("GET", "/upload-csv/failure?error_message=SELECT"))
+          val result = TestFileUploadController.failure("EMPTYREQUESTBODY", "", "")(FakeRequest("GET", "/upload-csv/failure?error_message=SELECT"))
               status(result) must be(OK)
               contentAsString(result) must include(Messages("gmp.bulk.failure.missing"))
               contentAsString(result) must include(Messages("gmp.bulk.problem.header"))
@@ -112,7 +104,7 @@ class FileUploadControllerSpec extends PlaySpec with OneServerPerSuite with Mock
 
     "successfully store callback data in session cache" in {
       when(mockSessionService.cacheCallBackData(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpBulkSession)))
-      val result = TestFileUploadController.callback()(fakeRequest)
+      val result = TestFileUploadController.callback("session1")(fakeRequest)
       status(result) must be(OK)
 
     }
@@ -120,24 +112,25 @@ class FileUploadControllerSpec extends PlaySpec with OneServerPerSuite with Mock
     "throw exception when doesn't store callback data" in {
       when(mockSessionService.cacheCallBackData(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(None))
       intercept[RuntimeException]{
-       await(TestFileUploadController.callback()(fakeRequest))
+       await(TestFileUploadController.callback("1")(fakeRequest))
       }
     }
 
     "recover from failures more" in {
       when(mockSessionService.cacheCallBackData(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.failed(new RuntimeException))
       intercept[RuntimeException]{
-        await(TestFileUploadController.callback()(fakeRequest))
+        await(TestFileUploadController.callback("1")(fakeRequest))
       }
     }
 
     "fail to store callback data in session cache when no sessionId" in {
-      val callbackData = gmpBulkSession.callBackData.get.copy(sessionId = "")
+      import models.upscan.UploadStatus.uploadedSuccessfullyFormat
+      val callbackData = UploadedSuccessfully("ref2", "name2", "download2")
 
       val fakeRequest = FakeRequest(method = "POST", uri = "", headers = FakeHeaders(Seq("Content-type" -> ("application/json"))), body = Json.toJson(callbackData))
       when(mockSessionService.cacheCallBackData(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.failed(new RuntimeException))
       intercept[RuntimeException]{
-        await(TestFileUploadController.callback()(fakeRequest))
+        await(TestFileUploadController.callback("1")(fakeRequest))
       }
     }
 
@@ -146,7 +139,7 @@ class FileUploadControllerSpec extends PlaySpec with OneServerPerSuite with Mock
 
       val fakeRequest = FakeRequest(method = "POST", uri = "", headers = FakeHeaders(Seq("Content-type" -> ("application/json"))), body = Json.toJson(gmpBulkSession.callBackData))
       when(mockSessionService.cacheCallBackData(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpBulkSession)))
-      val result = TestFileUploadController.callback()(fakeRequest)
+      val result = TestFileUploadController.callback("1")(fakeRequest)
       status(result) must be(OK)
 
     }
@@ -166,9 +159,9 @@ class FileUploadControllerSpec extends PlaySpec with OneServerPerSuite with Mock
       <button type="submit">Upload</button>
     </form>"""
 
-    when(mockAttachmentsConnector.getFileUploadPartial()(Matchers.any(),Matchers.any[Messages]())).thenReturn(Future.successful(HtmlPartial.Success(Some("thepartial"), Html(""))))
+    //when(mockAttachmentsConnector.getFileUploadPartial()(Matchers.any(),Matchers.any[Messages]())).thenReturn(Future.successful(HtmlPartial.Success(Some("thepartial"), Html(""))))
 
-    handler(TestFileUploadController.get()(request))
+    //handler(TestFileUploadController.get()(request))
   }
 
 }

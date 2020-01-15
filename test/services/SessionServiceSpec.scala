@@ -20,6 +20,7 @@ import config.GmpSessionCache
 import helpers.RandomNino
 import metrics.ApplicationMetrics
 import models._
+import models.upscan.UploadedSuccessfully
 import org.mockito.Matchers._
 import org.mockito.Mockito._
 import org.scalatest.concurrent.ScalaFutures
@@ -43,7 +44,7 @@ class SessionServiceSpec extends PlaySpec with OneServerPerSuite with ScalaFutur
   val mockSessionCache = mock[GmpSessionCache]
   val metrics = app.injector.instanceOf[ApplicationMetrics]
 
-  val callBackData = CallBackData("AAAAA", "11111", 1L, Some("Ted"), Some("application/json"), "YYYYYYY", None)
+  val callBackData = UploadedSuccessfully("ref1", "file1", "download1")
   val gmpBulkSession = GmpBulkSession(Some(callBackData), Some(EmailAddress("somebody@somewhere.com")), Some("reference"))
   val bulkJson = Json.toJson[GmpBulkSession](gmpBulkSession)
 
@@ -304,22 +305,22 @@ class SessionServiceSpec extends PlaySpec with OneServerPerSuite with ScalaFutur
       "cache callbackdata" in {
         when(mockSessionCache.fetchAndGetEntry[GmpBulkSession](any())(any(), any(), any())).thenReturn(Future.successful(None))
 
-        val expectedResult = GmpBulkSession(Some(CallBackData("BBBBB", "222222", 2L, Some("Bill"), Some("application/json"), "XXXXXXX", None)), None, None)
+        val expectedResult = GmpBulkSession(Some(UploadedSuccessfully("reference", "fileName", "download")), None, None)
         val json = Json.toJson[GmpBulkSession](expectedResult)
 
         when(mockSessionCache.cache[GmpBulkSession](any(), any())(any(), any(), any())).thenReturn(Future.successful(CacheMap("sessionValue", Map("gmp_bulk_session" -> json))))
-        val result = Await.result(TestSessionService.cacheCallBackData(Some(CallBackData("BBBBB", "222222", 2L, Some("Bill"), Some("application/json"), "XXXXXXX", None)))(request, hc), 10 seconds)
+        val result = Await.result(TestSessionService.cacheCallBackData(Some(UploadedSuccessfully("reference", "fileName", "download")))(request, hc), 10 seconds)
         result must be(Some(expectedResult))
       }
 
       "update callbackdata" in {
         when(mockSessionCache.fetchAndGetEntry[GmpBulkSession](any())(any(), any(), any())).thenReturn(Future.successful(Some(gmpBulkSession)))
 
-        val expectedResult = gmpBulkSession.copy(callBackData = Some(CallBackData("BBBBB", "222222", 2L, Some("Bill"), Some("application/json"), "XXXXXXX", None)))
+        val expectedResult = gmpBulkSession.copy(callBackData = Some(UploadedSuccessfully("reference", "fileName", "download")))
         val json = Json.toJson[GmpBulkSession](expectedResult)
 
         when(mockSessionCache.cache[GmpBulkSession](any(), any())(any(), any(), any())).thenReturn(Future.successful(CacheMap("sessionValue", Map("gmp_bulk_session" -> json))))
-        val result = Await.result(TestSessionService.cacheCallBackData(Some(CallBackData("BBBBB", "222222", 2L, Some("Bill"), Some("application/json"), "XXXXXXX", None)))(request, hc), 10 seconds)
+        val result = Await.result(TestSessionService.cacheCallBackData(Some(UploadedSuccessfully("reference", "fileName", "download")))(request, hc), 10 seconds)
         result must be(Some(expectedResult))
       }
 

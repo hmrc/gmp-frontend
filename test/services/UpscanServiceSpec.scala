@@ -48,8 +48,8 @@ class UpscanServiceSpec extends UnitSpec with OneAppPerSuite with MockitoSugar {
       implicit val request: Request[AnyRef] = FakeRequest("GET", "http://localhost:9941/")
       val hc = HeaderCarrier(sessionId = Some(SessionId("sessionid")))
       val callback = controllers.routes.FileUploadController.callback(hc.sessionId.get.value).absoluteURL()
-      val success = controllers.routes.BulkReferenceController.get().absoluteURL()
-      val failure = controllers.routes.FileUploadController.failure().absoluteURL()
+      val success = controllers.routes.FileUploadController.showResult().absoluteURL()
+      val failure = "http://localhost:9941/guaranteed-minimum-pension/upload-csv/failure"
       val expectedInitiateRequest = UpscanInitiateRequest(callback, success, failure)
 
       val upscanInitiateResponse = UpscanInitiateResponse(Reference("reference"), "postTarget", formFields = Map.empty[String, String])
