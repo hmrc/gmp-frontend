@@ -37,7 +37,7 @@ gmp.offline.title = GMP checker offline - GOV.UK
 gmp.thank_you.title = GMP checker survey thanks - GOV.UK
 gmp.unauthorised.title = Wrong GMP checker login - GOV.UK
 gmp.fileupload.title = Upload GMP file - GOV.UK
-gmp.fileupload.success.title = File Uploaded - GOV.UK
+gmp.fileupload.verifying.title = Verifying uploaded file - GOV.UK
 gmp.session_missing.title = Incomplete GMP checker information - GOV.UK
 
 ############################################################################
@@ -111,7 +111,7 @@ gmp.post90.true.value = True-gender value
 gmp.post90.opposite = Opposite gender
 gmp.post90.opposite.value = Opposite-gender value
 
-gmp.fileupload.success.header = File uploaded
+gmp.fileupload.verifying.header = Verifying uploaded file
 
 ############################################################################
 # Buttons
@@ -205,7 +205,11 @@ gmp.bulk.failure.missing = You did not select a file to upload. Please go <a hre
 gmp.bulk.failure.generic = Something went wrong with uploading your file. <br/>There is probably a problem with the system so <a href="/guaranteed-minimum-pension/new-bulk-calculation">try again in a few moments</a>.
 gmp.bulk.failure.duplicate_upload = <span class="lede">We think you have already uploaded this file.</span><br/><br/>We recommend you wait for the results to be ready and do not duplicate file uploads. If you want to process the same file again, perhaps to give it a different name, <a href="/guaranteed-minimum-pension/upload-csv">resubmit it</a>.
 gmp.bulk.failure.too_large = You should include the details of no more than 25,000 members in each file. Try splitting the calculation requests across 2 or more files and <a href="/guaranteed-minimum-pension/upload-csv">upload them</a> separately.
+gmp.bulk.failure.wrong_type = The file is not of an allowed file type
+gmp.bulk.failure.rejected = The file was rejected
 gmp.back_to_dashboard = Back to the GMP checker
+gmp.bulk.scanning = Waiting for the file to be scanned
+gmp.bulk.successful = <b class="bold"> {0} </b> has been validated and can be submitted!
 
 ############################################################################
 # Errors

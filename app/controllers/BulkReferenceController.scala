@@ -43,16 +43,7 @@ lazy val bulkReferenceForm = brf.bulkReferenceForm
 
   def get = authAction.async {
       implicit request =>
-        val futureCallbackData: Future[Option[UploadStatus]] = sessionService.getCallbackRecord
-
-        futureCallbackData.map { file =>
-          file match {
-            case Some(file: UploadedSuccessfully) =>
-              Ok(views.html.bulk_reference(bulkReferenceForm))
-            case Some(status: UploadStatus) =>
-              Ok(views.html.bulk_reference(bulkReferenceForm))
-          }
-        }
+        Future.successful(Ok(views.html.bulk_reference(bulkReferenceForm)))
   }
 
   def post = authAction.async {

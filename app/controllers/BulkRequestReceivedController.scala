@@ -20,6 +20,7 @@ import com.google.inject.{Inject, Singleton}
 import config.{ApplicationConfig, GmpContext, GmpSessionCache}
 import connectors.GmpBulkConnector
 import controllers.auth.AuthAction
+import models.upscan.{UploadedSuccessfully, UpscanReadyCallback}
 import play.api.Logger
 import play.api.i18n.Messages
 import play.api.mvc.MessagesControllerComponents
@@ -47,8 +48,8 @@ class BulkRequestReceivedController @Inject()(authAction: AuthAction,
         val link = request.linkId
         Logger.debug(s"[BulkRequestReceivedController][get][GET] : ${request.body}")
         sessionService.fetchGmpBulkSession().flatMap {
-          case Some(session) if session.callBackData.isDefined =>
-            val callbackData = session.callBackData.get
+          case Some(session) if session.callBackData.isDefined && session.callBackData.get.isInstanceOf[UploadedSuccessfully] =>
+            val callbackData = session.callBackData.get.asInstanceOf[UploadedSuccessfully]
             val errorPageForToMuchData = Ok(views.html.failure(Messages("gmp.bulk.failure.too_large"), Messages("gmp.bulk.file_too_large.header"), Messages("gmp.bulk_failure_file_too_large.title")))
             bulkRequestCreationService.createBulkRequest(callbackData, session.emailAddress.getOrElse(""), session.reference.getOrElse("")) match {
 

@@ -38,8 +38,8 @@ class UpscanService @Inject()(
     val callback = controllers.routes.FileUploadController.callback(hc.sessionId.get.value)
       .absoluteURL(environment.mode == Mode.Prod)
 
-    val success = controllers.routes.BulkReferenceController.get()
-    val failure = controllers.routes.FileUploadController.failure()
+    val success = controllers.routes.FileUploadController.showResult()
+    val failure = redirectUrlBase + "guaranteed-minimum-pension/upload-csv/failure"
     val upscanInitiateRequest = UpscanInitiateRequest(callback, success, failure)
     upscanConnector.getUpscanFormData(upscanInitiateRequest)
   }

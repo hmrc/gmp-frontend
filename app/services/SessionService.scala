@@ -34,6 +34,7 @@ class SessionService @Inject()(metrics: ApplicationMetrics,gmpSessionCache: GmpS
   val cleanSession = GmpSession(MemberDetails("", "", ""), "", "", None, None, Leaving(GmpDate(None, None, None), None), None)
 
   val GMP_BULK_SESSION_KEY = "gmp_bulk_session"
+  val CALLBACK_SESSION_KEY = "gmp_callback_session"
   val cleanBulkSession = GmpBulkSession(None, None, None)
 
   def fetchGmpBulkSession()(implicit request: Request[_], hc: HeaderCarrier): Future[Option[GmpBulkSession]] = {
@@ -59,7 +60,7 @@ class SessionService @Inject()(metrics: ApplicationMetrics,gmpSessionCache: GmpS
     })
   }
 
-  def cacheCallBackData(_callBackData: Option[UpscanReadyCallback])(implicit request: Request[_], hc: HeaderCarrier): Future[Option[GmpBulkSession]] = {
+  def cacheCallBackData(_callBackData: Option[UploadStatus])(implicit request: Request[_], hc: HeaderCarrier): Future[Option[GmpBulkSession]] = {
     val timer = metrics.keystoreStoreTimer.time()
       Logger.debug(s"[SessionService][cacheCallBackData] : ${_callBackData}")
 
@@ -335,15 +336,15 @@ class SessionService @Inject()(metrics: ApplicationMetrics,gmpSessionCache: GmpS
   }
 
   def createCallbackRecord(implicit request: Request[_], hc: HeaderCarrier): Future[Any] = {
-    gmpSessionCache.cache[UploadStatus](GMP_BULK_SESSION_KEY, NotStarted)
+    gmpSessionCache.cache[UploadStatus](CALLBACK_SESSION_KEY, NotStarted)
   }
 
   def updateCallbackRecord(sessionId: String, uploadStatus: UploadStatus)(implicit request: Request[_], hc: HeaderCarrier): Future[Any] = {
-    gmpSessionCache.cache(gmpSessionCache.defaultSource, sessionId, GMP_BULK_SESSION_KEY, uploadStatus)
+    gmpSessionCache.cache(gmpSessionCache.defaultSource, sessionId, CALLBACK_SESSION_KEY, uploadStatus)
   }
 
   def getCallbackRecord(implicit request: Request[_], hc: HeaderCarrier): Future[Option[UploadStatus]] = {
-    gmpSessionCache.fetchAndGetEntry[UploadStatus](GMP_BULK_SESSION_KEY)
+    gmpSessionCache.fetchAndGetEntry[UploadStatus](CALLBACK_SESSION_KEY)
   }
 
 }

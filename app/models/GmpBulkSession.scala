@@ -16,11 +16,11 @@
 
 package models
 
-import models.upscan.{UpscanCallback, UpscanReadyCallback}
+import models.upscan.{UploadStatus, UpscanCallback, UpscanReadyCallback}
 import play.api.libs.json.Json
 import models.upscan.UpscanCallback._
 
-case class GmpBulkSession(callBackData: Option[UpscanReadyCallback], emailAddress: Option[String], reference: Option[String])
+case class GmpBulkSession(callBackData: Option[UploadStatus], emailAddress: Option[String], reference: Option[String])
 
 object GmpBulkSession {
   implicit val formats = Json.format[GmpBulkSession]

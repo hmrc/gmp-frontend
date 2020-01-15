@@ -17,7 +17,7 @@
 package services
 
 import com.google.inject.Inject
-import models.upscan.{UpscanCallback, UpscanReadyCallback}
+import models.upscan.{UploadedSuccessfully, UpscanCallback, UpscanReadyCallback}
 import models.{BulkCalculationRequest, BulkCalculationRequestLine, CalculationRequestLine}
 import org.joda.time.LocalDate
 import org.joda.time.format.DateTimeFormat
@@ -91,8 +91,8 @@ class BulkRequestCreationService @Inject()(environment: Environment,
     for ((x, i) <- bulkCalculationRequestLines.zipWithIndex) yield x.copy(lineId = i + 1)
   }
 
-  def createBulkRequest(upscanCallback: UpscanReadyCallback, email: String, reference: String): Either[Throwable, BulkCalculationRequest] = {
-    val enumerator = new LimitingEnumerator(MAX_LINES, LINE_FEED.toByte.toChar, sourceData(upscanCallback.downloadUrl.toExternalForm))
+  def createBulkRequest(upscanCallback: UploadedSuccessfully, email: String, reference: String): Either[Throwable, BulkCalculationRequest] = {
+    val enumerator = new LimitingEnumerator(MAX_LINES, LINE_FEED.toByte.toChar, sourceData(upscanCallback.downloadUrl))
 
     Try(list(enumerator, LINE_FEED.toByte.toChar, constructBulkCalculationRequestLine(_))) match {
       case Success(bulkCalculationRequestLines) =>

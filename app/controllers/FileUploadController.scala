@@ -19,7 +19,9 @@ package controllers
 import com.google.inject.{Inject, Singleton}
 import config.{ApplicationConfig, GmpContext, GmpSessionCache}
 import controllers.auth.AuthAction
+import models.GmpBulkSession
 import models.upscan._
+import models.upscan.UploadStatus
 import play.api.Logger
 import play.api.i18n.Messages
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -47,6 +49,7 @@ class FileUploadController @Inject()(authAction: AuthAction,
   def get = authAction.async {
     implicit request =>
       for {
+        _ <- sessionService.resetGmpBulkSession()
         response <- upscanService.getUpscanFormData()
         _ <- sessionService.createCallbackRecord
       } yield {
@@ -54,12 +57,33 @@ class FileUploadController @Inject()(authAction: AuthAction,
       }
   }
 
-  def failure() = authAction {
+  def showResult(): Action[AnyContent] = Action.async { implicit request =>
+    val sessionId = hc.sessionId
+    for {
+      uploadResult <- sessionService.getCallbackRecord
+    } yield {
+          uploadResult match {
+            case Some(result: UploadStatus) => Ok(views.html.upload_result(result))
+            case None => BadRequest(s"Upload with session id ${sessionId.getOrElse("-")} not found")
+          }
+      }
+  }
+
+  def failure(errorCode: String, errorMessage: String, errorRequestId: String) = authAction {
     implicit request =>
-      request.getQueryString("error_message") match {
-        case Some(x) if x.toUpperCase.contains("VIRUS") => Ok(views.html.failure(Messages("gmp.bulk.failure.antivirus"), Messages("gmp.bulk.problem.header"), Messages("gmp.bulk_failure_antivirus.title")))
-        case Some(x) if x.toUpperCase.contains("SELECT") => Ok(views.html.failure(Messages("gmp.bulk.failure.missing"), Messages("gmp.bulk.problem.header"), Messages("gmp.bulk_failure_missing.title")))
-        case _ => Ok(views.html.failure(Messages("gmp.bulk.failure.generic"), Messages("gmp.bulk.problem.header"), Messages("gmp.bulk_failure_generic.title")))
+      errorCode match {
+        case a if a.toUpperCase.contains("INVALIDTEXTENCODING") =>
+          Ok(views.html.failure(Messages("gmp.bulk.incorrectlyEncoded"),
+            Messages("gmp.bulk.incorrectlyEncoded.header"),
+            Messages("gmp.bulk_failure_generic.title")))
+        case x if x.toUpperCase.contains("EMPTYREQUESTBODY") =>
+          Ok(views.html.failure(Messages("gmp.bulk.failure.missing"),
+            Messages("gmp.bulk.problem.header"),
+            Messages("gmp.bulk_failure_missing.title")))
+        case _ =>
+          Ok(views.html.failure(Messages("gmp.bulk.failure.generic"),
+            Messages("gmp.bulk.problem.header"),
+            Messages("gmp.bulk_failure_generic.title")))
       }
   }
 
@@ -73,26 +97,26 @@ class FileUploadController @Inject()(authAction: AuthAction,
       valid = callback => {
         val uploadStatus = callback match {
           case callback: UpscanReadyCallback =>
-            UploadedSuccessfully(callback.uploadDetails.fileName, callback.downloadUrl.toExternalForm)
-          case UpscanFailedCallback(_, details) =>
+            UploadedSuccessfully(callback.reference, callback.uploadDetails.fileName, callback.downloadUrl.toExternalForm)
+          case UpscanFailedCallback(ref, details) =>
             Logger.error(s"Callback for session id: $sessionId failed. Reason: ${details.failureReason}. Message: ${details.message}")
-            Failed
+            UploadedFailed(ref, details)
         }
         Logger.info(s"Updating callback for session: $sessionId to ${uploadStatus.getClass.getSimpleName}")
         for {
           result <- sessionService.updateCallbackRecord(sessionId, uploadStatus)(request, headerCarrier).map(_ => Ok("")).recover {
             case e: Throwable =>
               Logger.error(s"Failed to update callback record for session: $sessionId, timestamp: ${System.currentTimeMillis()}.", e)
-             InternalServerError("Exception occurred when attempting to update callback data")
+              InternalServerError("Exception occurred when attempting to update callback data")
           }
-          callBackData = callback.asInstanceOf[UpscanReadyCallback]
-          cacheResult <- sessionService.cacheCallBackData(Some(callBackData))(request, headerCarrier).map(_ => Ok("")).recover {
-            case e: Throwable =>
-              Logger.error(s"Failed to update gmp bulk session for: $sessionId, timestamp: ${System.currentTimeMillis()}.", e)
-              InternalServerError("Exception occurred when attempting to update gmp bulk session")
-          }
+          _ <- sessionService.cacheCallBackData(Some(uploadStatus))(request, headerCarrier).map(_ => Ok("")).recover {
+              case e: Throwable =>
+                Logger.error(s"Failed to update gmp bulk session for: $sessionId, timestamp: ${System.currentTimeMillis()}.", e)
+                InternalServerError("Exception occurred when attempting to update gmp bulk session")
+            }
+
         } yield {
-          cacheResult
+          result
         }
       }
     )
