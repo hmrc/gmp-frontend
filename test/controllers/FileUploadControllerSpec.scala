@@ -16,10 +16,12 @@
 
 package controllers
 
+import java.time.Instant
+
 import config.{ApplicationConfig, GmpSessionCache}
 import controllers.auth.{AuthAction, FakeAuthAction}
 import models._
-import models.upscan.UploadedSuccessfully
+import models.upscan._
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.mockito.MockitoSugar
@@ -33,7 +35,7 @@ import play.twirl.api.Html
 import services.{SessionService, UpscanService}
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.play.partials.HtmlPartial
-
+import java.net.URL
 import scala.concurrent.{ExecutionContext, Future}
 
 class FileUploadControllerSpec extends PlaySpec with OneServerPerSuite with MockitoSugar {
@@ -47,11 +49,13 @@ class FileUploadControllerSpec extends PlaySpec with OneServerPerSuite with Mock
   implicit val messagesProvider=MessagesImpl(Lang("en"), messagesAPI)
   implicit val ac=app.injector.instanceOf[ApplicationConfig]
   implicit val gmpSessionCache=app.injector.instanceOf[GmpSessionCache]
+  val uploadDetails = UploadDetails(Instant.now, "sum", "csv", "name1")
+  val callBackData = UpscanReadyCallback("ref1", "READY", new URL("http://localhost:9991/download1"), uploadDetails)
 
+  val emptyGmpBulkSession = GmpBulkSession(None, None, None)
+  val gmpBulkSession = GmpBulkSession(Some(UploadedSuccessfully("ref1", "name1", "http://localhost:9991/download1")), None, None)
 
-  val gmpBulkSession = GmpBulkSession(Some(UploadedSuccessfully("ref1", "name1", "download1")), None, None)
-
-  val fakeRequest = FakeRequest(method = "POST", uri = "", headers = FakeHeaders(Seq("Content-type" -> ("application/json"))), body = Json.toJson(gmpBulkSession.callBackData.get))
+  val fakeRequest = FakeRequest(method = "POST", uri = "", headers = FakeHeaders(Seq("Content-type" -> ("application/json"))), body = Json.toJson(callBackData))
 
   object TestFileUploadController extends FileUploadController(FakeAuthAction, mockAuthConnector, mockSessionService, FakeGmpContext,upscanService,mcc,ac,ec,gmpSessionCache) {
 
@@ -72,6 +76,9 @@ class FileUploadControllerSpec extends PlaySpec with OneServerPerSuite with Mock
 
       "be shown correct title for DOL" in {
 
+        when(mockSessionService.resetGmpBulkSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(emptyGmpBulkSession)))
+        when(upscanService.getUpscanFormData()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(UpscanInitiateResponse(Reference("ref1"), "to", Map())))
+        when(mockSessionService.createCallbackRecord(Matchers.any(), Matchers.any())).thenReturn(Future.successful(None))
           val result = TestFileUploadController.get(FakeRequest())
           status(result) must equal(OK)
           contentAsString(result) must include(Messages("gmp.fileupload.header"))
@@ -104,13 +111,14 @@ class FileUploadControllerSpec extends PlaySpec with OneServerPerSuite with Mock
 
     "successfully store callback data in session cache" in {
       when(mockSessionService.cacheCallBackData(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpBulkSession)))
+      when(mockSessionService.updateCallbackRecord(Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful())
       val result = TestFileUploadController.callback("session1")(fakeRequest)
       status(result) must be(OK)
 
     }
 
     "throw exception when doesn't store callback data" in {
-      when(mockSessionService.cacheCallBackData(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(None))
+      when(mockSessionService.cacheCallBackData(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.failed(new RuntimeException("Failed to update cache")))
       intercept[RuntimeException]{
        await(TestFileUploadController.callback("1")(fakeRequest))
       }
@@ -123,21 +131,11 @@ class FileUploadControllerSpec extends PlaySpec with OneServerPerSuite with Mock
       }
     }
 
-    "fail to store callback data in session cache when no sessionId" in {
-      import models.upscan.UploadStatus.uploadedSuccessfullyFormat
-      val callbackData = UploadedSuccessfully("ref2", "name2", "download2")
-
-      val fakeRequest = FakeRequest(method = "POST", uri = "", headers = FakeHeaders(Seq("Content-type" -> ("application/json"))), body = Json.toJson(callbackData))
-      when(mockSessionService.cacheCallBackData(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.failed(new RuntimeException))
-      intercept[RuntimeException]{
-        await(TestFileUploadController.callback("1")(fakeRequest))
-      }
-    }
 
     "store data when valid session id" in {
 
 
-      val fakeRequest = FakeRequest(method = "POST", uri = "", headers = FakeHeaders(Seq("Content-type" -> ("application/json"))), body = Json.toJson(gmpBulkSession.callBackData))
+      val fakeRequest = FakeRequest(method = "POST", uri = "", headers = FakeHeaders(Seq("Content-type" -> ("application/json"))), body = Json.toJson(callBackData))
       when(mockSessionService.cacheCallBackData(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpBulkSession)))
       val result = TestFileUploadController.callback("1")(fakeRequest)
       status(result) must be(OK)

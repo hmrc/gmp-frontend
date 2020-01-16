@@ -43,6 +43,20 @@ class UploadStatusSpec extends UnitSpec {
       }
     }
 
+    "return UploadedFailed" when {
+      "_type is Failed" in {
+        val expectedName = "fileName"
+        val expectedUrl = "downloadUrl"
+        val json =
+          s"""{"_type":"Failed","reference":"ref1","failureDetails": {
+             |"failureReason":"QUARANTINE",
+             |"message":"File had a virus"
+             |}}""".stripMargin
+        val expectedResponse = UploadedFailed("ref1", ErrorDetails("QUARANTINE", "File had a virus"))
+        Json.parse(json).as[UploadStatus] shouldBe expectedResponse
+      }
+    }
+
     "return JsonError" when {
       "_type is unexpected value" in {
         val unexpectedValue = "RandomValue"
@@ -75,6 +89,15 @@ class UploadStatusSpec extends UnitSpec {
         val expectedJson =
           s"""{"reference":"ref1","fileName":"$expectedName","downloadUrl":"$expectedUrl","_type":"UploadedSuccessfully","noOfRows":$noOfRows}"""
         val uploadStatus: UploadStatus = UploadedSuccessfully("ref1", expectedName, expectedUrl, Some(noOfRows))
+        Json.toJson(uploadStatus).toString() shouldBe expectedJson
+      }
+    }
+
+    "set _type as Failed with reference and error details in json" when {
+      "status is Failed" in {
+        val expectedJson =
+          s"""{"reference":"ref1","failureDetails":{"failureReason":"QUARANTINE","message":"File had a virus"},"_type":"Failed"}""".stripMargin
+        val uploadStatus: UploadStatus = UploadedFailed("ref1", ErrorDetails("QUARANTINE", "File had a virus"))
         Json.toJson(uploadStatus).toString() shouldBe expectedJson
       }
     }

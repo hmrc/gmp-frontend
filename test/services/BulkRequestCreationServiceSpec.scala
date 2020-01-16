@@ -44,7 +44,7 @@ class BulkRequestCreationServiceSpec extends PlaySpec with ScalaFutures with Moc
   val nino1 = RandomNino.generate
   val nino2 = RandomNino.generate
 
-  def upscanCallback(ref: String) = UploadedSuccessfully("ref1", "file1", "http://download1")
+  def upscanCallback(ref: String) = UploadedSuccessfully(ref, "file1", ref)
 
   val calcLine1 = BulkCalculationRequestLine(1, Some(CalculationRequestLine("S1301234T", nino1, "Isambard", "Brunell", Some("IB"), Some(1), Some("2017-02-02"), Some("2010-01-01"), Some(1), 1)), None, None)
   val calcLine2 = BulkCalculationRequestLine(1, Some(CalculationRequestLine("S1301234T", nino2, "Tim", "O’Brien", Some("GS"), Some(1), Some("2017-02-02"), Some("2010-01-01"), Some(1), 1)), None, None)
@@ -215,7 +215,7 @@ class BulkRequestCreationServiceSpec extends PlaySpec with ScalaFutures with Moc
 
     "termination date for person with blank input termination date should be None" in {
 
-      val bulkRequest: BulkCalculationRequest = TestBulkRequestCreationService.createBulkRequest(upscanCallback("11"), bulkRequest10.email, bulkRequest10.reference).right.get
+      val bulkRequest: BulkCalculationRequest = TestBulkRequestCreationService.createBulkRequest(upscanCallback("10"), bulkRequest10.email, bulkRequest10.reference).right.get
 
       bulkRequest.getFirstValid.terminationDate mustBe None
     }

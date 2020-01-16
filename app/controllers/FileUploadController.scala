@@ -107,12 +107,12 @@ class FileUploadController @Inject()(authAction: AuthAction,
           result <- sessionService.updateCallbackRecord(sessionId, uploadStatus)(request, headerCarrier).map(_ => Ok("")).recover {
             case e: Throwable =>
               Logger.error(s"Failed to update callback record for session: $sessionId, timestamp: ${System.currentTimeMillis()}.", e)
-              InternalServerError("Exception occurred when attempting to update callback data")
+              throw new RuntimeException("Exception occurred when attempting to update callback data")
           }
           _ <- sessionService.cacheCallBackData(Some(uploadStatus))(request, headerCarrier).map(_ => Ok("")).recover {
               case e: Throwable =>
                 Logger.error(s"Failed to update gmp bulk session for: $sessionId, timestamp: ${System.currentTimeMillis()}.", e)
-                InternalServerError("Exception occurred when attempting to update gmp bulk session")
+                throw new RuntimeException("Exception occurred when attempting to update gmp bulk session")
             }
 
         } yield {
