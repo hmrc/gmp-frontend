@@ -43,7 +43,7 @@
         case s : UploadedSuccessfully => {@Html(Messages("gmp.bulk.successful", s.fileName)) }
         case f : UploadedFailed => {
             @f.failureDetails.failureReason match {
-            case "QUARANTINE" => { @Messages("gmp.bulk.failure.antivirus") }
+            case "QUARANTINE" => { @Html(Messages("gmp.bulk.failure.antivirus")) }
             case "REJECTED"   => { @Messages("gmp.bulk.failure.wrong_type") }
             case _            => { @Messages("gmp.bulk.failure.rejected") }
             }

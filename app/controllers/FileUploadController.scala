@@ -57,7 +57,7 @@ class FileUploadController @Inject()(authAction: AuthAction,
       }
   }
 
-  def showResult(): Action[AnyContent] = Action.async { implicit request =>
+  def showResult() = authAction.async { implicit request =>
     val sessionId = hc.sessionId
     for {
       uploadResult <- sessionService.getCallbackRecord

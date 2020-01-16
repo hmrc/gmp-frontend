@@ -36,9 +36,15 @@ import services.{SessionService, UpscanService}
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.play.partials.HtmlPartial
 import java.net.URL
+
+import akka.stream.Materializer
+import akka.util.ByteString
+import org.scalatest.concurrent.ScalaFutures
+import play.api.libs.streams.Accumulator
+
 import scala.concurrent.{ExecutionContext, Future}
 
-class FileUploadControllerSpec extends PlaySpec with OneServerPerSuite with MockitoSugar {
+class FileUploadControllerSpec extends PlaySpec with OneServerPerSuite with MockitoSugar with ScalaFutures {
   val mockAuthConnector = mock[AuthConnector]
   val mockSessionService = mock[SessionService]
   val mockAuthAction = mock[AuthAction]
@@ -49,6 +55,7 @@ class FileUploadControllerSpec extends PlaySpec with OneServerPerSuite with Mock
   implicit val messagesProvider=MessagesImpl(Lang("en"), messagesAPI)
   implicit val ac=app.injector.instanceOf[ApplicationConfig]
   implicit val gmpSessionCache=app.injector.instanceOf[GmpSessionCache]
+
   val uploadDetails = UploadDetails(Instant.now, "sum", "csv", "name1")
   val callBackData = UpscanReadyCallback("ref1", "READY", new URL("http://localhost:9991/download1"), uploadDetails)
 
@@ -157,9 +164,6 @@ class FileUploadControllerSpec extends PlaySpec with OneServerPerSuite with Mock
       <button type="submit">Upload</button>
     </form>"""
 
-    //when(mockAttachmentsConnector.getFileUploadPartial()(Matchers.any(),Matchers.any[Messages]())).thenReturn(Future.successful(HtmlPartial.Success(Some("thepartial"), Html(""))))
-
-    //handler(TestFileUploadController.get()(request))
   }
 
 }

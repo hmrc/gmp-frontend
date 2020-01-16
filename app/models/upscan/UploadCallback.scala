@@ -65,8 +65,8 @@ object UpscanCallback {
         Logger.info("READY")
         implicitly[Reads[UpscanReadyCallback]].reads(json)
       case JsDefined(JsString("FAILED")) => implicitly[Reads[UpscanFailedCallback]].reads(json)
-      case JsDefined(value) => JsError(s"Invalid type distriminator: $value")
-      case JsUndefined() => JsError(s"Missing type distriminator")
+      case JsDefined(value) => JsError(s"Invalid type discriminator: $value")
+      case JsUndefined() => JsError(s"Missing type discriminator")
     }
   }
 }

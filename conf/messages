@@ -303,6 +303,7 @@ gmp.error.solution.63167 = Choose another <a href="/guaranteed-minimum-pension/r
 gmp.error.no_conts_and_earnings = No contributions and earnings available
 gmp.error.session_parts_missing = You have not given us enough information about the member and type of calculation you need or it has been too long since you did so.<br/><br/><a href="{0}"">Go back</a> and fill in the information required.
 
+error.expected.url = Download url is not a valid URL
 ############################################################################
 # Calculation results
 ############################################################################
