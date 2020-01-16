@@ -127,6 +127,7 @@ gmp.bulk_reference.button = Confirm and submit
 gmp.bulk_request_received.button = Upload another file
 gmp.download.link = Download
 gmp.upload = Upload
+gmp.upload.label = File to upload
 
 ############################################################################
 # Fields
