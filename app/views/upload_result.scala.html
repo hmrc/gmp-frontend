@@ -69,11 +69,17 @@
                 </a>
             </div>
         }
-        case _ => {
+        case NotStarted => {
             <div class="section">
                 @spinner()
             </div>
         }
+        case InProgress => {
+            <div class="section">
+            @spinner()
+            </div>
+        }
+        case _ => {}
     }
 
 
