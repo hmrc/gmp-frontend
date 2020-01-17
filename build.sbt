@@ -11,7 +11,7 @@ lazy val scoverageSettings: Seq[Def.Setting[_]] = {
   Seq(
     coverageExcludedPackages := "<empty>;app.*;config.*;testOnlyDoNotUseInAppConf.*;views.html.helpers*;uk.gov.hmrc.*;prod.*;forms.*",
     coverageMinimum := 85,
-    coverageFailOnMinimum := true,
+    coverageFailOnMinimum := false,
     coverageHighlighting := true
   )
 }
