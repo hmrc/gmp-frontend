@@ -37,7 +37,7 @@ gmp.offline.title = GMP checker offline - GOV.UK
 gmp.thank_you.title = GMP checker survey thanks - GOV.UK
 gmp.unauthorised.title = Wrong GMP checker login - GOV.UK
 gmp.fileupload.title = Upload GMP file - GOV.UK
-gmp.fileupload.verifying.title = Upload file status - GOV.UK
+gmp.fileupload.verifying.title = File Scan - GOV.UK
 gmp.session_missing.title = Incomplete GMP checker information - GOV.UK
 
 ############################################################################
