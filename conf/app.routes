@@ -53,7 +53,6 @@ GET         /equalise/back                                controllers.EqualiseCo
 GET         /upload-csv                                   controllers.FileUploadController.get
 GET         /upload-csv/failure                           controllers.FileUploadController.failure(errorCode: String, errorMessage: String, errorRequestId: String)
 GET         /upload-csv/success                           controllers.FileUploadController.showResult()
-GET         /upload-csv/test                              controllers.IncorrectlyEncodedController.testGenericError
 POST        /upload-csv/callback/:sessionId               controllers.FileUploadController.callback(sessionId: String)
 
 GET         /getting-results                              controllers.BulkReferenceController.get

@@ -69,22 +69,12 @@ class FileUploadController @Inject()(authAction: AuthAction,
       }
   }
 
+  //Used for Amazon failures
   def failure(errorCode: String, errorMessage: String, errorRequestId: String) = authAction {
     implicit request =>
-      errorCode match {
-        case a if a.toUpperCase.contains("INVALIDTEXTENCODING") =>
-          Ok(views.html.failure(Messages("gmp.bulk.incorrectlyEncoded"),
-            Messages("gmp.bulk.incorrectlyEncoded.header"),
-            Messages("gmp.bulk_failure_generic.title")))
-        case x if x.toUpperCase.contains("EMPTYREQUESTBODY") =>
-          Ok(views.html.failure(Messages("gmp.bulk.failure.missing"),
-            Messages("gmp.bulk.problem.header"),
-            Messages("gmp.bulk_failure_missing.title")))
-        case _ =>
           Ok(views.html.failure(Messages("gmp.bulk.failure.generic"),
             Messages("gmp.bulk.problem.header"),
             Messages("gmp.bulk_failure_generic.title")))
-      }
   }
 
   def callback(sessionId: String) = Action.async(parse.json) { implicit request =>

@@ -14,33 +14,38 @@
  * limitations under the License.
  */
 
-package controllers
+package controllers.test
 
 import com.google.inject.Inject
 import config.{ApplicationConfig, GmpContext}
+import controllers.GmpPageFlow
 import controllers.auth.AuthAction
-import play.api.i18n.Messages
+import models.upscan.{ErrorDetails, UploadedFailed}
 import play.api.mvc.MessagesControllerComponents
 import services.SessionService
 import uk.gov.hmrc.auth.core.AuthConnector
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class IncorrectlyEncodedController @Inject()( authAction: AuthAction,
+class TestController @Inject()( authAction: AuthAction,
                                               override val authConnector: AuthConnector,
                                               sessionService: SessionService,implicit val config:GmpContext,
                                               override val messagesControllerComponents: MessagesControllerComponents,ac:ApplicationConfig,
                                               implicit val executionContext: ExecutionContext
                                             ) extends GmpPageFlow(authConnector,sessionService,config,messagesControllerComponents,ac){
 
-
-
-  def get = authAction.async {
+  def testError(code: String) = authAction.async {
     implicit request => {
-      Future.successful(
-        InternalServerError(views.html.incorrectlyEncoded(
-          Messages("gmp.bulk.incorrectlyEncoded"),
-          Messages("gmp.bulk.incorrectlyEncoded.header"))))
+      val status1 = UploadedFailed("ref1", ErrorDetails("UNKNOWN", "Not known"))
+      val status2 = UploadedFailed("ref2", ErrorDetails("REJECTED", "Empty"))
+      val status3 = UploadedFailed("ref3", ErrorDetails("QUARANTINE", "Virus"))
+
+      code match {
+        case "1" => Future.successful(Ok(views.html.upload_result(status1)))
+        case "2" => Future.successful(Ok(views.html.upload_result(status2)))
+        case _   => Future.successful(Ok(views.html.upload_result(status3)))
+      }
+
     }
   }
 

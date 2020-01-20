@@ -102,13 +102,6 @@ class FileUploadControllerSpec extends PlaySpec with OneServerPerSuite with Mock
               contentAsString(result) must include(Messages("gmp.bulk.failure.generic"))
               contentAsString(result) must include(Messages("gmp.bulk.problem.header"))
         }
-
-        "show correct message for missing file error" in {
-          val result = TestFileUploadController.failure("EMPTYREQUESTBODY", "", "")(FakeRequest("GET", "/upload-csv/failure?error_message=SELECT"))
-              status(result) must be(OK)
-              contentAsString(result) must include(Messages("gmp.bulk.failure.missing"))
-              contentAsString(result) must include(Messages("gmp.bulk.problem.header"))
-            }
       }
     }
   }
