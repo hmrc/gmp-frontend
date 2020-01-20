@@ -19,6 +19,7 @@ package controllers
 import com.google.inject.Inject
 import config.{ApplicationConfig, GmpContext}
 import controllers.auth.AuthAction
+import models.upscan.{ErrorDetails, UploadedFailed}
 import play.api.i18n.Messages
 import play.api.mvc.MessagesControllerComponents
 import services.SessionService
@@ -38,6 +39,14 @@ class IncorrectlyEncodedController @Inject()( authAction: AuthAction,
   def get = authAction.async {
     implicit request => {
       Future.successful(InternalServerError(views.html.incorrectlyEncoded(Messages("gmp.bulk.incorrectlyEncoded"), Messages("gmp.bulk.incorrectlyEncoded.header"))))
+    }
+  }
+
+  //TODO Remove after demo
+  def testGenericError = authAction.async {
+    implicit request => {
+      val status = UploadedFailed("ref1", ErrorDetails("UNKNOWN", "Not known"))
+      Future.successful(Ok(views.html.upload_result(status)))
     }
   }
 }

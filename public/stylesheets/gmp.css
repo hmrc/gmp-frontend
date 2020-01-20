@@ -334,3 +334,7 @@ Error styling to bring in line with GDS
     font-weight: bold;
     text-decoration: underline;
 }
+
+.spinner {
+    text-align: center;
+}
