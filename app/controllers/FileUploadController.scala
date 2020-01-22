@@ -64,7 +64,7 @@ class FileUploadController @Inject()(authAction: AuthAction,
     } yield {
           uploadResult match {
             case Some(result: UploadStatus) => Ok(views.html.upload_result(result))
-            case None => BadRequest(s"Upload with session id ${sessionId.getOrElse("-")} not found")
+            case None => throw new RuntimeException(s"Upload with session id ${sessionId.getOrElse("-")} not found")
           }
       }
   }
