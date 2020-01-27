@@ -25,7 +25,8 @@
     mainClass : Option[String] = None,
     scriptElement : Option[Html] = None,
     isUserResearchBannerVisible:Boolean = false,
-    signOutEnabled:Boolean)(mainContent: Html = HtmlFormat.empty)(implicit request: Request[_], context: config.GmpContext, messages: Messages)
+    signOutEnabled:Boolean,
+    customHead: Option[Html] = None)(mainContent: Html = HtmlFormat.empty)(implicit request: Request[_], context: config.GmpContext, messages: Messages)
 
 @import layouts.{govuk_template => hmrcGovUkTemplate}
 @import uk.gov.hmrc.play.views.html.{layouts => uiLayouts}
@@ -39,6 +40,7 @@
         linkElem = linkElement,
         headScripts = Some(headScript))
     <meta name="format-detection" content="telephone=no"/>
+    @customHead
 }
 
 @urToggle = @{

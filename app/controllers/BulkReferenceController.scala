@@ -20,6 +20,7 @@ import com.google.inject.{Inject, Singleton}
 import config.{ApplicationConfig, GmpContext, GmpSessionCache}
 import controllers.auth.AuthAction
 import forms.BulkReferenceForm
+import models.upscan.{UploadStatus, UploadedSuccessfully}
 import play.api.Logger
 import play.api.mvc.MessagesControllerComponents
 import services.SessionService
@@ -35,12 +36,14 @@ class BulkReferenceController @Inject()(authAction: AuthAction,
                                         sessionService: SessionService,implicit val config:GmpContext,brf:BulkReferenceForm,
                                         override val messagesControllerComponents: MessagesControllerComponents,
                                         implicit val executionContext: ExecutionContext,ac:ApplicationConfig,
-                                        implicit val gmpSessionCache: GmpSessionCache) extends GmpController(messagesControllerComponents,ac,sessionService,config) {
+                                        implicit val gmpSessionCache: GmpSessionCache)
+  extends GmpController(messagesControllerComponents,ac,sessionService,config) {
 
-lazy val bulkReferenceForm=brf.bulkReferenceForm
+lazy val bulkReferenceForm = brf.bulkReferenceForm
 
   def get = authAction.async {
-      implicit request =>  Future.successful(Ok(views.html.bulk_reference(bulkReferenceForm)))
+      implicit request =>
+        Future.successful(Ok(views.html.bulk_reference(bulkReferenceForm)))
   }
 
   def post = authAction.async {

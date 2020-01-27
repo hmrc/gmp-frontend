@@ -18,16 +18,16 @@ package config
 
 import com.google.inject.{Inject, Singleton}
 import com.typesafe.config.ConfigFactory
-import play.api.Mode.Mode
 import play.api.{Configuration, Environment, Play}
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
+import scala.concurrent.duration._
+import scala.concurrent.duration.FiniteDuration
 
 @Singleton
 class ApplicationConfig @Inject()(
   val runModeConfiguration: Configuration,
   val environment: Environment,
   servicesConfig: ServicesConfig) {
-
 
   private def loadConfig(key: String) = runModeConfiguration.getOptional[String](key).getOrElse(throw new Exception(s"Missing key: $key"))
 
@@ -41,6 +41,9 @@ class ApplicationConfig @Inject()(
   val globalErrors = ConfigFactory.load("global-errors.properties")
   val contactFormServiceIdentifier = "GMP"
   val frontendHost = loadConfig("platform.frontend.host")
+
+  val upscanInitiateHost: String = servicesConfig.baseUrl("upscan")
+  val upscanRedirectBase: String = runModeConfiguration.get[String]("microservice.services.upscan.redirect-base")
 
 }
 

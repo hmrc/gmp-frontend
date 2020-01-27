@@ -27,7 +27,8 @@ object AppDependencies {
     "org.pegdown"             %  "pegdown"            % "1.6.0",
     "org.jsoup"               %  "jsoup"              % "1.11.3",
     "com.typesafe.play"       %% "play-test"          % PlayVersion.current,
-    "org.mockito"             %  "mockito-core"       % "1.9.5"
+    "org.mockito"             %  "mockito-core"       % "1.9.5",
+    "com.github.tomakehurst"  %  "wiremock-jre8"      % "2.25.1"
   ).map(_ % "test")
 
   val all: Seq[ModuleID] = compile ++ test

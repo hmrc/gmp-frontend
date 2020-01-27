@@ -14,14 +14,18 @@
  * limitations under the License.
  */
 
-package models
+package models.upscan
 
-import models.upscan.{UploadStatus, UpscanCallback, UpscanReadyCallback}
-import play.api.libs.json.Json
-import models.upscan.UpscanCallback._
+import play.api.libs.json.{Json, OFormat}
 
-case class GmpBulkSession(callBackData: Option[UploadStatus], emailAddress: Option[String], reference: Option[String])
+case class UpscanInitiateRequest(
+                                  callbackUrl: String,
+                                  successRedirect: String,
+                                  errorRedirect: String,
+                                  minimumFileSize: Option[Int] = None,
+                                  maximumFileSize: Option[Int] = None
+                                )
 
-object GmpBulkSession {
-  implicit val formats = Json.format[GmpBulkSession]
+object UpscanInitiateRequest {
+  implicit val format: OFormat[UpscanInitiateRequest] = Json.format[UpscanInitiateRequest]
 }

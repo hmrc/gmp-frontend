@@ -1,0 +1,86 @@
+@*
+ * Copyright 2020 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import config.ApplicationConfig
+@import models.upscan.UploadStatus
+@import models.upscan.{InProgress, UploadedSuccessfully, UploadedFailed, NotStarted}
+@import views.html.helpers.spinner
+@import models.upscan.UploadedFailed
+@(status : UploadStatus)(implicit request: Request[_], messages: Messages, context: config.GmpContext, appConfig: ApplicationConfig)
+
+@refreshHeader = {
+    <meta http-equiv="refresh" content="3"/>
+}
+
+@gmp_main(title = Messages("gmp.fileupload.verifying.title"),
+    customHead = {
+    status match {
+        case InProgress => Some(refreshHeader)
+        case NotStarted => Some(refreshHeader)
+        case _ => None
+    }
+}) {
+    @includes.back_link(Messages("gmp.fileupload.result.scanning.header"))
+
+    <h1>@status match {
+        case InProgress => { @Messages("gmp.fileupload.result.scanning.header")}
+        case NotStarted => { @Messages("gmp.fileupload.result.scanning.header")}
+        case s : UploadedSuccessfully => { @Messages("gmp.fileupload.result.success.header") }
+        case f : UploadedFailed => {
+            @f.failureDetails.failureReason match {
+                case "QUARANTINE" => { @Messages("gmp.generic.errors_heading") }
+                case "REJECTED"   => { @Messages("gmp.generic.errors_heading") }
+                case _            => { @Messages("gmp.generic.errors_heading") }
+            }
+        }
+    }</h1>
+
+    @status match {
+        case InProgress => {}
+        case NotStarted => {}
+        case s : UploadedSuccessfully => { @Messages("gmp.bulk.successful") }
+        case f : UploadedFailed => {
+            @f.failureDetails.failureReason match {
+            case "QUARANTINE" => { @Html(Messages("gmp.bulk.failure.antivirus")) }
+            case "REJECTED"   => { @Html(Messages("gmp.bulk.failure.wrong_type")) }
+            case _            => { @Html(Messages("gmp.bulk.failure.rejected")) }
+            }
+        }
+    }
+
+    @status match {
+        case s : UploadedSuccessfully => {
+            <div class="section">
+                <a href="@routes.BulkReferenceController.get()">
+                    <button class="button">@Messages("gmp.continue.button")</button>
+                </a>
+            </div>
+        }
+        case NotStarted => {
+            <div class="spinner">
+                @spinner()
+            </div>
+        }
+        case InProgress => {
+            <div class="spinner">
+            @spinner()
+            </div>
+        }
+        case _ => {}
+    }
+
+
+}

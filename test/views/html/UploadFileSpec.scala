@@ -16,12 +16,14 @@
 
 package views.html
 
+import models.upscan.{Reference, UpscanInitiateRequest, UpscanInitiateResponse}
 import play.twirl.api.Html
 import utils.GmpViewSpec
 
 class UploadFileSpec extends GmpViewSpec {
 
-  override def view: Html = views.html.upload_file(uploadForm)
+  val upscanInitiate = UpscanInitiateResponse(Reference("reference"), "download", Map())
+  override def view: Html = views.html.upscan_csv_file_upload(upscanInitiate)
 
   "UploadFiles page" must {
     behave like pageWithTitle(messages("gmp.fileupload.header"))

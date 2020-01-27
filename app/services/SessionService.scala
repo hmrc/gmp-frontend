@@ -20,6 +20,7 @@ import com.google.inject.Inject
 import config.GmpSessionCache
 import metrics.ApplicationMetrics
 import models._
+import models.upscan._
 import play.api.Logger
 import play.api.mvc.Request
 import uk.gov.hmrc.http.HeaderCarrier
@@ -33,6 +34,7 @@ class SessionService @Inject()(metrics: ApplicationMetrics,gmpSessionCache: GmpS
   val cleanSession = GmpSession(MemberDetails("", "", ""), "", "", None, None, Leaving(GmpDate(None, None, None), None), None)
 
   val GMP_BULK_SESSION_KEY = "gmp_bulk_session"
+  val CALLBACK_SESSION_KEY = "gmp_callback_session"
   val cleanBulkSession = GmpBulkSession(None, None, None)
 
   def fetchGmpBulkSession()(implicit request: Request[_], hc: HeaderCarrier): Future[Option[GmpBulkSession]] = {
@@ -58,7 +60,7 @@ class SessionService @Inject()(metrics: ApplicationMetrics,gmpSessionCache: GmpS
     })
   }
 
-  def cacheCallBackData(_callBackData: Option[CallBackData])(implicit request: Request[_], hc: HeaderCarrier): Future[Option[GmpBulkSession]] = {
+  def cacheCallBackData(_callBackData: Option[UploadStatus])(implicit request: Request[_], hc: HeaderCarrier): Future[Option[GmpBulkSession]] = {
     val timer = metrics.keystoreStoreTimer.time()
       Logger.debug(s"[SessionService][cacheCallBackData] : ${_callBackData}")
 
@@ -77,7 +79,8 @@ class SessionService @Inject()(metrics: ApplicationMetrics,gmpSessionCache: GmpS
     })
   }
 
-  def cacheEmailAndReference(_email: Option[String], _reference: Option[String])(implicit request: Request[_], hc: HeaderCarrier ): Future[Option[GmpBulkSession]] = {
+  def cacheEmailAndReference(_email: Option[String], _reference: Option[String])
+                            (implicit request: Request[_], hc: HeaderCarrier ): Future[Option[GmpBulkSession]] = {
     val timer = metrics.keystoreStoreTimer.time()
 
     Logger.debug(s"[SessionService][cacheEmailAndReferencea] : email: ${_email}; reference: ${_reference}")
@@ -330,6 +333,18 @@ class SessionService @Inject()(metrics: ApplicationMetrics,gmpSessionCache: GmpS
       timer.stop()
       cacheMap.getEntry[GmpSession](GMP_SESSION_KEY)
     })
+  }
+
+  def createCallbackRecord(implicit request: Request[_], hc: HeaderCarrier): Future[Any] = {
+    gmpSessionCache.cache[UploadStatus](CALLBACK_SESSION_KEY, NotStarted)
+  }
+
+  def updateCallbackRecord(sessionId: String, uploadStatus: UploadStatus)(implicit request: Request[_], hc: HeaderCarrier): Future[Any] = {
+    gmpSessionCache.cache(gmpSessionCache.defaultSource, sessionId, CALLBACK_SESSION_KEY, uploadStatus)
+  }
+
+  def getCallbackRecord(implicit request: Request[_], hc: HeaderCarrier): Future[Option[UploadStatus]] = {
+    gmpSessionCache.fetchAndGetEntry[UploadStatus](CALLBACK_SESSION_KEY)
   }
 
 }
