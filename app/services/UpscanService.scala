@@ -27,8 +27,7 @@ import scala.concurrent.Future
 
 class UpscanService @Inject()(
                                applicationConfig: ApplicationConfig,
-                               upscanConnector: UpscanConnector,
-                               environment: Environment
+                               upscanConnector: UpscanConnector
                              ) {
 
   lazy val redirectUrlBase: String = applicationConfig.upscanRedirectBase
@@ -36,7 +35,7 @@ class UpscanService @Inject()(
 
   def getUpscanFormData()(implicit hc: HeaderCarrier, request: Request[_]): Future[UpscanInitiateResponse] = {
     val callback = controllers.routes.FileUploadController.callback(hc.sessionId.get.value)
-      .absoluteURL(environment.mode == Mode.Prod)
+      .absoluteURL(applicationConfig.upscanProtocol == "https")
 
     val success = s"$redirectUrlBase/guaranteed-minimum-pension/upload-csv/success"
     val failure = s"$redirectUrlBase/guaranteed-minimum-pension/upload-csv/failure"

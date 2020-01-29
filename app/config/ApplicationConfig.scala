@@ -43,6 +43,7 @@ class ApplicationConfig @Inject()(
   val frontendHost = loadConfig("platform.frontend.host")
 
   val upscanInitiateHost: String = servicesConfig.baseUrl("upscan")
+  val upscanProtocol: String = servicesConfig.getConfString("upscan.protocol", "https")
   val upscanRedirectBase: String = runModeConfiguration.get[String]("microservice.services.upscan.redirect-base")
 
 }
