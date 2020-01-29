@@ -43,7 +43,7 @@ class ApplicationConfig @Inject()(
   val frontendHost = loadConfig("platform.frontend.host")
 
   val upscanInitiateHost: String = servicesConfig.baseUrl("upscan")
-  val upscanRedirectBase: String = servicesConfig.baseUrl("gmp-frontend")
+  val upscanRedirectBase: String = runModeConfiguration.get[String]("microservice.services.upscan.redirect-base")
 
 }
 

@@ -27,14 +27,17 @@ import scala.concurrent.Future
 
 class UpscanService @Inject()(
                                applicationConfig: ApplicationConfig,
-                               upscanConnector: UpscanConnector
+                               upscanConnector: UpscanConnector,
+                               environment: Environment
                              ) {
 
   lazy val redirectUrlBase: String = applicationConfig.upscanRedirectBase
   private implicit def urlToString(c: Call): String = redirectUrlBase + c.url
 
   def getUpscanFormData()(implicit hc: HeaderCarrier, request: Request[_]): Future[UpscanInitiateResponse] = {
-    val callback = s"$redirectUrlBase/guaranteed-minimum-pension/upload-csv/callback/${hc.sessionId.get.value}"
+    val callback = controllers.routes.FileUploadController.callback(hc.sessionId.get.value)
+      .absoluteURL(environment.mode == Mode.Prod)
+
     val success = s"$redirectUrlBase/guaranteed-minimum-pension/upload-csv/success"
     val failure = s"$redirectUrlBase/guaranteed-minimum-pension/upload-csv/failure"
 
