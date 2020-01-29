@@ -34,7 +34,9 @@ class UpscanService @Inject()(
   private implicit def urlToString(c: Call): String = redirectUrlBase + c.url
 
   def getUpscanFormData()(implicit hc: HeaderCarrier, request: Request[_]): Future[UpscanInitiateResponse] = {
-    val callback = s"$redirectUrlBase/guaranteed-minimum-pension/upload-csv/callback/${hc.sessionId.get.value}"
+    val callback = controllers.routes.FileUploadController.callback(hc.sessionId.get.value)
+      .absoluteURL(applicationConfig.upscanProtocol == "https")
+
     val success = s"$redirectUrlBase/guaranteed-minimum-pension/upload-csv/success"
     val failure = s"$redirectUrlBase/guaranteed-minimum-pension/upload-csv/failure"
 
