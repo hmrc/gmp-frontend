@@ -36,10 +36,7 @@ class DateOfLeavingForm  @Inject()(mcc: MessagesControllerComponents) {
   def dateMustBePresentIfHaveDateOfLeavingAfterApril2016(x: Leaving): Boolean = {
 
     x.leaving match {
-      case Some(leavingmessage) if leavingmessage == Leaving.YES_AFTER =>
-        x.leavingDate.day.isDefined ||
-        x.leavingDate.month.isDefined || x.leavingDate.year.isDefined
-      case Some(leavingMessage) if(leavingMessage == Leaving.YES_BEFORE_REVALUATION) => println("&&&&&&&&&&&")
+      case Some(leavingmessage) if leavingmessage == Leaving.YES_AFTER || leavingmessage == Leaving.YES_BEFORE_REVALUATION =>
         x.leavingDate.day.isDefined ||
         x.leavingDate.month.isDefined || x.leavingDate.year.isDefined
       case _ => true
@@ -50,7 +47,6 @@ class DateOfLeavingForm  @Inject()(mcc: MessagesControllerComponents) {
     leaving => {
       val errors =
         if (!dateMustBePresentIfHaveDateOfLeavingAfterApril2016(leaving)) {
-          println(">>>>>>>>>>>>>>")
           Seq(ValidationError(messages("gmp.error.leaving_date.mandatory"), "leavingDate"))
         } else if (!checkValidDate(leaving.leavingDate)) {
           Seq(ValidationError(messages("gmp.error.date.leaving.invalid"), "leavingDate"))
