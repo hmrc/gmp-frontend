@@ -218,6 +218,7 @@ gmp.error.revaluation_before_leaving = When you would like the calculation to be
 gmp.error.revaluation_pre2016_not_left = When you would like the calculation to be made must be after 5 April 2016
 gmp.error.leaving_on_or_after.too_low = Enter a leaving date after 5 April 2016
 gmp.error.leaving_on_or_after.too_high = Enter a leaving date before 5 April 2046
+gmp.error.leaving_on_or_after.too_high_revaluation = Enter a leaving date before 6 April 2016
 gmp.error.email.invalid = Enter a valid email address
 gmp.error.date.invalid = Enter a real date when you would like the calculation made to
 gmp.error.date.leaving.invalid = Enter a real leaving date

@@ -74,6 +74,12 @@
                         (Leaving.YES_BEFORE, Leaving.YES_BEFORE, "none") -> Messages("gmp.dol.threequestions.before2016"),
                         (Leaving.YES_AFTER, Leaving.YES_AFTER, "leaving-date") -> Messages("gmp.dol.threequestions.after2016")
                         )
+                        case CalculationType.REVALUATION =>
+                            Seq(
+                                (Leaving.NO, Leaving.NO, "none") -> Messages("gmp.dol.threequestions.no"),
+                                (Leaving.YES_BEFORE_REVALUATION, Leaving.YES_BEFORE_REVALUATION, "leaving-date") -> Messages("gmp.dol.threequestions.before2016"),
+                                (Leaving.YES_AFTER,  Leaving.YES_AFTER, "leaving-date") -> Messages("gmp.dol.threequestions.after2016")
+                            )
                         case _ =>
                         Seq(
                         (Leaving.NO, Leaving.NO, "none") -> Messages("gmp.dol.threequestions.no"),

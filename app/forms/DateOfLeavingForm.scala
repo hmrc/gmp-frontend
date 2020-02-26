@@ -32,9 +32,15 @@ class DateOfLeavingForm  @Inject()(mcc: MessagesControllerComponents) {
 
   val YEAR_FIELD_LENGTH: Int = 4
 
+  //For revaluation scenario the leaving date is mandatory no matter when they left the scheme
   def dateMustBePresentIfHaveDateOfLeavingAfterApril2016(x: Leaving): Boolean = {
+
     x.leaving match {
-      case Some(leavingmessage) if leavingmessage == Leaving.YES_AFTER => x.leavingDate.day.isDefined ||
+      case Some(leavingmessage) if leavingmessage == Leaving.YES_AFTER =>
+        x.leavingDate.day.isDefined ||
+        x.leavingDate.month.isDefined || x.leavingDate.year.isDefined
+      case Some(leavingMessage) if(leavingMessage == Leaving.YES_BEFORE_REVALUATION) => println("&&&&&&&&&&&")
+        x.leavingDate.day.isDefined ||
         x.leavingDate.month.isDefined || x.leavingDate.year.isDefined
       case _ => true
     }
@@ -44,9 +50,13 @@ class DateOfLeavingForm  @Inject()(mcc: MessagesControllerComponents) {
     leaving => {
       val errors =
         if (!dateMustBePresentIfHaveDateOfLeavingAfterApril2016(leaving)) {
+          println(">>>>>>>>>>>>>>")
           Seq(ValidationError(messages("gmp.error.leaving_date.mandatory"), "leavingDate"))
         } else if (!checkValidDate(leaving.leavingDate)) {
           Seq(ValidationError(messages("gmp.error.date.leaving.invalid"), "leavingDate"))
+        }
+        else if (leaving.leaving.isDefined && leaving.leaving.get.equals(Leaving.YES_BEFORE_REVALUATION) && !leaving.leavingDate.isBefore06042016) {
+          Seq(ValidationError(messages("gmp.error.leaving_on_or_after.too_high_revaluation"), "leavingDate"))
         }
         else if (leaving.leaving.isDefined && leaving.leaving.get.equals(Leaving.YES_AFTER) && !leaving.leavingDate.isOnOrAfter06042016) {
           Seq(ValidationError(messages("gmp.error.leaving_on_or_after.too_low"), "leavingDate"))
@@ -72,12 +82,7 @@ class DateOfLeavingForm  @Inject()(mcc: MessagesControllerComponents) {
         "day" -> optional(text),
         "month" -> optional(text),
         "year" -> optional(text)
-      )(GmpDate.apply)(GmpDate.unapply)
-//        .verifying(Messages("gmp.error.date.nonnumber"), x => checkForNumber(x.day) && checkForNumber(x.month) && checkForNumber(x.year))
-//        .verifying(Messages("gmp.error.day.invalid"), x => checkDayRange(x.day))
-//        .verifying(Messages("gmp.error.month.invalid"), x => checkMonthRange(x.month))
-//        .verifying(Messages("gmp.error.year.invalid.format"), x => checkYearLength(x.year))
-      ,
+      )(GmpDate.apply)(GmpDate.unapply),
       "leaving" -> optional(text).verifying(messages("gmp.error.reason.mandatory"), {
         _.isDefined
       })
