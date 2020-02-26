@@ -79,7 +79,7 @@ class DateOfLeavingForm  @Inject()(mcc: MessagesControllerComponents) {
         "month" -> optional(text),
         "year" -> optional(text)
       )(GmpDate.apply)(GmpDate.unapply),
-      "leaving" -> optional(text).verifying(messages("gmp.error.reason.mandatory"), {
+      "leaving" -> optional(text).verifying(mandatoryMessage, {
         _.isDefined
       })
     )(Leaving.apply)(Leaving.unapply)
