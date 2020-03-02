@@ -21,10 +21,14 @@ import models._
 import play.api.data.Form
 import play.api.mvc.MessagesControllerComponents
 import play.twirl.api.Html
+import uk.gov.hmrc.play.partials.FormPartialRetriever
 import utils.GmpViewSpec
 
 abstract class RevaluationRateSpec extends GmpViewSpec {
-  override def view: Html = views.html.revaluation_rate(revaluationRateForm, session)
+
+  private val formPartial = app.injector.instanceOf[FormPartialRetriever]
+
+  override def view: Html = views.html.revaluation_rate(revaluationRateForm, session, formPartial)
 
   lazy val mcc = app.injector.instanceOf[MessagesControllerComponents]
 

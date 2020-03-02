@@ -34,8 +34,7 @@ import scala.concurrent.ExecutionContext
 class RevaluationRateController @Inject()(authAction: AuthAction,
                                           override val authConnector: AuthConnector, ac: ApplicationConfig,
                                           sessionService: SessionService,
-                                          formPartialRetriever: FormPartialRetriever,
-                                          override val messagesControllerComponents: MessagesControllerComponents, rrf: RevaluationRateForm)
+                                          override val messagesControllerComponents: MessagesControllerComponents, rrf: RevaluationRateForm, formPartialRetriever: FormPartialRetriever)
                                          (implicit val gmpSessionCache: GmpSessionCache, val executionContext: ExecutionContext, val config: GmpContext
                                          ) extends GmpPageFlow(authConnector, sessionService, config, messagesControllerComponents, ac) {
 

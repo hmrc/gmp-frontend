@@ -19,6 +19,7 @@ package views.html
 import models.BulkPreviousRequest
 import org.joda.time.LocalDateTime
 import play.twirl.api.Html
+import uk.gov.hmrc.play.partials.FormPartialRetriever
 import utils.GmpViewSpec
 
 class DashboardSpec extends GmpViewSpec {
@@ -68,7 +69,9 @@ class DashboardSpec extends GmpViewSpec {
     }
   }
 
-  override def view: Html = views.html.dashboard(bulkPreviousRequestsList)
+  private val formPartial = app.injector.instanceOf[FormPartialRetriever]
+
+  override def view: Html = views.html.dashboard(bulkPreviousRequestsList, formPartial)
 
   private val bulkPreviousRequestsList: List[models.BulkPreviousRequest] = List(BulkPreviousRequest(uploadReference = "upload",
     reference = "fake", timestamp = LocalDateTime.now, processedDateTime = LocalDateTime.now), BulkPreviousRequest(uploadReference = "upload",
@@ -79,6 +82,8 @@ class DashboardSpec extends GmpViewSpec {
 
 class DashboardSpecNoPreviousCalculations extends GmpViewSpec {
 
+  private val formPartial = app.injector.instanceOf[FormPartialRetriever]
+
   "MoreBulkResults page where no previous calculations" must {
     behave like pageWithH2Header(messages("gmp.previous_calculations"))
 
@@ -87,7 +92,7 @@ class DashboardSpecNoPreviousCalculations extends GmpViewSpec {
     }
   }
 
-  override def view: Html = views.html.dashboard(bulkPreviousRequestsList)
+  override def view: Html = views.html.dashboard(bulkPreviousRequestsList, formPartial)
 
   private val bulkPreviousRequestsList: List[models.BulkPreviousRequest] = List()
 }

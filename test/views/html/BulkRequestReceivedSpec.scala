@@ -17,9 +17,12 @@
 package views.html
 
 import play.twirl.api.Html
+import uk.gov.hmrc.play.partials.FormPartialRetriever
 import utils.GmpViewSpec
 
-class BulkRequestReceivedSpec extends GmpViewSpec{
+class BulkRequestReceivedSpec extends GmpViewSpec {
+
+  private val formPartial = app.injector.instanceOf[FormPartialRetriever]
 
   "BulkRequestReceived page" must {
     behave like pageWithTitle(messages("gmp.bulk_request_received.banner"))
@@ -36,7 +39,7 @@ class BulkRequestReceivedSpec extends GmpViewSpec{
    doc must haveSubmitButton(messages("gmp.bulk_request_received.button"))
   }
 
-  override def view: Html = views.html.bulk_request_received(reference)
+  override def view: Html = views.html.bulk_request_received(reference, formPartial)
 
   val reference: String = "Fake reference"
 }

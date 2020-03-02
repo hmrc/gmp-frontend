@@ -22,17 +22,18 @@ import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.data.Form
 import play.api.mvc.MessagesControllerComponents
 import play.twirl.api.Html
+import uk.gov.hmrc.play.partials.FormPartialRetriever
 import utils.GmpViewSpec
 
-abstract class DateOfLeavingSpec extends GmpViewSpec  {
-  override def view: Html = views.html.dateofleaving(dateOfLeavingForm, scenario)
+abstract class DateOfLeavingSpec extends GmpViewSpec {
+
+  private val formPartial = app.injector.instanceOf[FormPartialRetriever]
+
+  override def view: Html = views.html.dateofleaving(dateOfLeavingForm, scenario, formPartial)
    val mcc = app.injector.instanceOf[MessagesControllerComponents]
 
    val dateOfLeavingForm = new DateOfLeavingForm(mcc).dateOfLeavingForm
 
-
-
- // val dateOfLeavingForm: Form[models.Leaving] = DateOfLeavingFo.dateOfLeavingForm
   val scenario = CalculationType.DOL
 }
 

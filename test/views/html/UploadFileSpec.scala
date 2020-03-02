@@ -17,13 +17,17 @@
 package views.html
 
 import models.upscan.{Reference, UpscanInitiateRequest, UpscanInitiateResponse}
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.twirl.api.Html
+import uk.gov.hmrc.play.partials.FormPartialRetriever
 import utils.GmpViewSpec
 
-class UploadFileSpec extends GmpViewSpec {
+class UploadFileSpec extends GmpViewSpec with GuiceOneAppPerSuite {
+
+  val formPartial = app.injector.instanceOf[FormPartialRetriever]
 
   val upscanInitiate = UpscanInitiateResponse(Reference("reference"), "download", Map())
-  override def view: Html = views.html.upscan_csv_file_upload(upscanInitiate)
+  override def view: Html = views.html.upscan_csv_file_upload(upscanInitiate, formPartial)
 
   "UploadFiles page" must {
     behave like pageWithTitle(messages("gmp.fileupload.header"))

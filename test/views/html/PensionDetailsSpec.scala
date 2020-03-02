@@ -16,18 +16,19 @@
 
 package views.html
 
-import forms.PensionDetailsForm
 import models.PensionDetails
 import play.api.data.Form
 import play.api.data.Forms.{mapping, text}
 import play.twirl.api.Html
+import uk.gov.hmrc.play.partials.FormPartialRetriever
 import utils.GmpViewSpec
 import validation.SconValidate
 
 class PensionDetailsSpec extends GmpViewSpec {
-  override def view: Html = views.html.pension_details(pensionDetailsForm)
 
- // private val pensionDetailsForm: Form[models.PensionDetails] = PensionDetailsForm.pensionDetailsForm
+  private val formPartial = app.injector.instanceOf[FormPartialRetriever]
+
+  override def view: Html = views.html.pension_details(pensionDetailsForm, formPartial)
 
   def pensionDetailsForm = Form(
     mapping(

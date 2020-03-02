@@ -23,8 +23,9 @@ import helpers.RandomNino
 import models._
 import org.mockito.Matchers
 import org.mockito.Mockito._
-import org.scalatest.mockito.MockitoSugar
-import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
+import org.scalatestplus.mockito.MockitoSugar
+import org.scalatestplus.play.PlaySpec
+import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl}
 import play.api.libs.json.Json
 import play.api.mvc.{AnyContentAsEmpty, MessagesControllerComponents, Result}
@@ -32,25 +33,28 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.SessionService
 import uk.gov.hmrc.auth.core.AuthConnector
+import uk.gov.hmrc.play.partials.FormPartialRetriever
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class ScenarioControllerSpec extends PlaySpec with OneServerPerSuite with MockitoSugar {
+class ScenarioControllerSpec extends PlaySpec with GuiceOneServerPerSuite with MockitoSugar {
 
   val mockAuthConnector = mock[AuthConnector]
   val mockSessionService = mock[SessionService]
   val mockAuthAction = mock[AuthAction]
 
+  val formPartial = app.injector.instanceOf[FormPartialRetriever]
   implicit lazy val mcc = app.injector.instanceOf[MessagesControllerComponents]
   implicit val ec = app.injector.instanceOf[ExecutionContext]
   implicit val messagesAPI=app.injector.instanceOf[MessagesApi]
   implicit val messagesProvider=MessagesImpl(Lang("en"), messagesAPI)
   implicit val ac=app.injector.instanceOf[ApplicationConfig]
   implicit val gmpSessionCache=app.injector.instanceOf[GmpSessionCache]
+  implicit val fakeGmpContext = FakeGmpContext
+
   lazy val scenarioForm = new ScenarioForm(mcc)
 
-
-  object TestScenarioController extends ScenarioController(FakeAuthAction, mockAuthConnector,ac,mockSessionService,FakeGmpContext,mcc,scenarioForm,ec,gmpSessionCache)
+  object TestScenarioController extends ScenarioController(FakeAuthAction, mockAuthConnector,ac,mockSessionService,mcc,scenarioForm, formPartial)
 
   private val nino: String = RandomNino.generate
   val gmpSession = GmpSession(MemberDetails(nino, "A", "AAA"), "S1301234T", CalculationType.REVALUATION, None, None, Leaving(GmpDate(None, None, None), None), None)

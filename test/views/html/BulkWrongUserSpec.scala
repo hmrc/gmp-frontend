@@ -18,10 +18,14 @@ package views.html
 
 import controllers.auth.ExternalUrls
 import play.twirl.api.Html
+import uk.gov.hmrc.play.partials.FormPartialRetriever
 import utils.GmpViewSpec
 
 class BulkWrongUserSpec extends GmpViewSpec{
-  override def view: Html = views.html.bulk_wrong_user()
+
+  private val formPartial = app.injector.instanceOf[FormPartialRetriever]
+
+  override def view: Html = views.html.bulk_wrong_user(formPartial)
 
   "BulkWrongUser page" must {
     behave like pageWithTitle(messages("gmp.bulk.problem.header"))

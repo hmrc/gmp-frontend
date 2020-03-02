@@ -16,13 +16,13 @@
 
 package views.html
 
-import forms.BulkReferenceForm
 import models.BulkReference
 import play.api.data.Form
 import play.api.data.Forms.{mapping, text}
 import play.api.data.validation.{Constraint, Invalid, Valid, ValidationError}
 import play.twirl.api.Html
 import uk.gov.hmrc.emailaddress.EmailAddress
+import uk.gov.hmrc.play.partials.FormPartialRetriever
 import utils.GmpViewSpec
 
 class BulkReferenceSpec extends GmpViewSpec {
@@ -44,11 +44,10 @@ class BulkReferenceSpec extends GmpViewSpec {
       doc.getElementById("reference") must not be null
       doc must haveInputLabelWithText("reference", expectedText=s"${messages("gmp.reference.calcname")} ${messages("gmp.bulk_reference.reference_text")}")
     }
-
   }
+  private val formPartial = app.injector.instanceOf[FormPartialRetriever]
 
-  override def view: Html = views.html.bulk_reference(bulkReferenceForm)
-  //private val form: Form[models.BulkReference] = bulkReferenceForm
+  override def view: Html = views.html.bulk_reference(bulkReferenceForm, formPartial)
 
   val bulkReferenceForm = Form(
     mapping(

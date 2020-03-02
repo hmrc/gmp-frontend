@@ -16,16 +16,20 @@
 
 package views.html
 
-import forms.{RevaluationForm, checkDateOnOBeforeGMPEnd, checkDateOnOrAfterGMPStart, checkValidDate}
+import forms.{checkDateOnOBeforeGMPEnd, checkDateOnOrAfterGMPStart, checkValidDate}
 import models.{GmpDate, Leaving, RevaluationDate}
 import play.api.data.Form
 import play.api.data.Forms.{mapping, optional, text}
 import play.api.data.validation.{Constraint, Invalid, Valid, ValidationError}
 import play.twirl.api.Html
+import uk.gov.hmrc.play.partials.FormPartialRetriever
 import utils.GmpViewSpec
 
-class RevaluationSpec extends GmpViewSpec{
-  override def view: Html = views.html.revaluation(revaluationForm)
+class RevaluationSpec extends GmpViewSpec {
+
+  private val formPartial = app.injector.instanceOf[FormPartialRetriever]
+
+  override def view: Html = views.html.revaluation(revaluationForm, formPartial)
 //  private val revaluationForm: Form[models.RevaluationDate] = RevaluationForm.revaluationForm
 
   val YEAR_FIELD_LENGTH: Int = 4

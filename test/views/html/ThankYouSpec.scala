@@ -17,10 +17,14 @@
 package views.html
 
 import play.twirl.api.Html
+import uk.gov.hmrc.play.partials.FormPartialRetriever
 import utils.GmpViewSpec
 
 class ThankYouSpec extends GmpViewSpec{
-  override def view: Html = views.html.thank_you()
+
+  private val formPartial = app.injector.instanceOf[FormPartialRetriever]
+
+  override def view: Html = views.html.thank_you(formPartial)
 
   "Thank you page" must {
     behave like pageWithTitle(messages("gmp.thank_you.header"))

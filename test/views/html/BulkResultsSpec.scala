@@ -18,15 +18,18 @@ package views.html
 
 import controllers.routes
 import models.BulkResultsSummary
+import uk.gov.hmrc.play.partials.FormPartialRetriever
 import utils.GmpViewSpec
 
-abstract class BulkResultsSpec extends GmpViewSpec{
+abstract class BulkResultsSpec extends GmpViewSpec {
 
   val bulkResultsSummary:BulkResultsSummary
   val uploadReference: String
   val comingFromPage: Int
 
-  override def view = views.html.bulk_results(bulkResultsSummary, uploadReference, comingFromPage)
+  private val formPartial = app.injector.instanceOf[FormPartialRetriever]
+
+  override def view = views.html.bulk_results(bulkResultsSummary, uploadReference, comingFromPage, formPartial)
 }
 
 

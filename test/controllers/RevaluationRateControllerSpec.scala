@@ -23,25 +23,27 @@ import helpers.RandomNino
 import models._
 import org.mockito.Matchers
 import org.mockito.Mockito._
-import org.scalatest.mockito.MockitoSugar
-import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
-import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl, MessagesProvider}
-import play.api.i18n.Messages.Implicits._
+import org.scalatestplus.mockito.MockitoSugar
+import org.scalatestplus.play.PlaySpec
+import org.scalatestplus.play.guice.GuiceOneServerPerSuite
+import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl}
 import play.api.libs.json.Json
 import play.api.mvc.MessagesControllerComponents
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.SessionService
 import uk.gov.hmrc.auth.core.AuthConnector
+import uk.gov.hmrc.play.partials.FormPartialRetriever
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class RevaluationRateControllerSpec extends PlaySpec with OneServerPerSuite with MockitoSugar {
+class RevaluationRateControllerSpec extends PlaySpec with GuiceOneServerPerSuite with MockitoSugar {
 
   val mockAuthConnector = mock[AuthConnector]
   val mockSessionService = mock[SessionService]
   val mockAuthAction = mock[AuthAction]
 
+  val formPartial = app.injector.instanceOf[FormPartialRetriever]
   implicit lazy val mcc = app.injector.instanceOf[MessagesControllerComponents]
   implicit val ec = app.injector.instanceOf[ExecutionContext]
   implicit val messagesAPI=app.injector.instanceOf[MessagesApi]
@@ -49,8 +51,9 @@ class RevaluationRateControllerSpec extends PlaySpec with OneServerPerSuite with
   implicit val ac=app.injector.instanceOf[ApplicationConfig]
   implicit val gmpSessionCache=app.injector.instanceOf[GmpSessionCache]
   lazy val revaluationRateForm = new RevaluationRateForm(mcc)
+  implicit val fakeGmpContext = FakeGmpContext
 
-  object TestRevaluationRateController extends RevaluationRateController(FakeAuthAction, mockAuthConnector,ac,mockSessionService,FakeGmpContext,mcc,revaluationRateForm,ec,gmpSessionCache)
+  object TestRevaluationRateController extends RevaluationRateController(FakeAuthAction, mockAuthConnector,ac,mockSessionService ,mcc, revaluationRateForm, formPartial)
 
 
   private val nino: String = RandomNino.generate

@@ -16,16 +16,19 @@
 
 package views.html
 
-import forms.{InflationProofForm, checkDateOnOBeforeGMPEnd, checkDateOnOrAfterGMPStart, checkDayRange, checkForNumber, checkMonthRange, checkValidDate, checkYearLength}
+import forms.{checkDayRange, checkForNumber, checkMonthRange, checkYearLength}
 import models.{GmpDate, InflationProof}
 import play.api.data.Form
 import play.api.data.Forms.{mapping, optional, text}
 import play.twirl.api.Html
+import uk.gov.hmrc.play.partials.FormPartialRetriever
 import utils.GmpViewSpec
 
 class InflationProofSpec extends GmpViewSpec {
-  override def view: Html = views.html.inflation_proof(inflationProofForm)
- // private val inflationProofForm: Form[models.InflationProof] = InflationProofForm.inflationProofForm
+
+  private val formPartial = app.injector.instanceOf[FormPartialRetriever]
+
+  override def view: Html = views.html.inflation_proof(inflationProofForm, formPartial)
 
   val inflationProofForm = Form(
     mapping(

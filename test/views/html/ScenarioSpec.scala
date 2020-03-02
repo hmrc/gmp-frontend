@@ -16,15 +16,18 @@
 
 package views.html
 
-import forms.ScenarioForm
 import models.CalculationType
 import play.api.data.Form
 import play.api.data.Forms.{mapping, optional, text}
 import play.twirl.api.Html
+import uk.gov.hmrc.play.partials.FormPartialRetriever
 import utils.GmpViewSpec
 
-class ScenarioSpec extends GmpViewSpec{
-  override def view: Html = views.html.scenario(scenarioForm)
+class ScenarioSpec extends GmpViewSpec {
+
+  private val formPartial = app.injector.instanceOf[FormPartialRetriever]
+
+  override def view: Html = views.html.scenario(scenarioForm, formPartial)
  // private val pensionDetailsForm: Form[models.CalculationType] = ScenarioForm.scenarioForm
 
   val scenarioForm = Form(

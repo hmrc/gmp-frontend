@@ -19,10 +19,14 @@ package views.html
 import models.{CalculationPeriod, CalculationResponse, ContributionsAndEarnings}
 import org.joda.time.LocalDate
 import play.twirl.api.Html
+import uk.gov.hmrc.play.partials.FormPartialRetriever
 import utils.GmpViewSpec
 
-class ResultsSpec extends GmpViewSpec{
-  override def view: Html = views.html.results( calculationResponse, Some("revalRateSubheader"), Some("survivorSubheader"))
+class ResultsSpec extends GmpViewSpec {
+
+  private val formPartial = app.injector.instanceOf[FormPartialRetriever]
+
+  override def view: Html = views.html.results(calculationResponse, Some("revalRateSubheader"), Some("survivorSubheader"), formPartial)
 
   private val calculationResponse : CalculationResponse = CalculationResponse(
     "name", "nino", "scon", Some("revaluationRate"), Some(LocalDate.now),

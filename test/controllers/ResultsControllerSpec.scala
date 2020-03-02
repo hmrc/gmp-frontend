@@ -27,8 +27,9 @@ import models._
 import org.joda.time.LocalDate
 import org.mockito.Matchers
 import org.mockito.Mockito._
-import org.scalatest.mockito.MockitoSugar
-import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
+import org.scalatestplus.mockito.MockitoSugar
+import org.scalatestplus.play.PlaySpec
+import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl}
 import play.api.mvc.{MessagesControllerComponents, Request}
 import play.api.test.FakeRequest
@@ -39,11 +40,12 @@ import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.logging.SessionId
 import uk.gov.hmrc.play.audit.http.connector.{AuditConnector, AuditResult}
+import uk.gov.hmrc.play.partials.FormPartialRetriever
 import views.helpers.GmpDateFormatter._
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with MockitoSugar {
+class ResultsControllerSpec extends PlaySpec with GuiceOneServerPerSuite with MockitoSugar {
 
   val mockAuthConnector = mock[AuthConnector]
   val mockSessionService = mock[SessionService]
@@ -58,10 +60,12 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
   implicit val messagesProvider=MessagesImpl(Lang("en"), messagesAPI)
   implicit val applicationConfig=app.injector.instanceOf[ApplicationConfig]
   implicit val gmpSessionCache=app.injector.instanceOf[GmpSessionCache]
+  implicit val fakeGmpContext = FakeGmpContext
+  val formPartial = app.injector.instanceOf[FormPartialRetriever]
 
-  implicit val hc = new HeaderCarrier(sessionId = Some(SessionId(s"session-${UUID.randomUUID}")))
+  implicit val hc = HeaderCarrier(sessionId = Some(SessionId(s"session-${UUID.randomUUID}")))
 
-  object TestResultsController extends ResultsController(FakeAuthAction, mockAuthConnector, mockSessionService,FakeGmpContext, mockCalculationConnector, mockAuditConnector, metrics,applicationConfig,mcc,ec,gmpSessionCache) {
+  object TestResultsController extends ResultsController(FakeAuthAction, mockAuthConnector, mockSessionService, mockCalculationConnector, mockAuditConnector, metrics, applicationConfig,mcc, formPartial) {
 
 
     override def resultsView(response: CalculationResponse, subheader: Option[String], revalSubheader: Option[String])(implicit request: Request[_], context: config.GmpContext): HtmlFormat.Appendable = {

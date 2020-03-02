@@ -16,6 +16,7 @@
 
 import play.api.i18n.Messages
 import play.twirl.api.Html
+import uk.gov.hmrc.play.partials.FormPartialRetriever
 import utils.GmpViewSpec
 
 class IncorrectlyEncodedSpec extends GmpViewSpec {
@@ -23,8 +24,10 @@ class IncorrectlyEncodedSpec extends GmpViewSpec {
   val header = Messages("gmp.bulk.incorrectlyEncoded.header")
   val title = s"$header - ${Messages("service.title")} - ${Messages("gov.uk")}"
   val message = Messages("gmp.bulk.incorrectlyEncoded")
-  
-  override def view: Html = views.html.incorrectlyEncoded(message, header)
+
+  private val formPartial = app.injector.instanceOf[FormPartialRetriever]
+
+  override def view: Html = views.html.incorrectlyEncoded(message, header, formPartial)
 
   "Incorrectly encoded page" must {
     behave like pageWithTitle(title)

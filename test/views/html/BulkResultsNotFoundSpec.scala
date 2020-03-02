@@ -17,10 +17,14 @@
 package views.html
 
 import play.twirl.api.Html
+import uk.gov.hmrc.play.partials.FormPartialRetriever
 import utils.GmpViewSpec
 
 class BulkResultsNotFoundSpec extends GmpViewSpec {
-  override def view: Html = views.html.bulk_results_not_found()
+
+  private val formPartial = app.injector.instanceOf[FormPartialRetriever]
+
+  override def view: Html = views.html.bulk_results_not_found(formPartial)
 
   "BulkResultsNotFound page" must {
     behave like pageWithTitle(messages("gmp.bulk.results_not_found"))

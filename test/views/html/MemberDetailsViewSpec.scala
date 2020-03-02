@@ -16,17 +16,18 @@
 
 package views.html
 
-import forms.MemberDetailsForm
 import models.MemberDetails
 import play.api.data.Form
 import play.api.data.Forms.{mapping, text}
 import play.api.data.validation.{Constraint, Invalid, Valid, ValidationError}
 import play.api.i18n.Messages
 import play.twirl.api.Html
+import uk.gov.hmrc.play.partials.FormPartialRetriever
 import utils.GmpViewSpec
 import validation.NinoValidate
 
-class MemberDetailsViewSpec extends GmpViewSpec{
+class MemberDetailsViewSpec extends GmpViewSpec {
+
 
   "MemberDetails page " must {
     behave like pageWithTitle(messages("gmp.member_details.header"))
@@ -44,8 +45,9 @@ class MemberDetailsViewSpec extends GmpViewSpec{
     }
   }
 
-  override def view: Html = views.html.member_details(form)
-  //private val memberDetailsForm: Form[models.MemberDetails] = MemberDetailsForm.form
+  private val formPartial = app.injector.instanceOf[FormPartialRetriever]
+
+  override def view: Html = views.html.member_details(form, formPartial)
 
   def form()(implicit messages: Messages) = Form(
     mapping(

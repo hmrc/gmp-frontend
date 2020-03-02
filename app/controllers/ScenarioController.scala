@@ -33,9 +33,8 @@ import scala.concurrent.{ExecutionContext, Future}
 class ScenarioController @Inject()(authAction: AuthAction,
                                    override val authConnector: AuthConnector,
                                    ac:ApplicationConfig,sessionService: SessionService,
-                                   formPartialRetriever: FormPartialRetriever,
-                                   override val messagesControllerComponents: MessagesControllerComponents,sf:ScenarioForm)(implicit
-                                    val executionContext: ExecutionContext, val gmpSessionCache: GmpSessionCache, val config:GmpContext)
+                                   override val messagesControllerComponents: MessagesControllerComponents,sf:ScenarioForm, formPartialRetriever: FormPartialRetriever
+)(implicit val executionContext: ExecutionContext, val gmpSessionCache: GmpSessionCache, val config:GmpContext)
   extends GmpPageFlow(authConnector,sessionService,config,messagesControllerComponents,ac) {
 
 

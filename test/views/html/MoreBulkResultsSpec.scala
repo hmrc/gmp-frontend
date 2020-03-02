@@ -19,11 +19,14 @@ package views.html
 import models.BulkPreviousRequest
 import org.joda.time.LocalDateTime
 import play.twirl.api.Html
+import uk.gov.hmrc.play.partials.FormPartialRetriever
 import utils.GmpViewSpec
 
 class MoreBulkResultsSpec extends GmpViewSpec {
 
-  override def view: Html = views.html.more_bulk_results(bulkPreviousRequestsList)
+  private val formPartial = app.injector.instanceOf[FormPartialRetriever]
+
+  override def view: Html = views.html.more_bulk_results(bulkPreviousRequestsList, formPartial)
 
   "MoreBulkResults page" must {
 

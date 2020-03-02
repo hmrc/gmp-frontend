@@ -16,16 +16,16 @@
 
 package forms
 
-import forms.RevaluationRateForm
 import models.RevaluationRate
-import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.mockito.MockitoSugar
+import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
-import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
-import play.api.i18n.{Lang, MessagesApi, MessagesImpl, MessagesProvider}
+import play.api.i18n.{Lang, MessagesApi, MessagesImpl}
 import play.api.libs.json.Json
 import play.api.mvc.MessagesControllerComponents
 
 class RevaluationRateFormSpec extends PlaySpec with GuiceOneAppPerSuite with MockitoSugar {
+
   implicit lazy val messagesAPI=app.injector.instanceOf[MessagesApi]
   implicit lazy val messagesProvider=MessagesImpl(Lang("en"), messagesAPI)
   lazy val mcc = app.injector.instanceOf[MessagesControllerComponents]

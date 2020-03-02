@@ -17,10 +17,14 @@
 package views.html
 
 import play.twirl.api.Html
+import uk.gov.hmrc.play.partials.FormPartialRetriever
 import utils.GmpViewSpec
 
 class FailureSpec extends GmpViewSpec{
-  override def view: Html = views.html.failure(message, header, title)
+
+  private val formPartial = app.injector.instanceOf[FormPartialRetriever]
+
+  override def view: Html = views.html.failure(message, header, title, formPartial)
   private val message : String = "message"
   private val header : String = "header"
   private val title : String = "header - Guaranteed Minimum Pension - GOV.UK"

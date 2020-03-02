@@ -42,8 +42,8 @@ class ResultsController @Inject()(authAction: AuthAction,
                                   calculationConnector: GmpConnector,
                                   auditConnector: AuditConnector,
                                   metrics: ApplicationMetrics,ac:ApplicationConfig,
-                                  formPartialRetriever: FormPartialRetriever,
-                                  override val messagesControllerComponents: MessagesControllerComponents)(
+                                  override val messagesControllerComponents: MessagesControllerComponents,
+                                  formPartialRetriever: FormPartialRetriever)(
                                   implicit val executionContext: ExecutionContext,
                                   val gmpSessionCache: GmpSessionCache,
                                   override val context: GmpContext) extends GmpPageFlow(authConnector,sessionService,context,messagesControllerComponents,ac) {

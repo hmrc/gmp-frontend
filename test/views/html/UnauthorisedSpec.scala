@@ -17,10 +17,14 @@
 package views.html
 
 import play.twirl.api.Html
+import uk.gov.hmrc.play.partials.FormPartialRetriever
 import utils.GmpViewSpec
 
 class UnauthorisedSpec extends GmpViewSpec {
-  override def view: Html = views.html.unauthorised()
+
+ private val formPartial = app.injector.instanceOf[FormPartialRetriever]
+
+  override def view: Html = views.html.unauthorised(formPartial)
 
   "Unauthorised page" must {
     behave like pageWithTitle(messages("gmp.unauthorised.message"))
