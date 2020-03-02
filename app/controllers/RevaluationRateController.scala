@@ -30,16 +30,14 @@ import uk.gov.hmrc.play.partials.FormPartialRetriever
 
 import scala.concurrent.ExecutionContext
 
-
 @Singleton
 class RevaluationRateController @Inject()(authAction: AuthAction,
                                           override val authConnector: AuthConnector, ac: ApplicationConfig,
                                           sessionService: SessionService,
                                           formPartialRetriever: FormPartialRetriever,
                                           override val messagesControllerComponents: MessagesControllerComponents, rrf: RevaluationRateForm)
-                                         (implicit val gmpSessionCache: GmpSessionCache, val executionContext: ExecutionContext, val config: GmpContext,
+                                         (implicit val gmpSessionCache: GmpSessionCache, val executionContext: ExecutionContext, val config: GmpContext
                                          ) extends GmpPageFlow(authConnector, sessionService, config, messagesControllerComponents, ac) {
-
 
   lazy val revaluationRateForm = rrf.revaluationRateForm
 
@@ -51,7 +49,7 @@ class RevaluationRateController @Inject()(authAction: AuthAction,
           case _ if session.memberDetails.nino == "" || session.memberDetails.firstForename == "" || session.memberDetails.surname == "" => Ok(views.html.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/member-details"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title"), formPartialRetriever))
           case _ if session.scenario == "" => Ok(views.html.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/calculation-reason"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title"), formPartialRetriever))
           case _ if !session.leaving.leaving.isDefined => Ok(views.html.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/left-scheme"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title"), formPartialRetriever))
-          case _ => Ok(views.html.revaluation_rate(revaluationRateForm, session))
+          case _ => Ok(views.html.revaluation_rate(revaluationRateForm, session, formPartialRetriever))
         }
         case _ => throw new RuntimeException
       }
@@ -66,7 +64,7 @@ class RevaluationRateController @Inject()(authAction: AuthAction,
       revaluationRateForm.bindFromRequest.fold(
         formWithErrors => {
           sessionService.fetchGmpSession() map {
-            case Some(x) => BadRequest(views.html.revaluation_rate(formWithErrors, x))
+            case Some(x) => BadRequest(views.html.revaluation_rate(formWithErrors, x, formPartialRetriever))
             case _ => throw new RuntimeException
           }
         },

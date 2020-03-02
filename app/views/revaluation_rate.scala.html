@@ -15,11 +15,11 @@
  *@
 
 @import config.ApplicationConfig
-@(revaluationRateForm: Form[models.RevaluationRate], session: GmpSession)(implicit request: Request[_], context: config.GmpContext, messages: Messages,ac:ApplicationConfig)
-
-@import uk.gov.hmrc.play.views.html._
 @import uk.gov.hmrc.play.views.html.helpers._
 @import views.html.helpers._
+@import uk.gov.hmrc.play.partials.FormPartialRetriever
+
+@(revaluationRateForm: Form[models.RevaluationRate], session: GmpSession, formPartialRetriever: FormPartialRetriever)(implicit request: Request[_], context: config.GmpContext, messages: Messages,ac:ApplicationConfig)
 
 @import models.CalculationType
 @heading = {

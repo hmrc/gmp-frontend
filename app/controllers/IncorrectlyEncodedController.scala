@@ -17,21 +17,22 @@
 package controllers
 
 import com.google.inject.Inject
-import config.{ApplicationConfig, GmpContext}
+import config.{ApplicationConfig, GmpContext, GmpSessionCache}
 import controllers.auth.AuthAction
 import play.api.i18n.Messages
 import play.api.mvc.MessagesControllerComponents
 import services.SessionService
 import uk.gov.hmrc.auth.core.AuthConnector
+import uk.gov.hmrc.play.partials.FormPartialRetriever
 
 import scala.concurrent.{ExecutionContext, Future}
 
 class IncorrectlyEncodedController @Inject()( authAction: AuthAction,
                                               override val authConnector: AuthConnector,
-                                              sessionService: SessionService,implicit val config:GmpContext,
-                                              override val messagesControllerComponents: MessagesControllerComponents,ac:ApplicationConfig,
-                                              implicit val executionContext: ExecutionContext
-                                            ) extends GmpPageFlow(authConnector,sessionService,config,messagesControllerComponents,ac){
+                                              sessionService: SessionService,
+                                              formPartialRetriever: FormPartialRetriever,
+                                              override val messagesControllerComponents: MessagesControllerComponents,ac:ApplicationConfig
+                                            )(implicit val executionContext: ExecutionContext, val config: GmpContext) extends GmpPageFlow(authConnector,sessionService,config,messagesControllerComponents,ac) {
 
 
 
@@ -40,7 +41,7 @@ class IncorrectlyEncodedController @Inject()( authAction: AuthAction,
       Future.successful(
         InternalServerError(views.html.incorrectlyEncoded(
           Messages("gmp.bulk.incorrectlyEncoded"),
-          Messages("gmp.bulk.incorrectlyEncoded.header"))))
+          Messages("gmp.bulk.incorrectlyEncoded.header"), formPartialRetriever)))
     }
   }
 

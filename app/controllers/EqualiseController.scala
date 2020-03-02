@@ -24,21 +24,22 @@ import play.api.Logger
 import play.api.mvc.MessagesControllerComponents
 import services.SessionService
 import uk.gov.hmrc.auth.core.AuthConnector
+import uk.gov.hmrc.play.partials.FormPartialRetriever
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class EqualiseController @Inject()(authAction: AuthAction,
                                    override val authConnector: AuthConnector,
-                                   sessionService: SessionService,implicit val config:GmpContext,ef:EqualiseForm,
-                                   messagesControllerComponents: MessagesControllerComponents,ac:ApplicationConfig,
-                                   implicit val executionContext: ExecutionContext,implicit val gmpSessionCache: GmpSessionCache)
+                                   sessionService: SessionService, ef:EqualiseForm,
+                                   formPartialRetriever: FormPartialRetriever,
+                                   messagesControllerComponents: MessagesControllerComponents, ac:ApplicationConfig)(implicit val executionContext: ExecutionContext, val gmpSessionCache: GmpSessionCache, val config: GmpContext)
                                   extends GmpPageFlow(authConnector,sessionService,config,messagesControllerComponents,ac) {
 
 
   lazy val equaliseForm = ef.equaliseForm
   def get = authAction.async {
-    implicit request => Future.successful(Ok(views.html.equalise(equaliseForm)))
+    implicit request => Future.successful(Ok(views.html.equalise(equaliseForm, formPartialRetriever)))
   }
 
   def post = authAction.async {
@@ -48,7 +49,7 @@ class EqualiseController @Inject()(authAction: AuthAction,
 
         equaliseForm.bindFromRequest().fold(
 
-          formWithErrors => {Future.successful(BadRequest(views.html.equalise(formWithErrors)))},
+          formWithErrors => {Future.successful(BadRequest(views.html.equalise(formWithErrors, formPartialRetriever)))},
 
           equalise => {
             sessionService.cacheEqualise(equalise.equalise) map {

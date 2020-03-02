@@ -46,7 +46,7 @@ class ScenarioController @Inject()(authAction: AuthAction,
         case Some(session) => session match {
           case _ if session.scon == "" => Ok(views.html.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/pension-details"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title"), formPartialRetriever))
           case _ if session.memberDetails.nino == "" || session.memberDetails.firstForename == "" || session.memberDetails.surname == "" => Ok(views.html.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/member-details"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title"), formPartialRetriever))
-          case _ => Ok(views.html.scenario(scenarioForm))
+          case _ => Ok(views.html.scenario(scenarioForm, formPartialRetriever))
         }
         case _ => Ok(views.html.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/dashboard"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title"), formPartialRetriever))
       }
@@ -59,7 +59,7 @@ class ScenarioController @Inject()(authAction: AuthAction,
 
         scenarioForm.bindFromRequest().fold(
           formWithErrors => {
-            Future.successful(BadRequest(views.html.scenario(formWithErrors)))
+            Future.successful(BadRequest(views.html.scenario(formWithErrors, formPartialRetriever)))
           }, calculationType => {
             sessionService.cacheScenario(calculationType.calcType.get) map {
               case Some(session) => nextPage("ScenarioController", session)

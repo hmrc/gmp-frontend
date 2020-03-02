@@ -51,7 +51,7 @@ class ResultsController @Inject()(authAction: AuthAction,
 
 
    def resultsView(response: CalculationResponse, revalRateSubheader: Option[String], survivorSubheader: Option[String])(implicit request: Request[_], context: GmpContext): HtmlFormat.Appendable = {
-    views.html.results(response, revalRateSubheader,survivorSubheader)
+    views.html.results(response, revalRateSubheader,survivorSubheader, formPartialRetriever)
   }
 
   def get = authAction.async {

@@ -20,58 +20,58 @@ import com.google.inject.{Inject, Singleton}
 import config.{ApplicationConfig, GmpContext, GmpSessionCache}
 import controllers.auth.AuthAction
 import forms.MemberDetailsForm
-
 import play.api.Logger
 import play.api.mvc.MessagesControllerComponents
 import services.SessionService
 import uk.gov.hmrc.auth.core.AuthConnector
+import uk.gov.hmrc.play.partials.FormPartialRetriever
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class MemberDetailsController @Inject()(authAction: AuthAction,
-                                        override val authConnector: AuthConnector,sessionService: SessionService,implicit val config:GmpContext,
-                                        override val messagesControllerComponents: MessagesControllerComponents,ac:ApplicationConfig,mdf:MemberDetailsForm,
-                                        implicit val executionContext: ExecutionContext,implicit val gmpSessionCache: GmpSessionCache) extends GmpPageFlow(authConnector,sessionService,config,messagesControllerComponents,ac) {
+                                        override val authConnector: AuthConnector, sessionService: SessionService,
+                                        override val messagesControllerComponents: MessagesControllerComponents, ac: ApplicationConfig, mdf: MemberDetailsForm, formPartialRetriever: FormPartialRetriever
+                                       )(implicit val executionContext: ExecutionContext, val gmpSessionCache: GmpSessionCache, val config: GmpContext) extends GmpPageFlow(authConnector, sessionService, config, messagesControllerComponents, ac) {
 
 
-  lazy val form=mdf.form()
+  lazy val form = mdf.form()
 
   def get = authAction.async {
-      implicit request => {
-        sessionService.fetchMemberDetails() map {
-          case Some(memberDetails) => Ok(views.html.member_details(form.fill(memberDetails)))
-          case _ => Ok(views.html.member_details(form))
-        }
+    implicit request => {
+      sessionService.fetchMemberDetails() map {
+        case Some(memberDetails) => Ok(views.html.member_details(form.fill(memberDetails), formPartialRetriever))
+        case _ => Ok(views.html.member_details(form, formPartialRetriever))
       }
+    }
   }
 
   def post = authAction.async {
-      implicit request => {
+    implicit request => {
 
-        Logger.debug(s"[MemberDetailsController][POST] : ${request.body}")
+      Logger.debug(s"[MemberDetailsController][POST] : ${request.body}")
 
-        form.bindFromRequest.fold(
-          formWithErrors => {
-            Future.successful(BadRequest(views.html.member_details(formWithErrors)))
-          },
-          memberDetails => {
-            sessionService.cacheMemberDetails(memberDetails) map {
-              case Some(session) => nextPage("MemberDetailsController", session)
-              case _ => throw new RuntimeException
-            }
+      form.bindFromRequest.fold(
+        formWithErrors => {
+          Future.successful(BadRequest(views.html.member_details(formWithErrors, formPartialRetriever)))
+        },
+        memberDetails => {
+          sessionService.cacheMemberDetails(memberDetails) map {
+            case Some(session) => nextPage("MemberDetailsController", session)
+            case _ => throw new RuntimeException
           }
-        )
-      }
+        }
+      )
+    }
   }
 
   def back = authAction.async {
-      implicit request => {
-        sessionService.fetchGmpSession() map {
-          case Some(session) => previousPage("MemberDetailsController", session)
-          case _ => throw new RuntimeException
-        }
+    implicit request => {
+      sessionService.fetchGmpSession() map {
+        case Some(session) => previousPage("MemberDetailsController", session)
+        case _ => throw new RuntimeException
       }
+    }
   }
 
 }

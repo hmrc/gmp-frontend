@@ -17,7 +17,7 @@
 package controllers
 
 import com.google.inject.{Inject, Singleton}
-import config.{ApplicationConfig, GmpContext}
+import config.{ApplicationConfig, GmpContext, GmpSessionCache}
 import controllers.auth.{AuthAction, ExternalUrls, UUIDGenerator}
 import play.api.i18n.{Messages, MessagesProvider}
 import play.api.inject.guice.GuiceApplicationBuilder
@@ -26,6 +26,7 @@ import services.SessionService
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.audit.model.DataEvent
+import uk.gov.hmrc.play.partials.FormPartialRetriever
 
 import scala.concurrent.ExecutionContext
 
@@ -34,17 +35,17 @@ class ApplicationController @Inject()(authAction: AuthAction,
                                       auditConnector: AuditConnector,
                                       val authConnector: AuthConnector,
                                       uuidGenerator: UUIDGenerator,
-                                      sessionService: SessionService,implicit val config:GmpContext,
+                                      sessionService: SessionService,
+                                      formPartialRetriever: FormPartialRetriever,
                                       messagesControllerComponents: MessagesControllerComponents,
-                                      implicit val executionContext: ExecutionContext,
-                                      ac:ApplicationConfig)
+                                      ac:ApplicationConfig)(implicit val executionContext: ExecutionContext, val config: GmpContext)
                                       extends GmpController(messagesControllerComponents,ac,sessionService,config) {
 
 
 
   def unauthorised: Action[AnyContent] = Action {
     implicit request =>
-      Ok(views.html.unauthorised())
+      Ok(views.html.unauthorised(formPartialRetriever))
   }
 
 

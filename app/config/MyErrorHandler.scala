@@ -23,11 +23,11 @@ import play.api.i18n.MessagesApi
 import play.api.mvc.Request
 import play.twirl.api.Html
 import uk.gov.hmrc.play.bootstrap.http.FrontendErrorHandler
+import uk.gov.hmrc.play.partials.FormPartialRetriever
 @Singleton
 class MyErrorHandler @Inject()(
-                                val messagesApi: MessagesApi, val configuration: Configuration,
-                                implicit val applicationConfig:config.ApplicationConfig
-                              ) (implicit val gmpContext: GmpContext)extends FrontendErrorHandler {
+                                val messagesApi: MessagesApi, val configuration: Configuration, formPartialRetriever: FormPartialRetriever
+                              ) (implicit val gmpContext: GmpContext, val applicationConfig: ApplicationConfig)extends FrontendErrorHandler {
 
 
   override def standardErrorTemplate(pageTitle: String, heading: String, message: String)
@@ -35,7 +35,7 @@ class MyErrorHandler @Inject()(
     views.html.global_error(pageTitle, heading, message)
 
   override def notFoundTemplate(implicit request: Request[_]): Html = {
-    views.html.global_page_not_found()
+    views.html.global_page_not_found(formPartialRetriever)
   }
 
 }

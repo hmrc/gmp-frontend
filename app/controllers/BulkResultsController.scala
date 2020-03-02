@@ -46,7 +46,7 @@ class BulkResultsController @Inject()(authAction: AuthAction,
 
         gmpBulkConnector.getBulkResultsSummary(uploadReference, link).map {
           bulkResultsSummary => {
-            Ok(views.html.bulk_results(bulkResultsSummary, uploadReference, comingFromPage))
+            Ok(views.html.bulk_results(bulkResultsSummary, uploadReference, comingFromPage, formPartialRetriever))
           }
         }.recover {
           case e: Upstream4xxResponse if e.upstreamResponseCode == FORBIDDEN => {

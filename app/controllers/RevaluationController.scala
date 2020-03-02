@@ -25,24 +25,25 @@ import play.api.Logger
 import play.api.mvc.MessagesControllerComponents
 import services.SessionService
 import uk.gov.hmrc.auth.core.AuthConnector
+import uk.gov.hmrc.play.partials.FormPartialRetriever
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class RevaluationController @Inject()( authAction: AuthAction,
-                                       override val authConnector: AuthConnector,sessionService: SessionService,implicit val config:GmpContext,
+                                       override val authConnector: AuthConnector,sessionService: SessionService,
                                        override val messagesControllerComponents: MessagesControllerComponents,
-                                       ac:ApplicationConfig,rvform: RevaluationForm,
-                                       implicit val executionContext: ExecutionContext,implicit val gmpSessionCache: GmpSessionCache
+                                       ac:ApplicationConfig,rvform: RevaluationForm, formPartialRetriever: FormPartialRetriever)(
+                                       implicit val executionContext: ExecutionContext, val gmpSessionCache: GmpSessionCache, val config:GmpContext
                                      ) extends GmpPageFlow(authConnector,sessionService,config,messagesControllerComponents,ac) {
 
   lazy val revalForm = rvform.revaluationForm
   def get = authAction.async {
       implicit request => sessionService.fetchLeaving.map {
         case Some(leaving) => {
-          Ok(views.html.revaluation(revalForm.fill(RevaluationDate(leaving, GmpDate(None, None, None)))))
+          Ok(views.html.revaluation(revalForm.fill(RevaluationDate(leaving, GmpDate(None, None, None))), formPartialRetriever))
         }
-        case _ => Ok(views.html.revaluation(revalForm))
+        case _ => Ok(views.html.revaluation(revalForm, formPartialRetriever))
       }
   }
 
@@ -51,7 +52,7 @@ class RevaluationController @Inject()( authAction: AuthAction,
         Logger.debug(s"[RevaluationController][post][POST] : ${request.body}")
         revalForm.bindFromRequest.fold(
           formWithErrors => {
-            Future.successful(BadRequest(views.html.revaluation(formWithErrors)))
+            Future.successful(BadRequest(views.html.revaluation(formWithErrors, formPartialRetriever)))
           },
           revaluation => {
             sessionService.cacheRevaluationDate(Some(revaluation.revaluationDate)).map {
