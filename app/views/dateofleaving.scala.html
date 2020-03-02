@@ -14,13 +14,12 @@
  * limitations under the License.
  *@
 
-@import config.ApplicationConfig
-@(dateOfLeavingForm: Form[models.Leaving],scenario: String)(implicit request: Request[_], context: config.GmpContext, messages: Messages,applicationConfig: config.ApplicationConfig)
-
-@import uk.gov.hmrc.play.views.html._
+@import uk.gov.hmrc.play.partials.FormPartialRetriever
 @import uk.gov.hmrc.play.views.html.helpers._
 @import views.html.helpers._
 @import models.Leaving
+
+@(dateOfLeavingForm: Form[models.Leaving], scenario: String, formPartialRetriever: FormPartialRetriever)(implicit request: Request[_], context: config.GmpContext, messages: Messages,applicationConfig: config.ApplicationConfig)
 
 @implicitFormInstance = @{ Some(dateOfLeavingForm) }
 
@@ -38,7 +37,7 @@
     }
 }
 
-@gmp_main(title = heading + " - " + Messages("service.title") + " - " + Messages("gov.uk"), pageScripts = Some(pageScripts)) {
+@gmp_main(title = heading + " - " + Messages("service.title") + " - " + Messages("gov.uk"), formPartialRetriever, pageScripts = Some(pageScripts)) {
 
         @includes.back_link(Messages("gmp.bulk.problem.header"))
 

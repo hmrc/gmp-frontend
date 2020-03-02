@@ -34,7 +34,7 @@
         case _ => Messages("gmp.revaluation_rate.header")
         }}
 }
-@gmp_main(title = heading + " - " + Messages("service.title") + " - " + Messages("gov.uk")) {
+@gmp_main(title = heading + " - " + Messages("service.title") + " - " + Messages("gov.uk"), formPartialRetriever) {
 
         @includes.back_link(Messages("gmp.revaluation_rate.header"))
 

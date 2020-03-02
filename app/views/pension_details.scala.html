@@ -14,13 +14,12 @@
  * limitations under the License.
  *@
 
-@import config.ApplicationConfig
-@(pensionDetailsForm: Form[models.PensionDetails])(implicit request: Request[_], context: config.GmpContext, messages: Messages,ac:ApplicationConfig)
-
-@import uk.gov.hmrc.play.views.html._
 @import uk.gov.hmrc.play.views.html.helpers._
 @import views.html.helpers._
+@import config.ApplicationConfig
 
+@import uk.gov.hmrc.play.partials.FormPartialRetriever
+@(pensionDetailsForm: Form[models.PensionDetails], formPartialRetriever: FormPartialRetriever)(implicit request: Request[_], context: config.GmpContext, messages: Messages,ac:ApplicationConfig)
 
 @implicitFormInstance = @{ Some(pensionDetailsForm) }
 
@@ -28,7 +27,7 @@
     <script type="text/javascript" src='@controllers.routes.AssetsController.at("javascripts/pension-details.js")'></script>
 }
 
-@gmp_main(title = Messages("gmp.pension_details.header") + " - " + Messages("service.title") + " - " + Messages("gov.uk"), pageScripts = Some(pageScripts)) {
+@gmp_main(title = Messages("gmp.pension_details.header") + " - " + Messages("service.title") + " - " + Messages("gov.uk"), formPartialRetriever, pageScripts = Some(pageScripts)) {
 
   @includes.back_link(Messages("gmp.bulk_reference.header"))
 

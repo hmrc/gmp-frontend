@@ -24,7 +24,7 @@
 
 @implicitFormInstance = @{ Some(revaluationForm) }
 
-@gmp_main(title = Messages("gmp.revaluation.question")+ " - " + Messages("service.title") + " - " + Messages("gov.uk")) {
+@gmp_main(title = Messages("gmp.revaluation.question")+ " - " + Messages("service.title") + " - " + Messages("gov.uk"), formPartialRetriever) {
 
 @includes.back_link(Messages("gmp.revaluation.question"))
 

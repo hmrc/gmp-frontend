@@ -14,17 +14,12 @@
  * limitations under the License.
  *@
 
-@import play.api.Play.current
-@import play.api.i18n.Messages.Implicits._
-
 @import config.ApplicationConfig
-@()(implicit request: Request[_], context: config.GmpContext,messages: Messages,ac:ApplicationConfig)
+@import uk.gov.hmrc.play.partials.FormPartialRetriever
 
-@import uk.gov.hmrc.play.views.html._
-@import uk.gov.hmrc.play.views.html.helpers._
-@import views.html.helpers._
+@(formPartialRetriever: FormPartialRetriever)(implicit request: Request[_], context: config.GmpContext,messages: Messages,ac:ApplicationConfig)
 
-@gmp_main(title = Messages("gmp.bulk.results_not_found") + " - " + Messages("service.title") + " - " + Messages("gov.uk"),supportLinkEnabled = false, dashboardLinkEnabled = false) {
+@gmp_main(title = Messages("gmp.bulk.results_not_found") + " - " + Messages("service.title") + " - " + Messages("gov.uk"), formPartialRetriever, supportLinkEnabled = false, dashboardLinkEnabled = false) {
 
     @includes.back_link(Messages("gmp.bulk.results.banner"))
         <h1 class="heading-xlarge">@Messages("gmp.bulk.results_not_found")</h1>

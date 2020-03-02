@@ -23,7 +23,7 @@
 
 @implicitFormInstance = @{ Some(memberDetailsForm) }
 
-@gmp_main(title = Messages("gmp.member_details.header") + " - " + Messages("service.title") + " - " + Messages("gov.uk")) {
+@gmp_main(title = Messages("gmp.member_details.header") + " - " + Messages("service.title") + " - " + Messages("gov.uk"), formPartialRetriever) {
 
     @includes.back_link(Messages("gmp.bulk.results.banner"))
 
