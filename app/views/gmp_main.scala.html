@@ -13,11 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *@
-
-@import uk.gov.hmrc.http.HeaderCarrier
-@import scala.concurrent.ExecutionContext
+@import uk.gov.hmrc.play.partials.FormPartialRetriever
 
 @(title: String,
+formPartialRetriever: FormPartialRetriever,
 pageScripts: Option[Html] = None,
 scriptElem: Option[Html] = None,
 userLoggedIn: Boolean = false,
@@ -28,10 +27,10 @@ showSignOutLink: Boolean = true,
 showUserResearchBanner: Boolean = false,
 dashboardLinkEnabled:Boolean = false,
 pageHeading: Option[String] = None,
-customHead: Option[Html] = None)(mainContent: Html)(implicit request: Request[_], context: config.GmpContext, messages: Messages,applicationconfig:config.ApplicationConfig)
+customHead: Option[Html] = None)(mainContent: Html)(implicit request: Request[_], context: config.GmpContext, messages: Messages, applicationconfig:config.ApplicationConfig)
 
 @getHelpForm = {
-    @includes.report_problem(supportLinkEnabled)
+    @includes.report_problem(supportLinkEnabled, formPartialRetriever, applicationconfig)
 }
 
 @linkElement = {

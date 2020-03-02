@@ -15,13 +15,11 @@
  *@
 
 @import config.ApplicationConfig
-@(reference: String)(implicit request: Request[_], context: config.GmpContext,messages: Messages,ac:ApplicationConfig)
+@import uk.gov.hmrc.play.partials.FormPartialRetriever
 
-@import uk.gov.hmrc.play.views.html._
-@import uk.gov.hmrc.play.views.html.helpers._
-@import views.html.helpers._
+@(reference: String, formPartialRetriever: FormPartialRetriever)(implicit request: Request[_], context: config.GmpContext,messages: Messages,ac:ApplicationConfig)
 
-@gmp_main(title = Messages("gmp.bulk_request_received.banner") + " - " + Messages("service.title") + " - " + Messages("gov.uk"), supportLinkEnabled = true) {
+@gmp_main(title = Messages("gmp.bulk_request_received.banner") + " - " + Messages("service.title") + " - " + Messages("gov.uk"), formPartialRetriever, supportLinkEnabled = true) {
 
       @includes.back_to_dashboard_link(Messages("gmp.bulk_request_received.banner"))
 

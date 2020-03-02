@@ -37,6 +37,9 @@ class ApplicationConfig @Inject()(
    val urBannerToggle:Boolean = loadConfig("urBanner.toggle").toBoolean
    val urBannerLink: String = loadConfig("urBanner.link")
    val optimizelyProjectId: String = loadConfig("optimizely.projectId")
+   private val contactFrontendService = servicesConfig.baseUrl("contact-frontend")
+
+  val contactFrontendPartialBaseUrl: String = s"$contactFrontendService"
 
   val globalErrors = ConfigFactory.load("global-errors.properties")
   val contactFormServiceIdentifier = "GMP"
