@@ -29,6 +29,7 @@ import services.{SessionService, UpscanService}
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.logging.SessionId
+import uk.gov.hmrc.play.partials.FormPartialRetriever
 import views.html.upscan_csv_file_upload
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -37,12 +38,12 @@ import scala.concurrent.{ExecutionContext, Future}
 class FileUploadController @Inject()(authAction: AuthAction,
                                      val authConnector: AuthConnector,
                                      sessionService: SessionService,
-                                     implicit val config: GmpContext,
                                      upscanService: UpscanService,
                                      messagesControllerComponents: MessagesControllerComponents,
-                                     ac: ApplicationConfig,
-                                     implicit val executionContext: ExecutionContext,
-                                     implicit val gmpSessionCache: GmpSessionCache)
+                                     formPartialRetriever: FormPartialRetriever,
+                                     ac: ApplicationConfig)(implicit val config: GmpContext,
+                                                             val executionContext: ExecutionContext,
+                                                            val gmpSessionCache: GmpSessionCache)
   extends GmpController(messagesControllerComponents, ac, sessionService, config) {
 
 
@@ -53,7 +54,7 @@ class FileUploadController @Inject()(authAction: AuthAction,
         response <- upscanService.getUpscanFormData()
         _ <- sessionService.createCallbackRecord
       } yield {
-        Ok(upscan_csv_file_upload(response))
+        Ok(upscan_csv_file_upload(response, formPartialRetriever))
       }
   }
 
@@ -74,7 +75,7 @@ class FileUploadController @Inject()(authAction: AuthAction,
     implicit request =>
           Ok(views.html.failure(Messages("gmp.bulk.failure.generic"),
             Messages("gmp.bulk.problem.header"),
-            Messages("gmp.bulk_failure_generic.title")))
+            Messages("gmp.bulk_failure_generic.title"), formPartialRetriever))
   }
 
   def callback(sessionId: String) = Action.async(parse.json) { implicit request =>

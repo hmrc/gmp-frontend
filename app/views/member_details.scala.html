@@ -15,11 +15,11 @@
  *@
 
 @import config.ApplicationConfig
-@(memberDetailsForm: Form[models.MemberDetails])(implicit request: Request[_], context: config.GmpContext, messages: Messages,ac:ApplicationConfig)
-
-@import uk.gov.hmrc.play.views.html._
 @import uk.gov.hmrc.play.views.html.helpers._
 @import views.html.helpers._
+@import uk.gov.hmrc.play.partials.FormPartialRetriever
+
+@(memberDetailsForm: Form[models.MemberDetails], formPartialRetriever: FormPartialRetriever)(implicit request: Request[_], context: config.GmpContext, messages: Messages,ac:ApplicationConfig)
 
 @implicitFormInstance = @{ Some(memberDetailsForm) }
 

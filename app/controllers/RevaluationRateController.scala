@@ -26,28 +26,31 @@ import play.api.i18n.Messages
 import play.api.mvc.MessagesControllerComponents
 import services.SessionService
 import uk.gov.hmrc.auth.core.AuthConnector
+import uk.gov.hmrc.play.partials.FormPartialRetriever
 
 import scala.concurrent.ExecutionContext
 
 
 @Singleton
-class RevaluationRateController @Inject()( authAction: AuthAction,
-                                           override val authConnector: AuthConnector, ac:ApplicationConfig,
-                                           sessionService: SessionService,implicit val config:GmpContext,
-                                           override val messagesControllerComponents: MessagesControllerComponents,rrf:RevaluationRateForm,
-                                           implicit val executionContext: ExecutionContext,implicit val gmpSessionCache: GmpSessionCache
-                                         ) extends GmpPageFlow(authConnector,sessionService,config,messagesControllerComponents,ac) {
+class RevaluationRateController @Inject()(authAction: AuthAction,
+                                          override val authConnector: AuthConnector, ac: ApplicationConfig,
+                                          sessionService: SessionService,
+                                          formPartialRetriever: FormPartialRetriever,
+                                          override val messagesControllerComponents: MessagesControllerComponents, rrf: RevaluationRateForm)
+                                         (implicit val gmpSessionCache: GmpSessionCache, val executionContext: ExecutionContext, val config: GmpContext,
+                                         ) extends GmpPageFlow(authConnector, sessionService, config, messagesControllerComponents, ac) {
 
 
-  lazy val revaluationRateForm=rrf.revaluationRateForm
+  lazy val revaluationRateForm = rrf.revaluationRateForm
 
   def get = authAction.async {
-      implicit request => sessionService.fetchGmpSession() map {
+    implicit request =>
+      sessionService.fetchGmpSession() map {
         case Some(session) => session match {
-          case _ if session.scon == "" => Ok(views.html.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/pension-details"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title")))
-          case _ if session.memberDetails.nino == "" || session.memberDetails.firstForename == "" || session.memberDetails.surname == "" => Ok(views.html.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/member-details"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title")))
-          case _ if session.scenario == "" => Ok(views.html.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/calculation-reason"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title")))
-          case _ if !session.leaving.leaving.isDefined => Ok(views.html.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/left-scheme"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title")))
+          case _ if session.scon == "" => Ok(views.html.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/pension-details"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title"), formPartialRetriever))
+          case _ if session.memberDetails.nino == "" || session.memberDetails.firstForename == "" || session.memberDetails.surname == "" => Ok(views.html.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/member-details"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title"), formPartialRetriever))
+          case _ if session.scenario == "" => Ok(views.html.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/calculation-reason"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title"), formPartialRetriever))
+          case _ if !session.leaving.leaving.isDefined => Ok(views.html.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/left-scheme"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title"), formPartialRetriever))
           case _ => Ok(views.html.revaluation_rate(revaluationRateForm, session))
         }
         case _ => throw new RuntimeException
@@ -56,34 +59,34 @@ class RevaluationRateController @Inject()( authAction: AuthAction,
   }
 
   def post = authAction.async {
-      implicit request => {
+    implicit request => {
 
-        Logger.debug(s"[RevaluationRateController][post][POST] : ${request.body}")
+      Logger.debug(s"[RevaluationRateController][post][POST] : ${request.body}")
 
-        revaluationRateForm.bindFromRequest.fold(
-          formWithErrors => {
-            sessionService.fetchGmpSession() map {
-              case Some(x) => BadRequest(views.html.revaluation_rate(formWithErrors, x))
-              case _ => throw new RuntimeException
-            }
-          },
-          revaluationRate => {
-            sessionService.cacheRevaluationRate(revaluationRate.rateType.get) map {
-              case Some(session) => nextPage("RevaluationRateController", session)
-              case _ => throw new RuntimeException
-            }
+      revaluationRateForm.bindFromRequest.fold(
+        formWithErrors => {
+          sessionService.fetchGmpSession() map {
+            case Some(x) => BadRequest(views.html.revaluation_rate(formWithErrors, x))
+            case _ => throw new RuntimeException
           }
-        )
-      }
+        },
+        revaluationRate => {
+          sessionService.cacheRevaluationRate(revaluationRate.rateType.get) map {
+            case Some(session) => nextPage("RevaluationRateController", session)
+            case _ => throw new RuntimeException
+          }
+        }
+      )
+    }
   }
 
   def back = authAction.async {
-     implicit request => {
-        sessionService.fetchGmpSession() map {
-          case Some(session) => previousPage("RevaluationRateController", session)
-          case _ => throw new RuntimeException
-        }
+    implicit request => {
+      sessionService.fetchGmpSession() map {
+        case Some(session) => previousPage("RevaluationRateController", session)
+        case _ => throw new RuntimeException
       }
+    }
   }
 
 }

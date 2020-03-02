@@ -24,17 +24,18 @@ import play.api.Logger
 import play.api.mvc.MessagesControllerComponents
 import services.SessionService
 import uk.gov.hmrc.auth.core.AuthConnector
+import uk.gov.hmrc.play.partials.FormPartialRetriever
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class InflationProofController @Inject()( authAction: AuthAction,
                                           override val authConnector: AuthConnector,
-                                          sessionService: SessionService,implicit val config:GmpContext,
+                                          sessionService: SessionService,
+                                          formPartialRetriever: FormPartialRetriever,
                                           override val messagesControllerComponents: MessagesControllerComponents,ipf:InflationProofForm,
-                                          ac:ApplicationConfig,
-                                          implicit val executionContext: ExecutionContext,implicit val gmpSessionCache: GmpSessionCache
-                                        ) extends GmpPageFlow(authConnector,sessionService,config,messagesControllerComponents,ac) {
+                                          ac:ApplicationConfig)(implicit val executionContext: ExecutionContext, val gmpSessionCache: GmpSessionCache
+  ,config:GmpContext) extends GmpPageFlow(authConnector,sessionService,config,messagesControllerComponents,ac) {
 
 
   lazy val inflationProofForm=ipf.inflationProofForm
@@ -42,7 +43,7 @@ class InflationProofController @Inject()( authAction: AuthAction,
 
   def get = authAction.async {
       implicit request => {
-        Future.successful(Ok(views.html.inflation_proof(inflationProofForm)))
+        Future.successful(Ok(views.html.inflation_proof(inflationProofForm, formPartialRetriever)))
       }
   }
 
@@ -53,7 +54,7 @@ class InflationProofController @Inject()( authAction: AuthAction,
 
         inflationProofForm.bindFromRequest.fold(
           formWithErrors => {
-            Future.successful(BadRequest(views.html.inflation_proof(formWithErrors)))
+            Future.successful(BadRequest(views.html.inflation_proof(formWithErrors, formPartialRetriever)))
           },
           revaluation => {
             val dateToStore = revaluation.revaluate match {

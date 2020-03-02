@@ -26,24 +26,24 @@ import play.api.mvc.MessagesControllerComponents
 import services.SessionService
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
+import uk.gov.hmrc.play.partials.FormPartialRetriever
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class BulkReferenceController @Inject()(authAction: AuthAction,
                                         val authConnector: AuthConnector,
-                                        auditConnector : AuditConnector,
-                                        sessionService: SessionService,implicit val config:GmpContext,brf:BulkReferenceForm,
-                                        override val messagesControllerComponents: MessagesControllerComponents,
-                                        implicit val executionContext: ExecutionContext,ac:ApplicationConfig,
-                                        implicit val gmpSessionCache: GmpSessionCache)
+                                        sessionService: SessionService, brf:BulkReferenceForm,
+                                        override val messagesControllerComponents: MessagesControllerComponents, formPartialRetriever: FormPartialRetriever)(
+                                        implicit val executionContext: ExecutionContext, ac:ApplicationConfig,
+                                        val gmpSessionCache: GmpSessionCache, val config:GmpContext)
   extends GmpController(messagesControllerComponents,ac,sessionService,config) {
 
 lazy val bulkReferenceForm = brf.bulkReferenceForm
 
   def get = authAction.async {
       implicit request =>
-        Future.successful(Ok(views.html.bulk_reference(bulkReferenceForm)))
+        Future.successful(Ok(views.html.bulk_reference(bulkReferenceForm, formPartialRetriever) ))
   }
 
   def post = authAction.async {
@@ -51,7 +51,7 @@ lazy val bulkReferenceForm = brf.bulkReferenceForm
         Logger.debug(s"[BulkReferenceController][post]: ${request.body}")
 
         bulkReferenceForm.bindFromRequest().fold(
-          formWithErrors => {Future.successful(BadRequest(views.html.bulk_reference(formWithErrors)))},
+          formWithErrors => {Future.successful(BadRequest(views.html.bulk_reference(formWithErrors, formPartialRetriever)))},
           value => {
 
             sessionService.cacheEmailAndReference(Some(value.email.trim), Some(value.reference.trim)).map {

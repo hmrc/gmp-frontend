@@ -15,13 +15,11 @@
  *@
 
 @import config.ApplicationConfig
-@(message: String, header: String)(implicit request: Request[_], context: config.GmpContext,messages: Messages,applicationConfig: ApplicationConfig)
+@import uk.gov.hmrc.play.partials.FormPartialRetriever
 
-@import uk.gov.hmrc.play.views.html._
-@import uk.gov.hmrc.play.views.html.helpers._
-@import views.html.helpers._
+@(message: String, header: String, formPartialRetriever: FormPartialRetriever)(implicit request: Request[_], context: config.GmpContext,messages: Messages,applicationConfig: ApplicationConfig)
 
-@gmp_main(title = s"$header - ${Messages("service.title")} - ${Messages("gov.uk")}") {
+@gmp_main(title = s"$header - ${Messages("service.title")} - ${Messages("gov.uk")}", formPartialRetriever) {
 
 @includes.back_link(header)
 <h1 class="heading-xlarge">@header</h1>

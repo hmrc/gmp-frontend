@@ -25,16 +25,18 @@ import play.api.i18n.Messages
 import play.api.mvc.MessagesControllerComponents
 import services.SessionService
 import uk.gov.hmrc.auth.core.AuthConnector
+import uk.gov.hmrc.play.partials.FormPartialRetriever
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class ScenarioController @Inject()(authAction: AuthAction,
                                    override val authConnector: AuthConnector,
-                                   ac:ApplicationConfig,sessionService: SessionService,implicit val config:GmpContext,
-                                   override val messagesControllerComponents: MessagesControllerComponents,sf:ScenarioForm,
-                                   implicit val executionContext: ExecutionContext,implicit val gmpSessionCache: GmpSessionCache
-                                  ) extends GmpPageFlow(authConnector,sessionService,config,messagesControllerComponents,ac) {
+                                   ac:ApplicationConfig,sessionService: SessionService,
+                                   formPartialRetriever: FormPartialRetriever,
+                                   override val messagesControllerComponents: MessagesControllerComponents,sf:ScenarioForm)(implicit
+                                    val executionContext: ExecutionContext, val gmpSessionCache: GmpSessionCache, val config:GmpContext)
+  extends GmpPageFlow(authConnector,sessionService,config,messagesControllerComponents,ac) {
 
 
   lazy val scenarioForm=sf.scenarioForm
@@ -42,12 +44,12 @@ class ScenarioController @Inject()(authAction: AuthAction,
   def get = authAction.async {
       implicit request => sessionService.fetchGmpSession() map {
         case Some(session) => session match {
-          case _ if session.scon == "" => Ok(views.html.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/pension-details"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title")))
-          case _ if session.memberDetails.nino == "" || session.memberDetails.firstForename == "" || session.memberDetails.surname == "" => Ok(views.html.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/member-details"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title")))
+          case _ if session.scon == "" => Ok(views.html.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/pension-details"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title"), formPartialRetriever))
+          case _ if session.memberDetails.nino == "" || session.memberDetails.firstForename == "" || session.memberDetails.surname == "" => Ok(views.html.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/member-details"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title"), formPartialRetriever))
           case _ => Ok(views.html.scenario(scenarioForm))
         }
-        case _ => Ok(views.html.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/dashboard"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title")))
-      }      
+        case _ => Ok(views.html.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/dashboard"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title"), formPartialRetriever))
+      }
   }
 
   def post = authAction.async {

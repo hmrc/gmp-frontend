@@ -24,6 +24,7 @@ import play.api.Logger
 import play.api.mvc.MessagesControllerComponents
 import services.SessionService
 import uk.gov.hmrc.auth.core.AuthConnector
+import uk.gov.hmrc.play.partials.FormPartialRetriever
 
 import scala.concurrent.ExecutionContext
 
@@ -31,9 +32,10 @@ import scala.concurrent.ExecutionContext
 class DashboardController @Inject()(authAction: AuthAction,
                                     override val authConnector: AuthConnector,
                                     gmpBulkConnector: GmpBulkConnector,ac:ApplicationConfig,
-                                    sessionService: SessionService,implicit val config:GmpContext,
-                                    messagesControllerComponents: MessagesControllerComponents,
-                                    implicit val executionContext: ExecutionContext,implicit val gmpSessionCache: GmpSessionCache) extends GmpPageFlow(authConnector,sessionService,config,messagesControllerComponents,ac) {
+                                    sessionService: SessionService,
+                                    formPartialRetriever: FormPartialRetriever,
+                                    messagesControllerComponents: MessagesControllerComponents)(implicit val config:GmpContext,
+                                     val executionContext: ExecutionContext, val gmpSessionCache: GmpSessionCache) extends GmpPageFlow(authConnector,sessionService,config,messagesControllerComponents,ac) {
 
 
 
@@ -44,12 +46,12 @@ class DashboardController @Inject()(authAction: AuthAction,
 
         gmpBulkConnector.getPreviousBulkRequests(link).map {
           bulkPreviousRequests => {
-            Ok(views.html.dashboard(bulkPreviousRequests.sorted))
+            Ok(views.html.dashboard(bulkPreviousRequests.sorted, formPartialRetriever))
           }
         }.recover {
           case f => {
             Logger.error(s"[DashboardController][getPreviousBulkRequests returned {error : ${f.getMessage}")
-            Ok(views.html.dashboard(Nil))
+            Ok(views.html.dashboard(Nil, formPartialRetriever))
           }
         }
       }

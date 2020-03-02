@@ -16,10 +16,11 @@
 
 @import config.ApplicationConfig
 
+@import uk.gov.hmrc.play.partials.FormPartialRetriever
 @(
         calculationResponse:CalculationResponse,
         revalRateSubheader: Option[String],
-        survivorSubheader: Option[String])(implicit request: Request[_], context: config.GmpContext, messages: Messages,applicationConfig: ApplicationConfig)
+        survivorSubheader: Option[String], formPartialRetriever: FormPartialRetriever)(implicit request: Request[_], context: config.GmpContext, messages: Messages,applicationConfig: ApplicationConfig)
 
 
 

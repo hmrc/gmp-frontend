@@ -15,7 +15,8 @@
  *@
 
 @import config.ApplicationConfig
-@()(implicit request: Request[_], context: config.GmpContext,messages: Messages,ac:ApplicationConfig)
+@import uk.gov.hmrc.play.partials.FormPartialRetriever
+@()(implicit request: Request[_], context: config.GmpContext,messages: Messages,ac:ApplicationConfig, formPartialRetriever: FormPartialRetriever)
 
 @gmp_main(title = Messages("gmp.unauthorised.message") + " - " + Messages("service.title") + " - " + Messages("gov.uk"), formPartialRetriever) {
 

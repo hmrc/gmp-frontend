@@ -18,21 +18,23 @@
 @import models.upscan.UploadStatus
 @import models.upscan.{InProgress, UploadedSuccessfully, UploadedFailed, NotStarted}
 @import views.html.helpers.spinner
-@import models.upscan.UploadedFailed
-@(status : UploadStatus)(implicit request: Request[_], messages: Messages, context: config.GmpContext, appConfig: ApplicationConfig)
+
+@import uk.gov.hmrc.play.partials.FormPartialRetriever
+@(status : UploadStatus, formPartialRetriever: FormPartialRetriever)(implicit request: Request[_], messages: Messages, context: config.GmpContext, appConfig: ApplicationConfig)
 
 @refreshHeader = {
     <meta http-equiv="refresh" content="3"/>
 }
 
 @gmp_main(title = Messages("gmp.fileupload.verifying.title"),
+    formPartialRetriever,
     customHead = {
     status match {
         case InProgress => Some(refreshHeader)
         case NotStarted => Some(refreshHeader)
         case _ => None
     }
-}) {
+} ) {
     @includes.back_link(Messages("gmp.fileupload.result.scanning.header"))
 
     <h1>@status match {

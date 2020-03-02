@@ -15,7 +15,8 @@
  *@
 
 @import config.ApplicationConfig
-@(bulkResultsSummary: BulkResultsSummary, uploadReference: String, comingFromPage: Int)(implicit request: Request[_], context: config.GmpContext,messages: Messages,ac:ApplicationConfig)
+@import uk.gov.hmrc.play.partials.FormPartialRetriever
+@(bulkResultsSummary: BulkResultsSummary, uploadReference: String, comingFromPage: Int, formPartialRetriever: FormPartialRetriever)(implicit request: Request[_], context: config.GmpContext,messages: Messages,ac:ApplicationConfig)
 
 
 

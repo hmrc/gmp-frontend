@@ -19,7 +19,7 @@
 
 @(formPartialRetriever: FormPartialRetriever)(implicit request: Request[_], context: config.GmpContext,messages: Messages,ac:ApplicationConfig)
 
-@gmp_main(title = Messages("gmp.bulk.results_not_found") + " - " + Messages("service.title") + " - " + Messages("gov.uk"), formPartialRetriever, supportLinkEnabled = false, dashboardLinkEnabled = false) {
+@gmp_main(title = Messages("gmp.bulk.results_not_found") + " - " + Messages("service.title") + " - " + Messages("gov.uk"), formPartialRetriever, supportLinkEnabled = false) {
 
     @includes.back_link(Messages("gmp.bulk.results.banner"))
         <h1 class="heading-xlarge">@Messages("gmp.bulk.results_not_found")</h1>

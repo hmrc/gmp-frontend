@@ -26,6 +26,7 @@ import play.api.i18n.Messages
 import play.api.mvc.MessagesControllerComponents
 import services.{BulkRequestCreationService, DataLimitExceededException, SessionService}
 import uk.gov.hmrc.auth.core.AuthConnector
+import uk.gov.hmrc.play.partials.FormPartialRetriever
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -34,40 +35,37 @@ class BulkRequestReceivedController @Inject()(authAction: AuthAction,
                                               val authConnector: AuthConnector,
                                               sessionService: SessionService,
                                               bulkRequestCreationService: BulkRequestCreationService,
-                                              gmpBulkConnector: GmpBulkConnector, ac:ApplicationConfig,
-                                              implicit val config:GmpContext,
+                                              gmpBulkConnector: GmpBulkConnector, ac: ApplicationConfig,
                                               messagesControllerComponents: MessagesControllerComponents,
-                                              implicit val executionContext: ExecutionContext,
-                                              implicit val sessionCache:GmpSessionCache
-                                             ) extends GmpController(messagesControllerComponents,ac,sessionService,config) {
-
-
+                                              formPartialRetriever: FormPartialRetriever
+                                             )(implicit val config: GmpContext, val executionContext: ExecutionContext, val sessionCache: GmpSessionCache)
+  extends GmpController(messagesControllerComponents, ac, sessionService, config) {
 
   def get = authAction.async {
-      implicit request => {
-        val link = request.linkId
-        Logger.debug(s"[BulkRequestReceivedController][get][GET] : ${request.body}")
-        sessionService.fetchGmpBulkSession().flatMap {
-          case Some(session) if session.callBackData.isDefined && session.callBackData.get.isInstanceOf[UploadedSuccessfully] =>
-            val callbackData = session.callBackData.get.asInstanceOf[UploadedSuccessfully]
-            val errorPageForToMuchData = Ok(views.html.failure(Messages("gmp.bulk.failure.too_large"), Messages("gmp.bulk.file_too_large.header"), Messages("gmp.bulk_failure_file_too_large.title")))
-            bulkRequestCreationService.createBulkRequest(callbackData, session.emailAddress.getOrElse(""), session.reference.getOrElse("")) match {
+    implicit request => {
+      val link = request.linkId
+      Logger.debug(s"[BulkRequestReceivedController][get][GET] : ${request.body}")
+      sessionService.fetchGmpBulkSession().flatMap {
+        case Some(session) if session.callBackData.isDefined && session.callBackData.get.isInstanceOf[UploadedSuccessfully] =>
+          val callbackData = session.callBackData.get.asInstanceOf[UploadedSuccessfully]
+          val errorPageForToMuchData = Ok(views.html.failure(Messages("gmp.bulk.failure.too_large"), Messages("gmp.bulk.file_too_large.header"), Messages("gmp.bulk_failure_file_too_large.title")))
+          bulkRequestCreationService.createBulkRequest(callbackData, session.emailAddress.getOrElse(""), session.reference.getOrElse("")) match {
 
-              case Right(bulkRequest) => gmpBulkConnector.sendBulkRequest(bulkRequest, link).map {
-                  case OK => Ok(views.html.bulk_request_received(bulkRequest.reference))
-                  case CONFLICT => Ok(views.html.failure(Messages("gmp.bulk.failure.duplicate_upload"), Messages("gmp.bulk.problem.header"), Messages("gmp.bulk_failure_duplicate.title")))
-                  case REQUEST_ENTITY_TOO_LARGE => errorPageForToMuchData
-                  case _ => Ok(views.html.failure(Messages("gmp.bulk.failure.generic"), Messages("gmp.bulk.problem.header"), Messages("gmp.bulk_failure_generic.title")))
-                }
-
-              case Left(DataLimitExceededException) => Future.successful(errorPageForToMuchData)
-
-              case Left(_) => Future.successful((Redirect(controllers.routes.IncorrectlyEncodedController.get())))
+            case Right(bulkRequest) => gmpBulkConnector.sendBulkRequest(bulkRequest, link).map {
+              case OK => Ok(views.html.bulk_request_received(bulkRequest.reference, formPartialRetriever))
+              case CONFLICT => Ok(views.html.failure(Messages("gmp.bulk.failure.duplicate_upload"), Messages("gmp.bulk.problem.header"), Messages("gmp.bulk_failure_duplicate.title"), formPartialRetriever))
+              case REQUEST_ENTITY_TOO_LARGE => errorPageForToMuchData
+              case _ => Ok(views.html.failure(Messages("gmp.bulk.failure.generic"), Messages("gmp.bulk.problem.header"), Messages("gmp.bulk_failure_generic.title"), formPartialRetriever))
             }
 
-          case _ => Future.successful(Ok(views.html.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/upload-csv"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title"))))
-        }
+            case Left(DataLimitExceededException) => Future.successful(errorPageForToMuchData)
+
+            case Left(_) => Future.successful((Redirect(controllers.routes.IncorrectlyEncodedController.get())))
+          }
+
+        case _ => Future.successful(Ok(views.html.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/upload-csv"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title"), formPartialRetriever)))
       }
+    }
   }
 }
 
