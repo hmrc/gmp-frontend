@@ -23,19 +23,20 @@ import models._
 import org.joda.time.LocalDateTime
 import org.mockito.Matchers
 import org.mockito.Mockito._
-import org.scalatest.mockito.MockitoSugar
-import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
-import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl, MessagesProvider}
-import play.api.i18n.Messages.Implicits._
+import org.scalatestplus.mockito.MockitoSugar
+import org.scalatestplus.play.PlaySpec
+import org.scalatestplus.play.guice.GuiceOneServerPerSuite
+import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl}
 import play.api.mvc.MessagesControllerComponents
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.SessionService
 import uk.gov.hmrc.auth.core.AuthConnector
+import uk.gov.hmrc.play.partials.FormPartialRetriever
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class MoreBulkResultsControllerSpec extends PlaySpec with OneServerPerSuite with MockitoSugar {
+class MoreBulkResultsControllerSpec extends PlaySpec with GuiceOneServerPerSuite with MockitoSugar {
 
   val mockAuthConnector = mock[AuthConnector]
   val mockSessionService = mock[SessionService]
@@ -46,11 +47,11 @@ class MoreBulkResultsControllerSpec extends PlaySpec with OneServerPerSuite with
   implicit val messagesAPI=app.injector.instanceOf[MessagesApi]
   implicit val messagesProvider=MessagesImpl(Lang("en"), messagesAPI)
   implicit val ac=app.injector.instanceOf[ApplicationConfig]
-
+  val formPartial = app.injector.instanceOf[FormPartialRetriever]
+  implicit val fakeGmpContext = FakeGmpContext
 
   object TestMoreBulkResultsController extends MoreBulkResultsController(FakeAuthAction, mockAuthConnector, mockSessionService,
-                  FakeGmpContext,mockGmpBulkConnector,ac,mcc,ec)
-
+                  mockGmpBulkConnector, ac, mcc, formPartial)
 
   val recentBulkCalculations = List(new BulkPreviousRequest("1234","abcd",LocalDateTime.now(),LocalDateTime.now()), new BulkPreviousRequest("5678","efgh", LocalDateTime.now(),LocalDateTime.now()))
 

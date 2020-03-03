@@ -18,7 +18,7 @@ package models
 
 import helpers.RandomNino
 import org.joda.time.LocalDate
-import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
 import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl, MessagesProvider}
 import play.api.i18n.Messages.Implicits._

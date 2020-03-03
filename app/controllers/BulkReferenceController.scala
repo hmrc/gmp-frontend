@@ -20,12 +20,10 @@ import com.google.inject.{Inject, Singleton}
 import config.{ApplicationConfig, GmpContext, GmpSessionCache}
 import controllers.auth.AuthAction
 import forms.BulkReferenceForm
-import models.upscan.{UploadStatus, UploadedSuccessfully}
 import play.api.Logger
 import play.api.mvc.MessagesControllerComponents
 import services.SessionService
 import uk.gov.hmrc.auth.core.AuthConnector
-import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.partials.FormPartialRetriever
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -33,10 +31,13 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class BulkReferenceController @Inject()(authAction: AuthAction,
                                         val authConnector: AuthConnector,
-                                        sessionService: SessionService, brf:BulkReferenceForm,
-                                        override val messagesControllerComponents: MessagesControllerComponents, formPartialRetriever: FormPartialRetriever)(
-                                        implicit val executionContext: ExecutionContext, ac:ApplicationConfig,
-                                        val gmpSessionCache: GmpSessionCache, val config:GmpContext)
+                                        sessionService: SessionService,
+                                        brf:BulkReferenceForm,
+                                        ac: ApplicationConfig,
+                                        override val messagesControllerComponents: MessagesControllerComponents,
+                                        formPartialRetriever: FormPartialRetriever)(
+                                        implicit val executionContext: ExecutionContext,
+                                        val gmpSessionCache: GmpSessionCache, val config: GmpContext)
   extends GmpController(messagesControllerComponents,ac,sessionService,config) {
 
 lazy val bulkReferenceForm = brf.bulkReferenceForm

@@ -27,12 +27,8 @@ import uk.gov.hmrc.play.partials.FormPartialRetriever
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class IncorrectlyEncodedController @Inject()( authAction: AuthAction,
-                                              override val authConnector: AuthConnector,
-                                              sessionService: SessionService,
-                                              formPartialRetriever: FormPartialRetriever,
-                                              override val messagesControllerComponents: MessagesControllerComponents,ac:ApplicationConfig
-                                            )(implicit val executionContext: ExecutionContext, val config: GmpContext) extends GmpPageFlow(authConnector,sessionService,config,messagesControllerComponents,ac) {
+class IncorrectlyEncodedController @Inject()(authAction: AuthAction, override val authConnector: AuthConnector, sessionService: SessionService, override val messagesControllerComponents: MessagesControllerComponents, ac: ApplicationConfig, formPartialRetriever: FormPartialRetriever)
+                                            (implicit val executionContext: ExecutionContext, val config: GmpContext) extends GmpPageFlow(authConnector,sessionService,config,messagesControllerComponents,ac) {
 
 
 

@@ -21,7 +21,7 @@ import controllers.auth.{AuthAction, FakeAuthAction}
 import metrics.ApplicationMetrics
 import org.mockito.Matchers
 import org.mockito.Mockito._
-import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
 import play.api.i18n.{Lang, MessagesApi, MessagesImpl, MessagesProvider}
 import play.api.mvc.MessagesControllerComponents

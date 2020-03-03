@@ -29,11 +29,7 @@ import uk.gov.hmrc.play.partials.FormPartialRetriever
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class EqualiseController @Inject()(authAction: AuthAction,
-                                   override val authConnector: AuthConnector,
-                                   sessionService: SessionService, ef:EqualiseForm,
-                                   formPartialRetriever: FormPartialRetriever,
-                                   messagesControllerComponents: MessagesControllerComponents, ac:ApplicationConfig)(implicit val executionContext: ExecutionContext, val gmpSessionCache: GmpSessionCache, val config: GmpContext)
+class EqualiseController @Inject()(authAction: AuthAction, override val authConnector: AuthConnector, sessionService: SessionService, ef: EqualiseForm, messagesControllerComponents: MessagesControllerComponents, ac: ApplicationConfig, formPartialRetriever: FormPartialRetriever)(implicit val executionContext: ExecutionContext, val gmpSessionCache: GmpSessionCache, val config: GmpContext)
                                   extends GmpPageFlow(authConnector,sessionService,config,messagesControllerComponents,ac) {
 
 

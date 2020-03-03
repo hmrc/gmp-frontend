@@ -36,9 +36,10 @@ class ApplicationController @Inject()(authAction: AuthAction,
                                       val authConnector: AuthConnector,
                                       uuidGenerator: UUIDGenerator,
                                       sessionService: SessionService,
-                                      formPartialRetriever: FormPartialRetriever,
                                       messagesControllerComponents: MessagesControllerComponents,
-                                      ac:ApplicationConfig)(implicit val executionContext: ExecutionContext, val config: GmpContext)
+                                      ac:ApplicationConfig,
+                                      formPartialRetriever: FormPartialRetriever
+                                     )(implicit val executionContext: ExecutionContext, val config: GmpContext)
                                       extends GmpController(messagesControllerComponents,ac,sessionService,config) {
 
 

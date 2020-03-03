@@ -20,11 +20,11 @@ import java.util.UUID
 
 import config.{ApplicationConfig, GmpSessionCache}
 import controllers.auth.FakeAuthAction
-import forms.{BulkReferenceForm, DateOfLeavingForm}
+import forms.BulkReferenceForm
 import models._
 import org.mockito.Matchers
 import org.mockito.Mockito._
-import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl}
@@ -37,6 +37,7 @@ import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.logging.SessionId
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
+import uk.gov.hmrc.play.partials.FormPartialRetriever
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -46,7 +47,7 @@ class BulkReferenceControllerSpec extends PlaySpec  with MockitoSugar with Guice
   val mockSessionService: SessionService = mock[SessionService]
   val mockAuditConnector: AuditConnector = mock[AuditConnector]
 
-  implicit lazy val hc = new HeaderCarrier(sessionId = Some(SessionId(s"session-${UUID.randomUUID}")))
+  implicit lazy val hc = HeaderCarrier(sessionId = Some(SessionId(s"session-${UUID.randomUUID}")))
   implicit val mcc = app.injector.instanceOf[MessagesControllerComponents]
   implicit val ec = app.injector.instanceOf[ExecutionContext]
   implicit val messagesApi = app.injector.instanceOf[MessagesApi]
@@ -55,9 +56,11 @@ class BulkReferenceControllerSpec extends PlaySpec  with MockitoSugar with Guice
   implicit val gmpSessionCache=app.injector.instanceOf[GmpSessionCache]
   lazy val bulkReferenceForm = new BulkReferenceForm(mcc)
 
+  val formPartial = app.injector.instanceOf[FormPartialRetriever]
+  implicit lazy val fakeGmpContext = FakeGmpContext
 
-  object TestBulkReferenceController extends BulkReferenceController(FakeAuthAction, mockAuthConnector, mockAuditConnector,mockSessionService,FakeGmpContext
-    ,bulkReferenceForm,mcc,ec,ac,gmpSessionCache) {
+  object TestBulkReferenceController extends BulkReferenceController(FakeAuthAction, mockAuthConnector, mockSessionService,
+    bulkReferenceForm,ac, mcc, formPartial) {
 
   }
 

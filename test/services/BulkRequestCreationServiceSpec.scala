@@ -26,7 +26,7 @@ import models.upscan.{UploadDetails, UploadedSuccessfully, UpscanReadyCallback}
 import models.{BulkCalculationRequest, BulkCalculationRequestLine, CalculationRequestLine}
 import org.joda.time.{LocalDate, LocalDateTime}
 import org.scalatest.concurrent.ScalaFutures
-import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
 import play.api.Environment
 import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl}

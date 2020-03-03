@@ -22,9 +22,9 @@ import forms.EqualiseForm
 import models._
 import org.mockito.Matchers
 import org.mockito.Mockito._
-import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.mockito.MockitoSugar
+import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
-import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
 import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl}
 import play.api.libs.json.Json
 import play.api.mvc.MessagesControllerComponents
@@ -32,6 +32,7 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.SessionService
 import uk.gov.hmrc.auth.core.AuthConnector
+import uk.gov.hmrc.play.partials.FormPartialRetriever
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -40,6 +41,7 @@ class EqualiseControllerSpec extends PlaySpec with GuiceOneServerPerSuite with M
   val mockAuthConnector = mock[AuthConnector]
   val mockSessionService = mock[SessionService]
   val mockAuthAction = mock[AuthAction]
+
   implicit lazy val mcc = app.injector.instanceOf[MessagesControllerComponents]
   implicit val ec = app.injector.instanceOf[ExecutionContext]
   implicit val messagesAPI=app.injector.instanceOf[MessagesApi]
@@ -48,8 +50,10 @@ class EqualiseControllerSpec extends PlaySpec with GuiceOneServerPerSuite with M
   implicit val gmpSessionCache=app.injector.instanceOf[GmpSessionCache]
   lazy val equaliseForm = new EqualiseForm(mcc)
 
+  val formPartial = app.injector.instanceOf[FormPartialRetriever]
+  implicit lazy val fakeGmpContext = FakeGmpContext
 
-  object TestEqualiseController extends EqualiseController(FakeAuthAction, mockAuthConnector, mockSessionService,FakeGmpContext,equaliseForm,mcc,ac,ec,gmpSessionCache) {
+  object TestEqualiseController extends EqualiseController(FakeAuthAction, mockAuthConnector, mockSessionService, equaliseForm, mcc, ac, formPartial) {
     }
 
   "EqualiseController GET" must {

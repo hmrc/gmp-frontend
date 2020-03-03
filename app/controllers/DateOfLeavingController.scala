@@ -32,12 +32,14 @@ import scala.concurrent.ExecutionContext
 @Singleton
 class DateOfLeavingController @Inject()(authAction: AuthAction,
                                         override val authConnector: AuthConnector,
+                                        sessionService: SessionService,
                                         dlf: DateOfLeavingForm,
                                         messagesControllerComponents: MessagesControllerComponents,
-                                        formPartialRetriever: FormPartialRetriever,
-                                        sessionService: SessionService, ac: ApplicationConfig)(implicit
-                                                                                               val config: GmpContext,
-                                                                                               val executionContext: ExecutionContext, val gmpSessionCache: GmpSessionCache) extends GmpPageFlow(authConnector, sessionService, config, messagesControllerComponents, ac) {
+                                        ac: ApplicationConfig, formPartialRetriever: FormPartialRetriever)
+                                       (implicit val config: GmpContext,
+                                        val executionContext: ExecutionContext,
+                                        val gmpSessionCache: GmpSessionCache)
+  extends GmpPageFlow(authConnector, sessionService, config, messagesControllerComponents, ac) {
 
   lazy val dateOfLeavingForm = dlf.dateOfLeavingForm
 

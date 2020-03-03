@@ -31,21 +31,20 @@ import scala.concurrent.ExecutionContext
 class MoreBulkResultsController @Inject()(authAction: AuthAction,
                                           override val authConnector: AuthConnector,
                                           sessionService: SessionService,
-                                          gmpBulkConnector: GmpBulkConnector,ac:ApplicationConfig,
-                                          formPartialRetriever: FormPartialRetriever,
-                                          override val messagesControllerComponents: MessagesControllerComponents)(implicit val config: GmpContext, val executionContext: ExecutionContext) extends GmpPageFlow(authConnector,sessionService,config,messagesControllerComponents,ac) {
-
+                                          gmpBulkConnector: GmpBulkConnector, ac: ApplicationConfig,
+                                          override val messagesControllerComponents: MessagesControllerComponents, formPartialRetriever: FormPartialRetriever)
+                                         (implicit val config: GmpContext, val executionContext: ExecutionContext) extends GmpPageFlow(authConnector, sessionService, config, messagesControllerComponents, ac) {
 
 
   def retrieveMoreBulkResults = authAction.async {
-      implicit request => {
-        val link = request.linkId
-        gmpBulkConnector.getPreviousBulkRequests(link).map {
-          bulkPreviousRequests => {
-            Ok(views.html.more_bulk_results(bulkPreviousRequests.sorted, formPartialRetriever))
-          }
+    implicit request => {
+      val link = request.linkId
+      gmpBulkConnector.getPreviousBulkRequests(link).map {
+        bulkPreviousRequests => {
+          Ok(views.html.more_bulk_results(bulkPreviousRequests.sorted, formPartialRetriever))
         }
       }
+    }
   }
 
 }

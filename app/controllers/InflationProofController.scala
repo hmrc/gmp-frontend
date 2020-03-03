@@ -29,13 +29,9 @@ import uk.gov.hmrc.play.partials.FormPartialRetriever
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class InflationProofController @Inject()( authAction: AuthAction,
-                                          override val authConnector: AuthConnector,
-                                          sessionService: SessionService,
-                                          formPartialRetriever: FormPartialRetriever,
-                                          override val messagesControllerComponents: MessagesControllerComponents,ipf:InflationProofForm,
-                                          ac:ApplicationConfig)(implicit val executionContext: ExecutionContext, val gmpSessionCache: GmpSessionCache
-  ,config:GmpContext) extends GmpPageFlow(authConnector,sessionService,config,messagesControllerComponents,ac) {
+class InflationProofController @Inject()(authAction: AuthAction, override val authConnector: AuthConnector, sessionService: SessionService, override val messagesControllerComponents: MessagesControllerComponents, ipf: InflationProofForm, ac: ApplicationConfig, formPartialRetriever: FormPartialRetriever)(
+  implicit val executionContext: ExecutionContext, val gmpSessionCache: GmpSessionCache, config: GmpContext)
+  extends GmpPageFlow(authConnector,sessionService,config,messagesControllerComponents,ac) {
 
 
   lazy val inflationProofForm=ipf.inflationProofForm

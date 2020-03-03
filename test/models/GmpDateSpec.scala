@@ -16,7 +16,7 @@
 
 package models
 
-import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 
 class GmpDateSpec extends PlaySpec with MockitoSugar{

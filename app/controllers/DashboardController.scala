@@ -31,13 +31,15 @@ import scala.concurrent.ExecutionContext
 @Singleton
 class DashboardController @Inject()(authAction: AuthAction,
                                     override val authConnector: AuthConnector,
-                                    gmpBulkConnector: GmpBulkConnector,ac:ApplicationConfig,
+                                    gmpBulkConnector: GmpBulkConnector,
+                                    ac: ApplicationConfig,
                                     sessionService: SessionService,
-                                    formPartialRetriever: FormPartialRetriever,
-                                    messagesControllerComponents: MessagesControllerComponents)(implicit val config:GmpContext,
-                                     val executionContext: ExecutionContext, val gmpSessionCache: GmpSessionCache) extends GmpPageFlow(authConnector,sessionService,config,messagesControllerComponents,ac) {
-
-
+                                    messagesControllerComponents: MessagesControllerComponents,
+                                    formPartialRetriever: FormPartialRetriever)
+                                   (implicit val config: GmpContext,
+                                    val executionContext: ExecutionContext,
+                                    val gmpSessionCache: GmpSessionCache)
+  extends GmpPageFlow(authConnector,sessionService,config,messagesControllerComponents,ac) {
 
   def get = authAction.async {
       implicit request => {

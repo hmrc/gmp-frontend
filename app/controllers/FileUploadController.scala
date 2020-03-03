@@ -35,15 +35,9 @@ import views.html.upscan_csv_file_upload
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class FileUploadController @Inject()(authAction: AuthAction,
-                                     val authConnector: AuthConnector,
-                                     sessionService: SessionService,
-                                     upscanService: UpscanService,
-                                     messagesControllerComponents: MessagesControllerComponents,
-                                     formPartialRetriever: FormPartialRetriever,
-                                     ac: ApplicationConfig)(implicit val config: GmpContext,
-                                                             val executionContext: ExecutionContext,
-                                                            val gmpSessionCache: GmpSessionCache)
+class FileUploadController @Inject()(authAction: AuthAction, val authConnector: AuthConnector, sessionService: SessionService, upscanService: UpscanService,
+                                     messagesControllerComponents: MessagesControllerComponents, ac: ApplicationConfig, formPartialRetriever: FormPartialRetriever)
+                                    (implicit val config: GmpContext, val executionContext: ExecutionContext, val gmpSessionCache: GmpSessionCache)
   extends GmpController(messagesControllerComponents, ac, sessionService, config) {
 
 

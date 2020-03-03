@@ -24,8 +24,9 @@ import org.mockito.Matchers._
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.concurrent.ScalaFutures
-import org.scalatest.mockito.MockitoSugar
-import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
+import org.scalatestplus.mockito.MockitoSugar
+import org.scalatestplus.play.PlaySpec
+import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 import play.api.mvc.MessagesControllerComponents
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -33,12 +34,13 @@ import services.SessionService
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.audit.model.DataEvent
+import uk.gov.hmrc.play.partials.FormPartialRetriever
 
 import scala.concurrent.ExecutionContext
 
 @Singleton
 class ApplicationControllerSpec extends PlaySpec
-  with OneServerPerSuite
+  with GuiceOneServerPerSuite
   with BeforeAndAfterEach
   with ScalaFutures
   with MockitoSugar
@@ -52,9 +54,11 @@ class ApplicationControllerSpec extends PlaySpec
     implicit val ec = app.injector.instanceOf[ExecutionContext]
      implicit val ac=app.injector.instanceOf[ApplicationConfig]
     implicit val ss=app.injector.instanceOf[SessionService]
+    val formPartial = app.injector.instanceOf[FormPartialRetriever]
+    implicit lazy val fakeGmpContext = FakeGmpContext
 
     object TestController extends ApplicationController(FakeAuthAction, mockAuditConnector, mockAuthConnector, mockUUIDGenerator,
-                      ss,FakeGmpContext,mcc,ec,ac) {
+                      ss,mcc,ac, formPartial) {
 
   }
 

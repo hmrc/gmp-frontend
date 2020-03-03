@@ -17,7 +17,7 @@
 package connectors
 
 import models.upscan.{PreparedUpload, Reference, UploadForm, UpscanInitiateRequest}
-import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.OneAppPerSuite
 import play.api.Application
 import play.api.inject.guice.GuiceApplicationBuilder

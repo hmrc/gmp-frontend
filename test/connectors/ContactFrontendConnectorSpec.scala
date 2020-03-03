@@ -20,7 +20,7 @@ import com.google.inject.Inject
 import org.mockito.Matchers.{eq => meq, _}
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
-import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
 import play.api.Mode.Mode
 import play.api.inject.guice.GuiceApplicationBuilder

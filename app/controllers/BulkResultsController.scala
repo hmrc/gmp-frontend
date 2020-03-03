@@ -33,8 +33,8 @@ class BulkResultsController @Inject()(authAction: AuthAction,
                                       val authConnector: AuthConnector,
                                       gmpBulkConnector: GmpBulkConnector,
                                       messagesControllerComponents: MessagesControllerComponents,
-                                      formPartialRetriever: FormPartialRetriever,
-                                      ac: ApplicationConfig, sessionService: SessionService)(implicit val config:GmpContext,
+                                      ac: ApplicationConfig, sessionService: SessionService,
+                                      formPartialRetriever: FormPartialRetriever)(implicit val config:GmpContext,
                                        val executionContext: ExecutionContext
                                      ) extends GmpController(messagesControllerComponents,ac,sessionService,config) {
    def get(uploadReference: String, comingFromPage: Int) = authAction.async {

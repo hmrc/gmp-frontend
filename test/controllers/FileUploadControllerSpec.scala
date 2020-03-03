@@ -16,6 +16,7 @@
 
 package controllers
 
+import java.net.URL
 import java.time.Instant
 
 import config.{ApplicationConfig, GmpSessionCache}
@@ -24,27 +25,22 @@ import models._
 import models.upscan._
 import org.mockito.Matchers
 import org.mockito.Mockito._
-import org.scalatest.mockito.MockitoSugar
-import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
+import org.scalatest.concurrent.ScalaFutures
+import org.scalatestplus.mockito.MockitoSugar
+import org.scalatestplus.play.PlaySpec
+import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl}
 import play.api.libs.json.Json
 import play.api.mvc.{AnyContentAsEmpty, MessagesControllerComponents, Result}
 import play.api.test.Helpers._
 import play.api.test.{FakeHeaders, FakeRequest}
-import play.twirl.api.Html
 import services.{SessionService, UpscanService}
 import uk.gov.hmrc.auth.core.AuthConnector
-import uk.gov.hmrc.play.partials.HtmlPartial
-import java.net.URL
-
-import akka.stream.Materializer
-import akka.util.ByteString
-import org.scalatest.concurrent.ScalaFutures
-import play.api.libs.streams.Accumulator
+import uk.gov.hmrc.play.partials.FormPartialRetriever
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class FileUploadControllerSpec extends PlaySpec with OneServerPerSuite with MockitoSugar with ScalaFutures {
+class FileUploadControllerSpec extends PlaySpec with GuiceOneServerPerSuite with MockitoSugar with ScalaFutures {
   val mockAuthConnector = mock[AuthConnector]
   val mockSessionService = mock[SessionService]
   val mockAuthAction = mock[AuthAction]
@@ -61,11 +57,11 @@ class FileUploadControllerSpec extends PlaySpec with OneServerPerSuite with Mock
 
   val emptyGmpBulkSession = GmpBulkSession(None, None, None)
   val gmpBulkSession = GmpBulkSession(Some(UploadedSuccessfully("ref1", "name1", "http://localhost:9991/download1")), None, None)
-
+  val formPartial = app.injector.instanceOf[FormPartialRetriever]
+  implicit lazy val fakeGmpContext = FakeGmpContext
   val fakeRequest = FakeRequest(method = "POST", uri = "", headers = FakeHeaders(Seq("Content-type" -> ("application/json"))), body = Json.toJson(callBackData))
 
-  object TestFileUploadController extends FileUploadController(FakeAuthAction, mockAuthConnector, mockSessionService, FakeGmpContext,upscanService,mcc,ac,ec,gmpSessionCache) {
-
+  object TestFileUploadController extends FileUploadController(FakeAuthAction, mockAuthConnector, mockSessionService, upscanService, mcc, ac, formPartial) {
  }
 
   "File upload controller GET " must {

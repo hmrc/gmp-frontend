@@ -16,13 +16,13 @@
 
 package views.html
 
-import models.upscan.{Reference, UpscanInitiateRequest, UpscanInitiateResponse}
-import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import models.upscan.{Reference, UpscanInitiateResponse}
+import org.scalatestplus.play.guice.{GuiceOneAppPerSuite, GuiceOneServerPerSuite}
 import play.twirl.api.Html
 import uk.gov.hmrc.play.partials.FormPartialRetriever
 import utils.GmpViewSpec
 
-class UploadFileSpec extends GmpViewSpec with GuiceOneAppPerSuite {
+class UploadFileSpec extends GmpViewSpec with GuiceOneServerPerSuite {
 
   val formPartial = app.injector.instanceOf[FormPartialRetriever]
 
@@ -39,7 +39,4 @@ class UploadFileSpec extends GmpViewSpec with GuiceOneAppPerSuite {
         "You can download a template and instructions as a ZIP file (3Kb) on how to create your file first.")
     }
   }
-
-  private val uploadForm = Html("")
-
 }
