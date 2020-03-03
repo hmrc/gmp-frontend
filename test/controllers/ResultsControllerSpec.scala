@@ -29,7 +29,7 @@ import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
-import org.scalatestplus.play.guice.GuiceOneServerPerSuite
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl}
 import play.api.mvc.{MessagesControllerComponents, Request}
 import play.api.test.FakeRequest
@@ -45,7 +45,7 @@ import views.helpers.GmpDateFormatter._
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class ResultsControllerSpec extends PlaySpec with GuiceOneServerPerSuite with MockitoSugar {
+class ResultsControllerSpec extends PlaySpec with GuiceOneAppPerSuite with MockitoSugar {
 
   val mockAuthConnector = mock[AuthConnector]
   val mockSessionService = mock[SessionService]
@@ -69,9 +69,8 @@ class ResultsControllerSpec extends PlaySpec with GuiceOneServerPerSuite with Mo
 
 
     override def resultsView(response: CalculationResponse, subheader: Option[String], revalSubheader: Option[String])(implicit request: Request[_], context: config.GmpContext): HtmlFormat.Appendable = {
-      views.html.results(response, subheader, revalSubheader)
+      views.html.results(response, subheader, revalSubheader, formPartial)
     }
-
   }
 
   private val nino: String = RandomNino.generate

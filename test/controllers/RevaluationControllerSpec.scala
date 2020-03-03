@@ -32,6 +32,7 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.SessionService
 import uk.gov.hmrc.auth.core.AuthConnector
+import uk.gov.hmrc.play.partials.FormPartialRetriever
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -41,7 +42,8 @@ class RevaluationControllerSpec extends PlaySpec with GuiceOneServerPerSuite wit
   val mockSessionService = mock[SessionService]
   val mockAuthAction = mock[AuthAction]
 
-  val
+  val formPartial: FormPartialRetriever = app.injector.instanceOf[FormPartialRetriever]
+  implicit val fakeGmpContext = FakeGmpContext
   implicit lazy val mcc = app.injector.instanceOf[MessagesControllerComponents]
   implicit val ec = app.injector.instanceOf[ExecutionContext]
   implicit val messagesAPI=app.injector.instanceOf[MessagesApi]
@@ -53,7 +55,7 @@ class RevaluationControllerSpec extends PlaySpec with GuiceOneServerPerSuite wit
 
   val baseValidDate = GmpDate(day = Some("31"), month = Some("1"), year = Some("2015"))
 
-  object TestRevaluationController extends RevaluationController(FakeAuthAction, mockAuthConnector,mockSessionService,FakeGmpContext,mcc,ac,revaluationForm,ec,gmpSessionCache)
+  object TestRevaluationController extends RevaluationController(FakeAuthAction, mockAuthConnector,mockSessionService ,mcc,ac,revaluationForm, formPartial)
 
   "Revaluation controller" must {
 
