@@ -16,18 +16,14 @@
 
 package config
 
-import java.io.File
-
-import play.api.inject.{Binding, Module}
-import play.api.{Configuration, Environment, Logger, Mode}
-import uk.gov.hmrc.auth.core.AuthConnector
 import com.google.inject.AbstractModule
-import uk.gov.hmrc.http.{HttpGet, HttpPost, HttpPut}
+import play.api.{Configuration, Environment, Mode}
+import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.bootstrap.audit.DefaultAuditConnector
 import uk.gov.hmrc.play.bootstrap.auth.DefaultAuthConnector
-import uk.gov.hmrc.play.bootstrap.config.RunMode
 import uk.gov.hmrc.play.bootstrap.http.{DefaultHttpClient, HttpClient}
+import uk.gov.hmrc.play.partials.FormPartialRetriever
 
 class GmpModule(environment: Environment,
                 configuration: Configuration) extends AbstractModule {
@@ -39,7 +35,7 @@ class GmpModule(environment: Environment,
     bind(classOf[HttpClient]).to(classOf[DefaultHttpClient])
       bind(classOf[AuthConnector]).to(classOf[DefaultAuthConnector])
       bind(classOf[AuditConnector]).to(classOf[DefaultAuditConnector])
-
+      bind(classOf[FormPartialRetriever]).to(classOf[GmpFormPartialRetriever])
 }
 
 }

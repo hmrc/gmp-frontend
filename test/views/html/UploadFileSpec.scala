@@ -17,7 +17,7 @@
 package views.html
 
 import models.upscan.{Reference, UpscanInitiateResponse}
-import org.scalatestplus.play.guice.{GuiceOneAppPerSuite, GuiceOneServerPerSuite}
+import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 import play.twirl.api.Html
 import uk.gov.hmrc.play.partials.FormPartialRetriever
 import utils.GmpViewSpec
