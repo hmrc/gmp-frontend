@@ -38,6 +38,13 @@ class ApplicationConfig @Inject()(
    val urBannerLink: String = loadConfig("urBanner.link")
    val optimizelyProjectId: String = loadConfig("optimizely.projectId")
 
+  val contactHost = runModeConfiguration.getOptional[String](s"contact-frontend.host").getOrElse("")
+
+  val reportAProblemPartialUrl: String =
+    s"$contactHost/contact/problem_reports_ajax?service=$contactFormServiceIdentifier"
+  val reportAProblemNonJSUrl: String =
+    s"$contactHost/contact/problem_reports_nonjs?service=$contactFormServiceIdentifier"
+
   val globalErrors = ConfigFactory.load("global-errors.properties")
   val contactFormServiceIdentifier = "GMP"
   val frontendHost = loadConfig("platform.frontend.host")
