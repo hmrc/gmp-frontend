@@ -401,3 +401,7 @@ global.error.InternalServerError500.title = Sorry, there is a problem with the s
 global.error.InternalServerError500.heading = Sorry, there is a problem with the service
 global.error.InternalServerError500.message = Try again later.
 
+gmp.download.description.all = a CSV file of all the results of all calculation requests
+gmp.download.description.success = a CSV file of only the results where a GMP total was calculated
+gmp.download.description.failed = a CSV file of only the results where a GMP total could not be calculated
+gmp.download.description.contributions = a contributions and earnings CSV file for all queries

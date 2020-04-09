@@ -34,7 +34,8 @@
       <li id="exp-failed-3" class="font-xsmall">@Messages("gmp.bulk.explanations.failed.3")</li>
     </ul>
   </div>
-  <div class="column-one-quarter text--right"><a id="download-failed" data-journey-click="gmp-bulk:click:download_failed" href="@routes.BulkResultsController.getResultsAsCsv(uploadReference, failed)">@Messages("gmp.download.link")</a></div>
+  <div class="column-one-quarter text--right"><a id="download-failed" data-journey-click="gmp-bulk:click:download_failed" href="@routes.BulkResultsController.getResultsAsCsv(uploadReference, failed)">
+  @Messages("gmp.download.link")<span class="visuallyhidden"> @Messages("gmp.download.description.failed")</span></a></div>
 </div>
 
 <div class="divider--top divider--bottom clearfix">
@@ -44,5 +45,6 @@
       <li id="exp-conts" class="font-xsmall">@Messages("gmp.bulk.explanations.contsandearnings")</li>
     </ul>
   </div>
-  <div class="column-one-quarter text--right"><a id="download-conts" data-journey-click="gmp-bulk:click:download_ce" href="@routes.BulkResultsController.getContributionsAndEarningsAsCsv(uploadReference)">@Messages("gmp.download.link")</a></div>
+  <div class="column-one-quarter text--right"><a id="download-conts" data-journey-click="gmp-bulk:click:download_ce" href="@routes.BulkResultsController.getContributionsAndEarningsAsCsv(uploadReference)">
+  @Messages("gmp.download.link")<span class="visuallyhidden"> @Messages("gmp.download.description.contributions")</span></a></div>
 </div>
