@@ -338,3 +338,7 @@ Error styling to bring in line with GDS
 .spinner {
     text-align: center;
 }
+
+.col-width-2 {
+    width: 2%;
+}

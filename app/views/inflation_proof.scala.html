@@ -58,13 +58,9 @@
                 '_trackGA -> true)
         </div>
 
-            @if(inflationProofForm.hasGlobalErrors || inflationProofForm.hasErrors) {
-              <div class="form-field--error form-field js-hidden" id="revaluation-date">
-            } else {
-              <div class="form-field js-hidden" id="revaluation-date">
-            }
+            <div class="form-field js-hidden @if(inflationProofForm.hasErrors) {form-field--error}" id="revaluation-date">
 
-                <fieldset id="revaluation-date">
+                <fieldset>
 
                     <legend>
                         <span class="form-label-bold">@Messages("gmp.inflation_proofed")</span>
