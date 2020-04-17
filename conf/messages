@@ -64,7 +64,7 @@ gmp.revaluation_rate.header = What revaluation rate do you want HMRC to use?
 gmp.thank_you.header = Thank you
 gmp.thank_you.what_now = What do you want to do now?
 gmp.contracted_out_period_table_header = Contracted-out period {0}
-gmp.contracted_out_period_error = Contracted out period {0}
+gmp.contracted_out_period_error = There are no contributions and earnings available for contracted out period {0} to {1}
 gmp.tax_year_table_column_header = Year
 gmp.contracted_out_period_table_column_header = Amount
 gmp.equalise_header = Do you also want an opposite gender calculation?
@@ -300,7 +300,7 @@ gmp.error.solution.63148 = Check the date up to which you would like the calcula
 gmp.error.solution.63150 = <a href="/guaranteed-minimum-pension/equalise">Go back</a> and select ‘No’ when asked if you want an opposite gender calculation.
 gmp.error.solution.63167 = Choose another <a href="/guaranteed-minimum-pension/revaluation-rate">revaluation rate</a>.
 
-gmp.error.no_conts_and_earnings = No contributions and earnings available
+gmp.error.no_conts_and_earnings = There are no contributions and earnings available for this period.
 gmp.error.session_parts_missing = You have not given us enough information about the member and type of calculation you need or it has been too long since you did so.<br/><br/><a href="{0}"">Go back</a> and fill in the information required.
 
 error.expected.url = Download url is not a valid URL

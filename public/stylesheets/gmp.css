@@ -127,6 +127,11 @@ tr.error-row td {
   font-weight: bold;
 }
 
+.error-message-left {
+    text-align: left;
+    color: #B10E1E;
+    font-weight: bold;
+}
 
 
 .continue-button {
