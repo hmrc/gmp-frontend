@@ -880,7 +880,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
           when(mockAuditConnector.sendEvent(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(AuditResult.Success))
             val result = TestResultsController.getContributionsAndEarnings(FakeRequest())
             status(result) must equal(OK)
-            contentAsString(result) must include(Messages("gmp.contracted_out_period_table_header", "10 11 2014 to 10 11 2015"))
+            contentAsString(result) must include(Messages("gmp.contracted_out_period_table_header", "10 November 2014", "10 November 2015"))
             contentAsString(result) must include(Messages("gmp.tax_year_table_column_header"))
             contentAsString(result) must include(Messages("gmp.contracted_out_period_table_column_header"))
             contentAsString(result) must include("2014")
@@ -900,7 +900,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
             status(result) must equal(OK)
             contentAsString(result) must include(Messages("gmp.error.no_conts_and_earnings"))
             contentAsString(result) must include(Messages("gmp.only_part_problem"))
-            contentAsString(result) must include(Messages("gmp.contracted_out_period_error", "10/11/2014 to 10/11/2015"))
+            contentAsString(result) must include(Messages("gmp.contracted_out_period_error", "10 November 2014", "10 November 2015"))
             contentAsString(result) must not include(Messages("gmp.back_to_dashboard"))
         }
 
