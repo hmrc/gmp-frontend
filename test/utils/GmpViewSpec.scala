@@ -49,6 +49,12 @@ trait GmpViewSpec extends PlaySpec with JSoupMatchers with OneServerPerSuite {
     }
   }
 
+  def pageWithTableCaption(id: String, captionText: String): Unit = {
+    s"have a table caption with text: $captionText" in {
+      doc must haveTableCaptionWithIdAndText(id, captionText)
+    }
+  }
+
   def pageWithHeader(headerText: String): Unit = {
     "have a static h1 header" in {
       doc must haveHeadingWithText(headerText)
