@@ -98,7 +98,7 @@
     <tbody>
         @for((period, count) <- calculationResponse.calculationPeriods.zipWithIndex){
             <tr>
-                <td><b class="bold">@{new LocalDate(period.startDate.get).toString("d MMM yyyy")}</b> @{Messages("gmp.date_to")} <b class="bold">@{new LocalDate(period.endDate).toString("d MMM yyyy")}</bcla></td>
+                <td><b class="bold">@{new LocalDate(period.startDate.get).toString("d MMM yyyy")}</b> @{Messages("gmp.date_to")} <b class="bold">@{new LocalDate(period.endDate).toString("d MMM yyyy")}</b></td>
                 <td id="post90-total-@count">
                     @if(period.dualCalcPost90OppositeTotal != Some("0.00")) {
                         <span>£@{ period.dualCalcPost90TrueTotal }<br/>@Messages("gmp.frequency.weekly")</span>
