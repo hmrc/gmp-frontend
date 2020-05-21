@@ -117,10 +117,6 @@
   border-left: 5px solid #B10E1E;
 }
 
-tr.error-row td {
-  padding-left: 10px;
-}
-
 .error-message {
   text-align: center;
   color: #B10E1E;

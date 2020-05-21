@@ -30,7 +30,7 @@
                 <li>
                     @if(period.errorCode > 0) {
                         <a href="#reason-@count" class="error-list" id="from-to-error-@count">
-                            @{ new LocalDate(period.startDate.get).toString("dd/MM/yyyy") } to @{ new LocalDate(period.endDate).toString("dd/MM/yyyy") }: @Messages("gmp.unavailable")
+                            @{ new LocalDate(period.startDate.get).toString("dd MMMM yyyy") } to @{ new LocalDate(period.endDate).toString("dd MMMM yyyy") }: @Messages("gmp.unavailable")
                         </a>
                     }
                 </li>

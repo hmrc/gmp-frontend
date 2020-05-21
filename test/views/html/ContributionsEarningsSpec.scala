@@ -41,7 +41,7 @@ class ContributionsEarningsSpec extends GmpViewSpec {
       doc must haveLinkWithText("Back")
     }
 
-    "have a table with td's" in {
+    "have a table with th's" in {
       doc must haveThWithText(messages("Name"))
       doc must haveThWithText(messages("Scheme Contracted Out Number"))
       doc must haveThWithText(messages("National Insurance number"))
