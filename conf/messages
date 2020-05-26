@@ -105,6 +105,7 @@ gmp.more_bulk_results.header = Recent bulk calculations
 
 gmp.date_from = From:
 gmp.date_to = to
+gmp.date_To = To:
 gmp.multi.dual_calc.header = Post-1990 value
 gmp.post90.true = True gender
 gmp.post90.true.value = True-gender value

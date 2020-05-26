@@ -25,6 +25,9 @@
     <thead>
         <tr id="table-column-names">
             <th>@Messages("gmp.table.period")</th>
+            <th><span class="hidden">hidden text for empty th</span></th>
+            <th><span class="hidden">hidden text for empty th</span></th>
+            <th><span class="hidden">hidden text for empty th</span></th>
             <th id="per-week">@Messages("gmp.per.week")</th>
             <th id ="post-1988">@Messages("gmp.post.1988")</th>
             @if(calculationResponse.dualCalc) {
@@ -40,7 +43,10 @@
     @for((period, count) <- calculationResponse.calculationPeriods.zipWithIndex){
 
     <tr @{if(period.errorCode> 0 )"class=error-row"}>
-        <td><b class="bold">@{new LocalDate(period.startDate.get).toString("dd MMM yyyy")}</b> @Messages("gmp.date_to") <b class="bold">@{new LocalDate(period.endDate).toString("dd MMM yyyy")}</b></td>
+        <td colspan="4">
+            <span class="bold-xsmall" id="from-date-@count">@Messages("gmp.date_from")</span><br/> @{ new LocalDate(period.startDate.get).toString("dd MMM yyyy") } <br/>
+            <span class="bold-xsmall" id="to-date-@count">@Messages("gmp.date_To")</span><br/> @{ new LocalDate(period.endDate).toString("dd MMM yyyy") }
+        </td>
         @if(period.errorCode == 0) {
             <td id="gmp-total-@count">
                 <span class="bold-small">£@{ period.gmpTotal }</span>
