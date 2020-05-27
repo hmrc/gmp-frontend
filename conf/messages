@@ -26,8 +26,8 @@ gmp.inflation_proof.title = GMP inflation proofing - GOV.UK
 gmp.member_details.title = Member details - GOV.UK
 gmp.more_bulk_results.title = Recent bulk GMP calculations - GOV.UK
 gmp.pension_details.title = Pension scheme details - GOV.UK
-gmp.results.title = Guaranteed minimum pension results - GOV.UK
-gmp.results.h1 = Guaranteed minimum pension results
+gmp.results.title = Guaranteed Minimum Pension results - GOV.UK
+gmp.results.h1 = Guaranteed Minimum Pension results
 gmp.results.p1 = This has not been revalued and the is total for the period shown.
 gmp.results.error = GMP checker error - GOV.UK
 gmp.revaluation.title = GMP calculation at specific date - GOV.UK
@@ -104,7 +104,8 @@ gmp.days_left = {0} Day{1}
 gmp.more_bulk_results.header = Recent bulk calculations
 
 gmp.date_from = From:
-gmp.date_to = To:
+gmp.date_to = to
+gmp.date_To = To:
 gmp.multi.dual_calc.header = Post-1990 value
 gmp.post90.true = True gender
 gmp.post90.true.value = True-gender value
@@ -327,9 +328,9 @@ gmp.revaluation_rate.type_3 = Limited
 gmp.notrevalued.subheader = This GMP is not revalued.
 gmp.notrevalued.multi.subheader = This GMP is not revalued and is the sum of the amounts for each period shown below.
 gmp.results.survivior.disclaimer = This amount is subject to qualifying conditions of the <a href="https://www.gov.uk/browse/benefits/bereavement">type of bereavement benefit</a> the surviving partner is entitled to.
-gmp.reval_rate.subheader = Revaluation rate: {0}
-gmp.held_rate.subheader = Revaluation rate held for this SCON: {0}
-gmp.chosen_rate.subheader = Revaluation rate chosen: {0}
+gmp.reval_rate.subheader = Revaluation rate: <b class="bold">{0}</b>
+gmp.held_rate.subheader = Revaluation rate held for this SCON: <b class="bold">{0}</b>
+gmp.chosen_rate.subheader = Revaluation rate chosen: <b class="bold">{0}</b>
 
 ############################################################################
 # Scenarios
@@ -405,3 +406,5 @@ gmp.download.description.all = a CSV file of all the results of all calculation 
 gmp.download.description.success = a CSV file of only the results where a GMP total was calculated
 gmp.download.description.failed = a CSV file of only the results where a GMP total could not be calculated
 gmp.download.description.contributions = a contributions and earnings CSV file for all queries
+
+gmp.table.period = Period

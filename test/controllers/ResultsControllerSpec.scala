@@ -687,7 +687,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
           when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSessionWithHMRCRate.copy(leaving = Leaving(date, Some(Leaving.YES_AFTER))))))
           when(mockCalculationConnector.calculateSingle(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful(validCalculationResponse.copy(revaluationRate = Some("0"), calcType = 2)))
             val result = TestResultsController.get(FakeRequest())
-            contentAsString(result) must include("Revaluation rate chosen: HMRC held rate (S148).")
+            contentAsString(result) must include("""Revaluation rate chosen: <b class="bold">HMRC held rate</b> <b class='bold'>(S148)</b>""")
         }
 
         "show the correct subheader when gmp payable age and member left scheme and rate entered" in {
@@ -695,7 +695,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
           when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSessionWithRate.copy(leaving = Leaving(date, Some(Leaving.YES_AFTER))))))
           when(mockCalculationConnector.calculateSingle(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful(validCalculationResponse.copy(revaluationRate = Some("1"), calcType = 2)))
             val result = TestResultsController.get(FakeRequest())
-            contentAsString(result) must include(Messages("gmp.chosen_rate.subheader", "S148."))
+            contentAsString(result) must include("""Revaluation rate chosen: <b class="bold">S148</b>""")
         }
 
         "show the correct subheader when gmp payable age and member left scheme and rate not entered" in {
@@ -703,7 +703,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
           when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSessionWithRate.copy(leaving = Leaving(date, Some(Leaving.YES_AFTER))))))
           when(mockCalculationConnector.calculateSingle(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful(validCalculationResponse.copy(calcType = 2)))
             val result = TestResultsController.get(FakeRequest())
-            contentAsString(result) must include(Messages("gmp.held_rate.subheader", "S148."))
+            contentAsString(result) must include("""Revaluation rate held for this SCON: <b class="bold">S148</b>""")
         }
 
         "show no subheader when gmp payable age and member still in scheme and rate" in {
@@ -711,7 +711,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
           when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSessionWithRate.copy(leaving = Leaving(date, Some(Leaving.NO))))))
           when(mockCalculationConnector.calculateSingle(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful(validCalculationResponse.copy(calcType = 2)))
             val result = TestResultsController.get(FakeRequest())
-            contentAsString(result) must not include (Messages("gmp.held_rate.subheader", "S148."))
+            contentAsString(result) must not include (Messages("gmp.held_rate.subheader", "S148"))
         }
 
         "show no subheader when gmp payable age and member still in scheme and no rate" in {
@@ -719,7 +719,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
           when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession.copy(leaving = Leaving(date, Some(Leaving.NO))))))
           when(mockCalculationConnector.calculateSingle(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful(validCalculationResponse.copy(calcType = 2)))
             val result = TestResultsController.get(FakeRequest())
-            contentAsString(result) must not include (Messages("gmp.held_rate.subheader", "S148."))
+            contentAsString(result) must not include (Messages("gmp.held_rate.subheader", "S148"))
         }
 
         "show the correct subheader when state pension age and member left scheme and rate entered" in {
@@ -727,7 +727,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
           when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSessionWithRate.copy(leaving = Leaving(date, Some(Leaving.YES_AFTER))))))
           when(mockCalculationConnector.calculateSingle(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful(validCalculationResponse.copy(revaluationRate = Some("1"), calcType = 4)))
             val result = TestResultsController.get(FakeRequest())
-            contentAsString(result) must include(Messages("gmp.chosen_rate.subheader", "S148."))
+            contentAsString(result) must include("""Revaluation rate chosen: <b class="bold">S148</b>""")
         }
 
         "show the correct subheader when state pension age and member left scheme and rate not entered" in {
@@ -735,7 +735,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
           when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSessionWithRate.copy(leaving = Leaving(date, Some(Leaving.YES_AFTER))))))
           when(mockCalculationConnector.calculateSingle(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful(validCalculationResponse.copy(calcType = 4)))
             val result = TestResultsController.get(FakeRequest())
-            contentAsString(result) must include(Messages("gmp.held_rate.subheader", "S148."))
+            contentAsString(result) must include("Revaluation rate held for this SCON: <b class=\"bold\">S148</b>")
         }
 
         "show no subheader when state pension age and member still in scheme" in {
@@ -743,7 +743,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
           when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSessionWithRate.copy(leaving = Leaving(date, Some(Leaving.NO))))))
           when(mockCalculationConnector.calculateSingle(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful(validCalculationResponse.copy(calcType = 4)))
             val result = TestResultsController.get(FakeRequest())
-            contentAsString(result) must not include (Messages("gmp.held_rate.subheader", "S148."))
+            contentAsString(result) must not include (Messages("gmp.held_rate.subheader", "S148"))
         }
 
         "show no subheader when state pension age and member still in scheme and no rate" in {
@@ -751,7 +751,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
           when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession.copy(leaving = Leaving(date, Some(Leaving.NO))))))
           when(mockCalculationConnector.calculateSingle(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful(validCalculationResponse.copy(calcType = 2)))
             val result = TestResultsController.get(FakeRequest())
-            contentAsString(result) must not include (Messages("gmp.held_rate.subheader", "S148."))
+            contentAsString(result) must not include (Messages("gmp.held_rate.subheader", "S148"))
         }
 
         "show the correct subheader when survivor and member left scheme and hmrc rate entered and no inflation proof" in {
@@ -760,7 +760,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
           when(mockCalculationConnector.calculateSingle(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful(survivorRevaluationCalculationResponseNoInflation.copy(revaluationRate = Some("0"),
             calculationPeriods = List(CalculationPeriod(Some(new LocalDate(2015, 11, 10)), new LocalDate(2015, 11, 10), "1.11", "2.22", 1, 0, Some(0), inflationProofBeyondDod = Some(0))))))
             val result = TestResultsController.get(FakeRequest())
-            contentAsString(result) must include("Revaluation rate chosen: HMRC held rate (S148).")
+            contentAsString(result) must include("""Revaluation rate chosen: <b class="bold">HMRC held rate</b> <b class='bold'>(S148)</b>""")
             contentAsString(result) must include(Messages("gmp.no_inflation.subheader"))
         }
 
@@ -770,7 +770,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
           when(mockCalculationConnector.calculateSingle(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful(survivorRevaluationCalculationResponse.copy(revaluationRate = Some("1"), calculationPeriods = List(CalculationPeriod(Some(new
               LocalDate(2015, 11, 10)), new LocalDate(2015, 11, 10), "1.11", "2.22", 1, 0, Some(0), inflationProofBeyondDod = Some(1))))))
             val result = TestResultsController.get(FakeRequest())
-            contentAsString(result) must include(Messages("gmp.chosen_rate.subheader", "S148."))
+            contentAsString(result) must include("""Revaluation rate chosen: <b class="bold">S148</b>""")
             contentAsString(result) must not include (Messages("gmp.no_inflation.subheader"))
         }
 
@@ -780,7 +780,7 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
           when(mockCalculationConnector.calculateSingle(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful(survivorRevaluationCalculationResponseNoInflation.copy(revaluationRate = Some("0"),
             calculationPeriods = List(CalculationPeriod(Some(new LocalDate(2015, 11, 10)), new LocalDate(2015, 11, 10), "1.11", "2.22", 1, 0, Some(0), inflationProofBeyondDod = Some(0))))))
             val result = TestResultsController.get(FakeRequest())
-            contentAsString(result) must not include ("Revaluation rate chosen: HMRC held rate (S148).")
+            contentAsString(result) must not include ("Revaluation rate chosen: HMRC held rate (S148)")
             contentAsString(result) must not include (Messages("gmp.no_inflation.subheader"))
         }
       }

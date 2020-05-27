@@ -159,9 +159,9 @@ class ResultsController @Inject()(authAction: AuthAction,
             Some(Messages("gmp.notrevalued.subheader"))
           else if (response.revaluationRate.isDefined) {
             if (response.revaluationRate == Some("0"))
-              Some(Messages("gmp.reval_rate.subheader", Messages(s"gmp.revaluation_rate.type_${response.revaluationRate.get}")) + " (" + Messages(s"gmp.revaluation_rate.type_${response.calculationPeriods.head.revaluationRate}") + ").")
+              Some(Messages("gmp.reval_rate.subheader", Messages(s"gmp.revaluation_rate.type_${response.revaluationRate.get}")) + " <b class='bold'>(" + Messages(s"gmp.revaluation_rate.type_${response.calculationPeriods.head.revaluationRate}") + ")</b>")
             else
-              Some(Messages("gmp.reval_rate.subheader", Messages(s"gmp.revaluation_rate.type_${response.revaluationRate.get}")) + ".")
+              Some(Messages("gmp.reval_rate.subheader", Messages(s"gmp.revaluation_rate.type_${response.revaluationRate.get}")))
           }
           else None
         }
@@ -171,11 +171,11 @@ class ResultsController @Inject()(authAction: AuthAction,
             case Some(Leaving.NO) => None
             case _ => {
               if (response.revaluationRate.isDefined && response.revaluationRate == Some("0"))
-                Some(Messages("gmp.chosen_rate.subheader", Messages(s"gmp.revaluation_rate.type_${response.revaluationRate.get}")) + " (" + Messages(s"gmp.revaluation_rate.type_${response.calculationPeriods.head.revaluationRate}") + ").")
+                Some(Messages("gmp.chosen_rate.subheader", Messages(s"gmp.revaluation_rate.type_${response.revaluationRate.get}")) + " <b class='bold'>(" + Messages(s"gmp.revaluation_rate.type_${response.calculationPeriods.head.revaluationRate}") + ")</b>")
               else if (response.revaluationRate.isDefined)
-                Some(Messages("gmp.chosen_rate.subheader", Messages(s"gmp.revaluation_rate.type_${response.calculationPeriods.head.revaluationRate}")) + ".")
+                Some(Messages("gmp.chosen_rate.subheader", Messages(s"gmp.revaluation_rate.type_${response.calculationPeriods.head.revaluationRate}")))
               else
-                Some(Messages("gmp.held_rate.subheader", Messages(s"gmp.revaluation_rate.type_${response.calculationPeriods.head.revaluationRate}")) + ".")
+                Some(Messages("gmp.held_rate.subheader", Messages(s"gmp.revaluation_rate.type_${response.calculationPeriods.head.revaluationRate}")))
             }
           }
         }

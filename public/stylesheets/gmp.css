@@ -117,10 +117,6 @@
   border-left: 5px solid #B10E1E;
 }
 
-tr.error-row td {
-  padding-left: 10px;
-}
-
 .error-message {
   text-align: center;
   color: #B10E1E;
@@ -240,10 +236,6 @@ caption {
   text-align: center;
 }
 
-#gmp-periods th {
-    padding: 0.7em 0.5em;
-}
-
 .multi-results-header-text {
   text-align: center;
   font-size: 20px;
@@ -273,7 +265,7 @@ caption {
 
 
 .table-caption {
-    font-size: 19px;
+    font-size: 26px;
 }
 
 #global-results-grid .list-number {

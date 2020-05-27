@@ -18,30 +18,32 @@
 
 @import org.joda.time.LocalDate
 
-    <h2 id="details-table-caption" class="table-caption">
-      @if(calculationResponse.calcType == CalculationType.SURVIVOR.toInt){
-        @Messages("gmp.entered_details.title.survivor")
-      } else{
-        @Messages("gmp.entered_details.title")
-      }
-    </h2>
-
     <table role="presentation" id="member-details">
+        <caption id="details-table-caption" class="table-caption">
+        @if(calculationResponse.calcType == CalculationType.SURVIVOR.toInt){
+            @Messages("gmp.entered_details.title.survivor")
+        } else{
+            @Messages("gmp.entered_details.title")
+        }
+        </caption>
+
+        <thead>
+            <tr>
+                <th>@Messages("gmp.name")</th>
+                <th>@Messages("gmp.scon.noabrv")</th>
+                <th>@Messages("gmp.nino")</th>
+            </tr>
+        </thead>
+
       <tbody>
         <tr>
-          <td class="width-53">@Messages("gmp.name")</td>
           <td class="width-47" id="full-name">@calculationResponse.name</td>
-        </tr>
-        <tr>
-          <td class="width-53">@Messages("gmp.scon.noabrv")</td>
           <td class="width-47" id="scon">@calculationResponse.scon</td>
-        </tr>
-        <tr>
-          <td class="width-53">@Messages("gmp.nino")</td>
           <td class="width-47" id="nino">@calculationResponse.nino</td>
         </tr>
-
       </tbody>
 
     </table>
+
+    <br/>
 
