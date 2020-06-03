@@ -137,7 +137,7 @@ class AuthActionSpec extends PlaySpec with GuiceOneAppPerSuite with MockitoSugar
         }
       }
 
-    "the user is authorised with both psa, psp and pods" must {
+    "the user is authorised with psa, psp and pods" must {
       "create an authenticated link for psa" in {
         val mockAuthConnector = mock[AuthConnector]
 
