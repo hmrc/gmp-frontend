@@ -45,7 +45,7 @@ class AuthAction @Inject()(override val authConnector: AuthConnector, configurat
 
     implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session))
 
-    authorised(ConfidenceLevel.L50 and (Enrolment("HMRC-PSA-ORG") or Enrolment("HMRC-PP-ORG")))
+    authorised(ConfidenceLevel.L50 and (Enrolment("HMRC-PSA-ORG") or Enrolment("HMRC-PP-ORG") or Enrolment("HMRC-PODS-ORG")))
       .retrieve(Retrievals.authorisedEnrolments) {
         case Enrolments(enrolments) => {
 
@@ -56,7 +56,11 @@ class AuthAction @Inject()(override val authConnector: AuthConnector, configurat
             enrolment => enrolment.identifiers.find(id => id.key == "PPID").map(_.value)
           }
 
-          psaid.orElse(ppid).fold(Future.successful(Results.Redirect(ExternalUrls.signIn)))(id => block(AuthenticatedRequest(id, request)))
+          val podsPsaid = enrolments.find(_.key == "HMRC-PODS-ORG").flatMap {
+            enrolment => enrolment.identifiers.find(id => id.key == "PSAID").map(_.value)
+          }
+
+          psaid.orElse(ppid).orElse(podsPsaid).fold(Future.successful(Results.Redirect(ExternalUrls.signIn)))(id => block(AuthenticatedRequest(id, request)))
 
         }
         case _ => throw new RuntimeException("Can't find credentials for user")

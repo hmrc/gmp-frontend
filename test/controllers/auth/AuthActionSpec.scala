@@ -137,7 +137,7 @@ class AuthActionSpec extends PlaySpec with GuiceOneAppPerSuite with MockitoSugar
         }
       }
 
-    "the user is authorised with both psa and psp" must {
+    "the user is authorised with psa, psp and pods" must {
       "create an authenticated link for psa" in {
         val mockAuthConnector = mock[AuthConnector]
 
@@ -146,7 +146,8 @@ class AuthActionSpec extends PlaySpec with GuiceOneAppPerSuite with MockitoSugar
             Enrolments(
               Set(
                 Enrolment("HMRC-PSA-ORG", Seq(EnrolmentIdentifier("PSAID", "somePsaID")), ""),
-                Enrolment("HMRC-PP-ORG", Seq(EnrolmentIdentifier("PPID", "somePspID")), "")
+                Enrolment("HMRC-PP-ORG", Seq(EnrolmentIdentifier("PPID", "somePspID")), ""),
+                Enrolment("HMRC-PODS-ORG", Seq(EnrolmentIdentifier("PSAID", "somePodsID")), "")
               )
             )
           )
@@ -161,6 +162,27 @@ class AuthActionSpec extends PlaySpec with GuiceOneAppPerSuite with MockitoSugar
         status(result) mustBe OK
         whenReady(result) {
           _.header.headers("link") mustBe "somePsaID"
+        }
+      }
+    }
+
+    "the user is authorised with pods " must {
+      "create an authenticated link for pods" in {
+        val mockAuthConnector = mock[AuthConnector]
+
+        val retrievalResult: Future[Enrolments] =
+          Future.successful(Enrolments(Set(Enrolment("HMRC-PODS-ORG", Seq(EnrolmentIdentifier("PSAID", "somePODSID")), ""))))
+
+        when(mockAuthConnector.authorise[Enrolments](any(), any())(any(), any()))
+          .thenReturn(retrievalResult)
+
+        val authAction = new AuthAction(mockAuthConnector, app.configuration,mcc)
+        val controller = new Harness(authAction)
+
+        val result = controller.onPageLoad()(FakeRequest("", ""))
+        status(result) mustBe OK
+        whenReady(result) {
+          _.header.headers("link") mustBe "somePODSID"
         }
       }
     }
