@@ -67,6 +67,8 @@
 
     class="@if( elements.args.get('_inputClass)){@elements.args.get('_inputClass)}else{form-control}"
 
+    @if(elements.args.contains('_spellCheck)) { spellcheck="@elements.args.get('_spellCheck)" }
+
     @if(elements.args.contains('_dataAttributes) ){
         @elements.args.get('_dataAttributes)
     }

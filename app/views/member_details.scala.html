@@ -34,31 +34,34 @@
     @form(action = routes.MemberDetailsController.post) {
 
     <div class="form-group">
-      <div class="form-field">
+        <div class="form-field">
+
+        @gmpInput(memberDetailsForm("firstForename"),
+            '_label -> Html(Messages("gmp.firstname")),
+            '_labelClass -> "form-label-bold",
+            '_id -> "firstForename")
+        </div>
+
+        <div class="form-field">
+
+        @gmpInput(memberDetailsForm("surname"),
+            '_label -> Html(Messages("gmp.lastname")),
+            '_labelClass -> "form-label-bold",
+            '_id -> "surname")
+
+        </div>
+
+        <div class="form-field">
 
           @gmpInput(memberDetailsForm("nino"),
           '_label -> Html(Messages("gmp.nino")),
           '_labelClass -> "form-label-bold",
           '_id -> "nino",
           '_maxLength -> 13,
-          '_hintText -> Messages("gmp.nino.hint"))
+          '_hintText -> Messages("gmp.nino.hint"),
+          '_spellCheck -> false)
 
-      </div>
-        <div class="form-field">
-
-          @gmpInput(memberDetailsForm("firstForename"),
-          '_label -> Html(Messages("gmp.firstname")),
-          '_labelClass -> "form-label-bold",
-          '_id -> "firstForename")
         </div>
-        <div class="form-field">
-
-          @gmpInput(memberDetailsForm("surname"),
-          '_label -> Html(Messages("gmp.lastname")),
-          '_labelClass -> "form-label-bold",
-          '_id -> "surname")
-
-      </div>
     </div>
       <div>
           <button data-journey-click='@Messages("gmp.ga-track.button.click"):@Messages("gmp.member_details.header"):@Messages("gmp.continue.button")'
