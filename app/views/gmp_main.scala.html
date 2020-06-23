@@ -35,6 +35,8 @@ customHead: Option[Html] = None)(mainContent: Html)(implicit request: Request[_]
 @linkElement = {
   <link rel="stylesheet" href='@controllers.routes.AssetsController.at("stylesheets/gmp.css")'/>
   <link rel="stylesheet" href='@routes.AssetsController.at("stylesheets/urBanner.css")' media="screen" type="text/css" />
+  <link rel="stylesheet" href='@routes.AssetsController.at("stylesheets/palette.css")'/>
+  <link rel="stylesheet" href='@routes.AssetsController.at("stylesheets/focus.css")'/>
 }
 
 @main(
