@@ -340,3 +340,10 @@ Error styling to bring in line with GDS
 .col-width-2 {
     width: 2%;
 }
+
+.govuk-file-upload:focus {
+    outline: 3px solid #fd0;
+    outline-offset: 3px;
+    -webkit-box-shadow: inset 0 0 0 0px, 0 0 0 3px;
+    box-shadow: inset 0 0 0 0px, 0 0 0 3px;
+}
