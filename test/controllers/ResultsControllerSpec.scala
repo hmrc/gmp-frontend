@@ -72,12 +72,12 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
 
   private val nino: String = RandomNino.generate
 
-  val gmpSession = GmpSession(MemberDetails(nino, "John", "Johnson"), "S1234567T", CalculationType.REVALUATION, None, None, Leaving(GmpDate(None, None, None), Some(Leaving.YES_BEFORE)), None)
-  val gmpSession2 = GmpSession(MemberDetails(nino, "John", "Johnson"), "S1234567T", CalculationType.REVALUATION, Some(GmpDate(Some("12"), Some("12"), Some("1999"))), None, Leaving(GmpDate(None, None, None), Some(Leaving.NO)), None)
-  val gmpSession3 = GmpSession(MemberDetails(nino, "John", "Johnson"), "S1234567T", CalculationType.REVALUATION, Some(GmpDate(Some("12"), Some("12"), Some("1999"))), None, Leaving(GmpDate(None, None, None), Some(Leaving.NO)), equalise = Some(1))
+  val gmpSession = GmpSession(MemberDetails("John", "Johnson", nino), "S1234567T", CalculationType.REVALUATION, None, None, Leaving(GmpDate(None, None, None), Some(Leaving.YES_BEFORE)), None)
+  val gmpSession2 = GmpSession(MemberDetails("John", "Johnson", nino), "S1234567T", CalculationType.REVALUATION, Some(GmpDate(Some("12"), Some("12"), Some("1999"))), None, Leaving(GmpDate(None, None, None), Some(Leaving.NO)), None)
+  val gmpSession3 = GmpSession(MemberDetails("John", "Johnson", nino), "S1234567T", CalculationType.REVALUATION, Some(GmpDate(Some("12"), Some("12"), Some("1999"))), None, Leaving(GmpDate(None, None, None), Some(Leaving.NO)), equalise = Some(1))
 
-  val gmpSessionWithRate = GmpSession(MemberDetails(nino, "John", "Johnson"), "S1234567T", CalculationType.REVALUATION, None, Some("1"), Leaving(GmpDate(None, None, None), Some(Leaving.NO)), None)
-  val gmpSessionWithHMRCRate = GmpSession(MemberDetails(nino, "John", "Johnson"), "S1234567T", CalculationType.REVALUATION, None, Some("0"), Leaving(GmpDate(None, None, None), Some(Leaving.NO)), None)
+  val gmpSessionWithRate = GmpSession(MemberDetails("John", "Johnson", nino), "S1234567T", CalculationType.REVALUATION, None, Some("1"), Leaving(GmpDate(None, None, None), Some(Leaving.NO)), None)
+  val gmpSessionWithHMRCRate = GmpSession(MemberDetails("John", "Johnson", nino), "S1234567T", CalculationType.REVALUATION, None, Some("0"), Leaving(GmpDate(None, None, None), Some(Leaving.NO)), None)
 
   val gmpSession4Nino = RandomNino.generate
   val gmpSession4NinoSpaced = gmpSession4Nino.grouped(2).foldLeft(new StringBuilder){
@@ -88,12 +88,12 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
       }
     }
   }.toString
-  val gmpSession4 = GmpSession(MemberDetails(gmpSession4NinoSpaced, "John", "Johnson"), "S1234567T", CalculationType.REVALUATION, None, None, Leaving(GmpDate(None, None, None), Some(Leaving.NO)), None)
+  val gmpSession4 = GmpSession(MemberDetails("John", "Johnson", gmpSession4NinoSpaced), "S1234567T", CalculationType.REVALUATION, None, None, Leaving(GmpDate(None, None, None), Some(Leaving.NO)), None)
 
-  val gmpSessionSameTaxYear = GmpSession(MemberDetails(nino, "John", "Johnson"), "S1234567T", CalculationType.REVALUATION, Some(GmpDate(Some("07"), Some("07"), Some("2015"))), None,
+  val gmpSessionSameTaxYear = GmpSession(MemberDetails("John", "Johnson", nino), "S1234567T", CalculationType.REVALUATION, Some(GmpDate(Some("07"), Some("07"), Some("2015"))), None,
                                                                                                                                 Leaving(GmpDate(Some("07"), Some("07"), Some("2015")), Some(Leaving.YES_BEFORE)),None)
 
-  val gmpSessionDifferentTaxYear = GmpSession(MemberDetails(nino, "John", "Johnson"), "S1234567T", CalculationType.REVALUATION, Some(GmpDate(Some("07"), Some("07"), Some("2015"))), None,
+  val gmpSessionDifferentTaxYear = GmpSession(MemberDetails("John", "Johnson", nino), "S1234567T", CalculationType.REVALUATION, Some(GmpDate(Some("07"), Some("07"), Some("2015"))), None,
                                                                                                                                      Leaving(GmpDate(Some("07"), Some("07"), Some("2017")), Some(Leaving.YES_AFTER)),None)
 
   val validCalculationResponse = CalculationResponse("John Johnson", nino, "S1234567T", None, None, List(CalculationPeriod(Some(new
