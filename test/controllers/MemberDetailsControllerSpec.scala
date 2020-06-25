@@ -75,7 +75,7 @@ class MemberDetailsControllerSpec extends PlaySpec with GuiceOneServerPerSuite w
       "load the details from the session storage if present" in {
         val nino = RandomNino.generate
         when(mockSessionService.fetchMemberDetails()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some
-        (MemberDetails(nino, "Bob", "Jones"))))
+        (MemberDetails("Bob", "Jones", nino))))
           val result = TestMemberDetailsController.get(FakeRequest())
           contentAsString(result) must include(nino)
           contentAsString(result) must include("Bob")
@@ -104,15 +104,15 @@ class MemberDetailsControllerSpec extends PlaySpec with GuiceOneServerPerSuite w
 
       "with valid data" must {
 
-        val memberDetails = MemberDetails(RandomNino.generate, "Bob", "Jones")
+        val memberDetails = MemberDetails("Bob", "Jones", RandomNino.generate)
         val session = GmpSession(memberDetails, "SCON1234", "", None, None, Leaving(GmpDate(None, None, None), None), None)
 
         "redirect" in {
           when(mockSessionService.cacheMemberDetails(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(session)))
             val postData = Json.obj(
-              "nino" -> RandomNino.generate,
               "firstForename" -> "Bob",
-              "surname" -> "Jones"
+              "surname" -> "Jones",
+              "nino" -> RandomNino.generate
             )
             val result = TestMemberDetailsController.post(FakeRequest().withJsonBody(Json.toJson(memberDetails)))
             status(result) must equal(SEE_OTHER)
@@ -128,9 +128,9 @@ class MemberDetailsControllerSpec extends PlaySpec with GuiceOneServerPerSuite w
           reset(mockSessionService)
           when(mockSessionService.cacheMemberDetails(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(None))
             val postData = Json.obj(
-              "nino" -> RandomNino.generate,
               "firstForename" -> "Bob",
-              "surname" -> "Jones"
+              "surname" -> "Jones",
+              "nino" -> RandomNino.generate
             )
             intercept[RuntimeException]{
               await(TestMemberDetailsController.post(FakeRequest().withJsonBody(postData)))
@@ -143,9 +143,9 @@ class MemberDetailsControllerSpec extends PlaySpec with GuiceOneServerPerSuite w
 
         "respond with BAD_REQUEST" in {
             val postData = Json.obj(
-              "nino" -> RandomNino.generate,
               "firstForename" -> "",
-              "surname" -> "Jones"
+              "surname" -> "Jones",
+              "nino" -> RandomNino.generate
             )
             val result = TestMemberDetailsController.post(FakeRequest().withJsonBody(postData))
             status(result) must equal(BAD_REQUEST)
@@ -153,9 +153,9 @@ class MemberDetailsControllerSpec extends PlaySpec with GuiceOneServerPerSuite w
 
         "display the errors" in {
             val postData = Json.obj(
-              "nino" -> RandomNino.generate,
               "firstForename" -> "Bob",
-              "surname" -> ""
+              "surname" -> "",
+              "nino" -> RandomNino.generate
             )
             val result = TestMemberDetailsController.post(FakeRequest().withJsonBody(postData))
             contentAsString(result) must include(Messages("gmp.error.member.lastname.mandatory"))
