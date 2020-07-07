@@ -53,6 +53,7 @@ class ApplicationConfig @Inject()(
   val upscanProtocol: String = servicesConfig.getConfString("upscan.protocol", "https")
   val upscanRedirectBase: String = runModeConfiguration.get[String]("microservice.services.upscan.redirect-base")
 
+  val gtmContainerId = loadConfig("googleTagManager.containerId")
 }
 
 
