@@ -31,24 +31,27 @@ import play.twirl.api.HtmlFormat
 import services.SessionService
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
+import views.Views
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class ResultsController @Inject()(authAction: AuthAction,
                                   override val authConnector: AuthConnector,
-                                  sessionService: SessionService,implicit override val context: GmpContext,
+                                  sessionService: SessionService,
+                                  implicit override val context: GmpContext,
                                   calculationConnector: GmpConnector,
                                   auditConnector: AuditConnector,
                                   metrics: ApplicationMetrics,ac:ApplicationConfig,
                                   override val messagesControllerComponents: MessagesControllerComponents,
                                   implicit val executionContext: ExecutionContext,
-                                  implicit val gmpSessionCache: GmpSessionCache) extends GmpPageFlow(authConnector,sessionService,context,messagesControllerComponents,ac) {
+                                  implicit val gmpSessionCache: GmpSessionCache,
+                                  views: Views) extends GmpPageFlow(authConnector,sessionService,context,messagesControllerComponents,ac) {
 
 
 
    def resultsView(response: CalculationResponse, revalRateSubheader: Option[String], survivorSubheader: Option[String])(implicit request: Request[_], context: GmpContext): HtmlFormat.Appendable = {
-    views.html.results(response, revalRateSubheader,survivorSubheader)
+    views.results(response, revalRateSubheader,survivorSubheader)
   }
 
   def get = authAction.async {
@@ -58,10 +61,10 @@ class ResultsController @Inject()(authAction: AuthAction,
           sessionOpt: Option[GmpSession] =>
             sessionOpt match {
               case Some(session) => session match {
-                case _ if session.scon == "" => Future.successful(Ok(views.html.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/pension-details"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title"))))
-                case _ if session.memberDetails.nino == "" || session.memberDetails.firstForename == "" || session.memberDetails.surname == "" => Future.successful(Ok(views.html.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/member-details"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title"))))
-                case _ if session.scenario == "" => Future.successful(Ok(views.html.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/calculation-reason"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title"))))
-                case _ if session.leaving.leaving.isEmpty => Future.successful(Ok(views.html.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/left-scheme"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title"))))
+                case _ if session.scon == "" => Future.successful(Ok(views.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/pension-details"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title"))))
+                case _ if session.memberDetails.nino == "" || session.memberDetails.firstForename == "" || session.memberDetails.surname == "" => Future.successful(Ok(views.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/member-details"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title"))))
+                case _ if session.scenario == "" => Future.successful(Ok(views.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/calculation-reason"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title"))))
+                case _ if session.leaving.leaving.isEmpty => Future.successful(Ok(views.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/left-scheme"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title"))))
                 case _ =>
                   val calcRequest = createCalculationRequest(session)
                   calculationConnector.calculateSingle(calcRequest, link) map { response: CalculationResponse => {
@@ -73,7 +76,7 @@ class ResultsController @Inject()(authAction: AuthAction,
                     Ok(resultsView(response, revalRateSubheader(response, session.leaving), survivorSubheader(session, response)))
                   }}
               }
-              case _ => Future.successful(Ok(views.html.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/dashboard"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title"))))
+              case _ => Future.successful(Ok(views.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/dashboard"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title"))))
             }
         }
       }
@@ -87,10 +90,10 @@ class ResultsController @Inject()(authAction: AuthAction,
           sessionOpt: Option[GmpSession] =>
             sessionOpt match {
               case Some(session) => session match {
-                case _ if session.scon == "" => Future.successful(Ok(views.html.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/pension-details"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title"))))
-                case _ if session.memberDetails.nino == "" || session.memberDetails.firstForename == "" || session.memberDetails.surname == "" => Future.successful(Ok(views.html.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/member-details"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title"))))
-                case _ if session.scenario == "" => Future.successful(Ok(views.html.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/calculation-reason"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title"))))
-                case _ if !session.leaving.leaving.isDefined => Future.successful(Ok(views.html.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/left-scheme"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title"))))
+                case _ if session.scon == "" => Future.successful(Ok(views.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/pension-details"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title"))))
+                case _ if session.memberDetails.nino == "" || session.memberDetails.firstForename == "" || session.memberDetails.surname == "" => Future.successful(Ok(views.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/member-details"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title"))))
+                case _ if session.scenario == "" => Future.successful(Ok(views.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/calculation-reason"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title"))))
+                case _ if !session.leaving.leaving.isDefined => Future.successful(Ok(views.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/left-scheme"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title"))))
                 case _ =>
                   val calcRequest = createCalculationRequest(session)
                   calculationConnector.calculateSingle(calcRequest, link) map { response: CalculationResponse => {
@@ -105,10 +108,10 @@ class ResultsController @Inject()(authAction: AuthAction,
                       case e: Throwable => Logger.error(s"[ResultsController][post] contsAndEarningsResult ${e.getMessage}", e)
                     }
 
-                    Ok(views.html.contributions_earnings(response))
+                    Ok(views.contributionsEarnings(response))
                   }}
               }
-              case _ => Future.successful(Ok(views.html.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/dashboard"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title"))))
+              case _ => Future.successful(Ok(views.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/dashboard"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title"))))
             }
         }
       }

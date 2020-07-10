@@ -24,16 +24,21 @@ import play.api.Logger
 import play.api.mvc.MessagesControllerComponents
 import services.SessionService
 import uk.gov.hmrc.auth.core.AuthConnector
+import views.Views
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class InflationProofController @Inject()( authAction: AuthAction,
                                           override val authConnector: AuthConnector,
-                                          sessionService: SessionService,implicit val config:GmpContext,
-                                          override val messagesControllerComponents: MessagesControllerComponents,ipf:InflationProofForm,
+                                          sessionService: SessionService,
+                                          implicit val config:GmpContext,
+                                          override val messagesControllerComponents: MessagesControllerComponents,
+                                          ipf:InflationProofForm,
                                           ac:ApplicationConfig,
-                                          implicit val executionContext: ExecutionContext,implicit val gmpSessionCache: GmpSessionCache
+                                          implicit val executionContext: ExecutionContext,
+                                          implicit val gmpSessionCache: GmpSessionCache,
+                                          views: Views
                                         ) extends GmpPageFlow(authConnector,sessionService,config,messagesControllerComponents,ac) {
 
 
@@ -42,7 +47,7 @@ class InflationProofController @Inject()( authAction: AuthAction,
 
   def get = authAction.async {
       implicit request => {
-        Future.successful(Ok(views.html.inflation_proof(inflationProofForm)))
+        Future.successful(Ok(views.inflationProof(inflationProofForm)))
       }
   }
 
@@ -53,7 +58,7 @@ class InflationProofController @Inject()( authAction: AuthAction,
 
         inflationProofForm.bindFromRequest.fold(
           formWithErrors => {
-            Future.successful(BadRequest(views.html.inflation_proof(formWithErrors)))
+            Future.successful(BadRequest(views.inflationProof(formWithErrors)))
           },
           revaluation => {
             val dateToStore = revaluation.revaluate match {

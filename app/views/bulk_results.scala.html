@@ -15,11 +15,12 @@
  *@
 
 @import config.ApplicationConfig
+
+@this(gmpMain: gmp_main)
+
 @(bulkResultsSummary: BulkResultsSummary, uploadReference: String, comingFromPage: Int)(implicit request: Request[_], context: config.GmpContext,messages: Messages,ac:ApplicationConfig)
 
-
-
-@gmp_main(title = Messages("gmp.bulk.results.banner") + " - " + Messages("service.title") + " - " + Messages("gov.uk")) {
+@gmpMain(title = Messages("gmp.bulk.results.banner") + " - " + Messages("service.title") + " - " + Messages("gov.uk")) {
 
     @includes.back_link(Messages("gmp.bulk.results.banner"))
         <div class="govuk-box-highlight">

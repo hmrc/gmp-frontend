@@ -15,6 +15,11 @@
  *@
 
 @import play.twirl.api.HtmlFormat
+@import views.ViewHelpers
+@import views.html.layouts.GovUkTemplate
+
+@this(govUkTemplate: GovUkTemplate,
+        viewHelpers: ViewHelpers)
 
 @( applicationConfig: config.ApplicationConfig,
         title: String,
@@ -44,7 +49,7 @@
     <script src="https://cdn.optimizely.com/js/@{applicationConfig.optimizelyProjectId}.js"></script>
 }
 @head = {
-    @uiLayouts.head(
+    @viewHelpers.head(
         linkElem = linkElement,
         headScripts = Some(headScript))
     <meta name="format-detection" content="telephone=no"/>
@@ -60,7 +65,7 @@
 }
 
 @insideHeader = {
-    @uiLayouts.header_nav(
+    @viewHelpers.headerNav(
         navTitle = Some(Messages("gmp.title")),
         navTitleLink = None,
         showBetaLink = false,
@@ -86,7 +91,7 @@
 }
 
 @bodyEnd = {
-    @uiLayouts.footer(
+    @viewHelpers.footer(
         analyticsToken = applicationConfig.analyticsToken,
         analyticsHost = applicationConfig.analyticsHost,
         ssoUrl = None,
@@ -102,7 +107,7 @@
 @footerLinks = {}
 
 @serviceInfo = {
-    @uiLayouts.serviceInfo(
+    @viewHelpers.serviceInfo(
         betaBanner = HtmlFormat.empty,
         includeGridWrapper = false,
         serviceInfoContent = None,
@@ -112,17 +117,17 @@
 
 @mainContentHeader = {
     @contentHeader.map { contentHeaderVal =>
-        @uiLayouts.main_content_header(contentHeader = contentHeaderVal)
+        @viewHelpers.mainContentHeader(contentHeader = contentHeaderVal)
     }
 }
 
 @content = {
-    @uiLayouts.main_content(
-        article = uiLayouts.article(mainContent),
+    @viewHelpers.mainContent(
+        article = viewHelpers.article(mainContent),
         mainClass = mainClass,
         mainContentHeader = mainContentHeader,
         serviceInfo = serviceInfo,
         getHelpForm = getHelpForm)
 }
 
-@hmrcGovUkTemplate(Some(title), None)(head, bodyEnd, insideHeader, afterHeader, footerTop, Some(uiLayouts.footer_links()), true)(content)
+@govUkTemplate(Some(title), None)(head, bodyEnd, insideHeader, afterHeader, footerTop, Some(viewHelpers.footerLinks()), true)(content)

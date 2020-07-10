@@ -14,12 +14,15 @@
  * limitations under the License.
  *@
 
-@(pageTitle: String, heading: String, message: String)(implicit request: Request[_], messages: Messages, applicationConfig :config.ApplicationConfig)
-
-
-@import layouts.{govuk_template => hmrcGovUkTemplate}
 @import uk.gov.hmrc.play.views.html.{layouts => uiLayouts}
 @import play.twirl.api.HtmlFormat
+@import views.ViewHelpers
+@import views.html.layouts.GovUkTemplate
+
+@this(viewHelpers: ViewHelpers,
+        govUkTemplate: GovUkTemplate)
+
+@(pageTitle: String, heading: String, message: String)(implicit request: Request[_], messages: Messages, applicationConfig :config.ApplicationConfig)
 
 @gmpPageTitle = {@pageTitle - @Messages("service.title") - @Messages("gov.uk")}
 
@@ -37,7 +40,7 @@
 }
 
 @serviceInfo = {
-    @uiLayouts.serviceInfo(
+    @viewHelpers.serviceInfo(
     betaBanner = HtmlFormat.empty,
     includeGridWrapper = false,
     serviceInfoContent = None,
@@ -46,14 +49,14 @@
 
 
 @content = {
-    @uiLayouts.main_content(
-    article = uiLayouts.article(mainContent),
+    @viewHelpers.mainContent(
+    article = viewHelpers.article(mainContent),
     serviceInfo = serviceInfo)
 }
 
 
 @bodyEnd = {
-    @uiLayouts.footer(
+    @viewHelpers.footer(
     analyticsToken = applicationConfig.analyticsToken,
     analyticsHost = applicationConfig.analyticsHost,
     ssoUrl = None,
@@ -71,7 +74,7 @@
 }
 
 @insideHeader = {
-    @uiLayouts.header_nav(
+    @viewHelpers.headerNav(
         navTitle = Some(Messages("gmp.title")),
         navTitleLink = None,
         showBetaLink = false,
@@ -81,4 +84,4 @@
 
 @afterHeader = {}
 
-@hmrcGovUkTemplate(Some(gmpPageTitle.toString), None)(head, bodyEnd, insideHeader, afterHeader, footerTop, Some(uiLayouts.footer_links()), true)(content)
+@govUkTemplate(Some(gmpPageTitle.toString), None)(head, bodyEnd, insideHeader, afterHeader, footerTop, Some(viewHelpers.footerLinks()), true)(content)

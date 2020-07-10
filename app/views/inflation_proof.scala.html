@@ -15,11 +15,13 @@
  *@
 
 @import config.ApplicationConfig
-@(inflationProofForm: Form[models.InflationProof])(implicit request: Request[_], context: config.GmpContext, messages: Messages,applicationConfig: ApplicationConfig)
-
 @import uk.gov.hmrc.play.views.html._
 @import uk.gov.hmrc.play.views.html.helpers._
 @import views.html.helpers._
+
+@this(gmpMain: gmp_main)
+
+@(inflationProofForm: Form[models.InflationProof])(implicit request: Request[_], context: config.GmpContext, messages: Messages,applicationConfig: ApplicationConfig)
 
 @implicitFormInstance = @{ Some(inflationProofForm) }
 
@@ -29,7 +31,7 @@
 <script type="text/javascript" src='@controllers.routes.AssetsController.at("javascripts/revaluation-date.js")'></script>
 }
 
-@gmp_main(title = Messages("gmp.inflation_proof.question") + " - " + Messages("service.title") + " - " + Messages("gov.uk"), pageScripts = Some(pageScripts)) {
+@gmpMain(title = Messages("gmp.inflation_proof.question") + " - " + Messages("service.title") + " - " + Messages("gov.uk"), pageScripts = Some(pageScripts)) {
 
 
     @includes.back_link(Messages("gmp.inflation_proof.question"))

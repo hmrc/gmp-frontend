@@ -17,17 +17,15 @@
 @import config.ApplicationConfig
 @import models.upscan.UpscanInitiateResponse
 @import views.html.includes.upscan_file_upload_form
-
-@(upscanInitiateResponse: UpscanInitiateResponse)(implicit request: Request[_], context: config.GmpContext, messages: Messages,ac:ApplicationConfig)
-
 @import uk.gov.hmrc.play.views.html._
 @import uk.gov.hmrc.play.views.html.helpers._
 @import views.html.helpers._
 
+@this(gmpMain: gmp_main)
 
+@(upscanInitiateResponse: UpscanInitiateResponse)(implicit request: Request[_], context: config.GmpContext, messages: Messages,ac:ApplicationConfig)
 
-@gmp_main(title = Messages("gmp.fileupload.header") + " - " + Messages("service.title") + " - " + Messages("gov.uk")) {
-
+@gmpMain(title = Messages("gmp.fileupload.header") + " - " + Messages("service.title") + " - " + Messages("gov.uk")) {
 
 @includes.back_link(Messages("gmp.fileupload.header"))
     <h1>@Messages("gmp.fileupload.header")</h1>

@@ -15,13 +15,16 @@
  *@
 
 @import config.ApplicationConfig
-@(revaluationRateForm: Form[models.RevaluationRate], session: GmpSession)(implicit request: Request[_], context: config.GmpContext, messages: Messages,ac:ApplicationConfig)
-
 @import uk.gov.hmrc.play.views.html._
 @import uk.gov.hmrc.play.views.html.helpers._
 @import views.html.helpers._
-
 @import models.CalculationType
+@import helper._
+
+@this(gmpMain: gmp_main)
+
+@(revaluationRateForm: Form[models.RevaluationRate], session: GmpSession)(implicit request: Request[_], context: config.GmpContext, messages: Messages,ac:ApplicationConfig)
+
 @heading = {
         @{session.scenario match {
         case CalculationType.PAYABLE_AGE | CalculationType.SPA | CalculationType.SURVIVOR => Messages("gmp.revaluation_rate.header")
@@ -34,7 +37,7 @@
         case _ => Messages("gmp.revaluation_rate.header")
         }}
 }
-@gmp_main(title = heading + " - " + Messages("service.title") + " - " + Messages("gov.uk")) {
+@gmpMain(title = heading + " - " + Messages("service.title") + " - " + Messages("gov.uk")) {
 
         @includes.back_link(Messages("gmp.revaluation_rate.header"))
 
@@ -43,7 +46,7 @@
           <h1>@heading</h1>
 
 
-          @form(action = routes.RevaluationRateController.post) {
+          @helper.form(action = routes.RevaluationRateController.post) {
             <div class="form-group @if(revaluationRateForm.hasErrors) {form-field--error}" id="rateType">
               @gmpRadioGroup(
                   revaluationRateForm("rateType"),
