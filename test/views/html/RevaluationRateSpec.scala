@@ -22,10 +22,13 @@ import play.api.data.Form
 import play.api.mvc.MessagesControllerComponents
 import play.twirl.api.Html
 import utils.GmpViewSpec
+import views.ViewHelpers
 
 abstract class RevaluationRateSpec extends GmpViewSpec {
   lazy val gmpMain = app.injector.instanceOf[gmp_main]
-  override def view: Html = new views.html.revaluation_rate(gmpMain)(revaluationRateForm, session)
+  lazy val viewHelpers = app.injector.instanceOf[ViewHelpers]
+
+  override def view: Html = new views.html.revaluation_rate(gmpMain, viewHelpers)(revaluationRateForm, session)
 
   lazy val mcc = app.injector.instanceOf[MessagesControllerComponents]
 

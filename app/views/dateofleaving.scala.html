@@ -19,9 +19,9 @@
 @import uk.gov.hmrc.play.views.html.helpers._
 @import views.html.helpers._
 @import models.Leaving
-@import helper._
+@import views.ViewHelpers
 
-@this(gmpMain: gmp_main)
+@this(gmpMain: gmp_main, viewHelpers: ViewHelpers)
 
 @(dateOfLeavingForm: Form[models.Leaving],scenario: String)(implicit request: Request[_], context: config.GmpContext, messages: Messages,applicationConfig: config.ApplicationConfig)
 
@@ -49,7 +49,7 @@
 
           <h1>@heading</h1>
 
-            @helper.form(action = routes.DateOfLeavingController.post) {
+            @viewHelpers.form(action = routes.DateOfLeavingController.post) {
 
             <div class="form-field @if(dateOfLeavingForm.hasErrors && !dateOfLeavingForm.hasGlobalErrors) {form-field--error}" id="leaving">
 

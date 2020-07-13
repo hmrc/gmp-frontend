@@ -22,10 +22,13 @@ import play.api.data.Form
 import play.api.data.Forms.{mapping, optional, text}
 import play.twirl.api.Html
 import utils.GmpViewSpec
+import views.ViewHelpers
 
 class ScenarioSpec extends GmpViewSpec{
   lazy val gmpMain = app.injector.instanceOf[gmp_main]
-  override def view: Html = new views.html.scenario(gmpMain)(scenarioForm)
+  lazy val viewHelpers = app.injector.instanceOf[ViewHelpers]
+
+  override def view: Html = new views.html.scenario(gmpMain, viewHelpers)(scenarioForm)
  // private val pensionDetailsForm: Form[models.CalculationType] = ScenarioForm.scenarioForm
 
   val scenarioForm = Form(

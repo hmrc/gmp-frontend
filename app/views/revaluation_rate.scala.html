@@ -19,9 +19,9 @@
 @import uk.gov.hmrc.play.views.html.helpers._
 @import views.html.helpers._
 @import models.CalculationType
-@import helper._
+@import views.ViewHelpers
 
-@this(gmpMain: gmp_main)
+@this(gmpMain: gmp_main, viewHelpers: ViewHelpers)
 
 @(revaluationRateForm: Form[models.RevaluationRate], session: GmpSession)(implicit request: Request[_], context: config.GmpContext, messages: Messages,ac:ApplicationConfig)
 
@@ -46,7 +46,7 @@
           <h1>@heading</h1>
 
 
-          @helper.form(action = routes.RevaluationRateController.post) {
+          @viewHelpers.form(action = routes.RevaluationRateController.post) {
             <div class="form-group @if(revaluationRateForm.hasErrors) {form-field--error}" id="rateType">
               @gmpRadioGroup(
                   revaluationRateForm("rateType"),

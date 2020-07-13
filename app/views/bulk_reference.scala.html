@@ -17,9 +17,9 @@
 @import config.ApplicationConfig
 @import uk.gov.hmrc.play.views.html.helpers._
 @import views.html.helpers._
-@import helper._
+@import views.ViewHelpers
 
-@this(gmpMain: gmp_main)
+@this(gmpMain: gmp_main, viewHelpers: ViewHelpers)
 
 @(bulkReferenceForm: Form[models.BulkReference])(implicit request: Request[_], context: config.GmpContext,messages: Messages,ac:ApplicationConfig)
 
@@ -32,7 +32,7 @@
 
         <h1>@Messages("gmp.bulk_reference.header")</h1>
 
-        @helper.form(action = routes.BulkReferenceController.post) {
+        @viewHelpers.form(action = routes.BulkReferenceController.post) {
 
           <div class="form-group">
               <div class="form-field">

@@ -18,9 +18,9 @@
 @import uk.gov.hmrc.play.views.html._
 @import uk.gov.hmrc.play.views.html.helpers._
 @import views.html.helpers._
-@import helper._
+@import views.ViewHelpers
 
-@this(gmpMain: gmp_main)
+@this(gmpMain: gmp_main, viewHelpers: ViewHelpers)
 
 @(inflationProofForm: Form[models.InflationProof])(implicit request: Request[_], context: config.GmpContext, messages: Messages,applicationConfig: ApplicationConfig)
 
@@ -41,7 +41,7 @@
 
     <h1>@Messages("gmp.inflation_proof.question")</h1>
 
-        @helper.form(action = routes.InflationProofController.post) {
+        @viewHelpers.form(action = routes.InflationProofController.post) {
 
         <div class="form-field @if(inflationProofForm.hasErrors && !inflationProofForm.hasGlobalErrors) {form-field--error}">
 

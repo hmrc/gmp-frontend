@@ -18,9 +18,9 @@
 @import uk.gov.hmrc.play.views.html._
 @import uk.gov.hmrc.play.views.html.helpers._
 @import views.html.helpers._
-@import helper._
+@import views.ViewHelpers
 
-@this(gmpMain: gmp_main)
+@this(gmpMain: gmp_main, viewHelpers: ViewHelpers)
 
 @(pensionDetailsForm: Form[models.PensionDetails])(implicit request: Request[_], context: config.GmpContext, messages: Messages,ac:ApplicationConfig)
 
@@ -39,7 +39,7 @@
 
   <h1>@Messages("gmp.pension_details.header")</h1>
 
-  @helper.form(action = routes.PensionDetailsController.post) {
+  @viewHelpers.form(action = routes.PensionDetailsController.post) {
 
       <div id="scon-form-group">
           @gmpInput(pensionDetailsForm("scon"),

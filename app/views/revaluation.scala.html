@@ -18,9 +18,9 @@
 @import uk.gov.hmrc.play.views.html._
 @import uk.gov.hmrc.play.views.html.helpers._
 @import views.html.helpers._
-@import helper._
+@import views.ViewHelpers
 
-@this(gmpMain: gmp_main)
+@this(gmpMain: gmp_main, viewHelpers: ViewHelpers)
 
 @(revaluationForm: Form[models.RevaluationDate])(implicit request: Request[_], context: config.GmpContext, messages: Messages,ac:ApplicationConfig)
 
@@ -35,7 +35,7 @@
 <h1>@Messages("gmp.revaluation.question")</h1>
 
 
-    @helper.form(action = routes.RevaluationController.post) {
+    @viewHelpers.form(action = routes.RevaluationController.post) {
 
         @if(revaluationForm.hasErrors || revaluationForm.hasGlobalErrors) {
           <div class="form-field--error form-date" id="revaluation-date">
