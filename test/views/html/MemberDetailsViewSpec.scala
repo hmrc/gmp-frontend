@@ -44,7 +44,8 @@ class MemberDetailsViewSpec extends GmpViewSpec{
     }
   }
 
-  override def view: Html = views.html.member_details(form)
+  lazy val gmpMain = app.injector.instanceOf[gmp_main]
+  override def view: Html = new views.html.member_details(gmpMain)(form)
   //private val memberDetailsForm: Form[models.MemberDetails] = MemberDetailsForm.form
 
   def form()(implicit messages: Messages) = Form(

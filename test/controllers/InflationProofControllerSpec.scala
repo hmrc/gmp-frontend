@@ -32,6 +32,7 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.SessionService
 import uk.gov.hmrc.auth.core.AuthConnector
+import views.Views
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -47,10 +48,10 @@ class InflationProofControllerSpec extends PlaySpec with GuiceOneServerPerSuite 
   implicit val ac=app.injector.instanceOf[ApplicationConfig]
   implicit val gmpSessionCache=app.injector.instanceOf[GmpSessionCache]
   lazy val inflationProofForm = new InflationProofForm(mcc)
-
+  lazy val views = app.injector.instanceOf[Views]
 
   object TestInflationProofController extends InflationProofController(FakeAuthAction, mockAuthConnector,mockSessionService,
-    FakeGmpContext,mcc,inflationProofForm,ac,ec,gmpSessionCache)
+    FakeGmpContext,mcc,inflationProofForm,ac,ec,gmpSessionCache,views)
 
 
   "InflationProofController" must {

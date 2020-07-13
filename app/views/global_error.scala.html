@@ -14,7 +14,6 @@
  * limitations under the License.
  *@
 
-@import uk.gov.hmrc.play.views.html.{layouts => uiLayouts}
 @import play.twirl.api.HtmlFormat
 @import views.ViewHelpers
 @import views.html.layouts.GovUkTemplate
@@ -33,14 +32,14 @@
 }
 
 @head = {
-    @uiLayouts.head(
+    viewHelpers.head(
     linkElem = None,
     headScripts = None)
     <meta name="format-detection" content="telephone=no"/>
 }
 
 @serviceInfo = {
-    @viewHelpers.serviceInfo(
+    viewHelpers.serviceInfo(
     betaBanner = HtmlFormat.empty,
     includeGridWrapper = false,
     serviceInfoContent = None,
@@ -49,14 +48,14 @@
 
 
 @content = {
-    @viewHelpers.mainContent(
+    viewHelpers.mainContent(
     article = viewHelpers.article(mainContent),
     serviceInfo = serviceInfo)
 }
 
 
 @bodyEnd = {
-    @viewHelpers.footer(
+    viewHelpers.footer(
     analyticsToken = applicationConfig.analyticsToken,
     analyticsHost = applicationConfig.analyticsHost,
     ssoUrl = None,
@@ -74,7 +73,7 @@
 }
 
 @insideHeader = {
-    @viewHelpers.headerNav(
+    viewHelpers.headerNav(
         navTitle = Some(Messages("gmp.title")),
         navTitleLink = None,
         showBetaLink = false,

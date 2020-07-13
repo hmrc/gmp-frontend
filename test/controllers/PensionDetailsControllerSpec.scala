@@ -37,6 +37,7 @@ import services.SessionService
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.logging.SessionId
+import views.Views
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -54,11 +55,11 @@ class PensionDetailsControllerSpec extends PlaySpec with OneServerPerSuite with 
   implicit val ac=app.injector.instanceOf[ApplicationConfig]
   implicit val gmpSessionCache=app.injector.instanceOf[GmpSessionCache]
   lazy val pensionDetailsForm = new PensionDetailsForm(mcc)
-
+  lazy val views = app.injector.instanceOf[Views]
 
   implicit val hc = new HeaderCarrier(sessionId = Some(SessionId(s"session-${UUID.randomUUID}")))
 
-  object TestPensionDetailsController extends PensionDetailsController(FakeAuthAction, mockAuthConnector, mockGmpConnector,mockSessionService,FakeGmpContext, metrics,ac,pensionDetailsForm,mcc,ec,gmpSessionCache) {
+  object TestPensionDetailsController extends PensionDetailsController(FakeAuthAction, mockAuthConnector, mockGmpConnector,mockSessionService,FakeGmpContext, metrics,ac,pensionDetailsForm,mcc,ec,gmpSessionCache,views) {
    /* override val sessionService = mockSessionService
     override val context = FakeGmpContext*/
   }

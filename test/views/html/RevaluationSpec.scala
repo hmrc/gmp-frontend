@@ -25,7 +25,8 @@ import play.twirl.api.Html
 import utils.GmpViewSpec
 
 class RevaluationSpec extends GmpViewSpec{
-  override def view: Html = views.html.revaluation(revaluationForm)
+  lazy val gmpMain = app.injector.instanceOf[gmp_main]
+  override def view: Html = new views.html.revaluation(gmpMain)(revaluationForm)
 //  private val revaluationForm: Form[models.RevaluationDate] = RevaluationForm.revaluationForm
 
   val YEAR_FIELD_LENGTH: Int = 4

@@ -33,6 +33,7 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.SessionService
 import uk.gov.hmrc.auth.core.AuthConnector
+import views.Views
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -48,10 +49,10 @@ class MemberDetailsControllerSpec extends PlaySpec with GuiceOneServerPerSuite w
   implicit val ac=app.injector.instanceOf[ApplicationConfig]
   implicit val gmpSessionCache=app.injector.instanceOf[GmpSessionCache]
   lazy val form = new MemberDetailsForm(mcc)
-
+  lazy val views = app.injector.instanceOf[Views]
 
   object TestMemberDetailsController extends MemberDetailsController(FakeAuthAction, mockAuthConnector,mockSessionService,
-                      FakeGmpContext,mcc,ac,form,ec,gmpSessionCache)
+                      FakeGmpContext,mcc,ac,form,ec,gmpSessionCache,views)
   "GET" must {
 
     "authenticated users" must {

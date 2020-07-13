@@ -37,7 +37,8 @@ class ApplicationController @Inject()(authAction: AuthAction,
                                       messagesControllerComponents: MessagesControllerComponents,
                                       implicit val executionContext: ExecutionContext,
                                       ac:ApplicationConfig,
-                                      views: Views)
+                                      views: Views,
+                                      externalUrls: ExternalUrls)
                                       extends GmpController(messagesControllerComponents,ac,sessionService,config) {
 
 
@@ -55,7 +56,7 @@ class ApplicationController @Inject()(authAction: AuthAction,
         val dataEvent: DataEvent = DataEvent("GMP", "signout", detail = auditData)
 
         auditConnector.sendEvent(dataEvent)
-        Redirect(ExternalUrls.signOutCallback).withSession(("feedbackId", uuid))
+        Redirect(externalUrls.signOutCallback).withSession(("feedbackId", uuid))
   }
 }
 

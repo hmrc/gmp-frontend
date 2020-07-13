@@ -18,6 +18,7 @@
 @import uk.gov.hmrc.play.views.html._
 @import uk.gov.hmrc.play.views.html.helpers._
 @import views.html.helpers._
+@import helper._
 
 @this(gmpMain: gmp_main)
 
@@ -33,7 +34,7 @@
       <h1>@Messages("gmp.equalise_header")</h1>
 
 
-      @form(action = routes.EqualiseController.post) {
+      @helper.form(action = routes.EqualiseController.post) {
 
 
         <div class="form-field inline @if(equaliseForm.hasErrors) {form-field--error}">

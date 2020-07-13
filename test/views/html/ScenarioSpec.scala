@@ -24,7 +24,8 @@ import play.twirl.api.Html
 import utils.GmpViewSpec
 
 class ScenarioSpec extends GmpViewSpec{
-  override def view: Html = views.html.scenario(scenarioForm)
+  lazy val gmpMain = app.injector.instanceOf[gmp_main]
+  override def view: Html = new views.html.scenario(gmpMain)(scenarioForm)
  // private val pensionDetailsForm: Form[models.CalculationType] = ScenarioForm.scenarioForm
 
   val scenarioForm = Form(

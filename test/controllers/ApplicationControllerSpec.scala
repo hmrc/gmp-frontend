@@ -18,7 +18,7 @@ package controllers
 
 import com.google.inject.Singleton
 import config.ApplicationConfig
-import controllers.auth.{AuthAction, FakeAuthAction, UUIDGenerator}
+import controllers.auth.{AuthAction, ExternalUrls, FakeAuthAction, UUIDGenerator}
 import org.mockito.ArgumentCaptor
 import org.mockito.Matchers._
 import org.mockito.Mockito._
@@ -33,6 +33,8 @@ import services.SessionService
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.audit.model.DataEvent
+import views.Views
+import views.html._
 
 import scala.concurrent.ExecutionContext
 
@@ -52,9 +54,11 @@ class ApplicationControllerSpec extends PlaySpec
     implicit val ec = app.injector.instanceOf[ExecutionContext]
      implicit val ac=app.injector.instanceOf[ApplicationConfig]
     implicit val ss=app.injector.instanceOf[SessionService]
+    lazy val views = app.injector.instanceOf[Views]
+    lazy val externalUrls = app.injector.instanceOf[ExternalUrls]
 
     object TestController extends ApplicationController(FakeAuthAction, mockAuditConnector, mockAuthConnector, mockUUIDGenerator,
-                      ss,FakeGmpContext,mcc,ec,ac) {
+                      ss,FakeGmpContext,mcc,ec,ac, views, externalUrls) {
 
   }
 

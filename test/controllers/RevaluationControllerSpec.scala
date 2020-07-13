@@ -31,6 +31,7 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.SessionService
 import uk.gov.hmrc.auth.core.AuthConnector
+import views.Views
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -46,11 +47,11 @@ class RevaluationControllerSpec extends PlaySpec with OneServerPerSuite with Moc
   implicit val ac=app.injector.instanceOf[ApplicationConfig]
   implicit val gmpSessionCache=app.injector.instanceOf[GmpSessionCache]
   lazy val revaluationForm = new RevaluationForm(mcc)
-
+  lazy val views = app.injector.instanceOf[Views]
 
   val baseValidDate = GmpDate(day = Some("31"), month = Some("1"), year = Some("2015"))
 
-  object TestRevaluationController extends RevaluationController(FakeAuthAction, mockAuthConnector,mockSessionService,FakeGmpContext,mcc,ac,revaluationForm,ec,gmpSessionCache)
+  object TestRevaluationController extends RevaluationController(FakeAuthAction, mockAuthConnector,mockSessionService,FakeGmpContext,mcc,ac,revaluationForm,ec,gmpSessionCache,views)
 
   "Revaluation controller" must {
 

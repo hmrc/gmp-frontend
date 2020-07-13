@@ -46,7 +46,7 @@ class ApplicationConfig @Inject()(
     s"$contactHost/contact/problem_reports_nonjs?service=$contactFormServiceIdentifier"
 
   val globalErrors = ConfigFactory.load("global-errors.properties")
-  val contactFormServiceIdentifier = "GMP"
+  lazy val contactFormServiceIdentifier = "GMP"
   val frontendHost = loadConfig("platform.frontend.host")
 
   val upscanInitiateHost: String = servicesConfig.baseUrl("upscan")

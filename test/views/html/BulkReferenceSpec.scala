@@ -47,7 +47,8 @@ class BulkReferenceSpec extends GmpViewSpec {
 
   }
 
-  override def view: Html = views.html.bulk_reference(bulkReferenceForm)
+  lazy val gmpMain = app.injector.instanceOf[gmp_main]
+  override def view: Html = new views.html.bulk_reference(gmpMain)(bulkReferenceForm)
   //private val form: Form[models.BulkReference] = bulkReferenceForm
 
   val bulkReferenceForm = Form(

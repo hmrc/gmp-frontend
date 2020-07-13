@@ -22,7 +22,8 @@ import play.twirl.api.Html
 import utils.GmpViewSpec
 
 class ContributionsEarningsSpec extends GmpViewSpec {
-  override def view: Html = views.html.contributions_earnings(calculationResponse)
+  lazy val gmpMain = app.injector.instanceOf[gmp_main]
+  override def view: Html = new views.html.contributions_earnings(gmpMain)(calculationResponse)
 
   private val calculationResponse: CalculationResponse = CalculationResponse("name", "nino", "scon", Some("revaluationRate"),
     Some(LocalDate.now), List(CalculationPeriod(Some(LocalDate.now), LocalDate.now(), "gmpTotal", "post", 1, 2, Some(3), Some("string"),

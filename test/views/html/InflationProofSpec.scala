@@ -24,7 +24,8 @@ import play.twirl.api.Html
 import utils.GmpViewSpec
 
 class InflationProofSpec extends GmpViewSpec {
-  override def view: Html = views.html.inflation_proof(inflationProofForm)
+  lazy val gmpMain = app.injector.instanceOf[gmp_main]
+  override def view: Html = new views.html.inflation_proof(gmpMain)(inflationProofForm)
  // private val inflationProofForm: Form[models.InflationProof] = InflationProofForm.inflationProofForm
 
   val inflationProofForm = Form(

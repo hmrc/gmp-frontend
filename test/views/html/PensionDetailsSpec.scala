@@ -25,7 +25,8 @@ import utils.GmpViewSpec
 import validation.SconValidate
 
 class PensionDetailsSpec extends GmpViewSpec {
-  override def view: Html = views.html.pension_details(pensionDetailsForm)
+  lazy val gmpMain = app.injector.instanceOf[gmp_main]
+  override def view: Html = new views.html.pension_details(gmpMain)(pensionDetailsForm)
 
  // private val pensionDetailsForm: Form[models.PensionDetails] = PensionDetailsForm.pensionDetailsForm
 

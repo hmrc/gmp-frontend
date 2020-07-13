@@ -24,7 +24,8 @@ import play.twirl.api.Html
 import utils.GmpViewSpec
 
 class EqualiseSpec extends GmpViewSpec {
-  override def view: Html = views.html.equalise(equaliseForm)
+  lazy val gmpMain = app.injector.instanceOf[gmp_main]
+  override def view: Html = new views.html.equalise(gmpMain)(equaliseForm)
  // val equaliseForm: Form[models.Equalise] = EqualiseForm.equaliseForm
 
   val equaliseForm = Form(

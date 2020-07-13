@@ -33,6 +33,7 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.SessionService
 import uk.gov.hmrc.auth.core.AuthConnector
+import views.Views
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -49,8 +50,9 @@ class RevaluationRateControllerSpec extends PlaySpec with OneServerPerSuite with
   implicit val ac=app.injector.instanceOf[ApplicationConfig]
   implicit val gmpSessionCache=app.injector.instanceOf[GmpSessionCache]
   lazy val revaluationRateForm = new RevaluationRateForm(mcc)
+  lazy val views = app.injector.instanceOf[Views]
 
-  object TestRevaluationRateController extends RevaluationRateController(FakeAuthAction, mockAuthConnector,ac,mockSessionService,FakeGmpContext,mcc,revaluationRateForm,ec,gmpSessionCache)
+  object TestRevaluationRateController extends RevaluationRateController(FakeAuthAction, mockAuthConnector,ac,mockSessionService,FakeGmpContext,mcc,revaluationRateForm,ec,gmpSessionCache,views)
 
 
   private val nino: String = RandomNino.generate

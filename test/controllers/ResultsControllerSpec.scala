@@ -39,7 +39,9 @@ import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.logging.SessionId
 import uk.gov.hmrc.play.audit.http.connector.{AuditConnector, AuditResult}
+import views.Views
 import views.helpers.GmpDateFormatter._
+import views.html.gmp_main
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -58,14 +60,14 @@ class ResultsControllerSpec extends PlaySpec with OneServerPerSuite with Mockito
   implicit val messagesProvider=MessagesImpl(Lang("en"), messagesAPI)
   implicit val applicationConfig=app.injector.instanceOf[ApplicationConfig]
   implicit val gmpSessionCache=app.injector.instanceOf[GmpSessionCache]
-
+  lazy val views = app.injector.instanceOf[Views]
   implicit val hc = new HeaderCarrier(sessionId = Some(SessionId(s"session-${UUID.randomUUID}")))
 
-  object TestResultsController extends ResultsController(FakeAuthAction, mockAuthConnector, mockSessionService,FakeGmpContext, mockCalculationConnector, mockAuditConnector, metrics,applicationConfig,mcc,ec,gmpSessionCache) {
+  object TestResultsController extends ResultsController(FakeAuthAction, mockAuthConnector, mockSessionService,FakeGmpContext, mockCalculationConnector, mockAuditConnector, metrics,applicationConfig,mcc,ec,gmpSessionCache,views) {
 
 
     override def resultsView(response: CalculationResponse, subheader: Option[String], revalSubheader: Option[String])(implicit request: Request[_], context: config.GmpContext): HtmlFormat.Appendable = {
-      views.html.results(response, subheader, revalSubheader)
+      views.results(response, subheader, revalSubheader)
     }
 
   }

@@ -26,9 +26,11 @@ import scala.concurrent.ExecutionContext.Implicits._
 import scala.concurrent.Future
 import scala.util.Random
 
-object FakeAuthAction extends AuthAction(authConnector=new GuiceApplicationBuilder().injector().instanceOf[AuthConnector],
-  configuration=new GuiceApplicationBuilder().injector().instanceOf[Configuration],
-  messagesControllerComponents=new GuiceApplicationBuilder().injector().instanceOf[MessagesControllerComponents]) {
+object FakeAuthAction extends AuthAction(
+  authConnector = new GuiceApplicationBuilder().injector().instanceOf[AuthConnector],
+  configuration = new GuiceApplicationBuilder().injector().instanceOf[Configuration],
+  messagesControllerComponents = new GuiceApplicationBuilder().injector().instanceOf[MessagesControllerComponents],
+  externalUrls = new GuiceApplicationBuilder().injector().instanceOf[ExternalUrls]) {
 
 
   val nino = new Generator(new Random).nextNino

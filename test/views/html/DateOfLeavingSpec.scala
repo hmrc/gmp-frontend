@@ -25,7 +25,8 @@ import play.twirl.api.Html
 import utils.GmpViewSpec
 
 abstract class DateOfLeavingSpec extends GmpViewSpec  {
-  override def view: Html = views.html.dateofleaving(dateOfLeavingForm, scenario)
+  lazy val gmpMain = app.injector.instanceOf[gmp_main]
+  override def view: Html = new views.html.dateofleaving(gmpMain)(dateOfLeavingForm, scenario)
    val mcc = app.injector.instanceOf[MessagesControllerComponents]
 
    val dateOfLeavingForm = new DateOfLeavingForm(mcc).dateOfLeavingForm

@@ -24,7 +24,8 @@ import play.twirl.api.Html
 import utils.GmpViewSpec
 
 abstract class RevaluationRateSpec extends GmpViewSpec {
-  override def view: Html = views.html.revaluation_rate(revaluationRateForm, session)
+  lazy val gmpMain = app.injector.instanceOf[gmp_main]
+  override def view: Html = new views.html.revaluation_rate(gmpMain)(revaluationRateForm, session)
 
   lazy val mcc = app.injector.instanceOf[MessagesControllerComponents]
 
