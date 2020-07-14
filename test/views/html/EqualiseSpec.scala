@@ -29,7 +29,6 @@ class EqualiseSpec extends GmpViewSpec {
   lazy val viewHelpers = app.injector.instanceOf[ViewHelpers]
 
   override def view: Html = new views.html.equalise(gmpMain, viewHelpers)(equaliseForm)
- // val equaliseForm: Form[models.Equalise] = EqualiseForm.equaliseForm
 
   val equaliseForm = Form(
     mapping(

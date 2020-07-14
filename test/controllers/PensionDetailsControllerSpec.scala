@@ -60,8 +60,6 @@ class PensionDetailsControllerSpec extends PlaySpec with OneServerPerSuite with 
   implicit val hc = new HeaderCarrier(sessionId = Some(SessionId(s"session-${UUID.randomUUID}")))
 
   object TestPensionDetailsController extends PensionDetailsController(FakeAuthAction, mockAuthConnector, mockGmpConnector,mockSessionService,FakeGmpContext, metrics,ac,pensionDetailsForm,mcc,ec,gmpSessionCache,views) {
-   /* override val sessionService = mockSessionService
-    override val context = FakeGmpContext*/
   }
 
   "pension details GET " must {
