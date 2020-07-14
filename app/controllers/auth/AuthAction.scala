@@ -32,10 +32,11 @@ import scala.concurrent.{ExecutionContext, Future}
 case class AuthenticatedRequest[A](linkId: String, request:Request[A]) extends WrappedRequest[A](request)
 
 @Singleton
-class AuthAction @Inject()(override val authConnector: AuthConnector, configuration: Configuration,
-                           messagesControllerComponents: MessagesControllerComponents)
-                              (implicit ec: ExecutionContext) extends ActionBuilder[AuthenticatedRequest, AnyContent]
-                          with AuthorisedFunctions{
+class AuthAction @Inject()(override val authConnector: AuthConnector,
+                           configuration: Configuration,
+                           messagesControllerComponents: MessagesControllerComponents,
+                           externalUrls: ExternalUrls)(implicit ec: ExecutionContext)
+  extends ActionBuilder[AuthenticatedRequest, AnyContent] with AuthorisedFunctions{
 
   override val parser: BodyParser[AnyContent] = messagesControllerComponents.parsers.defaultBodyParser
   override protected val executionContext: ExecutionContext = messagesControllerComponents.executionContext
@@ -60,13 +61,13 @@ class AuthAction @Inject()(override val authConnector: AuthConnector, configurat
             enrolment => enrolment.identifiers.find(id => id.key == "PSAID").map(_.value)
           }
 
-          psaid.orElse(ppid).orElse(podsPsaid).fold(Future.successful(Results.Redirect(ExternalUrls.signIn)))(id => block(AuthenticatedRequest(id, request)))
+          psaid.orElse(ppid).orElse(podsPsaid).fold(Future.successful(Results.Redirect(externalUrls.signIn)))(id => block(AuthenticatedRequest(id, request)))
 
         }
         case _ => throw new RuntimeException("Can't find credentials for user")
       }
   } recover {
-    case ex: NoActiveSession => Results.Redirect(ExternalUrls.signIn)
+    case ex: NoActiveSession => Results.Redirect(externalUrls.signIn)
 
     case ex: InsufficientConfidenceLevel => Results.Redirect(controllers.routes.ApplicationController.unauthorised().url)
 

@@ -23,16 +23,20 @@ import controllers.auth.AuthAction
 import play.api.mvc.MessagesControllerComponents
 import services.SessionService
 import uk.gov.hmrc.auth.core.AuthConnector
+import views.Views
 
 import scala.concurrent.ExecutionContext
 
 @Singleton
 class MoreBulkResultsController @Inject()(authAction: AuthAction,
                                           override val authConnector: AuthConnector,
-                                          sessionService: SessionService,implicit val config:GmpContext,
-                                          gmpBulkConnector: GmpBulkConnector,ac:ApplicationConfig,
+                                          sessionService: SessionService,
+                                          implicit val config:GmpContext,
+                                          gmpBulkConnector: GmpBulkConnector,
+                                          ac:ApplicationConfig,
                                           override val messagesControllerComponents: MessagesControllerComponents,
-                                          implicit val executionContext: ExecutionContext) extends GmpPageFlow(authConnector,sessionService,config,messagesControllerComponents,ac) {
+                                          implicit val executionContext: ExecutionContext,
+                                          views: Views) extends GmpPageFlow(authConnector,sessionService,config,messagesControllerComponents,ac) {
 
 
 
@@ -41,7 +45,7 @@ class MoreBulkResultsController @Inject()(authAction: AuthAction,
         val link = request.linkId
         gmpBulkConnector.getPreviousBulkRequests(link).map {
           bulkPreviousRequests => {
-            Ok(views.html.more_bulk_results(bulkPreviousRequests.sorted))
+            Ok(views.moreBulkResults(bulkPreviousRequests.sorted))
           }
         }
       }

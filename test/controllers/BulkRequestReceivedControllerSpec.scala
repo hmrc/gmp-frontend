@@ -38,6 +38,7 @@ import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.emailaddress.EmailAddress
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.logging.SessionId
+import views.Views
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -55,6 +56,7 @@ class BulkRequestReceivedControllerSpec extends PlaySpec with OneServerPerSuite 
   implicit val messagesProvider=MessagesImpl(Lang("en"), messagesApi)
   implicit val ac=app.injector.instanceOf[ApplicationConfig]
   implicit val sc=app.injector.instanceOf[GmpSessionCache]
+  lazy val views = app.injector.instanceOf[Views]
 
   val callBackData = UploadedSuccessfully("ref1", "name1", "download1")
   val gmpBulkSession = GmpBulkSession(Some(callBackData), Some(EmailAddress("somebody@somewhere.com")), Some("reference"))
@@ -70,7 +72,7 @@ class BulkRequestReceivedControllerSpec extends PlaySpec with OneServerPerSuite 
     mockAuthConnector,
     mockSessionService,
     mockBulkRequestCreationService,
-    mockGmpBulkConnector,ac,FakeGmpContext,mcc,ec,sc){
+    mockGmpBulkConnector,ac,FakeGmpContext,mcc,ec,sc,views){
   }
 
   "BulkRequestReceivedController" must {

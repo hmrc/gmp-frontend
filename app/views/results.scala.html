@@ -16,6 +16,8 @@
 
 @import config.ApplicationConfig
 
+@this(gmpMain: gmp_main)
+
 @(
         calculationResponse:CalculationResponse,
         revalRateSubheader: Option[String],
@@ -23,7 +25,7 @@
 
 
 
-@gmp_main(
+@gmpMain(
   title = {
     if(calculationResponse.globalErrorCode > 0 ||
       (calculationResponse.calculationPeriods.length == 1 && calculationResponse.calculationPeriods.head.errorCode > 0)){

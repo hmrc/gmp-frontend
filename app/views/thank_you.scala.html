@@ -15,14 +15,13 @@
  *@
 
 @import config.ApplicationConfig
-@()(implicit request: Request[_], context: config.GmpContext,messages: Messages,ac:ApplicationConfig)
-
-@import uk.gov.hmrc.play.views.html._
-@import uk.gov.hmrc.play.views.html.helpers._
 @import views.html.helpers._
 
+@this(gmpMain: gmp_main)
 
-@gmp_main(title = Messages("gmp.thank_you.header") + " - " + Messages("service.title") + " - " + Messages("gov.uk"),supportLinkEnabled = false, dashboardLinkEnabled = false) {
+@()(implicit request: Request[_], context: config.GmpContext,messages: Messages,ac:ApplicationConfig)
+
+@gmpMain(title = Messages("gmp.thank_you.header") + " - " + Messages("service.title") + " - " + Messages("gov.uk"),supportLinkEnabled = false, dashboardLinkEnabled = false) {
 
   <div id="thank-you-page">
       @includes.back_link(Messages("gmp.thank_you.header"))

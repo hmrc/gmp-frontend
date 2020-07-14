@@ -26,6 +26,7 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.SessionService
 import uk.gov.hmrc.auth.core.AuthConnector
+import views.Views
 
 import scala.concurrent.ExecutionContext
 
@@ -39,9 +40,9 @@ class IncorrectlyEncodedControllerSpec extends PlaySpec with OneServerPerSuite w
   implicit val messagesAPI=app.injector.instanceOf[MessagesApi]
   implicit val messagesProvider=MessagesImpl(Lang("en"), messagesAPI)
   implicit val ac=app.injector.instanceOf[ApplicationConfig]
+  lazy val views = app.injector.instanceOf[Views]
 
-
-  object TestIncorrectlyEncodedController extends IncorrectlyEncodedController(FakeAuthAction,mockAuthConnector,mockSessionService,FakeGmpContext,mcc,ac,ec)
+  object TestIncorrectlyEncodedController extends IncorrectlyEncodedController(FakeAuthAction,mockAuthConnector,mockSessionService,FakeGmpContext,mcc,ac,ec,views)
 
   "IncorrectlyEncodedController.get" should {
 

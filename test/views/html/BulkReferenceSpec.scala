@@ -24,6 +24,7 @@ import play.api.data.validation.{Constraint, Invalid, Valid, ValidationError}
 import play.twirl.api.Html
 import uk.gov.hmrc.emailaddress.EmailAddress
 import utils.GmpViewSpec
+import views.ViewHelpers
 
 class BulkReferenceSpec extends GmpViewSpec {
 
@@ -47,8 +48,10 @@ class BulkReferenceSpec extends GmpViewSpec {
 
   }
 
-  override def view: Html = views.html.bulk_reference(bulkReferenceForm)
-  //private val form: Form[models.BulkReference] = bulkReferenceForm
+  lazy val gmpMain = app.injector.instanceOf[gmp_main]
+  lazy val viewHelpers = app.injector.instanceOf[ViewHelpers]
+
+  override def view: Html = new views.html.bulk_reference(gmpMain, viewHelpers)(bulkReferenceForm)
 
   val bulkReferenceForm = Form(
     mapping(

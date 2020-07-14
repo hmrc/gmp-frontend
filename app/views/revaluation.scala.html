@@ -15,16 +15,16 @@
  *@
 
 @import config.ApplicationConfig
-@(revaluationForm: Form[models.RevaluationDate])(implicit request: Request[_], context: config.GmpContext, messages: Messages,ac:ApplicationConfig)
-
-@import uk.gov.hmrc.play.views.html._
-@import uk.gov.hmrc.play.views.html.helpers._
 @import views.html.helpers._
+@import views.ViewHelpers
 
+@this(gmpMain: gmp_main, viewHelpers: ViewHelpers)
+
+@(revaluationForm: Form[models.RevaluationDate])(implicit request: Request[_], context: config.GmpContext, messages: Messages,ac:ApplicationConfig)
 
 @implicitFormInstance = @{ Some(revaluationForm) }
 
-@gmp_main(title = Messages("gmp.revaluation.question")+ " - " + Messages("service.title") + " - " + Messages("gov.uk")) {
+@gmpMain(title = Messages("gmp.revaluation.question")+ " - " + Messages("service.title") + " - " + Messages("gov.uk")) {
 
 @includes.back_link(Messages("gmp.revaluation.question"))
 
@@ -33,7 +33,7 @@
 <h1>@Messages("gmp.revaluation.question")</h1>
 
 
-    @form(action = routes.RevaluationController.post) {
+    @viewHelpers.form(action = routes.RevaluationController.post) {
 
         @if(revaluationForm.hasErrors || revaluationForm.hasGlobalErrors) {
           <div class="form-field--error form-date" id="revaluation-date">

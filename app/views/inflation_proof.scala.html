@@ -15,11 +15,12 @@
  *@
 
 @import config.ApplicationConfig
-@(inflationProofForm: Form[models.InflationProof])(implicit request: Request[_], context: config.GmpContext, messages: Messages,applicationConfig: ApplicationConfig)
-
-@import uk.gov.hmrc.play.views.html._
-@import uk.gov.hmrc.play.views.html.helpers._
 @import views.html.helpers._
+@import views.ViewHelpers
+
+@this(gmpMain: gmp_main, viewHelpers: ViewHelpers)
+
+@(inflationProofForm: Form[models.InflationProof])(implicit request: Request[_], context: config.GmpContext, messages: Messages,applicationConfig: ApplicationConfig)
 
 @implicitFormInstance = @{ Some(inflationProofForm) }
 
@@ -29,7 +30,7 @@
 <script type="text/javascript" src='@controllers.routes.AssetsController.at("javascripts/revaluation-date.js")'></script>
 }
 
-@gmp_main(title = Messages("gmp.inflation_proof.question") + " - " + Messages("service.title") + " - " + Messages("gov.uk"), pageScripts = Some(pageScripts)) {
+@gmpMain(title = Messages("gmp.inflation_proof.question") + " - " + Messages("service.title") + " - " + Messages("gov.uk"), pageScripts = Some(pageScripts)) {
 
 
     @includes.back_link(Messages("gmp.inflation_proof.question"))
@@ -38,7 +39,7 @@
 
     <h1>@Messages("gmp.inflation_proof.question")</h1>
 
-        @form(action = routes.InflationProofController.post) {
+        @viewHelpers.form(action = routes.InflationProofController.post) {
 
         <div class="form-field @if(inflationProofForm.hasErrors && !inflationProofForm.hasGlobalErrors) {form-field--error}">
 

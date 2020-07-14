@@ -19,13 +19,16 @@
 @import models.upscan.{InProgress, UploadedSuccessfully, UploadedFailed, NotStarted}
 @import views.html.helpers.spinner
 @import models.upscan.UploadedFailed
+
+@this(gmpMain: gmp_main)
+
 @(status : UploadStatus)(implicit request: Request[_], messages: Messages, context: config.GmpContext, appConfig: ApplicationConfig)
 
 @refreshHeader = {
     <meta http-equiv="refresh" content="3"/>
 }
 
-@gmp_main(title = Messages("gmp.fileupload.verifying.title"),
+@gmpMain(title = Messages("gmp.fileupload.verifying.title"),
     customHead = {
     status match {
         case InProgress => Some(refreshHeader)

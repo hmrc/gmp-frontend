@@ -15,12 +15,14 @@
  *@
 
 @import config.ApplicationConfig
+@import views.html.helpers._
+@import views.ViewHelpers
+
+@this(gmpMain: gmp_main, viewHelpers: ViewHelpers)
+
 @(bulkReferenceForm: Form[models.BulkReference])(implicit request: Request[_], context: config.GmpContext,messages: Messages,ac:ApplicationConfig)
 
-@import uk.gov.hmrc.play.views.html.helpers._
-@import views.html.helpers._
-
-@gmp_main(title = Messages("gmp.bulk_reference.header") + " - " + Messages("service.title") + " - " + Messages("gov.uk"), supportLinkEnabled = true) {
+@gmpMain(title = Messages("gmp.bulk_reference.header") + " - " + Messages("service.title") + " - " + Messages("gov.uk"), supportLinkEnabled = true) {
 
 
     @includes.back_link(Messages("gmp.bulk_reference.header"))
@@ -29,7 +31,7 @@
 
         <h1>@Messages("gmp.bulk_reference.header")</h1>
 
-        @form(action = routes.BulkReferenceController.post) {
+        @viewHelpers.form(action = routes.BulkReferenceController.post) {
 
           <div class="form-group">
               <div class="form-field">

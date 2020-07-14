@@ -25,6 +25,7 @@ import play.api.i18n.Messages
 import play.api.mvc.MessagesControllerComponents
 import services.SessionService
 import uk.gov.hmrc.auth.core.AuthConnector
+import views.Views
 
 import scala.concurrent.ExecutionContext
 
@@ -34,19 +35,21 @@ class DateOfLeavingController @Inject()(authAction: AuthAction,
                                         sessionService: SessionService,ac:ApplicationConfig,
                                         implicit val config:GmpContext,dlf:DateOfLeavingForm,
                                         messagesControllerComponents: MessagesControllerComponents,
-                                        implicit val executionContext: ExecutionContext,implicit val gmpSessionCache: GmpSessionCache) extends GmpPageFlow(authConnector,sessionService,config,messagesControllerComponents,ac) {
+                                        implicit val executionContext: ExecutionContext,
+                                        implicit val gmpSessionCache: GmpSessionCache,
+                                        views: Views) extends GmpPageFlow(authConnector,sessionService,config,messagesControllerComponents,ac) {
 
   lazy val dateOfLeavingForm=dlf.dateOfLeavingForm
   def get = authAction.async {
       implicit request =>
         sessionService.fetchGmpSession.map {
           case Some(session) => session match {
-            case _ if session.scon == "" => Ok(views.html.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/pension-details"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title")))
-            case _ if session.memberDetails.nino == "" || session.memberDetails.firstForename == "" || session.memberDetails.surname == "" => Ok(views.html.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/member-details"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title")))
-            case _ if session.scenario == "" => Ok(views.html.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/calculation-reason"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title")))
-            case _ => Ok (views.html.dateofleaving (dateOfLeavingForm, session.scenario) )
+            case _ if session.scon == "" => Ok(views.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/pension-details"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title")))
+            case _ if session.memberDetails.nino == "" || session.memberDetails.firstForename == "" || session.memberDetails.surname == "" => Ok(views.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/member-details"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title")))
+            case _ if session.scenario == "" => Ok(views.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/calculation-reason"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title")))
+            case _ => Ok (views.dateOfLeaving (dateOfLeavingForm, session.scenario) )
           }
-          case _ => Ok(views.html.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/dashboard"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title")))
+          case _ => Ok(views.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/dashboard"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title")))
         }
   }
 
@@ -56,7 +59,7 @@ class DateOfLeavingController @Inject()(authAction: AuthAction,
         dateOfLeavingForm.bindFromRequest.fold(
           formWithErrors => {
             sessionService.fetchGmpSession.map {
-              case Some(session) => BadRequest(views.html.dateofleaving(formWithErrors, session.scenario))
+              case Some(session) => BadRequest(views.dateOfLeaving(formWithErrors, session.scenario))
               case _ => throw new RuntimeException
             }
           },

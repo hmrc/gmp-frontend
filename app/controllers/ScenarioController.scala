@@ -25,15 +25,21 @@ import play.api.i18n.Messages
 import play.api.mvc.MessagesControllerComponents
 import services.SessionService
 import uk.gov.hmrc.auth.core.AuthConnector
+import views.Views
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class ScenarioController @Inject()(authAction: AuthAction,
                                    override val authConnector: AuthConnector,
-                                   ac:ApplicationConfig,sessionService: SessionService,implicit val config:GmpContext,
-                                   override val messagesControllerComponents: MessagesControllerComponents,sf:ScenarioForm,
-                                   implicit val executionContext: ExecutionContext,implicit val gmpSessionCache: GmpSessionCache
+                                   ac:ApplicationConfig,
+                                   sessionService: SessionService,
+                                   implicit val config:GmpContext,
+                                   override val messagesControllerComponents: MessagesControllerComponents,
+                                   sf:ScenarioForm,
+                                   implicit val executionContext: ExecutionContext,
+                                   implicit val gmpSessionCache: GmpSessionCache,
+                                   views: Views
                                   ) extends GmpPageFlow(authConnector,sessionService,config,messagesControllerComponents,ac) {
 
 
@@ -42,11 +48,11 @@ class ScenarioController @Inject()(authAction: AuthAction,
   def get = authAction.async {
       implicit request => sessionService.fetchGmpSession() map {
         case Some(session) => session match {
-          case _ if session.scon == "" => Ok(views.html.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/pension-details"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title")))
-          case _ if session.memberDetails.nino == "" || session.memberDetails.firstForename == "" || session.memberDetails.surname == "" => Ok(views.html.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/member-details"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title")))
-          case _ => Ok(views.html.scenario(scenarioForm))
+          case _ if session.scon == "" => Ok(views.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/pension-details"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title")))
+          case _ if session.memberDetails.nino == "" || session.memberDetails.firstForename == "" || session.memberDetails.surname == "" => Ok(views.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/member-details"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title")))
+          case _ => Ok(views.scenario(scenarioForm))
         }
-        case _ => Ok(views.html.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/dashboard"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title")))
+        case _ => Ok(views.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/dashboard"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title")))
       }      
   }
 
@@ -57,7 +63,7 @@ class ScenarioController @Inject()(authAction: AuthAction,
 
         scenarioForm.bindFromRequest().fold(
           formWithErrors => {
-            Future.successful(BadRequest(views.html.scenario(formWithErrors)))
+            Future.successful(BadRequest(views.scenario(formWithErrors)))
           }, calculationType => {
             sessionService.cacheScenario(calculationType.calcType.get) map {
               case Some(session) => nextPage("ScenarioController", session)

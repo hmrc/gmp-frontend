@@ -41,6 +41,7 @@ class AuthActionSpec extends PlaySpec with GuiceOneAppPerSuite with MockitoSugar
 
   implicit val timeout: Timeout = 5 seconds
   val mcc = app.injector.instanceOf[MessagesControllerComponents]
+  lazy val externalUrls = app.injector.instanceOf[ExternalUrls]
 
   "Auth Action" when {
     "the user is not logged in" must {
@@ -53,12 +54,12 @@ class AuthActionSpec extends PlaySpec with GuiceOneAppPerSuite with MockitoSugar
         when(mockAuthConnector.authorise(any(),any())(any(), any()))
           .thenReturn(Future.failed(new MissingBearerToken))
 
-        val authAction = new AuthAction(mockAuthConnector,app.configuration,mcc)
+        val authAction = new AuthAction(mockAuthConnector,app.configuration,mcc, externalUrls)
         val controller = new Harness(authAction)
 
         val result = controller.onPageLoad()(FakeRequest("", ""))
         status(result) mustBe SEE_OTHER
-        redirectLocation(result).get must include(ExternalUrls.signIn)
+        redirectLocation(result).get must include(externalUrls.signIn)
       }
     }
 
@@ -70,7 +71,7 @@ class AuthActionSpec extends PlaySpec with GuiceOneAppPerSuite with MockitoSugar
         when(mockAuthConnector.authorise(any(),any())(any(), any()))
           .thenReturn(Future.failed(new InsufficientConfidenceLevel))
 
-        val authAction = new AuthAction(mockAuthConnector,app.configuration,mcc)
+        val authAction = new AuthAction(mockAuthConnector,app.configuration,mcc,externalUrls)
         val controller = new Harness(authAction)
 
         val result = controller.onPageLoad()(FakeRequest("", ""))
@@ -86,7 +87,7 @@ class AuthActionSpec extends PlaySpec with GuiceOneAppPerSuite with MockitoSugar
         when(mockAuthConnector.authorise[Enrolments](any(), any())(any(), any()))
           .thenReturn(Future.failed(new InsufficientEnrolments))
 
-        val authAction = new AuthAction(mockAuthConnector, app.configuration,mcc)
+        val authAction = new AuthAction(mockAuthConnector, app.configuration,mcc,externalUrls)
         val controller = new Harness(authAction)
 
         val result = controller.onPageLoad()(FakeRequest("", ""))
@@ -106,7 +107,7 @@ class AuthActionSpec extends PlaySpec with GuiceOneAppPerSuite with MockitoSugar
         when(mockAuthConnector.authorise[Enrolments](any(), any())(any(), any()))
           .thenReturn(retrievalResult)
 
-        val authAction = new AuthAction(mockAuthConnector, app.configuration,mcc)
+        val authAction = new AuthAction(mockAuthConnector, app.configuration,mcc,externalUrls)
         val controller = new Harness(authAction)
 
         val result = controller.onPageLoad()(FakeRequest("", ""))
@@ -126,7 +127,7 @@ class AuthActionSpec extends PlaySpec with GuiceOneAppPerSuite with MockitoSugar
           when(mockAuthConnector.authorise[Enrolments](any(), any())(any(), any()))
             .thenReturn(retrievalResult)
 
-          val authAction = new AuthAction(mockAuthConnector, app.configuration,mcc)
+          val authAction = new AuthAction(mockAuthConnector, app.configuration,mcc,externalUrls)
           val controller = new Harness(authAction)
 
           val result = controller.onPageLoad()(FakeRequest("", ""))
@@ -155,7 +156,7 @@ class AuthActionSpec extends PlaySpec with GuiceOneAppPerSuite with MockitoSugar
         when(mockAuthConnector.authorise[Enrolments](any(), any())(any(), any()))
           .thenReturn(retrievalResult)
 
-        val authAction = new AuthAction(mockAuthConnector, app.configuration,mcc)
+        val authAction = new AuthAction(mockAuthConnector, app.configuration,mcc,externalUrls)
         val controller = new Harness(authAction)
 
         val result = controller.onPageLoad()(FakeRequest("", ""))
@@ -176,7 +177,7 @@ class AuthActionSpec extends PlaySpec with GuiceOneAppPerSuite with MockitoSugar
         when(mockAuthConnector.authorise[Enrolments](any(), any())(any(), any()))
           .thenReturn(retrievalResult)
 
-        val authAction = new AuthAction(mockAuthConnector, app.configuration,mcc)
+        val authAction = new AuthAction(mockAuthConnector, app.configuration,mcc,externalUrls)
         val controller = new Harness(authAction)
 
         val result = controller.onPageLoad()(FakeRequest("", ""))

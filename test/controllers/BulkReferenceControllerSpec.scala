@@ -37,6 +37,7 @@ import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.logging.SessionId
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
+import views.Views
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -54,10 +55,11 @@ class BulkReferenceControllerSpec extends PlaySpec  with MockitoSugar with Guice
   implicit val ac=app.injector.instanceOf[ApplicationConfig]
   implicit val gmpSessionCache=app.injector.instanceOf[GmpSessionCache]
   lazy val bulkReferenceForm = new BulkReferenceForm(mcc)
+  lazy val views = app.injector.instanceOf[Views]
 
 
   object TestBulkReferenceController extends BulkReferenceController(FakeAuthAction, mockAuthConnector, mockAuditConnector,mockSessionService,FakeGmpContext
-    ,bulkReferenceForm,mcc,ec,ac,gmpSessionCache) {
+    ,bulkReferenceForm,mcc,ec,ac,gmpSessionCache, views) {
 
   }
 

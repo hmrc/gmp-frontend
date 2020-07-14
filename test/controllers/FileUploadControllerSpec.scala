@@ -41,6 +41,7 @@ import akka.stream.Materializer
 import akka.util.ByteString
 import org.scalatest.concurrent.ScalaFutures
 import play.api.libs.streams.Accumulator
+import views.Views
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -55,7 +56,7 @@ class FileUploadControllerSpec extends PlaySpec with OneServerPerSuite with Mock
   implicit val messagesProvider=MessagesImpl(Lang("en"), messagesAPI)
   implicit val ac=app.injector.instanceOf[ApplicationConfig]
   implicit val gmpSessionCache=app.injector.instanceOf[GmpSessionCache]
-
+  lazy val views = app.injector.instanceOf[Views]
   val uploadDetails = UploadDetails(Instant.now, "sum", "csv", "name1")
   val callBackData = UpscanReadyCallback("ref1", "READY", new URL("http://localhost:9991/download1"), uploadDetails)
 
@@ -64,7 +65,7 @@ class FileUploadControllerSpec extends PlaySpec with OneServerPerSuite with Mock
 
   val fakeRequest = FakeRequest(method = "POST", uri = "", headers = FakeHeaders(Seq("Content-type" -> ("application/json"))), body = Json.toJson(callBackData))
 
-  object TestFileUploadController extends FileUploadController(FakeAuthAction, mockAuthConnector, mockSessionService, FakeGmpContext,upscanService,mcc,ac,ec,gmpSessionCache) {
+  object TestFileUploadController extends FileUploadController(FakeAuthAction, mockAuthConnector, mockSessionService, FakeGmpContext,upscanService,mcc,ac,ec,gmpSessionCache,views) {
 
  }
 

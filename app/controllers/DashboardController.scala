@@ -24,6 +24,7 @@ import play.api.Logger
 import play.api.mvc.MessagesControllerComponents
 import services.SessionService
 import uk.gov.hmrc.auth.core.AuthConnector
+import views.Views
 
 import scala.concurrent.ExecutionContext
 
@@ -33,7 +34,9 @@ class DashboardController @Inject()(authAction: AuthAction,
                                     gmpBulkConnector: GmpBulkConnector,ac:ApplicationConfig,
                                     sessionService: SessionService,implicit val config:GmpContext,
                                     messagesControllerComponents: MessagesControllerComponents,
-                                    implicit val executionContext: ExecutionContext,implicit val gmpSessionCache: GmpSessionCache) extends GmpPageFlow(authConnector,sessionService,config,messagesControllerComponents,ac) {
+                                    implicit val executionContext: ExecutionContext,
+                                    implicit val gmpSessionCache: GmpSessionCache,
+                                    views: Views) extends GmpPageFlow(authConnector,sessionService,config,messagesControllerComponents,ac) {
 
 
 
@@ -44,12 +47,12 @@ class DashboardController @Inject()(authAction: AuthAction,
 
         gmpBulkConnector.getPreviousBulkRequests(link).map {
           bulkPreviousRequests => {
-            Ok(views.html.dashboard(bulkPreviousRequests.sorted))
+            Ok(views.dashboard(bulkPreviousRequests.sorted))
           }
         }.recover {
           case f => {
             Logger.error(s"[DashboardController][getPreviousBulkRequests returned {error : ${f.getMessage}")
-            Ok(views.html.dashboard(Nil))
+            Ok(views.dashboard(Nil))
           }
         }
       }

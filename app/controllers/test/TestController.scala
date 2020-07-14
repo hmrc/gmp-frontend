@@ -24,14 +24,15 @@ import models.upscan.{ErrorDetails, UploadedFailed}
 import play.api.mvc.MessagesControllerComponents
 import services.SessionService
 import uk.gov.hmrc.auth.core.AuthConnector
-
+import views.Views
 import scala.concurrent.{ExecutionContext, Future}
 
 class TestController @Inject()( authAction: AuthAction,
                                               override val authConnector: AuthConnector,
                                               sessionService: SessionService,implicit val config:GmpContext,
                                               override val messagesControllerComponents: MessagesControllerComponents,ac:ApplicationConfig,
-                                              implicit val executionContext: ExecutionContext
+                                              implicit val executionContext: ExecutionContext,
+                                              views: Views
                                             ) extends GmpPageFlow(authConnector,sessionService,config,messagesControllerComponents,ac){
 
   def testError(code: String) = authAction.async {
@@ -41,9 +42,9 @@ class TestController @Inject()( authAction: AuthAction,
       val status3 = UploadedFailed("ref3", ErrorDetails("QUARANTINE", "Virus"))
 
       code match {
-        case "1" => Future.successful(Ok(views.html.upload_result(status1)))
-        case "2" => Future.successful(Ok(views.html.upload_result(status2)))
-        case _   => Future.successful(Ok(views.html.upload_result(status3)))
+        case "1" => Future.successful(Ok(views.uploadResult(status1)))
+        case "2" => Future.successful(Ok(views.uploadResult(status2)))
+        case _   => Future.successful(Ok(views.uploadResult(status3)))
       }
 
     }

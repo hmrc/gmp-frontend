@@ -34,6 +34,7 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.SessionService
 import uk.gov.hmrc.auth.core.AuthConnector
+import views.Views
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -51,10 +52,10 @@ class DateOfLeavingControllerSpec extends PlaySpec with GuiceOneServerPerSuite w
   implicit val ac=app.injector.instanceOf[ApplicationConfig]
   implicit val gmpSessionCache=app.injector.instanceOf[GmpSessionCache]
   lazy val dateOfLeavingForm = new DateOfLeavingForm(mcc)
+  lazy val views = app.injector.instanceOf[Views]
 
 
-
-  object TestDateOfLeavingController extends DateOfLeavingController(FakeAuthAction, mockAuthConnector, mockSessionService,ac,FakeGmpContext,dateOfLeavingForm,mcc,ec,gmpSessionCache) {
+  object TestDateOfLeavingController extends DateOfLeavingController(FakeAuthAction, mockAuthConnector, mockSessionService,ac,FakeGmpContext,dateOfLeavingForm,mcc,ec,gmpSessionCache,views) {
     override val context = FakeGmpContext
   }
 

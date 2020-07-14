@@ -14,7 +14,10 @@
  * limitations under the License.
  *@
 
-@import uk.gov.hmrc.play.views.html.{helpers => uiHelpers}
+@import views.ViewHelpers
+
+@this(main: views.html.main,
+      viewHelpers: ViewHelpers)
 
 @(title: String,
 pageScripts: Option[Html] = None,
@@ -29,7 +32,7 @@ dashboardLinkEnabled:Boolean = false,
 pageHeading: Option[String] = None,
 customHead: Option[Html] = None)(mainContent: Html)(implicit request: Request[_], context: config.GmpContext, messages: Messages, appConfig:config.ApplicationConfig)
 
-@getHelpForm = @{uiHelpers.reportAProblemLink(appConfig.reportAProblemPartialUrl, appConfig.reportAProblemNonJSUrl)}
+@getHelpForm = @{viewHelpers.reportAProblemLink(appConfig.reportAProblemPartialUrl, appConfig.reportAProblemNonJSUrl)}
 
 
 @linkElement = {
