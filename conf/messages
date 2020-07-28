@@ -408,3 +408,8 @@ gmp.download.description.failed = a CSV file of only the results where a GMP tot
 gmp.download.description.contributions = a contributions and earnings CSV file for all queries
 
 gmp.table.period = Period
+
+sessionTimeout.title = You are about to be signed out
+sessionTimeout.message = For security reasons, you will be signed out of this service in
+sessionTimeout.staySignedIn = Stay signed in
+sessionTimeout.signOut = Sign out
