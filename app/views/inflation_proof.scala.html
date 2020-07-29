@@ -35,7 +35,7 @@
 
     @includes.back_link(Messages("gmp.inflation_proof.question"))
 
-    @views.html.helpers.errorSummary(inflationProofForm)
+    @views.html.helpers.errorSummary(form = inflationProofForm, focusId = {if(!inflationProofForm.hasGlobalErrors && inflationProofForm.error("revaluate").isDefined) Some("revaluate-revaluation-date") else Some("revaluationDate_day")})
 
     <h1>@Messages("gmp.inflation_proof.question")</h1>
 
