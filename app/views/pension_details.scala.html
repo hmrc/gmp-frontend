@@ -24,11 +24,8 @@
 
 @implicitFormInstance = @{ Some(pensionDetailsForm) }
 
-@pageScripts = {
-    <script type="text/javascript" src='@controllers.routes.AssetsController.at("javascripts/pension-details.js")'></script>
-}
 
-@gmpMain(title = Messages("gmp.pension_details.header") + " - " + Messages("service.title") + " - " + Messages("gov.uk"), pageScripts = Some(pageScripts)) {
+@gmpMain(title = Messages("gmp.pension_details.header") + " - " + Messages("service.title") + " - " + Messages("gov.uk")) {
 
   @includes.back_link(Messages("gmp.bulk_reference.header"))
 
