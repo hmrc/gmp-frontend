@@ -24,7 +24,7 @@ $.timeoutDialog = function (options) {
         timeout: 900,
         countdown: 120,
         time: 'minutes',
-        title: 'You’re about to be signed out',
+        title: 'You are about to be signed out',
         message: 'For security reasons, you will be signed out of this service in',
         keep_alive_url: '/keep-alive',
         logout_url: '/sign-out',
