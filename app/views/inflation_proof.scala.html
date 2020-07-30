@@ -37,8 +37,6 @@
 
     @views.html.helpers.errorSummary(form = inflationProofForm, focusId = {if(!inflationProofForm.hasGlobalErrors && inflationProofForm.error("revaluate").isDefined) Some("revaluate-revaluation-date") else Some("revaluationDate_day")})
 
-    <h1>@Messages("gmp.inflation_proof.question")</h1>
-
         @viewHelpers.form(action = routes.InflationProofController.post) {
 
         <div class="form-field @if(inflationProofForm.hasErrors && !inflationProofForm.hasGlobalErrors) {form-field--error}">
@@ -52,7 +50,6 @@
                 '_fieldsetAttributes -> "class=inline",
                 '_fieldsetAttributesLegend -> "revaluate",
                 '_legend -> Messages("gmp.inflation_proof.question"),
-                '_legendClass -> "visuallyhidden",
                 '_labelAfter -> true,
                 '_labelClass -> "block-label",
                 '_groupClass -> "inline-block",

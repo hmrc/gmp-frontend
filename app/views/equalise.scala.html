@@ -28,10 +28,6 @@
 
       @views.html.helpers.errorSummary(equaliseForm, formHeaderKey = "gmp.equalise_header", focusId = Some("equalise-yes"))
 
-
-      <h1>@Messages("gmp.equalise_header")</h1>
-
-
       @viewHelpers.form(action = routes.EqualiseController.post) {
 
 
@@ -45,7 +41,6 @@
             ),
             '_fieldsetAttributesLegend -> "equalise",
             '_legend -> Messages("gmp.equalise_header"),
-            '_legendClass -> "visuallyhidden",
             '_labelAfter -> true,
             '_labelClass -> "block-label",
             '_groupClass -> "inline-block",

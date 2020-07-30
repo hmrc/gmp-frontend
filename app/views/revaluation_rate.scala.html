@@ -41,9 +41,6 @@
 
         @views.html.helpers.errorSummary(revaluationRateForm)
 
-          <h1>@heading</h1>
-
-
           @viewHelpers.form(action = routes.RevaluationRateController.post) {
             <div class="form-group @if(revaluationRateForm.hasErrors) {form-field--error}" id="rateType">
               @gmpRadioGroup(
@@ -72,7 +69,6 @@
                     }
                     case _ => '_legend -> Messages("gmp.revaluation_rate.header")
                   },
-                  '_legendClass -> "visuallyhidden",
                   '_labelAfter -> true,
                   '_labelClass -> "block-label",
                   '_groupClass -> "inline-block",

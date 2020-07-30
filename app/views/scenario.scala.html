@@ -31,8 +31,6 @@
 
     @views.html.helpers.errorSummary(calculationType, formHeaderKey = "gmp.scenarios.title", focusId = Some("calcType-payableage"))
 
-    <h1 id="calc-type">@Messages("gmp.scenarios.title")</h1>
-
       @viewHelpers.form(action = routes.ScenarioController.post) {
           <div class="form-field @if(!calculationType.errors.isEmpty) {form-field--error}">
               @gmpRadioGroup(
@@ -46,7 +44,6 @@
                 ),
                 '_fieldsetAttributesLegend -> "calcType",
                 '_legend -> Messages("gmp.scenarios.title"),
-                '_legendClass -> "visuallyhidden",
                 '_labelAfter -> true,
                 '_trackGA -> true,
                 '_formHeaderKey -> "gmp.scenarios.title"
