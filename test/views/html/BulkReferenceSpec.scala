@@ -40,9 +40,11 @@ class BulkReferenceSpec extends GmpViewSpec {
 
     "display an input field for text entry" in {
       doc.getElementById("email") must not be null
+      doc must haveInputLabelWithText("email", expectedText=s"${messages("gmp.email.address")}")
 
       doc.getElementById("reference") must not be null
-      }
+      doc must haveInputLabelWithText("reference", expectedText=s"${messages("gmp.reference.calcname")}")
+    }
 
   }
 

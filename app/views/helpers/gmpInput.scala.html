@@ -52,12 +52,12 @@
         @if(labelHighlight) {<strong>}
         @if(elements.args.contains('_label)) {@elements.label}
         @if(labelHighlight) {</strong>}
+        @if(elements.args.contains('_header)) {
+            <h1>@elements.args.get('_header)</h1>
+        }
         @if(elements.args.contains('_symbol)) {
             <span class="inline-fields">@elements.args.get('_symbol)</span>
         }
-        @if(elements.args.contains('_header)){
-        <h1>@elements.args.get('_header)</h1>
-    }
     </label>
     @if(elements.args.contains('_hintText)) {
         <span class="form-hint" id="@hintId">@elements.args.get('_hintText)</span>
