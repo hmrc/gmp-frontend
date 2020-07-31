@@ -32,16 +32,14 @@
   @views.html.helpers.errorSummary(pensionDetailsForm)
 
 
-  <h1>@Messages("gmp.pension_details.header")</h1>
-
   @viewHelpers.form(action = routes.PensionDetailsController.post) {
 
       <div id="scon-form-group">
           @gmpInput(pensionDetailsForm("scon"),
           '_id -> "scon",
           '_maxLength -> 9,
-          '_hintText -> Messages("gmp.scon.hint"))
-
+          '_hintText -> Messages("gmp.scon.hint"),
+          '_header -> Messages("gmp.pension_details.header"))
       </div>
 
       <p>@Messages("gmp.scon.message") <a data-journey-click='@Messages("gmp.ga-track.link.click"):@Messages("gmp.pension_details.header"):@Messages("gmp.contact.hmrc")'
