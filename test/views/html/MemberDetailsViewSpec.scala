@@ -35,7 +35,6 @@ class MemberDetailsViewSpec extends GmpViewSpec{
     behave like pageWithBackLink
 
     "have correct input labels" in {
-      doc must haveInputLabelWithText("nino", messages("gmp.nino") + " " + messages("gmp.nino.hint"))
       doc must haveInputLabelWithText("firstForename", messages("gmp.firstname"))
       doc must haveInputLabelWithText("surname", messages("gmp.lastname"))
     }
