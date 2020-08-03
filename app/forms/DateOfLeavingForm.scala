@@ -66,7 +66,7 @@ class DateOfLeavingForm  @Inject()(mcc: MessagesControllerComponents) {
     }
   })
 
-  val dateOfLeavingForm = Form(
+  def dateOfLeavingForm(mandatoryMessage: String) = Form(
     mapping(
       "leavingDate" -> mapping(
         "day" -> optional(text),
@@ -78,7 +78,7 @@ class DateOfLeavingForm  @Inject()(mcc: MessagesControllerComponents) {
 //        .verifying(Messages("gmp.error.month.invalid"), x => checkMonthRange(x.month))
 //        .verifying(Messages("gmp.error.year.invalid.format"), x => checkYearLength(x.year))
       ,
-      "leaving" -> optional(text).verifying(messages("gmp.error.reason.mandatory"), {
+      "leaving" -> optional(text).verifying(mandatoryMessage, {
         _.isDefined
       })
     )(Leaving.apply)(Leaving.unapply)
