@@ -80,6 +80,7 @@ class DateOfLeavingControllerSpec extends PlaySpec with GuiceOneServerPerSuite w
 
       "throw an exception when session not fetched" in {
 
+
           when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(None))
           val result = TestDateOfLeavingController.get(FakeRequest())
           contentAsString(result) must include (Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/dashboard"))
@@ -265,14 +266,12 @@ class DateOfLeavingControllerSpec extends PlaySpec with GuiceOneServerPerSuite w
         "redirect" in {
 
 
-          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
+          when(mockSessionService.cacheLeaving(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
 
           val leaving = Json.toJson(Leaving(GmpDate(Some("06"), Some("04"), Some("2016")), Some("Y")))
 
             val result = TestDateOfLeavingController.post()(FakeRequest().withJsonBody(leaving))
-          intercept[RuntimeException] {
             status(result) must equal(SEE_OTHER)
-          }
         }
 
         "throw exception when can't cache session" in {
@@ -289,48 +288,44 @@ class DateOfLeavingControllerSpec extends PlaySpec with GuiceOneServerPerSuite w
         }
 
         "redirect to revaluation when revaluation scenario is selected" in {
-          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession.copy(scenario = CalculationType.REVALUATION))))
+          when(mockSessionService.cacheLeaving(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession.copy(scenario = CalculationType.REVALUATION))))
           val validReason = Json.toJson(Leaving(baseValidDate.copy(day = Some("06"), month = Some("4"), year = Some("2016")), Some(Leaving.YES_AFTER)))
 
             val result = TestDateOfLeavingController.post()(FakeRequest().withJsonBody(validReason))
-          intercept[RuntimeException] {
             status(result) must equal(SEE_OTHER)
-          }
+            redirectLocation(result).get must include("/relevant-date")
         }
 
         "redirect to revaluation rate when spa and has left" in {
-          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(
+          when(mockSessionService.cacheLeaving(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(
             gmpSession.copy(scenario = CalculationType.SPA, leaving = Leaving(GmpDate(Some("06"), Some("4"), Some("2016")), leaving = Some(Leaving.YES_AFTER))))))
           val validReason = Json.toJson(Leaving(baseValidDate.copy(day = Some("06"), month = Some("4"), year = Some("2016")), Some(Leaving.YES_AFTER)))
 
             val result = TestDateOfLeavingController.post()(FakeRequest().withJsonBody(validReason))
-          intercept[RuntimeException] {
             status(result) must equal(SEE_OTHER)
-          }
-
+            redirectLocation(result).get must include("/revaluation-rate")
         }
 
         "redirect to equalisation when payable age and has not left" in {
-          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
+          when(mockSessionService.cacheLeaving(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession.copy(scenario = CalculationType.PAYABLE_AGE))))
           val validReason = Json.toJson(Leaving(baseValidDate.copy(day = None, month = None, year = None), Some(Leaving.YES_BEFORE)))
 
             val result = TestDateOfLeavingController.post()(FakeRequest().withJsonBody(validReason))
-          intercept[RuntimeException] {
             status(result) must equal(SEE_OTHER)
-          }
 
+            redirectLocation(result).get must include("/equalise")
 
         }
 
         "redirect to equalise when dol" in {
-          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
+          when(mockSessionService.cacheLeaving(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession.copy(leaving = Leaving(GmpDate(Some(""), Some(""), Some("")), leaving = None)))))
+
             val postData = Json.toJson(
               Leaving(baseValidDate.copy(day = Some("06"), month = Some("4"), year = Some("2016")), Some(Leaving.YES_AFTER))
             )
             val result = TestDateOfLeavingController.post(FakeRequest().withJsonBody(postData))
-          intercept[RuntimeException] {
             status(result) must equal(SEE_OTHER)
-          }
+            redirectLocation(result).get must include("/equalise")
         }
 
         "redirect to the revaluation rate page when survivor has left before 6/4/16" in {
