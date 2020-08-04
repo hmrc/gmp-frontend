@@ -45,6 +45,7 @@ class DateOfLeavingController @Inject()(authAction: AuthAction,
       case CalculationType.DOL => Messages("gmp.leaving.dol.question.mandatory")
       case CalculationType.SPA | CalculationType.PAYABLE_AGE | CalculationType.REVALUATION => Messages("gmp.other.dol.left.question.mandatory")
       case CalculationType.SURVIVOR => Messages("gmp.survivor.dol.question.mandatory")
+      case _ => Messages("gmp.leaving.dol.question.mandatory")
     }
     dlf.dateOfLeavingForm(mandatoryErrorMessage)
   }
