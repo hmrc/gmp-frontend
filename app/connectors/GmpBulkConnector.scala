@@ -23,7 +23,7 @@ import play.api.Mode
 import play.api.{Configuration, Environment, Logger}
 import uk.gov.hmrc.http._
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
-import uk.gov.hmrc.play.bootstrap.http.HttpClient
+import uk.gov.hmrc.http.HttpClient
 
 
 import scala.concurrent.ExecutionContext.Implicits.global

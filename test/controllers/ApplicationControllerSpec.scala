@@ -24,8 +24,9 @@ import org.mockito.Matchers._
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.concurrent.ScalaFutures
-import org.scalatest.mockito.MockitoSugar
-import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
+import org.scalatestplus.mockito.MockitoSugar
+import org.scalatestplus.play.PlaySpec
+import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 import play.api.mvc.MessagesControllerComponents
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -40,7 +41,7 @@ import scala.concurrent.ExecutionContext
 
 @Singleton
 class ApplicationControllerSpec extends PlaySpec
-  with OneServerPerSuite
+  with GuiceOneServerPerSuite
   with BeforeAndAfterEach
   with ScalaFutures
   with MockitoSugar

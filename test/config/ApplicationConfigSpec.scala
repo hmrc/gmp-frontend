@@ -16,9 +16,11 @@
 
 package config
 
-import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
+import org.scalatestplus.play.PlaySpec
+import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 
-class ApplicationConfigSpec extends PlaySpec with OneServerPerSuite{
+
+class ApplicationConfigSpec extends PlaySpec with GuiceOneServerPerSuite{
 
   implicit val ac=app.injector.instanceOf[ApplicationConfig]
 

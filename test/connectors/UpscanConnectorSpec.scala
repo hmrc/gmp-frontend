@@ -17,8 +17,8 @@
 package connectors
 
 import models.upscan.{PreparedUpload, Reference, UploadForm, UpscanInitiateRequest}
-import org.scalatest.mockito.MockitoSugar
-import org.scalatestplus.play.OneAppPerSuite
+import org.scalatestplus.mockito.MockitoSugar
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
 import play.api.inject.guice.GuiceApplicationBuilder
 import uk.gov.hmrc.http.{BadRequestException, HeaderCarrier, NotFoundException, Upstream5xxResponse}
@@ -29,7 +29,7 @@ import play.api.http.Status._
 import play.api.libs.json.Json
 
 
-class UpscanConnectorSpec extends UnitSpec with OneAppPerSuite with MockitoSugar with WireMockHelper {
+class UpscanConnectorSpec extends UnitSpec with GuiceOneAppPerSuite with MockitoSugar with WireMockHelper {
 
   "getUpscanFormData" should {
     "return a UpscanInitiateResponse" when {

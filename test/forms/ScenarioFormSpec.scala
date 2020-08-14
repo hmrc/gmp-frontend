@@ -18,14 +18,15 @@ package forms
 
 import forms.ScenarioForm
 import models.CalculationType
-import org.scalatest.mockito.MockitoSugar
-import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
+import org.scalatestplus.mockito.MockitoSugar
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import org.scalatestplus.play.PlaySpec
 import play.api.data.FormError
 import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl}
 import play.api.libs.json.Json
 import play.api.mvc.MessagesControllerComponents
 
-class ScenarioFormSpec extends PlaySpec with OneAppPerSuite with MockitoSugar {
+class ScenarioFormSpec extends PlaySpec with GuiceOneAppPerSuite with MockitoSugar {
 
   implicit lazy val messagesAPI=app.injector.instanceOf[MessagesApi]
   implicit lazy val messagesProvider=MessagesImpl(Lang("en"), messagesAPI)
