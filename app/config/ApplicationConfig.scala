@@ -54,6 +54,9 @@ class ApplicationConfig @Inject()(
   val upscanRedirectBase: String = runModeConfiguration.get[String]("microservice.services.upscan.redirect-base")
 
   val gtmContainerId = loadConfig("googleTagManager.containerId")
+
+  lazy val timeout = servicesConfig.getInt("timeout.seconds")
+  lazy val timeoutCountdown = servicesConfig.getInt("timeout.countdown")
 }
 
 

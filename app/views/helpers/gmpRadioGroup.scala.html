@@ -39,13 +39,13 @@
 
     @commonHelper(field,errors)
 
-    <legend aria-hidden="true"
+    <legend
       @if(elements.args.get('_legendClass).isDefined) {
         class="@elements.args.get('_legendClass)"
       }
       @if(elements.args.get('_fieldsetAttributesLegend).isDefined) {
         id="@elements.args.get('_fieldsetAttributesLegend)"
-      }>@elements.args.get('_legend)</legend>
+      }><h1>@elements.args.get('_legend)</h1></legend>
 
     @if(elements.args.get('_fieldsetQuestion).isDefined) {
       <details role="group">

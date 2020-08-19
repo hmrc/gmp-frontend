@@ -55,8 +55,11 @@ gmp.pension_details.header = Enter Scheme Contracted Out Number (SCON)
 gmp.revaluation.question = When would you like the calculation made to?
 gmp.inflation_proof.question = Would you like a calculation for a date after the date of death?
 gmp.leaving.dol.question = Did the member leave the scheme before 6 April 2016?
+gmp.leaving.dol.question.mandatory=Select whether the member left the scheme before 6 April 2016
 gmp.other.dol.left.question = Has the member left the scheme?
+gmp.other.dol.left.question.mandatory = Select whether the member has left the scheme
 gmp.survivor.dol.question = Had the member already left the scheme at date of death?
+gmp.survivor.dol.question.mandatory = Select whether the member had already left the scheme at date of death
 gmp.fileupload.header = Upload your file
 gmp.bulk.results.banner = Calculation ready
 gmp.bulk_request_received.banner = Your request has been received
@@ -202,13 +205,13 @@ gmp.revaluation_rate = Revaluation rate
 gmp.bulk.results = Results
 gmp.bulk.results.csv = CSV
 gmp.bulk.results.reference = Reference {0}
-gmp.bulk.failure.antivirus = The selected file contains a virus. Create the file again and <a href="/guaranteed-minimum-pension/new-bulk-calculation" id="bulk-back-link">upload it</a>.
+gmp.bulk.failure.antivirus = The selected file contains a virus. <a href="/guaranteed-minimum-pension/new-bulk-calculation" id="bulk-back-link">Create the file again and upload it</a>.
 gmp.bulk.failure.missing = You did not select a file to upload. Please go <a href="/guaranteed-minimum-pension/new-bulk-calculation">back</a>, browse for a file and try again.
 gmp.bulk.failure.generic = Something went wrong with uploading your file. <br/>There is probably a problem with the system so <a href="/guaranteed-minimum-pension/new-bulk-calculation">try again in a few moments</a>.
 gmp.bulk.failure.duplicate_upload = <span class="lede">We think you have already uploaded this file.</span><br/><br/>We recommend you wait for the results to be ready and do not duplicate file uploads. If you want to process the same file again, perhaps to give it a different name, <a href="/guaranteed-minimum-pension/upload-csv">resubmit it</a>.
-gmp.bulk.failure.too_large = You should include the details of no more than 25,000 members in each file. Try splitting the calculation requests across 2 or more files and <a href="/guaranteed-minimum-pension/upload-csv">upload them</a> separately.
-gmp.bulk.failure.wrong_type = Either no file was selected OR it is the wrong type. Select a file in CSV format and <a href="/guaranteed-minimum-pension/new-bulk-calculation" id="bulk-back-link">upload it</a>.
-gmp.bulk.failure.rejected = Something went wrong with uploading your file. Please check it for any obvious faults, or try to <a href="/guaranteed-minimum-pension/new-bulk-calculation" id="bulk-back-link">upload it</a> again in a few moments.
+gmp.bulk.failure.too_large = You should include the details of no more than 25,000 members in each file. Try splitting the calculation requests across 2 or more files and <a href="/guaranteed-minimum-pension/upload-csv">upload the separate files with less than 25,000 members in each.</a>
+gmp.bulk.failure.wrong_type = No file was selected. <a href="/guaranteed-minimum-pension/new-bulk-calculation" id="bulk-back-link">Select a file in CSV format and upload it</a>.
+gmp.bulk.failure.rejected = Something went wrong with uploading your file. Please check it for any obvious faults, or try to <a href="/guaranteed-minimum-pension/new-bulk-calculation" id="bulk-back-link">select a file in CSV format and upload it</a> again in a few moments.
 gmp.back_to_dashboard = Back to the GMP checker
 gmp.bulk.successful = Your file has been successfully uploaded.
 
@@ -392,8 +395,9 @@ gmp.unauthorised.message = You are not authorised to view this page
 ############################################################################
 urbanner.message.text = Help improve digital services by joining the HMRC user panel
 urbanner.message.ga.text = homepage UR banner
-urbanner.message.open.new.window = (opens in new window)
+urbanner.message.open.new.window = (opens in new tab)
 urbanner.message.reject = No thanks
+urbanner.message.reject.description = I do not want to join the HMRC user panel
 
 gmp.ga-track.link.click=link - click
 gmp.ga-track.button.click=button - click
@@ -408,3 +412,8 @@ gmp.download.description.failed = a CSV file of only the results where a GMP tot
 gmp.download.description.contributions = a contributions and earnings CSV file for all queries
 
 gmp.table.period = Period
+
+sessionTimeout.title = You are about to be signed out
+sessionTimeout.message = For security reasons, you will be signed out of this service in
+sessionTimeout.staySignedIn = Stay signed in
+sessionTimeout.signOut = Sign out

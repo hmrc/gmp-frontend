@@ -313,6 +313,12 @@ Error styling to bring in line with GDS
 .form-field--error .form-control {
     border: 4px solid #d4351c;
 }
+
+.form-field--error .form-control:focus {
+    border-color:#0b0c0c;
+    -webkit-box-shadow:none;
+    box-shadow:none}
+
 .error-summary {
     border: 4px solid #d4351c;
     margin-top: 15px;
