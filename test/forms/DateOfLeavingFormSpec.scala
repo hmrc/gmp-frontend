@@ -32,7 +32,7 @@ class DateOfLeavingFormSpec extends PlaySpec with GuiceOneAppPerSuite with Mocki
   implicit lazy val messagesAPI=app.injector.instanceOf[MessagesApi]
   implicit lazy val messagesProvider=MessagesImpl(Lang("en"), messagesAPI)
   lazy val mcc = app.injector.instanceOf[MessagesControllerComponents]
-  lazy val dateOfLeavingForm = new DateOfLeavingForm(mcc).dateOfLeavingForm
+  lazy val dateOfLeavingForm = new DateOfLeavingForm(mcc).dateOfLeavingForm("")
 
   DateTimeUtils.setCurrentMillisFixed(new DateTime(2016,1,1,1,1).toDate.getTime)
   val leavingDate = GmpDate(Some("06"), Some("04"), Some("2016"))

@@ -32,7 +32,7 @@ abstract class DateOfLeavingSpec extends GmpViewSpec  {
   override def view: Html = new views.html.dateofleaving(gmpMain, viewHelpers)(dateOfLeavingForm, scenario)
    val mcc = app.injector.instanceOf[MessagesControllerComponents]
 
-   val dateOfLeavingForm = new DateOfLeavingForm(mcc).dateOfLeavingForm
+   val dateOfLeavingForm = new DateOfLeavingForm(mcc).dateOfLeavingForm("")
 
 
 

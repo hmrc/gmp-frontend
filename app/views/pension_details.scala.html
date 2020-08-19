@@ -24,18 +24,13 @@
 
 @implicitFormInstance = @{ Some(pensionDetailsForm) }
 
-@pageScripts = {
-    <script type="text/javascript" src='@controllers.routes.AssetsController.at("javascripts/pension-details.js")'></script>
-}
 
-@gmpMain(title = Messages("gmp.pension_details.header") + " - " + Messages("service.title") + " - " + Messages("gov.uk"), pageScripts = Some(pageScripts)) {
+@gmpMain(title = Messages("gmp.pension_details.header") + " - " + Messages("service.title") + " - " + Messages("gov.uk")) {
 
   @includes.back_link(Messages("gmp.bulk_reference.header"))
 
   @views.html.helpers.errorSummary(pensionDetailsForm)
 
-
-  <h1>@Messages("gmp.pension_details.header")</h1>
 
   @viewHelpers.form(action = routes.PensionDetailsController.post) {
 
@@ -43,8 +38,8 @@
           @gmpInput(pensionDetailsForm("scon"),
           '_id -> "scon",
           '_maxLength -> 9,
-          '_hintText -> Messages("gmp.scon.hint"))
-
+          '_hintText -> Messages("gmp.scon.hint"),
+          '_header -> Messages("gmp.pension_details.header"))
       </div>
 
       <p>@Messages("gmp.scon.message") <a data-journey-click='@Messages("gmp.ga-track.link.click"):@Messages("gmp.pension_details.header"):@Messages("gmp.contact.hmrc")'

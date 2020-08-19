@@ -45,8 +45,6 @@
 
         @views.html.helpers.errorSummary(dateOfLeavingForm, formHeaderKey=heading.toString)
 
-          <h1>@heading</h1>
-
             @viewHelpers.form(action = routes.DateOfLeavingController.post) {
 
             <div class="form-field @if(dateOfLeavingForm.hasErrors && !dateOfLeavingForm.hasGlobalErrors) {form-field--error}" id="leaving">
@@ -60,7 +58,6 @@
                             ),
                             '_fieldsetAttributes -> "class=inline",
                             '_legend -> Messages("gmp.leaving.dol.question"),
-                            '_legendClass -> "visuallyhidden",
                             '_labelAfter -> true,
                             '_labelClass -> "block-label",
                             '_groupClass -> "inline-block",
@@ -86,7 +83,6 @@
                             case CalculationType.SURVIVOR => '_legend -> Messages("gmp.survivor.dol.question")
                             case _ => '_legend -> Messages("gmp.other.dol.left.question")
                         },
-                        '_legendClass -> "visuallyhidden",
                         '_labelAfter -> true,
                         '_labelClass -> "block-label",
                         '_groupClass -> "inline-block",
@@ -104,8 +100,8 @@
 
                         <legend id="termination-date">
                             <span class="form-label-bold" id="date_header">@Messages("gmp.date.header_text")</span>
-                            <span class="form-hint" id="date_hint">@Messages("gmp.date.example")</span>
                         </legend>
+                        <span class="form-hint" id="date_hint">@Messages("gmp.date.example")</span>
 
                         <div class="form-date">
 
