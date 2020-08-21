@@ -20,7 +20,8 @@ import config.ApplicationConfig
 import controllers.auth.AuthAction
 import models._
 import org.scalatest.mockito.MockitoSugar
-import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
+import org.scalatestplus.play.PlaySpec
+import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 import play.api.i18n.{Lang, MessagesApi, MessagesImpl, MessagesProvider}
 import play.api.mvc.MessagesControllerComponents
 import play.api.test.Helpers._
@@ -30,7 +31,7 @@ import uk.gov.hmrc.auth.core.AuthConnector
 import scala.concurrent.ExecutionContext
 
 
-class GmpControllerSpec extends PlaySpec with OneServerPerSuite with MockitoSugar {
+class GmpControllerSpec extends PlaySpec with GuiceOneServerPerSuite with MockitoSugar {
 
   val mockAuthConnector = mock[AuthConnector]
   val mockSessionService = mock[SessionService]

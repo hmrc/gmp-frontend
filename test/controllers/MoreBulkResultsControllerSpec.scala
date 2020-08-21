@@ -23,8 +23,9 @@ import models._
 import org.joda.time.LocalDateTime
 import org.mockito.Matchers
 import org.mockito.Mockito._
-import org.scalatest.mockito.MockitoSugar
-import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
+import org.scalatestplus.mockito.MockitoSugar
+import org.scalatestplus.play.guice.GuiceOneServerPerSuite
+import org.scalatestplus.play.PlaySpec
 import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl, MessagesProvider}
 import play.api.i18n.Messages.Implicits._
 import play.api.mvc.MessagesControllerComponents
@@ -36,7 +37,7 @@ import views.Views
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class MoreBulkResultsControllerSpec extends PlaySpec with OneServerPerSuite with MockitoSugar {
+class MoreBulkResultsControllerSpec extends PlaySpec with GuiceOneServerPerSuite with MockitoSugar {
 
   val mockAuthConnector = mock[AuthConnector]
   val mockSessionService = mock[SessionService]

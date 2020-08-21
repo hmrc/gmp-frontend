@@ -20,19 +20,20 @@ import com.google.inject.Inject
 import org.mockito.Matchers.{eq => meq, _}
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
-import org.scalatest.mockito.MockitoSugar
-import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
-import play.api.Mode.Mode
+import org.scalatestplus.mockito.MockitoSugar
+import org.scalatestplus.play.PlaySpec
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import play.api.Mode
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.Helpers._
 import play.api.{Application, Configuration, Environment, Play}
 import uk.gov.hmrc.http.{BadGatewayException, HeaderCarrier, HttpGet, HttpResponse}
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
-import uk.gov.hmrc.play.bootstrap.http.HttpClient
+import uk.gov.hmrc.http.HttpClient
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class ContactFrontendConnectorSpec @Inject()(servicesConfig: ServicesConfig) extends PlaySpec with OneAppPerSuite with MockitoSugar with BeforeAndAfterEach{
+class ContactFrontendConnectorSpec @Inject()(servicesConfig: ServicesConfig) extends PlaySpec with GuiceOneAppPerSuite with MockitoSugar with BeforeAndAfterEach{
   implicit override lazy val app: Application = new GuiceApplicationBuilder()
   .configure(Map("Test.microservice.assets.url" -> "test-url", "Test.microservice.assets.version" -> "test-version"))
   .build

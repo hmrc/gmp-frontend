@@ -27,8 +27,9 @@ import models.upscan.UploadedSuccessfully
 import org.joda.time.{LocalDate, LocalDateTime}
 import org.mockito.Matchers
 import org.mockito.Mockito._
-import org.scalatest.mockito.MockitoSugar
-import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
+import org.scalatestplus.mockito.MockitoSugar
+import org.scalatestplus.play.PlaySpec
+import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl}
 import play.api.mvc.MessagesControllerComponents
 import play.api.test.FakeRequest
@@ -42,7 +43,7 @@ import views.Views
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class BulkRequestReceivedControllerSpec extends PlaySpec with OneServerPerSuite with MockitoSugar {
+class BulkRequestReceivedControllerSpec extends PlaySpec with GuiceOneServerPerSuite with MockitoSugar {
   val mockAuthConnector = mock[AuthConnector]
   val mockSessionService = mock[SessionService]
   val mockBulkRequestCreationService = mock[BulkRequestCreationService]

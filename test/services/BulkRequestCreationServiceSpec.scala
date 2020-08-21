@@ -26,8 +26,9 @@ import models.upscan.{UploadDetails, UploadedSuccessfully, UpscanReadyCallback}
 import models.{BulkCalculationRequest, BulkCalculationRequestLine, CalculationRequestLine}
 import org.joda.time.{LocalDate, LocalDateTime}
 import org.scalatest.concurrent.ScalaFutures
-import org.scalatest.mockito.MockitoSugar
-import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
+import org.scalatestplus.mockito.MockitoSugar
+import org.scalatestplus.play.guice.GuiceOneServerPerSuite
+import org.scalatestplus.play.PlaySpec
 import play.api.Environment
 import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl}
 import play.api.mvc.MessagesControllerComponents
@@ -35,7 +36,7 @@ import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
 import scala.io.Source
 
-class BulkRequestCreationServiceSpec extends PlaySpec with ScalaFutures with MockitoSugar with OneServerPerSuite {
+class BulkRequestCreationServiceSpec extends PlaySpec with ScalaFutures with MockitoSugar with GuiceOneServerPerSuite {
   implicit val messages=app.injector.instanceOf[MessagesControllerComponents]
   implicit val servicesConfig=app.injector.instanceOf[ServicesConfig]
   implicit val messagesAPI=app.injector.instanceOf[MessagesApi]

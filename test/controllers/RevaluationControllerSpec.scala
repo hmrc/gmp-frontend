@@ -22,8 +22,9 @@ import forms.{RevaluationForm, RevaluationRateForm}
 import models._
 import org.mockito.Matchers
 import org.mockito.Mockito._
-import org.scalatest.mockito.MockitoSugar
-import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
+import org.scalatestplus.mockito.MockitoSugar
+import org.scalatestplus.play.guice.GuiceOneServerPerSuite
+import org.scalatestplus.play.PlaySpec
 import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl}
 import play.api.libs.json.Json
 import play.api.mvc.MessagesControllerComponents
@@ -35,7 +36,7 @@ import views.Views
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class RevaluationControllerSpec extends PlaySpec with OneServerPerSuite with MockitoSugar {
+class RevaluationControllerSpec extends PlaySpec with GuiceOneServerPerSuite with MockitoSugar {
 
   val mockAuthConnector = mock[AuthConnector]
   val mockSessionService = mock[SessionService]

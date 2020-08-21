@@ -18,13 +18,14 @@ package models
 
 import helpers.RandomNino
 import org.joda.time.LocalDate
-import org.scalatest.mockito.MockitoSugar
-import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
+import org.scalatestplus.mockito.MockitoSugar
+import org.scalatestplus.play.guice.GuiceOneServerPerSuite
+import org.scalatestplus.play.PlaySpec
 import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl, MessagesProvider}
 import play.api.i18n.Messages.Implicits._
 import views.helpers.GmpDateFormatter._
 
-class CalculationResponseSpec extends PlaySpec with MockitoSugar with OneServerPerSuite {
+class CalculationResponseSpec extends PlaySpec with MockitoSugar with GuiceOneServerPerSuite {
 
   implicit val messagesAPI=app.injector.instanceOf[MessagesApi]
   implicit val messagesProvider=MessagesImpl(Lang("en"), messagesAPI)

@@ -24,7 +24,7 @@ import play.api.Configuration
 import play.api.http.HeaderNames
 import uk.gov.hmrc.http.{HeaderCarrier, HttpPost}
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
-import uk.gov.hmrc.play.bootstrap.http.HttpClient
+import uk.gov.hmrc.http.HttpClient
 
 import scala.concurrent.{ExecutionContext, Future}
 

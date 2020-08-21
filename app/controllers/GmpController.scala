@@ -24,7 +24,7 @@ import play.api.i18n.{Messages, MessagesImpl}
 import play.api.mvc.{MessagesControllerComponents, Result}
 import services.SessionService
 import uk.gov.hmrc.auth.core.AuthConnector
-import uk.gov.hmrc.play.bootstrap.controller.FrontendController
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import uk.gov.hmrc.time.TaxYear
 import scala.concurrent.ExecutionContext
 
