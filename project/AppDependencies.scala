@@ -15,7 +15,7 @@ object AppDependencies {
     "uk.gov.hmrc" %% "bulk-entity-streaming"       % "1.0.0",
     "uk.gov.hmrc" %% "auth-client"                 % "3.0.0-play-26",
     "uk.gov.hmrc" %% "govuk-template"              % "5.55.0-play-26",
-    "uk.gov.hmrc" %% "play-ui"                     % "8.9.0-play-26",
+    "uk.gov.hmrc" %% "play-ui"                     % "8.11.0-play-26",
     "com.typesafe.play" %% "play-json-joda"        % "2.7.4",
     "com.typesafe.play" %% "play-iteratees"        % "2.6.1"
   )
