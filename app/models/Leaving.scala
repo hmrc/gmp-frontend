@@ -23,6 +23,7 @@ case class Leaving(leavingDate: GmpDate, leaving: Option[String])
 object Leaving {
   implicit val formats = Json.format[Leaving]
   val YES_BEFORE = "yes-before"
+  val YES_BEFORE_REVALUATION = "yes-before-revaluation"
   val YES_AFTER = "yes-after"
   val NO = "no"
 }

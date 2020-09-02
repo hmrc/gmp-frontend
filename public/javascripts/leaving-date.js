@@ -22,20 +22,6 @@ $(document).ready(function() {
     $("#leaving-no").removeAttr("checked");
   }
 
-  if ($('#errors').length && (
-                              ($('#errors').text().indexOf('Enter a leaving date after 5 April 2016') > -1) ||
-                              ($('#errors').text().indexOf('Enter a leaving date before 1 January 2100') > -1) ||
-                              ($('#errors').text().indexOf('Enter a real leaving date') > -1) ||
-                              ($('#errors').text().indexOf('Enter a leaving date') > -1) ||
-                              ($('#errors').text().indexOf('Enter a valid date') > -1) ||
-                              ($('#errors').text().indexOf('Enter a day between 1 and 31') > -1) ||
-                              ($('#errors').text().indexOf('Enter a month between 1 and 12') > -1) ||
-                              ($('#errors').text().indexOf('Enter a date using numbers only') > -1) ||
-                              ($('#errors').text().indexOf('Enter the year in full (4 numbers)') > -1)
-                           )){
-      $("#leaving-yes-after").click();
-  }
-
   $('#leaving-no').click(function(){
     $('#leavingDate_day').val('');
     $('#leavingDate_month').val('');
