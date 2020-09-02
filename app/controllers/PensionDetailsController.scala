@@ -28,25 +28,31 @@ import play.api.i18n.Messages
 import play.api.mvc.MessagesControllerComponents
 import services.SessionService
 import uk.gov.hmrc.auth.core.AuthConnector
+import views.Views
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class PensionDetailsController @Inject()(authAction: AuthAction,
                                          override val authConnector: AuthConnector,
-                                         gmpConnector: GmpConnector,sessionService: SessionService,
+                                         gmpConnector: GmpConnector,
+                                         sessionService: SessionService,
                                          implicit val config:GmpContext,
-                                         metrics: ApplicationMetrics,ac:ApplicationConfig,pdf:PensionDetailsForm,
+                                         metrics: ApplicationMetrics,
+                                         ac:ApplicationConfig,
+                                         pdf:PensionDetailsForm,
                                          override val messagesControllerComponents: MessagesControllerComponents,
-                                         implicit val executionContext: ExecutionContext,implicit val gmpSessionCache: GmpSessionCache) extends GmpPageFlow(authConnector,sessionService,config,messagesControllerComponents,ac) {
+                                         implicit val executionContext: ExecutionContext,
+                                         implicit val gmpSessionCache: GmpSessionCache,
+                                         views: Views) extends GmpPageFlow(authConnector,sessionService,config,messagesControllerComponents,ac) {
 
   lazy val pensionDetailsForm=pdf.pensionDetailsForm
 
   def get = authAction.async {
       implicit request => {
         sessionService.fetchPensionDetails.map {
-          case Some(scon) => Ok(views.html.pension_details(pensionDetailsForm.fill(PensionDetails(scon))))
-          case _ => Ok(views.html.pension_details(pensionDetailsForm))
+          case Some(scon) => Ok(views.pensionDetails(pensionDetailsForm.fill(PensionDetails(scon))))
+          case _ => Ok(views.pensionDetails(pensionDetailsForm))
         }
       }
   }
@@ -58,7 +64,7 @@ class PensionDetailsController @Inject()(authAction: AuthAction,
 
         pensionDetailsForm.bindFromRequest().fold(
           formWithErrors => {
-            Future.successful(BadRequest(views.html.pension_details(formWithErrors)))
+            Future.successful(BadRequest(views.pensionDetails(formWithErrors)))
           },
           pensionDetails => {
 
@@ -74,7 +80,7 @@ class PensionDetailsController @Inject()(authAction: AuthAction,
                 }
                 else {
                   metrics.countNpsSconInvalid()
-                  Future.successful(BadRequest(views.html.pension_details(pensionDetailsForm.fill(
+                  Future.successful(BadRequest(views.pensionDetails(pensionDetailsForm.fill(
                     PensionDetails(pensionDetails.scon)).withError("scon", Messages("gmp.error.scon.nps_invalid")))))
                 }
 

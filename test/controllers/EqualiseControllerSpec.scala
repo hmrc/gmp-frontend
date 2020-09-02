@@ -22,9 +22,9 @@ import forms.EqualiseForm
 import models._
 import org.mockito.Matchers
 import org.mockito.Mockito._
-import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
-import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
+import org.scalatestplus.play.PlaySpec
 import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl}
 import play.api.libs.json.Json
 import play.api.mvc.MessagesControllerComponents
@@ -32,6 +32,7 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.SessionService
 import uk.gov.hmrc.auth.core.AuthConnector
+import views.Views
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -47,9 +48,9 @@ class EqualiseControllerSpec extends PlaySpec with GuiceOneServerPerSuite with M
   implicit val ac=app.injector.instanceOf[ApplicationConfig]
   implicit val gmpSessionCache=app.injector.instanceOf[GmpSessionCache]
   lazy val equaliseForm = new EqualiseForm(mcc)
+  lazy val views = app.injector.instanceOf[Views]
 
-
-  object TestEqualiseController extends EqualiseController(FakeAuthAction, mockAuthConnector, mockSessionService,FakeGmpContext,equaliseForm,mcc,ac,ec,gmpSessionCache) {
+  object TestEqualiseController extends EqualiseController(FakeAuthAction, mockAuthConnector, mockSessionService,FakeGmpContext,equaliseForm,mcc,ac,ec,gmpSessionCache,views) {
     }
 
   "EqualiseController GET" must {

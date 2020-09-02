@@ -15,14 +15,14 @@
  *@
 
 @import config.ApplicationConfig
-@(previousBulkCalculations: List[BulkPreviousRequest])(implicit request: Request[_], context: config.GmpContext,messages: Messages,ac:ApplicationConfig)
-
-@import uk.gov.hmrc.play.views.html._
-@import uk.gov.hmrc.play.views.html.helpers._
 @import views.html.helpers._
 @import org.joda.time.{Days, LocalDateTime, LocalDate}
 
-@gmp_main(title = Messages("gmp.more_bulk_results.header") + " - " + Messages("service.title") + " - " + Messages("gov.uk")) {
+@this(gmpMain: gmp_main)
+
+@(previousBulkCalculations: List[BulkPreviousRequest])(implicit request: Request[_], context: config.GmpContext,messages: Messages,ac:ApplicationConfig)
+
+@gmpMain(title = Messages("gmp.more_bulk_results.header") + " - " + Messages("service.title") + " - " + Messages("gov.uk")) {
 
 </br>
     @includes.back_link(Messages("gmp.more_bulk_results.header"))
@@ -30,14 +30,13 @@
 
 
     <table id="recent-calculations-table">
+        <caption class="hidden" id="recent-calcualtions-caption">@Messages("gmp.caption")</caption>
 
       <colgroup>
-        <col width="2%">
-        <col width="2%">
-        <col width="2%">
+        <col class="col-width-2">
+        <col class="col-width-2">
+        <col class="col-width-2">
       </colgroup>
-
-      <caption class="hidden" id="recent-calcualtions-caption">@Messages("gmp.caption")</caption>
 
       <thead>
         <tr id="table-row">

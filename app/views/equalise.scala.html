@@ -15,23 +15,20 @@
  *@
 
 @import config.ApplicationConfig
+@import views.html.helpers._
+@import views.ViewHelpers
+
+@this(gmpMain: gmp_main, viewHelpers: ViewHelpers)
+
 @(equaliseForm: Form[models.Equalise])(implicit request: Request[_], context: config.GmpContext, messages: Messages,applicationConfig: ApplicationConfig)
 
-@import uk.gov.hmrc.play.views.html._
-@import uk.gov.hmrc.play.views.html.helpers._
-@import views.html.helpers._
-
-@gmp_main(title = Messages("gmp.equalise_header")+ " - " + Messages("service.title") + " - " + Messages("gov.uk")) {
+@gmpMain(title = Messages("gmp.equalise_header")+ " - " + Messages("service.title") + " - " + Messages("gov.uk")) {
 
       @includes.back_link(Messages("gmp.equalise_header"))
 
-      @views.html.helpers.errorSummary(equaliseForm, formHeaderKey = "gmp.equalise_header")
+      @views.html.helpers.errorSummary(equaliseForm, formHeaderKey = "gmp.equalise_header", focusId = Some("equalise-yes"))
 
-
-      <h1>@Messages("gmp.equalise_header")</h1>
-
-
-      @form(action = routes.EqualiseController.post) {
+      @viewHelpers.form(action = routes.EqualiseController.post) {
 
 
         <div class="form-field inline @if(equaliseForm.hasErrors) {form-field--error}">
@@ -44,7 +41,6 @@
             ),
             '_fieldsetAttributesLegend -> "equalise",
             '_legend -> Messages("gmp.equalise_header"),
-            '_legendClass -> "visuallyhidden",
             '_labelAfter -> true,
             '_labelClass -> "block-label",
             '_groupClass -> "inline-block",

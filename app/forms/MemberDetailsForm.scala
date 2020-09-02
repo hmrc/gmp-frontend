@@ -59,8 +59,6 @@ class MemberDetailsForm @Inject()(mcc: MessagesControllerComponents) {
 
   def form() = Form(
     mapping(
-      "nino" -> text
-        .verifying(ninoConstraint),
       "firstForename" -> text
         .verifying(messages("gmp.error.firstnameorinitial", messages("gmp.firstname")), _.length > 0)
         .verifying(messages("gmp.error.length", messages("gmp.lowercase.firstname"), MAX_LENGTH), _.length <= MAX_LENGTH)
@@ -68,7 +66,9 @@ class MemberDetailsForm @Inject()(mcc: MessagesControllerComponents) {
       "surname" -> text
         .verifying(messages("gmp.error.member.lastname.mandatory"), x => x.length > 0)
         .verifying(messages("gmp.error.length", messages("gmp.lowercase.lastname"), MAX_LENGTH), x => x.length <= MAX_LENGTH)
-        .verifying(messages("gmp.error.name.invalid", messages("gmp.lowercase.lastname")), x => x.length == 0 || x.matches(NAME_REGEX)))
+        .verifying(messages("gmp.error.name.invalid", messages("gmp.lowercase.lastname")), x => x.length == 0 || x.matches(NAME_REGEX)),
+      "nino" -> text
+        .verifying(ninoConstraint))
     (MemberDetails.apply)(MemberDetails.unapply)
   )
 

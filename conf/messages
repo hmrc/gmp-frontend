@@ -26,9 +26,9 @@ gmp.inflation_proof.title = GMP inflation proofing - GOV.UK
 gmp.member_details.title = Member details - GOV.UK
 gmp.more_bulk_results.title = Recent bulk GMP calculations - GOV.UK
 gmp.pension_details.title = Pension scheme details - GOV.UK
-gmp.results.title = Guaranteed minimum pension results - GOV.UK
-gmp.results.h1 = Guaranteed minimum pension results
-gmp.results.p1 = This has not been revalued and the is total for the period shown.
+gmp.results.title = Guaranteed Minimum Pension results - GOV.UK
+gmp.results.h1 = Guaranteed Minimum Pension results
+gmp.results.p1 = This has not been revalued and is the total for the period shown.
 gmp.results.error = GMP checker error - GOV.UK
 gmp.revaluation.title = GMP calculation at specific date - GOV.UK
 gmp.revaluation_rate.title = GMP revaluation rate - GOV.UK
@@ -50,13 +50,16 @@ gmp.title = Guaranteed Minimum Pension (GMP) checker
 gmp.entered_details.title = Scheme member details
 gmp.entered_details.title.survivor = Deceased member’s entered details
 gmp.contributions_earnings.header = Contributions and earnings
-gmp.member_details.header = What are the member’s details?
+gmp.member_details.header = Enter member’s details
 gmp.pension_details.header = Enter Scheme Contracted Out Number (SCON)
 gmp.revaluation.question = When would you like the calculation made to?
 gmp.inflation_proof.question = Would you like a calculation for a date after the date of death?
 gmp.leaving.dol.question = Did the member leave the scheme before 6 April 2016?
+gmp.leaving.dol.question.mandatory=Select whether the member left the scheme before 6 April 2016
 gmp.other.dol.left.question = Has the member left the scheme?
+gmp.other.dol.left.question.mandatory = Select whether the member has left the scheme
 gmp.survivor.dol.question = Had the member already left the scheme at date of death?
+gmp.survivor.dol.question.mandatory = Select whether the member had already left the scheme at date of death
 gmp.fileupload.header = Upload your file
 gmp.bulk.results.banner = Calculation ready
 gmp.bulk_request_received.banner = Your request has been received
@@ -64,7 +67,7 @@ gmp.revaluation_rate.header = What revaluation rate do you want HMRC to use?
 gmp.thank_you.header = Thank you
 gmp.thank_you.what_now = What do you want to do now?
 gmp.contracted_out_period_table_header = Contracted-out period {0}
-gmp.contracted_out_period_error = Contracted out period {0}
+gmp.contracted_out_period_error = There are no contributions and earnings available for contracted out period {0} to {1}
 gmp.tax_year_table_column_header = Year
 gmp.contracted_out_period_table_column_header = Amount
 gmp.equalise_header = Do you also want an opposite gender calculation?
@@ -72,7 +75,7 @@ gmp.results.survivor.header = Surviving partner’s GMP entitlement at date of d
 gmp.results.survivor.revaluation.header = Surviving partner’s GMP entitlement at {0}
 gmp.bulk_reference.header = Name your calculation
 gmp.bulk_request_received.header = What next
-gmp.no_inflation.subheader = This GMP has not been inflation proofed as you entered a date in the same tax year as the date of death.
+gmp.no_inflation.subheader = This GMP has not been inflation-proofed as you entered a date in the same tax year as the date of death.
 
 gmp.bulk.subheaders.allcalculations = All results
 gmp.bulk.subheaders.successfulcalculations = Total GMP calculated
@@ -104,7 +107,8 @@ gmp.days_left = {0} Day{1}
 gmp.more_bulk_results.header = Recent bulk calculations
 
 gmp.date_from = From:
-gmp.date_to = To:
+gmp.date_to = to
+gmp.date_To = To:
 gmp.multi.dual_calc.header = Post-1990 value
 gmp.post90.true = True gender
 gmp.post90.true.value = True-gender value
@@ -172,7 +176,7 @@ gmp.dol.threequestions.no = No, member is still in the scheme
 gmp.dol.threequestions.no.survivor = No, member was still in the scheme
 
 gmp.date.header_text = Enter a leaving date
-gmp.inflationproof.subtext = The GMP will be inflation proofed and its value will increase based on the rate of inflation.
+gmp.inflationproof.subtext = The GMP will be inflation-proofed and its value will increase based on the rate of inflation.
 gmp.total.entitlement = Total GMP entitlement
 gmp.post88.entitlement = Post-1988 GMP entitlement
 gmp.email = email address
@@ -201,13 +205,13 @@ gmp.revaluation_rate = Revaluation rate
 gmp.bulk.results = Results
 gmp.bulk.results.csv = CSV
 gmp.bulk.results.reference = Reference {0}
-gmp.bulk.failure.antivirus = The selected file contains a virus. Create the file again and <a href="/guaranteed-minimum-pension/new-bulk-calculation" id="bulk-back-link">upload it</a>.
+gmp.bulk.failure.antivirus = The selected file contains a virus. <a href="/guaranteed-minimum-pension/new-bulk-calculation" id="bulk-back-link">Create the file again and upload it</a>.
 gmp.bulk.failure.missing = You did not select a file to upload. Please go <a href="/guaranteed-minimum-pension/new-bulk-calculation">back</a>, browse for a file and try again.
 gmp.bulk.failure.generic = Something went wrong with uploading your file. <br/>There is probably a problem with the system so <a href="/guaranteed-minimum-pension/new-bulk-calculation">try again in a few moments</a>.
 gmp.bulk.failure.duplicate_upload = <span class="lede">We think you have already uploaded this file.</span><br/><br/>We recommend you wait for the results to be ready and do not duplicate file uploads. If you want to process the same file again, perhaps to give it a different name, <a href="/guaranteed-minimum-pension/upload-csv">resubmit it</a>.
-gmp.bulk.failure.too_large = You should include the details of no more than 25,000 members in each file. Try splitting the calculation requests across 2 or more files and <a href="/guaranteed-minimum-pension/upload-csv">upload them</a> separately.
-gmp.bulk.failure.wrong_type = Either no file was selected OR it is the wrong type. Select a file in CSV format and <a href="/guaranteed-minimum-pension/new-bulk-calculation" id="bulk-back-link">upload it</a>.
-gmp.bulk.failure.rejected = Something went wrong with uploading your file. Please check it for any obvious faults, or try to <a href="/guaranteed-minimum-pension/new-bulk-calculation" id="bulk-back-link">upload it</a> again in a few moments.
+gmp.bulk.failure.too_large = You should include the details of no more than 25,000 members in each file. Try splitting the calculation requests across 2 or more files and <a href="/guaranteed-minimum-pension/upload-csv">upload the separate files with less than 25,000 members in each.</a>
+gmp.bulk.failure.wrong_type = No file was selected. <a href="/guaranteed-minimum-pension/new-bulk-calculation" id="bulk-back-link">Select a file in CSV format and upload it</a>.
+gmp.bulk.failure.rejected = Something went wrong with uploading your file. Please check it for any obvious faults, or try to <a href="/guaranteed-minimum-pension/new-bulk-calculation" id="bulk-back-link">select a file in CSV format and upload it</a> again in a few moments.
 gmp.back_to_dashboard = Back to the GMP checker
 gmp.bulk.successful = Your file has been successfully uploaded.
 
@@ -261,7 +265,7 @@ gmp.error.csv.date.invalid = Enter a date in the same format as the example give
 gmp.error.csv.termination.invalid = Enter a date If the member left after 5 April 2016 or ‘SM’ if the member is still in the scheme
 gmp.error.csv.termination.oob = Enter a date that is after 5 April 2016
 gmp.error.csv.dual_calc.invalid = Enter ‘Yes’ or ‘Y’ if you want an opposite gender calculation or ‘No’ or ‘N’ if you do not. This field cannot be left blank.
-gmp.error.csv.member_ref.character.invalid = Calculation name must only include letters a to z, numbers 0 to 9, spaces, hyphens or underscores
+gmp.error.csv.member_ref.character.invalid = Calculation name must only include letters a to z, numbers 0 to 9, hyphens or underscores
 gmp.error.csv.member_ref.spaces.invalid = The calculation name cannot have spaces
 gmp.error.csv.member_ref.length.invalid = The calculation name must have fewer than 99 letters or numbers
 gmp.error.member_previous_names = If we still cannot calculate a GMP, ask if the member has any previous names that may not have been updated with HM Revenue and Customs.
@@ -278,7 +282,7 @@ gmp.error.reason.56067 = This is because we believe the member has no pre-1997 G
 gmp.error.reason.56018 = This is because the member has a Married Woman’s Reduced Rate Election for the contracted-out period therefore there is no GMP liability.
 gmp.error.reason.56002 = This is because the S148/S37a orders are not yet available.
 gmp.error.reason.56013 = This is because this scheme has no GMP liability.
-gmp.error.reason.generic = But HM Revenue and Customs may still be able to do a calculation for you.
+gmp.error.reason.generic = But HMRC may still be able to do a calculation for you.
 gmp.error.reason.valid_contributions = This is because we do not hold any valid contributions or earnings for some of the time the member was contracted out.
 gmp.error.reason.63149 = This is because you entered a leaving date that is after the final relevant year.
 gmp.error.reason.63148 = This is because you entered a calculation date that is before the date of death we hold on record.
@@ -301,7 +305,7 @@ gmp.error.solution.63148 = Check the date up to which you would like the calcula
 gmp.error.solution.63150 = <a href="/guaranteed-minimum-pension/equalise">Go back</a> and select ‘No’ when asked if you want an opposite gender calculation.
 gmp.error.solution.63167 = Choose another <a href="/guaranteed-minimum-pension/revaluation-rate">revaluation rate</a>.
 
-gmp.error.no_conts_and_earnings = No contributions and earnings available
+gmp.error.no_conts_and_earnings = There are no contributions and earnings available for this period.
 gmp.error.session_parts_missing = You have not given us enough information about the member and type of calculation you need or it has been too long since you did so.<br/><br/><a href="{0}"">Go back</a> and fill in the information required.
 
 error.expected.url = Download url is not a valid URL
@@ -328,9 +332,9 @@ gmp.revaluation_rate.type_3 = Limited
 gmp.notrevalued.subheader = This GMP is not revalued.
 gmp.notrevalued.multi.subheader = This GMP is not revalued and is the sum of the amounts for each period shown below.
 gmp.results.survivior.disclaimer = This amount is subject to qualifying conditions of the <a href="https://www.gov.uk/browse/benefits/bereavement">type of bereavement benefit</a> the surviving partner is entitled to.
-gmp.reval_rate.subheader = Revaluation rate: {0}
-gmp.held_rate.subheader = Revaluation rate held for this SCON: {0}
-gmp.chosen_rate.subheader = Revaluation rate chosen: {0}
+gmp.reval_rate.subheader = Revaluation rate: <b class="bold">{0}</b>
+gmp.held_rate.subheader = Revaluation rate held for this SCON: <b class="bold">{0}</b>
+gmp.chosen_rate.subheader = Revaluation rate chosen: <b class="bold">{0}</b>
 
 ############################################################################
 # Scenarios
@@ -392,8 +396,9 @@ gmp.unauthorised.message = You are not authorised to view this page
 ############################################################################
 urbanner.message.text = Help improve digital services by joining the HMRC user panel
 urbanner.message.ga.text = homepage UR banner
-urbanner.message.open.new.window = (opens in new window)
+urbanner.message.open.new.window = (opens in new tab)
 urbanner.message.reject = No thanks
+urbanner.message.reject.description = I do not want to join the HMRC user panel
 
 gmp.ga-track.link.click=link - click
 gmp.ga-track.button.click=button - click
@@ -402,3 +407,14 @@ global.error.InternalServerError500.title = Sorry, there is a problem with the s
 global.error.InternalServerError500.heading = Sorry, there is a problem with the service
 global.error.InternalServerError500.message = Try again later.
 
+gmp.download.description.all = a CSV file of all the results of all calculation requests
+gmp.download.description.success = a CSV file of only the results where a GMP total was calculated
+gmp.download.description.failed = a CSV file of only the results where a GMP total could not be calculated
+gmp.download.description.contributions = a contributions and earnings CSV file for all queries
+
+gmp.table.period = Period
+
+sessionTimeout.title = You are about to be signed out
+sessionTimeout.message = For security reasons, you will be signed out of this service in
+sessionTimeout.staySignedIn = Stay signed in
+sessionTimeout.signOut = Sign out

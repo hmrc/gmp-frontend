@@ -52,13 +52,16 @@
         @if(labelHighlight) {<strong>}
         @if(elements.args.contains('_label)) {@elements.label}
         @if(labelHighlight) {</strong>}
-        @if(elements.args.contains('_hintText)) {
-            <span class="form-hint" id="@hintId">@elements.args.get('_hintText)</span>
+        @if(elements.args.contains('_header)) {
+            <h1>@elements.args.get('_header)</h1>
         }
         @if(elements.args.contains('_symbol)) {
             <span class="inline-fields">@elements.args.get('_symbol)</span>
         }
     </label>
+    @if(elements.args.contains('_hintText)) {
+        <span class="form-hint" id="@hintId">@elements.args.get('_hintText)</span>
+    }
 
     <input @if(elements.args.contains('_type)){type="@elements.args.get('_type)"}else{type="text"}
     @if(elements.args.contains('_maxLength)){
@@ -66,6 +69,8 @@
     }
 
     class="@if( elements.args.get('_inputClass)){@elements.args.get('_inputClass)}else{form-control}"
+
+    @if(elements.args.contains('_spellCheck)) { spellcheck="@elements.args.get('_spellCheck)" }
 
     @if(elements.args.contains('_dataAttributes) ){
         @elements.args.get('_dataAttributes)

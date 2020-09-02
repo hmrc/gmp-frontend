@@ -21,7 +21,9 @@ import play.twirl.api.Html
 import utils.GmpViewSpec
 
 class BulkWrongUserSpec extends GmpViewSpec{
-  override def view: Html = views.html.bulk_wrong_user()
+  lazy val gmpMain = app.injector.instanceOf[gmp_main]
+  lazy val externalUrls = app.injector.instanceOf[ExternalUrls]
+  override def view: Html = new views.html.bulk_wrong_user(gmpMain, externalUrls)()
 
   "BulkWrongUser page" must {
     behave like pageWithTitle(messages("gmp.bulk.problem.header"))
@@ -33,7 +35,7 @@ class BulkWrongUserSpec extends GmpViewSpec{
     }
 
     "have a bulk wrong user ign out anchor with correct URL and text" in {
-      doc.select("#bulk_wrong_user_sign_out").first must haveLinkURL(ExternalUrls.signOut)
+      doc.select("#bulk_wrong_user_sign_out").first must haveLinkURL(externalUrls.signOut)
       doc must haveLinkWithText(messages("gmp.signout"))
     }
   }

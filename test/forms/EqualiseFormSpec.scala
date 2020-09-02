@@ -19,7 +19,7 @@ package forms
 import forms.EqualiseForm
 import models.Equalise
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
-import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
+import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.Json
 import play.api.mvc.MessagesControllerComponents
 

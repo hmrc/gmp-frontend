@@ -29,6 +29,7 @@ import services.{SessionService, UpscanService}
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.logging.SessionId
+import views.Views
 import views.html.upscan_csv_file_upload
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -42,7 +43,8 @@ class FileUploadController @Inject()(authAction: AuthAction,
                                      messagesControllerComponents: MessagesControllerComponents,
                                      ac: ApplicationConfig,
                                      implicit val executionContext: ExecutionContext,
-                                     implicit val gmpSessionCache: GmpSessionCache)
+                                     implicit val gmpSessionCache: GmpSessionCache,
+                                     views: Views)
   extends GmpController(messagesControllerComponents, ac, sessionService, config) {
 
 
@@ -53,7 +55,7 @@ class FileUploadController @Inject()(authAction: AuthAction,
         response <- upscanService.getUpscanFormData()
         _ <- sessionService.createCallbackRecord
       } yield {
-        Ok(upscan_csv_file_upload(response))
+        Ok(views.upscanCsvFileUpload(response))
       }
   }
 
@@ -63,7 +65,7 @@ class FileUploadController @Inject()(authAction: AuthAction,
       uploadResult <- sessionService.getCallbackRecord
     } yield {
           uploadResult match {
-            case Some(result: UploadStatus) => Ok(views.html.upload_result(result))
+            case Some(result: UploadStatus) => Ok(views.uploadResult(result))
             case None => throw new RuntimeException(s"Upload with session id ${sessionId.getOrElse("-")} not found")
           }
       }
@@ -72,7 +74,7 @@ class FileUploadController @Inject()(authAction: AuthAction,
   //Used for Amazon failures
   def failure(errorCode: String, errorMessage: String, errorRequestId: String) = authAction {
     implicit request =>
-          Ok(views.html.failure(Messages("gmp.bulk.failure.generic"),
+          Ok(views.failure(Messages("gmp.bulk.failure.generic"),
             Messages("gmp.bulk.problem.header"),
             Messages("gmp.bulk_failure_generic.title")))
   }

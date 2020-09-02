@@ -19,13 +19,12 @@ package controllers
 import com.google.inject.{Inject, Singleton}
 import config.{ApplicationConfig, GmpContext}
 import controllers.auth.{AuthAction, ExternalUrls, UUIDGenerator}
-import play.api.i18n.{Messages, MessagesProvider}
-import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.SessionService
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.audit.model.DataEvent
+import views.Views
 
 import scala.concurrent.ExecutionContext
 
@@ -37,14 +36,16 @@ class ApplicationController @Inject()(authAction: AuthAction,
                                       sessionService: SessionService,implicit val config:GmpContext,
                                       messagesControllerComponents: MessagesControllerComponents,
                                       implicit val executionContext: ExecutionContext,
-                                      ac:ApplicationConfig)
+                                      ac:ApplicationConfig,
+                                      views: Views,
+                                      externalUrls: ExternalUrls)
                                       extends GmpController(messagesControllerComponents,ac,sessionService,config) {
 
 
 
   def unauthorised: Action[AnyContent] = Action {
     implicit request =>
-      Ok(views.html.unauthorised())
+      Ok(views.unauthorised())
   }
 
 
@@ -55,7 +56,12 @@ class ApplicationController @Inject()(authAction: AuthAction,
         val dataEvent: DataEvent = DataEvent("GMP", "signout", detail = auditData)
 
         auditConnector.sendEvent(dataEvent)
-        Redirect(ExternalUrls.signOutCallback).withSession(("feedbackId", uuid))
+        Redirect(externalUrls.signOutCallback).withSession(("feedbackId", uuid))
+  }
+
+  def keepAlive: Action[AnyContent] = authAction {
+    implicit request =>
+      Ok("OK")
   }
 }
 

@@ -16,38 +16,41 @@
 
 package controllers.auth
 
-import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
+import org.scalatestplus.play.PlaySpec
+import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 
-class ExternalUrlsSpec extends PlaySpec with OneServerPerSuite {
 
+class ExternalUrlsSpec extends PlaySpec with GuiceOneServerPerSuite {
+
+  lazy val externalUrls = app.injector.instanceOf[ExternalUrls]
   "ExternalUrls" must {
 
     "have companyAuthHost " in {
-      ExternalUrls.companyAuthHost must be("http://localhost:9025")
+      externalUrls.companyAuthHost must be("http://localhost:9025")
     }
 
     "have loginCallback " in {
-      ExternalUrls.loginCallback must be("http://localhost:9941/guaranteed-minimum-pension/dashboard")
+      externalUrls.loginCallback must be("http://localhost:9941/guaranteed-minimum-pension/dashboard")
     }
 
     "have signOutCallback " in {
-      ExternalUrls.signOutCallback must be("http://localhost:9514/feedback/GMP")
+      externalUrls.signOutCallback must be("http://localhost:9514/feedback/GMP")
     }
 
     "have loginPath " in {
-      ExternalUrls.loginPath must be("sign-in")
+      externalUrls.loginPath must be("sign-in")
     }
 
     "have signIn " in {
-      ExternalUrls.signIn must be(s"""http://localhost:9025/gg/sign-in?continue=http://localhost:9941/guaranteed-minimum-pension/dashboard""")
+      externalUrls.signIn must be(s"""http://localhost:9025/gg/sign-in?continue=http://localhost:9941/guaranteed-minimum-pension/dashboard""")
     }
 
     "have signoutPath" in {
-      ExternalUrls.signOutPath must be("sign-out")
+      externalUrls.signOutPath must be("sign-out")
     }
 
     "have signout" in {
-      ExternalUrls.signOut must be(s"""http://localhost:9025/gg/sign-out?continue=http://localhost:9514/feedback/GMP""")
+      externalUrls.signOut must be(s"""http://localhost:9025/gg/sign-out?continue=http://localhost:9514/feedback/GMP""")
     }
   }
   

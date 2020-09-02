@@ -19,8 +19,8 @@ package services
 import connectors.UpscanConnector
 import models.upscan.{Reference, UpscanInitiateRequest, UpscanInitiateResponse}
 import org.mockito.ArgumentCaptor
-import org.scalatest.mockito.MockitoSugar
-import org.scalatestplus.play.OneAppPerSuite
+import org.scalatestplus.mockito.MockitoSugar
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.inject.bind
@@ -35,7 +35,7 @@ import uk.gov.hmrc.http.logging.SessionId
 import scala.concurrent.Future
 
 
-class UpscanServiceSpec extends UnitSpec with OneAppPerSuite with MockitoSugar {
+class UpscanServiceSpec extends UnitSpec with GuiceOneAppPerSuite with MockitoSugar {
 
   override def fakeApplication: Application = new GuiceApplicationBuilder()
     .overrides(bind[UpscanConnector].toInstance(mockUpscanConnector))

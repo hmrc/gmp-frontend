@@ -20,19 +20,24 @@ import com.google.inject.{Inject, Singleton}
 import config.{ApplicationConfig, GmpContext, GmpSessionCache}
 import controllers.auth.AuthAction
 import forms.MemberDetailsForm
-
 import play.api.Logger
 import play.api.mvc.MessagesControllerComponents
 import services.SessionService
 import uk.gov.hmrc.auth.core.AuthConnector
+import views.Views
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class MemberDetailsController @Inject()(authAction: AuthAction,
-                                        override val authConnector: AuthConnector,sessionService: SessionService,implicit val config:GmpContext,
-                                        override val messagesControllerComponents: MessagesControllerComponents,ac:ApplicationConfig,mdf:MemberDetailsForm,
-                                        implicit val executionContext: ExecutionContext,implicit val gmpSessionCache: GmpSessionCache) extends GmpPageFlow(authConnector,sessionService,config,messagesControllerComponents,ac) {
+                                        override val authConnector: AuthConnector,
+                                        sessionService: SessionService,
+                                        implicit val config:GmpContext,
+                                        override val messagesControllerComponents: MessagesControllerComponents,
+                                        ac:ApplicationConfig,mdf:MemberDetailsForm,
+                                        implicit val executionContext: ExecutionContext,
+                                        implicit val gmpSessionCache: GmpSessionCache,
+                                        views: Views) extends GmpPageFlow(authConnector,sessionService,config,messagesControllerComponents,ac) {
 
 
   lazy val form=mdf.form()
@@ -40,8 +45,8 @@ class MemberDetailsController @Inject()(authAction: AuthAction,
   def get = authAction.async {
       implicit request => {
         sessionService.fetchMemberDetails() map {
-          case Some(memberDetails) => Ok(views.html.member_details(form.fill(memberDetails)))
-          case _ => Ok(views.html.member_details(form))
+          case Some(memberDetails) => Ok(views.memberDetails(form.fill(memberDetails)))
+          case _ => Ok(views.memberDetails(form))
         }
       }
   }
@@ -53,7 +58,7 @@ class MemberDetailsController @Inject()(authAction: AuthAction,
 
         form.bindFromRequest.fold(
           formWithErrors => {
-            Future.successful(BadRequest(views.html.member_details(formWithErrors)))
+            Future.successful(BadRequest(views.memberDetails(formWithErrors)))
           },
           memberDetails => {
             sessionService.cacheMemberDetails(memberDetails) map {

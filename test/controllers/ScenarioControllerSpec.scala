@@ -23,8 +23,9 @@ import helpers.RandomNino
 import models._
 import org.mockito.Matchers
 import org.mockito.Mockito._
-import org.scalatest.mockito.MockitoSugar
-import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
+import org.scalatestplus.mockito.MockitoSugar
+import org.scalatestplus.play.guice.GuiceOneServerPerSuite
+import org.scalatestplus.play.PlaySpec
 import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl}
 import play.api.libs.json.Json
 import play.api.mvc.{AnyContentAsEmpty, MessagesControllerComponents, Result}
@@ -32,10 +33,11 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.SessionService
 import uk.gov.hmrc.auth.core.AuthConnector
+import views.Views
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class ScenarioControllerSpec extends PlaySpec with OneServerPerSuite with MockitoSugar {
+class ScenarioControllerSpec extends PlaySpec with GuiceOneServerPerSuite with MockitoSugar {
 
   val mockAuthConnector = mock[AuthConnector]
   val mockSessionService = mock[SessionService]
@@ -48,9 +50,9 @@ class ScenarioControllerSpec extends PlaySpec with OneServerPerSuite with Mockit
   implicit val ac=app.injector.instanceOf[ApplicationConfig]
   implicit val gmpSessionCache=app.injector.instanceOf[GmpSessionCache]
   lazy val scenarioForm = new ScenarioForm(mcc)
+  lazy val views = app.injector.instanceOf[Views]
 
-
-  object TestScenarioController extends ScenarioController(FakeAuthAction, mockAuthConnector,ac,mockSessionService,FakeGmpContext,mcc,scenarioForm,ec,gmpSessionCache)
+  object TestScenarioController extends ScenarioController(FakeAuthAction, mockAuthConnector,ac,mockSessionService,FakeGmpContext,mcc,scenarioForm,ec,gmpSessionCache,views)
 
   private val nino: String = RandomNino.generate
   val gmpSession = GmpSession(MemberDetails(nino, "A", "AAA"), "S1301234T", CalculationType.REVALUATION, None, None, Leaving(GmpDate(None, None, None), None), None)

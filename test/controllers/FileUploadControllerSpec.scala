@@ -24,8 +24,9 @@ import models._
 import models.upscan._
 import org.mockito.Matchers
 import org.mockito.Mockito._
-import org.scalatest.mockito.MockitoSugar
-import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
+import org.scalatestplus.mockito.MockitoSugar
+import org.scalatestplus.play.guice.GuiceOneServerPerSuite
+import org.scalatestplus.play.PlaySpec
 import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl}
 import play.api.libs.json.Json
 import play.api.mvc.{AnyContentAsEmpty, MessagesControllerComponents, Result}
@@ -41,10 +42,11 @@ import akka.stream.Materializer
 import akka.util.ByteString
 import org.scalatest.concurrent.ScalaFutures
 import play.api.libs.streams.Accumulator
+import views.Views
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class FileUploadControllerSpec extends PlaySpec with OneServerPerSuite with MockitoSugar with ScalaFutures {
+class FileUploadControllerSpec extends PlaySpec with GuiceOneServerPerSuite with MockitoSugar with ScalaFutures {
   val mockAuthConnector = mock[AuthConnector]
   val mockSessionService = mock[SessionService]
   val mockAuthAction = mock[AuthAction]
@@ -55,7 +57,7 @@ class FileUploadControllerSpec extends PlaySpec with OneServerPerSuite with Mock
   implicit val messagesProvider=MessagesImpl(Lang("en"), messagesAPI)
   implicit val ac=app.injector.instanceOf[ApplicationConfig]
   implicit val gmpSessionCache=app.injector.instanceOf[GmpSessionCache]
-
+  lazy val views = app.injector.instanceOf[Views]
   val uploadDetails = UploadDetails(Instant.now, "sum", "csv", "name1")
   val callBackData = UpscanReadyCallback("ref1", "READY", new URL("http://localhost:9991/download1"), uploadDetails)
 
@@ -64,7 +66,7 @@ class FileUploadControllerSpec extends PlaySpec with OneServerPerSuite with Mock
 
   val fakeRequest = FakeRequest(method = "POST", uri = "", headers = FakeHeaders(Seq("Content-type" -> ("application/json"))), body = Json.toJson(callBackData))
 
-  object TestFileUploadController extends FileUploadController(FakeAuthAction, mockAuthConnector, mockSessionService, FakeGmpContext,upscanService,mcc,ac,ec,gmpSessionCache) {
+  object TestFileUploadController extends FileUploadController(FakeAuthAction, mockAuthConnector, mockSessionService, FakeGmpContext,upscanService,mcc,ac,ec,gmpSessionCache,views) {
 
  }
 

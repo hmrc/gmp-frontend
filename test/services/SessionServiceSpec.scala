@@ -24,8 +24,9 @@ import models.upscan.UploadedSuccessfully
 import org.mockito.Matchers._
 import org.mockito.Mockito._
 import org.scalatest.concurrent.ScalaFutures
-import org.scalatest.mockito.MockitoSugar
-import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
+import org.scalatestplus.mockito.MockitoSugar
+import org.scalatestplus.play.guice.GuiceOneServerPerSuite
+import org.scalatestplus.play.PlaySpec
 import play.api.libs.json._
 import play.api.test.FakeRequest
 import uk.gov.hmrc.emailaddress.EmailAddress
@@ -35,7 +36,7 @@ import uk.gov.hmrc.http.cache.client.CacheMap
 import scala.concurrent.duration._
 import scala.concurrent.{Await, Future}
 
-class SessionServiceSpec extends PlaySpec with OneServerPerSuite with ScalaFutures with MockitoSugar {
+class SessionServiceSpec extends PlaySpec with GuiceOneServerPerSuite with ScalaFutures with MockitoSugar {
 
   val memberDetails = MemberDetails(RandomNino.generate, "John", "Johnson")
   val scon = "S3123456A"

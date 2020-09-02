@@ -24,9 +24,9 @@ import models._
 import org.joda.time.{DateTime, DateTimeUtils}
 import org.mockito.Matchers
 import org.mockito.Mockito._
-import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
-import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
+import org.scalatestplus.play.PlaySpec
 import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl}
 import play.api.libs.json.Json
 import play.api.mvc.MessagesControllerComponents
@@ -34,6 +34,7 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.SessionService
 import uk.gov.hmrc.auth.core.AuthConnector
+import views.Views
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -51,10 +52,10 @@ class DateOfLeavingControllerSpec extends PlaySpec with GuiceOneServerPerSuite w
   implicit val ac=app.injector.instanceOf[ApplicationConfig]
   implicit val gmpSessionCache=app.injector.instanceOf[GmpSessionCache]
   lazy val dateOfLeavingForm = new DateOfLeavingForm(mcc)
+  lazy val views = app.injector.instanceOf[Views]
 
 
-
-  object TestDateOfLeavingController extends DateOfLeavingController(FakeAuthAction, mockAuthConnector, mockSessionService,ac,FakeGmpContext,dateOfLeavingForm,mcc,ec,gmpSessionCache) {
+  object TestDateOfLeavingController extends DateOfLeavingController(FakeAuthAction, mockAuthConnector, mockSessionService,ac,FakeGmpContext,dateOfLeavingForm,mcc,ec,gmpSessionCache,views) {
     override val context = FakeGmpContext
   }
 
@@ -264,6 +265,7 @@ class DateOfLeavingControllerSpec extends PlaySpec with GuiceOneServerPerSuite w
         val gmpSession = GmpSession(MemberDetails(nino, "A", "AAA"), "S1234567T", CalculationType.DOL, None, None, Leaving(GmpDate(None, None, None), None), None)
         "redirect" in {
 
+          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
 
           when(mockSessionService.cacheLeaving(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
 

@@ -27,8 +27,9 @@ import models.upscan.UploadedSuccessfully
 import org.joda.time.{LocalDate, LocalDateTime}
 import org.mockito.Matchers
 import org.mockito.Mockito._
-import org.scalatest.mockito.MockitoSugar
-import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
+import org.scalatestplus.mockito.MockitoSugar
+import org.scalatestplus.play.PlaySpec
+import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl}
 import play.api.mvc.MessagesControllerComponents
 import play.api.test.FakeRequest
@@ -38,10 +39,11 @@ import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.emailaddress.EmailAddress
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.logging.SessionId
+import views.Views
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class BulkRequestReceivedControllerSpec extends PlaySpec with OneServerPerSuite with MockitoSugar {
+class BulkRequestReceivedControllerSpec extends PlaySpec with GuiceOneServerPerSuite with MockitoSugar {
   val mockAuthConnector = mock[AuthConnector]
   val mockSessionService = mock[SessionService]
   val mockBulkRequestCreationService = mock[BulkRequestCreationService]
@@ -55,6 +57,7 @@ class BulkRequestReceivedControllerSpec extends PlaySpec with OneServerPerSuite 
   implicit val messagesProvider=MessagesImpl(Lang("en"), messagesApi)
   implicit val ac=app.injector.instanceOf[ApplicationConfig]
   implicit val sc=app.injector.instanceOf[GmpSessionCache]
+  lazy val views = app.injector.instanceOf[Views]
 
   val callBackData = UploadedSuccessfully("ref1", "name1", "download1")
   val gmpBulkSession = GmpBulkSession(Some(callBackData), Some(EmailAddress("somebody@somewhere.com")), Some("reference"))
@@ -70,7 +73,7 @@ class BulkRequestReceivedControllerSpec extends PlaySpec with OneServerPerSuite 
     mockAuthConnector,
     mockSessionService,
     mockBulkRequestCreationService,
-    mockGmpBulkConnector,ac,FakeGmpContext,mcc,ec,sc){
+    mockGmpBulkConnector,ac,FakeGmpContext,mcc,ec,sc,views){
   }
 
   "BulkRequestReceivedController" must {

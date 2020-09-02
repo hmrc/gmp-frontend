@@ -72,7 +72,7 @@ class DateOfLeavingForm  @Inject()(mcc: MessagesControllerComponents) {
     }
   })
 
-  val dateOfLeavingForm = Form(
+  def dateOfLeavingForm(mandatoryMessage: String) = Form(
     mapping(
       "leavingDate" -> mapping(
         "day" -> optional(text),

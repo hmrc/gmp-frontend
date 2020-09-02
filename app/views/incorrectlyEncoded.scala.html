@@ -15,13 +15,13 @@
  *@
 
 @import config.ApplicationConfig
-@(message: String, header: String)(implicit request: Request[_], context: config.GmpContext,messages: Messages,applicationConfig: ApplicationConfig)
-
-@import uk.gov.hmrc.play.views.html._
-@import uk.gov.hmrc.play.views.html.helpers._
 @import views.html.helpers._
 
-@gmp_main(title = s"$header - ${Messages("service.title")} - ${Messages("gov.uk")}") {
+@this(gmpMain: gmp_main)
+
+@(message: String, header: String)(implicit request: Request[_], context: config.GmpContext,messages: Messages,applicationConfig: ApplicationConfig)
+
+@gmpMain(title = s"$header - ${Messages("service.title")} - ${Messages("gov.uk")}") {
 
 @includes.back_link(header)
 <h1 class="heading-xlarge">@header</h1>

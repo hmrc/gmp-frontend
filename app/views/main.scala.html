@@ -15,6 +15,11 @@
  *@
 
 @import play.twirl.api.HtmlFormat
+@import views.ViewHelpers
+@import views.html.layouts.GovUkTemplate
+
+@this(govUkTemplate: GovUkTemplate,
+        viewHelpers: ViewHelpers)
 
 @( applicationConfig: config.ApplicationConfig,
         title: String,
@@ -28,15 +33,19 @@
     signOutEnabled:Boolean,
     customHead: Option[Html] = None)(mainContent: Html = HtmlFormat.empty)(implicit request: Request[_], context: config.GmpContext, messages: Messages)
 
-@import layouts.{govuk_template => hmrcGovUkTemplate}
-@import uk.gov.hmrc.play.views.html.{layouts => uiLayouts}
-@import controllers.auth.ExternalUrls
-
 @headScript = {
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+                new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+            j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+            'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer', '@applicationConfig.gtmContainerId');</script>
+        <!-- End Google Tag Manager -->
+
     <script src="https://cdn.optimizely.com/js/@{applicationConfig.optimizelyProjectId}.js"></script>
 }
 @head = {
-    @uiLayouts.head(
+    @viewHelpers.head(
         linkElem = linkElement,
         headScripts = Some(headScript))
     <meta name="format-detection" content="telephone=no"/>
@@ -52,12 +61,19 @@
 }
 
 @insideHeader = {
-    @uiLayouts.header_nav(
+    @viewHelpers.headerNav(
         navTitle = Some(Messages("gmp.title")),
         navTitleLink = None,
         showBetaLink = false,
         navLinks = if(signOutEnabled) Some(signOutLink) else None
     )
+}
+
+@googleBodyNoScript = {
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=@applicationConfig.gtmContainerId"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
 }
 
 @afterHeader = @{
@@ -71,7 +87,7 @@
 }
 
 @bodyEnd = {
-    @uiLayouts.footer(
+    @viewHelpers.footer(
         analyticsToken = applicationConfig.analyticsToken,
         analyticsHost = applicationConfig.analyticsHost,
         ssoUrl = None,
@@ -80,13 +96,14 @@
     )
     <script src='@routes.AssetsController.at("javascripts/urBanner.js")'> </script>
     <script src='@routes.AssetsController.at("javascripts/back.js")'> </script>
+    @googleBodyNoScript
 }
 
 @footerTop = {}
 @footerLinks = {}
 
 @serviceInfo = {
-    @uiLayouts.serviceInfo(
+    @viewHelpers.serviceInfo(
         betaBanner = HtmlFormat.empty,
         includeGridWrapper = false,
         serviceInfoContent = None,
@@ -96,17 +113,17 @@
 
 @mainContentHeader = {
     @contentHeader.map { contentHeaderVal =>
-        @uiLayouts.main_content_header(contentHeader = contentHeaderVal)
+        @viewHelpers.mainContentHeader(contentHeader = contentHeaderVal)
     }
 }
 
 @content = {
-    @uiLayouts.main_content(
-        article = uiLayouts.article(mainContent),
+    @viewHelpers.mainContent(
+        article = viewHelpers.article(mainContent),
         mainClass = mainClass,
         mainContentHeader = mainContentHeader,
         serviceInfo = serviceInfo,
         getHelpForm = getHelpForm)
 }
 
-@hmrcGovUkTemplate(Some(title), None)(head, bodyEnd, insideHeader, afterHeader, footerTop, Some(uiLayouts.footer_links()), true)(content)
+@govUkTemplate(Some(title), None)(head, bodyEnd, insideHeader, afterHeader, footerTop, Some(viewHelpers.footerLinks()), true)(content)

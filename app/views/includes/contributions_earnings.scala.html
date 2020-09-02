@@ -42,10 +42,10 @@
 
         @period.contsAndEarnings match {
 
-          case Some(contList: List[ContributionsAndEarnings]) => {
+          case Some(contList: List[ContributionsAndEarnings]) if(period.errorCode == 0 && contList.nonEmpty) => {
       <table id="contributions-earnings-table-@count">
           <caption id="gmp-conts-and-earnings-header-@count">
-              @{Messages("gmp.contracted_out_period_table_header" ,s"${period.startDate.get.toString("dd MM yyyy")} to ${period.endDate.toString("dd MM yyyy")}")}
+              @{Messages("gmp.contracted_out_period_table_header" ,s"${period.startDate.get.toString("d MMMM yyyy")} to ${period.endDate.toString("d MMMM yyyy")}")}
           </caption>
 
                 <thead>
@@ -60,18 +60,31 @@
                 </thead>
           <br>
                 <tbody>
-                    @if(period.errorCode == 0){
                       @for((contsAndEarnings, count) <- contList.reverse.zipWithIndex){
                         @displayConts(contsAndEarnings)
                       }
-                    } else{
-                        <tr class="error-row" id="period-row-in-error-@count">
-                            <td colspan="2" class="error-message">@{Messages("gmp.error.no_conts_and_earnings")}</td>
-                        </tr>
-                    }
                 </tbody>
               </table>
 
           }
+            case Some(contList: List[ContributionsAndEarnings]) if(period.errorCode != 0) => {
+                <h3 id="gmp-conts-and-earnings-header-@count">
+                @{Messages("gmp.contracted_out_period_table_header" ,s"${period.startDate.get.toString("d MMMM yyyy")} to ${period.endDate.toString("d MMMM yyyy")}")}
+                </h3>
+                <p class="error-message-left" id="period-row-in-error-@count">
+                    @{Messages("gmp.error.no_conts_and_earnings")}
+                </p>
+            }
+            case _ => {
+                <h3 id="gmp-conts-and-earnings-header-@count">
+                @{Messages("gmp.contracted_out_period_table_header" ,s"${period.startDate.get.toString("d MMMM yyyy")} to ${period.endDate.toString("d MMMM yyyy")}")}
+                </h3>
+                <p id="period-row-in-error-@count">
+                @{Messages("gmp.error.no_conts_and_earnings")}
+                </p>
+            }
+
         }
     }
+
+    <br/>

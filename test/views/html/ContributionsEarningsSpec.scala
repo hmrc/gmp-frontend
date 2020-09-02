@@ -22,7 +22,8 @@ import play.twirl.api.Html
 import utils.GmpViewSpec
 
 class ContributionsEarningsSpec extends GmpViewSpec {
-  override def view: Html = views.html.contributions_earnings(calculationResponse)
+  lazy val gmpMain = app.injector.instanceOf[gmp_main]
+  override def view: Html = new views.html.contributions_earnings(gmpMain)(calculationResponse)
 
   private val calculationResponse: CalculationResponse = CalculationResponse("name", "nino", "scon", Some("revaluationRate"),
     Some(LocalDate.now), List(CalculationPeriod(Some(LocalDate.now), LocalDate.now(), "gmpTotal", "post", 1, 2, Some(3), Some("string"),
@@ -31,7 +32,7 @@ class ContributionsEarningsSpec extends GmpViewSpec {
   "Contributions Earnings page" must {
     behave like pageWithTitle(messages("gmp.contributions_earnings.header"))
     behave like pageWithHeader(messages("gmp.contributions_earnings.header"))
-    behave like pageWithH2Header(messages("gmp.entered_details.title"))
+    behave like pageWithTableCaption("details-table-caption", messages("gmp.entered_details.title"))
 
     "have a correct span with text" in {
       doc must haveSpanWithText(messages("gmp.queryhandling.contsandearnings"))
@@ -41,10 +42,10 @@ class ContributionsEarningsSpec extends GmpViewSpec {
       doc must haveLinkWithText("Back")
     }
 
-    "have a table with td's" in {
-      doc must haveTdWithText(messages("Name"))
-      doc must haveTdWithText(messages("Scheme Contracted Out Number"))
-      doc must haveTdWithText(messages("National Insurance number"))
+    "have a table with th's" in {
+      doc must haveThWithText(messages("Name"))
+      doc must haveThWithText(messages("Scheme Contracted Out Number"))
+      doc must haveThWithText(messages("National Insurance number"))
     }
 
     "have a valid submit button" in {

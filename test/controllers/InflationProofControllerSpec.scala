@@ -22,9 +22,9 @@ import forms.InflationProofForm
 import models._
 import org.mockito.Matchers
 import org.mockito.Mockito._
-import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.mockito.MockitoSugar
+import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
-import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
 import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl}
 import play.api.libs.json.Json
 import play.api.mvc.MessagesControllerComponents
@@ -32,6 +32,7 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.SessionService
 import uk.gov.hmrc.auth.core.AuthConnector
+import views.Views
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -47,10 +48,10 @@ class InflationProofControllerSpec extends PlaySpec with GuiceOneServerPerSuite 
   implicit val ac=app.injector.instanceOf[ApplicationConfig]
   implicit val gmpSessionCache=app.injector.instanceOf[GmpSessionCache]
   lazy val inflationProofForm = new InflationProofForm(mcc)
-
+  lazy val views = app.injector.instanceOf[Views]
 
   object TestInflationProofController extends InflationProofController(FakeAuthAction, mockAuthConnector,mockSessionService,
-    FakeGmpContext,mcc,inflationProofForm,ac,ec,gmpSessionCache)
+    FakeGmpContext,mcc,inflationProofForm,ac,ec,gmpSessionCache,views)
 
 
   "InflationProofController" must {

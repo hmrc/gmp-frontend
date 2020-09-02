@@ -20,7 +20,8 @@ import play.twirl.api.Html
 import utils.GmpViewSpec
 
 class ThankYouSpec extends GmpViewSpec{
-  override def view: Html = views.html.thank_you()
+  lazy val gmpMain = app.injector.instanceOf[gmp_main]
+  override def view: Html = new views.html.thank_you(gmpMain)()
 
   "Thank you page" must {
     behave like pageWithTitle(messages("gmp.thank_you.header"))

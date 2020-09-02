@@ -68,7 +68,8 @@ class DashboardSpec extends GmpViewSpec {
     }
   }
 
-  override def view: Html = views.html.dashboard(bulkPreviousRequestsList)
+  lazy val gmpMain = app.injector.instanceOf[gmp_main]
+  override def view: Html = new views.html.dashboard(gmpMain)(bulkPreviousRequestsList)
 
   private val bulkPreviousRequestsList: List[models.BulkPreviousRequest] = List(BulkPreviousRequest(uploadReference = "upload",
     reference = "fake", timestamp = LocalDateTime.now, processedDateTime = LocalDateTime.now), BulkPreviousRequest(uploadReference = "upload",
@@ -87,7 +88,8 @@ class DashboardSpecNoPreviousCalculations extends GmpViewSpec {
     }
   }
 
-  override def view: Html = views.html.dashboard(bulkPreviousRequestsList)
+  lazy val gmpMain = app.injector.instanceOf[gmp_main]
+  override def view: Html = new views.html.dashboard(gmpMain)(bulkPreviousRequestsList)
 
   private val bulkPreviousRequestsList: List[models.BulkPreviousRequest] = List()
 }

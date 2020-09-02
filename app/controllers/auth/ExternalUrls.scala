@@ -17,12 +17,10 @@
 package controllers.auth
 
 import com.google.inject.{Inject, Singleton}
-import play.api.Mode
-import play.api.{Configuration, Play}
+import play.api.Configuration
 
-// TODO tidy/remove this
 @Singleton
-class BaseExternalUrls @Inject()(val runModeConfiguration: Configuration) {
+class ExternalUrls @Inject()(val runModeConfiguration: Configuration) {
 
   val companyAuthHost = runModeConfiguration.getOptional[String]("gg-urls.company-auth.host").getOrElse("")
   val loginCallback = runModeConfiguration.getOptional[String]("gg-urls.login-callback.url").getOrElse("")
@@ -33,5 +31,3 @@ class BaseExternalUrls @Inject()(val runModeConfiguration: Configuration) {
   val signOut = s"$companyAuthHost/gg/$signOutPath?continue=$signOutCallback"
 
 }
-
-case object ExternalUrls extends BaseExternalUrls(Play.current.configuration)

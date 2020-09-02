@@ -24,17 +24,18 @@
     <caption class="visuallyhidden">@Messages("gmp.results.table_caption")</caption>
     <thead>
         <tr id="table-column-names">
-            <th class="numeric"><span class="hidden">hidden text for empty th</span></th>
-            <th class="numeric"><span class="hidden">hidden text for empty th</span></th>
-            <th class="numeric"><span class="hidden">hidden text for empty th</span></th>
-            <th class="numeric" id="per-week">@Messages("gmp.per.week")</th>
-            <th class="numeric" id ="post-1988">@Messages("gmp.post.1988")</th>
+            <th>@Messages("gmp.table.period")</th>
+            <th><span class="hidden">hidden text for empty th</span></th>
+            <th><span class="hidden">hidden text for empty th</span></th>
+            <th><span class="hidden">hidden text for empty th</span></th>
+            <th id="per-week">@Messages("gmp.per.week")</th>
+            <th id ="post-1988">@Messages("gmp.post.1988")</th>
             @if(calculationResponse.dualCalc) {
-                <th class="numeric" id="true-table-column-header">@Messages("gmp.true")</th>
-                <th class="numeric" id="opposite-table-column-header">@Messages("gmp.opposite")</th>
+                <th id="true-table-column-header">@Messages("gmp.true")</th>
+                <th id="opposite-table-column-header">@Messages("gmp.opposite")</th>
             }
             @if(!calculationResponse.revaluationDate.isEmpty && calculationResponse.revaluationRate == Some("0")) {
-                <th class="numeric" id="hmrc-held-rate">@Messages("gmp.rate_hmrc_holds")</th>
+                <th id="hmrc-held-rate">@Messages("gmp.rate_hmrc_holds")</th>
             }
         </tr>
     </thead>
@@ -42,20 +43,20 @@
     @for((period, count) <- calculationResponse.calculationPeriods.zipWithIndex){
 
     <tr @{if(period.errorCode> 0 )"class=error-row"}>
-        <td class="table-background" colspan="3">
-            <span class="bold-xsmall" id="from-date-@count">@Messages("gmp.date_from")</span> @{ new LocalDate(period.startDate.get).toString("dd/MM/yyyy") } <br/>
-            <span class="bold-xsmall" id="to-date-@count">@Messages("gmp.date_to")</span> @{ new LocalDate(period.endDate).toString("dd/MM/yyyy") }
+        <td colspan="4">
+            <span class="bold-xsmall" id="from-date-@count">@Messages("gmp.date_from")</span><br/> @{ new LocalDate(period.startDate.get).toString("dd MMM yyyy") } <br/>
+            <span class="bold-xsmall" id="to-date-@count">@Messages("gmp.date_To")</span><br/> @{ new LocalDate(period.endDate).toString("dd MMM yyyy") }
         </td>
         @if(period.errorCode == 0) {
-            <td id="gmp-total-@count" class="numeric">
+            <td id="gmp-total-@count">
                 <span class="bold-small">£@{ period.gmpTotal }</span>
             </td>
-            <td id="post-88-@count" class="numeric">
+            <td id="post-88-@count">
                 <span class="bold-small">£@{ period.post88GMPTotal }</span>
             </td>
 
             @if(calculationResponse.dualCalc) {
-                <td id="true-@count" class="numeric">
+                <td id="true-@count">
                     <span class="bold-small">
                       @if(period.dualCalcPost90TrueTotal != Some("0.00")) {
                         £@{ period.dualCalcPost90TrueTotal }
@@ -64,7 +65,7 @@
                       }
                     </span>
                 </td>
-                <td id="opposite-@count" class="numeric">
+                <td id="opposite-@count">
                     <span class="bold-small">
                       @if(period.dualCalcPost90OppositeTotal != Some("0.00")) {
                         £@{ period.dualCalcPost90OppositeTotal }
@@ -75,7 +76,7 @@
                 </td>
             }
             @if(!calculationResponse.revaluationDate.isEmpty && calculationResponse.revaluationRate == Some("0")) {
-                <td id="rate-@count" class="numeric">
+                <td id="rate-@count">
                     <span class="bold-small">
                       @if(count == 0 && !period.endDate.isBefore(LocalDate.now)) {
                         --

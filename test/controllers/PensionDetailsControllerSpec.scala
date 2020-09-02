@@ -26,8 +26,9 @@ import metrics.ApplicationMetrics
 import models._
 import org.mockito.Matchers
 import org.mockito.Mockito._
-import org.scalatest.mockito.MockitoSugar
-import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
+import org.scalatestplus.mockito.MockitoSugar
+import org.scalatestplus.play.guice.GuiceOneServerPerSuite
+import org.scalatestplus.play.PlaySpec
 import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl}
 import play.api.libs.json.Json
 import play.api.mvc.MessagesControllerComponents
@@ -37,10 +38,11 @@ import services.SessionService
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.logging.SessionId
+import views.Views
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class PensionDetailsControllerSpec extends PlaySpec with OneServerPerSuite with MockitoSugar {
+class PensionDetailsControllerSpec extends PlaySpec with GuiceOneServerPerSuite with MockitoSugar {
 
   val mockAuthConnector = mock[AuthConnector]
   val mockSessionService = mock[SessionService]
@@ -54,13 +56,11 @@ class PensionDetailsControllerSpec extends PlaySpec with OneServerPerSuite with 
   implicit val ac=app.injector.instanceOf[ApplicationConfig]
   implicit val gmpSessionCache=app.injector.instanceOf[GmpSessionCache]
   lazy val pensionDetailsForm = new PensionDetailsForm(mcc)
-
+  lazy val views = app.injector.instanceOf[Views]
 
   implicit val hc = new HeaderCarrier(sessionId = Some(SessionId(s"session-${UUID.randomUUID}")))
 
-  object TestPensionDetailsController extends PensionDetailsController(FakeAuthAction, mockAuthConnector, mockGmpConnector,mockSessionService,FakeGmpContext, metrics,ac,pensionDetailsForm,mcc,ec,gmpSessionCache) {
-   /* override val sessionService = mockSessionService
-    override val context = FakeGmpContext*/
+  object TestPensionDetailsController extends PensionDetailsController(FakeAuthAction, mockAuthConnector, mockGmpConnector,mockSessionService,FakeGmpContext, metrics,ac,pensionDetailsForm,mcc,ec,gmpSessionCache,views) {
   }
 
   "pension details GET " must {

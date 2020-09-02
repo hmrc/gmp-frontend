@@ -25,6 +25,7 @@ import play.api.i18n.Messages
 import play.twirl.api.Html
 import utils.GmpViewSpec
 import validation.NinoValidate
+import views.ViewHelpers
 
 class MemberDetailsViewSpec extends GmpViewSpec{
 
@@ -34,7 +35,7 @@ class MemberDetailsViewSpec extends GmpViewSpec{
     behave like pageWithBackLink
 
     "have correct input labels" in {
-      doc must haveInputLabelWithText("nino", messages("gmp.nino") + " " + messages("gmp.nino.hint"))
+      doc must haveInputLabelWithText("nino", messages("gmp.nino"))
       doc must haveInputLabelWithText("firstForename", messages("gmp.firstname"))
       doc must haveInputLabelWithText("surname", messages("gmp.lastname"))
     }
@@ -44,7 +45,10 @@ class MemberDetailsViewSpec extends GmpViewSpec{
     }
   }
 
-  override def view: Html = views.html.member_details(form)
+  lazy val gmpMain = app.injector.instanceOf[gmp_main]
+  lazy val viewHelpers = app.injector.instanceOf[ViewHelpers]
+
+  override def view: Html = new views.html.member_details(gmpMain, viewHelpers)(form)
   //private val memberDetailsForm: Form[models.MemberDetails] = MemberDetailsForm.form
 
   def form()(implicit messages: Messages) = Form(

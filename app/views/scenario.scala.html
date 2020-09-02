@@ -15,24 +15,23 @@
  *@
 
 @import config.ApplicationConfig
-@(calculationType: Form[models.CalculationType])(implicit request: Request[_], context: config.GmpContext, messages: Messages,ac:ApplicationConfig)
-
-@import uk.gov.hmrc.play.views.html._
-@import uk.gov.hmrc.play.views.html.helpers._
-
 @import views.html.helpers._
+@import views.ViewHelpers
+
+@this(gmpMain: gmp_main, viewHelpers: ViewHelpers)
+
+
+@(calculationType: Form[models.CalculationType])(implicit request: Request[_], context: config.GmpContext, messages: Messages,ac:ApplicationConfig)
 
 @implicitFormInstance = @{ Some(calculationType) }
 
-@gmp_main(title = Messages("gmp.scenarios.title") + " - " + Messages("service.title") + " - " + Messages("gov.uk")) {
+@gmpMain(title = Messages("gmp.scenarios.title") + " - " + Messages("service.title") + " - " + Messages("gov.uk")) {
 
     @includes.back_link(Messages("gmp.scenarios.title"))
 
-    @views.html.helpers.errorSummary(calculationType, formHeaderKey = "gmp.scenarios.title")
+    @views.html.helpers.errorSummary(calculationType, formHeaderKey = "gmp.scenarios.title", focusId = Some("calcType-payableage"))
 
-    <h1 id="calc-type">@Messages("gmp.scenarios.title")</h1>
-
-      @form(action = routes.ScenarioController.post) {
+      @viewHelpers.form(action = routes.ScenarioController.post) {
           <div class="form-field @if(!calculationType.errors.isEmpty) {form-field--error}">
               @gmpRadioGroup(
                 calculationType("calcType"),
@@ -45,7 +44,6 @@
                 ),
                 '_fieldsetAttributesLegend -> "calcType",
                 '_legend -> Messages("gmp.scenarios.title"),
-                '_legendClass -> "visuallyhidden",
                 '_labelAfter -> true,
                 '_trackGA -> true,
                 '_formHeaderKey -> "gmp.scenarios.title"

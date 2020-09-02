@@ -24,6 +24,7 @@ import play.api.data.validation.{Constraint, Invalid, Valid, ValidationError}
 import play.twirl.api.Html
 import uk.gov.hmrc.emailaddress.EmailAddress
 import utils.GmpViewSpec
+import views.ViewHelpers
 
 class BulkReferenceSpec extends GmpViewSpec {
 
@@ -39,16 +40,18 @@ class BulkReferenceSpec extends GmpViewSpec {
 
     "display an input field for text entry" in {
       doc.getElementById("email") must not be null
-      doc must haveInputLabelWithText("email", expectedText=s"${messages("gmp.email.address")} ${messages("gmp.bulk_reference.email_text")}")
+      doc must haveInputLabelWithText("email", expectedText=s"${messages("gmp.email.address")}")
 
       doc.getElementById("reference") must not be null
-      doc must haveInputLabelWithText("reference", expectedText=s"${messages("gmp.reference.calcname")} ${messages("gmp.bulk_reference.reference_text")}")
+      doc must haveInputLabelWithText("reference", expectedText=s"${messages("gmp.reference.calcname")}")
     }
 
   }
 
-  override def view: Html = views.html.bulk_reference(bulkReferenceForm)
-  //private val form: Form[models.BulkReference] = bulkReferenceForm
+  lazy val gmpMain = app.injector.instanceOf[gmp_main]
+  lazy val viewHelpers = app.injector.instanceOf[ViewHelpers]
+
+  override def view: Html = new views.html.bulk_reference(gmpMain, viewHelpers)(bulkReferenceForm)
 
   val bulkReferenceForm = Form(
     mapping(

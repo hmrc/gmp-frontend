@@ -25,17 +25,18 @@ import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.HeaderCarrierConverter
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
-import uk.gov.hmrc.play.bootstrap.http.HttpClient
+import uk.gov.hmrc.http.HttpClient
 
 import scala.concurrent.{ExecutionContext, Future}
 
 case class AuthenticatedRequest[A](linkId: String, request:Request[A]) extends WrappedRequest[A](request)
 
 @Singleton
-class AuthAction @Inject()(override val authConnector: AuthConnector, configuration: Configuration,
-                           messagesControllerComponents: MessagesControllerComponents)
-                              (implicit ec: ExecutionContext) extends ActionBuilder[AuthenticatedRequest, AnyContent]
-                          with AuthorisedFunctions{
+class AuthAction @Inject()(override val authConnector: AuthConnector,
+                           configuration: Configuration,
+                           messagesControllerComponents: MessagesControllerComponents,
+                           externalUrls: ExternalUrls)(implicit ec: ExecutionContext)
+  extends ActionBuilder[AuthenticatedRequest, AnyContent] with AuthorisedFunctions{
 
   override val parser: BodyParser[AnyContent] = messagesControllerComponents.parsers.defaultBodyParser
   override protected val executionContext: ExecutionContext = messagesControllerComponents.executionContext
@@ -45,7 +46,7 @@ class AuthAction @Inject()(override val authConnector: AuthConnector, configurat
 
     implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session))
 
-    authorised(ConfidenceLevel.L50 and (Enrolment("HMRC-PSA-ORG") or Enrolment("HMRC-PP-ORG")))
+    authorised(ConfidenceLevel.L50 and (Enrolment("HMRC-PSA-ORG") or Enrolment("HMRC-PP-ORG") or Enrolment("HMRC-PODS-ORG")))
       .retrieve(Retrievals.authorisedEnrolments) {
         case Enrolments(enrolments) => {
 
@@ -56,13 +57,17 @@ class AuthAction @Inject()(override val authConnector: AuthConnector, configurat
             enrolment => enrolment.identifiers.find(id => id.key == "PPID").map(_.value)
           }
 
-          psaid.orElse(ppid).fold(Future.successful(Results.Redirect(ExternalUrls.signIn)))(id => block(AuthenticatedRequest(id, request)))
+          val podsPsaid = enrolments.find(_.key == "HMRC-PODS-ORG").flatMap {
+            enrolment => enrolment.identifiers.find(id => id.key == "PSAID").map(_.value)
+          }
+
+          psaid.orElse(ppid).orElse(podsPsaid).fold(Future.successful(Results.Redirect(externalUrls.signIn)))(id => block(AuthenticatedRequest(id, request)))
 
         }
         case _ => throw new RuntimeException("Can't find credentials for user")
       }
   } recover {
-    case ex: NoActiveSession => Results.Redirect(ExternalUrls.signIn)
+    case ex: NoActiveSession => Results.Redirect(externalUrls.signIn)
 
     case ex: InsufficientConfidenceLevel => Results.Redirect(controllers.routes.ApplicationController.unauthorised().url)
 

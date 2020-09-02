@@ -26,7 +26,8 @@ abstract class BulkResultsSpec extends GmpViewSpec{
   val uploadReference: String
   val comingFromPage: Int
 
-  override def view = views.html.bulk_results(bulkResultsSummary, uploadReference, comingFromPage)
+  lazy val gmpMain = app.injector.instanceOf[gmp_main]
+  override def view = new views.html.bulk_results(gmpMain)(bulkResultsSummary, uploadReference, comingFromPage)
 }
 
 
@@ -67,7 +68,7 @@ class BulkResultsSuccessSpec extends BulkResultsSpec {
 
     "have a download success anchor with correct URL and text" in {
       doc.select("#download-success").first must haveLinkURL(routes.BulkResultsController.getResultsAsCsv(uploadReference, "successful").url)
-      doc must haveLinkWithText(messages("gmp.download.link"))
+      doc must haveLinkWithText(s"${messages("gmp.download.link")} ${messages("gmp.download.description.success")}")
     }
 
     "have a heading level 3 with conts and earnings" in {
@@ -80,7 +81,7 @@ class BulkResultsSuccessSpec extends BulkResultsSpec {
 
     "have a download conts anchor with correct URL and text" in {
       doc.select("#download-conts").first must haveLinkURL(routes.BulkResultsController.getContributionsAndEarningsAsCsv(uploadReference).url)
-      doc must haveLinkWithText(messages("gmp.download.link"))
+      doc must haveLinkWithText(s"${messages("gmp.download.link")} ${messages("gmp.download.description.contributions")}")
     }
 
     // Not have Failure specific
@@ -129,7 +130,7 @@ class BulkResultsFailureSpec extends BulkResultsSpec {
 
     "have a download failure anchor with correct URL and text" in {
       doc.select("#download-failed").first must haveLinkURL(routes.BulkResultsController.getResultsAsCsv(uploadReference, "failed").url)
-      doc must haveLinkWithText(messages("gmp.download.link"))
+      doc must haveLinkWithText(s"${messages("gmp.download.link")} ${messages("gmp.download.description.failed")}")
     }
 
     "have a heading level 3 with failure conts and earnings" in {
@@ -142,7 +143,7 @@ class BulkResultsFailureSpec extends BulkResultsSpec {
 
     "have a failure download conts anchor with correct URL and text" in {
       doc.select("#download-conts").first must haveLinkURL(routes.BulkResultsController.getContributionsAndEarningsAsCsv(uploadReference).url)
-      doc must haveLinkWithText(messages("gmp.download.link"))
+      doc must haveLinkWithText(s"${messages("gmp.download.link")} ${messages("gmp.download.description.contributions")}")
     }
 
     // Not have Success-specific
@@ -185,7 +186,7 @@ class BulkResultsAllSpec extends BulkResultsSpec {
 
     "have a download success anchor with correct URL and text" in {
       doc.select("#download-all").first must haveLinkURL(routes.BulkResultsController.getResultsAsCsv(uploadReference, "all").url)
-      doc must haveLinkWithText(messages("gmp.download.link"))
+      doc must haveLinkWithText(s"${messages("gmp.download.link")} ${messages("gmp.download.description.success")}")
     }
 
     "have a heading level 3 with aaall page" in {
@@ -202,7 +203,7 @@ class BulkResultsAllSpec extends BulkResultsSpec {
 
     "have aaa download success anchor with correct URL and text" in {
       doc.select("#download-success").first must haveLinkURL(routes.BulkResultsController.getResultsAsCsv(uploadReference, "successful").url)
-      doc must haveLinkWithText(messages("gmp.download.link"))
+      doc must haveLinkWithText(s"${messages("gmp.download.link")} ${messages("gmp.download.description.success")}")
     }
 
     "have a heading level 3 for failed calculations" in {
@@ -223,7 +224,7 @@ class BulkResultsAllSpec extends BulkResultsSpec {
 
     "have a download failed anchor with correct URL and text" in {
       doc.select("#download-failed").first must haveLinkURL(routes.BulkResultsController.getResultsAsCsv(uploadReference, "failed").url)
-      doc must haveLinkWithText(messages("gmp.download.link"))
+      doc must haveLinkWithText(s"${messages("gmp.download.link")} ${messages("gmp.download.description.failed")}")
     }
 
     "have a heading level 3 for conts and earnings" in {
@@ -236,7 +237,7 @@ class BulkResultsAllSpec extends BulkResultsSpec {
 
     "have a download conts anchor with correct URL and text" in {
       doc.select("#download-conts").first must haveLinkURL(routes.BulkResultsController.getContributionsAndEarningsAsCsv(uploadReference).url)
-      doc must haveLinkWithText(messages("gmp.download.link"))
+      doc must haveLinkWithText(s"${messages("gmp.download.link")} ${messages("gmp.download.description.contributions")}")
     }
   }
 }

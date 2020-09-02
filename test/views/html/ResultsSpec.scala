@@ -22,7 +22,8 @@ import play.twirl.api.Html
 import utils.GmpViewSpec
 
 class ResultsSpec extends GmpViewSpec{
-  override def view: Html = views.html.results( calculationResponse, Some("revalRateSubheader"), Some("survivorSubheader"))
+  lazy val gmpMain = app.injector.instanceOf[gmp_main]
+  override def view: Html = new views.html.results(gmpMain)( calculationResponse, Some("revalRateSubheader"), Some("survivorSubheader"))
 
   private val calculationResponse : CalculationResponse = CalculationResponse(
     "name", "nino", "scon", Some("revaluationRate"), Some(LocalDate.now),

@@ -19,7 +19,7 @@ package validation
 import helpers.RandomNino
 import models.CalculationRequestLine
 import org.scalatest.{FlatSpec, Matchers}
-import org.scalatestplus.play.OneAppPerSuite
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl, MessagesProvider}
 import play.api.i18n.Messages.Implicits._
 import services.BulkRequestCsvColumn
@@ -27,7 +27,7 @@ import services.BulkRequestCsvColumn
 /**
   * Created by stevenhobbs on 12/05/2016.
   */
-class CsvLineValidatorSpec extends FlatSpec with Matchers with OneAppPerSuite {
+class CsvLineValidatorSpec extends FlatSpec with Matchers with GuiceOneAppPerSuite {
   implicit val messagesAPI=app.injector.instanceOf[MessagesApi]
   implicit val messagesProvider=MessagesImpl(Lang("en"), messagesAPI)
 

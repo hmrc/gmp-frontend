@@ -15,36 +15,31 @@
  *@
 
 @import config.ApplicationConfig
-@(pensionDetailsForm: Form[models.PensionDetails])(implicit request: Request[_], context: config.GmpContext, messages: Messages,ac:ApplicationConfig)
-
-@import uk.gov.hmrc.play.views.html._
-@import uk.gov.hmrc.play.views.html.helpers._
 @import views.html.helpers._
+@import views.ViewHelpers
 
+@this(gmpMain: gmp_main, viewHelpers: ViewHelpers)
+
+@(pensionDetailsForm: Form[models.PensionDetails])(implicit request: Request[_], context: config.GmpContext, messages: Messages,ac:ApplicationConfig)
 
 @implicitFormInstance = @{ Some(pensionDetailsForm) }
 
-@pageScripts = {
-    <script type="text/javascript" src='@controllers.routes.AssetsController.at("javascripts/pension-details.js")'></script>
-}
 
-@gmp_main(title = Messages("gmp.pension_details.header") + " - " + Messages("service.title") + " - " + Messages("gov.uk"), pageScripts = Some(pageScripts)) {
+@gmpMain(title = Messages("gmp.pension_details.header") + " - " + Messages("service.title") + " - " + Messages("gov.uk")) {
 
   @includes.back_link(Messages("gmp.bulk_reference.header"))
 
   @views.html.helpers.errorSummary(pensionDetailsForm)
 
 
-  <h1>@Messages("gmp.pension_details.header")</h1>
-
-  @form(action = routes.PensionDetailsController.post) {
+  @viewHelpers.form(action = routes.PensionDetailsController.post) {
 
       <div id="scon-form-group">
           @gmpInput(pensionDetailsForm("scon"),
           '_id -> "scon",
           '_maxLength -> 9,
-          '_hintText -> Messages("gmp.scon.hint"))
-
+          '_hintText -> Messages("gmp.scon.hint"),
+          '_header -> Messages("gmp.pension_details.header"))
       </div>
 
       <p>@Messages("gmp.scon.message") <a data-journey-click='@Messages("gmp.ga-track.link.click"):@Messages("gmp.pension_details.header"):@Messages("gmp.contact.hmrc")'

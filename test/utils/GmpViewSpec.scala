@@ -20,13 +20,14 @@ import config.ApplicationConfig
 import controllers.FakeGmpContext
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
+import org.scalatestplus.play.guice.GuiceOneServerPerSuite
+import org.scalatestplus.play.PlaySpec
 import play.api.i18n.{Messages, MessagesApi, MessagesImpl}
 import play.api.mvc.MessagesControllerComponents
 import play.api.test.FakeRequest
 import play.twirl.api.Html
 
-trait GmpViewSpec extends PlaySpec with JSoupMatchers with OneServerPerSuite {
+trait GmpViewSpec extends PlaySpec with JSoupMatchers with GuiceOneServerPerSuite {
 
   implicit val messagesControllerComponents = app.injector.instanceOf[MessagesControllerComponents].langs.availables.head
   implicit val messagesApi =  app.injector.instanceOf[MessagesApi]
@@ -46,6 +47,12 @@ trait GmpViewSpec extends PlaySpec with JSoupMatchers with OneServerPerSuite {
   def pageWithTitle(titleText: String): Unit = {
     "have a static title" in {
       doc.title must include(titleText)
+    }
+  }
+
+  def pageWithTableCaption(id: String, captionText: String): Unit = {
+    s"have a table caption with text: $captionText" in {
+      doc must haveTableCaptionWithIdAndText(id, captionText)
     }
   }
 

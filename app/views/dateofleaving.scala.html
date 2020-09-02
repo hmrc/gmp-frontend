@@ -15,12 +15,13 @@
  *@
 
 @import config.ApplicationConfig
-@(dateOfLeavingForm: Form[models.Leaving],scenario: String)(implicit request: Request[_], context: config.GmpContext, messages: Messages,applicationConfig: config.ApplicationConfig)
-
-@import uk.gov.hmrc.play.views.html._
-@import uk.gov.hmrc.play.views.html.helpers._
 @import views.html.helpers._
 @import models.Leaving
+@import views.ViewHelpers
+
+@this(gmpMain: gmp_main, viewHelpers: ViewHelpers)
+
+@(dateOfLeavingForm: Form[models.Leaving],scenario: String)(implicit request: Request[_], context: config.GmpContext, messages: Messages,applicationConfig: config.ApplicationConfig)
 
 @implicitFormInstance = @{ Some(dateOfLeavingForm) }
 
@@ -38,15 +39,13 @@
     }
 }
 
-@gmp_main(title = heading + " - " + Messages("service.title") + " - " + Messages("gov.uk"), pageScripts = Some(pageScripts)) {
+@gmpMain(title = heading + " - " + Messages("service.title") + " - " + Messages("gov.uk"), pageScripts = Some(pageScripts)) {
 
         @includes.back_link(Messages("gmp.bulk.problem.header"))
 
         @views.html.helpers.errorSummary(dateOfLeavingForm, formHeaderKey=heading.toString)
 
-          <h1>@heading</h1>
-
-            @form(action = routes.DateOfLeavingController.post) {
+            @viewHelpers.form(action = routes.DateOfLeavingController.post) {
 
             <div class="form-field @if(dateOfLeavingForm.hasErrors && !dateOfLeavingForm.hasGlobalErrors) {form-field--error}" id="leaving">
 
@@ -59,7 +58,6 @@
                             ),
                             '_fieldsetAttributes -> "class=inline",
                             '_legend -> Messages("gmp.leaving.dol.question"),
-                            '_legendClass -> "visuallyhidden",
                             '_labelAfter -> true,
                             '_labelClass -> "block-label",
                             '_groupClass -> "inline-block",
@@ -91,7 +89,6 @@
                             case CalculationType.SURVIVOR => '_legend -> Messages("gmp.survivor.dol.question")
                             case _ => '_legend -> Messages("gmp.other.dol.left.question")
                         },
-                        '_legendClass -> "visuallyhidden",
                         '_labelAfter -> true,
                         '_labelClass -> "block-label",
                         '_groupClass -> "inline-block",
@@ -105,12 +102,12 @@
             } else {
               <div class="form-field js-hidden" id="leaving-date">
             }
-                    <fieldset id="termination-date">
+                    <fieldset id="leavingDate">
 
-                        <legend id="leavingDate">
+                        <legend id="termination-date">
                             <span class="form-label-bold" id="date_header">@Messages("gmp.date.header_text")</span>
-                            <span class="form-hint" id="date_hint">@Messages("gmp.date.example")</span>
                         </legend>
+                        <span class="form-hint" id="date_hint">@Messages("gmp.date.example")</span>
 
                         <div class="form-date">
 

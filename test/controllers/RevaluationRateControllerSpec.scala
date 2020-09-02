@@ -23,8 +23,9 @@ import helpers.RandomNino
 import models._
 import org.mockito.Matchers
 import org.mockito.Mockito._
-import org.scalatest.mockito.MockitoSugar
-import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
+import org.scalatestplus.mockito.MockitoSugar
+import org.scalatestplus.play.guice.GuiceOneServerPerSuite
+import org.scalatestplus.play.PlaySpec
 import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl, MessagesProvider}
 import play.api.i18n.Messages.Implicits._
 import play.api.libs.json.Json
@@ -33,10 +34,11 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.SessionService
 import uk.gov.hmrc.auth.core.AuthConnector
+import views.Views
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class RevaluationRateControllerSpec extends PlaySpec with OneServerPerSuite with MockitoSugar {
+class RevaluationRateControllerSpec extends PlaySpec with GuiceOneServerPerSuite with MockitoSugar {
 
   val mockAuthConnector = mock[AuthConnector]
   val mockSessionService = mock[SessionService]
@@ -49,8 +51,9 @@ class RevaluationRateControllerSpec extends PlaySpec with OneServerPerSuite with
   implicit val ac=app.injector.instanceOf[ApplicationConfig]
   implicit val gmpSessionCache=app.injector.instanceOf[GmpSessionCache]
   lazy val revaluationRateForm = new RevaluationRateForm(mcc)
+  lazy val views = app.injector.instanceOf[Views]
 
-  object TestRevaluationRateController extends RevaluationRateController(FakeAuthAction, mockAuthConnector,ac,mockSessionService,FakeGmpContext,mcc,revaluationRateForm,ec,gmpSessionCache)
+  object TestRevaluationRateController extends RevaluationRateController(FakeAuthAction, mockAuthConnector,ac,mockSessionService,FakeGmpContext,mcc,revaluationRateForm,ec,gmpSessionCache,views)
 
 
   private val nino: String = RandomNino.generate

@@ -23,7 +23,8 @@ import utils.GmpViewSpec
 
 class MoreBulkResultsSpec extends GmpViewSpec {
 
-  override def view: Html = views.html.more_bulk_results(bulkPreviousRequestsList)
+  lazy val gmpMain = app.injector.instanceOf[gmp_main]
+  override def view: Html = new views.html.more_bulk_results(gmpMain)(bulkPreviousRequestsList)
 
   "MoreBulkResults page" must {
 

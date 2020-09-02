@@ -25,6 +25,7 @@ import play.api.mvc.MessagesControllerComponents
 import services.SessionService
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.http.{NotFoundException, Upstream4xxResponse}
+import views.Views
 
 import scala.concurrent.ExecutionContext
 
@@ -33,7 +34,8 @@ class BulkResultsController @Inject()(authAction: AuthAction,
                                       gmpBulkConnector: GmpBulkConnector,
                                       messagesControllerComponents: MessagesControllerComponents,
                                       ac:ApplicationConfig,sessionService: SessionService,implicit val config:GmpContext,
-                                      implicit val executionContext: ExecutionContext
+                                      implicit val executionContext: ExecutionContext,
+                                      views: Views
                                      ) extends GmpController(messagesControllerComponents,ac,sessionService,config) {
    def get(uploadReference: String, comingFromPage: Int) = authAction.async {
     implicit request => {
@@ -44,16 +46,16 @@ class BulkResultsController @Inject()(authAction: AuthAction,
 
         gmpBulkConnector.getBulkResultsSummary(uploadReference, link).map {
           bulkResultsSummary => {
-            Ok(views.html.bulk_results(bulkResultsSummary, uploadReference, comingFromPage))
+            Ok(views.bulkResults(bulkResultsSummary, uploadReference, comingFromPage))
           }
         }.recover {
           case e: Upstream4xxResponse if e.upstreamResponseCode == FORBIDDEN => {
             log(e)
-            Ok(views.html.bulk_wrong_user())
+            Ok(views.bulkWrongUser())
           }
           case e: NotFoundException => {
             log(e)
-            Ok(views.html.bulk_results_not_found())
+            Ok(views.bulkResultsNotFound())
           }
           // $COVERAGE-OFF$
           case e: Exception => {

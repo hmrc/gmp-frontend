@@ -24,15 +24,17 @@ import play.api.i18n.{Messages, MessagesImpl}
 import play.api.mvc.{MessagesControllerComponents, Result}
 import services.SessionService
 import uk.gov.hmrc.auth.core.AuthConnector
-import uk.gov.hmrc.play.bootstrap.controller.FrontendController
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import uk.gov.hmrc.time.TaxYear
-
 import scala.concurrent.ExecutionContext
 
 @Singleton
 class GmpController @Inject()(val messagesControllerComponents: MessagesControllerComponents,
-                              ac: ApplicationConfig, sessionService: SessionService,context: GmpContext)
+                              ac: ApplicationConfig,
+                              sessionService: SessionService,
+                              context: GmpContext)
                   extends FrontendController(messagesControllerComponents){
+
   implicit val applicationConfig: config.ApplicationConfig  = ac
   implicit lazy val messages: Messages = MessagesImpl(messagesControllerComponents.langs.availables.head, messagesApi)
 }
@@ -49,8 +51,11 @@ object PageType {
   val INFLATION_PROOF = "InflationProofController"
 }
 
-class GmpPageFlow @Inject()(val authConnector: AuthConnector,sessionService: SessionService,implicit val context: GmpContext,
-                            messagesControllerComponents: MessagesControllerComponents,applicationConfig: ApplicationConfig)
+class GmpPageFlow @Inject()(val authConnector: AuthConnector,
+                            sessionService: SessionService,
+                            implicit val context: GmpContext,
+                            messagesControllerComponents: MessagesControllerComponents,
+                            applicationConfig: ApplicationConfig)
                            (implicit ec: ExecutionContext)
                           extends GmpController(messagesControllerComponents,applicationConfig,sessionService,context) {
 

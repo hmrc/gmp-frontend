@@ -25,7 +25,8 @@ import models.BulkResultsSummary
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.mockito.MockitoSugar
-import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
+import org.scalatestplus.play.PlaySpec
+import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl}
 import play.api.mvc.MessagesControllerComponents
 import play.api.test.FakeRequest
@@ -34,10 +35,11 @@ import services.SessionService
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.http.logging.SessionId
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, NotFoundException, Upstream4xxResponse}
+import views.Views
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class BulkResultsControllerSpec extends PlaySpec with OneServerPerSuite with MockitoSugar {
+class BulkResultsControllerSpec extends PlaySpec with GuiceOneServerPerSuite with MockitoSugar {
 
   val mockAuthConnector = mock[AuthConnector]
   val mockGmpBulkConnector = mock[GmpBulkConnector]
@@ -50,10 +52,10 @@ class BulkResultsControllerSpec extends PlaySpec with OneServerPerSuite with Moc
 
   implicit val ac=app.injector.instanceOf[ApplicationConfig]
   implicit val ss=app.injector.instanceOf[SessionService]
+  lazy val views = app.injector.instanceOf[Views]
 
 
-  object TestBulkResultsController extends BulkResultsController(FakeAuthAction,mockAuthConnector, mockGmpBulkConnector,mcc,ac,ss,FakeGmpContext,ec) {
-   // override val context = FakeGmpContext
+  object TestBulkResultsController extends BulkResultsController(FakeAuthAction,mockAuthConnector, mockGmpBulkConnector,mcc,ac,ss,FakeGmpContext,ec,views) {
   }
 
   "Bulk Results Controller" must {

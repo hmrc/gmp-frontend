@@ -15,15 +15,16 @@
  *@
 
 @import config.ApplicationConfig
-@(memberDetailsForm: Form[models.MemberDetails])(implicit request: Request[_], context: config.GmpContext, messages: Messages,ac:ApplicationConfig)
-
-@import uk.gov.hmrc.play.views.html._
-@import uk.gov.hmrc.play.views.html.helpers._
 @import views.html.helpers._
+@import views.ViewHelpers
+
+@this(gmpMain: gmp_main, viewHelpers: ViewHelpers)
+
+@(memberDetailsForm: Form[models.MemberDetails])(implicit request: Request[_], context: config.GmpContext, messages: Messages,ac:ApplicationConfig)
 
 @implicitFormInstance = @{ Some(memberDetailsForm) }
 
-@gmp_main(title = Messages("gmp.member_details.header") + " - " + Messages("service.title") + " - " + Messages("gov.uk")) {
+@gmpMain(title = Messages("gmp.member_details.header") + " - " + Messages("service.title") + " - " + Messages("gov.uk")) {
 
     @includes.back_link(Messages("gmp.bulk.results.banner"))
 
@@ -31,34 +32,37 @@
 
     <h1>@Messages("gmp.member_details.header")</h1>
 
-    @form(action = routes.MemberDetailsController.post) {
+    @viewHelpers.form(action = routes.MemberDetailsController.post) {
 
     <div class="form-group">
-      <div class="form-field">
+        <div class="form-field">
+
+        @gmpInput(memberDetailsForm("firstForename"),
+            '_label -> Html(Messages("gmp.firstname")),
+            '_labelClass -> "form-label-bold",
+            '_id -> "firstForename")
+        </div>
+
+        <div class="form-field">
+
+        @gmpInput(memberDetailsForm("surname"),
+            '_label -> Html(Messages("gmp.lastname")),
+            '_labelClass -> "form-label-bold",
+            '_id -> "surname")
+
+        </div>
+
+        <div class="form-field">
 
           @gmpInput(memberDetailsForm("nino"),
           '_label -> Html(Messages("gmp.nino")),
           '_labelClass -> "form-label-bold",
           '_id -> "nino",
           '_maxLength -> 13,
-          '_hintText -> Messages("gmp.nino.hint"))
+          '_hintText -> Messages("gmp.nino.hint"),
+          '_spellCheck -> false)
 
-      </div>
-        <div class="form-field">
-
-          @gmpInput(memberDetailsForm("firstForename"),
-          '_label -> Html(Messages("gmp.firstname")),
-          '_labelClass -> "form-label-bold",
-          '_id -> "firstForename")
         </div>
-        <div class="form-field">
-
-          @gmpInput(memberDetailsForm("surname"),
-          '_label -> Html(Messages("gmp.lastname")),
-          '_labelClass -> "form-label-bold",
-          '_id -> "surname")
-
-      </div>
     </div>
       <div>
           <button data-journey-click='@Messages("gmp.ga-track.button.click"):@Messages("gmp.member_details.header"):@Messages("gmp.continue.button")'

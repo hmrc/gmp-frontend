@@ -17,6 +17,8 @@
 @import play.api.i18n.Messages
 @import play.twirl.api.HtmlFormat
 
+@this(gmpMain: gmp_main)
+
 @(
     signOutEnabled: Boolean = true,
     getHelpForm: Html  = HtmlFormat.empty,
@@ -27,7 +29,7 @@
     <a href="@url">@serviceName</a>
 }
 
-@gmp_main(title = Messages("gmp.page_not_found.tabtitle")) {
+@gmpMain(title = Messages("gmp.page_not_found.tabtitle")) {
     <div class="grid-row">
         <div class="content">
 
