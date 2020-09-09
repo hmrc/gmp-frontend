@@ -48,9 +48,9 @@ class MemberDetailsForm @Inject()(mcc: MessagesControllerComponents) {
       else if (!NinoValidate.isValid(ninoText.toUpperCase())){
         Invalid(Seq(ValidationError(messages("gmp.error.nino.invalid"))))
       }
-      else if (!ninoText.takeRight(1).toUpperCase().matches(NINO_SUFFIX_REGEX)){
-        Invalid(Seq(ValidationError(messages("gmp.error.nino.invalid"))))
-      }
+//      else if (!ninoText.takeRight(1).toUpperCase().matches(NINO_SUFFIX_REGEX)){
+//        Invalid(Seq(ValidationError(messages("gmp.error.nino.invalid"))))
+//      }
       else {
         Valid
       }

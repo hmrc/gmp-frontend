@@ -14,25 +14,25 @@
  * limitations under the License.
  */
 
-package models
-
-import helpers.RandomNino
-import org.scalatest.{Matchers, WordSpec}
-
-class NinoSpec extends WordSpec with Matchers {
-
-  "Creating a Nino" should {
-    "fail if the nino is not valid" in {
-      an[IllegalArgumentException] should be thrownBy Nino("INVALID_NINO")
-    }
-  }
-
-  "Formatting a Nino" should {
-    "produce a formatted nino" in {
-      val nino = RandomNino.generate
-      val formattedNino = nino.grouped(2).mkString(" ")
-
-      Nino(nino).formatted shouldBe formattedNino
-    }
-  }
-}
+//package models
+//
+//import helpers.RandomNino
+//import org.scalatest.{Matchers, WordSpec}
+//
+//class NinoSpec extends WordSpec with Matchers {
+//
+//  "Creating a Nino" should {
+//    "fail if the nino is not valid" in {
+//      an[IllegalArgumentException] should be thrownBy Nino("INVALID_NINO")
+//    }
+//  }
+//
+//  "Formatting a Nino" should {
+//    "produce a formatted nino" in {
+//      val nino = RandomNino.generate
+//      val formattedNino = nino.grouped(2).mkString(" ")
+//
+//      Nino(nino).formatted shouldBe formattedNino
+//    }
+//  }
+//}
