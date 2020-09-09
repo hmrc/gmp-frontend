@@ -19,7 +19,9 @@ package config
 import com.google.inject.{Inject, Singleton}
 import com.typesafe.config.ConfigFactory
 import play.api.{Configuration, Environment, Play}
+import uk.gov.hmrc.play.bootstrap.binders.SafeRedirectUrl
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
+
 import scala.concurrent.duration._
 import scala.concurrent.duration.FiniteDuration
 
@@ -57,6 +59,12 @@ class ApplicationConfig @Inject()(
 
   lazy val timeout = servicesConfig.getInt("timeout.seconds")
   lazy val timeoutCountdown = servicesConfig.getInt("timeout.countdown")
+
+  lazy val accessibilityStatementToggle = servicesConfig.getBoolean("accessibility-statement-toggle")
+  lazy val accessibilityBaseUrl = servicesConfig.getString("accessibility-statement-baseUrl")
+  def accessibilityStatementUrl(referrer: String) =
+    s"$accessibilityBaseUrl/accessibility-statement/guaranteed-minimum-pension?referrerUrl=${SafeRedirectUrl(
+      frontendHost + referrer).encodedUrl}"
 }
 
 
