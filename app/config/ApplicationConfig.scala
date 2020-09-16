@@ -33,12 +33,12 @@ class ApplicationConfig @Inject()(
 
   private def loadConfig(key: String) = runModeConfiguration.getOptional[String](key).getOrElse(throw new Exception(s"Missing key: $key"))
 
-   val assetsPrefix: String = loadConfig("assets.url") + loadConfig("assets.version")
-   val analyticsToken: Option[String] = runModeConfiguration.getOptional[String]("google-analytics.token")
-   val analyticsHost: String = runModeConfiguration.getOptional[String]("google-analytics.host").getOrElse("auto")
-   val urBannerToggle:Boolean = loadConfig("urBanner.toggle").toBoolean
-   val urBannerLink: String = loadConfig("urBanner.link")
-   val optimizelyProjectId: String = loadConfig("optimizely.projectId")
+  val assetsPrefix: String = loadConfig("assets.url") + loadConfig("assets.version")
+  val analyticsToken: Option[String] = runModeConfiguration.getOptional[String]("google-analytics.token")
+  val analyticsHost: String = runModeConfiguration.getOptional[String]("google-analytics.host").getOrElse("auto")
+  val urBannerToggle: Boolean = loadConfig("urBanner.toggle").toBoolean
+  val urBannerLink: String = loadConfig("urBanner.link")
+  val optimizelyProjectId: String = loadConfig("optimizely.projectId")
 
   val contactHost = runModeConfiguration.getOptional[String](s"contact-frontend.host").getOrElse("")
 
@@ -59,13 +59,8 @@ class ApplicationConfig @Inject()(
 
   lazy val timeout = servicesConfig.getInt("timeout.seconds")
   lazy val timeoutCountdown = servicesConfig.getInt("timeout.countdown")
-
-  lazy val accessibilityStatementToggle = servicesConfig.getBoolean("accessibility-statement-toggle")
-  lazy val accessibilityBaseUrl = servicesConfig.getString("accessibility-statement-baseUrl")
-  def accessibilityStatementUrl(referrer: String) =
-    s"$accessibilityBaseUrl/accessibility-statement/guaranteed-minimum-pension?referrerUrl=${SafeRedirectUrl(
-      frontendHost + referrer).encodedUrl}"
 }
+
 
 
 
