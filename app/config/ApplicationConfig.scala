@@ -49,7 +49,6 @@ class ApplicationConfig @Inject()(
 
   val globalErrors = ConfigFactory.load("global-errors.properties")
   lazy val contactFormServiceIdentifier = "GMP"
-  val frontendHost = loadConfig("platform.frontend.host")
 
   val upscanInitiateHost: String = servicesConfig.baseUrl("upscan")
   val upscanProtocol: String = servicesConfig.getConfString("upscan.protocol", "https")
