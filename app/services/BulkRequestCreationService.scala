@@ -25,10 +25,8 @@ import play.api.i18n.{Messages, MessagesImpl}
 import play.api.mvc.MessagesControllerComponents
 import play.api.{Configuration, Environment, Logger, Mode}
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
-import uk.gov.hmrc.stream.BulkEntityProcessor
 import uk.gov.hmrc.time.TaxYear
 import validation.{CsvLineValidator, DateValidate, SMValidate}
-
 import scala.util.{Failure, Success, Try}
 
 object BulkRequestCsvColumn {
