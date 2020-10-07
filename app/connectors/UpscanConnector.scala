@@ -34,18 +34,13 @@ class UpscanConnector @Inject()(
                                  @Named("appName") appName: String
                                )(implicit ec: ExecutionContext) {
 
-  private val headers = Map(
-    HeaderNames.USER_AGENT   -> appName,
-    HeaderNames.CONTENT_TYPE -> "application/json"
-  )
-
   private val upscanInitiateHost: String = configuration.upscanInitiateHost
   private[connectors] val upscanInitiatePath: String = "/upscan/v2/initiate"
   private val upscanInitiateUrl: String = upscanInitiateHost + upscanInitiatePath
 
   def getUpscanFormData(body: UpscanInitiateRequest)
                        (implicit hc: HeaderCarrier): Future[UpscanInitiateResponse] = {
-    httpClient.POST[UpscanInitiateRequest, PreparedUpload](upscanInitiateUrl, body, headers.toSeq).map {
+    httpClient.POST[UpscanInitiateRequest, PreparedUpload](upscanInitiateUrl, body).map {
       _.toUpscanInitiateResponse
     }
   }
