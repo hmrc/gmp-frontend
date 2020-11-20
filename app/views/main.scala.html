@@ -33,21 +33,10 @@
     signOutEnabled:Boolean,
     customHead: Option[Html] = None)(mainContent: Html = HtmlFormat.empty)(implicit request: Request[_], context: config.GmpContext, messages: Messages)
 
-@headScript = {
-    <!-- Google Tag Manager -->
-    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-                new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-            j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-            'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer', '@applicationConfig.gtmContainerId');</script>
-        <!-- End Google Tag Manager -->
-
-    <script src="https://cdn.optimizely.com/js/@{applicationConfig.optimizelyProjectId}.js"></script>
-}
 @head = {
-    @viewHelpers.head(
+    @viewHelpers.headWithTrackingConsent(
         linkElem = linkElement,
-        headScripts = Some(headScript))
+        headScripts = None)
     <meta name="format-detection" content="telephone=no"/>
     @customHead
 }
@@ -67,13 +56,6 @@
         showBetaLink = false,
         navLinks = if(signOutEnabled) Some(signOutLink) else None
     )
-}
-
-@googleBodyNoScript = {
-  <!-- Google Tag Manager (noscript) -->
-  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=@applicationConfig.gtmContainerId"
-  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-  <!-- End Google Tag Manager (noscript) -->
 }
 
 @afterHeader = @{
@@ -96,7 +78,6 @@
     )
     <script src='@routes.AssetsController.at("javascripts/urBanner.js")'> </script>
     <script src='@routes.AssetsController.at("javascripts/back.js")'> </script>
-    @googleBodyNoScript
 }
 
 @footerTop = {}

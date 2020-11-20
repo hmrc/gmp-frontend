@@ -14,7 +14,7 @@ object AppDependencies {
     "uk.gov.hmrc" %% "emailaddress"                % "3.5.0",
     "uk.gov.hmrc" %% "auth-client"                 % "3.2.0-play-26",
     "uk.gov.hmrc" %% "govuk-template"              % "5.57.0-play-26",
-    "uk.gov.hmrc" %% "play-ui"                     % "8.12.0-play-26",
+    "uk.gov.hmrc" %% "play-ui"                     % "8.15.0-play-26",
     "com.typesafe.play" %% "play-json-joda"        % "2.7.4",
     "com.typesafe.play" %% "play-iteratees"        % "2.6.1"
   )
