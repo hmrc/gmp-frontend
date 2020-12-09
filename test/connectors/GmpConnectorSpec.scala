@@ -28,7 +28,7 @@ import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 import play.api.Environment
-import play.api.libs.json.{JsValue, Json}
+import play.api.libs.json.Json
 import play.api.test.Helpers._
 import uk.gov.hmrc.http._
 import uk.gov.hmrc.http.logging.SessionId
@@ -207,7 +207,7 @@ class GmpConnectorSpec extends PlaySpec with GuiceOneServerPerSuite with Mockito
         val calculationRequest: CalculationRequest = CalculationRequest(scon = "S1401234Z", nino = nino, surname = "Smith", firstForename = "Bill", 1)
 
         intercept[RuntimeException] {
-          val result = TestGmpConnector.calculateSingle(calculationRequest,link)
+          TestGmpConnector.calculateSingle(calculationRequest,link)
         }
       }
     }
@@ -234,7 +234,7 @@ class GmpConnectorSpec extends PlaySpec with GuiceOneServerPerSuite with Mockito
         val validateSconRequest: ValidateSconRequest = ValidateSconRequest(scon = "S1401234Z")
 
         intercept[RuntimeException] {
-          val result = TestGmpConnector.validateScon(validateSconRequest,link)
+          TestGmpConnector.validateScon(validateSconRequest,link)
         }
       }
     }
@@ -261,7 +261,7 @@ class GmpConnectorSpec extends PlaySpec with GuiceOneServerPerSuite with Mockito
         val validateSconRequest: ValidateSconRequest = ValidateSconRequest(scon = "S1401234Z")
 
         intercept[RuntimeException] {
-          val result = TestGmpConnector.validateScon(validateSconRequest,link)
+          TestGmpConnector.validateScon(validateSconRequest,link)
         }
       }
     }
@@ -302,9 +302,4 @@ class GmpConnectorSpec extends PlaySpec with GuiceOneServerPerSuite with Mockito
       }
     }
   }
-
-  private def successfulCalcHttpResponse(responseJson: Option[JsValue]): JsValue = {
-    responseJson.get
-  }
-
 }

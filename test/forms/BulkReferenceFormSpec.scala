@@ -16,7 +16,6 @@
 
 package forms
 
-import forms.BulkReferenceForm
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import org.scalatestplus.play.PlaySpec
 import play.api.data.FormError

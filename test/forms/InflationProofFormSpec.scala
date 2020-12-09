@@ -16,7 +16,6 @@
 
 package forms
 
-import forms.InflationProofForm
 import models.{GmpDate, InflationProof}
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import org.scalatestplus.play.PlaySpec

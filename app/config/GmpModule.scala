@@ -16,13 +16,9 @@
 
 package config
 
-import java.io.File
-
-import play.api.inject.{Binding, Module}
-import play.api.{Configuration, Environment, Logger, Mode}
+import play.api.{Configuration, Environment, Mode}
 import uk.gov.hmrc.auth.core.AuthConnector
 import com.google.inject.AbstractModule
-import uk.gov.hmrc.http.{HttpGet, HttpPost, HttpPut}
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.bootstrap.audit.DefaultAuditConnector
 import uk.gov.hmrc.play.bootstrap.auth.DefaultAuthConnector

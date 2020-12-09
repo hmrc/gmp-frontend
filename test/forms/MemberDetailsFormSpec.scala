@@ -16,13 +16,11 @@
 
 package forms
 
-import forms.MemberDetailsForm
 import helpers.RandomNino
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import org.scalatestplus.play.PlaySpec
 import play.api.data.FormError
-import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl, MessagesProvider}
-import play.api.i18n.Messages.Implicits._
+import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl}
 import play.api.libs.json.Json
 import play.api.mvc.MessagesControllerComponents
 

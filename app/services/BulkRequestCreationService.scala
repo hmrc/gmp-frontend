@@ -17,7 +17,7 @@
 package services
 
 import com.google.inject.Inject
-import models.upscan.{UploadedSuccessfully, UpscanCallback, UpscanReadyCallback}
+import models.upscan.UploadedSuccessfully
 import models.{BulkCalculationRequest, BulkCalculationRequestLine, CalculationRequestLine}
 import org.joda.time.LocalDate
 import org.joda.time.format.DateTimeFormat

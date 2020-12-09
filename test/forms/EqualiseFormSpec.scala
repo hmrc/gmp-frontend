@@ -16,7 +16,6 @@
 
 package forms
 
-import forms.EqualiseForm
 import models.Equalise
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import org.scalatestplus.play.PlaySpec

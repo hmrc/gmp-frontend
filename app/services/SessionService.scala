@@ -37,7 +37,7 @@ class SessionService @Inject()(metrics: ApplicationMetrics,gmpSessionCache: GmpS
   val CALLBACK_SESSION_KEY = "gmp_callback_session"
   val cleanBulkSession = GmpBulkSession(None, None, None)
 
-  def fetchGmpBulkSession()(implicit request: Request[_], hc: HeaderCarrier): Future[Option[GmpBulkSession]] = {
+  def fetchGmpBulkSession()(implicit hc: HeaderCarrier): Future[Option[GmpBulkSession]] = {
 
     val timer = metrics.keystoreStoreTimer.time()
 
@@ -49,7 +49,7 @@ class SessionService @Inject()(metrics: ApplicationMetrics,gmpSessionCache: GmpS
     })
   }
 
-  def resetGmpBulkSession()(implicit request: Request[_], hc: HeaderCarrier ): Future[Option[GmpBulkSession]] = {
+  def resetGmpBulkSession()(implicit hc: HeaderCarrier ): Future[Option[GmpBulkSession]] = {
     val timer = metrics.keystoreStoreTimer.time()
 
     Logger.debug(s"[SessionService][fetchGmpBulkSession]")
@@ -60,7 +60,7 @@ class SessionService @Inject()(metrics: ApplicationMetrics,gmpSessionCache: GmpS
     })
   }
 
-  def cacheCallBackData(_callBackData: Option[UploadStatus])(implicit request: Request[_], hc: HeaderCarrier): Future[Option[GmpBulkSession]] = {
+  def cacheCallBackData(_callBackData: Option[UploadStatus])(implicit  hc: HeaderCarrier): Future[Option[GmpBulkSession]] = {
     val timer = metrics.keystoreStoreTimer.time()
       Logger.debug(s"[SessionService][cacheCallBackData] : ${_callBackData}")
 
@@ -80,7 +80,7 @@ class SessionService @Inject()(metrics: ApplicationMetrics,gmpSessionCache: GmpS
   }
 
   def cacheEmailAndReference(_email: Option[String], _reference: Option[String])
-                            (implicit request: Request[_], hc: HeaderCarrier ): Future[Option[GmpBulkSession]] = {
+                            (implicit  hc: HeaderCarrier ): Future[Option[GmpBulkSession]] = {
     val timer = metrics.keystoreStoreTimer.time()
 
     Logger.debug(s"[SessionService][cacheEmailAndReferencea] : email: ${_email}; reference: ${_reference}")
@@ -101,7 +101,7 @@ class SessionService @Inject()(metrics: ApplicationMetrics,gmpSessionCache: GmpS
   }
 
 
-  def fetchGmpSession()(implicit request: Request[_], hc: HeaderCarrier ): Future[Option[GmpSession]] = {
+  def fetchGmpSession()(implicit  hc: HeaderCarrier ): Future[Option[GmpSession]] = {
     val timer = metrics.keystoreStoreTimer.time()
 
     Logger.debug(s"[SessionService][fetchGmpSession]")
@@ -112,7 +112,7 @@ class SessionService @Inject()(metrics: ApplicationMetrics,gmpSessionCache: GmpS
     })
   }
 
-  def resetGmpSession()(implicit request: Request[_], hc: HeaderCarrier ): Future[Option[GmpSession]] = {
+  def resetGmpSession()(implicit  hc: HeaderCarrier ): Future[Option[GmpSession]] = {
     val timer = metrics.keystoreStoreTimer.time()
 
     Logger.debug(s"[SessionService][fetchGmpSession]")
@@ -137,7 +137,7 @@ class SessionService @Inject()(metrics: ApplicationMetrics,gmpSessionCache: GmpS
     }
   }
 
-  def cacheMemberDetails(memberDetails: MemberDetails)(implicit request: Request[_], hc: HeaderCarrier ): Future[Option[GmpSession]] = {
+  def cacheMemberDetails(memberDetails: MemberDetails)(implicit  hc: HeaderCarrier ): Future[Option[GmpSession]] = {
     val timer = metrics.keystoreStoreTimer.time()
 
     Logger.debug(s"[SessionService][cacheMemberDetails] : $memberDetails")
@@ -157,7 +157,7 @@ class SessionService @Inject()(metrics: ApplicationMetrics,gmpSessionCache: GmpS
     })
   }
 
-  def fetchMemberDetails()(implicit request: Request[_], hc: HeaderCarrier ): Future[Option[MemberDetails]] = {
+  def fetchMemberDetails()(implicit hc: HeaderCarrier ): Future[Option[MemberDetails]] = {
     val timer = metrics.keystoreStoreTimer.time()
 
     Logger.debug(s"[SessionService][fetchMemberDetails]")
@@ -170,7 +170,7 @@ class SessionService @Inject()(metrics: ApplicationMetrics,gmpSessionCache: GmpS
     }
   }
 
-  def cachePensionDetails(scon: String)(implicit request: Request[_], hc: HeaderCarrier ): Future[Option[GmpSession]] = {
+  def cachePensionDetails(scon: String)(implicit  hc: HeaderCarrier ): Future[Option[GmpSession]] = {
     val timer = metrics.keystoreStoreTimer.time()
 
     Logger.debug(s"[SessionService][cachePensionDetails] : $scon")
@@ -190,7 +190,7 @@ class SessionService @Inject()(metrics: ApplicationMetrics,gmpSessionCache: GmpS
     })
   }
 
-  def fetchPensionDetails()(implicit request: Request[_], hc: HeaderCarrier ): Future[Option[String]] = {
+  def fetchPensionDetails()(implicit  hc: HeaderCarrier ): Future[Option[String]] = {
     val timer = metrics.keystoreStoreTimer.time()
 
     Logger.debug(s"[SessionService][fetchPensionDetails]")
@@ -203,7 +203,7 @@ class SessionService @Inject()(metrics: ApplicationMetrics,gmpSessionCache: GmpS
     }
   }
 
-  def cacheScenario(scenario: String)(implicit request: Request[_], hc: HeaderCarrier ): Future[Option[GmpSession]] = {
+  def cacheScenario(scenario: String)(implicit  hc: HeaderCarrier ): Future[Option[GmpSession]] = {
     val timer = metrics.keystoreStoreTimer.time()
 
     Logger.debug(s"[SessionService][cacheScenario] : $scenario")
@@ -223,7 +223,7 @@ class SessionService @Inject()(metrics: ApplicationMetrics,gmpSessionCache: GmpS
     })
   }
 
-  def fetchScenario()(implicit request: Request[_], hc: HeaderCarrier ): Future[Option[String]] = {
+  def fetchScenario()(implicit hc: HeaderCarrier ): Future[Option[String]] = {
     val timer = metrics.keystoreStoreTimer.time()
 
     Logger.debug(s"[SessionService][fetchScenario]")
@@ -236,7 +236,7 @@ class SessionService @Inject()(metrics: ApplicationMetrics,gmpSessionCache: GmpS
     }
   }
 
-  def cacheEqualise(_equalise: Option[Int])(implicit request: Request[_], hc: HeaderCarrier ): Future[Option[GmpSession]] = {
+  def cacheEqualise(_equalise: Option[Int])(implicit  hc: HeaderCarrier ): Future[Option[GmpSession]] = {
     val timer = metrics.keystoreStoreTimer.time()
 
     Logger.debug(s"[SessionService][cacheEqualise] : ${_equalise}")
@@ -256,7 +256,7 @@ class SessionService @Inject()(metrics: ApplicationMetrics,gmpSessionCache: GmpS
     })
   }
 
-  def cacheRevaluationDate(date: Option[GmpDate])(implicit request: Request[_], hc: HeaderCarrier): Future[Option[GmpSession]] = {
+  def cacheRevaluationDate(date: Option[GmpDate])(implicit  hc: HeaderCarrier): Future[Option[GmpSession]] = {
     val timer = metrics.keystoreStoreTimer.time()
 
     Logger.debug(s"[SessionService][cacheRevaluationDate] : $date")
@@ -282,7 +282,7 @@ class SessionService @Inject()(metrics: ApplicationMetrics,gmpSessionCache: GmpS
     })
   }
 
-  def cacheLeaving(leaving: Leaving)(implicit request: Request[_], hc: HeaderCarrier ): Future[Option[GmpSession]] = {
+  def cacheLeaving(leaving: Leaving)(implicit  hc: HeaderCarrier ): Future[Option[GmpSession]] = {
     val timer = metrics.keystoreStoreTimer.time()
 
     Logger.debug(s"[SessionService][cacheLeaving] : $leaving")
@@ -302,7 +302,7 @@ class SessionService @Inject()(metrics: ApplicationMetrics,gmpSessionCache: GmpS
     })
   }
 
-  def fetchLeaving()(implicit request: Request[_], hc: HeaderCarrier ): Future[Option[Leaving]] = {
+  def fetchLeaving()(implicit  hc: HeaderCarrier ): Future[Option[Leaving]] = {
     val timer = metrics.keystoreStoreTimer.time()
 
     Logger.debug(s"[SessionService][fetchLeaving]")
@@ -315,7 +315,7 @@ class SessionService @Inject()(metrics: ApplicationMetrics,gmpSessionCache: GmpS
     }
   }
 
-  def cacheRevaluationRate(rate: String)(implicit request: Request[_], hc: HeaderCarrier ): Future[Option[GmpSession]] = {
+  def cacheRevaluationRate(rate: String)(implicit  hc: HeaderCarrier ): Future[Option[GmpSession]] = {
     val timer = metrics.keystoreStoreTimer.time()
 
     Logger.debug(s"[SessionService][cacheRevaluationRate] : $rate")
@@ -335,15 +335,15 @@ class SessionService @Inject()(metrics: ApplicationMetrics,gmpSessionCache: GmpS
     })
   }
 
-  def createCallbackRecord(implicit request: Request[_], hc: HeaderCarrier): Future[Any] = {
+  def createCallbackRecord(implicit  hc: HeaderCarrier): Future[Any] = {
     gmpSessionCache.cache[UploadStatus](CALLBACK_SESSION_KEY, NotStarted)
   }
 
-  def updateCallbackRecord(sessionId: String, uploadStatus: UploadStatus)(implicit request: Request[_], hc: HeaderCarrier): Future[Any] = {
+  def updateCallbackRecord(sessionId: String, uploadStatus: UploadStatus)(implicit  hc: HeaderCarrier): Future[Any] = {
     gmpSessionCache.cache(gmpSessionCache.defaultSource, sessionId, CALLBACK_SESSION_KEY, uploadStatus)
   }
 
-  def getCallbackRecord(implicit request: Request[_], hc: HeaderCarrier): Future[Option[UploadStatus]] = {
+  def getCallbackRecord(implicit  hc: HeaderCarrier): Future[Option[UploadStatus]] = {
     gmpSessionCache.fetchAndGetEntry[UploadStatus](CALLBACK_SESSION_KEY)
   }
 

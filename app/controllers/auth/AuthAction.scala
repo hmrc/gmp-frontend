@@ -16,7 +16,7 @@
 
 package controllers.auth
 
-import com.google.inject.{ImplementedBy, Inject, Singleton}
+import com.google.inject.{Inject, Singleton}
 import play.api.Mode
 import play.api.mvc._
 import play.api.{Configuration, Environment}

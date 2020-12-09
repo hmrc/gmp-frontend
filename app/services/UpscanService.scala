@@ -20,8 +20,7 @@ import com.google.inject.Inject
 import config.ApplicationConfig
 import connectors.UpscanConnector
 import models.upscan.{UpscanInitiateRequest, UpscanInitiateResponse}
-import play.api.{Environment, Mode}
-import play.api.mvc.{Call, Request}
+import play.api.mvc.{ Request}
 import uk.gov.hmrc.http.HeaderCarrier
 import scala.concurrent.Future
 
@@ -31,7 +30,7 @@ class UpscanService @Inject()(
                              ) {
 
   lazy val redirectUrlBase: String = applicationConfig.upscanRedirectBase
-  private implicit def urlToString(c: Call): String = redirectUrlBase + c.url
+  //private implicit def urlToString(c: Call): String = redirectUrlBase + c.url
 
   def getUpscanFormData()(implicit hc: HeaderCarrier, request: Request[_]): Future[UpscanInitiateResponse] = {
     val callback = controllers.routes.FileUploadController.callback(hc.sessionId.get.value)

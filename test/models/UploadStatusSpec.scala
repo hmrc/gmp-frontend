@@ -45,8 +45,6 @@ class UploadStatusSpec extends UnitSpec {
 
     "return UploadedFailed" when {
       "_type is Failed" in {
-        val expectedName = "fileName"
-        val expectedUrl = "downloadUrl"
         val json =
           s"""{"_type":"Failed","reference":"ref1","failureDetails": {
              |"failureReason":"QUARANTINE",

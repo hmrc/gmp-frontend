@@ -20,8 +20,7 @@ import helpers.RandomNino
 import models.CalculationRequestLine
 import org.scalatest.{FlatSpec, Matchers}
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
-import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl, MessagesProvider}
-import play.api.i18n.Messages.Implicits._
+import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl}
 import services.BulkRequestCsvColumn
 
 /**

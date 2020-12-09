@@ -58,13 +58,13 @@ class MemberDetailsControllerSpec extends PlaySpec with GuiceOneServerPerSuite w
     "authenticated users" must {
 
       "respond with ok" in {
-        when(mockSessionService.fetchMemberDetails()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(None))
+        when(mockSessionService.fetchMemberDetails()(Matchers.any())).thenReturn(Future.successful(None))
           val result = TestMemberDetailsController.get(FakeRequest())
           status(result) must equal(OK)
       }
 
       "present the member's details page" in {
-        when(mockSessionService.fetchMemberDetails()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(None))
+        when(mockSessionService.fetchMemberDetails()(Matchers.any())).thenReturn(Future.successful(None))
           val result = TestMemberDetailsController.get(FakeRequest())
           contentAsString(result) must include(Messages("gmp.member_details.header"))
           contentAsString(result) must include(Messages("gmp.nino"))
@@ -75,7 +75,7 @@ class MemberDetailsControllerSpec extends PlaySpec with GuiceOneServerPerSuite w
 
       "load the details from the session storage if present" in {
         val nino = RandomNino.generate
-        when(mockSessionService.fetchMemberDetails()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some
+        when(mockSessionService.fetchMemberDetails()(Matchers.any())).thenReturn(Future.successful(Some
         (MemberDetails("Bob", "Jones", nino))))
           val result = TestMemberDetailsController.get(FakeRequest())
           contentAsString(result) must include(nino)
@@ -92,7 +92,7 @@ class MemberDetailsControllerSpec extends PlaySpec with GuiceOneServerPerSuite w
       val memberDetails = MemberDetails("", "", "")
       val session = GmpSession(memberDetails, "", "", None, None, Leaving(GmpDate(None, None, None), None), None)
 
-        when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(session)))
+        when(mockSessionService.fetchGmpSession()(Matchers.any())).thenReturn(Future.successful(Some(session)))
         val result = TestMemberDetailsController.back(FakeRequest())
         status(result) must equal(SEE_OTHER)
     }
@@ -109,7 +109,7 @@ class MemberDetailsControllerSpec extends PlaySpec with GuiceOneServerPerSuite w
         val session = GmpSession(memberDetails, "SCON1234", "", None, None, Leaving(GmpDate(None, None, None), None), None)
 
         "redirect" in {
-          when(mockSessionService.cacheMemberDetails(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(session)))
+          when(mockSessionService.cacheMemberDetails(Matchers.any())(Matchers.any())).thenReturn(Future.successful(Some(session)))
             val postData = Json.obj(
               "firstForename" -> "Bob",
               "surname" -> "Jones",
@@ -120,14 +120,14 @@ class MemberDetailsControllerSpec extends PlaySpec with GuiceOneServerPerSuite w
         }
 
         "save details to keystore" in {
-          when(mockSessionService.cacheMemberDetails(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(session)))
+          when(mockSessionService.cacheMemberDetails(Matchers.any())(Matchers.any())).thenReturn(Future.successful(Some(session)))
             TestMemberDetailsController.post(FakeRequest().withJsonBody(Json.toJson(memberDetails)))
-            verify(mockSessionService, atLeastOnce()).cacheMemberDetails(Matchers.any())(Matchers.any(), Matchers.any())
+            verify(mockSessionService, atLeastOnce()).cacheMemberDetails(Matchers.any())(Matchers.any())
         }
 
         "respond with an exception when the session cache is unavailable" in {
           reset(mockSessionService)
-          when(mockSessionService.cacheMemberDetails(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(None))
+          when(mockSessionService.cacheMemberDetails(Matchers.any())(Matchers.any())).thenReturn(Future.successful(None))
             val postData = Json.obj(
               "firstForename" -> "Bob",
               "surname" -> "Jones",
@@ -164,7 +164,7 @@ class MemberDetailsControllerSpec extends PlaySpec with GuiceOneServerPerSuite w
 
         "throw an exception when session not fetched" in {
 
-            when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(None))
+            when(mockSessionService.fetchGmpSession()(Matchers.any())).thenReturn(Future.successful(None))
             val result = TestMemberDetailsController.back(FakeRequest())
             intercept[RuntimeException] {
               status(result)

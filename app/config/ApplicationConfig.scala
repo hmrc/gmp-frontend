@@ -18,12 +18,8 @@ package config
 
 import com.google.inject.{Inject, Singleton}
 import com.typesafe.config.ConfigFactory
-import play.api.{Configuration, Environment, Play}
-import uk.gov.hmrc.play.bootstrap.binders.SafeRedirectUrl
+import play.api.{Configuration, Environment}
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
-
-import scala.concurrent.duration._
-import scala.concurrent.duration.FiniteDuration
 
 @Singleton
 class ApplicationConfig @Inject()(

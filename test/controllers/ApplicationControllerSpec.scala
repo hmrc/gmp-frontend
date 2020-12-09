@@ -35,7 +35,6 @@ import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.audit.model.DataEvent
 import views.Views
-import views.html._
 
 import scala.concurrent.ExecutionContext
 
