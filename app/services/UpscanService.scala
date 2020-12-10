@@ -30,7 +30,6 @@ class UpscanService @Inject()(
                              ) {
 
   lazy val redirectUrlBase: String = applicationConfig.upscanRedirectBase
-  //private implicit def urlToString(c: Call): String = redirectUrlBase + c.url
 
   def getUpscanFormData()(implicit hc: HeaderCarrier, request: Request[_]): Future[UpscanInitiateResponse] = {
     val callback = controllers.routes.FileUploadController.callback(hc.sessionId.get.value)
