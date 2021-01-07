@@ -16,10 +16,8 @@
 
 package models
 
-import com.fasterxml.jackson.core.JsonParseException
 import models.upscan._
-import play.api.libs.json
-import play.api.libs.json.{JsError, JsResultException, Json, JsonValidationError}
+import play.api.libs.json.{JsResultException, Json}
 import uk.gov.hmrc.play.test.UnitSpec
 
 class UpscanCallbackSpec extends UnitSpec {

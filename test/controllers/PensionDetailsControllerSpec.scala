@@ -68,7 +68,7 @@ class PensionDetailsControllerSpec extends PlaySpec with GuiceOneServerPerSuite 
     "authenticated users" must {
 
       "respond with ok" in {
-        when(mockSessionService.fetchPensionDetails()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(None))
+        when(mockSessionService.fetchPensionDetails()(Matchers.any())).thenReturn(Future.successful(None))
         val result = TestPensionDetailsController.get(FakeRequest())
             status(result) must equal(OK)
             contentAsString(result) must include(Messages("gmp.pension_details.header"))
@@ -79,7 +79,7 @@ class PensionDetailsControllerSpec extends PlaySpec with GuiceOneServerPerSuite 
       }
 
       "get page containing scon when retrieved" in {
-        when(mockSessionService.fetchPensionDetails()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some("S1301234T")))
+        when(mockSessionService.fetchPensionDetails()(Matchers.any())).thenReturn(Future.successful(Some("S1301234T")))
         val result = TestPensionDetailsController.get(FakeRequest())
             contentAsString(result) must include("S1301234T")
       }
@@ -95,7 +95,7 @@ class PensionDetailsControllerSpec extends PlaySpec with GuiceOneServerPerSuite 
       val gmpSession = GmpSession(MemberDetails("", "", ""), "S1301234T", "", None, None, Leaving(GmpDate(None, None, None), None), None)
 
       "validate scon and store scon and redirect" in {
-        when(mockSessionService.cachePensionDetails(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
+        when(mockSessionService.cachePensionDetails(Matchers.any())(Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
         when(mockGmpConnector.validateScon(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful(ValidateSconResponse(true)))
           val result = TestPensionDetailsController.post()(FakeRequest().withJsonBody(Json.toJson(validGmpRequest)))
           status(result) must equal(SEE_OTHER)
@@ -115,7 +115,7 @@ class PensionDetailsControllerSpec extends PlaySpec with GuiceOneServerPerSuite 
       }
 
       "respond with exception when scon service throws exception" in {
-        when(mockSessionService.cachePensionDetails(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
+        when(mockSessionService.cachePensionDetails(Matchers.any())(Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
         when(mockGmpConnector.validateScon(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful(null))
           intercept[RuntimeException]{
             await(TestPensionDetailsController.post()(FakeRequest().withJsonBody(Json.toJson(validGmpRequest))))
@@ -123,7 +123,7 @@ class PensionDetailsControllerSpec extends PlaySpec with GuiceOneServerPerSuite 
       }
 
       "respond with exception when cache service throws exception" in {
-        when(mockSessionService.cachePensionDetails(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(None))
+        when(mockSessionService.cachePensionDetails(Matchers.any())(Matchers.any())).thenReturn(Future.successful(None))
         when(mockGmpConnector.validateScon(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful(ValidateSconResponse(true)))
           intercept[RuntimeException]{
             await(TestPensionDetailsController.post()(FakeRequest().withJsonBody(Json.toJson(validGmpRequest))))

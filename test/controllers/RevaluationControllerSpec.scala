@@ -18,7 +18,7 @@ package controllers
 
 import config.{ApplicationConfig, GmpSessionCache}
 import controllers.auth.{AuthAction, FakeAuthAction}
-import forms.{RevaluationForm, RevaluationRateForm}
+import forms.RevaluationForm
 import models._
 import org.mockito.Matchers
 import org.mockito.Mockito._
@@ -60,7 +60,7 @@ class RevaluationControllerSpec extends PlaySpec with GuiceOneServerPerSuite wit
 
       "respond with ok" in {
 
-          when(mockSessionService.fetchLeaving()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(Leaving(GmpDate(None, None, None), None))))
+          when(mockSessionService.fetchLeaving()(Matchers.any())).thenReturn(Future.successful(Some(Leaving(GmpDate(None, None, None), None))))
           val result = TestRevaluationController.get(FakeRequest())
             status(result) must equal(OK)
             contentAsString(result) must include("When would you like the calculation made to?")
@@ -69,7 +69,7 @@ class RevaluationControllerSpec extends PlaySpec with GuiceOneServerPerSuite wit
       }
 
       "respond with ok when no leaving" in {
-        when(mockSessionService.fetchLeaving()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(None))
+        when(mockSessionService.fetchLeaving()(Matchers.any())).thenReturn(Future.successful(None))
         val result = TestRevaluationController.get(FakeRequest())
             status(result) must equal(OK)
             contentAsString(result) must include("When would you like the calculation made to?")
@@ -87,7 +87,7 @@ class RevaluationControllerSpec extends PlaySpec with GuiceOneServerPerSuite wit
 
       "redirect to the date of leaving page" in {
 
-          when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(session)))
+          when(mockSessionService.fetchGmpSession()(Matchers.any())).thenReturn(Future.successful(Some(session)))
           val result = TestRevaluationController.back(FakeRequest())
           status(result) must equal(SEE_OTHER)
           redirectLocation(result).get must include("/left-scheme")
@@ -96,7 +96,7 @@ class RevaluationControllerSpec extends PlaySpec with GuiceOneServerPerSuite wit
 
     "throw an exception when session not fetched" in {
 
-        when(mockSessionService.fetchGmpSession()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(None))
+        when(mockSessionService.fetchGmpSession()(Matchers.any())).thenReturn(Future.successful(None))
         val result = TestRevaluationController.back(FakeRequest())
         intercept[RuntimeException] {
           status(result)
@@ -135,7 +135,7 @@ class RevaluationControllerSpec extends PlaySpec with GuiceOneServerPerSuite wit
 
         "redirect" in {
 
-          when(mockSessionService.cacheRevaluationDate(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
+          when(mockSessionService.cacheRevaluationDate(Matchers.any())(Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
             val postData = Json.toJson(
               RevaluationDate(Leaving(GmpDate(None, None, None), None), baseValidDate.copy(day = Some("31"), month = Some("3"), year = Some("2015")))
             )
@@ -145,7 +145,7 @@ class RevaluationControllerSpec extends PlaySpec with GuiceOneServerPerSuite wit
 
 
         "respond with error when rate not stored" in {
-          when(mockSessionService.cacheRevaluationDate(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(None))
+          when(mockSessionService.cacheRevaluationDate(Matchers.any())(Matchers.any())).thenReturn(Future.successful(None))
             val postData = Json.toJson(
               RevaluationDate(Leaving(GmpDate(None, None, None), None), baseValidDate.copy(day = Some("31"), month = Some("3"), year = Some("2015")))
             )

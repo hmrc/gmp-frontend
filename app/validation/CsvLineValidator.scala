@@ -115,7 +115,7 @@ trait FieldValidator {
     }
   }
 
-  private def tryParseDate(date: String)(implicit messages: Messages): Option[LocalDate] =
+  private def tryParseDate(date: String): Option[LocalDate] =
     if (!DateValidate.isValid(date))
       None
     else

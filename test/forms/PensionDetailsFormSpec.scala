@@ -16,7 +16,6 @@
 
 package forms
 
-import forms.PensionDetailsForm
 import models.PensionDetails
 import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite

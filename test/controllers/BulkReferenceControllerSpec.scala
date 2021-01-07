@@ -20,7 +20,7 @@ import java.util.UUID
 
 import config.{ApplicationConfig, GmpSessionCache}
 import controllers.auth.FakeAuthAction
-import forms.{BulkReferenceForm, DateOfLeavingForm}
+import forms.BulkReferenceForm
 import models._
 import org.mockito.Matchers
 import org.mockito.Mockito._
@@ -84,7 +84,6 @@ class BulkReferenceControllerSpec extends PlaySpec  with MockitoSugar with Guice
 
       val validRequest = BulkReference("dan@hmrc.com", "Reference")
       val validRequestWithSpaces = BulkReference("dan@hmrc.com   ", "Reference   ")
-      val validRequestWithSpacesNoEmail = BulkReference("", "Reference  ")
       val emptyRequest = BulkReference("", "")
       val gmpBulkSession = GmpBulkSession(None, None, None)
 
@@ -96,7 +95,7 @@ class BulkReferenceControllerSpec extends PlaySpec  with MockitoSugar with Guice
       }
 
       "throw an exception when can't cache email and reference" in {
-        when(mockSessionService.cacheEmailAndReference(Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(None))
+        when(mockSessionService.cacheEmailAndReference(Matchers.any(), Matchers.any())(Matchers.any())).thenReturn(Future.successful(None))
 
           val result = TestBulkReferenceController.post()(FakeRequest().withJsonBody(Json.toJson(validRequest)))
           intercept[RuntimeException]{
@@ -105,7 +104,7 @@ class BulkReferenceControllerSpec extends PlaySpec  with MockitoSugar with Guice
       }
 
       "validate email and reference, cache and redirect" in {
-        when(mockSessionService.cacheEmailAndReference(Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpBulkSession)))
+        when(mockSessionService.cacheEmailAndReference(Matchers.any(), Matchers.any())(Matchers.any())).thenReturn(Future.successful(Some(gmpBulkSession)))
 
           val result = TestBulkReferenceController.post()(FakeRequest().withJsonBody(Json.toJson(validRequest)))
           status(result) must equal(SEE_OTHER)
@@ -113,7 +112,7 @@ class BulkReferenceControllerSpec extends PlaySpec  with MockitoSugar with Guice
       }
 
       "validate email and reference with spaces, cache and redirect" in {
-        when(mockSessionService.cacheEmailAndReference(Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(gmpBulkSession)))
+        when(mockSessionService.cacheEmailAndReference(Matchers.any(), Matchers.any())(Matchers.any())).thenReturn(Future.successful(Some(gmpBulkSession)))
 
           val result = TestBulkReferenceController.post()(FakeRequest().withJsonBody(Json.toJson(validRequestWithSpaces)))
           status(result) must equal(SEE_OTHER)

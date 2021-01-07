@@ -16,7 +16,6 @@
 
 package forms
 
-import forms.RevaluationForm
 import models.{GmpDate, Leaving, RevaluationDate}
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import org.scalatestplus.play.PlaySpec

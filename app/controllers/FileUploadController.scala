@@ -19,18 +19,16 @@ package controllers
 import com.google.inject.{Inject, Singleton}
 import config.{ApplicationConfig, GmpContext, GmpSessionCache}
 import controllers.auth.AuthAction
-import models.GmpBulkSession
 import models.upscan._
 import models.upscan.UploadStatus
 import play.api.Logger
 import play.api.i18n.Messages
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.api.mvc.MessagesControllerComponents
 import services.{SessionService, UpscanService}
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.logging.SessionId
 import views.Views
-import views.html.upscan_csv_file_upload
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -96,12 +94,12 @@ class FileUploadController @Inject()(authAction: AuthAction,
         }
         Logger.info(s"Updating callback for session: $sessionId to ${uploadStatus.getClass.getSimpleName}")
         for {
-          result <- sessionService.updateCallbackRecord(sessionId, uploadStatus)(request, headerCarrier).map(_ => Ok("")).recover {
+          result <- sessionService.updateCallbackRecord(sessionId, uploadStatus)(headerCarrier).map(_ => Ok("")).recover {
             case e: Throwable =>
               Logger.error(s"Failed to update callback record for session: $sessionId, timestamp: ${System.currentTimeMillis()}.", e)
               throw new RuntimeException("Exception occurred when attempting to update callback data")
           }
-          _ <- sessionService.cacheCallBackData(Some(uploadStatus))(request, headerCarrier).map(_ => Ok("")).recover {
+          _ <- sessionService.cacheCallBackData(Some(uploadStatus))(headerCarrier).map(_ => Ok("")).recover {
               case e: Throwable =>
                 Logger.error(s"Failed to update gmp bulk session for: $sessionId, timestamp: ${System.currentTimeMillis()}.", e)
                 throw new RuntimeException("Exception occurred when attempting to update gmp bulk session")

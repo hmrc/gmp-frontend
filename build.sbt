@@ -40,4 +40,15 @@ lazy val microservice = Project(appName, file("."))
       "hmrc-releases" at "https://artefacts.tax.service.gov.uk/artifactory/hmrc-releases/"
     )
   )
+  .settings(
+    scalacOptions ++= List(
+      "-Yrangepos",
+      "-Xlint:-missing-interpolator,_",
+      "-Yno-adapted-args",
+      "-feature",
+      "-unchecked",
+      "-language:implicitConversions",
+      "-P:silencer:pathFilters=views;routes;TestStorage"
+    )
+  )
   .disablePlugins(JUnitXmlReportPlugin) //Required to prevent https://github.com/scalatest/scalatest/issues/1427

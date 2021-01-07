@@ -62,8 +62,6 @@ class DashboardControllerSpec extends PlaySpec with GuiceOneServerPerSuite with 
 
     "Contain Ur banner" in {
 
-      val dashboard = new Dashboard(Nil)
-
         val result = TestDashboardController.get(FakeRequest())
         contentAsString(result) must include(Messages("urbanner.message.text"))
         contentAsString(result) must include(Messages("urbanner.message.open.new.window"))
@@ -103,7 +101,6 @@ class DashboardControllerSpec extends PlaySpec with GuiceOneServerPerSuite with 
       }
 
       "load the dashboard from the bulk service if present but empty" in {
-        val dashboard = new Dashboard(Nil)
           val result = TestDashboardController.get(FakeRequest())
           contentAsString(result) must include(Messages("gmp.previous_calculations"))
       }
@@ -117,8 +114,6 @@ class DashboardControllerSpec extends PlaySpec with GuiceOneServerPerSuite with 
          }
 
         when(brokenGmpBulkConnector.getPreviousBulkRequests(Matchers.any())(Matchers.any())).thenReturn(Future.failed(new Upstream5xxResponse("failed",503,503)))
-        val dashboard = new Dashboard(Nil)
-
           val result = BrokenDashboardController.get(FakeRequest())
           contentAsString(result) must include(Messages("gmp.previous_calculations"))
       }

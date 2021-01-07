@@ -16,9 +16,8 @@
 
 package models
 
-import models.upscan.{UploadStatus, UpscanCallback, UpscanReadyCallback}
+import models.upscan.UploadStatus
 import play.api.libs.json.Json
-import models.upscan.UpscanCallback._
 
 case class GmpBulkSession(callBackData: Option[UploadStatus], emailAddress: Option[String], reference: Option[String])
 

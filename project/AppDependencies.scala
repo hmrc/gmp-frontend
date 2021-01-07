@@ -16,7 +16,9 @@ object AppDependencies {
     "uk.gov.hmrc" %% "govuk-template"              % "5.57.0-play-26",
     "uk.gov.hmrc" %% "play-ui"                     % "8.15.0-play-26",
     "com.typesafe.play" %% "play-json-joda"        % "2.7.4",
-    "com.typesafe.play" %% "play-iteratees"        % "2.6.1"
+    "com.typesafe.play" %% "play-iteratees"        % "2.6.1",
+    compilerPlugin("com.github.ghik" % "silencer-plugin" % "1.7.1" cross CrossVersion.full),
+    "com.github.ghik" % "silencer-lib" % "1.7.1" % Provided cross CrossVersion.full
   )
 
   val test: Seq[ModuleID] = Seq(

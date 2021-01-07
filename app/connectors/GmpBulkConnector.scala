@@ -73,13 +73,13 @@ class GmpBulkConnector @Inject()(environment: Environment,
     Logger.debug(s"[GmpBulkConnector][getPreviousBulkRequests][GET]")
 
     // $COVERAGE-OFF$
-    result onSuccess {
+    result onComplete {
       case response => Logger.debug(s"[GmpBulkConnector][getPreviousBulkRequests][response] : $response")
     }
 
-    result onFailure {
+    result.failed.foreach( {
       case e: Exception => Logger.error(s"[GmpBulkConnector][getPreviousBulkRequests] ${e.getMessage}", e)
-    }
+    })
     // $COVERAGE-ON$
 
     result
@@ -96,13 +96,13 @@ class GmpBulkConnector @Inject()(environment: Environment,
     Logger.debug(s"[GmpBulkConnector][getBulkResultsSummary][GET] reference : $uploadReference")
 
     // $COVERAGE-OFF$
-    result onSuccess {
+    result onComplete  {
       case response => Logger.debug(s"[GmpBulkConnector][getBulkResultsSummary][response] : $response")
     }
 
-    result onFailure {
+    result.failed.foreach({
       case e: Exception => Logger.error(s"[GmpBulkConnector][getBulkResultsSummary] ${e.getMessage}", e)
-    }
+    })
     // $COVERAGE-ON$
 
     result
@@ -117,13 +117,13 @@ class GmpBulkConnector @Inject()(environment: Environment,
     Logger.debug(s"[GmpBulkConnector][getResultsAsCsv][GET] reference : $uploadReference")
 
     // $COVERAGE-OFF$
-    result onSuccess {
+    result onComplete  {
       case response => Logger.debug(s"[GmpBulkConnector][getResultsAsCsv][response] : $response")
     }
 
-    result onFailure {
+    result.failed.foreach({
       case e: Exception => Logger.error(s"[GmpBulkConnector][getResultsAsCsv] ${e.getMessage}", e)
-    }
+    })
     // $COVERAGE-ON$
 
     result.map {
@@ -140,13 +140,13 @@ class GmpBulkConnector @Inject()(environment: Environment,
     Logger.debug(s"[GmpBulkConnector][getContributionsAndEarningsAsCsv][GET] reference : $uploadReference")
 
     // $COVERAGE-OFF$
-    result onSuccess {
+    result onComplete  {
       case response => Logger.debug(s"[GmpBulkConnector][getContributionsAndEarningsAsCsv][response] : $response")
     }
 
-    result onFailure {
+    result.failed.foreach({
       case e: Exception => Logger.error(s"[GmpBulkConnector][getContributionsAndEarningsAsCsv] ${e.getMessage}", e)
-    }
+    })
     // $COVERAGE-ON$
 
     result.map {

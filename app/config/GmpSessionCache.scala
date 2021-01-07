@@ -19,8 +19,6 @@ package config
 import com.google.inject.name.Named
 import com.google.inject.{Inject, Singleton}
 import play.api.Mode
-import play.api.i18n.MessagesProvider
-import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.{Configuration, Environment}
 import uk.gov.hmrc.http.cache.client.SessionCache
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
