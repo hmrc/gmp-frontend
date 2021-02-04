@@ -16,7 +16,6 @@
 
 package forms
 
-import forms.ScenarioForm
 import models.CalculationType
 import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite

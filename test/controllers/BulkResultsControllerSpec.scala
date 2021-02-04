@@ -60,7 +60,6 @@ class BulkResultsControllerSpec extends PlaySpec with GuiceOneServerPerSuite wit
 
   "Bulk Results Controller" must {
     val comingFromDashboard = 0
-    val comingFromMoreBulkResults = 1
     val bulkResultsSummary = BulkResultsSummary("0001.csv", 50, 25)
 
     "GET" must {

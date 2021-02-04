@@ -21,7 +21,6 @@ import java.time.Instant
 
 import play.api.Logger
 import play.api.libs.json._
-import models.upscan.Reference
 
 import scala.util.Try
 

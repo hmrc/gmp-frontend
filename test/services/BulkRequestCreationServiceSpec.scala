@@ -17,12 +17,10 @@
 package services
 
 import java.io.ByteArrayInputStream
-import java.net.URL
 import java.nio.charset.Charset
-import java.time.Instant
 
 import helpers.RandomNino
-import models.upscan.{UploadDetails, UploadedSuccessfully, UpscanReadyCallback}
+import models.upscan.UploadedSuccessfully
 import models.{BulkCalculationRequest, BulkCalculationRequestLine, CalculationRequestLine}
 import org.joda.time.{LocalDate, LocalDateTime}
 import org.scalatest.concurrent.ScalaFutures
@@ -150,7 +148,6 @@ class BulkRequestCreationServiceSpec extends PlaySpec with ScalaFutures with Moc
   "Bulk Request Creation Service" must {
 
     val localDateTime = new LocalDateTime(2016, 5, 18, 17, 50, 55, 511)
-    val collection = "gmp"
 
     val bulkRequest1 = BulkCalculationRequest("1", "bill@bixby.com", "uploadRef1", List(calcLine1), "", localDateTime)
     val bulkRequest2 = BulkCalculationRequest("2", "timburton@scary.com", "uploadRef2", List(calcLine2))

@@ -19,7 +19,7 @@ package connectors
 import com.google.inject.{Inject, Singleton}
 import play.api.Mode
 import play.api.{Configuration, Environment, Logger}
-import uk.gov.hmrc.http.{BadGatewayException, HeaderCarrier, HttpGet}
+import uk.gov.hmrc.http.{BadGatewayException, HeaderCarrier}
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
 import scala.concurrent.ExecutionContext.Implicits.global

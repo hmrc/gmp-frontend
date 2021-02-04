@@ -104,9 +104,9 @@ class ResultsController @Inject()(authAction: AuthAction,
 
                     val contsAndEarningsResult = auditConnector.sendEvent(new ContributionsAndEarningsEvent(link, response.nino))
 
-                    contsAndEarningsResult.onFailure {
+                    contsAndEarningsResult.failed.foreach({
                       case e: Throwable => Logger.error(s"[ResultsController][post] contsAndEarningsResult ${e.getMessage}", e)
-                    }
+                    })
 
                     Ok(views.contributionsEarnings(response))
                   }}

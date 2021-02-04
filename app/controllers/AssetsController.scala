@@ -17,6 +17,5 @@
 package controllers
 import com.google.inject.Inject
 import config.MyErrorHandler
-import play.api.http.HttpErrorHandler
 
 class AssetsController @Inject() (errorHandler: MyErrorHandler,metadata: AssetsMetadata) extends AssetsBuilder(errorHandler,metadata)

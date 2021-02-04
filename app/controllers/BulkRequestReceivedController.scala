@@ -20,7 +20,7 @@ import com.google.inject.{Inject, Singleton}
 import config.{ApplicationConfig, GmpContext, GmpSessionCache}
 import connectors.GmpBulkConnector
 import controllers.auth.AuthAction
-import models.upscan.{UploadedSuccessfully, UpscanReadyCallback}
+import models.upscan.UploadedSuccessfully
 import play.api.Logger
 import play.api.i18n.Messages
 import play.api.mvc.MessagesControllerComponents
