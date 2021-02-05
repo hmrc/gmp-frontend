@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 HM Revenue & Customs
+ * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,8 +25,8 @@ class ExternalUrlsSpec extends PlaySpec with GuiceOneServerPerSuite {
   lazy val externalUrls = app.injector.instanceOf[ExternalUrls]
   "ExternalUrls" must {
 
-    "have companyAuthHost " in {
-      externalUrls.companyAuthHost must be("http://localhost:9025")
+    "have basGatewayHost " in {
+      externalUrls.basGatewayHost must be("http://localhost:9553")
     }
 
     "have loginCallback " in {
@@ -42,15 +42,15 @@ class ExternalUrlsSpec extends PlaySpec with GuiceOneServerPerSuite {
     }
 
     "have signIn " in {
-      externalUrls.signIn must be(s"""http://localhost:9025/gg/sign-in?continue=http://localhost:9941/guaranteed-minimum-pension/dashboard""")
+      externalUrls.signIn must be(s"""http://localhost:9553/bas-gateway/sign-in?continue_url=http://localhost:9941/guaranteed-minimum-pension/dashboard""")
     }
 
     "have signoutPath" in {
-      externalUrls.signOutPath must be("sign-out")
+      externalUrls.signOutPath must be("sign-out-without-state")
     }
 
     "have signout" in {
-      externalUrls.signOut must be(s"""http://localhost:9025/gg/sign-out?continue=http://localhost:9514/feedback/GMP""")
+      externalUrls.signOut must be(s"""http://localhost:9553/bas-gateway/sign-out-without-state?continue=http://localhost:9514/feedback/GMP""")
     }
   }
   
