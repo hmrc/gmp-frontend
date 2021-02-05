@@ -22,12 +22,12 @@ import play.api.Configuration
 @Singleton
 class ExternalUrls @Inject()(val runModeConfiguration: Configuration) {
 
-  val companyAuthHost = runModeConfiguration.getOptional[String]("gg-urls.company-auth.host").getOrElse("")
+  val basGatewayHost = runModeConfiguration.getOptional[String]("gg-urls.bas-gateway.host").getOrElse("")
   val loginCallback = runModeConfiguration.getOptional[String]("gg-urls.login-callback.url").getOrElse("")
   val signOutCallback = runModeConfiguration.getOptional[String]("gg-urls.signout-callback.url").getOrElse("")
   val loginPath = runModeConfiguration.getOptional[String]("gg-urls.login_path").getOrElse("")
   val signOutPath = runModeConfiguration.getOptional[String]("gg-urls.signout_path").getOrElse("")
-  val signIn = s"$companyAuthHost/gg/$loginPath?continue=$loginCallback"
-  val signOut = s"$companyAuthHost/gg/$signOutPath?continue=$signOutCallback"
+  val signIn = s"$basGatewayHost/bas-gateway/$loginPath?continue_url=$loginCallback"
+  val signOut = s"$basGatewayHost/bas-gateway/$signOutPath?continue=$signOutCallback"
 
 }
