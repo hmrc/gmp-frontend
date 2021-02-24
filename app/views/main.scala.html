@@ -70,10 +70,10 @@
 
 @bodyEnd = {
     @viewHelpers.footer(
-        analyticsToken = applicationConfig.analyticsToken,
-        analyticsHost = applicationConfig.analyticsHost,
+        analyticsToken = None,
+        analyticsHost = "",
         ssoUrl = None,
-        scriptElem = scriptElement,
+        scriptElem = None,
         gaCalls = None
     )
     <script src='@routes.AssetsController.at("javascripts/urBanner.js")'> </script>

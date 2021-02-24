@@ -30,8 +30,6 @@ class ApplicationConfig @Inject()(
   private def loadConfig(key: String) = runModeConfiguration.getOptional[String](key).getOrElse(throw new Exception(s"Missing key: $key"))
 
   val assetsPrefix: String = loadConfig("assets.url") + loadConfig("assets.version")
-  val analyticsToken: Option[String] = runModeConfiguration.getOptional[String]("google-analytics.token")
-  val analyticsHost: String = runModeConfiguration.getOptional[String]("google-analytics.host").getOrElse("auto")
   val urBannerToggle: Boolean = loadConfig("urBanner.toggle").toBoolean
   val urBannerLink: String = loadConfig("urBanner.link")
   val optimizelyProjectId: String = loadConfig("optimizely.projectId")
