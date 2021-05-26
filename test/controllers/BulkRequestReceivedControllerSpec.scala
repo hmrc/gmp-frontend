@@ -38,7 +38,7 @@ import services.{BulkRequestCreationService, DataLimitExceededException, Session
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.emailaddress.EmailAddress
 import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.http.logging.SessionId
+import uk.gov.hmrc.http.SessionId
 import views.Views
 
 import scala.concurrent.{ExecutionContext, Future}

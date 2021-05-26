@@ -27,7 +27,7 @@ import play.api.mvc.MessagesControllerComponents
 import services.{SessionService, UpscanService}
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.http.logging.SessionId
+import uk.gov.hmrc.http.SessionId
 import views.Views
 
 import scala.concurrent.{ExecutionContext, Future}

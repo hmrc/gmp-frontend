@@ -30,7 +30,7 @@ import org.mockito.Matchers.any
 import play.api.mvc.Request
 import play.api.test.FakeRequest
 import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.http.logging.SessionId
+import uk.gov.hmrc.http.SessionId
 
 import scala.concurrent.Future
 

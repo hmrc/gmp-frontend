@@ -19,14 +19,15 @@ package utils
 import org.jsoup.nodes.{Attributes, Document, Element}
 import org.jsoup.select.Elements
 import org.scalatest.matchers.{MatchResult, Matcher}
+import scala.collection.JavaConverters._
 
 trait JSoupMatchers {
-  import scala.collection.JavaConversions._
 
   class TagWithTextMatcher(expectedContent: String, tag: String) extends Matcher[Document] {
     def apply(left: Document): MatchResult = {
       val elements: List[String] =
         left.getElementsByTag(tag)
+          .asScala
           .toList
           .map(_.text)
 
@@ -44,6 +45,7 @@ trait JSoupMatchers {
     def apply(left: Document): MatchResult = {
       val elements: List[String] =
         left.select(selector)
+          .asScala
           .toList
           .map(_.text)
 
@@ -63,6 +65,7 @@ trait JSoupMatchers {
     def apply(left: Document): MatchResult = {
       val attributes: List[Attributes] =
         left.select(selector)
+          .asScala
           .toList
           .map(_.attributes())
 
@@ -80,6 +83,7 @@ trait JSoupMatchers {
     def apply(left: Document): MatchResult = {
       val classes: List[String] =
         left.select(selector)
+          .asScala
           .toList
           .map(_.className())
 
@@ -165,7 +169,7 @@ trait JSoupMatchers {
   class ElementWithAttributeValueMatcher(expectedContent: String, attribute: String) extends Matcher[Element] {
     def apply(left: Element): MatchResult = {
       val attribVal = left.attr(attribute)
-      val attributes = left.attributes().asList().mkString("\t", "\n\t", "")
+      val attributes = left.attributes().asScala.toList.mkString("\t", "\n\t", "")
 
       MatchResult(
         attribVal == expectedContent,
@@ -177,7 +181,7 @@ trait JSoupMatchers {
 
   class ElementWithClassMatcher(expectedClass: String) extends Matcher[Element] {
     def apply(left: Element): MatchResult = {
-      val classes = left.classNames.toList
+      val classes = left.classNames.asScala.toList
       val classNames = classes.mkString("\t", "\n\t", "")
 
       MatchResult(

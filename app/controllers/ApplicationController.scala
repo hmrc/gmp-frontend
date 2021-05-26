@@ -60,7 +60,7 @@ class ApplicationController @Inject()(authAction: AuthAction,
   }
 
   def keepAlive: Action[AnyContent] = authAction {
-    implicit request =>
+    _ =>
       Ok("OK")
   }
 }
