@@ -21,7 +21,7 @@
 @this(gmpMain: gmp_main, viewHelpers: ViewHelpers)
 
 
-@(calculationType: Form[models.CalculationType])(implicit request: Request[_], context: config.GmpContext, messages: Messages,ac:ApplicationConfig)
+@(calculationType: Form[models.CalculationType])(implicit request: Request[_], messages: Messages, ac:ApplicationConfig)
 
 @implicitFormInstance = @{ Some(calculationType) }
 

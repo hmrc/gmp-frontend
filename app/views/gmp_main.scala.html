@@ -30,7 +30,7 @@ showSignOutLink: Boolean = true,
 showUserResearchBanner: Boolean = false,
 dashboardLinkEnabled:Boolean = false,
 pageHeading: Option[String] = None,
-customHead: Option[Html] = None)(mainContent: Html)(implicit request: Request[_], context: config.GmpContext, messages: Messages, appConfig:config.ApplicationConfig)
+customHead: Option[Html] = None)(mainContent: Html)(implicit request: Request[_], messages: Messages, appConfig:config.ApplicationConfig)
 
 @getHelpForm = @{viewHelpers.reportAProblemLink(appConfig.reportAProblemPartialUrl, appConfig.reportAProblemNonJSUrl)}
 

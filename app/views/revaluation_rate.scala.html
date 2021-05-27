@@ -21,7 +21,7 @@
 
 @this(gmpMain: gmp_main, viewHelpers: ViewHelpers)
 
-@(revaluationRateForm: Form[models.RevaluationRate], session: GmpSession)(implicit request: Request[_], context: config.GmpContext, messages: Messages,ac:ApplicationConfig)
+@(revaluationRateForm: Form[models.RevaluationRate], session: GmpSession)(implicit request: Request[_], messages: Messages, ac:ApplicationConfig)
 
 @heading = {
         @{session.scenario match {

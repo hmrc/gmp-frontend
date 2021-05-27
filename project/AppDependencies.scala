@@ -29,7 +29,7 @@ object AppDependencies {
     "com.typesafe.play"       %% "play-test"          % PlayVersion.current,
     "org.mockito"             %  "mockito-core"       % "1.10.19",
     "com.github.tomakehurst"  %  "wiremock-jre8"      % "2.28.0",
-    "uk.gov.hmrc" %% "bootstrap-play-26" % "4.0.0"
+    "uk.gov.hmrc" %% "bootstrap-frontend-play-26" % "5.3.0"
   ).map(_ % "test")
 
   val all: Seq[ModuleID] = compile ++ test

@@ -21,7 +21,7 @@
 
 @this(gmpMain: gmp_main, viewHelpers: ViewHelpers)
 
-@(dateOfLeavingForm: Form[models.Leaving],scenario: String)(implicit request: Request[_], context: config.GmpContext, messages: Messages,applicationConfig: config.ApplicationConfig)
+@(dateOfLeavingForm: Form[models.Leaving],scenario: String)(implicit request: Request[_], messages: Messages, applicationConfig: config.ApplicationConfig)
 
 @implicitFormInstance = @{ Some(dateOfLeavingForm) }
 

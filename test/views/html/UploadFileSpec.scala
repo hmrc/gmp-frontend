@@ -37,6 +37,4 @@ class UploadFileSpec extends GmpViewSpec {
     }
   }
 
-  private val uploadForm = Html("")
-
 }

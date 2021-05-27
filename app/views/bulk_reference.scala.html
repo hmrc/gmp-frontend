@@ -20,7 +20,7 @@
 
 @this(gmpMain: gmp_main, viewHelpers: ViewHelpers)
 
-@(bulkReferenceForm: Form[models.BulkReference])(implicit request: Request[_], context: config.GmpContext,messages: Messages,ac:ApplicationConfig)
+@(bulkReferenceForm: Form[models.BulkReference])(implicit request: Request[_], messages: Messages, ac:ApplicationConfig)
 
 @gmpMain(title = Messages("gmp.bulk_reference.header") + " - " + Messages("service.title") + " - " + Messages("gov.uk"), supportLinkEnabled = true) {
 

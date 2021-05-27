@@ -192,10 +192,10 @@ class GmpConnectorSpec extends PlaySpec with GuiceOneServerPerSuite with Mockito
                                       }"""
 
 
-        when(mockHttpPost.POST[CalculationRequest, CalculationResponse](Matchers.any(), Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.failed(new Upstream5xxResponse("Scon not found", 500, 500)))
+        when(mockHttpPost.POST[CalculationRequest, CalculationResponse](Matchers.any(), Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.failed(UpstreamErrorResponse("Scon not found", 500, 500)))
 
         val result = TestGmpConnector.calculateSingle(Json.fromJson[CalculationRequest](Json.parse(calcRequestBody)).get,link)
-        intercept[Upstream5xxResponse] {
+        intercept[UpstreamErrorResponse] {
                 await(result)
               }
 

@@ -28,7 +28,7 @@ import play.api.mvc.{Action, AnyContent, BaseController, ControllerComponents, M
 import play.api.test.FakeRequest
 import play.api.test.Helpers.{redirectLocation, status, stubControllerComponents}
 import uk.gov.hmrc.auth.core._
-
+import scala.language.postfixOps
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scala.concurrent.duration._

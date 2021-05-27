@@ -20,7 +20,7 @@
 
 @this(gmpMain: gmp_main)
 
-@(previousBulkCalculations: List[BulkPreviousRequest])(implicit request: Request[_], context: config.GmpContext,messages: Messages,ac:ApplicationConfig)
+@(previousBulkCalculations: List[BulkPreviousRequest])(implicit request: Request[_], messages: Messages, ac:ApplicationConfig)
 
 @gmpMain(title = Messages("gmp.dashboard_header") + " - " + Messages("service.title") + " - " + Messages("gov.uk"), dashboardLinkEnabled = false, showUserResearchBanner = true, mainClass=Some("gmp-dashboard")) {
 

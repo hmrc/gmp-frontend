@@ -24,7 +24,6 @@
 @elements = @{new FieldElements(field.id, field, null, args.toMap, messages) }
 @parentField = @{args.toMap.get('parentField).asInstanceOf[Option[Field]]}
 @errors = @{ FormHelpers.getErrors(field, parentField) }
-@fieldsetClass = {@elements.args.get('_groupClass)@if(errors.nonEmpty){ form-field--error}}
 @labelAfter = @{ elements.args.get('_labelAfter).getOrElse(false).asInstanceOf[Boolean] }
 @trackGA = @{ elements.args.get('_trackGA).getOrElse(false).asInstanceOf[Boolean] }
 @formHeaderKey = @{ elements.args.get('_formHeaderKey).getOrElse("service.title").asInstanceOf[String] }

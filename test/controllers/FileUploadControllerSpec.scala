@@ -143,7 +143,6 @@ class FileUploadControllerSpec extends PlaySpec with GuiceOneServerPerSuite with
 
   def getFileUploadPartial(request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest())(handler: Future[Result] => Any) {
 
-
     val html =
       """
     <form id="file-uploader" method="post" action="/attachments/attach/gmp" enctype="multipart/form-data">

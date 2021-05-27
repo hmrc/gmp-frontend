@@ -281,7 +281,7 @@ class SessionServiceSpec extends PlaySpec with GuiceOneServerPerSuite with Scala
 
       "reset the session with scon" in {
         when(mockSessionCache.fetchAndGetEntry[GmpSession](any())(any(), any(), any())).thenReturn(Future.successful(Some(gmpSession.copy(scon = scon))))
-        val result = Await.result(TestSessionService.resetGmpSessionWithScon()(request, hc), 10 seconds)
+        val result = Await.result(TestSessionService.resetGmpSessionWithScon()(hc), 10 seconds)
         result must be(Some(new SessionService(metrics, mockSessionCache).cleanSession.copy(scon = scon)))
       }
 

@@ -41,7 +41,8 @@ lazy val microservice = Project(appName, file("."))
       "-feature",
       "-unchecked",
       "-language:implicitConversions",
-      "-P:silencer:pathFilters=views;routes;TestStorage"
+      "-P:silencer:pathFilters=routes;TestStorage",
+      "-P:silencer:globalFilters=Unused import"
     )
   )
   .disablePlugins(JUnitXmlReportPlugin) //Required to prevent https://github.com/scalatest/scalatest/issues/1427

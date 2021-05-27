@@ -31,7 +31,7 @@ import play.api.Environment
 import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl}
 import play.api.mvc.MessagesControllerComponents
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
-
+import scala.language.postfixOps
 import scala.io.Source
 
 class BulkRequestCreationServiceSpec extends PlaySpec with ScalaFutures with MockitoSugar with GuiceOneServerPerSuite {

@@ -22,7 +22,7 @@
 
 @this(gmpMain: gmp_main)
 
-@(status : UploadStatus)(implicit request: Request[_], messages: Messages, context: config.GmpContext, appConfig: ApplicationConfig)
+@(status : UploadStatus)(implicit request: Request[_], messages: Messages, appConfig: ApplicationConfig)
 
 @refreshHeader = {
     <meta http-equiv="refresh" content="3"/>

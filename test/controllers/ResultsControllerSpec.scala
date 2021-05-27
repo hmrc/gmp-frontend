@@ -66,7 +66,7 @@ class ResultsControllerSpec extends PlaySpec with GuiceOneServerPerSuite with Mo
   object TestResultsController extends ResultsController(FakeAuthAction, mockAuthConnector, mockSessionService,FakeGmpContext, mockCalculationConnector, mockAuditConnector, metrics,applicationConfig,mcc,ec,gmpSessionCache,views) {
 
 
-    override def resultsView(response: CalculationResponse, subheader: Option[String], revalSubheader: Option[String])(implicit request: Request[_], context: config.GmpContext): HtmlFormat.Appendable = {
+    override def resultsView(response: CalculationResponse, subheader: Option[String], revalSubheader: Option[String])(implicit request: Request[_]): HtmlFormat.Appendable = {
       views.results(response, subheader, revalSubheader)
     }
 

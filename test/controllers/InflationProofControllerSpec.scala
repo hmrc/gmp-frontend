@@ -101,7 +101,7 @@ class InflationProofControllerSpec extends PlaySpec with GuiceOneServerPerSuite 
           "save revaluation date to session cache" in {
 
               when(mockSessionService.cacheRevaluationDate(Matchers.any())(Matchers.any())).thenReturn(Future.successful(Some(session)))
-              val result = TestInflationProofController.post(FakeRequest().withJsonBody(Json.toJson(inflationProof)))
+              TestInflationProofController.post(FakeRequest().withJsonBody(Json.toJson(inflationProof)))
               verify(mockSessionService, atLeastOnce()).cacheRevaluationDate(Matchers.any())(Matchers.any())
 
           }

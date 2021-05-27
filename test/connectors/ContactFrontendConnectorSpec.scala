@@ -38,8 +38,8 @@ class ContactFrontendConnectorSpec @Inject()(servicesConfig: ServicesConfig) ext
   .configure(Map("Test.microservice.assets.url" -> "test-url", "Test.microservice.assets.version" -> "test-version"))
   .build
 
-  protected def mode: Mode = Play.current.mode
-  protected def runModeConfiguration: Configuration = Play.current.configuration
+  protected def mode: Mode = app.injector.instanceOf[Mode]
+  protected def runModeConfiguration: Configuration = app.injector.instanceOf[Configuration]
 
 
   implicit val headerCarrier = HeaderCarrier()
@@ -60,7 +60,7 @@ class ContactFrontendConnectorSpec @Inject()(servicesConfig: ServicesConfig) ext
 
     "contact the front end service to download the 'get help' partial" in {
 
-      val response = HttpResponse(200, responseString = Some(dummyResponseHtml))
+      val response = HttpResponse(200, dummyResponseHtml)
 
       when(mockHttp.GET[HttpResponse](meq(serviceUrl))(any(), any[HeaderCarrier], any[ExecutionContext])) thenReturn Future.successful(response)
 
