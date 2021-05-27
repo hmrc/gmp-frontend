@@ -28,8 +28,8 @@ lazy val microservice = Project(appName, file("."))
     majorVersion := 4,
     scalaVersion := "2.12.13",
     libraryDependencies ++= AppDependencies.all,
-    parallelExecution in Test := false,
-    fork in Test := false,
+    Test / parallelExecution := false,
+    Test / fork := false,
     retrieveManaged := true,
     PlayKeys.playDefaultPort := 9941
   )
