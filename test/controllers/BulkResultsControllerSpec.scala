@@ -102,7 +102,7 @@ class BulkResultsControllerSpec extends PlaySpec with GuiceOneServerPerSuite wit
         }
 
         "show the calc not found page" in {
-          when(mockGmpBulkConnector.getBulkResultsSummary(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.failed(new NotFoundException("")))
+          when(mockGmpBulkConnector.getBulkResultsSummary(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.failed(UpstreamErrorResponse("Not Found", 404)))
 
             val result = TestBulkResultsController.get("",comingFromDashboard)(FakeRequest())
 

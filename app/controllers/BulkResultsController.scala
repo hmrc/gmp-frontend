@@ -24,7 +24,7 @@ import play.api.Logger
 import play.api.mvc.MessagesControllerComponents
 import services.SessionService
 import uk.gov.hmrc.auth.core.AuthConnector
-import uk.gov.hmrc.http.{NotFoundException, Upstream4xxResponse}
+import uk.gov.hmrc.http.UpstreamErrorResponse
 import views.Views
 
 import scala.concurrent.ExecutionContext
@@ -49,11 +49,11 @@ class BulkResultsController @Inject()(authAction: AuthAction,
             Ok(views.bulkResults(bulkResultsSummary, uploadReference, comingFromPage))
           }
         }.recover {
-          case e: Upstream4xxResponse if e.upstreamResponseCode == FORBIDDEN => {
+          case e: UpstreamErrorResponse if e.statusCode == FORBIDDEN => {
             log(e)
             Ok(views.bulkWrongUser())
           }
-          case e: NotFoundException => {
+          case e: UpstreamErrorResponse if e.statusCode == NOT_FOUND => {
             log(e)
             Ok(views.bulkResultsNotFound())
           }
