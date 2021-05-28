@@ -15,28 +15,20 @@
  *@
 
 @import views.html.helpers.commonHelper
-@(field: Field, args: (Symbol,Any)*)(implicit messages: Messages, formInstance: Option[Form[_]] = None)
-
 @import play.api.i18n._
 @import views.html.helper._
 @import views.helpers._
+
+@(field: Field, args: (Symbol,Any)*)(implicit messages: Messages, formInstance: Option[Form[_]] = None)
 
 @elements = @{ new FieldElements(field.id, field, null, args.toMap, messages) }
 @parentField = @{args.toMap.get('parentField).asInstanceOf[Option[Field]]}
 @errors = @{ FormHelpers.getErrors(field, parentField) }
 @parentElements = @{parentField.map(pf => new FieldElements(pf.id, pf, null, Map(), messages) )}
 @value = @{ field.value match { case Some(x) => x case None => "" case x => x }}
-@labelAfter = @{ elements.args.get('_labelAfter).getOrElse(false).asInstanceOf[Boolean] }
 @labelHighlight = @{ elements.args.get('_labelHighlight).getOrElse(false).asInstanceOf[Boolean] }
 
 @labelFor = @{elements.args.get('_id)}
-
-@labelClass = @{
-                    elements.args.get('_divClass)
-                    if(elements.args.get('_labelClass)){
-                        elements.args.get('_labelClass)
-                    }
-}
 
 @labelId = {@if(elements.args.get('_id)){@elements.args.get('_id)_field}else{@elements.field.name.replaceAll("""[\.\[\]]""", "-")}}
 @hintId = {@if(elements.args.get('_id)){@elements.args.get('_id)_hint}}

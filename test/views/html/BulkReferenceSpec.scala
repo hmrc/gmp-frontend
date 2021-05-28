@@ -70,7 +70,7 @@ class BulkReferenceSpec extends GmpViewSpec {
   val emailConstraintRegex = "^((?:[a-zA-Z][a-zA-Z0-9_]*))(.)((?:[a-zA-Z][a-zA-Z0-9_]*))*$"
   val WHITE_SPACES = ".*\\s.*"
 
-  val emailConstraint : Constraint[String] = Constraint("constraints.email") ({
+  lazy val emailConstraint : Constraint[String] = Constraint("constraints.email") ({
     text =>
       if (text.trim.length == 0){
         Invalid(Seq(ValidationError(messages("gmp.error.mandatory.an", messages("gmp.email")))))

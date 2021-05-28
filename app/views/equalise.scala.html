@@ -20,7 +20,7 @@
 
 @this(gmpMain: gmp_main, viewHelpers: ViewHelpers)
 
-@(equaliseForm: Form[models.Equalise])(implicit request: Request[_], context: config.GmpContext, messages: Messages,applicationConfig: ApplicationConfig)
+@(equaliseForm: Form[models.Equalise])(implicit request: Request[_], messages: Messages, applicationConfig: ApplicationConfig)
 
 @gmpMain(title = Messages("gmp.equalise_header")+ " - " + Messages("service.title") + " - " + Messages("gov.uk")) {
 

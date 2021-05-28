@@ -17,25 +17,25 @@
 package connectors
 
 import java.util.UUID
-
 import helpers.RandomNino
 import models._
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfter
-import org.scalatest.mockito.MockitoSugar
-import org.scalatestplus.play.{OneServerPerSuite, PlaySpec}
+import org.scalatestplus.mockito.MockitoSugar
+import org.scalatestplus.play.guice.GuiceOneServerPerSuite
+import org.scalatestplus.play.PlaySpec
 import play.api.Environment
 import play.api.libs.json.Json
 import play.api.test.Helpers._
 import uk.gov.hmrc.http._
-import uk.gov.hmrc.http.logging.SessionId
+import uk.gov.hmrc.http.SessionId
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import uk.gov.hmrc.http.HttpClient
 
 import scala.concurrent.Future
 
-class GmpBulkConnectorSpec extends PlaySpec with OneServerPerSuite with MockitoSugar with BeforeAndAfter {
+class GmpBulkConnectorSpec extends PlaySpec with GuiceOneServerPerSuite with MockitoSugar with BeforeAndAfter {
 
   val mockHttpPost = mock[HttpClient]
   val mockHttpGet = mock[HttpClient]
@@ -51,7 +51,7 @@ class GmpBulkConnectorSpec extends PlaySpec with OneServerPerSuite with MockitoS
     "send a bulk request with valid data" in {
 
       when(mockHttpPost.POST[BulkCalculationRequest, HttpResponse](Matchers.any(), Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any(), Matchers.any()))
-        .thenReturn(Future.successful(HttpResponse(responseStatus = OK)))
+        .thenReturn(Future.successful(HttpResponse(OK, "200")))
 
       val bcr = BulkCalculationRequest("upload1", "jim@jarmusch.com", "idreference",
         List(BulkCalculationRequestLine(1, Some(CalculationRequestLine("S1234567C", RandomNino.generate,
@@ -66,7 +66,7 @@ class GmpBulkConnectorSpec extends PlaySpec with OneServerPerSuite with MockitoS
     "send a bulk request with valid data but there is a duplicate" in {
 
       when(mockHttpPost.POST[BulkCalculationRequest, HttpResponse](Matchers.any(), Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any(), Matchers.any()))
-        .thenReturn(Future.failed(new Upstream4xxResponse("Tried to insert duplicate", 409, 409)))
+        .thenReturn(Future.failed(UpstreamErrorResponse("Tried to insert duplicate", 409, 409)))
 
       val bcr = BulkCalculationRequest("upload1", "jim@jarmusch.com", "idreference",
         List(BulkCalculationRequestLine(1, Some(CalculationRequestLine("S1234567C", RandomNino.generate,
@@ -80,7 +80,7 @@ class GmpBulkConnectorSpec extends PlaySpec with OneServerPerSuite with MockitoS
     "send a bulk request with valid data but the file is too large" in {
 
       when(mockHttpPost.POST[BulkCalculationRequest, HttpResponse](Matchers.any(), Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any(), Matchers.any()))
-        .thenReturn(Future.failed(new Upstream4xxResponse("File too large", 413, 413)))
+        .thenReturn(Future.failed(UpstreamErrorResponse("File too large", 413, 413)))
 
       val bcr = BulkCalculationRequest("upload1", "jim@jarmusch.com", "idreference",
         List(BulkCalculationRequestLine(1, Some(CalculationRequestLine("S1234567C", RandomNino.generate,
@@ -94,7 +94,7 @@ class GmpBulkConnectorSpec extends PlaySpec with OneServerPerSuite with MockitoS
     "send a bulk request with valid data but bulk fails" in {
 
       when(mockHttpPost.POST[BulkCalculationRequest, HttpResponse](Matchers.any(), Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any(), Matchers.any()))
-        .thenReturn(Future.failed(new Upstream5xxResponse("Failed generically", 500, 500)))
+        .thenReturn(Future.failed(UpstreamErrorResponse("Failed generically", 500, 500)))
 
       val bcr = BulkCalculationRequest("upload1", "jim@jarmusch.com", "idreference",
         List(BulkCalculationRequestLine(1, Some(CalculationRequestLine("S1234567C", RandomNino.generate,
@@ -111,7 +111,7 @@ class GmpBulkConnectorSpec extends PlaySpec with OneServerPerSuite with MockitoS
         """[{"uploadReference":"uploadRef","reference":"ref","timestamp":"2016-04-27T14:53:18.308","processedDateTime":"2016-05-18T17:50:55.511"}]"""
       )
 
-      when(mockHttpGet.GET[List[BulkPreviousRequest]]( Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any()))
+      when(mockHttpGet.GET[List[BulkPreviousRequest]]( Matchers.any(), Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any()))
         .thenReturn(Future.successful(bulkPreviousRequest.as[List[BulkPreviousRequest]]))
 
       val result = testGmpBulkConnector.getPreviousBulkRequests(link)
@@ -123,7 +123,7 @@ class GmpBulkConnectorSpec extends PlaySpec with OneServerPerSuite with MockitoS
 
     "return a bulk results summary" in {
 
-      when(mockHttpGet.GET[BulkResultsSummary](Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(BulkResultsSummary("test",1,1)))
+      when(mockHttpGet.GET[BulkResultsSummary](Matchers.any(), Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(BulkResultsSummary("test",1,1)))
 
       val result = testGmpBulkConnector.getBulkResultsSummary("",link)
       (await(result)).reference must be("test")
@@ -131,7 +131,7 @@ class GmpBulkConnectorSpec extends PlaySpec with OneServerPerSuite with MockitoS
 
     "return all bulk request as csv" in {
 
-      when(mockHttpGet.GET[HttpResponse](Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(HttpResponse(responseStatus = OK,responseString = Some("THIS IS A CSV STRING"))))
+      when(mockHttpGet.GET[HttpResponse](Matchers.any(), Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(HttpResponse(OK, "THIS IS A CSV STRING")))
 
       val result = testGmpBulkConnector.getResultsAsCsv("","",link)
       val resolvedResult = await(result)
@@ -141,7 +141,7 @@ class GmpBulkConnectorSpec extends PlaySpec with OneServerPerSuite with MockitoS
 
     "return all contributions and earnings as a csv" in {
 
-      when(mockHttpGet.GET[HttpResponse](Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(HttpResponse(responseStatus = OK,responseString = Some("THIS IS A CSV STRING"))))
+      when(mockHttpGet.GET[HttpResponse](Matchers.any(), Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(HttpResponse(OK, "THIS IS A CSV STRING")))
 
       val result = testGmpBulkConnector.getContributionsAndEarningsAsCsv("",link)
       val resolvedResult = await(result)

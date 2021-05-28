@@ -20,7 +20,7 @@
 
 @this(gmpMain: gmp_main, viewHelpers: ViewHelpers)
 
-@(memberDetailsForm: Form[models.MemberDetails])(implicit request: Request[_], context: config.GmpContext, messages: Messages,ac:ApplicationConfig)
+@(memberDetailsForm: Form[models.MemberDetails])(implicit request: Request[_], messages: Messages, ac:ApplicationConfig)
 
 @implicitFormInstance = @{ Some(memberDetailsForm) }
 

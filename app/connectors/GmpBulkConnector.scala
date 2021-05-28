@@ -24,7 +24,7 @@ import play.api.{Configuration, Environment, Logger}
 import uk.gov.hmrc.http._
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import uk.gov.hmrc.http.HttpClient
-
+import uk.gov.hmrc.http.HttpReads.Implicits._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -51,13 +51,13 @@ class GmpBulkConnector @Inject()(environment: Environment,
       Logger.debug(s"[GmpBulkConnector][sendBulkRequest][success] : $x")
         x.status
     } recover {
-      case conflict: Upstream4xxResponse if conflict.upstreamResponseCode == play.api.http.Status.CONFLICT =>
+      case conflict: UpstreamErrorResponse if conflict.statusCode == play.api.http.Status.CONFLICT =>
         Logger.warn(s"[GmpBulkConnector][sendBulkRequest] Conflict")
-        conflict.upstreamResponseCode
+        conflict.statusCode
 
-      case large_file: Upstream4xxResponse if large_file.upstreamResponseCode == play.api.http.Status.REQUEST_ENTITY_TOO_LARGE =>
+      case large_file: UpstreamErrorResponse if large_file.statusCode == play.api.http.Status.REQUEST_ENTITY_TOO_LARGE =>
         Logger.warn(s"[GmpBulkConnector][sendBulkRequest] File too large")
-        large_file.upstreamResponseCode
+        large_file.statusCode
 
       case e: Throwable => Logger.error(s"[GmpBulkConnector][sendBulkRequest] ${e.getMessage}", e)
         500
@@ -112,7 +112,7 @@ class GmpBulkConnector @Inject()(environment: Environment,
 
     val baseURI = s"gmp/${link}/gmp/get-results-as-csv"
     val bulkUri = s"$serviceURL/$baseURI/$uploadReference/$filter"
-    val result = httpGet.GET(bulkUri)
+    val result = httpGet.GET[HttpResponse](bulkUri)
 
     Logger.debug(s"[GmpBulkConnector][getResultsAsCsv][GET] reference : $uploadReference")
 
@@ -135,7 +135,7 @@ class GmpBulkConnector @Inject()(environment: Environment,
 
     val baseURI = s"gmp/${link}/gmp/get-contributions-as-csv"
     val bulkUri = s"$serviceURL/$baseURI/$uploadReference"
-    val result = httpGet.GET(bulkUri)
+    val result = httpGet.GET[HttpResponse](bulkUri)
 
     Logger.debug(s"[GmpBulkConnector][getContributionsAndEarningsAsCsv][GET] reference : $uploadReference")
 

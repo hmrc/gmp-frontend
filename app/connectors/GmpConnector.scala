@@ -26,7 +26,7 @@ import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import uk.gov.hmrc.http.HttpClient
 import play.api.libs.json.JodaWrites._
 import play.api.libs.json.JodaReads._
-
+import uk.gov.hmrc.http.HttpReads.Implicits._
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
@@ -60,7 +60,7 @@ class GmpConnector @Inject()(environment: Environment,
     }
 
     // $COVERAGE-OFF$
-    result onSuccess {
+    result.foreach {
       case response => Logger.debug(s"[GmpConnector][calculateSingle][response] : $response")
     }
 
@@ -87,7 +87,7 @@ class GmpConnector @Inject()(environment: Environment,
     result onComplete (_ => timer.stop())
 
     // $COVERAGE-OFF$
-    result onSuccess {
+    result.foreach {
       case response => Logger.debug(s"[GmpConnector][validateScon][response] : $response")
     }
 

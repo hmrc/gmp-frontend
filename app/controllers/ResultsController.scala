@@ -50,7 +50,7 @@ class ResultsController @Inject()(authAction: AuthAction,
 
 
 
-   def resultsView(response: CalculationResponse, revalRateSubheader: Option[String], survivorSubheader: Option[String])(implicit request: Request[_], context: GmpContext): HtmlFormat.Appendable = {
+   def resultsView(response: CalculationResponse, revalRateSubheader: Option[String], survivorSubheader: Option[String])(implicit request: Request[_]): HtmlFormat.Appendable = {
     views.results(response, revalRateSubheader,survivorSubheader)
   }
 

@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@(survivorCalc: Boolean)(implicit request: Request[_],messages: Messages)
+@(survivorCalc: Boolean)(implicit messages: Messages)
 
 @if(survivorCalc){
     <p id="survivor-disclaimer">@Html({Messages("gmp.results.survivior.disclaimer")})</p>

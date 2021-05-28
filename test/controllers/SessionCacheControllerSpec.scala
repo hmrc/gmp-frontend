@@ -55,13 +55,13 @@ class SessionCacheControllerSpec extends PlaySpec with GuiceOneServerPerSuite wi
   "new-calculation" must {
 
     "reset the cached calculation parameters except for scon" in {
-        when(mockSessionService.resetGmpSessionWithScon()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(new SessionService(metrics, gmpSessionCache).cleanSession)))
+        when(mockSessionService.resetGmpSessionWithScon()(Matchers.any())).thenReturn(Future.successful(Some(new SessionService(metrics, gmpSessionCache).cleanSession)))
         await(TestSessionCacheController.newCalculation(FakeRequest()))
-        verify(mockSessionService, atLeastOnce()).resetGmpSessionWithScon()(Matchers.any(), Matchers.any())
+        verify(mockSessionService, atLeastOnce()).resetGmpSessionWithScon()(Matchers.any())
     }
 
     "redirect to the pension details page" in {
-        when(mockSessionService.resetGmpSessionWithScon()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(new SessionService(metrics, gmpSessionCache).cleanSession)))
+        when(mockSessionService.resetGmpSessionWithScon()(Matchers.any())).thenReturn(Future.successful(Some(new SessionService(metrics, gmpSessionCache).cleanSession)))
         val result = TestSessionCacheController.newCalculation(FakeRequest())
         status(result) must be(SEE_OTHER)
         redirectLocation(result).get must be("/guaranteed-minimum-pension/pension-details")
@@ -69,7 +69,7 @@ class SessionCacheControllerSpec extends PlaySpec with GuiceOneServerPerSuite wi
 
     "raise an error when the session service is unreachable" in {
 
-        when(mockSessionService.resetGmpSessionWithScon()(Matchers.any(), Matchers.any())).thenReturn(Future.successful(None))
+        when(mockSessionService.resetGmpSessionWithScon()(Matchers.any())).thenReturn(Future.successful(None))
         intercept[RuntimeException]{
           await(TestSessionCacheController.newCalculation(FakeRequest()))
       }

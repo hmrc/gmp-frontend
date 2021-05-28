@@ -23,7 +23,7 @@ import models._
 import org.joda.time.LocalDateTime
 import org.mockito.Matchers
 import org.mockito.Mockito._
-import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl}
@@ -33,7 +33,7 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.SessionService
 import uk.gov.hmrc.auth.core.AuthConnector
-import uk.gov.hmrc.http.Upstream5xxResponse
+import uk.gov.hmrc.http.{Upstream5xxResponse, UpstreamErrorResponse}
 import views.Views
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -113,7 +113,7 @@ class DashboardControllerSpec extends PlaySpec with GuiceOneServerPerSuite with 
                     ac,mockSessionService,FakeGmpContext,mcc,ec,gmpSessionCache,views) {
          }
 
-        when(brokenGmpBulkConnector.getPreviousBulkRequests(Matchers.any())(Matchers.any())).thenReturn(Future.failed(new Upstream5xxResponse("failed",503,503)))
+        when(brokenGmpBulkConnector.getPreviousBulkRequests(Matchers.any())(Matchers.any())).thenReturn(Future.failed(UpstreamErrorResponse("failed",503,503)))
           val result = BrokenDashboardController.get(FakeRequest())
           contentAsString(result) must include(Messages("gmp.previous_calculations"))
       }

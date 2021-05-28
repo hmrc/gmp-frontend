@@ -19,10 +19,10 @@ package controllers
 import config.ApplicationConfig
 import controllers.auth.AuthAction
 import models._
-import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
-import play.api.i18n.{Lang, MessagesApi, MessagesImpl, MessagesProvider}
+import play.api.i18n.{Lang, MessagesApi, MessagesImpl}
 import play.api.mvc.MessagesControllerComponents
 import play.api.test.Helpers._
 import services.SessionService
@@ -43,7 +43,7 @@ class GmpControllerSpec extends PlaySpec with GuiceOneServerPerSuite with Mockit
   implicit val ac=app.injector.instanceOf[ApplicationConfig]
 
 
-  object TestGmpController extends GmpPageFlow(mockAuthConnector,mockSessionService,FakeGmpContext,mcc,ac)(ec) 
+  object TestGmpController extends GmpPageFlow(mockAuthConnector,mockSessionService,FakeGmpContext,mcc,ac)
 
   val gmpSession = GmpSession(MemberDetails("", "", ""), "", "", None, None, Leaving(GmpDate(None, None, None), None), None)
 

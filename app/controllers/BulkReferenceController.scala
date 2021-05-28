@@ -64,7 +64,7 @@ lazy val bulkReferenceForm = brf.bulkReferenceForm
   }
 
   def back = authAction.async {
-      implicit request => {
+      _ => {
         Future.successful(Redirect(routes.FileUploadController.get()))
       }
   }

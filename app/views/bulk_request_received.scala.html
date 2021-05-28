@@ -19,7 +19,7 @@
 
 @this(gmpMain: gmp_main)
 
-@(reference: String)(implicit request: Request[_], context: config.GmpContext,messages: Messages,ac:ApplicationConfig)
+@(reference: String)(implicit request: Request[_], messages: Messages, ac:ApplicationConfig)
 
 @gmpMain(title = Messages("gmp.bulk_request_received.banner") + " - " + Messages("service.title") + " - " + Messages("gov.uk"), supportLinkEnabled = true) {
 

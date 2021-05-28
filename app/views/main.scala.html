@@ -31,7 +31,7 @@
     scriptElement : Option[Html] = None,
     isUserResearchBannerVisible:Boolean = false,
     signOutEnabled:Boolean,
-    customHead: Option[Html] = None)(mainContent: Html = HtmlFormat.empty)(implicit request: Request[_], context: config.GmpContext, messages: Messages)
+    customHead: Option[Html] = None)(mainContent: Html = HtmlFormat.empty)(implicit request: Request[_], messages: Messages)
 
 @head = {
     @viewHelpers.headWithTrackingConsent(
@@ -81,7 +81,6 @@
 }
 
 @footerTop = {}
-@footerLinks = {}
 
 @serviceInfo = {
     @viewHelpers.serviceInfo(

@@ -31,7 +31,7 @@ import play.api.Environment
 import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl}
 import play.api.mvc.MessagesControllerComponents
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
-
+import scala.language.postfixOps
 import scala.io.Source
 
 class BulkRequestCreationServiceSpec extends PlaySpec with ScalaFutures with MockitoSugar with GuiceOneServerPerSuite {
@@ -394,7 +394,7 @@ class BulkRequestCreationServiceSpec extends PlaySpec with ScalaFutures with Moc
     {
       (l collect {
         case (None, i) => ""
-        case (Some(dateRegEx(s)), i) => new LocalDate(s).toString("dd/MM/yyyy")
+        case (Some(s: String), i) if s.matches(dateRegEx.regex) => new LocalDate(s).toString("dd/MM/yyyy")
         case (x: Int, BulkRequestCsvColumn.DUAL_CALC) => x match {
           case 1 => "Y";
           case _ => "N"

@@ -110,11 +110,6 @@ class MemberDetailsControllerSpec extends PlaySpec with GuiceOneServerPerSuite w
 
         "redirect" in {
           when(mockSessionService.cacheMemberDetails(Matchers.any())(Matchers.any())).thenReturn(Future.successful(Some(session)))
-            val postData = Json.obj(
-              "firstForename" -> "Bob",
-              "surname" -> "Jones",
-              "nino" -> RandomNino.generate
-            )
             val result = TestMemberDetailsController.post(FakeRequest().withJsonBody(Json.toJson(memberDetails)))
             status(result) must equal(SEE_OTHER)
         }

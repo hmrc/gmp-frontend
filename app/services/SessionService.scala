@@ -22,9 +22,7 @@ import metrics.ApplicationMetrics
 import models._
 import models.upscan._
 import play.api.Logger
-import play.api.mvc.Request
 import uk.gov.hmrc.http.HeaderCarrier
-
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
@@ -123,7 +121,7 @@ class SessionService @Inject()(metrics: ApplicationMetrics,gmpSessionCache: GmpS
     })
   }
 
-  def resetGmpSessionWithScon()(implicit request: Request[_], hc: HeaderCarrier ): Future[Option[GmpSession]] = {
+  def resetGmpSessionWithScon()(implicit hc: HeaderCarrier ): Future[Option[GmpSession]] = {
     val timer = metrics.keystoreStoreTimer.time()
 
     Logger.debug(s"[SessionService][fetchGmpSessionWithScon]")

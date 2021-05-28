@@ -38,7 +38,7 @@ import services.{BulkRequestCreationService, DataLimitExceededException, Session
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.emailaddress.EmailAddress
 import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.http.logging.SessionId
+import uk.gov.hmrc.http.SessionId
 import views.Views
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -174,7 +174,7 @@ class BulkRequestReceivedControllerSpec extends PlaySpec with GuiceOneServerPerS
       val dateRegEx = """([0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9])""".r
       item match {
         case None => ","
-        case Some(dateRegEx(s)) => new LocalDate(s).toString("dd/MM/yyyy") + ","
+        case s: String if s.matches(dateRegEx.regex) => new LocalDate(s).toString("dd/MM/yyyy") + ","
         case Some(x) => s"$x,"
         case x: String => x + ","
         case x: Int => x.toString + ","

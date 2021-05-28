@@ -21,7 +21,7 @@
 @this(viewHelpers: ViewHelpers,
         govUkTemplate: GovUkTemplate)
 
-@(pageTitle: String, heading: String, message: String)(implicit request: Request[_], messages: Messages, applicationConfig :config.ApplicationConfig)
+@(pageTitle: String, heading: String, message: String)(implicit request: Request[_], messages: Messages)
 
 @gmpPageTitle = {@pageTitle - @Messages("service.title") - @Messages("gov.uk")}
 
@@ -66,7 +66,6 @@
 }
 
 @footerTop = {}
-@footerLinks = {}
 
 @signOutLink = {
     <li><a id="logOutStatusHref" href="@controllers.routes.ApplicationController.signout">@Messages("gmp.signout")</a></li>

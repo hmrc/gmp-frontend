@@ -17,14 +17,13 @@
 package controllers
 
 import java.util.UUID
-
 import config.ApplicationConfig
 import connectors.GmpBulkConnector
 import controllers.auth.FakeAuthAction
 import models.BulkResultsSummary
 import org.mockito.Matchers
 import org.mockito.Mockito._
-import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl}
@@ -33,8 +32,7 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.SessionService
 import uk.gov.hmrc.auth.core.AuthConnector
-import uk.gov.hmrc.http.logging.SessionId
-import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, NotFoundException, Upstream4xxResponse}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, NotFoundException, SessionId, Upstream4xxResponse, UpstreamErrorResponse}
 import views.Views
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -97,14 +95,14 @@ class BulkResultsControllerSpec extends PlaySpec with GuiceOneServerPerSuite wit
         }
 
         "show the incorrect user page" in {
-          when(mockGmpBulkConnector.getBulkResultsSummary(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.failed(new Upstream4xxResponse("", FORBIDDEN, 0, Map())))
+          when(mockGmpBulkConnector.getBulkResultsSummary(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.failed(UpstreamErrorResponse("", FORBIDDEN, 0, Map())))
             val result = TestBulkResultsController.get("",comingFromDashboard)(FakeRequest())
 
             contentAsString(result) must include(Messages("gmp.bulk.wrong_user.login_text"))
         }
 
         "show the calc not found page" in {
-          when(mockGmpBulkConnector.getBulkResultsSummary(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.failed(new NotFoundException("")))
+          when(mockGmpBulkConnector.getBulkResultsSummary(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.failed(UpstreamErrorResponse("Not Found", 404)))
 
             val result = TestBulkResultsController.get("",comingFromDashboard)(FakeRequest())
 
@@ -117,7 +115,7 @@ class BulkResultsControllerSpec extends PlaySpec with GuiceOneServerPerSuite wit
 
       "download the results summary in csv format" in {
 
-        when(mockGmpBulkConnector.getResultsAsCsv(Matchers.any(),Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful(HttpResponse(responseStatus = 200,responseString = Some("CSV STRING"))))
+        when(mockGmpBulkConnector.getResultsAsCsv(Matchers.any(),Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful(HttpResponse(200, "CSV STRING")))
 
           val result = TestBulkResultsController.getResultsAsCsv("","")(FakeRequest())
 
@@ -131,7 +129,7 @@ class BulkResultsControllerSpec extends PlaySpec with GuiceOneServerPerSuite wit
 
       "download the contributions and earnings in csv format" in {
 
-        when(mockGmpBulkConnector.getContributionsAndEarningsAsCsv(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful(HttpResponse(responseStatus = 200,responseString = Some("CSV STRING"))))
+        when(mockGmpBulkConnector.getContributionsAndEarningsAsCsv(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful(HttpResponse(200, "CSV STRING")))
 
           val result = TestBulkResultsController.getContributionsAndEarningsAsCsv("")(FakeRequest())
 

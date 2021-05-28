@@ -26,7 +26,6 @@ import services.SessionService
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import uk.gov.hmrc.time.TaxYear
-import scala.concurrent.ExecutionContext
 
 @Singleton
 class GmpController @Inject()(val messagesControllerComponents: MessagesControllerComponents,
@@ -56,7 +55,6 @@ class GmpPageFlow @Inject()(val authConnector: AuthConnector,
                             implicit val context: GmpContext,
                             messagesControllerComponents: MessagesControllerComponents,
                             applicationConfig: ApplicationConfig)
-                           (implicit ec: ExecutionContext)
                           extends GmpController(messagesControllerComponents,applicationConfig,sessionService,context) {
 
 

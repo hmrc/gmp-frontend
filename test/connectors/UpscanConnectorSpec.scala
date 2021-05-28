@@ -21,7 +21,7 @@ import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
 import play.api.inject.guice.GuiceApplicationBuilder
-import uk.gov.hmrc.http.{BadRequestException, HeaderCarrier, Upstream5xxResponse}
+import uk.gov.hmrc.http.{BadRequestException, HeaderCarrier, Upstream5xxResponse, UpstreamErrorResponse}
 import uk.gov.hmrc.play.test.UnitSpec
 import utils.WireMockHelper
 import com.github.tomakehurst.wiremock.client.WireMock._
@@ -58,7 +58,7 @@ class UpscanConnectorSpec extends UnitSpec with GuiceOneAppPerSuite with Mockito
                 .withStatus(BAD_REQUEST)
             )
         )
-        a [BadRequestException] should be thrownBy await(connector.getUpscanFormData(request))
+        a [UpstreamErrorResponse] should be thrownBy await(connector.getUpscanFormData(request))
       }
 
       "upscan returns 5xx response" in {
@@ -69,7 +69,7 @@ class UpscanConnectorSpec extends UnitSpec with GuiceOneAppPerSuite with Mockito
                 .withStatus(SERVICE_UNAVAILABLE)
             )
         )
-        an [Upstream5xxResponse] should be thrownBy await(connector.getUpscanFormData(request))
+        an [UpstreamErrorResponse] should be thrownBy await(connector.getUpscanFormData(request))
       }
     }
   }

@@ -29,7 +29,7 @@ import play.twirl.api.Html
 
 trait GmpViewSpec extends PlaySpec with JSoupMatchers with GuiceOneServerPerSuite {
 
-  implicit val messagesControllerComponents = app.injector.instanceOf[MessagesControllerComponents].langs.availables.head
+  implicit lazy val messagesControllerComponents = app.injector.instanceOf[MessagesControllerComponents].langs.availables.head
   implicit val messagesApi =  app.injector.instanceOf[MessagesApi]
   implicit lazy val messages: Messages = MessagesImpl(messagesControllerComponents, messagesApi)
 
@@ -77,7 +77,7 @@ trait GmpViewSpec extends PlaySpec with JSoupMatchers with GuiceOneServerPerSuit
     }
   }
 
-  def pageWithBackLink: Unit = {
+  def pageWithBackLink(): Unit = {
     "have a back link" in {
       doc must haveBackLink
     }
