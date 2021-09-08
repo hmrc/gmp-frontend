@@ -22,14 +22,16 @@ import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
 import play.api.inject.guice.GuiceApplicationBuilder
 import uk.gov.hmrc.http.{BadRequestException, HeaderCarrier, Upstream5xxResponse, UpstreamErrorResponse}
-import uk.gov.hmrc.play.test.UnitSpec
 import utils.WireMockHelper
 import com.github.tomakehurst.wiremock.client.WireMock._
+import org.scalatest.concurrent.ScalaFutures.convertScalaFuture
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpec
 import play.api.http.Status._
 import play.api.libs.json.Json
 
 
-class UpscanConnectorSpec extends UnitSpec with GuiceOneAppPerSuite with MockitoSugar with WireMockHelper {
+class UpscanConnectorSpec extends AnyWordSpec with Matchers with GuiceOneAppPerSuite with MockitoSugar with WireMockHelper {
 
   "getUpscanFormData" should {
     "return a UpscanInitiateResponse" when {
@@ -44,8 +46,8 @@ class UpscanConnectorSpec extends UnitSpec with GuiceOneAppPerSuite with Mockito
             )
         )
 
-        val result = await(connector.getUpscanFormData(request))
-        result shouldBe body.toUpscanInitiateResponse
+        val result = connector.getUpscanFormData(request)
+        result.futureValue shouldBe body.toUpscanInitiateResponse
       }
     }
 
@@ -58,7 +60,7 @@ class UpscanConnectorSpec extends UnitSpec with GuiceOneAppPerSuite with Mockito
                 .withStatus(BAD_REQUEST)
             )
         )
-        a [UpstreamErrorResponse] should be thrownBy await(connector.getUpscanFormData(request))
+        a [UpstreamErrorResponse] should be thrownBy (connector.getUpscanFormData(request)).futureValue
       }
 
       "upscan returns 5xx response" in {
@@ -69,7 +71,7 @@ class UpscanConnectorSpec extends UnitSpec with GuiceOneAppPerSuite with Mockito
                 .withStatus(SERVICE_UNAVAILABLE)
             )
         )
-        an [UpstreamErrorResponse] should be thrownBy await(connector.getUpscanFormData(request))
+        an [UpstreamErrorResponse] should be thrownBy (connector.getUpscanFormData(request)).futureValue
       }
     }
   }

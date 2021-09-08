@@ -30,7 +30,7 @@ class GmpModule(environment: Environment,
   val mode: Mode = environment.mode
   val runModeConfiguration: Configuration = configuration
 
-  def configure(): Unit = {
+  override def configure(): Unit = {
     bind(classOf[HttpClient]).to(classOf[DefaultHttpClient])
       bind(classOf[AuthConnector]).to(classOf[DefaultAuthConnector])
       bind(classOf[AuditConnector]).to(classOf[DefaultAuditConnector])

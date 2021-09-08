@@ -22,6 +22,7 @@ import models._
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfter
+import org.scalatest.concurrent.ScalaFutures.convertScalaFuture
 import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 import org.scalatestplus.play.PlaySpec
@@ -59,7 +60,7 @@ class GmpBulkConnectorSpec extends PlaySpec with GuiceOneServerPerSuite with Moc
           None, None)))
 
       val result = testGmpBulkConnector.sendBulkRequest(bcr,link)
-      (await(result)) must be(OK)
+      result.futureValue must be(OK)
 
     }
 

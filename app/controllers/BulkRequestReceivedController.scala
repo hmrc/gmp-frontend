@@ -21,7 +21,7 @@ import config.{ApplicationConfig, GmpContext, GmpSessionCache}
 import connectors.GmpBulkConnector
 import controllers.auth.AuthAction
 import models.upscan.UploadedSuccessfully
-import play.api.Logger
+import play.api.Logging
 import play.api.i18n.Messages
 import play.api.mvc.MessagesControllerComponents
 import services.{BulkRequestCreationService, DataLimitExceededException, SessionService}
@@ -41,14 +41,14 @@ class BulkRequestReceivedController @Inject()(authAction: AuthAction,
                                               implicit val executionContext: ExecutionContext,
                                               implicit val sessionCache:GmpSessionCache,
                                               views: Views
-                                             ) extends GmpController(messagesControllerComponents,ac,sessionService,config) {
+                                             ) extends GmpController(messagesControllerComponents,ac,sessionService,config) with Logging {
 
 
 
   def get = authAction.async {
       implicit request => {
         val link = request.linkId
-        Logger.debug(s"[BulkRequestReceivedController][get][GET] : ${request.body}")
+        logger.debug(s"[BulkRequestReceivedController][get][GET] : ${request.body}")
         sessionService.fetchGmpBulkSession().flatMap {
           case Some(session) if session.callBackData.isDefined && session.callBackData.get.isInstanceOf[UploadedSuccessfully] =>
             val callbackData = session.callBackData.get.asInstanceOf[UploadedSuccessfully]
@@ -64,7 +64,7 @@ class BulkRequestReceivedController @Inject()(authAction: AuthAction,
 
               case Left(DataLimitExceededException) => Future.successful(errorPageForToMuchData)
 
-              case Left(_) => Future.successful((Redirect(controllers.routes.IncorrectlyEncodedController.get())))
+              case Left(_) => Future.successful((Redirect(controllers.routes.IncorrectlyEncodedController.get)))
             }
 
           case _ => Future.successful(Ok(views.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/upload-csv"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title"))))

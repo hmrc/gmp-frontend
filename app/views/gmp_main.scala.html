@@ -64,9 +64,9 @@ customHead: Option[Html] = None)(mainContent: Html)(implicit request: Request[_]
     @if(userLoggedIn) {
         $.timeoutDialog({timeout: @appConfig.timeout,
                          countdown: @appConfig.timeoutCountdown,
-                         keep_alive_url: "@controllers.routes.ApplicationController.keepAlive()",
-                         logout_url: "@controllers.routes.ApplicationController.signout()",
-                         logout_redirect_url: "@controllers.routes.ApplicationController.signout()",
+                         keep_alive_url: "@controllers.routes.ApplicationController.keepAlive",
+                         logout_url: "@controllers.routes.ApplicationController.signout",
+                         logout_redirect_url: "@controllers.routes.ApplicationController.signout",
                          restart_on_yes: true, background_no_scroll: true});
        var dialogOpen;
     }

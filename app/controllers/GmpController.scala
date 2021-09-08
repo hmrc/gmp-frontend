@@ -20,6 +20,7 @@ package controllers
 import com.google.inject.{Inject, Singleton}
 import config.{ApplicationConfig, GmpContext}
 import models.{CalculationType, GmpSession, Leaving}
+import play.api.Logging
 import play.api.i18n.{Messages, MessagesImpl}
 import play.api.mvc.{MessagesControllerComponents, Result}
 import services.SessionService
@@ -75,7 +76,7 @@ class GmpPageFlow @Inject()(val authConnector: AuthConnector,
     PageType.REVALUATION_RATE -> { (session: GmpSession) => {
       session.scenario match {
         case (CalculationType.PAYABLE_AGE | CalculationType.SPA | CalculationType.REVALUATION) => Redirect(routes.EqualiseController.get)
-        case CalculationType.SURVIVOR => Redirect(controllers.routes.InflationProofController.get())
+        case CalculationType.SURVIVOR => Redirect(controllers.routes.InflationProofController.get)
       }
     }
     },
@@ -84,14 +85,14 @@ class GmpPageFlow @Inject()(val authConnector: AuthConnector,
     PageType.SCENARIO -> { (session: GmpSession) => Redirect(routes.DateOfLeavingController.get) },
     PageType.DATE_OF_LEAVING -> { (session: GmpSession) => {
       session.scenario match {
-        case CalculationType.DOL => Redirect(controllers.routes.EqualiseController.get())
+        case CalculationType.DOL => Redirect(controllers.routes.EqualiseController.get)
         case CalculationType.PAYABLE_AGE | CalculationType.SPA => {
           session.leaving.leaving match {
-            case Some(Leaving.YES_AFTER) | Some(Leaving.YES_BEFORE) => Redirect(controllers.routes.RevaluationRateController.get())
-            case _ => Redirect(controllers.routes.EqualiseController.get())
+            case Some(Leaving.YES_AFTER) | Some(Leaving.YES_BEFORE) => Redirect(controllers.routes.RevaluationRateController.get)
+            case _ => Redirect(controllers.routes.EqualiseController.get)
           }
         }
-        case CalculationType.REVALUATION => Redirect(controllers.routes.RevaluationController.get())
+        case CalculationType.REVALUATION => Redirect(controllers.routes.RevaluationController.get)
         case CalculationType.SURVIVOR => {
           session.leaving.leaving match {
             case Some(Leaving.YES_AFTER) | Some(Leaving.YES_BEFORE) => Redirect(routes.RevaluationRateController.get)
@@ -150,7 +151,7 @@ class GmpPageFlow @Inject()(val authConnector: AuthConnector,
     }
     },
     PageType.DATE_OF_LEAVING -> {
-      (session: GmpSession) => Redirect(routes.ScenarioController.get())
+      (session: GmpSession) => Redirect(routes.ScenarioController.get)
     }
 
   )

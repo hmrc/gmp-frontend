@@ -23,6 +23,7 @@ import helpers.RandomNino
 import models._
 import org.mockito.Matchers
 import org.mockito.Mockito._
+import org.scalatest.concurrent.ScalaFutures.convertScalaFuture
 import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 import org.scalatestplus.play.PlaySpec
@@ -152,7 +153,7 @@ class ScenarioControllerSpec extends PlaySpec with GuiceOneServerPerSuite with M
       when(mockSessionService.cacheScenario(Matchers.any())(Matchers.any())).thenReturn(Future.successful(None))
       val validReason = Json.toJson(CalculationType(Some(CalculationType.DOL)))
         intercept[RuntimeException]{
-          await(TestScenarioController.post()(FakeRequest().withJsonBody(validReason)))
+          (TestScenarioController.post()(FakeRequest().withJsonBody(validReason)).futureValue)
 
       }
     }

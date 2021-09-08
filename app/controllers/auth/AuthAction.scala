@@ -68,9 +68,9 @@ class AuthAction @Inject()(override val authConnector: AuthConnector,
   } recover {
     case ex: NoActiveSession => Results.Redirect(externalUrls.signIn)
 
-    case ex: InsufficientConfidenceLevel => Results.Redirect(controllers.routes.ApplicationController.unauthorised().url)
+    case ex: InsufficientConfidenceLevel => Results.Redirect(controllers.routes.ApplicationController.unauthorised.url)
 
-    case ex: InsufficientEnrolments => Results.Redirect(controllers.routes.ApplicationController.unauthorised().url)
+    case ex: InsufficientEnrolments => Results.Redirect(controllers.routes.ApplicationController.unauthorised.url)
   }
 }
 

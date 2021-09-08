@@ -25,10 +25,10 @@
 @parentElements = @{parentField.map(pf => new FieldElements(pf.id, pf, null, Map(), messages) )}
 <div class="form-group">
     <label for="@if(elements.args.get('id)){@elements.args.get('id)}" class="@if( elements.args.get('_labelClass) ){ @elements.args.get('_labelClass)}@if(elements.hasErrors || (parentElements.isDefined && parentElements.get.hasErrors)) {form-field--error}" id="@if( elements.args.get('id) ) {@elements.args.get('id)_field}">
-        @elements.errors.map { error => <span class="error-notification">@Messages(error)</span>}
-        @if(parentElements.isDefined) {
-        @parentElements.get.errors.map { error => <span class="error-notification">@Messages(error)</span>}
-        }
+        @(elements.errors.map { error => <span class="error-notification">Messages(error)</span>})
+        @{if(parentElements.isDefined) {
+        parentElements.get.errors.map { error => <span class="error-notification">Messages(error)</span>}
+        }}
         @if(elements.args.contains('_label)) { @elements.label }
     </label>
     <textarea

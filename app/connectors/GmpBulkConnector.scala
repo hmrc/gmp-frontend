@@ -20,7 +20,7 @@ import com.google.inject.Inject
 import models.{BulkCalculationRequest, BulkPreviousRequest, BulkResultsSummary}
 import org.joda.time.LocalDateTime
 import play.api.Mode
-import play.api.{Configuration, Environment, Logger}
+import play.api.{Configuration, Environment, Logging}
 import uk.gov.hmrc.http._
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import uk.gov.hmrc.http.HttpClient
@@ -33,7 +33,7 @@ class GmpBulkConnector @Inject()(environment: Environment,
                                  val runModeConfiguration: Configuration,
                                  httpGet: HttpClient,
                                  httpPost: HttpClient,
-                                 servicesConfig: ServicesConfig)  {
+                                 servicesConfig: ServicesConfig) extends Logging {
 
    def mode: Mode = environment.mode
 
@@ -45,21 +45,21 @@ class GmpBulkConnector @Inject()(environment: Environment,
     val bulkUri = s"$serviceURL/$baseURI/"
     val result = httpPost.POST[BulkCalculationRequest, HttpResponse](bulkUri,bcr.copy(timestamp = LocalDateTime.now(),userId = link))
 
-    Logger.debug(s"[GmpBulkConnector][sendBulkRequest][POST] size : ${bcr.calculationRequests.size}")
+    logger.debug(s"[GmpBulkConnector][sendBulkRequest][POST] size : ${bcr.calculationRequests.size}")
 
     result.map { x =>
-      Logger.debug(s"[GmpBulkConnector][sendBulkRequest][success] : $x")
+      logger.debug(s"[GmpBulkConnector][sendBulkRequest][success] : $x")
         x.status
     } recover {
       case conflict: UpstreamErrorResponse if conflict.statusCode == play.api.http.Status.CONFLICT =>
-        Logger.warn(s"[GmpBulkConnector][sendBulkRequest] Conflict")
+        logger.warn(s"[GmpBulkConnector][sendBulkRequest] Conflict")
         conflict.statusCode
 
       case large_file: UpstreamErrorResponse if large_file.statusCode == play.api.http.Status.REQUEST_ENTITY_TOO_LARGE =>
-        Logger.warn(s"[GmpBulkConnector][sendBulkRequest] File too large")
+        logger.warn(s"[GmpBulkConnector][sendBulkRequest] File too large")
         large_file.statusCode
 
-      case e: Throwable => Logger.error(s"[GmpBulkConnector][sendBulkRequest] ${e.getMessage}", e)
+      case e: Throwable => logger.error(s"[GmpBulkConnector][sendBulkRequest] ${e.getMessage}", e)
         500
     }
   }
@@ -70,15 +70,15 @@ class GmpBulkConnector @Inject()(environment: Environment,
     val bulkUri = s"$serviceURL/$baseURI"
     val result = httpGet.GET[List[BulkPreviousRequest]](bulkUri)
 
-    Logger.debug(s"[GmpBulkConnector][getPreviousBulkRequests][GET]")
+    logger.debug(s"[GmpBulkConnector][getPreviousBulkRequests][GET]")
 
     // $COVERAGE-OFF$
     result onComplete {
-      case response => Logger.debug(s"[GmpBulkConnector][getPreviousBulkRequests][response] : $response")
+      case response => logger.debug(s"[GmpBulkConnector][getPreviousBulkRequests][response] : $response")
     }
 
     result.failed.foreach( {
-      case e: Exception => Logger.error(s"[GmpBulkConnector][getPreviousBulkRequests] ${e.getMessage}", e)
+      case e: Exception => logger.error(s"[GmpBulkConnector][getPreviousBulkRequests] ${e.getMessage}", e)
     })
     // $COVERAGE-ON$
 
@@ -93,15 +93,15 @@ class GmpBulkConnector @Inject()(environment: Environment,
 
     val result = httpGet.GET[BulkResultsSummary](bulkUri)
 
-    Logger.debug(s"[GmpBulkConnector][getBulkResultsSummary][GET] reference : $uploadReference")
+    logger.debug(s"[GmpBulkConnector][getBulkResultsSummary][GET] reference : $uploadReference")
 
     // $COVERAGE-OFF$
     result onComplete  {
-      case response => Logger.debug(s"[GmpBulkConnector][getBulkResultsSummary][response] : $response")
+      case response => logger.debug(s"[GmpBulkConnector][getBulkResultsSummary][response] : $response")
     }
 
     result.failed.foreach({
-      case e: Exception => Logger.error(s"[GmpBulkConnector][getBulkResultsSummary] ${e.getMessage}", e)
+      case e: Exception => logger.error(s"[GmpBulkConnector][getBulkResultsSummary] ${e.getMessage}", e)
     })
     // $COVERAGE-ON$
 
@@ -114,15 +114,15 @@ class GmpBulkConnector @Inject()(environment: Environment,
     val bulkUri = s"$serviceURL/$baseURI/$uploadReference/$filter"
     val result = httpGet.GET[HttpResponse](bulkUri)
 
-    Logger.debug(s"[GmpBulkConnector][getResultsAsCsv][GET] reference : $uploadReference")
+    logger.debug(s"[GmpBulkConnector][getResultsAsCsv][GET] reference : $uploadReference")
 
     // $COVERAGE-OFF$
     result onComplete  {
-      case response => Logger.debug(s"[GmpBulkConnector][getResultsAsCsv][response] : $response")
+      case response => logger.debug(s"[GmpBulkConnector][getResultsAsCsv][response] : $response")
     }
 
     result.failed.foreach({
-      case e: Exception => Logger.error(s"[GmpBulkConnector][getResultsAsCsv] ${e.getMessage}", e)
+      case e: Exception => logger.error(s"[GmpBulkConnector][getResultsAsCsv] ${e.getMessage}", e)
     })
     // $COVERAGE-ON$
 
@@ -137,15 +137,15 @@ class GmpBulkConnector @Inject()(environment: Environment,
     val bulkUri = s"$serviceURL/$baseURI/$uploadReference"
     val result = httpGet.GET[HttpResponse](bulkUri)
 
-    Logger.debug(s"[GmpBulkConnector][getContributionsAndEarningsAsCsv][GET] reference : $uploadReference")
+    logger.debug(s"[GmpBulkConnector][getContributionsAndEarningsAsCsv][GET] reference : $uploadReference")
 
     // $COVERAGE-OFF$
     result onComplete  {
-      case response => Logger.debug(s"[GmpBulkConnector][getContributionsAndEarningsAsCsv][response] : $response")
+      case response => logger.debug(s"[GmpBulkConnector][getContributionsAndEarningsAsCsv][response] : $response")
     }
 
     result.failed.foreach({
-      case e: Exception => Logger.error(s"[GmpBulkConnector][getContributionsAndEarningsAsCsv] ${e.getMessage}", e)
+      case e: Exception => logger.error(s"[GmpBulkConnector][getContributionsAndEarningsAsCsv] ${e.getMessage}", e)
     })
     // $COVERAGE-ON$
 

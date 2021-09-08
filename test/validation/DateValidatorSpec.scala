@@ -16,9 +16,11 @@
 
 package validation
 
-import org.scalatest.{FlatSpec, Matchers}
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
-class DateValidatorSpec extends FlatSpec with Matchers {
+
+class DateValidatorSpec extends AnyFlatSpec with Matchers {
 
   "Validate a date" should "pass with a valid date 1/1/2015" in {
     DateValidate.isValid("1/1/2015") should be(true)

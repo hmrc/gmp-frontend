@@ -17,9 +17,10 @@
 package validation
 
 import helpers.RandomNino
-import org.scalatest.{Matchers, WordSpec}
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpec
 
-class NinoValidatorSpec extends WordSpec with Matchers {
+class NinoValidatorSpec extends AnyWordSpec with Matchers {
 
   "The validation of a nino" should {
 

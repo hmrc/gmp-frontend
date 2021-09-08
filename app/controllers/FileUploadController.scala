@@ -21,7 +21,7 @@ import config.{ApplicationConfig, GmpContext, GmpSessionCache}
 import controllers.auth.AuthAction
 import models.upscan._
 import models.upscan.UploadStatus
-import play.api.Logger
+import play.api.Logging
 import play.api.i18n.Messages
 import play.api.mvc.MessagesControllerComponents
 import services.{SessionService, UpscanService}
@@ -43,7 +43,7 @@ class FileUploadController @Inject()(authAction: AuthAction,
                                      implicit val executionContext: ExecutionContext,
                                      implicit val gmpSessionCache: GmpSessionCache,
                                      views: Views)
-  extends GmpController(messagesControllerComponents, ac, sessionService, config) {
+  extends GmpController(messagesControllerComponents, ac, sessionService, config) with Logging{
 
 
   def get = authAction.async {
@@ -81,7 +81,7 @@ class FileUploadController @Inject()(authAction: AuthAction,
     implicit val headerCarrier: HeaderCarrier = hc.copy(sessionId = Some(SessionId(sessionId)))
     request.body.validate[UpscanCallback].fold(
       invalid = errors => {
-        Logger.error(s"Failed to validate UpscanCallback json with errors: $errors")
+        logger.error(s"Failed to validate UpscanCallback json with errors: $errors")
         Future.successful(BadRequest(""))
       },
       valid = callback => {
@@ -89,19 +89,19 @@ class FileUploadController @Inject()(authAction: AuthAction,
           case callback: UpscanReadyCallback =>
             UploadedSuccessfully(callback.reference, callback.uploadDetails.fileName, callback.downloadUrl.toExternalForm)
           case UpscanFailedCallback(ref, details) =>
-            Logger.error(s"Callback for session id: $sessionId failed. Reason: ${details.failureReason}. Message: ${details.message}")
+            logger.error(s"Callback for session id: $sessionId failed. Reason: ${details.failureReason}. Message: ${details.message}")
             UploadedFailed(ref, details)
         }
-        Logger.info(s"Updating callback for session: $sessionId to ${uploadStatus.getClass.getSimpleName}")
+        logger.info(s"Updating callback for session: $sessionId to ${uploadStatus.getClass.getSimpleName}")
         for {
           result <- sessionService.updateCallbackRecord(sessionId, uploadStatus)(headerCarrier).map(_ => Ok("")).recover {
             case e: Throwable =>
-              Logger.error(s"Failed to update callback record for session: $sessionId, timestamp: ${System.currentTimeMillis()}.", e)
+              logger.error(s"Failed to update callback record for session: $sessionId, timestamp: ${System.currentTimeMillis()}.", e)
               throw new RuntimeException("Exception occurred when attempting to update callback data")
           }
           _ <- sessionService.cacheCallBackData(Some(uploadStatus))(headerCarrier).map(_ => Ok("")).recover {
               case e: Throwable =>
-                Logger.error(s"Failed to update gmp bulk session for: $sessionId, timestamp: ${System.currentTimeMillis()}.", e)
+                logger.error(s"Failed to update gmp bulk session for: $sessionId, timestamp: ${System.currentTimeMillis()}.", e)
                 throw new RuntimeException("Exception occurred when attempting to update gmp bulk session")
             }
 

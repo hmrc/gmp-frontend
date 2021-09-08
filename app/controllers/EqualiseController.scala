@@ -20,7 +20,7 @@ import com.google.inject.{Inject, Singleton}
 import config.{ApplicationConfig, GmpContext, GmpSessionCache}
 import controllers.auth.AuthAction
 import forms.EqualiseForm
-import play.api.Logger
+import play.api.Logging
 import play.api.mvc.MessagesControllerComponents
 import services.SessionService
 import uk.gov.hmrc.auth.core.AuthConnector
@@ -38,7 +38,7 @@ class EqualiseController @Inject()(authAction: AuthAction,
                                    implicit val executionContext: ExecutionContext,
                                    implicit val gmpSessionCache: GmpSessionCache,
                                    views: Views)
-                                  extends GmpPageFlow(authConnector,sessionService,config,messagesControllerComponents,ac) {
+                                  extends GmpPageFlow(authConnector,sessionService,config,messagesControllerComponents,ac) with Logging{
 
 
   lazy val equaliseForm = ef.equaliseForm
@@ -49,7 +49,7 @@ class EqualiseController @Inject()(authAction: AuthAction,
   def post = authAction.async {
       implicit request => {
 
-        Logger.debug(s"[EqualiseController][POST] : ${request.body}")
+        logger.debug(s"[EqualiseController][POST] : ${request.body}")
 
         equaliseForm.bindFromRequest().fold(
 

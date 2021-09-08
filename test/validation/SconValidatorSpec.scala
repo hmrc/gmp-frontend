@@ -16,9 +16,10 @@
 
 package validation
 
-import org.scalatest.{FlatSpec, Matchers}
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
-class SconValidatorSpec extends FlatSpec with Matchers {
+class SconValidatorSpec extends AnyFlatSpec with Matchers {
 
   "Validate a SCON" should "pass with a valid SCON S1301234T" in {
     SconValidate.isValid("S1301234T") should be(true)

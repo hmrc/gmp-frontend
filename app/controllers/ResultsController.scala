@@ -24,7 +24,7 @@ import events.ContributionsAndEarningsEvent
 import metrics.ApplicationMetrics
 import models._
 import org.joda.time.LocalDate
-import play.api.Logger
+import play.api.Logging
 import play.api.i18n.Messages
 import play.api.mvc.{MessagesControllerComponents, Request}
 import play.twirl.api.HtmlFormat
@@ -46,7 +46,7 @@ class ResultsController @Inject()(authAction: AuthAction,
                                   override val messagesControllerComponents: MessagesControllerComponents,
                                   implicit val executionContext: ExecutionContext,
                                   implicit val gmpSessionCache: GmpSessionCache,
-                                  views: Views) extends GmpPageFlow(authConnector,sessionService,context,messagesControllerComponents,ac) {
+                                  views: Views) extends GmpPageFlow(authConnector,sessionService,context,messagesControllerComponents,ac) with Logging{
 
 
 
@@ -105,7 +105,7 @@ class ResultsController @Inject()(authAction: AuthAction,
                     val contsAndEarningsResult = auditConnector.sendEvent(new ContributionsAndEarningsEvent(link, response.nino))
 
                     contsAndEarningsResult.failed.foreach({
-                      case e: Throwable => Logger.error(s"[ResultsController][post] contsAndEarningsResult ${e.getMessage}", e)
+                      case e: Throwable => logger.error(s"[ResultsController][post] contsAndEarningsResult ${e.getMessage}", e)
                     })
 
                     Ok(views.contributionsEarnings(response))

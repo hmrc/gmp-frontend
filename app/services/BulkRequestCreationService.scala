@@ -23,7 +23,7 @@ import org.joda.time.LocalDate
 import org.joda.time.format.DateTimeFormat
 import play.api.i18n.{Messages, MessagesImpl}
 import play.api.mvc.MessagesControllerComponents
-import play.api.{Configuration, Environment, Logger, Mode}
+import play.api.{Configuration, Environment, Logging, Mode}
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import uk.gov.hmrc.time.TaxYear
 import validation.{CsvLineValidator, DateValidate, SMValidate}
@@ -51,7 +51,7 @@ case object IncorrectlyEncodedException extends Throwable
 class BulkRequestCreationService @Inject()(environment: Environment,
                                            val runModeConfiguration: Configuration, mcc: MessagesControllerComponents,
                                            servicesConfig: ServicesConfig,val messagesApi : play.api.i18n.MessagesApi
-                                          ) extends BulkEntityProcessor[BulkCalculationRequestLine]  {
+                                          ) extends BulkEntityProcessor[BulkCalculationRequestLine] with Logging {
 
   implicit lazy val messages: Messages = MessagesImpl(mcc.langs.availables.head, messagesApi)
 
@@ -96,18 +96,18 @@ class BulkRequestCreationService @Inject()(environment: Environment,
       case Success(bulkCalculationRequestLines) =>
 
         if (enumerator.hasDataBeyondLimit) {
-          Logger.debug(s"[BulkRequestCreationService][createBulkRequest] size: ${enumerator.getCount} (too large, throwing DataLimitExceededException)")
+          logger.debug(s"[BulkRequestCreationService][createBulkRequest] size: ${enumerator.getCount} (too large, throwing DataLimitExceededException)")
           Left(DataLimitExceededException)
         } else {
           if (bulkCalculationRequestLines.size == 1) {
             val emptyFileLines = List(BulkCalculationRequestLine(1, None, None, Some(Map(BulkRequestCsvColumn.LINE_ERROR_EMPTY.toString -> messages("gmp.error.parsing.empty_file")))))
             val req = BulkCalculationRequest(upscanCallback.reference, email, reference, enterLineNumbers(emptyFileLines))
-            Logger.debug(s"[BulkRequestCreationService][createBulkRequest] size : empty")
+            logger.debug(s"[BulkRequestCreationService][createBulkRequest] size : empty")
             Right(req)
           }
           else {
             val req = BulkCalculationRequest(upscanCallback.reference, email, reference, enterLineNumbers(bulkCalculationRequestLines.drop(1)))
-            Logger.debug(s"[BulkRequestCreationService][createBulkRequest] size : ${req.calculationRequests.size}")
+            logger.debug(s"[BulkRequestCreationService][createBulkRequest] size : ${req.calculationRequests.size}")
             Right(req)
           }
         }
@@ -159,7 +159,7 @@ class BulkRequestCreationService @Inject()(environment: Environment,
     tryConverting match {
       case Success(n) => Some(n)
       case Failure(e) =>
-        Logger.warn(s"[BulkCreationService][protectedToInt] ${e.getMessage}", e)
+        logger.warn(s"[BulkCreationService][protectedToInt] ${e.getMessage}", e)
         None
     }
   }
@@ -170,7 +170,7 @@ class BulkRequestCreationService @Inject()(environment: Environment,
     tryConverting match {
       case Success(convertedDate) => Some(convertedDate)
       case Failure(e) =>
-        Logger.warn(s"[BulkCreationService][protectedDateConvert] ${e.getMessage}", e)
+        logger.warn(s"[BulkCreationService][protectedDateConvert] ${e.getMessage}", e)
         None
     }
   }

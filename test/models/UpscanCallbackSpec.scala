@@ -16,11 +16,12 @@
 
 package models
 
+import helpers.BaseSpec
 import models.upscan._
+import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
 import play.api.libs.json.{JsResultException, Json}
-import uk.gov.hmrc.play.test.UnitSpec
 
-class UpscanCallbackSpec extends UnitSpec {
+class UpscanCallbackSpec extends BaseSpec {
 
   "Upscan Callback" should {
 

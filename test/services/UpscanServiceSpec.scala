@@ -17,6 +17,7 @@
 package services
 
 import connectors.UpscanConnector
+import helpers.BaseSpec
 import models.upscan.{Reference, UpscanInitiateRequest, UpscanInitiateResponse}
 import org.mockito.ArgumentCaptor
 import org.scalatestplus.mockito.MockitoSugar
@@ -24,9 +25,10 @@ import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.inject.bind
-import uk.gov.hmrc.play.test.UnitSpec
 import org.mockito.Mockito._
 import org.mockito.Matchers.any
+import org.scalatest.concurrent.ScalaFutures.convertScalaFuture
+import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
 import play.api.mvc.Request
 import play.api.test.FakeRequest
 import uk.gov.hmrc.http.HeaderCarrier
@@ -35,7 +37,7 @@ import uk.gov.hmrc.http.SessionId
 import scala.concurrent.Future
 
 
-class UpscanServiceSpec extends UnitSpec with GuiceOneAppPerSuite with MockitoSugar {
+class UpscanServiceSpec extends BaseSpec with GuiceOneAppPerSuite with MockitoSugar {
 
   override def fakeApplication: Application = new GuiceApplicationBuilder()
     .overrides(bind[UpscanConnector].toInstance(mockUpscanConnector))
@@ -58,7 +60,7 @@ class UpscanServiceSpec extends UnitSpec with GuiceOneAppPerSuite with MockitoSu
       when(mockUpscanConnector.getUpscanFormData(initiateRequestCaptor.capture())(any[HeaderCarrier]))
         .thenReturn(Future.successful(upscanInitiateResponse))
 
-      await(upscanService.getUpscanFormData()(hc, request))
+      (upscanService.getUpscanFormData()(hc, request)).futureValue
 
       initiateRequestCaptor.getValue shouldBe expectedInitiateRequest
     }
