@@ -85,7 +85,7 @@ class UploadStatusSpec extends BaseSpec {
         val expectedUrl = "downloadUrl"
         val noOfRows = 2
         val expectedJson =
-          s"""{"reference":"ref1","fileName":"$expectedName","downloadUrl":"$expectedUrl","_type":"UploadedSuccessfully","noOfRows":$noOfRows}"""
+          s"""{"reference":"ref1","fileName":"$expectedName","downloadUrl":"$expectedUrl","noOfRows":$noOfRows,"_type":"UploadedSuccessfully"}"""
         val uploadStatus: UploadStatus = UploadedSuccessfully("ref1", expectedName, expectedUrl, Some(noOfRows))
         Json.toJson(uploadStatus).toString() shouldBe expectedJson
       }

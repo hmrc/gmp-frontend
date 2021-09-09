@@ -21,19 +21,22 @@ import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
 import play.api.inject.guice.GuiceApplicationBuilder
-import uk.gov.hmrc.http.{BadRequestException, HeaderCarrier, Upstream5xxResponse, UpstreamErrorResponse}
+import uk.gov.hmrc.http.{HeaderCarrier, UpstreamErrorResponse}
 import utils.WireMockHelper
 import com.github.tomakehurst.wiremock.client.WireMock._
-import org.scalatest.concurrent.ScalaFutures.convertScalaFuture
+import scala.concurrent.duration._
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 import play.api.http.Status._
+import scala.concurrent.Await
 import play.api.libs.json.Json
 
 
 class UpscanConnectorSpec extends AnyWordSpec with Matchers with GuiceOneAppPerSuite with MockitoSugar with WireMockHelper {
 
   "getUpscanFormData" should {
+    val timeout = 10000 millis
+
     "return a UpscanInitiateResponse" when {
       "upscan returns valid successful response" in {
         val body = PreparedUpload(Reference("Reference"), UploadForm("downloadUrl", Map("formKey" -> "formValue")))
@@ -46,8 +49,8 @@ class UpscanConnectorSpec extends AnyWordSpec with Matchers with GuiceOneAppPerS
             )
         )
 
-        val result = connector.getUpscanFormData(request)
-        result.futureValue shouldBe body.toUpscanInitiateResponse
+        val result = Await.result(connector.getUpscanFormData(request), timeout)
+        result shouldBe body.toUpscanInitiateResponse
       }
     }
 
@@ -60,7 +63,7 @@ class UpscanConnectorSpec extends AnyWordSpec with Matchers with GuiceOneAppPerS
                 .withStatus(BAD_REQUEST)
             )
         )
-        a [UpstreamErrorResponse] should be thrownBy (connector.getUpscanFormData(request)).futureValue
+        a [UpstreamErrorResponse] should be thrownBy Await.result(connector.getUpscanFormData(request), timeout)
       }
 
       "upscan returns 5xx response" in {
@@ -71,7 +74,7 @@ class UpscanConnectorSpec extends AnyWordSpec with Matchers with GuiceOneAppPerS
                 .withStatus(SERVICE_UNAVAILABLE)
             )
         )
-        an [UpstreamErrorResponse] should be thrownBy (connector.getUpscanFormData(request)).futureValue
+        an [UpstreamErrorResponse] should be thrownBy Await.result(connector.getUpscanFormData(request), timeout)
       }
     }
   }
