@@ -29,7 +29,7 @@ class BulkReferenceFormSpec extends PlaySpec with GuiceOneAppPerSuite {
   implicit lazy val messagesProvider=MessagesImpl(Lang("en"), messagesAPI)
   lazy val mcc = app.injector.instanceOf[MessagesControllerComponents]
   lazy val bulkReferenceForm = new BulkReferenceForm(mcc).bulkReferenceForm
-
+  val fromJsonMaxChars: Int = 102400
 
   "BulkReferenceForm" must {
     "return no errors with valid data" in {
@@ -38,7 +38,7 @@ class BulkReferenceFormSpec extends PlaySpec with GuiceOneAppPerSuite {
         "email" -> "dan@hmrc.com",
         "reference" -> "Reference"
       )
-      val validatedForm = bulkReferenceForm.bind(postData)
+      val validatedForm = bulkReferenceForm.bind(postData, fromJsonMaxChars)
 
       assert(validatedForm.errors.isEmpty)
     }
@@ -50,7 +50,7 @@ class BulkReferenceFormSpec extends PlaySpec with GuiceOneAppPerSuite {
           "email" -> "",
           "reference" -> "Reference"
         )
-        val validatedForm = bulkReferenceForm.bind(postData)
+        val validatedForm = bulkReferenceForm.bind(postData, fromJsonMaxChars)
         assert(validatedForm.errors.contains(FormError("email", List(Messages("gmp.error.mandatory.an", Messages("gmp.email"))))))
       }
 
@@ -61,7 +61,7 @@ class BulkReferenceFormSpec extends PlaySpec with GuiceOneAppPerSuite {
               "email" -> s"$email",
               "reference" -> "Reference"
             )
-            val validatedForm = bulkReferenceForm.bind(postData)
+            val validatedForm = bulkReferenceForm.bind(postData, fromJsonMaxChars)
 
             assert(validatedForm.errors.contains(FormError("email", List(Messages("gmp.error.email.invalid")))))
           }
@@ -74,7 +74,7 @@ class BulkReferenceFormSpec extends PlaySpec with GuiceOneAppPerSuite {
           "email" -> "dan@hmrc.com",
           "reference" -> ""
         )
-        val validatedForm = bulkReferenceForm.bind(postData)
+        val validatedForm = bulkReferenceForm.bind(postData, fromJsonMaxChars)
 
         assert(validatedForm.errors.contains(FormError("reference", List(Messages("gmp.error.mandatory", Messages("gmp.reference"))))))
       }
@@ -84,7 +84,7 @@ class BulkReferenceFormSpec extends PlaySpec with GuiceOneAppPerSuite {
           "email" -> "dan@hmrc.com",
           "reference" -> "a" * 100
         )
-        val validatedForm = bulkReferenceForm.bind(postData)
+        val validatedForm = bulkReferenceForm.bind(postData, fromJsonMaxChars)
 
         assert(validatedForm.errors.contains(FormError("reference", List(Messages("gmp.error.csv.member_ref.length.invalid")))))
       }
@@ -94,7 +94,7 @@ class BulkReferenceFormSpec extends PlaySpec with GuiceOneAppPerSuite {
           "email" -> "dan@hmrc.com",
           "reference" -> "Calculation@ABCDEFGHIJKLMNOPQRSTUVWXYZ*&^%$£"
         )
-        val validatedForm = bulkReferenceForm.bind(postData)
+        val validatedForm = bulkReferenceForm.bind(postData, fromJsonMaxChars)
 
         assert(validatedForm.errors.contains(FormError("reference", List(Messages("gmp.error.csv.member_ref.character.invalid")))))
       }
@@ -104,7 +104,7 @@ class BulkReferenceFormSpec extends PlaySpec with GuiceOneAppPerSuite {
           "email" -> "dan@hmrc.com",
           "reference" -> "Calcu lation"
         )
-        val validatedForm = bulkReferenceForm.bind(postData)
+        val validatedForm = bulkReferenceForm.bind(postData, fromJsonMaxChars)
 
         assert(validatedForm.errors.contains(FormError("reference", List(Messages("gmp.error.csv.member_ref.spaces.invalid")))))
       }
@@ -116,7 +116,7 @@ class BulkReferenceFormSpec extends PlaySpec with GuiceOneAppPerSuite {
           "email" -> "",
           "reference" -> ""
         )
-        val validatedForm = bulkReferenceForm.bind(postData)
+        val validatedForm = bulkReferenceForm.bind(postData, fromJsonMaxChars)
 
         assert(validatedForm.errors.size == 2)
       }

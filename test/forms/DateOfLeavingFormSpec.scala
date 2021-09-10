@@ -32,14 +32,14 @@ class DateOfLeavingFormSpec extends PlaySpec with GuiceOneAppPerSuite with Mocki
   implicit lazy val messagesProvider=MessagesImpl(Lang("en"), messagesAPI)
   lazy val mcc = app.injector.instanceOf[MessagesControllerComponents]
   lazy val dateOfLeavingForm = new DateOfLeavingForm(mcc).dateOfLeavingForm("")
-
+  val fromJsonMaxChars: Int = 102400
   DateTimeUtils.setCurrentMillisFixed(new DateTime(2016,1,1,1,1).toDate.getTime)
   val leavingDate = GmpDate(Some("06"), Some("04"), Some("2016"))
 
   "Leaving Form" must {
     "return no errors when valid values are entered" in {
 
-      val dateOfLeavingFormResults = dateOfLeavingForm.bind(Json.toJson(Leaving(leavingDate,Some(Leaving.YES_AFTER))))
+      val dateOfLeavingFormResults = dateOfLeavingForm.bind(Json.toJson(Leaving(leavingDate,Some(Leaving.YES_AFTER))), fromJsonMaxChars)
 
       assert(dateOfLeavingFormResults.errors.size == 0)
 
@@ -47,7 +47,7 @@ class DateOfLeavingFormSpec extends PlaySpec with GuiceOneAppPerSuite with Mocki
 
     "return errors when leaving date not entered" in {
 
-      val dateOfLeavingFormResults = dateOfLeavingForm.bind(Json.toJson(Leaving(leavingDate.copy(None,None,None),Some(Leaving.YES_AFTER))))
+      val dateOfLeavingFormResults = dateOfLeavingForm.bind(Json.toJson(Leaving(leavingDate.copy(None,None,None),Some(Leaving.YES_AFTER))),fromJsonMaxChars)
 
       assert(dateOfLeavingFormResults.errors.size == 1)
 
@@ -56,12 +56,12 @@ class DateOfLeavingFormSpec extends PlaySpec with GuiceOneAppPerSuite with Mocki
     "entering a day" must {
 
       "return an error on the date when it is not a number" in {
-        val dateOfLeavingFormResults = dateOfLeavingForm.bind(Json.toJson(Leaving(GmpDate(Some("a"), Some("01"), Some("2012")),Some(Leaving.YES_AFTER))))
+        val dateOfLeavingFormResults = dateOfLeavingForm.bind(Json.toJson(Leaving(GmpDate(Some("a"), Some("01"), Some("2012")),Some(Leaving.YES_AFTER))), fromJsonMaxChars)
         dateOfLeavingFormResults.errors must contain(FormError("", List(Messages("gmp.error.date.leaving.invalid")), List("leavingDate")))
       }
 
       "return an error on the date when it is out of range" in {
-        val dateOfLeavingFormResults = dateOfLeavingForm.bind(Json.toJson(Leaving(new GmpDate(Some("32"), Some("01"), Some("2012")),Some(Leaving.YES_AFTER))))
+        val dateOfLeavingFormResults = dateOfLeavingForm.bind(Json.toJson(Leaving(new GmpDate(Some("32"), Some("01"), Some("2012")),Some(Leaving.YES_AFTER))),fromJsonMaxChars)
         dateOfLeavingFormResults.errors must contain(FormError("", List(Messages("gmp.error.date.leaving.invalid")), List("leavingDate")))
       }
     }
@@ -69,12 +69,12 @@ class DateOfLeavingFormSpec extends PlaySpec with GuiceOneAppPerSuite with Mocki
     "entering a month" must {
 
       "return an error on the date when it is not a number" in {
-        val dateOfLeavingFormResults = dateOfLeavingForm.bind(Json.toJson(Leaving(new GmpDate(Some("01"), Some("a"), Some("2012")),Some(Leaving.YES_AFTER))))
+        val dateOfLeavingFormResults = dateOfLeavingForm.bind(Json.toJson(Leaving(new GmpDate(Some("01"), Some("a"), Some("2012")),Some(Leaving.YES_AFTER))),fromJsonMaxChars)
         dateOfLeavingFormResults.errors must contain(FormError("", List(Messages("gmp.error.date.leaving.invalid")), List("leavingDate")))
       }
 
       "return an error on the date when it is out of range" in {
-        val dateOfLeavingFormResults = dateOfLeavingForm.bind(Json.toJson(Leaving(new GmpDate(Some("01"), Some("13"), Some("2012")),Some(Leaving.YES_AFTER))))
+        val dateOfLeavingFormResults = dateOfLeavingForm.bind(Json.toJson(Leaving(new GmpDate(Some("01"), Some("13"), Some("2012")),Some(Leaving.YES_AFTER))), fromJsonMaxChars)
         dateOfLeavingFormResults.errors must contain(FormError("", List(Messages("gmp.error.date.leaving.invalid")), List("leavingDate")))
       }
     }
@@ -82,50 +82,50 @@ class DateOfLeavingFormSpec extends PlaySpec with GuiceOneAppPerSuite with Mocki
     "entering a year" must {
 
       "return an error on the date when it is not a number" in {
-        val dateOfLeavingFormResults = dateOfLeavingForm.bind(Json.toJson(Leaving(new GmpDate(Some("01"), Some("12"), Some("21a1")),Some(Leaving.YES_AFTER))))
+        val dateOfLeavingFormResults = dateOfLeavingForm.bind(Json.toJson(Leaving(new GmpDate(Some("01"), Some("12"), Some("21a1")),Some(Leaving.YES_AFTER))), fromJsonMaxChars)
         dateOfLeavingFormResults.errors must contain(FormError("", List(Messages("gmp.error.date.leaving.invalid")), List("leavingDate")))
       }
 
       "return an error on the date when it is not the correct format" in {
-        val dateOfLeavingFormResults = dateOfLeavingForm.bind(Json.toJson(Leaving(new GmpDate(Some("01"), Some("11"), Some("190")),Some(Leaving.YES_AFTER))))
+        val dateOfLeavingFormResults = dateOfLeavingForm.bind(Json.toJson(Leaving(new GmpDate(Some("01"), Some("11"), Some("190")),Some(Leaving.YES_AFTER))), fromJsonMaxChars)
         dateOfLeavingFormResults.errors must contain(FormError("", List(Messages("gmp.error.date.leaving.invalid")), List("leavingDate")))
       }
     }
 
     "entering invalid dates" must {
       "return an error when the day is missing" in {
-        val dateOfLeavingFormResults = dateOfLeavingForm.bind(Json.toJson(Leaving(new GmpDate(Some(""), Some("04"), Some("1978")),Some(Leaving.YES_AFTER))))
+        val dateOfLeavingFormResults = dateOfLeavingForm.bind(Json.toJson(Leaving(new GmpDate(Some(""), Some("04"), Some("1978")),Some(Leaving.YES_AFTER))), fromJsonMaxChars)
         dateOfLeavingFormResults.errors must contain(FormError("", List(Messages("gmp.error.date.leaving.invalid")), List("leavingDate")))
       }
       "return an error when the month is missing" in {
-        val dateOfLeavingFormResults = dateOfLeavingForm.bind(Json.toJson(Leaving(new GmpDate(Some("04"), Some(""), Some("1978")),Some(Leaving.YES_AFTER))))
+        val dateOfLeavingFormResults = dateOfLeavingForm.bind(Json.toJson(Leaving(new GmpDate(Some("04"), Some(""), Some("1978")),Some(Leaving.YES_AFTER))), fromJsonMaxChars)
         dateOfLeavingFormResults.errors must contain(FormError("", List(Messages("gmp.error.date.leaving.invalid")), List("leavingDate")))
       }
       "return an error when the year is missing" in {
-        val dateOfLeavingFormResults = dateOfLeavingForm.bind(Json.toJson(Leaving(new GmpDate(Some("04"), Some("04"), Some("")),Some(Leaving.YES_AFTER))))
+        val dateOfLeavingFormResults = dateOfLeavingForm.bind(Json.toJson(Leaving(new GmpDate(Some("04"), Some("04"), Some("")),Some(Leaving.YES_AFTER))), fromJsonMaxChars)
         dateOfLeavingFormResults.errors must contain(FormError("", List(Messages("gmp.error.date.leaving.invalid")), List("leavingDate")))
       }
 
       "return an error if before 06/04/2016" in {
-        val dateOfLeavingFormResults = dateOfLeavingForm.bind(Json.toJson(Leaving(new GmpDate(Some("04"), Some("04"), Some("2016")),Some(Leaving.YES_AFTER))))
+        val dateOfLeavingFormResults = dateOfLeavingForm.bind(Json.toJson(Leaving(new GmpDate(Some("04"), Some("04"), Some("2016")),Some(Leaving.YES_AFTER))), fromJsonMaxChars)
         dateOfLeavingFormResults.errors must contain(FormError("", List(Messages("gmp.error.leaving_on_or_after.too_low")), List("leavingDate")))
       }
 
       "return an error if not before 01/01/2100" in {
-        val dateOfLeavingFormResults = dateOfLeavingForm.bind(Json.toJson(Leaving(new GmpDate(Some("01"), Some("01"), Some("2100")),Some(Leaving.YES_AFTER))))
+        val dateOfLeavingFormResults = dateOfLeavingForm.bind(Json.toJson(Leaving(new GmpDate(Some("01"), Some("01"), Some("2100")),Some(Leaving.YES_AFTER))), fromJsonMaxChars)
         dateOfLeavingFormResults.errors must contain(FormError("", List(Messages("gmp.error.leaving_on_or_after.too_high")), List("leavingDate")))
       }
     }
 
     "enter a valid date" must {
       "enter a date before 06/04/2016 and YES_BEFORE" in {
-        val dateOfLeavingFormResults = dateOfLeavingForm.bind(Json.toJson(Leaving(new GmpDate(Some("04"), Some("04"), Some("2016")),Some(Leaving.YES_BEFORE))))
+        val dateOfLeavingFormResults = dateOfLeavingForm.bind(Json.toJson(Leaving(new GmpDate(Some("04"), Some("04"), Some("2016")),Some(Leaving.YES_BEFORE))), fromJsonMaxChars)
         dateOfLeavingFormResults.errors.size must be(0)
       }
 
       "enter a valid date" must {
         "enter a date after 06/04/2016 and YES_AFTER" in {
-          val dateOfLeavingFormResults = dateOfLeavingForm.bind(Json.toJson(Leaving(new GmpDate(Some("07"), Some("04"), Some("2016")),Some(Leaving.YES_AFTER))))
+          val dateOfLeavingFormResults = dateOfLeavingForm.bind(Json.toJson(Leaving(new GmpDate(Some("07"), Some("04"), Some("2016")),Some(Leaving.YES_AFTER))), fromJsonMaxChars)
           dateOfLeavingFormResults.errors.size must be(0)
         }
       }

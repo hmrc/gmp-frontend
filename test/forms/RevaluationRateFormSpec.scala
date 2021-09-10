@@ -20,6 +20,7 @@ import models.RevaluationRate
 import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import org.scalatestplus.play.PlaySpec
+
 import play.api.i18n.{Lang, MessagesApi, MessagesImpl}
 import play.api.libs.json.Json
 import play.api.mvc.MessagesControllerComponents
@@ -29,11 +30,12 @@ class RevaluationRateFormSpec extends PlaySpec with GuiceOneAppPerSuite with Moc
   implicit lazy val messagesProvider=MessagesImpl(Lang("en"), messagesAPI)
   lazy val mcc = app.injector.instanceOf[MessagesControllerComponents]
   lazy val revaluationRateForm = new RevaluationRateForm(mcc).revaluationRateForm
+  val fromJsonMaxChars: Int = 102400
 
   "Revaluation Rate Form" must {
     "return no errors when valid values are entered" in {
 
-      val revaluationFormResults = revaluationRateForm.bind(Json.toJson(RevaluationRate(Some(RevaluationRate.HMRC))))
+      val revaluationFormResults = revaluationRateForm.bind(Json.toJson(RevaluationRate(Some(RevaluationRate.HMRC))), fromJsonMaxChars)
 
       assert(revaluationFormResults.errors.size == 0)
 
@@ -41,14 +43,14 @@ class RevaluationRateFormSpec extends PlaySpec with GuiceOneAppPerSuite with Moc
 
     "return errors when value not chosed" in {
 
-      val revaluationFormResults = revaluationRateForm.bind(Json.toJson(RevaluationRate(None)))
+      val revaluationFormResults = revaluationRateForm.bind(Json.toJson(RevaluationRate(None)), fromJsonMaxChars)
 
       assert(revaluationFormResults.errors.size == 1)
 
     }
 
     "return error when not allowed type" in {
-      val revaluationFormResults = revaluationRateForm.bind(Json.toJson(RevaluationRate(Some("~@"))))
+      val revaluationFormResults = revaluationRateForm.bind(Json.toJson(RevaluationRate(Some("~@"))), fromJsonMaxChars)
 
       assert(revaluationFormResults.errors.size == 1)
     }
