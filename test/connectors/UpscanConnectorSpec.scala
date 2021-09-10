@@ -24,19 +24,19 @@ import play.api.inject.guice.GuiceApplicationBuilder
 import uk.gov.hmrc.http.{HeaderCarrier, UpstreamErrorResponse}
 import utils.WireMockHelper
 import com.github.tomakehurst.wiremock.client.WireMock._
+import org.scalatest.concurrent.ScalaFutures
 import scala.concurrent.duration._
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 import play.api.http.Status._
-import scala.concurrent.Await
 import play.api.libs.json.Json
 
 
-class UpscanConnectorSpec extends AnyWordSpec with Matchers with GuiceOneAppPerSuite with MockitoSugar with WireMockHelper {
+class UpscanConnectorSpec extends AnyWordSpec with Matchers with GuiceOneAppPerSuite with MockitoSugar with WireMockHelper with ScalaFutures {
+
+  implicit val defaultPatience: PatienceConfig = PatienceConfig(timeout = 50000 millis, interval = 15 millis)
 
   "getUpscanFormData" should {
-    val timeout = 10000 millis
-
     "return a UpscanInitiateResponse" when {
       "upscan returns valid successful response" in {
         val body = PreparedUpload(Reference("Reference"), UploadForm("downloadUrl", Map("formKey" -> "formValue")))
@@ -49,7 +49,7 @@ class UpscanConnectorSpec extends AnyWordSpec with Matchers with GuiceOneAppPerS
             )
         )
 
-        val result = Await.result(connector.getUpscanFormData(request), timeout)
+        val result =  (connector.getUpscanFormData(request)).futureValue
         result shouldBe body.toUpscanInitiateResponse
       }
     }
@@ -63,7 +63,7 @@ class UpscanConnectorSpec extends AnyWordSpec with Matchers with GuiceOneAppPerS
                 .withStatus(BAD_REQUEST)
             )
         )
-        a [UpstreamErrorResponse] should be thrownBy Await.result(connector.getUpscanFormData(request), timeout)
+        a [UpstreamErrorResponse] should be thrownBy (connector.getUpscanFormData(request)).futureValue
       }
 
       "upscan returns 5xx response" in {
@@ -74,7 +74,7 @@ class UpscanConnectorSpec extends AnyWordSpec with Matchers with GuiceOneAppPerS
                 .withStatus(SERVICE_UNAVAILABLE)
             )
         )
-        an [UpstreamErrorResponse] should be thrownBy Await.result(connector.getUpscanFormData(request), timeout)
+        an [UpstreamErrorResponse] should be thrownBy (connector.getUpscanFormData(request)).futureValue
       }
     }
   }

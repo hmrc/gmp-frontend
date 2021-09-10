@@ -27,8 +27,7 @@ import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.inject.bind
 import org.mockito.Mockito._
 import org.mockito.Matchers.any
-import org.scalatest.concurrent.ScalaFutures.convertScalaFuture
-import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
+import org.scalatest.concurrent.ScalaFutures
 import play.api.mvc.Request
 import play.api.test.FakeRequest
 import uk.gov.hmrc.http.HeaderCarrier
@@ -37,7 +36,7 @@ import uk.gov.hmrc.http.SessionId
 import scala.concurrent.Future
 
 
-class UpscanServiceSpec extends BaseSpec with GuiceOneAppPerSuite with MockitoSugar {
+class UpscanServiceSpec extends BaseSpec with GuiceOneAppPerSuite with MockitoSugar with ScalaFutures {
 
   override def fakeApplication: Application = new GuiceApplicationBuilder()
     .overrides(bind[UpscanConnector].toInstance(mockUpscanConnector))

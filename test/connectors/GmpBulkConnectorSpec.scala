@@ -22,7 +22,7 @@ import models._
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfter
-import org.scalatest.concurrent.ScalaFutures.convertScalaFuture
+import org.scalatest.concurrent.ScalaFutures
 import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 import org.scalatestplus.play.PlaySpec
@@ -36,7 +36,7 @@ import uk.gov.hmrc.http.HttpClient
 
 import scala.concurrent.Future
 
-class GmpBulkConnectorSpec extends PlaySpec with GuiceOneServerPerSuite with MockitoSugar with BeforeAndAfter {
+class GmpBulkConnectorSpec extends PlaySpec with GuiceOneServerPerSuite with MockitoSugar with BeforeAndAfter with ScalaFutures{
 
   val mockHttpPost = mock[HttpClient]
   val mockHttpGet = mock[HttpClient]
@@ -74,8 +74,8 @@ class GmpBulkConnectorSpec extends PlaySpec with GuiceOneServerPerSuite with Moc
           "bob", "bobbleton", Some("bobby"), Some(0), Some("2012-02-02"), None, None, 0)),
           None, None)))
 
-      val result = testGmpBulkConnector.sendBulkRequest(bcr,link)
-      (await(result)) must be(CONFLICT)
+      val result = testGmpBulkConnector.sendBulkRequest(bcr,link).futureValue
+      (result)must be(CONFLICT)
     }
 
     "send a bulk request with valid data but the file is too large" in {
@@ -88,8 +88,8 @@ class GmpBulkConnectorSpec extends PlaySpec with GuiceOneServerPerSuite with Moc
           "bob", "bobbleton", Some("bobby"), Some(0), Some("2012-02-02"), None, None, 0)),
           None, None)))
 
-      val result = testGmpBulkConnector.sendBulkRequest(bcr,link)
-      (await(result)) must be(REQUEST_ENTITY_TOO_LARGE)
+      val result = testGmpBulkConnector.sendBulkRequest(bcr,link).futureValue
+      (result) must be(REQUEST_ENTITY_TOO_LARGE)
     }
 
     "send a bulk request with valid data but bulk fails" in {
@@ -102,8 +102,8 @@ class GmpBulkConnectorSpec extends PlaySpec with GuiceOneServerPerSuite with Moc
           "bob", "bobbleton", Some("bobby"), Some(0), Some("2012-02-02"), None, None, 0)),
           None, None)))
 
-      val result = testGmpBulkConnector.sendBulkRequest(bcr,link)
-      (await(result)) must be(500)
+      val result = testGmpBulkConnector.sendBulkRequest(bcr,link).futureValue
+      (result) must be(500)
     }
 
     "retrieve bulk requests associated with the user " in {
@@ -116,7 +116,7 @@ class GmpBulkConnectorSpec extends PlaySpec with GuiceOneServerPerSuite with Moc
         .thenReturn(Future.successful(bulkPreviousRequest.as[List[BulkPreviousRequest]]))
 
       val result = testGmpBulkConnector.getPreviousBulkRequests(link)
-      val resolvedResult = await(result)
+      val resolvedResult = (result).futureValue
 
       resolvedResult.head.uploadReference must be("uploadRef")
 
@@ -126,8 +126,8 @@ class GmpBulkConnectorSpec extends PlaySpec with GuiceOneServerPerSuite with Moc
 
       when(mockHttpGet.GET[BulkResultsSummary](Matchers.any(), Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(BulkResultsSummary("test",1,1)))
 
-      val result = testGmpBulkConnector.getBulkResultsSummary("",link)
-      (await(result)).reference must be("test")
+      val result = testGmpBulkConnector.getBulkResultsSummary("",link).futureValue
+      (result).reference must be("test")
     }
 
     "return all bulk request as csv" in {
@@ -135,7 +135,7 @@ class GmpBulkConnectorSpec extends PlaySpec with GuiceOneServerPerSuite with Moc
       when(mockHttpGet.GET[HttpResponse](Matchers.any(), Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(HttpResponse(OK, "THIS IS A CSV STRING")))
 
       val result = testGmpBulkConnector.getResultsAsCsv("","",link)
-      val resolvedResult = await(result)
+      val resolvedResult = (result).futureValue
 
       resolvedResult.body must be("THIS IS A CSV STRING")
     }
@@ -145,7 +145,7 @@ class GmpBulkConnectorSpec extends PlaySpec with GuiceOneServerPerSuite with Moc
       when(mockHttpGet.GET[HttpResponse](Matchers.any(), Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(HttpResponse(OK, "THIS IS A CSV STRING")))
 
       val result = testGmpBulkConnector.getContributionsAndEarningsAsCsv("",link)
-      val resolvedResult = await(result)
+      val resolvedResult = (result).futureValue
 
       resolvedResult.body must be("THIS IS A CSV STRING")
 
