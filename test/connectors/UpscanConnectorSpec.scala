@@ -34,8 +34,6 @@ import play.api.libs.json.Json
 
 class UpscanConnectorSpec extends AnyWordSpec with Matchers with GuiceOneAppPerSuite with MockitoSugar with WireMockHelper with ScalaFutures {
 
-  implicit val defaultPatience: PatienceConfig = PatienceConfig(timeout = 50000 millis, interval = 15 millis)
-
   "getUpscanFormData" should {
     "return a UpscanInitiateResponse" when {
       "upscan returns valid successful response" in {
@@ -63,7 +61,7 @@ class UpscanConnectorSpec extends AnyWordSpec with Matchers with GuiceOneAppPerS
                 .withStatus(BAD_REQUEST)
             )
         )
-        a [UpstreamErrorResponse] should be thrownBy (connector.getUpscanFormData(request)).futureValue
+          assert(connector.getUpscanFormData(request).failed.futureValue.isInstanceOf[UpstreamErrorResponse])
       }
 
       "upscan returns 5xx response" in {
@@ -74,11 +72,12 @@ class UpscanConnectorSpec extends AnyWordSpec with Matchers with GuiceOneAppPerS
                 .withStatus(SERVICE_UNAVAILABLE)
             )
         )
-        an [UpstreamErrorResponse] should be thrownBy (connector.getUpscanFormData(request)).futureValue
+        assert(connector.getUpscanFormData(request).failed.futureValue.isInstanceOf[UpstreamErrorResponse])
       }
     }
   }
 
+  implicit val defaultPatience: PatienceConfig = PatienceConfig(timeout = 50000 millis, interval = 15 millis)
   lazy val connector: UpscanConnector = app.injector.instanceOf[UpscanConnector]
   implicit val hc: HeaderCarrier = HeaderCarrier()
   val request = UpscanInitiateRequest("callbackUrl", "successRedirectUrl", "errorRedirectUrl")
