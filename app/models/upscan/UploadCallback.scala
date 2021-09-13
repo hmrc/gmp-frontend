@@ -19,7 +19,7 @@ package models.upscan
 import java.net.URL
 import java.time.Instant
 
-import play.api.Logger
+import play.api.Logging
 import play.api.libs.json._
 
 import scala.util.Try
@@ -40,7 +40,7 @@ case class UpscanFailedCallback(
                                  failureDetails: ErrorDetails
                                ) extends UpscanCallback
 
-object UpscanCallback {
+object UpscanCallback extends Logging{
   implicit val uploadDetailsFormat: Format[UploadDetails] = Json.format[UploadDetails]
   implicit val errorDetailsFormat: Format[ErrorDetails] = Json.format[ErrorDetails]
   implicit val formatURL: Format[URL] = new Format[URL] {
@@ -61,7 +61,7 @@ object UpscanCallback {
   implicit val reads: Reads[UpscanCallback] = new Reads[UpscanCallback] {
     override def reads(json: JsValue): JsResult[UpscanCallback] = json \ "fileStatus" match {
       case JsDefined(JsString("READY")) =>
-        Logger.info("READY")
+        logger.info("READY")
         implicitly[Reads[UpscanReadyCallback]].reads(json)
       case JsDefined(JsString("FAILED")) => implicitly[Reads[UpscanFailedCallback]].reads(json)
       case JsDefined(value) => JsError(s"Invalid type discriminator: $value")

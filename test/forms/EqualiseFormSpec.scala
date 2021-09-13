@@ -26,13 +26,14 @@ class EqualiseFormSpec extends PlaySpec with GuiceOneAppPerSuite{
 
   lazy val mcc = app.injector.instanceOf[MessagesControllerComponents]
   lazy val equaliseForm = new EqualiseForm(mcc).equaliseForm
+  val fromJsonMaxChars: Int = 102400
 
 
   "Equalise Form" must {
 
     "return errors when revaluation yes/no not entered" in {
 
-      val equaliseFormResults = equaliseForm.bind(Json.toJson(Equalise(None)))
+      val equaliseFormResults = equaliseForm.bind(Json.toJson(Equalise(None)), fromJsonMaxChars)
 
       assert(equaliseFormResults.errors.size == 1)
 

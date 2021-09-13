@@ -17,7 +17,6 @@
 package connectors
 
 import java.util.UUID
-
 import helpers.RandomNino
 import metrics.ApplicationMetrics
 import models._

@@ -20,7 +20,7 @@ import com.google.inject.{Inject, Singleton}
 import config.{ApplicationConfig, GmpContext, GmpSessionCache}
 import connectors.GmpBulkConnector
 import controllers.auth.AuthAction
-import play.api.Logger
+import play.api.Logging
 import play.api.mvc.MessagesControllerComponents
 import services.SessionService
 import uk.gov.hmrc.auth.core.AuthConnector
@@ -36,7 +36,7 @@ class DashboardController @Inject()(authAction: AuthAction,
                                     messagesControllerComponents: MessagesControllerComponents,
                                     implicit val executionContext: ExecutionContext,
                                     implicit val gmpSessionCache: GmpSessionCache,
-                                    views: Views) extends GmpPageFlow(authConnector,sessionService,config,messagesControllerComponents,ac) {
+                                    views: Views) extends GmpPageFlow(authConnector,sessionService,config,messagesControllerComponents,ac) with Logging{
 
 
 
@@ -51,7 +51,7 @@ class DashboardController @Inject()(authAction: AuthAction,
           }
         }.recover {
           case f => {
-            Logger.error(s"[DashboardController][getPreviousBulkRequests returned {error : ${f.getMessage}")
+            logger.error(s"[DashboardController][getPreviousBulkRequests returned {error : ${f.getMessage}")
             Ok(views.dashboard(Nil))
           }
         }

@@ -21,7 +21,7 @@ import config.{ApplicationConfig, GmpContext, GmpSessionCache}
 import controllers.auth.AuthAction
 import forms.DateOfLeavingForm
 import models.CalculationType
-import play.api.Logger
+import play.api.Logging
 import play.api.i18n.Messages
 import play.api.mvc.MessagesControllerComponents
 import services.SessionService
@@ -38,7 +38,7 @@ class DateOfLeavingController @Inject()(authAction: AuthAction,
                                         messagesControllerComponents: MessagesControllerComponents,
                                         implicit val executionContext: ExecutionContext,
                                         implicit val gmpSessionCache: GmpSessionCache,
-                                        views: Views) extends GmpPageFlow(authConnector,sessionService,config,messagesControllerComponents,ac) {
+                                        views: Views) extends GmpPageFlow(authConnector,sessionService,config,messagesControllerComponents,ac) with Logging{
 
   def dateOfLeavingForm(scenario: String)= {
     val mandatoryErrorMessage = scenario match {
@@ -65,7 +65,7 @@ class DateOfLeavingController @Inject()(authAction: AuthAction,
 
   def post = authAction.async {
       implicit request => {
-        Logger.debug(s"[DateOfLeavingController][post][POST] : ${request.body}")
+        logger.debug(s"[DateOfLeavingController][post][POST] : ${request.body}")
         val form = sessionService.fetchGmpSession.map{
           case Some(session) => dateOfLeavingForm(session.scenario)
           case None => throw new RuntimeException("No session found in order to retrieve scenario")

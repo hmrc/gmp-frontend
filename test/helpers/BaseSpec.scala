@@ -14,26 +14,12 @@
  * limitations under the License.
  */
 
-package models
+package helpers
 
-import helpers.RandomNino
+import org.scalatest.OptionValues
 import org.scalatest.matchers.should.Matchers
-import org.scalatest.wordspec.AnyWordSpec
+import org.scalatest.wordspec.AnyWordSpecLike
 
-class NinoSpec extends AnyWordSpec with Matchers {
+class BaseSpec extends AnyWordSpecLike with Matchers with OptionValues{
 
-  "Creating a Nino" should {
-    "fail if the nino is not valid" in {
-      an[IllegalArgumentException] should be thrownBy Nino("INVALID_NINO")
-    }
-  }
-
-  "Formatting a Nino" should {
-    "produce a formatted nino" in {
-      val nino = RandomNino.generate
-      val formattedNino = nino.grouped(2).mkString(" ")
-
-      Nino(nino).formatted shouldBe formattedNino
-    }
-  }
 }

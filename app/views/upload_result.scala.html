@@ -67,7 +67,7 @@
     @status match {
         case s : UploadedSuccessfully => {
             <div class="section">
-                <a class="button" href="@routes.BulkReferenceController.get()">@Messages("gmp.continue.button")</a>
+                <a class="button" href="@routes.BulkReferenceController.get">@Messages("gmp.continue.button")</a>
             </div>
         }
         case NotStarted => {

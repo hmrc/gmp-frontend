@@ -16,11 +16,11 @@
 
 package models
 
+import helpers.BaseSpec
 import models.upscan._
 import play.api.libs.json.{JsError, Json}
-import uk.gov.hmrc.play.test.UnitSpec
 
-class UploadStatusSpec extends UnitSpec {
+class UploadStatusSpec extends BaseSpec {
 
   val statuses = List(NotStarted, InProgress)
   "UploadStats json Reads" should {
@@ -74,7 +74,7 @@ class UploadStatusSpec extends UnitSpec {
       s"set _type as $status" when {
         s"status is $status" in {
           val expectedJson = s"""{"_type":"$status"}"""
-          Json.toJson(status).toString() shouldBe expectedJson
+          Json.toJson(status.asInstanceOf[UploadStatus]).toString() shouldBe expectedJson
         }
       }
     }
@@ -85,7 +85,7 @@ class UploadStatusSpec extends UnitSpec {
         val expectedUrl = "downloadUrl"
         val noOfRows = 2
         val expectedJson =
-          s"""{"reference":"ref1","fileName":"$expectedName","downloadUrl":"$expectedUrl","_type":"UploadedSuccessfully","noOfRows":$noOfRows}"""
+          s"""{"reference":"ref1","fileName":"$expectedName","downloadUrl":"$expectedUrl","noOfRows":$noOfRows,"_type":"UploadedSuccessfully"}"""
         val uploadStatus: UploadStatus = UploadedSuccessfully("ref1", expectedName, expectedUrl, Some(noOfRows))
         Json.toJson(uploadStatus).toString() shouldBe expectedJson
       }

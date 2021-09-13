@@ -20,7 +20,7 @@ import com.google.inject.{Inject, Singleton}
 import metrics.ApplicationMetrics
 import models._
 import play.api.Mode
-import play.api.{Configuration, Environment, Logger}
+import play.api.{Configuration, Environment, Logging}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import uk.gov.hmrc.http.HttpClient
@@ -37,7 +37,7 @@ class GmpConnector @Inject()(environment: Environment,
                              httpPost: HttpClient,
                              httpGet: HttpClient,
                              httpPut: HttpClient,
-                             val servicesConfig: ServicesConfig)  {
+                             val servicesConfig: ServicesConfig) extends Logging  {
 
    def mode: Mode = environment.mode
 
@@ -53,7 +53,7 @@ class GmpConnector @Inject()(environment: Environment,
     val timer = metrics.gmpConnectorTimer.time()
     val result = httpPost.POST[CalculationRequest, CalculationResponse](calculateUri, calculationRequest)
 
-    Logger.debug(s"[GmpConnector][calculateSingle][POST] : $calculationRequest")
+    logger.debug(s"[GmpConnector][calculateSingle][POST] : $calculationRequest")
 
     result onComplete {
       case _ => timer.stop()
@@ -61,11 +61,11 @@ class GmpConnector @Inject()(environment: Environment,
 
     // $COVERAGE-OFF$
     result.foreach {
-      case response => Logger.debug(s"[GmpConnector][calculateSingle][response] : $response")
+      case response => logger.debug(s"[GmpConnector][calculateSingle][response] : $response")
     }
 
     result.failed.foreach({
-      case e: Exception => Logger.error(s"[GmpConnector][calculateSingle] ${e.getMessage}", e)
+      case e: Exception => logger.error(s"[GmpConnector][calculateSingle] ${e.getMessage}", e)
     })
     // $COVERAGE-ON$
 
@@ -82,17 +82,17 @@ class GmpConnector @Inject()(environment: Environment,
     val timer = metrics.gmpConnectorTimer.time()
     val result = httpPost.POST[ValidateSconRequest, ValidateSconResponse](validateSconUri, validateSconRequest)
 
-    Logger.debug(s"[GmpConnector][validateScon][POST] $validateSconRequest")
+    logger.debug(s"[GmpConnector][validateScon][POST] $validateSconRequest")
 
     result onComplete (_ => timer.stop())
 
     // $COVERAGE-OFF$
     result.foreach {
-      case response => Logger.debug(s"[GmpConnector][validateScon][response] : $response")
+      case response => logger.debug(s"[GmpConnector][validateScon][response] : $response")
     }
 
     result.failed.foreach({
-      case e: Exception => Logger.error(s"[GmpConnector][validateScon] ${e.getMessage}", e)
+      case e: Exception => logger.error(s"[GmpConnector][validateScon] ${e.getMessage}", e)
     })
     // $COVERAGE-ON$
 

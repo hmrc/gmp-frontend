@@ -18,7 +18,7 @@ package connectors
 
 import com.google.inject.{Inject, Singleton}
 import play.api.Mode
-import play.api.{Configuration, Environment, Logger}
+import play.api.{Configuration, Environment, Logging}
 import uk.gov.hmrc.http.{BadGatewayException, HeaderCarrier}
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import uk.gov.hmrc.http.HttpReads.Implicits.readRaw
@@ -30,7 +30,7 @@ import uk.gov.hmrc.http.HttpClient
 class ContactFrontendConnector @Inject()(http: HttpClient,
                                          environment: Environment,
                                          val runModeConfiguration: Configuration,
-                                         val servicesConfig: ServicesConfig) {
+                                         val servicesConfig: ServicesConfig) extends Logging {
 
   val mode: Mode = environment.mode
 
@@ -44,7 +44,7 @@ class ContactFrontendConnector @Inject()(http: HttpClient,
       r.body
     } recover {
       case e: BadGatewayException =>
-        Logger.error(s"[ContactFrontendConnector] ${e.message}", e)
+        logger.error(s"[ContactFrontendConnector] ${e.message}", e)
         ""
     }
   }

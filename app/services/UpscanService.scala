@@ -20,7 +20,7 @@ import com.google.inject.Inject
 import config.ApplicationConfig
 import connectors.UpscanConnector
 import models.upscan.{UpscanInitiateRequest, UpscanInitiateResponse}
-import play.api.mvc.{ Request}
+import play.api.mvc.Request
 import uk.gov.hmrc.http.HeaderCarrier
 import scala.concurrent.Future
 

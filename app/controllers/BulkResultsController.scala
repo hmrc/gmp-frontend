@@ -20,7 +20,7 @@ import com.google.inject.Inject
 import config.{ApplicationConfig, GmpContext}
 import connectors.GmpBulkConnector
 import controllers.auth.AuthAction
-import play.api.Logger
+import play.api.Logging
 import play.api.mvc.MessagesControllerComponents
 import services.SessionService
 import uk.gov.hmrc.auth.core.AuthConnector
@@ -36,11 +36,11 @@ class BulkResultsController @Inject()(authAction: AuthAction,
                                       ac:ApplicationConfig,sessionService: SessionService,implicit val config:GmpContext,
                                       implicit val executionContext: ExecutionContext,
                                       views: Views
-                                     ) extends GmpController(messagesControllerComponents,ac,sessionService,config) {
+                                     ) extends GmpController(messagesControllerComponents,ac,sessionService,config) with Logging {
    def get(uploadReference: String, comingFromPage: Int) = authAction.async {
     implicit request => {
 
-      val log = (e: Throwable) => Logger.error(s"[BulkResultsController][GET] ${e.getMessage}", e)
+      val log = (e: Throwable) => logger.error(s"[BulkResultsController][GET] ${e.getMessage}", e)
 
       val link = request.linkId
 

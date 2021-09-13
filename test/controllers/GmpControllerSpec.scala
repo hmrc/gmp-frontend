@@ -62,7 +62,7 @@ class GmpControllerSpec extends PlaySpec with GuiceOneServerPerSuite with Mockit
         "redirect to the member details page" in {
           val result = TestGmpController.nextPage(PageType.PENSION_DETAILS, gmpSession)
           result.header.status must be(SEE_OTHER)
-          result.header.headers.get("LOCATION").get must be(routes.MemberDetailsController.get().url)
+          result.header.headers.get("LOCATION").get must be(routes.MemberDetailsController.get.url)
         }
       }
 
@@ -71,7 +71,7 @@ class GmpControllerSpec extends PlaySpec with GuiceOneServerPerSuite with Mockit
         "redirect to the scenario page" in {
           val result = TestGmpController.nextPage(PageType.MEMBER_DETAILS, gmpSession)
           result.header.status must be(SEE_OTHER)
-          result.header.headers.get("LOCATION").get must be(routes.ScenarioController.get().url)
+          result.header.headers.get("LOCATION").get must be(routes.ScenarioController.get.url)
         }
       }
 
@@ -83,7 +83,7 @@ class GmpControllerSpec extends PlaySpec with GuiceOneServerPerSuite with Mockit
           val result = TestGmpController.nextPage(PageType.SCENARIO, session)
 
           result.header.status must be(SEE_OTHER)
-          result.header.headers.get("LOCATION").get must be(routes.DateOfLeavingController.get().url)
+          result.header.headers.get("LOCATION").get must be(routes.DateOfLeavingController.get.url)
         }
       }
 
@@ -93,28 +93,28 @@ class GmpControllerSpec extends PlaySpec with GuiceOneServerPerSuite with Mockit
           val revalSession = GmpSession(MemberDetails("", "", ""), "", CalculationType.REVALUATION, Some(GmpDate(Some("1"), Some("1"), Some("1990"))), None, Leaving(GmpDate(None, None, None), Some(Leaving.NO)), None)
           val result = TestGmpController.nextPage(PageType.REVALUATION, revalSession)
           result.header.status must be(SEE_OTHER)
-          result.header.headers.get("LOCATION").get must be(routes.EqualiseController.get().url)
+          result.header.headers.get("LOCATION").get must be(routes.EqualiseController.get.url)
         }
 
         "redirect to the equalise page member not in scheme, left before 2016" in {
           val revalSession = GmpSession(MemberDetails("", "", ""), "", CalculationType.REVALUATION, Some(GmpDate(Some("1"), Some("1"), Some("2017"))), None, Leaving(GmpDate(Some("1"), Some("1"), Some("1990")), Some(Leaving.YES_BEFORE)), None)
           val result = TestGmpController.nextPage(PageType.REVALUATION, revalSession)
           result.header.status must be(SEE_OTHER)
-          result.header.headers.get("LOCATION").get must be(routes.RevaluationRateController.get().url)
+          result.header.headers.get("LOCATION").get must be(routes.RevaluationRateController.get.url)
         }
 
         "redirect to the equalise page member not in scheme, left after 2016, in same tax year" in {
           val revalSession = GmpSession(MemberDetails("", "", ""), "", CalculationType.REVALUATION, Some(GmpDate(Some("1"), Some("1"), Some("2017"))), None, Leaving(GmpDate(Some("1"), Some("1"), Some("2017")), Some(Leaving.YES_AFTER)), None)
           val result = TestGmpController.nextPage(PageType.REVALUATION, revalSession)
           result.header.status must be(SEE_OTHER)
-          result.header.headers.get("LOCATION").get must be(routes.EqualiseController.get().url)
+          result.header.headers.get("LOCATION").get must be(routes.EqualiseController.get.url)
         }
 
         "redirect to the equalise page member not in scheme, left after 2016, not in same tax year" in {
           val revalSession = GmpSession(MemberDetails("", "", ""), "", CalculationType.REVALUATION, Some(GmpDate(Some("1"), Some("1"), Some("1990"))), None, Leaving(GmpDate(Some("1"), Some("1"), Some("2017")), Some(Leaving.YES_AFTER)), None)
           val result = TestGmpController.nextPage(PageType.REVALUATION, revalSession)
           result.header.status must be(SEE_OTHER)
-          result.header.headers.get("LOCATION").get must be(routes.RevaluationRateController.get().url)
+          result.header.headers.get("LOCATION").get must be(routes.RevaluationRateController.get.url)
         }
       }
 
@@ -124,14 +124,14 @@ class GmpControllerSpec extends PlaySpec with GuiceOneServerPerSuite with Mockit
           val revalSession = GmpSession(MemberDetails("", "", ""), "", CalculationType.REVALUATION, Some(GmpDate(Some("1"), Some("1"), Some("1990"))), Some("1"), Leaving(GmpDate(None, None, None), None), None)
           val result = TestGmpController.nextPage(PageType.REVALUATION_RATE, revalSession)
           result.header.status must be(SEE_OTHER)
-          result.header.headers.get("LOCATION").get must be(routes.EqualiseController.get().url)
+          result.header.headers.get("LOCATION").get must be(routes.EqualiseController.get.url)
         }
 
         "redirect to the inflation proof page" in {
           val session = gmpSession.copy(scenario = CalculationType.SURVIVOR)
           val result = TestGmpController.nextPage(PageType.REVALUATION_RATE, session)
           result.header.status must be(SEE_OTHER)
-          result.header.headers.get("LOCATION").get must be(routes.InflationProofController.get().url)
+          result.header.headers.get("LOCATION").get must be(routes.InflationProofController.get.url)
         }
       }
 
@@ -140,7 +140,7 @@ class GmpControllerSpec extends PlaySpec with GuiceOneServerPerSuite with Mockit
         "redirect to the results page" in {
           val result = TestGmpController.nextPage(PageType.EQUALISE, gmpSession)
           result.header.status must be(SEE_OTHER)
-          result.header.headers.get("LOCATION").get must be(routes.ResultsController.get().url)
+          result.header.headers.get("LOCATION").get must be(routes.ResultsController.get.url)
         }
       }
     }
@@ -157,7 +157,7 @@ class GmpControllerSpec extends PlaySpec with GuiceOneServerPerSuite with Mockit
         "redirect to the pension details page" in {
           val result = TestGmpController.previousPage(PageType.MEMBER_DETAILS, gmpSession)
           result.header.status must be(SEE_OTHER)
-          result.header.headers.get("LOCATION").get must be(routes.PensionDetailsController.get().url)
+          result.header.headers.get("LOCATION").get must be(routes.PensionDetailsController.get.url)
         }
       }
 
@@ -166,7 +166,7 @@ class GmpControllerSpec extends PlaySpec with GuiceOneServerPerSuite with Mockit
         "redirect to the member details page" in {
           val result = TestGmpController.previousPage(PageType.SCENARIO, gmpSession)
           result.header.status must be(SEE_OTHER)
-          result.header.headers.get("LOCATION").get must be(routes.MemberDetailsController.get().url)
+          result.header.headers.get("LOCATION").get must be(routes.MemberDetailsController.get.url)
         }
       }
 
@@ -175,7 +175,7 @@ class GmpControllerSpec extends PlaySpec with GuiceOneServerPerSuite with Mockit
         "redirect to the scenario page" in {
           val result = TestGmpController.previousPage(PageType.REVALUATION, gmpSession)
           result.header.status must be(SEE_OTHER)
-          result.header.headers.get("LOCATION").get must be(routes.DateOfLeavingController.get().url)
+          result.header.headers.get("LOCATION").get must be(routes.DateOfLeavingController.get.url)
         }
       }
 
@@ -191,7 +191,7 @@ class GmpControllerSpec extends PlaySpec with GuiceOneServerPerSuite with Mockit
 
             val result = TestGmpController.previousPage(PageType.EQUALISE, revaluationSession)
             result.header.status must be(SEE_OTHER)
-            result.header.headers.get("LOCATION").get must be(routes.RevaluationController.get().url)
+            result.header.headers.get("LOCATION").get must be(routes.RevaluationController.get.url)
           }
         }
 
@@ -205,7 +205,7 @@ class GmpControllerSpec extends PlaySpec with GuiceOneServerPerSuite with Mockit
 
             val result = TestGmpController.previousPage(PageType.EQUALISE, revaluationSession)
             result.header.status must be(SEE_OTHER)
-            result.header.headers.get("LOCATION").get must be(routes.RevaluationRateController.get().url)
+            result.header.headers.get("LOCATION").get must be(routes.RevaluationRateController.get.url)
           }
         }
 
@@ -219,7 +219,7 @@ class GmpControllerSpec extends PlaySpec with GuiceOneServerPerSuite with Mockit
 
             val result = TestGmpController.previousPage(PageType.EQUALISE, revaluationSession)
             result.header.status must be(SEE_OTHER)
-            result.header.headers.get("LOCATION").get must be(routes.RevaluationRateController.get().url)
+            result.header.headers.get("LOCATION").get must be(routes.RevaluationRateController.get.url)
           }
         }
 
@@ -231,7 +231,7 @@ class GmpControllerSpec extends PlaySpec with GuiceOneServerPerSuite with Mockit
 
             val result = TestGmpController.previousPage(PageType.EQUALISE, spaSession)
             result.header.status must be(SEE_OTHER)
-            result.header.headers.get("LOCATION").get must be(routes.DateOfLeavingController.get().url)
+            result.header.headers.get("LOCATION").get must be(routes.DateOfLeavingController.get.url)
           }
         }
 
@@ -243,7 +243,7 @@ class GmpControllerSpec extends PlaySpec with GuiceOneServerPerSuite with Mockit
 
             val result = TestGmpController.previousPage(PageType.EQUALISE, paSession)
             result.header.status must be(SEE_OTHER)
-            result.header.headers.get("LOCATION").get must be(routes.DateOfLeavingController.get().url)
+            result.header.headers.get("LOCATION").get must be(routes.DateOfLeavingController.get.url)
           }
         }
 
@@ -255,7 +255,7 @@ class GmpControllerSpec extends PlaySpec with GuiceOneServerPerSuite with Mockit
 
             val result = TestGmpController.previousPage(PageType.EQUALISE, spaSession)
             result.header.status must be(SEE_OTHER)
-            result.header.headers.get("LOCATION").get must be(routes.RevaluationRateController.get().url)
+            result.header.headers.get("LOCATION").get must be(routes.RevaluationRateController.get.url)
           }
         }
 
@@ -267,7 +267,7 @@ class GmpControllerSpec extends PlaySpec with GuiceOneServerPerSuite with Mockit
 
             val result = TestGmpController.previousPage(PageType.EQUALISE, paSession)
             result.header.status must be(SEE_OTHER)
-            result.header.headers.get("LOCATION").get must be(routes.RevaluationRateController.get().url)
+            result.header.headers.get("LOCATION").get must be(routes.RevaluationRateController.get.url)
           }
         }
 
@@ -279,7 +279,7 @@ class GmpControllerSpec extends PlaySpec with GuiceOneServerPerSuite with Mockit
 
             val result = TestGmpController.previousPage(PageType.EQUALISE, dolSession)
             result.header.status must be(SEE_OTHER)
-            result.header.headers.get("LOCATION").get must be(routes.DateOfLeavingController.get().url)
+            result.header.headers.get("LOCATION").get must be(routes.DateOfLeavingController.get.url)
           }
         }
 
@@ -294,7 +294,7 @@ class GmpControllerSpec extends PlaySpec with GuiceOneServerPerSuite with Mockit
           "redirect to the termination page" in {
             val result = TestGmpController.previousPage(PageType.REVALUATION_RATE, spaSession)
             result.header.status must be(SEE_OTHER)
-            result.header.headers.get("LOCATION").get must be(routes.DateOfLeavingController.get().url)
+            result.header.headers.get("LOCATION").get must be(routes.DateOfLeavingController.get.url)
           }
         }
 
@@ -305,7 +305,7 @@ class GmpControllerSpec extends PlaySpec with GuiceOneServerPerSuite with Mockit
           "redirect to the scenario page" in {
             val result = TestGmpController.previousPage(PageType.REVALUATION_RATE, paSession)
             result.header.status must be(SEE_OTHER)
-            result.header.headers.get("LOCATION").get must be(routes.DateOfLeavingController.get().url)
+            result.header.headers.get("LOCATION").get must be(routes.DateOfLeavingController.get.url)
           }
         }
 
@@ -316,7 +316,7 @@ class GmpControllerSpec extends PlaySpec with GuiceOneServerPerSuite with Mockit
           "redirect to the revaluation page" in {
             val result = TestGmpController.previousPage(PageType.REVALUATION_RATE, revalSession)
             result.header.status must be(SEE_OTHER)
-            result.header.headers.get("LOCATION").get must be(routes.RevaluationController.get().url)
+            result.header.headers.get("LOCATION").get must be(routes.RevaluationController.get.url)
           }
         }
 
@@ -327,7 +327,7 @@ class GmpControllerSpec extends PlaySpec with GuiceOneServerPerSuite with Mockit
           "redirect to the date of leaving page" in {
             val result = TestGmpController.previousPage(PageType.REVALUATION_RATE, revalSession)
             result.header.status must be(SEE_OTHER)
-            result.header.headers.get("LOCATION").get must be(routes.DateOfLeavingController.get().url)
+            result.header.headers.get("LOCATION").get must be(routes.DateOfLeavingController.get.url)
           }
         }
       }

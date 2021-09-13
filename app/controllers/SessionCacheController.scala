@@ -19,7 +19,7 @@ package controllers
 import com.google.inject.{Inject, Singleton}
 import config.{ApplicationConfig, GmpContext, GmpSessionCache}
 import controllers.auth.AuthAction
-import play.api.Logger
+import play.api.Logging
 import play.api.mvc.MessagesControllerComponents
 import services.SessionService
 import uk.gov.hmrc.auth.core.AuthConnector
@@ -34,15 +34,15 @@ class SessionCacheController @Inject()(authAction: AuthAction,
                                        override val messagesControllerComponents: MessagesControllerComponents,
                                        implicit val executionContext: ExecutionContext,
                                        implicit val gmpSessionCache: GmpSessionCache
-                                      ) extends GmpPageFlow(authConnector,sessionService,config,messagesControllerComponents,ac) {
+                                      ) extends GmpPageFlow(authConnector,sessionService,config,messagesControllerComponents,ac) with Logging {
 
   def newCalculation = authAction.async {
       implicit request => {
 
-        Logger.debug(s"[SessionCacheController][newCalculation][GET] : $request")
+        logger.debug(s"[SessionCacheController][newCalculation][GET] : $request")
 
         sessionService.resetGmpSessionWithScon map {
-          case Some(x) => Redirect(controllers.routes.PensionDetailsController.get())
+          case Some(x) => Redirect(controllers.routes.PensionDetailsController.get)
           case None => throw new RuntimeException
         }
       }
@@ -51,10 +51,10 @@ class SessionCacheController @Inject()(authAction: AuthAction,
   def newBulkCalculation = authAction.async {
       implicit request => {
 
-        Logger.debug(s"[SessionCacheController][newBulkCalculation][GET] : $request")
+        logger.debug(s"[SessionCacheController][newBulkCalculation][GET] : $request")
 
         sessionService.resetGmpBulkSession() map {
-          case Some(x) => Redirect(controllers.routes.FileUploadController.get())
+          case Some(x) => Redirect(controllers.routes.FileUploadController.get)
           case None => throw new RuntimeException
         }
       }

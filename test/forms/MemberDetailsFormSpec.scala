@@ -30,7 +30,7 @@ class MemberDetailsFormSpec extends PlaySpec with GuiceOneAppPerSuite {
   implicit lazy val messagesProvider=MessagesImpl(Lang("en"), messagesAPI)
   lazy val mcc = app.injector.instanceOf[MessagesControllerComponents]
   lazy val form = new MemberDetailsForm(mcc).form()
-
+  val fromJsonMaxChars: Int = 102400
   val MAX_LENGTH = 99
 
   "Member details form" must {
@@ -42,7 +42,7 @@ class MemberDetailsFormSpec extends PlaySpec with GuiceOneAppPerSuite {
         "firstForename" -> "Bob",
         "surname" -> "Jones"
       )
-      val validatedForm = form.bind(postData)
+      val validatedForm = form.bind(postData, fromJsonMaxChars)
 
       assert(validatedForm.errors.isEmpty)
     }
@@ -56,7 +56,7 @@ class MemberDetailsFormSpec extends PlaySpec with GuiceOneAppPerSuite {
           "firstForename" -> "Bob",
           "surname" -> "Jones"
         )
-        val validatedForm = form.bind(postData)
+        val validatedForm = form.bind(postData, fromJsonMaxChars)
 
         assert(validatedForm.errors.contains(FormError("nino", List(Messages("gmp.error.member.nino.mandatory")))))
       }
@@ -68,7 +68,7 @@ class MemberDetailsFormSpec extends PlaySpec with GuiceOneAppPerSuite {
           "firstForename" -> "Bob",
           "surname" -> "Jones"
         )
-        val validatedForm = form.bind(postData)
+        val validatedForm = form.bind(postData, fromJsonMaxChars)
 
         assert(validatedForm.errors.contains(FormError("nino", List(Messages("gmp.error.nino.invalid")))))
         assert(!validatedForm.errors.contains(FormError("nino", List(Messages("gmp.error.mandatory")))))
@@ -82,7 +82,7 @@ class MemberDetailsFormSpec extends PlaySpec with GuiceOneAppPerSuite {
           "firstForename" -> "Bob",
           "surname" -> "Jones"
         )
-        val validatedForm = form.bind(postData)
+        val validatedForm = form.bind(postData, fromJsonMaxChars)
 
         assert(validatedForm.errors.contains(FormError("nino", List(Messages("gmp.error.nino.invalid")))))
         assert(validatedForm.errors.length == 1)
@@ -95,7 +95,7 @@ class MemberDetailsFormSpec extends PlaySpec with GuiceOneAppPerSuite {
           "firstForename" -> "Bob",
           "surname" -> "Jones"
         )
-        val validatedForm = form.bind(postData)
+        val validatedForm = form.bind(postData, fromJsonMaxChars)
 
         assert(validatedForm.errors.contains(FormError("nino", List(Messages("gmp.error.nino.invalid")))))
         assert(validatedForm.errors.length == 1)
@@ -108,7 +108,7 @@ class MemberDetailsFormSpec extends PlaySpec with GuiceOneAppPerSuite {
           "firstForename" -> "Bob",
           "surname" -> "Jones"
         )
-        val validatedForm = form.bind(postData)
+        val validatedForm = form.bind(postData, fromJsonMaxChars)
 
         assert(validatedForm.errors.isEmpty)
       }
@@ -120,7 +120,7 @@ class MemberDetailsFormSpec extends PlaySpec with GuiceOneAppPerSuite {
           "firstForename" -> "Bob",
           "surname" -> "Jones"
         )
-        val validatedForm = form.bind(postData)
+        val validatedForm = form.bind(postData, fromJsonMaxChars)
 
         assert(validatedForm.errors.contains(FormError("nino", List(Messages("gmp.error.nino.temporary")))))
         assert(validatedForm.errors.length == 1)
@@ -134,7 +134,7 @@ class MemberDetailsFormSpec extends PlaySpec with GuiceOneAppPerSuite {
           "firstForename" -> "Bob",
           "surname" -> "Jones"
         )
-        val validatedForm = form.bind(postData)
+        val validatedForm = form.bind(postData, fromJsonMaxChars)
 
         assert(validatedForm.errors.isEmpty)
       }
@@ -148,7 +148,7 @@ class MemberDetailsFormSpec extends PlaySpec with GuiceOneAppPerSuite {
           "firstForename" -> "Bob",
           "surname" -> "Jones"
         )
-        val validatedForm = form.bind(postData)
+        val validatedForm = form.bind(postData, fromJsonMaxChars)
 
         assert(validatedForm.errors.isEmpty)
       }
@@ -159,7 +159,7 @@ class MemberDetailsFormSpec extends PlaySpec with GuiceOneAppPerSuite {
           "firstForename" -> "Bob",
           "surname" -> "Jones"
         )
-        val validatedForm = form.bind(postData)
+        val validatedForm = form.bind(postData, fromJsonMaxChars)
 
         assert(validatedForm.errors.contains(FormError("nino", List(Messages("gmp.error.nino.invalid")))))
         assert(validatedForm.errors.length == 1)
@@ -171,7 +171,7 @@ class MemberDetailsFormSpec extends PlaySpec with GuiceOneAppPerSuite {
           "firstForename" -> "Bob",
           "surname" -> "Jones"
         )
-        val validatedForm = form.bind(postData)
+        val validatedForm = form.bind(postData, fromJsonMaxChars)
 
         assert(validatedForm.errors.contains(FormError("nino", List(Messages("gmp.error.nino.invalid")))))
         assert(validatedForm.errors.length == 1)
@@ -187,7 +187,7 @@ class MemberDetailsFormSpec extends PlaySpec with GuiceOneAppPerSuite {
           "firstForename" -> "",
           "surname" -> "Jones"
         )
-        val validatedForm = form.bind(postData)
+        val validatedForm = form.bind(postData, fromJsonMaxChars)
         assert(validatedForm.errors.contains(FormError("firstForename", List(Messages("gmp.error.firstnameorinitial")))))
         assert(validatedForm.errors.length == 1)
       }
@@ -199,7 +199,7 @@ class MemberDetailsFormSpec extends PlaySpec with GuiceOneAppPerSuite {
           "firstForename" -> "a" * MAX_LENGTH,
           "surname" -> "Jones"
         )
-        val validatedForm = form.bind(postData)
+        val validatedForm = form.bind(postData, fromJsonMaxChars)
 
         assert(validatedForm.errors.isEmpty)
       }
@@ -211,7 +211,7 @@ class MemberDetailsFormSpec extends PlaySpec with GuiceOneAppPerSuite {
           "firstForename" -> "a" * (MAX_LENGTH + 1),
           "surname" -> "Jones"
         )
-        val validatedForm = form.bind(postData)
+        val validatedForm = form.bind(postData, fromJsonMaxChars)
 
         assert(validatedForm.errors.contains(FormError("firstForename", List(Messages("gmp.error.length", Messages("gmp.lowercase.firstname"), MAX_LENGTH)))))
       }
@@ -222,7 +222,7 @@ class MemberDetailsFormSpec extends PlaySpec with GuiceOneAppPerSuite {
           "firstForename" -> "Bob2",
           "surname" -> "aaaa"
         )
-        val validatedForm = form.bind(postData)
+        val validatedForm = form.bind(postData, fromJsonMaxChars)
 
         assert(validatedForm.errors.contains(FormError("firstForename", List(Messages("gmp.error.name.invalid", Messages("gmp.lowercase.firstname"))))))
       }
@@ -233,7 +233,7 @@ class MemberDetailsFormSpec extends PlaySpec with GuiceOneAppPerSuite {
           "firstForename" -> "Bo'ob",
           "surname" -> "aaaa"
         )
-        val validatedForm = form.bind(postData)
+        val validatedForm = form.bind(postData, fromJsonMaxChars)
 
         assert(!validatedForm.errors.contains(FormError("firstForename", List(Messages("gmp.error.name.invalid")))))
       }
@@ -244,7 +244,7 @@ class MemberDetailsFormSpec extends PlaySpec with GuiceOneAppPerSuite {
           "firstForename" -> "'Bob",
           "surname" -> "aaaa"
         )
-        val validatedForm = form.bind(postData)
+        val validatedForm = form.bind(postData, fromJsonMaxChars)
 
         assert(validatedForm.errors.contains(FormError("firstForename", List(Messages("gmp.error.name.invalid", Messages("gmp.lowercase.firstname"))))))
       }
@@ -255,7 +255,7 @@ class MemberDetailsFormSpec extends PlaySpec with GuiceOneAppPerSuite {
           "firstForename" -> "Bo-ob",
           "surname" -> "aaaa"
         )
-        val validatedForm = form.bind(postData)
+        val validatedForm = form.bind(postData, fromJsonMaxChars)
 
         assert(!validatedForm.errors.contains(FormError("firstForename", List(Messages("gmp.error.name.invalid")))))
       }
@@ -266,7 +266,7 @@ class MemberDetailsFormSpec extends PlaySpec with GuiceOneAppPerSuite {
           "firstForename" -> "-Bob",
           "surname" -> "aaaa"
         )
-        val validatedForm = form.bind(postData)
+        val validatedForm = form.bind(postData, fromJsonMaxChars)
 
         assert(validatedForm.errors.contains(FormError("firstForename", List(Messages("gmp.error.name.invalid", Messages("gmp.lowercase.firstname"))))))
       }
@@ -277,14 +277,14 @@ class MemberDetailsFormSpec extends PlaySpec with GuiceOneAppPerSuite {
           "firstForename" -> "Bo$ob",
           "surname" -> "aaaa"
         )
-        val validatedForm1 = form.bind(postData1)
+        val validatedForm1 = form.bind(postData1, fromJsonMaxChars)
 
         val postData2 = Json.obj(
           "nino" -> RandomNino.generate,
           "firstForename" -> "Bo@ob",
           "surname" -> "aaaa"
         )
-        val validatedForm2 = form.bind(postData2)
+        val validatedForm2 = form.bind(postData2, fromJsonMaxChars)
 
         assert(validatedForm1.errors.contains(FormError("firstForename", List(Messages("gmp.error.name.invalid", Messages("gmp.lowercase.firstname"))))))
         assert(validatedForm2.errors.contains(FormError("firstForename", List(Messages("gmp.error.name.invalid", Messages("gmp.lowercase.firstname"))))))
@@ -296,7 +296,7 @@ class MemberDetailsFormSpec extends PlaySpec with GuiceOneAppPerSuite {
           "firstForename" -> "Bobby Rae",
           "surname" -> "'aaaa"
         )
-        val validatedForm = form.bind(postData)
+        val validatedForm = form.bind(postData, fromJsonMaxChars)
 
         assert(!validatedForm.errors.contains(FormError("firstForename", List(Messages("gmp.error.name.invalid")))))
       }
@@ -312,7 +312,7 @@ class MemberDetailsFormSpec extends PlaySpec with GuiceOneAppPerSuite {
         "firstForename" -> "Bob",
         "surname" -> ""
       )
-      val validatedForm = form.bind(postData)
+      val validatedForm = form.bind(postData, fromJsonMaxChars)
 
       assert(validatedForm.errors.contains(FormError("surname", List(Messages("gmp.error.member.lastname.mandatory")))))
       assert(validatedForm.errors.length == 1)
@@ -325,7 +325,7 @@ class MemberDetailsFormSpec extends PlaySpec with GuiceOneAppPerSuite {
         "firstForename" -> "Bob",
         "surname" -> "a" * MAX_LENGTH
       )
-      val validatedForm = form.bind(postData)
+      val validatedForm = form.bind(postData, fromJsonMaxChars)
 
       assert(validatedForm.errors.isEmpty)
     }
@@ -338,7 +338,7 @@ class MemberDetailsFormSpec extends PlaySpec with GuiceOneAppPerSuite {
         "firstForename" -> "Bob",
         "surname" -> "a" * (MAX_LENGTH + 1)
       )
-      val validatedForm = form.bind(postData)
+      val validatedForm = form.bind(postData, fromJsonMaxChars)
 
       assert(validatedForm.errors.contains(FormError("surname", List(Messages("gmp.error.length", Messages("gmp.lowercase.lastname"), MAX_LENGTH)))))
     }
@@ -349,7 +349,7 @@ class MemberDetailsFormSpec extends PlaySpec with GuiceOneAppPerSuite {
         "firstForename" -> "Bob",
         "surname" -> "a2"
       )
-      val validatedForm = form.bind(postData)
+      val validatedForm = form.bind(postData, fromJsonMaxChars)
 
       assert(validatedForm.errors.contains(FormError("surname", List(Messages("gmp.error.name.invalid", Messages("gmp.lowercase.lastname"))))))
     }
@@ -360,7 +360,7 @@ class MemberDetailsFormSpec extends PlaySpec with GuiceOneAppPerSuite {
         "firstForename" -> "Boob",
         "surname" -> "a'aaa"
       )
-      val validatedForm = form.bind(postData)
+      val validatedForm = form.bind(postData, fromJsonMaxChars)
 
       assert(!validatedForm.errors.contains(FormError("surname", List(Messages("gmp.error.name.invalid")))))
     }
@@ -371,7 +371,7 @@ class MemberDetailsFormSpec extends PlaySpec with GuiceOneAppPerSuite {
         "firstForename" -> "Bob",
         "surname" -> "'aaaa"
       )
-      val validatedForm = form.bind(postData)
+      val validatedForm = form.bind(postData, fromJsonMaxChars)
 
       assert(validatedForm.errors.contains(FormError("surname", List(Messages("gmp.error.name.invalid", Messages("gmp.lowercase.lastname"))))))
     }
@@ -382,7 +382,7 @@ class MemberDetailsFormSpec extends PlaySpec with GuiceOneAppPerSuite {
         "firstForename" -> "Bob",
         "surname" -> "aa-aa"
       )
-      val validatedForm = form.bind(postData)
+      val validatedForm = form.bind(postData, fromJsonMaxChars)
 
       assert(!validatedForm.errors.contains(FormError("surname", List(Messages("gmp.error.name.invalid")))))
     }
@@ -393,7 +393,7 @@ class MemberDetailsFormSpec extends PlaySpec with GuiceOneAppPerSuite {
         "firstForename" -> "Bob",
         "surname" -> "-aaaa"
       )
-      val validatedForm = form.bind(postData)
+      val validatedForm = form.bind(postData, fromJsonMaxChars)
 
       assert(validatedForm.errors.contains(FormError("surname", List(Messages("gmp.error.name.invalid", Messages("gmp.lowercase.lastname"))))))
     }
@@ -404,7 +404,7 @@ class MemberDetailsFormSpec extends PlaySpec with GuiceOneAppPerSuite {
         "firstForename" -> "Bob",
         "surname" -> "aaaa aaaaa"
       )
-      val validatedForm = form.bind(postData)
+      val validatedForm = form.bind(postData, fromJsonMaxChars)
 
       assert(!validatedForm.errors.contains(FormError("surname", List(Messages("gmp.error.name.invalid")))))
     }
@@ -415,14 +415,14 @@ class MemberDetailsFormSpec extends PlaySpec with GuiceOneAppPerSuite {
         "firstForename" -> "Boob",
         "surname" -> "aaa~a"
       )
-      val validatedForm1 = form.bind(postData1)
+      val validatedForm1 = form.bind(postData1, fromJsonMaxChars)
 
       val postData2 = Json.obj(
         "nino" -> RandomNino.generate,
         "firstForename" -> "Bob",
         "surname" -> "a$aaa"
       )
-      val validatedForm2 = form.bind(postData2)
+      val validatedForm2 = form.bind(postData2, fromJsonMaxChars)
 
       assert(validatedForm1.errors.contains(FormError("surname", List(Messages("gmp.error.name.invalid", Messages("gmp.lowercase.lastname"))))))
       assert(validatedForm2.errors.contains(FormError("surname", List(Messages("gmp.error.name.invalid", Messages("gmp.lowercase.lastname"))))))

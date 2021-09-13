@@ -31,13 +31,14 @@ class ScenarioFormSpec extends PlaySpec with GuiceOneAppPerSuite with MockitoSug
   implicit lazy val messagesProvider=MessagesImpl(Lang("en"), messagesAPI)
   lazy val mcc = app.injector.instanceOf[MessagesControllerComponents]
   lazy val scenarioForm = new ScenarioForm(mcc).scenarioForm
+  val fromJsonMaxChars: Int = 102400
 
   "Calculation Reason Form" must {
 
     "be valid when passed a calculation reason" in {
 
       val calculationReason = Json.toJson(CalculationType(Some("1")))
-      val calculationReasonResult = scenarioForm.bind(calculationReason)
+      val calculationReasonResult = scenarioForm.bind(calculationReason, fromJsonMaxChars)
 
       assert(calculationReasonResult.errors.size == 0)
       assert(!calculationReasonResult.errors.contains(FormError("calcType",List("gmp.error.scenario.mandatory"))))
@@ -53,7 +54,7 @@ class ScenarioFormSpec extends PlaySpec with GuiceOneAppPerSuite with MockitoSug
 
     "does not accept invalid format" in  {
       val calculationReason = Json.toJson(CalculationType(Some("%&20!")))
-      val calculationReasonResult = scenarioForm.bind(calculationReason)
+      val calculationReasonResult = scenarioForm.bind(calculationReason, fromJsonMaxChars)
       assert(calculationReasonResult.errors.size == 1)
       assert(calculationReasonResult.errors.contains(FormError("calcType",List(Messages("gmp.error.scenario.mandatory")))))
     }

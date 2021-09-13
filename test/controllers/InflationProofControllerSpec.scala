@@ -85,7 +85,7 @@ class InflationProofControllerSpec extends PlaySpec with GuiceOneServerPerSuite 
               when(mockSessionService.cacheRevaluationDate(Matchers.any())(Matchers.any())).thenReturn(Future.successful(Some(session)))
               val result = TestInflationProofController.post(FakeRequest().withJsonBody(Json.toJson(inflationProof)))
               status(result) must equal(SEE_OTHER)
-              redirectLocation(result).get must be(routes.ResultsController.get().url)
+              redirectLocation(result).get must be(routes.ResultsController.get.url)
 
           }
 
@@ -94,7 +94,7 @@ class InflationProofControllerSpec extends PlaySpec with GuiceOneServerPerSuite 
               when(mockSessionService.cacheRevaluationDate(Matchers.any())(Matchers.any())).thenReturn(Future.successful(Some(session)))
               val result = TestInflationProofController.post(FakeRequest().withJsonBody(Json.toJson(inflationProof.copy(revaluate = Some("No")))))
               status(result) must equal(SEE_OTHER)
-              redirectLocation(result).get must be(routes.ResultsController.get().url)
+              redirectLocation(result).get must be(routes.ResultsController.get.url)
 
           }
 
@@ -152,7 +152,7 @@ class InflationProofControllerSpec extends PlaySpec with GuiceOneServerPerSuite 
           when(mockSessionService.fetchGmpSession()(Matchers.any())).thenReturn(Future.successful(Some(session)))
           val result = TestInflationProofController.back(FakeRequest())
           status(result) must equal(SEE_OTHER)
-          redirectLocation(result).get must be(routes.DateOfLeavingController.get().url)
+          redirectLocation(result).get must be(routes.DateOfLeavingController.get.url)
       }
 
       "redirect to the revaluation rate page if the member has left the scheme before 5/4/16" in {
@@ -161,7 +161,7 @@ class InflationProofControllerSpec extends PlaySpec with GuiceOneServerPerSuite 
           when(mockSessionService.fetchGmpSession()(Matchers.any())).thenReturn(Future.successful(Some(session)))
           val result = TestInflationProofController.back(FakeRequest())
           status(result) must equal(SEE_OTHER)
-          redirectLocation(result).get must be(routes.RevaluationRateController.get().url)
+          redirectLocation(result).get must be(routes.RevaluationRateController.get.url)
       }
 
       "redirect to the revaluation rate page if the member has left the scheme after 5/4/16" in {
@@ -170,7 +170,7 @@ class InflationProofControllerSpec extends PlaySpec with GuiceOneServerPerSuite 
           when(mockSessionService.fetchGmpSession()(Matchers.any())).thenReturn(Future.successful(Some(session)))
           val result = TestInflationProofController.back(FakeRequest())
           status(result) must equal(SEE_OTHER)
-          redirectLocation(result).get must be(routes.RevaluationRateController.get().url)
+          redirectLocation(result).get must be(routes.RevaluationRateController.get.url)
       }
     }
   }

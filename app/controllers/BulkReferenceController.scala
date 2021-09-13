@@ -20,7 +20,7 @@ import com.google.inject.{Inject, Singleton}
 import config.{ApplicationConfig, GmpContext, GmpSessionCache}
 import controllers.auth.AuthAction
 import forms.BulkReferenceForm
-import play.api.Logger
+import play.api.Logging
 import play.api.mvc.MessagesControllerComponents
 import services.SessionService
 import uk.gov.hmrc.auth.core.AuthConnector
@@ -37,7 +37,7 @@ class BulkReferenceController @Inject()(authAction: AuthAction,
                                         implicit val executionContext: ExecutionContext,ac:ApplicationConfig,
                                         implicit val gmpSessionCache: GmpSessionCache,
                                         views: Views)
-  extends GmpController(messagesControllerComponents,ac,sessionService,config) {
+  extends GmpController(messagesControllerComponents,ac,sessionService,config) with Logging{
 
 lazy val bulkReferenceForm = brf.bulkReferenceForm
 
@@ -48,14 +48,14 @@ lazy val bulkReferenceForm = brf.bulkReferenceForm
 
   def post = authAction.async {
       implicit request => {
-        Logger.debug(s"[BulkReferenceController][post]: ${request.body}")
+        logger.debug(s"[BulkReferenceController][post]: ${request.body}")
 
         bulkReferenceForm.bindFromRequest().fold(
           formWithErrors => {Future.successful(BadRequest(views.bulkReference(formWithErrors)))},
           value => {
 
             sessionService.cacheEmailAndReference(Some(value.email.trim), Some(value.reference.trim)).map {
-              case Some(session) => Redirect(controllers.routes.BulkRequestReceivedController.get())
+              case Some(session) => Redirect(controllers.routes.BulkRequestReceivedController.get)
               case _ => throw new RuntimeException
             }
           }
@@ -65,7 +65,7 @@ lazy val bulkReferenceForm = brf.bulkReferenceForm
 
   def back = authAction.async {
       _ => {
-        Future.successful(Redirect(routes.FileUploadController.get()))
+        Future.successful(Redirect(routes.FileUploadController.get))
       }
   }
 }

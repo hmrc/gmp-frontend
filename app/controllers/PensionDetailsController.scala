@@ -23,7 +23,7 @@ import controllers.auth.AuthAction
 import forms.PensionDetailsForm
 import metrics.ApplicationMetrics
 import models.{PensionDetails, ValidateSconRequest}
-import play.api.Logger
+import play.api.Logging
 import play.api.i18n.Messages
 import play.api.mvc.MessagesControllerComponents
 import services.SessionService
@@ -44,7 +44,7 @@ class PensionDetailsController @Inject()(authAction: AuthAction,
                                          override val messagesControllerComponents: MessagesControllerComponents,
                                          implicit val executionContext: ExecutionContext,
                                          implicit val gmpSessionCache: GmpSessionCache,
-                                         views: Views) extends GmpPageFlow(authConnector,sessionService,config,messagesControllerComponents,ac) {
+                                         views: Views) extends GmpPageFlow(authConnector,sessionService,config,messagesControllerComponents,ac) with Logging {
 
   lazy val pensionDetailsForm=pdf.pensionDetailsForm
 
@@ -60,7 +60,7 @@ class PensionDetailsController @Inject()(authAction: AuthAction,
   def post = authAction.async {
       implicit request => {
         val link = request.linkId
-        Logger.debug(s"[PensionDetailsController][post][POST] : ${request.body}")
+        logger.debug(s"[PensionDetailsController][post][POST] : ${request.body}")
 
         pensionDetailsForm.bindFromRequest().fold(
           formWithErrors => {

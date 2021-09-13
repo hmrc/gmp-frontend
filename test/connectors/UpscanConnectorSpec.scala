@@ -21,15 +21,20 @@ import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
 import play.api.inject.guice.GuiceApplicationBuilder
-import uk.gov.hmrc.http.{BadRequestException, HeaderCarrier, Upstream5xxResponse, UpstreamErrorResponse}
-import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.http.{HeaderCarrier, UpstreamErrorResponse}
 import utils.WireMockHelper
 import com.github.tomakehurst.wiremock.client.WireMock._
+import org.scalatest.concurrent.ScalaFutures
+import scala.concurrent.duration._
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpec
 import play.api.http.Status._
 import play.api.libs.json.Json
 
+import scala.language.postfixOps
 
-class UpscanConnectorSpec extends UnitSpec with GuiceOneAppPerSuite with MockitoSugar with WireMockHelper {
+
+class UpscanConnectorSpec extends AnyWordSpec with Matchers with GuiceOneAppPerSuite with MockitoSugar with WireMockHelper with ScalaFutures {
 
   "getUpscanFormData" should {
     "return a UpscanInitiateResponse" when {
@@ -44,7 +49,7 @@ class UpscanConnectorSpec extends UnitSpec with GuiceOneAppPerSuite with Mockito
             )
         )
 
-        val result = await(connector.getUpscanFormData(request))
+        val result =  (connector.getUpscanFormData(request)).futureValue
         result shouldBe body.toUpscanInitiateResponse
       }
     }
@@ -58,7 +63,7 @@ class UpscanConnectorSpec extends UnitSpec with GuiceOneAppPerSuite with Mockito
                 .withStatus(BAD_REQUEST)
             )
         )
-        a [UpstreamErrorResponse] should be thrownBy await(connector.getUpscanFormData(request))
+          assert(connector.getUpscanFormData(request).failed.futureValue.isInstanceOf[UpstreamErrorResponse])
       }
 
       "upscan returns 5xx response" in {
@@ -69,11 +74,12 @@ class UpscanConnectorSpec extends UnitSpec with GuiceOneAppPerSuite with Mockito
                 .withStatus(SERVICE_UNAVAILABLE)
             )
         )
-        an [UpstreamErrorResponse] should be thrownBy await(connector.getUpscanFormData(request))
+        assert(connector.getUpscanFormData(request).failed.futureValue.isInstanceOf[UpstreamErrorResponse])
       }
     }
   }
 
+  implicit val defaultPatience: PatienceConfig = PatienceConfig(timeout = 50000 millis, interval = 15 millis)
   lazy val connector: UpscanConnector = app.injector.instanceOf[UpscanConnector]
   implicit val hc: HeaderCarrier = HeaderCarrier()
   val request = UpscanInitiateRequest("callbackUrl", "successRedirectUrl", "errorRedirectUrl")
