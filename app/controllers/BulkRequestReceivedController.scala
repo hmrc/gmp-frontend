@@ -55,12 +55,17 @@ class BulkRequestReceivedController @Inject()(authAction: AuthAction,
             val errorPageForToMuchData = Ok(views.failure(Messages("gmp.bulk.failure.too_large"), Messages("gmp.bulk.file_too_large.header"), Messages("gmp.bulk_failure_file_too_large.title")))
             bulkRequestCreationService.createBulkRequest(callbackData, session.emailAddress.getOrElse(""), session.reference.getOrElse("")) match {
 
-              case Right(bulkRequest) => gmpBulkConnector.sendBulkRequest(bulkRequest, link).map {
+              case Right(bulkRequest) => {
+                val calculationSize = bulkRequest.calculationRequests.size
+                val distinctSize = bulkRequest.calculationRequests.distinct.size
+                logger.info(s"BulkRequestReceivedController.get session ${hc.sessionId} request ${hc.requestId} size = $calculationSize, distinct = $distinctSize, duplicates = ${calculationSize-distinctSize}")
+                gmpBulkConnector.sendBulkRequest(bulkRequest, link).map {
                   case OK => Ok(views.bulkRequestReceived(bulkRequest.reference))
                   case CONFLICT => Ok(views.failure(Messages("gmp.bulk.failure.duplicate_upload"), Messages("gmp.bulk.problem.header"), Messages("gmp.bulk_failure_duplicate.title")))
                   case REQUEST_ENTITY_TOO_LARGE => errorPageForToMuchData
                   case _ => Ok(views.failure(Messages("gmp.bulk.failure.generic"), Messages("gmp.bulk.problem.header"), Messages("gmp.bulk_failure_generic.title")))
                 }
+              }
 
               case Left(DataLimitExceededException) => Future.successful(errorPageForToMuchData)
 
