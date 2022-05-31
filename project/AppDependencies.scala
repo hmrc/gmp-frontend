@@ -11,7 +11,7 @@ object AppDependencies {
     "uk.gov.hmrc" %% "domain"                      % "8.1.0-play-28",
     "uk.gov.hmrc" %% "http-caching-client"         % "9.6.0-play-28",
     "uk.gov.hmrc" %% "tax-year"                    % "1.1.0",
-    "uk.gov.hmrc" %% "play-partials"               % "8.2.0-play-28",
+    "uk.gov.hmrc" %% "play-partials"               % "8.3.0-play-28",
     "uk.gov.hmrc" %% "emailaddress"                % "3.6.0",
     "uk.gov.hmrc" %% "govuk-template"              % "5.77.0-play-28",
     "uk.gov.hmrc" %% "play-ui"                     % "9.6.0-play-28",
