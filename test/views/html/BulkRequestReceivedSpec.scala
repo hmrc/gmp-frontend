@@ -36,7 +36,7 @@ class BulkRequestReceivedSpec extends GmpViewSpec{
    doc must haveSubmitButton(messages("gmp.bulk_request_received.button"))
   }
 
-  lazy val gmpMain = app.injector.instanceOf[gmp_main]
+  lazy val gmpMain = app.injector.instanceOf[gmp_main_old]
   override def view: Html = new views.html.bulk_request_received(gmpMain)(reference)
 
   val reference: String = "Fake reference"

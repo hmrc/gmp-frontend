@@ -16,7 +16,7 @@
 
 package controllers
 
-
+import org.joda.time.LocalDate
 import com.google.inject.{Inject, Singleton}
 import config.{ApplicationConfig, GmpContext}
 import models.{CalculationType, GmpSession, Leaving}

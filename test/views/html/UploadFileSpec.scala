@@ -23,7 +23,7 @@ import utils.GmpViewSpec
 class UploadFileSpec extends GmpViewSpec {
 
   val upscanInitiate = UpscanInitiateResponse(Reference("reference"), "download", Map())
-  lazy val gmpMain = app.injector.instanceOf[gmp_main]
+  lazy val gmpMain = app.injector.instanceOf[gmp_main_old]
   override def view: Html = new views.html.upscan_csv_file_upload(gmpMain)(upscanInitiate)
 
   "UploadFiles page" must {

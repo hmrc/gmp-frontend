@@ -26,7 +26,7 @@ abstract class BulkResultsSpec extends GmpViewSpec{
   val uploadReference: String
   val comingFromPage: Int
 
-  lazy val gmpMain = app.injector.instanceOf[gmp_main]
+  lazy val gmpMain = app.injector.instanceOf[gmp_main_old]
   override def view = new views.html.bulk_results(gmpMain)(bulkResultsSummary, uploadReference, comingFromPage)
 }
 

@@ -26,7 +26,7 @@ import utils.GmpViewSpec
 import views.ViewHelpers
 
 class RevaluationSpec extends GmpViewSpec{
-  lazy val gmpMain = app.injector.instanceOf[gmp_main]
+  lazy val gmpMain = app.injector.instanceOf[gmp_main_old]
   lazy val viewHelpers = app.injector.instanceOf[ViewHelpers]
 
   override def view: Html = new views.html.revaluation(gmpMain, viewHelpers)(revaluationForm)
