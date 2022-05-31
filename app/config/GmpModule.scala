@@ -33,7 +33,7 @@ class GmpModule(environment: Environment,
   override def configure(): Unit = {
     bind(classOf[HttpClient]).to(classOf[DefaultHttpClient])
       bind(classOf[AuthConnector]).to(classOf[DefaultAuthConnector])
-      bind(classOf[AuditConnector]).to(classOf[DefaultAuditConnector])
+//      bind(classOf[AuditConnector]).to(classOf[DefaultAuditConnector])
 
 }
 
