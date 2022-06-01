@@ -1,7 +1,7 @@
 # microservice specific routes
 
 ->          /template                                     template.Routes
-
+->          /hmrc-frontend                                hmrcfrontend.Routes
 GET         /assets/*file                                 controllers.AssetsController.at(path="/public", file)
 
 GET         /pension-details                              controllers.PensionDetailsController.get
