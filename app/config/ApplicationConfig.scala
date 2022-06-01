@@ -51,7 +51,3 @@ class ApplicationConfig @Inject()(
   lazy val timeout = servicesConfig.getInt("timeout.seconds")
   lazy val timeoutCountdown = servicesConfig.getInt("timeout.countdown")
 }
-
-
-
-
