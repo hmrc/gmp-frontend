@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ import play.api.data.validation.{Constraint, Invalid, Valid, ValidationError}
 import play.twirl.api.Html
 import uk.gov.hmrc.emailaddress.EmailAddress
 import utils.GmpViewSpec
-import views.ViewHelpers
+import views.{NewViewHelpers, ViewHelpers}
 
 class BulkReferenceSpec extends GmpViewSpec {
 
@@ -48,8 +48,8 @@ class BulkReferenceSpec extends GmpViewSpec {
 
   }
 
-  lazy val gmpMain = app.injector.instanceOf[gmp_main]
-  lazy val viewHelpers = app.injector.instanceOf[ViewHelpers]
+  lazy val gmpMain = app.injector.instanceOf[gmp_new_main]
+  lazy val viewHelpers = app.injector.instanceOf[NewViewHelpers]
 
   override def view: Html = new views.html.bulk_reference(gmpMain, viewHelpers)(bulkReferenceForm)
 

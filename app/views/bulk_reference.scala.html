@@ -1,5 +1,5 @@
 @*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,9 +16,9 @@
 
 @import config.ApplicationConfig
 @import views.html.helpers._
-@import views.ViewHelpers
+@import views.NewViewHelpers
 
-@this(gmpMain: gmp_main, viewHelpers: ViewHelpers)
+@this(gmpMain: gmp_new_main, viewHelpers: NewViewHelpers)
 
 @(bulkReferenceForm: Form[models.BulkReference])(implicit request: Request[_], messages: Messages, ac:ApplicationConfig)
 
@@ -29,30 +29,29 @@
 
     @views.html.helpers.errorSummary(bulkReferenceForm)
 
-        <h1>@Messages("gmp.bulk_reference.header")</h1>
+        <h1 class="govuk-heading-1">@Messages("gmp.bulk_reference.header")</h1>
 
         @viewHelpers.form(action = routes.BulkReferenceController.post) {
 
-          <div class="form-group">
-              <div class="form-field">
+          <div class="govuk-form-group">
                 @gmpInput(bulkReferenceForm("email"),
                 '_label -> Html(Messages("gmp.email.address")),
                 '_labelClass -> "form-label-bold",
                 '_id -> "email",
+                '_inputClass -> "govuk-input govuk-!-width-one-third",
                 '_hintText -> Messages("gmp.bulk_reference.email_text"))
-              </div>
-              <div class="form-field">
-
+          </div>
+          <div class="govuk-form-group">
                 @gmpInput(bulkReferenceForm("reference"),
                 '_label -> Html(Messages("gmp.reference.calcname")),
                 '_labelClass -> "form-label-bold",
                 '_id -> "reference",
                 '_maxLength -> 40,
+                '_inputClass -> "govuk-input govuk-!-width-one-third",
                 '_hintText -> Messages("gmp.bulk_reference.reference_text"))
-              </div>
           </div>
           <div>
-            <button class="button" type="submit" id="submit-button">@Messages("gmp.bulk_reference.button")</button>
+            <button class="govuk-button" type="submit" id="submit-button">@Messages("gmp.bulk_reference.button")</button>
           </div>
         }
 

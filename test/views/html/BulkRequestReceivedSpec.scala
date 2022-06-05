@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,7 +36,7 @@ class BulkRequestReceivedSpec extends GmpViewSpec{
    doc must haveSubmitButton(messages("gmp.bulk_request_received.button"))
   }
 
-  lazy val gmpMain = app.injector.instanceOf[gmp_main]
+  lazy val gmpMain = app.injector.instanceOf[gmp_new_main]
   override def view: Html = new views.html.bulk_request_received(gmpMain)(reference)
 
   val reference: String = "Fake reference"

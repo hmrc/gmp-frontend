@@ -1,5 +1,5 @@
 @*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,33 +16,22 @@
 
 @(fileType: String, formFields: Map[String, String], postTarget: String)(implicit messages: Messages)
 
-<div id="uploadForm">
+<div class="govuk-form-group">
     <form action="@postTarget" method="post" enctype="multipart/form-data">
-
         @for(field <- formFields) {
             <input type="hidden" name="@field._1" value="@field._2"/>
         }
-
         <div class="js-visible mt-3">
             <div class="form-group">
-                <label class="form-label" for="fileToUpload">
-                    <span class="">@Messages("gmp.upload.label")</span>
-                </label>
-                <div class="form-control-wrapper">
-                    <input
-                    class="govuk-file-upload"
-                    type="file"
-                    id="fileToUpload"
-                    name="file"
-                    accept="@fileType"
-                    />
-                </div>
+            <label class="govuk-label" for="fileToUpload">
+                @Messages("gmp.upload.label")
+            </label>
+            <div class="form-control-wrapper">
+                <input class="govuk-file-upload" id="fileToUpload" name="file" accept="@fileType" type="file"/>
             </div>
-
-        </div>
-
-        <div class="section" id="file-uploader">
-            <button id="submit" class="button">@messages("gmp.upload")</button>
-        </div>
+         </div>
+            <div class="section" id="file-uploader">
+                <button id="submit" class="govuk-button">@messages("gmp.upload")</button>
+            </div>
     </form>
 </div>

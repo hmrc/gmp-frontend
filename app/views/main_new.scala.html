@@ -1,0 +1,113 @@
+@*
+ * Copyright 2022 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import play.twirl.api.HtmlFormat
+@import views.NewViewHelpers
+@import views.html.helper._
+@import uk.gov.hmrc.hmrcfrontend.views.html.components.HmrcHeader
+@import uk.gov.hmrc.hmrcfrontend.views.html.components.Header
+@import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcLayout
+@import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcReportTechnicalIssueHelper
+@import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcTimeoutDialogHelper
+@import uk.gov.hmrc.hmrcfrontend.views.config.StandardBetaBanner
+@import uk.gov.hmrc.govukfrontend.views.html.components.FixedWidthPageLayout
+
+
+
+@this(
+        hmrcLayout: HmrcLayout, standardBetaBanner: StandardBetaBanner,
+        hmrcReportTechnicalIssueHelper:HmrcReportTechnicalIssueHelper,
+    hmrcHeader: uk.gov.hmrc.hmrcfrontend.views.html.components.HmrcHeader,
+        fullWidth: helpers.fullWidthContent,
+        viewHelpers: NewViewHelpers
+)
+
+@( applicationConfig: config.ApplicationConfig,
+        title: String,
+    contentHeader: Option[Html] = None,
+    userLoggedIn: Boolean = false,
+    getHelpForm: Html  = HtmlFormat.empty,
+    linkElement : Option[Html] = None,
+    mainClass : Option[String] = None,
+    scriptElement : Option[Html] = None,
+    isUserResearchBannerVisible:Boolean = false,
+    signOutEnabled:Boolean,
+    customHead: Option[Html] = None)(mainContent: Html = HtmlFormat.empty)(implicit request: Request[_], messages: Messages)
+
+
+@head = {
+    <meta name="format-detection" content="telephone=no"/>
+    <link rel="stylesheet" href='@controllers.routes.AssetsController.at("stylesheets/palette.scss")'/>
+    <link rel="stylesheet" href='@controllers.routes.AssetsController.at("stylesheets/fonts.css")'/>
+    <link rel="stylesheet" href='@controllers.routes.AssetsController.at("stylesheets/application.min.css")'/>
+    <link rel="stylesheet" href='@controllers.routes.AssetsController.at("stylesheets/gmp.css")'/>
+    <link rel="stylesheet" href='@controllers.routes.AssetsController.at("stylesheets/urBanner.css")' media="screen" type="text/css" />
+    <link rel="stylesheet" href='@controllers.routes.AssetsController.at("stylesheets/timeout-dialog.css")'/>
+    <link rel="stylesheet" href='@controllers.routes.AssetsController.at("stylesheets/palette.css")'/>
+    <link rel="stylesheet" href='@controllers.routes.AssetsController.at("stylesheets/focus.css")'/>
+    @customHead
+}
+
+@urToggle = @{
+    true
+}
+
+
+
+
+@afterHeader = @{
+
+    if(isUserResearchBannerVisible && urToggle) {
+        helpers.fullWidthBanner(
+            Messages("urbanner.message.text"),
+            applicationConfig.urBannerLink
+        )
+    }
+    else HtmlFormat.empty
+}
+
+@bodyEnd = {
+    @viewHelpers.footer(
+        analyticsToken = None,
+        analyticsHost = "",
+        ssoUrl = None,
+        scriptElem = scriptElement,
+        gaCalls = None
+    )
+    <script src='@routes.AssetsController.at("javascripts/urBanner.js")'> </script>
+    <script src='@routes.AssetsController.at("javascripts/back.js")'> </script>
+
+}
+
+@content = {
+    @mainContent
+    @getHelpForm
+}
+
+
+
+
+@hmrcLayout(
+    pageTitle = Some(title),
+    isWelshTranslationAvailable = false,
+    signOutUrl = Some(routes.ApplicationController.signout.url),
+    beforeContentBlock = Some(afterHeader),
+    additionalHeadBlock = Some(head),
+    additionalScriptsBlock = Some(bodyEnd),
+    headerContainerClasses = "govuk-width-container",
+    mainContentLayout = Some(fullWidth(_)),
+    nonce = CSPNonce.get
+)(content)

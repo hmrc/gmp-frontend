@@ -1,5 +1,5 @@
 @*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,21 +24,25 @@
 
 
 <div class="divider--top">
-  <h3 id="successful-calculations">@Messages("gmp.bulk.subheaders.successfulcalculations") (@{bulkResultsSummary.getNumberOfSuccessfulCalculations})</h3>
-    <ul class="bullets font-xsmall">
+    <hr class="govuk-section-break govuk-section-break--visible">
+
+    <h3 class="govuk-heading-s" id="successful-calculations">@Messages("gmp.bulk.subheaders.successfulcalculations") (@{bulkResultsSummary.getNumberOfSuccessfulCalculations})</h3>
+    <ul class="govuk-list govuk-list--bullet font-xsmall">
       <li id="exp-success-1" class="font-xsmall">@Messages("gmp.bulk.explanations.successful.1")</li>
       <li id="exp-success-2" class="font-xsmall">@Messages("gmp.bulk.explanations.successful.2")</li>
     </ul>
-  <div class="text--right"><a id="download-success" data-journey-click="gmp-bulk:click:download_successful" href="@routes.BulkResultsController.getResultsAsCsv(uploadReference, successful)">
-  @Messages("gmp.download.link")<span class="visuallyhidden"> @Messages("gmp.download.description.success")</span></a></div>
+  <div class="govuk-!-text-align-right"><a id="download-success" data-journey-click="gmp-bulk:click:download_successful" href="@routes.BulkResultsController.getResultsAsCsv(uploadReference, successful)">
+  @Messages("gmp.download.link")<span class="hidden"> @Messages("gmp.download.description.success")</span></a></div>
 </div>
 
 <div class="divider--top divider--bottom">
-  <h3 id="conts-and-earnings">@Messages("gmp.bulk.subheaders.contsandearnings")</h3>
-    <ul class="bullets font-xsmall">
+    <hr class="govuk-section-break govuk-section-break--visible">
+
+    <h3 class="govuk-heading-s" id="conts-and-earnings">@Messages("gmp.bulk.subheaders.contsandearnings")</h3>
+    <ul class="govuk-list govuk-list--bullet font-xsmall">
       <li id="exp-conts" class="font-xsmall">@Messages("gmp.bulk.explanations.contsandearnings")</li>
     </ul>
-  <div class="text--right"><a id="download-conts" data-journey-click="gmp-bulk:click:download_ce" href="@routes.BulkResultsController.getContributionsAndEarningsAsCsv(uploadReference)">
-  @Messages("gmp.download.link")<span class="visuallyhidden"> @Messages("gmp.download.description.contributions")</span></a></div>
+  <div class="govuk-!-text-align-right"><a id="download-conts" data-journey-click="gmp-bulk:click:download_ce" href="@routes.BulkResultsController.getContributionsAndEarningsAsCsv(uploadReference)">
+  @Messages("gmp.download.link")<span class="hidden"> @Messages("gmp.download.description.contributions")</span></a></div>
 </div>
 

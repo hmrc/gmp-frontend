@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@ import play.twirl.api.Html
 import utils.GmpViewSpec
 
 class BulkWrongUserSpec extends GmpViewSpec{
-  lazy val gmpMain = app.injector.instanceOf[gmp_main]
+  lazy val gmpMain = app.injector.instanceOf[gmp_new_main]
   lazy val externalUrls = app.injector.instanceOf[ExternalUrls]
   override def view: Html = new views.html.bulk_wrong_user(gmpMain, externalUrls)()
 

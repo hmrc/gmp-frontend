@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ import utils.GmpViewSpec
 class UploadFileSpec extends GmpViewSpec {
 
   val upscanInitiate = UpscanInitiateResponse(Reference("reference"), "download", Map())
-  lazy val gmpMain = app.injector.instanceOf[gmp_main]
+  lazy val gmpMain = app.injector.instanceOf[gmp_new_main]
   override def view: Html = new views.html.upscan_csv_file_upload(gmpMain)(upscanInitiate)
 
   "UploadFiles page" must {

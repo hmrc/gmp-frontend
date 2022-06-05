@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@ abstract class BulkResultsSpec extends GmpViewSpec{
   val uploadReference: String
   val comingFromPage: Int
 
-  lazy val gmpMain = app.injector.instanceOf[gmp_main]
+  lazy val gmpMain = app.injector.instanceOf[gmp_new_main]
   override def view = new views.html.bulk_results(gmpMain)(bulkResultsSummary, uploadReference, comingFromPage)
 }
 

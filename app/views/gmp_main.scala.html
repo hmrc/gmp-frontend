@@ -1,5 +1,5 @@
 @*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,6 +36,9 @@ customHead: Option[Html] = None)(mainContent: Html)(implicit request: Request[_]
 
 
 @linkElement = {
+  <link rel="stylesheet" href='@controllers.routes.AssetsController.at("stylesheets/palette.scss")'/>
+  <link rel="stylesheet" href='@controllers.routes.AssetsController.at("stylesheets/fonts.css")'/>
+  <link rel="stylesheet" href='@controllers.routes.AssetsController.at("stylesheets/application.min.css")'/>
   <link rel="stylesheet" href='@controllers.routes.AssetsController.at("stylesheets/gmp.css")'/>
   <link rel="stylesheet" href='@controllers.routes.AssetsController.at("stylesheets/urBanner.css")' media="screen" type="text/css" />
   <link rel="stylesheet" href='@controllers.routes.AssetsController.at("stylesheets/timeout-dialog.css")'/>

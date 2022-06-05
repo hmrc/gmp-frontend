@@ -1,5 +1,5 @@
 @*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,18 +17,18 @@
 @import config.ApplicationConfig
 @import views.html.helpers._
 
-@this(gmpMain: gmp_main)
+@this(gmpMain: gmp_new_main)
 
 @()(implicit request: Request[_], messages: Messages, ac:ApplicationConfig)
 
 @gmpMain(title = Messages("gmp.bulk.results_not_found") + " - " + Messages("service.title") + " - " + Messages("gov.uk"),supportLinkEnabled = false, dashboardLinkEnabled = false) {
 
     @includes.back_link(Messages("gmp.bulk.results.banner"))
-        <h1 class="heading-xlarge">@Messages("gmp.bulk.results_not_found")</h1>
+        <h1 class="govuk-heading-xl">@Messages("gmp.bulk.results_not_found")</h1>
 
-        <p>@Html(Messages("gmp.bulk.results_not_found.1"))</p>
-        <p>@Html(Messages("gmp.bulk.results_not_found.2"))</p>
-        <p>@Html(Messages("gmp.bulk.results_not_found.3"))</p>
+        <p class="govuk-body">@Html(Messages("gmp.bulk.results_not_found.1"))</p>
+        <p class="govuk-body">@Html(Messages("gmp.bulk.results_not_found.2"))</p>
+        <p class="govuk-body">@Html(Messages("gmp.bulk.results_not_found.3"))</p>
 
 
 }

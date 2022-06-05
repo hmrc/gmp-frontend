@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ import utils.GmpViewSpec
 
 class MoreBulkResultsSpec extends GmpViewSpec {
 
-  lazy val gmpMain = app.injector.instanceOf[gmp_main]
+  lazy val gmpMain = app.injector.instanceOf[gmp_new_main]
   override def view: Html = new views.html.more_bulk_results(gmpMain)(bulkPreviousRequestsList)
 
   "MoreBulkResults page" must {

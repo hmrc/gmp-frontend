@@ -1,5 +1,5 @@
 @*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,23 +16,27 @@
 
 @import config.ApplicationConfig
 
-@this(gmpMain: gmp_main)
+@this(gmpMain: gmp_new_main)
 
 @(bulkResultsSummary: BulkResultsSummary, uploadReference: String, comingFromPage: Int)(implicit request: Request[_], messages: Messages, ac:ApplicationConfig)
 
 @gmpMain(title = Messages("gmp.bulk.results.banner") + " - " + Messages("service.title") + " - " + Messages("gov.uk")) {
 
     @includes.back_link(Messages("gmp.bulk.results.banner"))
-        <div class="govuk-box-highlight">
-            <h1 id="calc-ready" class="heading-large">
+        <div class="govuk-panel govuk-panel--confirmation">
+            <h1 id="calc-ready" class="govuk-panel__title">
                 @Messages("gmp.bulk.results.banner")
             </h1>
-            <h2 id="reference">@Messages("gmp.bulk.results.reference", bulkResultsSummary.reference)</h2>
+            <div id="reference" class="govuk-panel__body">
+                @Messages("gmp.bulk.results.reference", bulkResultsSummary.reference)
+            </div>
         </div>
 
       <br>
+<hr class="govuk-section-break govuk-section-break--visible">
+
         <div id="results-heading" class="column-three-quarters">@Messages("gmp.bulk.results")</div>
-        <div id="csv-heading" class="column-one-quarter text--right">@Messages("gmp.bulk.results.csv")</div>
+        <div id="csv-heading" class="column-one-quarter govuk-!-text-align-right">@Messages("gmp.bulk.results.csv")</div>
 
 
     @if(bulkResultsSummary.total == bulkResultsSummary.getNumberOfSuccessfulCalculations) {

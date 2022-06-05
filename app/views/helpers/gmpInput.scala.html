@@ -1,5 +1,5 @@
 @*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,23 +36,23 @@
 
 
     @if(errors.nonEmpty) {
-        <div class="@if(errors.nonEmpty || (parentElements.isDefined && parentElements.get.hasErrors)) {form-field--error}">
+        <div class="@if(errors.nonEmpty || (parentElements.isDefined && parentElements.get.hasErrors)) {govuk-form-group--error}">
     }
 
-    <label for="@labelFor" class="form-label" id="@labelId">
+    <label for="@labelFor" class="govuk-label" id="@labelId">
         @commonHelper(field, errors)
         @if(labelHighlight) {<strong>}
         @if(elements.args.contains('_label)) {@elements.label}
         @if(labelHighlight) {</strong>}
         @if(elements.args.contains('_header)) {
-            <h1>@elements.args.get('_header)</h1>
+            <h1 class="govuk-label">@elements.args.get('_header)</h1>
         }
         @if(elements.args.contains('_symbol)) {
             <span class="inline-fields">@elements.args.get('_symbol)</span>
         }
     </label>
     @if(elements.args.contains('_hintText)) {
-        <span class="form-hint" id="@hintId">@elements.args.get('_hintText)</span>
+        <div class="govuk-hint" id="@hintId">@elements.args.get('_hintText)</div>
     }
 
     <input @if(elements.args.contains('_type)){type="@elements.args.get('_type)"}else{type="text"}
@@ -60,7 +60,7 @@
           maxlength="@elements.args.get('_maxLength)"
     }
 
-    class="@if( elements.args.get('_inputClass)){@elements.args.get('_inputClass)}else{form-control}"
+    class="@if( elements.args.get('_inputClass)){@elements.args.get('_inputClass)}else{govuk-input}"
 
     @if(elements.args.contains('_spellCheck)) { spellcheck="@elements.args.get('_spellCheck)" }
 

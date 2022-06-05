@@ -1,5 +1,5 @@
 @*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,17 +19,17 @@
 @import views.html.includes.upscan_file_upload_form
 @import views.html.helpers._
 
-@this(gmpMain: gmp_main)
+@this(gmpMain: gmp_new_main)
 
 @(upscanInitiateResponse: UpscanInitiateResponse)(implicit request: Request[_], messages: Messages,ac:ApplicationConfig)
 
 @gmpMain(title = Messages("gmp.fileupload.header") + " - " + Messages("service.title") + " - " + Messages("gov.uk")) {
 
 @includes.back_link(Messages("gmp.fileupload.header"))
-    <h1>@Messages("gmp.fileupload.header")</h1>
+    <h1 class="govuk-heading-xl">@Messages("gmp.fileupload.header")</h1>
 
     <br>
-    <p>@Html(Messages("gmp.fileupload.hint", routes.AssetsController.at("csv/GMP_template_and_instructions.zip"), Messages("gmp.fileupload.header")))</p>
+    <p class="govuk-body">@Html(Messages("gmp.fileupload.hint", routes.AssetsController.at("csv/GMP_template_and_instructions.zip"), Messages("gmp.fileupload.header")))</p>
 
 <label for="fileToUpload" class="hidden">@Html(Messages("gmp.fileupload.header"))</label>
  @upscan_file_upload_form(".csv", upscanInitiateResponse.formFields, upscanInitiateResponse.postTarget)

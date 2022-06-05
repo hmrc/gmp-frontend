@@ -1,6 +1,7 @@
 ############################################################################
 # Page titles
-service.title=Guaranteed Minimum Pension
+service.name = Guaranteed Minimum Pension (GMP) checker
+service.title=Guaranteed Minimum Pension (GMP) checker
 gov.uk=GOV.UK
 ############################################################################
 gmp-pbik-gov.uk-title=GOV.UK
@@ -185,7 +186,7 @@ gmp.bulk_reference.email_text = We will email you about this calculation and not
 gmp.reference = calculation name
 gmp.reference.calcname = Calculation name
 gmp.bulk_reference.reference_text = You can change the filename to help you recognise your results when they are returned (40 characters)
-gmp.bulk_request_received.text = <ul class="list-bullet"><li>Your calculation should be complete in less than 72 hours</li><li>It will then appear on the GMP checker dashboard with the reference {0}</li></ul>
+gmp.bulk_request_received.text = <ul class="govuk-list govuk-list--bullet"><li>Your calculation should be complete in less than 72 hours</li><li>It will then appear on the GMP checker dashboard with the reference {0}</li></ul>
 gmp.fileupload.hint = The file must contain mandatory information and in a specific format. You can <a data-journey-click="link - click:{1}:download a template and instructions as a ZIP file (3Kb)" href="{0}"> download a template and instructions as a ZIP file (3Kb)</a> on how to create your file first.
 gmp.dashboard_header = Guaranteed Minimum Pension (GMP) checker
 gmp.dashboard.choose_calculation_type = Choose the type of calculation you need.

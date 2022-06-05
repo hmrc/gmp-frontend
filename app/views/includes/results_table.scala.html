@@ -1,5 +1,5 @@
 @*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,10 +26,10 @@
             <th>
                 @if(calculationResponse.calcType == CalculationType.SURVIVOR.toInt) {
                 <span aria-hidden="true">@Messages("gmp.total.entitlement")</span>
-                <span class="visuallyhidden">@Messages("gmp.result.first-table-total.value")</span>
+                <span class="hidden">@Messages("gmp.result.first-table-total.value")</span>
                 } else {
                 <span aria-hidden="true">@Messages("gmp.total")</span>
-                <span class="visuallyhidden">@Messages("gmp.result.first-table-total.value")</span>
+                <span class="hidden">@Messages("gmp.result.first-table-total.value")</span>
                 }
                 <br/><span>£@calculationResponse.totalGmp</span>
             </th>
@@ -37,10 +37,10 @@
             <th>
                 @if(calculationResponse.calcType == CalculationType.SURVIVOR.toInt) {
                 <span aria-hidden="true">@Messages("gmp.post88.entitlement")</span>
-                <span class="visuallyhidden">@Messages("gmp.result.first-table-post.value")</span>
+                <span class="hidden">@Messages("gmp.result.first-table-post.value")</span>
                 } else {
                 <span aria-hidden="true"> @Messages("gmp.post.1988")</span>
-                <span class="visuallyhidden">@Messages("gmp.result.first-table-post.value")</span>
+                <span class="hidden">@Messages("gmp.result.first-table-post.value")</span>
                 }
                 <br/><span>£@calculationResponse.post88Gmp</span>
             </th>
@@ -82,12 +82,12 @@
             <th>@Messages("gmp.table.period")</th>
             <th>
                 <span aria-hidden="true">@Messages("gmp.post90.true")</span>
-                <span class="visuallyhidden">@Messages("gmp.post90.true.value")</span>
+                <span class="hidden">@Messages("gmp.post90.true.value")</span>
                 <br/><span>£@calculationResponse.trueCalculation</span>
             </th>
             <th>
                 <span aria-hidden="true">@Messages("gmp.post90.opposite")</span>
-                <span class="visuallyhidden">@Messages("gmp.post90.opposite.value")</span>
+                <span class="hidden">@Messages("gmp.post90.opposite.value")</span>
                 <br/><span>£@calculationResponse.oppositeCalculation</span>
             </th>
             @if(calculationResponse.showRateColumn){

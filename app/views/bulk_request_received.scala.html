@@ -1,5 +1,5 @@
 @*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 @import config.ApplicationConfig
 @import views.html.helpers._
 
-@this(gmpMain: gmp_main)
+@this(gmpMain: gmp_new_main)
 
 @(reference: String)(implicit request: Request[_], messages: Messages, ac:ApplicationConfig)
 
@@ -25,19 +25,19 @@
 
       @includes.back_to_dashboard_link(Messages("gmp.bulk_request_received.banner"))
 
-        <div class="govuk-box-highlight">
-          <h1>
+        <div class="govuk-panel govuk-panel--confirmation">
+          <h1 class="govuk-heading-1">
             <img src='@routes.AssetsController.at("images/tick.png")' alt=""/>
             @Messages("gmp.bulk_request_received.banner")
           </h1>
         </div>
 
-        <h2>@Messages("gmp.bulk_request_received.header")</h2>
+        <h2 class="govuk-heading-m">@Messages("gmp.bulk_request_received.header")</h2>
 
         @Html(Messages("gmp.bulk_request_received.text", reference))
 
         <form action="@routes.SessionCacheController.newBulkCalculation">
-          <button class="upload-file-button button" type="submit" id="submit-button" data-journey-click="gmp-bulk:click:bulk_upload_another">@Messages("gmp.bulk_request_received.button")</button>
+          <button class="upload-file-button govuk-button" type="submit" id="submit-button" data-journey-click="gmp-bulk:click:bulk_upload_another">@Messages("gmp.bulk_request_received.button")</button>
         </form>
 
         <br>
