@@ -30,7 +30,6 @@
 @this(
         hmrcLayout: HmrcLayout, standardBetaBanner: StandardBetaBanner,
         hmrcReportTechnicalIssueHelper:HmrcReportTechnicalIssueHelper,
-    hmrcHeader: uk.gov.hmrc.hmrcfrontend.views.html.components.HmrcHeader,
         fullWidth: helpers.fullWidthContent,
         viewHelpers: NewViewHelpers
 )
@@ -50,9 +49,7 @@
 
 @head = {
     <meta name="format-detection" content="telephone=no"/>
-    <link rel="stylesheet" href='@controllers.routes.AssetsController.at("stylesheets/palette.scss")'/>
-    <link rel="stylesheet" href='@controllers.routes.AssetsController.at("stylesheets/fonts.css")'/>
-    <link rel="stylesheet" href='@controllers.routes.AssetsController.at("stylesheets/application.min.css")'/>
+    <link rel="stylesheet" href='@controllers.routes.AssetsController.at("stylesheets/palette.css")'/>
     <link rel="stylesheet" href='@controllers.routes.AssetsController.at("stylesheets/gmp.css")'/>
     <link rel="stylesheet" href='@controllers.routes.AssetsController.at("stylesheets/urBanner.css")' media="screen" type="text/css" />
     <link rel="stylesheet" href='@controllers.routes.AssetsController.at("stylesheets/timeout-dialog.css")'/>
@@ -66,18 +63,6 @@
 }
 
 
-
-
-@afterHeader = @{
-
-    if(isUserResearchBannerVisible && urToggle) {
-        helpers.fullWidthBanner(
-            Messages("urbanner.message.text"),
-            applicationConfig.urBannerLink
-        )
-    }
-    else HtmlFormat.empty
-}
 
 @bodyEnd = {
     @viewHelpers.footer(
@@ -94,7 +79,7 @@
 
 @content = {
     @mainContent
-    @getHelpForm
+    @hmrcReportTechnicalIssueHelper()
 }
 
 
@@ -104,9 +89,9 @@
     pageTitle = Some(title),
     isWelshTranslationAvailable = false,
     signOutUrl = Some(routes.ApplicationController.signout.url),
-    beforeContentBlock = Some(afterHeader),
     additionalHeadBlock = Some(head),
     additionalScriptsBlock = Some(bodyEnd),
+    userResearchBannerUrl = if(isUserResearchBannerVisible && urToggle) {Some(applicationConfig.urBannerLink)} else {None},
     headerContainerClasses = "govuk-width-container",
     mainContentLayout = Some(fullWidth(_)),
     nonce = CSPNonce.get

@@ -47,5 +47,4 @@ class NewViewHelpers @Inject()(
                                 val govukWarningText:           GovukWarningText,
                                 val inputRadioGroup:             InputRadioGroup,
                                 val mainContentHeader: MainContentHeader
-
                               )

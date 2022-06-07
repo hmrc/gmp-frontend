@@ -29,31 +29,26 @@
     <h1 class="govuk-heading-1" id="recent-bulk-calculations-header">@Messages("gmp.more_bulk_results.header")</h1>
 
 
-    <table id="recent-calculations-table">
+    <table id="recent-calculations-table" class="govuk-table">
         <caption class="hidden" id="recent-calcualtions-caption">@Messages("gmp.caption")</caption>
 
-      <colgroup>
-        <col class="col-width-2">
-        <col class="col-width-2">
-        <col class="col-width-2">
-      </colgroup>
 
-      <thead>
-        <tr id="table-row">
-          <th><span>@Messages("gmp.th.reference")</span></th>
-          <th id="upload-date-table-header" class="r-padding numeric"><span>@Messages("gmp.th.upload_date")</span></th>
-          <th id="time-left-table-header" class="r-padding numeric"><span>@Messages("gmp.th.time_left")</span></th>
+      <thead class="govuk-table__head">
+        <tr id="table-row" class="govuk-table__row">
+          <th class="govuk-table__header"><span>@Messages("gmp.th.reference")</span></th>
+          <th class="govuk-table__header" id="upload-date-table-header" class="r-padding numeric"><span>@Messages("gmp.th.upload_date")</span></th>
+          <th class="govuk-table__header" id="time-left-table-header" class="r-padding numeric"><span>@Messages("gmp.th.time_left")</span></th>
         </tr>
       </thead>
 
-      <tbody>
+      <tbody class="govuk-table__body">
 
         @for((calculation, count) <- previousBulkCalculations.drop(3).zipWithIndex){
           @defining(30 - Days.daysBetween(new LocalDate(calculation.timestamp), LocalDate.now()).getDays){ days =>
-            <tr>
-              <td class="r-padding" id="reference-@count"><a href="@routes.BulkResultsController.get(calculation.uploadReference, 1)">@{calculation.reference}</a></td>
-              <td class="r-padding numeric" id="upload-date-@count">@{ new LocalDate(calculation.timestamp).toString("dd MMMM yyyy") }</td>
-              <td class="r-padding numeric" id="days-left-@count">@{Messages("gmp.days_left", days.toString, days match {case 1 => "";case _ => "s";})}</td>
+            <tr class="govuk-table__row">
+              <td  class="govuk-table__cell"  id="reference-@count"><a href="@routes.BulkResultsController.get(calculation.uploadReference, 1)">@{calculation.reference}</a></td>
+              <td  class="govuk-table__cell"  id="upload-date-@count">@{ new LocalDate(calculation.timestamp).toString("dd MMMM yyyy") }</td>
+              <td  class="govuk-table__cell"  id="days-left-@count">@{Messages("gmp.days_left", days.toString, days match {case 1 => "";case _ => "s";})}</td>
             </tr>
           }
         }
