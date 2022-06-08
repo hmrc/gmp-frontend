@@ -59,16 +59,13 @@ class DashboardSpec extends GmpViewSpec {
       }
     }
 
-    "have a previous bulk calculations link for size more than 3" in {
-      doc must haveLinkWithText(messages(""))
-    }
 
     "have a download template link" in {
       doc must haveLinkWithText(messages("gmp.download_templates_link"))
     }
   }
 
-  lazy val gmpMain = app.injector.instanceOf[gmp_main]
+  lazy val gmpMain = app.injector.instanceOf[gmp_new_main]
   override def view: Html = new views.html.dashboard(gmpMain)(bulkPreviousRequestsList)
 
   private val bulkPreviousRequestsList: List[models.BulkPreviousRequest] = List(BulkPreviousRequest(uploadReference = "upload",
@@ -88,7 +85,7 @@ class DashboardSpecNoPreviousCalculations extends GmpViewSpec {
     }
   }
 
-  lazy val gmpMain = app.injector.instanceOf[gmp_main]
+  lazy val gmpMain = app.injector.instanceOf[gmp_new_main]
   override def view: Html = new views.html.dashboard(gmpMain)(bulkPreviousRequestsList)
 
   private val bulkPreviousRequestsList: List[models.BulkPreviousRequest] = List()

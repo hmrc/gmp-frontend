@@ -24,7 +24,6 @@ class BulkRequestReceivedSpec extends GmpViewSpec{
   "BulkRequestReceived page" must {
     behave like pageWithTitle(messages("gmp.bulk_request_received.banner"))
     behave like pageWithHeader(messages("gmp.bulk_request_received.banner"))
-    behave like pageWithH2Header(messages("gmp.bulk_request_received.header"))
   }
 
   "have bullet points with description, reference displaying at paragraph two" in {

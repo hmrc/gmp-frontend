@@ -41,7 +41,6 @@ class BulkResultsSuccessSpec extends BulkResultsSpec {
 
     behave like pageWithTitle(messages("gmp.bulk.results.banner"))
     behave like pageWithHeader(messages("gmp.bulk.results.banner"))
-    behave like pageWithH2Header(messages("gmp.bulk.results.reference", bulkResultsSummary.reference))
     behave like haveBackLink
 
     "have a div with results text" in {

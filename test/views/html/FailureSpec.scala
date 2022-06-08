@@ -24,7 +24,7 @@ class FailureSpec extends GmpViewSpec{
   override def view: Html = new views.html.failure(gmpMain)(message, header, title)
   private val message : String = "message"
   private val header : String = "header"
-  private val title : String = "header - Guaranteed Minimum Pension - GOV.UK"
+  private val title : String = "header - "
 
   "Failure page" must {
     behave like pageWithTitle(title)

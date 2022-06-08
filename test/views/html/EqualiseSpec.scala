@@ -36,7 +36,7 @@ class EqualiseSpec extends GmpViewSpec {
     )(Equalise.apply)(Equalise.unapply)
   )
   "Equalise page" must {
-    behave like pageWithTitle("Do you also want an opposite gender calculation? - Guaranteed Minimum Pension - GOV.UK")
+    behave like pageWithTitle("Do you also want an opposite gender calculation?")
     behave like pageWithHeader(messages("gmp.equalise_header"))
     behave like pageWithBackLink
 

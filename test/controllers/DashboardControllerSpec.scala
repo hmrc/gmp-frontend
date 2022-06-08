@@ -58,16 +58,7 @@ class DashboardControllerSpec extends PlaySpec with GuiceOneServerPerSuite with 
           ac,mockSessionService,FakeGmpContext,mcc,ec,gmpSessionCache,views) {
    }
 
-  "DashboardController" must {
 
-    "Contain Ur banner" in {
-
-        val result = TestDashboardController.get(FakeRequest())
-        contentAsString(result) must include(Messages("urbanner.message.text"))
-        contentAsString(result) must include(Messages("urbanner.message.open.new.window"))
-        contentAsString(result) must include(Messages("urbanner.message.reject"))
-   }
-  }
 
   val recentBulkCalculations = List(new BulkPreviousRequest("1234","abcd",LocalDateTime.now(),LocalDateTime.now()), new BulkPreviousRequest("5678","efgh", LocalDateTime.now(),LocalDateTime.now()))
 
