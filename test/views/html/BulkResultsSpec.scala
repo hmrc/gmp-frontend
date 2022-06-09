@@ -43,6 +43,10 @@ class BulkResultsSuccessSpec extends BulkResultsSpec {
     behave like pageWithHeader(messages("gmp.bulk.results.banner"))
     behave like haveBackLink
 
+    "have a div with reference text" in {
+      doc must haveDivWithText(messages("gmp.bulk.results.reference", bulkResultsSummary.reference))
+    }
+
     "have a div with results text" in {
       doc must haveDivWithText(messages("gmp.bulk.results"))
     }

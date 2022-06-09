@@ -1,7 +1,7 @@
 ############################################################################
 # Page titles
 service.name = Guaranteed Minimum Pension (GMP) checker
-service.title=Guaranteed Minimum Pension (GMP) checker
+service.title=Guaranteed Minimum Pension
 gov.uk=GOV.UK
 ############################################################################
 gmp-pbik-gov.uk-title=GOV.UK
