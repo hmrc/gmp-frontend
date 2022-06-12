@@ -17,7 +17,7 @@
 @import config.ApplicationConfig
 @import views.html.helpers._
 
-@this(gmpMain: gmp_main_old)
+@this(gmpMain: gmp_main)
 
 @()(implicit request: Request[_], messages: Messages, ac:ApplicationConfig)
 
@@ -25,9 +25,9 @@
 
   <div id="thank-you-page">
       @includes.back_link(Messages("gmp.thank_you.header"))
-          <h1>@Messages("gmp.thank_you.header")</h1>
+          <h1 class="govuk-heading-l">@Messages("gmp.thank_you.header")</h1>
 
-          <h2>@Messages("gmp.thank_you.what_now")</h2>
+          <h2 class="govuk-heading-m">@Messages("gmp.thank_you.what_now")</h2>
 
           <form action="@routes.DashboardController.get">
               <button class="button" type="submit" id="request-another">@Messages("gmp.button.check_another")</button>

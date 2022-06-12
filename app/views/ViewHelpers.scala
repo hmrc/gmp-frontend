@@ -16,7 +16,7 @@
 
 package views
 
-import uk.gov.hmrc.govukfrontend.views.html.components.{GovukButton, GovukDateInput, GovukDetails, GovukErrorSummary, GovukFileUpload, GovukInput, GovukRadios, GovukWarningText}
+import uk.gov.hmrc.govukfrontend.views.html.components.{GovukButton, GovukDateInput, GovukDetails, GovukErrorSummary, GovukFileUpload, GovukInput, GovukPanel, GovukRadios, GovukWarningText}
 import uk.gov.hmrc.hmrcfrontend.views.html.components.HmrcHeader
 import uk.gov.hmrc.hmrcfrontend.views.html.helpers.{HmrcHead, HmrcTrackingConsentSnippet}
 import uk.gov.hmrc.play.views.html.helpers.FormWithCSRF
@@ -35,6 +35,7 @@ class ViewHelpers @Inject()(
                                 val govukFileUpload:            GovukFileUpload,
                                 val govUkDetails:               GovukDetails,
                                 val govukWarningText:           GovukWarningText,
+                                val govukPanel:                 GovukPanel,
                                 val form:                       FormWithCSRF
 
                               )

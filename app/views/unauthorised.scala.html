@@ -16,12 +16,12 @@
 
 @import config.ApplicationConfig
 
-@this(gmpMain: gmp_main_old)
+@this(gmpMain: gmp_main)
 
 @()(implicit request: Request[_], messages: Messages, ac:ApplicationConfig)
 
 @gmpMain(title = Messages("gmp.unauthorised.message") + " - " + Messages("service.title") + " - " + Messages("gov.uk")) {
 
-<h1>@Messages("gmp.unauthorised.message")</h1>
+<h1 class="govuk-heading-l">@Messages("gmp.unauthorised.message")</h1>
 
 }

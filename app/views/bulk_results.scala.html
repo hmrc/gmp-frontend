@@ -14,29 +14,28 @@
  * limitations under the License.
  *@
 
+@import uk.gov.hmrc.govukfrontend.views.html.components._
+
 @import config.ApplicationConfig
 
-@this(gmpMain: gmp_main)
+@this(gmpMain: gmp_main, govukPanel : GovukPanel, govukButton: GovukButton)
 
 @(bulkResultsSummary: BulkResultsSummary, uploadReference: String, comingFromPage: Int)(implicit request: Request[_], messages: Messages, ac:ApplicationConfig)
 
 @gmpMain(title = Messages("gmp.bulk.results.banner") + " - " + Messages("service.title") + " - " + Messages("gov.uk")) {
 
     @includes.back_link(Messages("gmp.bulk.results.banner"))
-        <div class="govuk-panel govuk-panel--confirmation">
-            <h1 id="calc-ready" class="govuk-panel__title">
-                @Messages("gmp.bulk.results.banner")
-            </h1>
-            <div id="reference" class="govuk-panel__body">
-                @Messages("gmp.bulk.results.reference", bulkResultsSummary.reference)
-            </div>
-        </div>
 
-      <br>
-<hr class="govuk-section-break govuk-section-break--visible">
+    @govukPanel(Panel(
+        title = Text(Messages("gmp.bulk.results.banner")),
+        content = Text(Messages("gmp.bulk.results.reference", bulkResultsSummary.reference))
+    ))
 
-        <div id="results-heading" class="column-three-quarters">@Messages("gmp.bulk.results")</div>
-        <div id="csv-heading" class="column-one-quarter govuk-!-text-align-right">@Messages("gmp.bulk.results.csv")</div>
+    <hr class="govuk-section-break" aria-hidden = true>
+    <hr class="govuk-section-break govuk-section-break--visible">
+
+    <div id="results-heading" class="column-three-quarters">@Messages("gmp.bulk.results")</div>
+    <div id="csv-heading" class="column-one-quarter govuk-!-text-align-right">@Messages("gmp.bulk.results.csv")</div>
 
 
     @if(bulkResultsSummary.total == bulkResultsSummary.getNumberOfSuccessfulCalculations) {

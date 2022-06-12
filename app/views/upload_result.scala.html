@@ -38,7 +38,7 @@
 }) {
     @includes.back_link(Messages("gmp.fileupload.result.scanning.header"))
 
-    <h1 class="govuk-heading-xl">@status match {
+    <h1 class="govuk-heading-l">@status match {
         case InProgress => { @Messages("gmp.fileupload.result.scanning.header")}
         case NotStarted => { @Messages("gmp.fileupload.result.scanning.header")}
         case s : UploadedSuccessfully => { @Messages("gmp.fileupload.result.success.header") }
@@ -50,20 +50,20 @@
             }
         }
     }</h1>
-<p class="govuk-body">
-    @status match {
-        case InProgress => {}
-        case NotStarted => {}
-        case s : UploadedSuccessfully => { @Messages("gmp.bulk.successful") }
-        case f : UploadedFailed => {
-            @f.failureDetails.failureReason match {
-            case "QUARANTINE" => { @Html(Messages("gmp.bulk.failure.antivirus")) }
-            case "REJECTED"   => { @Html(Messages("gmp.bulk.failure.wrong_type")) }
-            case _            => { @Html(Messages("gmp.bulk.failure.rejected")) }
+    <p class="govuk-body">
+        @status match {
+            case InProgress => {}
+            case NotStarted => {}
+            case s : UploadedSuccessfully => { @Messages("gmp.bulk.successful") }
+            case f : UploadedFailed => {
+                @f.failureDetails.failureReason match {
+                case "QUARANTINE" => { @Html(Messages("gmp.bulk.failure.antivirus")) }
+                case "REJECTED"   => { @Html(Messages("gmp.bulk.failure.wrong_type")) }
+                case _            => { @Html(Messages("gmp.bulk.failure.rejected")) }
+                }
             }
         }
-    }
-</p>
+    </p>
     @status match {
         case s : UploadedSuccessfully => {
             <div class="govuk-section">
