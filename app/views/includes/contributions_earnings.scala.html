@@ -58,7 +58,7 @@
                     </th>
                   </tr>
                 </thead>
-          <br>
+          <hr class="govuk-section-break" aria-hidden = true/>
                 <tbody>
                       @for((contsAndEarnings, count) <- contList.reverse.zipWithIndex){
                         @displayConts(contsAndEarnings)
@@ -87,4 +87,4 @@
         }
     }
 
-    <br/>
+<hr class="govuk-section-break" aria-hidden = true/>

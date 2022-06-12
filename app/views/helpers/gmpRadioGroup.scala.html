@@ -78,17 +78,17 @@
             @if(!labelAfter) {
               @if(elements.args.get('_stackedLabel)) {
                 @if(label.split(" ").length < 2) {
-                  <br>@label
+                    <hr class="govuk-section-break" aria-hidden = true/>@label
                 } else {
                   @for( (l, index) <- label.split(" ").zipWithIndex) {
-                    @if(index != 0) {<br>}@l
+                    @if(index != 0) {<hr class="govuk-section-break" aria-hidden = true/>}@l
                   }
                 }
               } else { @label }
             }
 
 
-          @if(labelAfter){@if(elements.args.get('_stackedLabel)){@if(label.split(" ").length < 2){<br>@label}else{@for((l, index) <- label.split(" ").zipWithIndex){@if(index != 0){<br>}@l}}}else{@Html(label)}}</label>
+          @if(labelAfter){@if(elements.args.get('_stackedLabel)){@if(label.split(" ").length < 2){<hr class="govuk-section-break" aria-hidden = true/>@label}else{@for((l, index) <- label.split(" ").zipWithIndex){@if(index != 0){<hr class="govuk-section-break" aria-hidden = true/>}@l}}}else{@Html(label)}}</label>
     </div>
   }
 }

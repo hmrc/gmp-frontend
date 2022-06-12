@@ -44,7 +44,7 @@
         }
 
         @if(application.globalErrors.hasPath(s"$globalErrorCode.also")){
-            <br/>
+    <hr class="govuk-section-break" aria-hidden = true/>
             @queryHandlingHeader
             <div id="query-handling">@Html(Messages(application.globalErrors.getString(s"$globalErrorCode.also")))</div>
         }

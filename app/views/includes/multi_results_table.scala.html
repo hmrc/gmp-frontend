@@ -44,8 +44,8 @@
 
     <tr @{if(period.errorCode> 0 )"class=error-row"}>
         <td colspan="4">
-            <span class="bold-xsmall" id="from-date-@count">@Messages("gmp.date_from")</span><br/> @{ new LocalDate(period.startDate.get).toString("dd MMM yyyy") } <br/>
-            <span class="bold-xsmall" id="to-date-@count">@Messages("gmp.date_To")</span><br/> @{ new LocalDate(period.endDate).toString("dd MMM yyyy") }
+            <span class="bold-xsmall" id="from-date-@count">@Messages("gmp.date_from")</span><hr class="govuk-section-break" aria-hidden = true/> @{ new LocalDate(period.startDate.get).toString("dd MMM yyyy") } <hr class="govuk-section-break" aria-hidden = true>
+            <span class="bold-xsmall" id="to-date-@count">@Messages("gmp.date_To")</span><hr class="govuk-section-break" aria-hidden = true/> @{ new LocalDate(period.endDate).toString("dd MMM yyyy") }
         </td>
         @if(period.errorCode == 0) {
             <td id="gmp-total-@count">
