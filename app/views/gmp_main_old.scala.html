@@ -14,9 +14,10 @@
  * limitations under the License.
  *@
 
-@import views.NewViewHelpers
+@import views.OldViewHelpers
 
-@this(main: views.html.main_new, reportAProblemLink: views.html.helpers.ReportAProblem, viewHelpers: NewViewHelpers)
+@this(main: views.html.main,
+      viewHelpers: OldViewHelpers)
 
 @(title: String,
 pageScripts: Option[Html] = None,
@@ -31,18 +32,18 @@ dashboardLinkEnabled:Boolean = false,
 pageHeading: Option[String] = None,
 customHead: Option[Html] = None)(mainContent: Html)(implicit request: Request[_], messages: Messages, appConfig:config.ApplicationConfig)
 
-@getHelpForm = @{reportAProblemLink(appConfig.reportAProblemPartialUrl, appConfig.reportAProblemNonJSUrl)}
+@getHelpForm = @{viewHelpers.reportAProblemLink(appConfig.reportAProblemPartialUrl, appConfig.reportAProblemNonJSUrl)}
 
 
 @linkElement = {
-<link rel="stylesheet" href='@controllers.routes.AssetsController.at("stylesheets/palette.scss")'/>
-<link rel="stylesheet" href='@controllers.routes.AssetsController.at("stylesheets/fonts.css")'/>
-<link rel="stylesheet" href='@controllers.routes.AssetsController.at("stylesheets/application.min.css")'/>
-<link rel="stylesheet" href='@controllers.routes.AssetsController.at("stylesheets/gmp.css")'/>
-<link rel="stylesheet" href='@controllers.routes.AssetsController.at("stylesheets/urBanner.css")' media="screen" type="text/css" />
-<link rel="stylesheet" href='@controllers.routes.AssetsController.at("stylesheets/timeout-dialog.css")'/>
-<link rel="stylesheet" href='@controllers.routes.AssetsController.at("stylesheets/palette.css")'/>
-<link rel="stylesheet" href='@controllers.routes.AssetsController.at("stylesheets/focus.css")'/>
+  <link rel="stylesheet" href='@controllers.routes.AssetsController.at("stylesheets/palette.scss")'/>
+  <link rel="stylesheet" href='@controllers.routes.AssetsController.at("stylesheets/fonts.css")'/>
+  <link rel="stylesheet" href='@controllers.routes.AssetsController.at("stylesheets/application.min.css")'/>
+  <link rel="stylesheet" href='@controllers.routes.AssetsController.at("stylesheets/gmp.css")'/>
+  <link rel="stylesheet" href='@controllers.routes.AssetsController.at("stylesheets/urBanner.css")' media="screen" type="text/css" />
+  <link rel="stylesheet" href='@controllers.routes.AssetsController.at("stylesheets/timeout-dialog.css")'/>
+  <link rel="stylesheet" href='@controllers.routes.AssetsController.at("stylesheets/palette.css")'/>
+  <link rel="stylesheet" href='@controllers.routes.AssetsController.at("stylesheets/focus.css")'/>
 }
 
 @main(

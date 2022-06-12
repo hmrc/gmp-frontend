@@ -16,10 +16,10 @@
 
 @import views.ViewHelpers
 
-@this(main: views.html.main,
-      viewHelpers: ViewHelpers)
+@this(layout: views.html.Layout, reportAProblemLink: views.html.helpers.ReportAProblem, viewHelpers: ViewHelpers)
 
-@(title: String,
+@(fullWidth:Boolean = false,
+title: String,
 pageScripts: Option[Html] = None,
 scriptElem: Option[Html] = None,
 userLoggedIn: Boolean = true,
@@ -32,49 +32,49 @@ dashboardLinkEnabled:Boolean = false,
 pageHeading: Option[String] = None,
 customHead: Option[Html] = None)(mainContent: Html)(implicit request: Request[_], messages: Messages, appConfig:config.ApplicationConfig)
 
-@getHelpForm = @{viewHelpers.reportAProblemLink(appConfig.reportAProblemPartialUrl, appConfig.reportAProblemNonJSUrl)}
 
 
 @linkElement = {
-  <link rel="stylesheet" href='@controllers.routes.AssetsController.at("stylesheets/palette.scss")'/>
-  <link rel="stylesheet" href='@controllers.routes.AssetsController.at("stylesheets/fonts.css")'/>
-  <link rel="stylesheet" href='@controllers.routes.AssetsController.at("stylesheets/application.min.css")'/>
-  <link rel="stylesheet" href='@controllers.routes.AssetsController.at("stylesheets/gmp.css")'/>
-  <link rel="stylesheet" href='@controllers.routes.AssetsController.at("stylesheets/urBanner.css")' media="screen" type="text/css" />
-  <link rel="stylesheet" href='@controllers.routes.AssetsController.at("stylesheets/timeout-dialog.css")'/>
-  <link rel="stylesheet" href='@controllers.routes.AssetsController.at("stylesheets/palette.css")'/>
-  <link rel="stylesheet" href='@controllers.routes.AssetsController.at("stylesheets/focus.css")'/>
+    <link rel="stylesheet" href='@controllers.routes.AssetsController.at("stylesheets/palette.scss")'/>
+    <link rel="stylesheet" href='@controllers.routes.AssetsController.at("stylesheets/fonts.css")'/>
+    <link rel="stylesheet" href='@controllers.routes.AssetsController.at("stylesheets/application.min.css")'/>
+    <link rel="stylesheet" href='@controllers.routes.AssetsController.at("stylesheets/gmp.css")'/>
+    <link rel="stylesheet" href='@controllers.routes.AssetsController.at("stylesheets/urBanner.css")' media="screen" type="text/css" />
+    <link rel="stylesheet" href='@controllers.routes.AssetsController.at("stylesheets/timeout-dialog.css")'/>
+    <link rel="stylesheet" href='@controllers.routes.AssetsController.at("stylesheets/palette.css")'/>
+    <link rel="stylesheet" href='@controllers.routes.AssetsController.at("stylesheets/focus.css")'/>
 }
 
-@main(
+@scriptElement = {
+    <script src="@controllers.routes.AssetsController.at("javascripts/timeout-dialog.js")"></script>
+    <script>
+        @if(userLoggedIn) {
+            $.timeoutDialog({timeout: @appConfig.timeout,
+                             countdown: @appConfig.timeoutCountdown,
+                             keep_alive_url: "@controllers.routes.ApplicationController.keepAlive",
+                             logout_url: "@controllers.routes.ApplicationController.signout",
+                             logout_redirect_url: "@controllers.routes.ApplicationController.signout",
+                             restart_on_yes: true, background_no_scroll: true});
+           var dialogOpen;
+        }
+
+    </script>
+    @scriptElem
+    @pageScripts
+}
+
+
+@layout(
+  useFullWidth = fullWidth,
   applicationConfig = appConfig,
   title = title,
   userLoggedIn = userLoggedIn,
-  getHelpForm = getHelpForm,
   mainClass = mainClass,
   linkElement = Some(linkElement),
   isUserResearchBannerVisible = showUserResearchBanner,
   scriptElement = Some(scriptElement),
   signOutEnabled = signOutEnabled,
   customHead = customHead) {
-
     @mainContent
 }
 
-@scriptElement = {
-    <script src="@controllers.routes.AssetsController.at("javascripts/timeout-dialog.js")"></script>
-    <script>
-    @if(userLoggedIn) {
-        $.timeoutDialog({timeout: @appConfig.timeout,
-                         countdown: @appConfig.timeoutCountdown,
-                         keep_alive_url: "@controllers.routes.ApplicationController.keepAlive",
-                         logout_url: "@controllers.routes.ApplicationController.signout",
-                         logout_redirect_url: "@controllers.routes.ApplicationController.signout",
-                         restart_on_yes: true, background_no_scroll: true});
-       var dialogOpen;
-    }
-
-  </script>
-@scriptElem
-  @pageScripts
-}

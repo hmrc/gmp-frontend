@@ -16,9 +16,9 @@
 
 @import config.ApplicationConfig
 @import views.html.helpers._
-@import views.NewViewHelpers
+@import views.ViewHelpers
 
-@this(gmpMain: gmp_new_main, viewHelpers: NewViewHelpers)
+@this(gmpMain: gmp_main, viewHelpers: ViewHelpers)
 
 @(bulkReferenceForm: Form[models.BulkReference])(implicit request: Request[_], messages: Messages, ac:ApplicationConfig)
 

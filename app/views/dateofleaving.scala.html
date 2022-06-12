@@ -17,9 +17,9 @@
 @import config.ApplicationConfig
 @import views.html.helpers._
 @import models.Leaving
-@import views.ViewHelpers
+@import views.OldViewHelpers
 
-@this(gmpMain: gmp_main, viewHelpers: ViewHelpers)
+@this(gmpMain: gmp_main_old, viewHelpers: OldViewHelpers)
 
 @(dateOfLeavingForm: Form[models.Leaving],scenario: String)(implicit request: Request[_], messages: Messages, applicationConfig: config.ApplicationConfig)
 

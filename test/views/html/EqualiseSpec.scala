@@ -22,11 +22,11 @@ import play.api.data.Form
 import play.api.data.Forms.{mapping, number, optional}
 import play.twirl.api.Html
 import utils.GmpViewSpec
-import views.ViewHelpers
+import views.OldViewHelpers
 
 class EqualiseSpec extends GmpViewSpec {
   lazy val gmpMain = app.injector.instanceOf[gmp_main]
-  lazy val viewHelpers = app.injector.instanceOf[ViewHelpers]
+  lazy val viewHelpers = app.injector.instanceOf[OldViewHelpers]
 
   override def view: Html = new views.html.equalise(gmpMain, viewHelpers)(equaliseForm)
 

@@ -15,10 +15,10 @@
  *@
 
 @import play.twirl.api.HtmlFormat
-@import views.ViewHelpers
+@import views.OldViewHelpers
 @import views.html.layouts.GovUkTemplate
 
-@this(viewHelpers: ViewHelpers,
+@this(viewHelpers: OldViewHelpers,
         govUkTemplate: GovUkTemplate)
 
 @(pageTitle: String, heading: String, message: String)(implicit request: Request[_], messages: Messages)

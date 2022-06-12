@@ -23,11 +23,11 @@ import play.api.data.Forms.{mapping, optional, text}
 import play.api.data.validation.{Constraint, Invalid, Valid, ValidationError}
 import play.twirl.api.Html
 import utils.GmpViewSpec
-import views.ViewHelpers
+import views.OldViewHelpers
 
 class RevaluationSpec extends GmpViewSpec{
   lazy val gmpMain = app.injector.instanceOf[gmp_main]
-  lazy val viewHelpers = app.injector.instanceOf[ViewHelpers]
+  lazy val viewHelpers = app.injector.instanceOf[OldViewHelpers]
 
   override def view: Html = new views.html.revaluation(gmpMain, viewHelpers)(revaluationForm)
 //  private val revaluationForm: Form[models.RevaluationDate] = RevaluationForm.revaluationForm

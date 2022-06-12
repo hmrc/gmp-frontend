@@ -25,7 +25,7 @@ import play.api.i18n.Messages
 import play.twirl.api.Html
 import utils.GmpViewSpec
 import validation.NinoValidate
-import views.ViewHelpers
+import views.OldViewHelpers
 
 class MemberDetailsViewSpec extends GmpViewSpec{
 
@@ -46,7 +46,7 @@ class MemberDetailsViewSpec extends GmpViewSpec{
   }
 
   lazy val gmpMain = app.injector.instanceOf[gmp_main]
-  lazy val viewHelpers = app.injector.instanceOf[ViewHelpers]
+  lazy val viewHelpers = app.injector.instanceOf[OldViewHelpers]
 
   override def view: Html = new views.html.member_details(gmpMain, viewHelpers)(form)
   //private val memberDetailsForm: Form[models.MemberDetails] = MemberDetailsForm.form

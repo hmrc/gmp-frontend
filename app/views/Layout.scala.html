@@ -15,7 +15,7 @@
  *@
 
 @import play.twirl.api.HtmlFormat
-@import views.NewViewHelpers
+@import views.ViewHelpers
 @import views.html.helper._
 @import uk.gov.hmrc.hmrcfrontend.views.html.components.HmrcHeader
 @import uk.gov.hmrc.hmrcfrontend.views.html.components.Header
@@ -23,22 +23,26 @@
 @import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcReportTechnicalIssueHelper
 @import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcTimeoutDialogHelper
 @import uk.gov.hmrc.hmrcfrontend.views.config.StandardBetaBanner
+@import uk.gov.hmrc.govukfrontend.views.html.components.TwoThirdsMainContent
 @import uk.gov.hmrc.govukfrontend.views.html.components.FixedWidthPageLayout
 
 
 
 @this(
-        hmrcLayout: HmrcLayout, standardBetaBanner: StandardBetaBanner,
+        hmrcLayout: HmrcLayout,
+        standardBetaBanner: StandardBetaBanner,
         hmrcReportTechnicalIssueHelper:HmrcReportTechnicalIssueHelper,
         fullWidth: helpers.fullWidthContent,
-        viewHelpers: NewViewHelpers
+        fixedWidthPageLayout: FixedWidthPageLayout,
+        defaultMainContent: TwoThirdsMainContent,
+        viewHelpers: ViewHelpers
 )
 
-@( applicationConfig: config.ApplicationConfig,
-        title: String,
+@( useFullWidth:Boolean = false,
+    applicationConfig: config.ApplicationConfig,
+    title: String,
     contentHeader: Option[Html] = None,
     userLoggedIn: Boolean = false,
-    getHelpForm: Html  = HtmlFormat.empty,
     linkElement : Option[Html] = None,
     mainClass : Option[String] = None,
     scriptElement : Option[Html] = None,
@@ -49,29 +53,13 @@
 
 @head = {
     <meta name="format-detection" content="telephone=no"/>
-    <link rel="stylesheet" href='@controllers.routes.AssetsController.at("stylesheets/palette.css")'/>
-    <link rel="stylesheet" href='@controllers.routes.AssetsController.at("stylesheets/gmp.css")'/>
-    <link rel="stylesheet" href='@controllers.routes.AssetsController.at("stylesheets/urBanner.css")' media="screen" type="text/css" />
-    <link rel="stylesheet" href='@controllers.routes.AssetsController.at("stylesheets/timeout-dialog.css")'/>
-    <link rel="stylesheet" href='@controllers.routes.AssetsController.at("stylesheets/palette.css")'/>
-    <link rel="stylesheet" href='@controllers.routes.AssetsController.at("stylesheets/focus.css")'/>
+    @linkElement
     @customHead
 }
 
-@urToggle = @{
-    true
-}
 
-
-
-@bodyEnd = {
-    @viewHelpers.footer(
-        analyticsToken = None,
-        analyticsHost = "",
-        ssoUrl = None,
-        scriptElem = scriptElement,
-        gaCalls = None
-    )
+@scriptBlock = {
+    @scriptElement
     <script src='@routes.AssetsController.at("javascripts/urBanner.js")'> </script>
     <script src='@routes.AssetsController.at("javascripts/back.js")'> </script>
 
@@ -83,16 +71,14 @@
 }
 
 
-
-
 @hmrcLayout(
     pageTitle = Some(title),
     isWelshTranslationAvailable = false,
-    signOutUrl = Some(routes.ApplicationController.signout.url),
+    signOutUrl = if(signOutEnabled) Some(routes.ApplicationController.signout.url) else None,
     additionalHeadBlock = Some(head),
-    additionalScriptsBlock = Some(bodyEnd),
-    userResearchBannerUrl = if(isUserResearchBannerVisible && urToggle) {Some(applicationConfig.urBannerLink)} else {None},
+    additionalScriptsBlock = Some(scriptBlock),
+    userResearchBannerUrl = if(isUserResearchBannerVisible) {Some(applicationConfig.urBannerLink)} else {None},
     headerContainerClasses = "govuk-width-container",
-    mainContentLayout = Some(fullWidth(_)),
+    mainContentLayout = if(useFullWidth) Some(fullWidth(_)) else Some(defaultMainContent(_)),
     nonce = CSPNonce.get
 )(content)

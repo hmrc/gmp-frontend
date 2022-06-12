@@ -23,11 +23,11 @@ import play.api.data.Forms.{mapping, text}
 import play.twirl.api.Html
 import utils.GmpViewSpec
 import validation.SconValidate
-import views.ViewHelpers
+import views.OldViewHelpers
 
 class PensionDetailsSpec extends GmpViewSpec {
   lazy val gmpMain = app.injector.instanceOf[gmp_main]
-  lazy val viewHelpers = app.injector.instanceOf[ViewHelpers]
+  lazy val viewHelpers = app.injector.instanceOf[OldViewHelpers]
 
   override def view: Html = new views.html.pension_details(gmpMain, viewHelpers)(pensionDetailsForm)
 

@@ -17,9 +17,9 @@
 @import config.ApplicationConfig
 @import views.html.helpers._
 @import models.CalculationType
-@import views.ViewHelpers
+@import views.OldViewHelpers
 
-@this(gmpMain: gmp_main, viewHelpers: ViewHelpers)
+@this(gmpMain: gmp_main_old, viewHelpers: OldViewHelpers)
 
 @(revaluationRateForm: Form[models.RevaluationRate], session: GmpSession)(implicit request: Request[_], messages: Messages, ac:ApplicationConfig)
 

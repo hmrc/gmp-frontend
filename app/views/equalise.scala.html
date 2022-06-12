@@ -16,9 +16,9 @@
 
 @import config.ApplicationConfig
 @import views.html.helpers._
-@import views.ViewHelpers
+@import views.OldViewHelpers
 
-@this(gmpMain: gmp_main, viewHelpers: ViewHelpers)
+@this(gmpMain: gmp_main_old, viewHelpers: OldViewHelpers)
 
 @(equaliseForm: Form[models.Equalise])(implicit request: Request[_], messages: Messages, applicationConfig: ApplicationConfig)
 
