@@ -16,8 +16,9 @@
 
 package validation
 
-import java.text.{ParseException, SimpleDateFormat}
+import play.api.data.validation.{Constraint, Invalid, Valid, ValidationError}
 
+import java.text.{ParseException, SimpleDateFormat}
 import uk.gov.hmrc.domain.Nino
 
 import scala.annotation.tailrec
@@ -46,6 +47,7 @@ object SconValidate extends Validator with Modulus19CheckDigit {
 }
 
 object NinoValidate extends Validator {
+
   override def isValid(nino: String): Boolean = Nino.isValid(nino.replaceAll("\\s", "").toUpperCase)
 }
 

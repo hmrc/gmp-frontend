@@ -32,6 +32,7 @@
         standardBetaBanner: StandardBetaBanner,
         hmrcReportTechnicalIssueHelper:HmrcReportTechnicalIssueHelper,
         fullWidth: helpers.fullWidthContent,
+        viewHelpers: NewViewHelpers,
         fixedWidthPageLayout: FixedWidthPageLayout,
         defaultMainContent: TwoThirdsMainContent,
         viewHelpers: ViewHelpers
@@ -52,20 +53,20 @@
 
 @head = {
     <meta name="format-detection" content="telephone=no"/>
-    @linkElement
-    @customHead
+@linkElement
+@customHead
 }
 
 @scriptBlock = {
-    @scriptElement
+@scriptElement
     <script src='@routes.AssetsController.at("javascripts/back.js")'> </script>
+
 }
 
 @content = {
     @mainContent
     @hmrcReportTechnicalIssueHelper()
 }
-
 
 @hmrcLayout(
     pageTitle = Some(title),
