@@ -18,6 +18,7 @@ package views.html
 
 import controllers.routes
 import models.BulkResultsSummary
+import uk.gov.hmrc.govukfrontend.views.html.components.{GovukButton, GovukPanel}
 import utils.GmpViewSpec
 
 abstract class BulkResultsSpec extends GmpViewSpec{
@@ -25,9 +26,10 @@ abstract class BulkResultsSpec extends GmpViewSpec{
   val bulkResultsSummary:BulkResultsSummary
   val uploadReference: String
   val comingFromPage: Int
-
-  lazy val gmpMain = app.injector.instanceOf[gmp_new_main]
-  override def view = new views.html.bulk_results(gmpMain)(bulkResultsSummary, uploadReference, comingFromPage)
+  lazy val panel = app.injector.instanceOf[GovukPanel]
+  lazy val button = app.injector.instanceOf[GovukButton]
+  lazy val gmpMain = app.injector.instanceOf[gmp_main]
+  override def view = new views.html.bulk_results(gmpMain, panel, button)(bulkResultsSummary, uploadReference, comingFromPage)
 }
 
 

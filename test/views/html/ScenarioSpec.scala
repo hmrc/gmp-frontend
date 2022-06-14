@@ -25,7 +25,7 @@ import utils.GmpViewSpec
 import views.OldViewHelpers
 
 class ScenarioSpec extends GmpViewSpec{
-  lazy val gmpMain = app.injector.instanceOf[gmp_main]
+  lazy val gmpMain = app.injector.instanceOf[gmp_main_old]
   lazy val viewHelpers = app.injector.instanceOf[OldViewHelpers]
 
   override def view: Html = new views.html.scenario(gmpMain, viewHelpers)(scenarioForm)

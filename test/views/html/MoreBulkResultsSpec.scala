@@ -19,12 +19,14 @@ package views.html
 import models.BulkPreviousRequest
 import org.joda.time.LocalDateTime
 import play.twirl.api.Html
+import uk.gov.hmrc.govukfrontend.views.html.components.GovukTable
 import utils.GmpViewSpec
 
 class MoreBulkResultsSpec extends GmpViewSpec {
 
-  lazy val gmpMain = app.injector.instanceOf[gmp_new_main]
-  override def view: Html = new views.html.more_bulk_results(gmpMain)(bulkPreviousRequestsList)
+  lazy val gmpMain = app.injector.instanceOf[gmp_main]
+  lazy val table = app.injector.instanceOf[GovukTable]
+  override def view: Html = new views.html.more_bulk_results(gmpMain, table)(bulkPreviousRequestsList)
 
   "MoreBulkResults page" must {
 

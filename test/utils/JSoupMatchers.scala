@@ -197,6 +197,7 @@ trait JSoupMatchers {
   def haveHeadingH3WithText(expectedText: String) = new TagWithTextMatcher(expectedText, "h3")
   def haveHeadingH4WithText(expectedText: String) = new TagWithTextMatcher(expectedText, "h4")
   def haveHeadingWithText (expectedText: String) = new TagWithTextMatcher(expectedText, "h1")
+  def haveStrongWithText (expectedText: String) = new TagWithTextMatcher(expectedText, "strong")
   def haveH2HeadingWithIdAndText(id: String, expectedText: String) = new CssSelectorWithTextMatcher(expectedText, s"h2[id=${id}]")
   def havePreHeadingWithText (expectedText: String, expectedPreHeadingAnnouncement: String = "This section is") =
     new CssSelectorWithTextMatcher(s"${expectedPreHeadingAnnouncement} ${expectedText}", "header>p")
@@ -226,6 +227,7 @@ trait JSoupMatchers {
   def haveTableTdWithId(id: String) = new CssSelectorWithAttributeValueMatcher("id", id, "td")
   def haveTableThWithIdAndText(id: String, expectedText: String) = new CssSelectorWithTextMatcher(expectedText, s"th[id=${id}]")
   def haveTableCaptionWithIdAndText(id: String, expectedText: String) = new CssSelectorWithTextMatcher(expectedText, s"caption[id=${id}]")
+  def haveTableCaptionWithText(expectedText: String) = new CssSelectorWithTextMatcher(expectedText, s"caption")
   def haveElementAtPathWithId(elementSelector: String, id: String) = new CssSelectorWithAttributeValueMatcher("id", id, elementSelector)
   def haveElementAtPathWithText(elementSelector: String, expectedText: String) = new CssSelectorWithTextMatcher(expectedText, elementSelector)
   def haveElementAtPathWithAttribute(elementSelector: String, attributeName: String, attributeValue: String) = new CssSelectorWithAttributeValueMatcher(attributeName, attributeValue, elementSelector)
@@ -264,5 +266,4 @@ trait JSoupMatchers {
   //def haveInputLabelWithText2 (id:String, expectedText: String) = new CssSelectorWithTextMatcher(expectedText, s"label[for=$id]")
 
 
-  def haveStrongWithText (expectedText: String) = new CssSelectorWithTextMatcher(expectedText,"strong")
 }

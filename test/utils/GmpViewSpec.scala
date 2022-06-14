@@ -62,6 +62,12 @@ trait GmpViewSpec extends PlaySpec with JSoupMatchers with GuiceOneServerPerSuit
     }
   }
 
+  def pageWitStrong(text: String): Unit = {
+    "have a static strong" in {
+      doc must haveStrongWithText(text)
+    }
+  }
+
   def pageWithH2Header(headerText: String): Unit = {
     s"have a static h2 header with text: $headerText" in {
       doc must haveH2HeadingWithText(headerText)

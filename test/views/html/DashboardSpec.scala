@@ -19,6 +19,7 @@ package views.html
 import models.BulkPreviousRequest
 import org.joda.time.LocalDateTime
 import play.twirl.api.Html
+import uk.gov.hmrc.govukfrontend.views.html.components.GovukTable
 import utils.GmpViewSpec
 
 class DashboardSpec extends GmpViewSpec {
@@ -46,7 +47,7 @@ class DashboardSpec extends GmpViewSpec {
     }
 
     "must have table with correct header content" in {
-      doc must haveTableCaptionWithIdAndText("recent-calcualtions-caption", messages("gmp.caption"))
+      doc must haveTableCaptionWithText(messages("gmp.caption"))
       doc must haveThWithText(messages("gmp.th.reference"))
       doc must haveThWithText(messages("gmp.th.upload_date"))
       doc must haveThWithText(messages("gmp.th.time_left"))
@@ -64,9 +65,9 @@ class DashboardSpec extends GmpViewSpec {
       doc must haveLinkWithText(messages("gmp.download_templates_link"))
     }
   }
-
-  lazy val gmpMain = app.injector.instanceOf[gmp_new_main]
-  override def view: Html = new views.html.dashboard(gmpMain)(bulkPreviousRequestsList)
+  lazy val table = app.injector.instanceOf[GovukTable]
+  lazy val gmpMain = app.injector.instanceOf[gmp_main]
+  override def view: Html = new views.html.dashboard(gmpMain, table)(bulkPreviousRequestsList)
 
   private val bulkPreviousRequestsList: List[models.BulkPreviousRequest] = List(BulkPreviousRequest(uploadReference = "upload",
     reference = "fake", timestamp = LocalDateTime.now, processedDateTime = LocalDateTime.now), BulkPreviousRequest(uploadReference = "upload",
@@ -84,9 +85,9 @@ class DashboardSpecNoPreviousCalculations extends GmpViewSpec {
       doc must haveParagraphWithText(messages("gmp.no_previous_calculations_text"))
     }
   }
-
-  lazy val gmpMain = app.injector.instanceOf[gmp_new_main]
-  override def view: Html = new views.html.dashboard(gmpMain)(bulkPreviousRequestsList)
+  lazy val table = app.injector.instanceOf[GovukTable]
+  lazy val gmpMain = app.injector.instanceOf[gmp_main]
+  override def view: Html = new views.html.dashboard(gmpMain, table)(bulkPreviousRequestsList)
 
   private val bulkPreviousRequestsList: List[models.BulkPreviousRequest] = List()
 }

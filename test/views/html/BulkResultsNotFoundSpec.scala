@@ -20,7 +20,7 @@ import play.twirl.api.Html
 import utils.GmpViewSpec
 
 class BulkResultsNotFoundSpec extends GmpViewSpec {
-  lazy val gmpMain = app.injector.instanceOf[gmp_new_main]
+  lazy val gmpMain = app.injector.instanceOf[gmp_main]
   override def view: Html = new views.html.bulk_results_not_found(gmpMain)()
 
   "BulkResultsNotFound page" must {
