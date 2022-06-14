@@ -19,7 +19,7 @@
 @import views.ViewHelpers
 @import uk.gov.hmrc.govukfrontend.views.html.components._
 @import uk.gov.hmrc.hmrcfrontend.views.Implicits.RichErrorSummary
-@import views.OldViewHelpers
+@import uk.gov.hmrc.govukfrontend.views.html.components.implicits._
 
 @this(gmpMain: gmp_main, viewHelpers: ViewHelpers, govukRadios : GovukRadios, govukButton : GovukButton, govukErrorSummary : GovukErrorSummary)
 
@@ -71,7 +71,7 @@
                           value = Some("1")
                       )
                   )
-              ))
+              ).withFormField(calculationType("calcType")))
 
 
           <div>
