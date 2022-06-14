@@ -18,6 +18,7 @@
 @import views.html.helpers._
 @import views.ViewHelpers
 @import uk.gov.hmrc.govukfrontend.views.html.components._
+@import uk.gov.hmrc.govukfrontend.views.html.components.implicits._
 @import uk.gov.hmrc.hmrcfrontend.views.Implicits.RichErrorSummary
 @import models.MemberDetails
 @this(
@@ -36,24 +37,26 @@
 
     @includes.back_link(Messages("gmp.bulk.results.banner"))
 
-    <hr class="govuk-section-break govuk-section-break--m" aria-hidden="true">
+    @views.html.helpers.errorSummary(memberDetailsForm, formHeaderKey = "gmp.member_details.header")
+<hr class="govuk-section-break govuk-section-break--m" aria-hidden="true">
     <h1 class="govuk-heading-l">@Messages("gmp.member_details.header")</h1>
 
-    @if(memberDetailsForm.errors.nonEmpty) {
-        @govukErrorSummary(ErrorSummary().withFormErrorsAsText(memberDetailsForm))
-    }
+@*//    @if(memberDetailsForm.errors.nonEmpty) {*@
+@*//        @govukErrorSummary(ErrorSummary().withFormErrorsAsText(memberDetailsForm))*@
+@*//    }*@
     @viewHelpers.form(action = routes.MemberDetailsController.post) {
 
         <div class="govuk-form-group">
 
-            @govukInput(Input(
-                id = "firstForename",
-                name = "firstForename",
-                label = Label(
-                    content = Text(Messages("gmp.firstname"))
-                ),
-                classes = "govuk-input--width-20"
-            ))
+            @govukInput(
+                Input(
+                    id = "firstForename",
+                    name = "firstForename",
+                    label = Label(
+                        content = Text(Messages("gmp.firstname"))
+                    ),
+                    classes = "govuk-input--width-20"
+                ).withFormField(memberDetailsForm("firstForename")))
 
             @govukInput(Input(
                 id = "surname",
@@ -62,7 +65,8 @@
                     content = Text(Messages("gmp.lastname"))
                 ),
                 classes = "govuk-input--width-20"
-            ))
+            ).withFormField(memberDetailsForm("surname")))
+
 
             @govukInput(Input(
                 id = "nino",
@@ -74,7 +78,8 @@
                 hint = Some(Hint(
                     content = Text(Messages("gmp.nino.hint"))
                 ))
-            ))
+            ).withFormField(memberDetailsForm("nino")))
+
         </div>
         <div>
             @govukButton(Button(

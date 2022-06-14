@@ -37,7 +37,7 @@
                     }
                 ) { anchor =>
                 <li data-journey='@Messages("gmp.bulk.problem.error.field"):@Messages(formHeaderKey):@error.message'>
-                    <a class="govuk-link" href="#@{if(focusId.isDefined) focusId.get else anchor}" data-focuses="@{if(focusId.isDefined) focusId.get else error.key}">
+                    <a href="#@{if(focusId.isDefined) focusId.get else anchor}" data-focuses="@{if(focusId.isDefined) focusId.get else error.key}">
                         @Messages(error.message)
                     </a>
                 </li>
