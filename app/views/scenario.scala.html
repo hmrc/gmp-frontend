@@ -36,7 +36,7 @@
 @*//    @views.html.helpers.errorSummary(calculationType, formHeaderKey = "gmp.scenarios.title", focusId = Some("calcType-payableage"))*@
 
       @viewHelpers.form(action = routes.ScenarioController.post) {
-          @if(calculationType.errors.isEmpty){
+          @if(calculationType.errors.nonEmpty){
               @govukErrorSummary(ErrorSummary().withFormErrorsAsText(calculationType))
           }
               @govukRadios(Radios(

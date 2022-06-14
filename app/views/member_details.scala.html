@@ -17,10 +17,9 @@
 @import config.ApplicationConfig
 @import views.html.helpers._
 @import views.ViewHelpers
-@import views.OldViewHelpers
 @import uk.gov.hmrc.govukfrontend.views.html.components._
 @import uk.gov.hmrc.hmrcfrontend.views.Implicits.RichErrorSummary
-
+@import models.MemberDetails
 @this(
         gmpMain: gmp_main,
         viewHelpers: ViewHelpers,
@@ -28,8 +27,6 @@
         govukInput : GovukInput,
         govukErrorSummary: GovukErrorSummary
 )
-
-@this(gmpMain: gmp_main, viewHelpers: OldViewHelpers)
 
 @(memberDetailsForm: Form[models.MemberDetails])(implicit request: Request[_], messages: Messages, ac:ApplicationConfig)
 

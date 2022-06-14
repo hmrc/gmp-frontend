@@ -15,7 +15,7 @@
  *@
 
 @import play.twirl.api.HtmlFormat
-@import views.NewViewHelpers
+@import views.ViewHelpers
 @import views.html.helper._
 @import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcLayout
 @import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcReportTechnicalIssueHelper
@@ -32,10 +32,9 @@
         standardBetaBanner: StandardBetaBanner,
         hmrcReportTechnicalIssueHelper:HmrcReportTechnicalIssueHelper,
         fullWidth: helpers.fullWidthContent,
-        viewHelpers: NewViewHelpers,
+        viewHelpers: ViewHelpers,
         fixedWidthPageLayout: FixedWidthPageLayout,
         defaultMainContent: TwoThirdsMainContent,
-        viewHelpers: ViewHelpers
 )
 
 @( useFullWidth:Boolean = false,
