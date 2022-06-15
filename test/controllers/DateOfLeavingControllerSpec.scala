@@ -72,9 +72,9 @@ class DateOfLeavingControllerSpec extends PlaySpec with GuiceOneServerPerSuite w
             when(mockSessionService.fetchGmpSession()(Matchers.any())).thenReturn(Future.successful(Some(session)))
             status(result) must equal(OK)
             contentAsString(result) must include("Did the member leave the scheme before 6 April 2016?")
-//            contentAsString(result) must include(Messages("gmp.date.header_text"))
-//            contentAsString(result) must include(Messages("gmp.date.example"))
-//            contentAsString(result) must include(Messages("gmp.back.link"))
+            contentAsString(result) must include(Messages("gmp.date.header_text"))
+            contentAsString(result) must include(Messages("gmp.date.example"))
+            contentAsString(result) must include(Messages("gmp.back.link"))
 
       }
 
