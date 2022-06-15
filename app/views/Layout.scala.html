@@ -31,7 +31,7 @@
         fullWidth: helpers.fullWidthContent,
         viewHelpers: ViewHelpers,
         fixedWidthPageLayout: FixedWidthPageLayout,
-        defaultMainContent: TwoThirdsMainContent,
+        defaultMainContent: TwoThirdsMainContent
 )
 
 @( useFullWidth:Boolean = false,
@@ -54,9 +54,8 @@
 }
 
 @scriptBlock = {
-@scriptElement
+    @scriptElement
     <script src='@routes.AssetsController.at("javascripts/back.js")'> </script>
-
 }
 
 @content = {
