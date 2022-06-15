@@ -34,20 +34,19 @@
       <br/>
       <div class="govuk-grid-column-one-half">
         <a data-journey-click='@Messages("gmp.ga-track.link.click"):@Messages("gmp.dashboard_header"):@Messages("gmp.single_calculation_link")'
-           class ="large-underlined-link" id="single-calculation-link" href="@routes.PensionDetailsController.get">
+           class ="govuk-link large-underlined-link" id="single-calculation-link" href="@routes.PensionDetailsController.get">
            @Messages("gmp.single_calculation_link")</a>
-          <hr class="govuk-section-break" aria-hidden = true/>
-          <hr class="govuk-section-break" aria-hidden = true/>
+          <hr class="govuk-section-break govuk-section-break--m" aria-hidden = true/>
         <p class="govuk-body" id="single-calculation-description">@Html(Messages("gmp.single_calculation_text"))</p>
       </div>
 
       <div class="govuk-grid-column-one-half">
         <a class ="large-underlined-link" id="bulk-calculation-link"
            data-journey-click='@Messages("gmp.ga-track.link.click"):@Messages("gmp.dashboard_header"):@Messages("gmp.bulk_calculation_link")'
-           href="@routes.FileUploadController.get">@Messages("gmp.bulk_calculation_link")</a>
-          <hr class="govuk-section-break" aria-hidden = true/>
-          <hr class="govuk-section-break" aria-hidden = true/>
-        <p class="govuk-body" id="bulk-calculation-description">@Html(Messages("gmp.bulk_calculation_text"))</p>
+           href="@routes.FileUploadController.get">@Messages("gmp.bulk_calculation_link")</a></br></br>
+          <hr class="govuk-section-break govuk-section-break--m" aria-hidden = true/>
+
+          <p class="govuk-body" id="bulk-calculation-description">@Html(Messages("gmp.bulk_calculation_text"))</p>
       </div>
     </div>
 
