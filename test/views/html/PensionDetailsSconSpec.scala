@@ -16,7 +16,6 @@
 
 package views.html
 
-import forms.PensionDetails_no_longer_used_Form
 import models.PensionDetailsScon
 import play.api.data.Form
 import play.api.data.Forms.{mapping, text}
