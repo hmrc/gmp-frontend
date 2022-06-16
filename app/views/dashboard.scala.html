@@ -31,8 +31,10 @@
 
 
     <div class="govuk-grid-row">
-      <br/>
-      <div class="govuk-grid-column-one-half">
+        <hr class="govuk-section-break" aria-hidden = true />
+        <div class="govuk-grid-column-one-half">
+        <hr class="govuk-section-break" aria-hidden = true />
+        <div class="govuk-grid-column-one-half">
         <a data-journey-click='@Messages("gmp.ga-track.link.click"):@Messages("gmp.dashboard_header"):@Messages("gmp.single_calculation_link")'
            class ="govuk-link large-underlined-link" id="single-calculation-link" href="@routes.PensionDetailsController.get">
            @Messages("gmp.single_calculation_link")</a>
@@ -54,6 +56,8 @@
        data-journey-click='@messages("gmp.ga-track.link.click"):@Messages("gmp.dashboard_header"):@messages("gmp.download_templates_link")'
        href="@routes.AssetsController.at("csv/GMP_template_and_instructions.zip")">@Messages("gmp.download_templates_link")</a>
 
+<hr class="govuk-section-break" aria-hidden = true/>
+
 @if(previousBulkCalculations.size > 0) {
 
     <h2 class="govuk-heading-m" id="previous-calculations">@Messages("gmp.previous_calculations")</h2>
@@ -61,6 +65,8 @@
 
 
     @govukTable(Table(
+        caption = Some(Messages("gmp.caption")),
+        captionClasses = "hidden",
         head = Some(Seq(
                         HeadCell(
                         content = Text(Messages("gmp.th.reference"))),

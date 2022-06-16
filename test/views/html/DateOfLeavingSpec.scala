@@ -26,6 +26,8 @@ import utils.GmpViewSpec
 import views.ViewHelpers
 
 abstract class DateOfLeavingSpec extends GmpViewSpec  {
+  lazy val gmpMain = app.injector.instanceOf[gmp_main_old]
+  lazy val viewHelpers = app.injector.instanceOf[OldViewHelpers]
   lazy val gmpMain = app.injector.instanceOf[gmp_main]
   lazy val viewHelpers = app.injector.instanceOf[ViewHelpers]
 
