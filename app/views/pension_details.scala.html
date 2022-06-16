@@ -16,6 +16,7 @@
 
 @import config.ApplicationConfig
 @import views.html.helpers._
+<<<<<<< HEAD
 @import views.ViewHelpers
 @import uk.gov.hmrc.govukfrontend.views.html.components._
 @import uk.gov.hmrc.govukfrontend.views.html.components.implicits._
@@ -28,6 +29,15 @@
         govukErrorSummary : GovukErrorSummary,
         govukInput : GovukInput
     )
+=======
+@import views.OldViewHelpers
+
+@this(gmpMain: gmp_main_old, viewHelpers: OldViewHelpers)
+
+@(pensionDetailsForm: Form[models.PensionDetails])(implicit request: Request[_], messages: Messages, ac:ApplicationConfig)
+
+@implicitFormInstance = @{ Some(pensionDetailsForm) }
+>>>>>>> 142f0ee (DLS-5098: Renaming templates)
 
 
 @(pensionDetailsForm: Form[models.PensionDetailsScon])(implicit request: Request[_], messages: Messages, ac:ApplicationConfig)

@@ -45,7 +45,7 @@ class MemberDetailsViewSpec extends GmpViewSpec{
     }
   }
 
-  lazy val gmpMain = app.injector.instanceOf[gmp_main_old]
+  lazy val gmpMain = app.injector.instanceOf[gmp_main]
   lazy val viewHelpers = app.injector.instanceOf[OldViewHelpers]
 
   override def view: Html = new views.html.member_details(gmpMain, viewHelpers)(form)

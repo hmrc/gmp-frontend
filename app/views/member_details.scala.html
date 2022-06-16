@@ -17,56 +17,71 @@
 @import config.ApplicationConfig
 @import views.html.helpers._
 @import views.ViewHelpers
+@import uk.gov.hmrc.govukfrontend.views.html.components._
+@import uk.gov.hmrc.hmrcfrontend.views.Implicits.RichErrorSummary
 
-@this(gmpMain: gmp_main, viewHelpers: ViewHelpers)
+@this(
+        gmpMain: gmp_main,
+        viewHelpers: ViewHelpers,
+        govukButton : GovukButton,
+        govukInput : GovukInput,
+        govukErrorSummary: GovukErrorSummary
+)
 
 @(memberDetailsForm: Form[models.MemberDetails])(implicit request: Request[_], messages: Messages, ac:ApplicationConfig)
 
 @implicitFormInstance = @{ Some(memberDetailsForm) }
 
-@gmpMain(title = Messages("gmp.member_details.header") + " - " + Messages("service.title") + " - " + Messages("gov.uk")) {
+@gmpMain(title = Messages("gmp.member_details.header")) {
 
     @includes.back_link(Messages("gmp.bulk.results.banner"))
 
-    @views.html.helpers.errorSummary(memberDetailsForm, formHeaderKey = "gmp.member_details.header")
-<hr class="govuk-section-break govuk-section-break--m" aria-hidden="true">
+    <hr class="govuk-section-break govuk-section-break--m" aria-hidden="true">
     <h1 class="govuk-heading-l">@Messages("gmp.member_details.header")</h1>
 
+    @if(memberDetailsForm.errors.nonEmpty) {
+        @govukErrorSummary(ErrorSummary().withFormErrorsAsText(memberDetailsForm))
+    }
     @viewHelpers.form(action = routes.MemberDetailsController.post) {
 
-    <div class="govuk-form-group">
-        <div class="govuk-fieldset govuk-input--width-20">
+        <div class="govuk-form-group">
 
-        @gmpInput(memberDetailsForm("firstForename"),
-            '_label -> Html(Messages("gmp.firstname")),
-            '_labelClass -> "govuk-label",
-            '_id -> "firstForename")
+            @govukInput(Input(
+                id = "firstForename",
+                name = "firstForename",
+                label = Label(
+                    content = Text(Messages("gmp.firstname"))
+                ),
+                classes = "govuk-input--width-20"
+            ))
+
+            @govukInput(Input(
+                id = "surname",
+                name = "surname",
+                label = Label(
+                    content = Text(Messages("gmp.lastname"))
+                ),
+                classes = "govuk-input--width-20"
+            ))
+
+            @govukInput(Input(
+                id = "nino",
+                name = "nino",
+                label = Label(
+                    content = Text(Messages("gmp.nino"))
+                ),
+                classes = "govuk-input--width-20",
+                hint = Some(Hint(
+                    content = Text(Messages("gmp.nino.hint"))
+                ))
+            ))
         </div>
-
-        <div class="govuk-fieldset govuk-input--width-20 govuk-!-margin-top-3">
-
-        @gmpInput(memberDetailsForm("surname"),
-            '_label -> Html(Messages("gmp.lastname")),
-            '_labelClass -> "govuk-label",
-            '_id -> "surname")
-
+        <div>
+            @govukButton(Button(
+                content = Text(Messages("gmp.continue.button"))
+            ))
+            @*            <button data-journey-click='@Messages("gmp.ga-track.button.click"):@Messages("gmp.member_details.header"):@Messages("gmp.continue.button")'*@
+            @*            class="govuk-button" type="submit" id="submit-button">@Messages("gmp.continue.button")</button>*@
         </div>
-
-        <div class="govuk-fieldset govuk-input--width-20 govuk-!-margin-top-3">
-
-          @gmpInput(memberDetailsForm("nino"),
-          '_label -> Html(Messages("gmp.nino")),
-          '_labelClass -> "govuk-label",
-          '_id -> "nino",
-          '_maxLength -> 13,
-          '_hintText -> Messages("gmp.nino.hint"),
-          '_spellCheck -> false)
-
-        </div>
-    </div>
-      <div>
-          <button data-journey-click='@Messages("gmp.ga-track.button.click"):@Messages("gmp.member_details.header"):@Messages("gmp.continue.button")'
-                  class="govuk-button" type="submit" id="submit-button">@Messages("gmp.continue.button")</button>
-      </div>
-  }
+    }
 }

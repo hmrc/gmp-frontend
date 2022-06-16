@@ -19,8 +19,10 @@
 @import views.ViewHelpers
 @import uk.gov.hmrc.govukfrontend.views.html.components._
 @import uk.gov.hmrc.hmrcfrontend.views.Implicits.RichErrorSummary
+@import views.OldViewHelpers
 
 @this(gmpMain: gmp_main, viewHelpers: ViewHelpers, govukRadios : GovukRadios, govukButton : GovukButton, govukErrorSummary : GovukErrorSummary)
+
 
 
 @(calculationType: Form[models.CalculationType])(implicit request: Request[_], messages: Messages, ac:ApplicationConfig)
@@ -34,7 +36,7 @@
 @*//    @views.html.helpers.errorSummary(calculationType, formHeaderKey = "gmp.scenarios.title", focusId = Some("calcType-payableage"))*@
 
       @viewHelpers.form(action = routes.ScenarioController.post) {
-          @if(calculationType.errors.isEmpty){
+          @if(calculationType.errors.nonEmpty){
               @govukErrorSummary(ErrorSummary().withFormErrorsAsText(calculationType))
           }
               @govukRadios(Radios(

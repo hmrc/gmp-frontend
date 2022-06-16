@@ -17,7 +17,6 @@
 @import config.ApplicationConfig
 @import views.html.helpers._
 @import views.ViewHelpers
-@import uk.gov.hmrc.govukfrontend.views.html.components._
 
 @this(gmpMain: gmp_main, viewHelpers: ViewHelpers)
 
@@ -30,7 +29,7 @@
 
     @views.html.helpers.errorSummary(bulkReferenceForm)
 
-        <h1 class="govuk-heading-l">@Messages("gmp.bulk_reference.header")</h1>
+        <h1 class="govuk-heading-1">@Messages("gmp.bulk_reference.header")</h1>
 
         @viewHelpers.form(action = routes.BulkReferenceController.post) {
 
@@ -52,11 +51,7 @@
                 '_hintText -> Messages("gmp.bulk_reference.reference_text"))
           </div>
           <div>
-              @viewHelpers.govukButton(Button(
-                content = Text(Messages("gmp.bulk_reference.button")),
-                inputType = Some("submit"),
-                attributes = Map("id" -> "submit-button")
-              ))
+            <button class="govuk-button" type="submit" id="submit-button">@Messages("gmp.bulk_reference.button")</button>
           </div>
         }
 

@@ -14,12 +14,10 @@
  * limitations under the License.
  *@
 
-@import uk.gov.hmrc.govukfrontend.views.html.components._
 @import config.ApplicationConfig
 @import views.html.helpers._
 
-
-@this(gmpMain: gmp_main, govukPanel : GovukPanel, govukButton: GovukButton)
+@this(gmpMain: gmp_main)
 
 @(reference: String)(implicit request: Request[_], messages: Messages, ac:ApplicationConfig)
 
@@ -27,24 +25,22 @@
 
       @includes.back_to_dashboard_link(Messages("gmp.bulk_request_received.banner"))
 
-        @govukPanel(Panel(
-            content = HtmlContent(s"""<img src='${routes.AssetsController.at("images/tick.png")}'/><strong>${Messages("gmp.bulk_request_received.banner")}</strong>""")
-        ))
+        <div class="govuk-panel govuk-panel--confirmation">
+          <h1 class="govuk-heading-1">
+            <img src='@routes.AssetsController.at("images/tick.png")' alt=""/>
+            @Messages("gmp.bulk_request_received.banner")
+          </h1>
+        </div>
 
         <h2 class="govuk-heading-m">@Messages("gmp.bulk_request_received.header")</h2>
 
         @Html(Messages("gmp.bulk_request_received.text", reference))
 
         <form action="@routes.SessionCacheController.newBulkCalculation">
-            @govukButton(Button(
-                content = Text(Messages("gmp.bulk_request_received.button")),
-                inputType = Some("submit"),
-                attributes = Map("data-journey-click" -> "gmp-bulk:click:bulk_upload_another")
-            ))
+          <button class="upload-file-button govuk-button" type="submit" id="submit-button" data-journey-click="gmp-bulk:click:bulk_upload_another">@Messages("gmp.bulk_request_received.button")</button>
         </form>
 
-        <hr class="govuk-section-break" aria-hidden = true/>
-
+        <br>
 
 
 
