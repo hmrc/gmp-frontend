@@ -14,52 +14,53 @@
  * limitations under the License.
  */
 
-package views.html
-
-import models.PensionDetailsScon
-import play.api.data.Form
-import play.api.data.Forms.{mapping, text}
-import play.twirl.api.Html
-import utils.GmpViewSpec
-import validation.SconValidate
-import views.OldViewHelpers
-
-class PensionDetailsSpec extends GmpViewSpec {
-  lazy val gmpMain = app.injector.instanceOf[gmp_main]
-  lazy val viewHelpers = app.injector.instanceOf[OldViewHelpers]
-
-  override def view: Html = new views.html.pension_details(gmpMain, viewHelpers)(pensionDetailsForm)
-
- // private val pensionDetailsForm: Form[models.PensionDetails] = PensionDetailsForm.pensionDetailsForm
-
-  def pensionDetailsForm = Form(
-    mapping(
-      "scon" -> text
-        .verifying(messages("gmp.error.mandatory.new"), x => x.length != 0)
-        .verifying(messages("gmp.error.scon.invalid"), x => x.length == 0 || SconValidate.isValid(x))
-
-    )(customApply)(customUnapply)
-  )
-
-  def customUnapply (req:PensionDetailsScon) = {
-    Some(req.scon)
-  }
-  def customApply(scon: String) = {
-    new PensionDetailsScon(scon)
-  }
-
-  "PensionDetails page" must {
-    behave like pageWithTitle(messages("gmp.pension_details.header"))
-    behave like pageWithHeader(messages("gmp.pension_details.header"))
-
-
-    "have a URL text" in {
-      doc must haveLinkWithText(messages("gmp.contact.hmrc"))
-    }
-
-
-    "have a submit button text" in {
-      doc must haveSubmitButton(messages("gmp.continue.button"))
-    }
-  }
-}
+//
+//package views.html
+//
+//import models.PensionDetailsScon
+//import play.api.data.Form
+//import play.api.data.Forms.{mapping, text}
+//import play.twirl.api.Html
+//import utils.GmpViewSpec
+//import validation.SconValidate
+//import views.OldViewHelpers
+//
+//class PensionDetailsSconSpec extends GmpViewSpec {
+//  lazy val gmpMain = app.injector.instanceOf[gmp_main]
+//  lazy val viewHelpers = app.injector.instanceOf[OldViewHelpers]
+//
+//  override def view: Html = new views.html.pension_details(gmpMain, viewHelpers)(pensionDetailsForm)
+//
+// // private val pensionDetailsForm: Form[models.PensionDetails] = PensionDetailsForm.pensionDetailsForm
+//
+//  def pensionDetailsForm = Form(
+//    mapping(
+//      "scon" -> text
+//        .verifying(messages("gmp.error.mandatory.new"), x => x.length != 0)
+//        .verifying(messages("gmp.error.scon.invalid"), x => x.length == 0 || SconValidate.isValid(x))
+//
+//    )(customApply)(customUnapply)
+//  )
+//
+//  def customUnapply (req:PensionDetailsScon) = {
+//    Some(req.scon)
+//  }
+//  def customApply(scon: String) = {
+//    new PensionDetailsScon(scon)
+//  }
+//
+//  "PensionDetails page" must {
+//    behave like pageWithTitle(messages("gmp.pension_details.header"))
+//    behave like pageWithHeader(messages("gmp.pension_details.header"))
+//
+//
+//    "have a URL text" in {
+//      doc must haveLinkWithText(messages("gmp.contact.hmrc"))
+//    }
+//
+//
+//    "have a submit button text" in {
+//      doc must haveSubmitButton(messages("gmp.continue.button"))
+//    }
+//  }
+//}
