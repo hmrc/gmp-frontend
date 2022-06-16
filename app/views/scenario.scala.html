@@ -16,43 +16,65 @@
 
 @import config.ApplicationConfig
 @import views.html.helpers._
-@import views.OldViewHelpers
+@import views.ViewHelpers
+@import uk.gov.hmrc.govukfrontend.views.html.components._
+@import uk.gov.hmrc.hmrcfrontend.views.Implicits.RichErrorSummary
 
-@this(gmpMain: gmp_main_old, viewHelpers: OldViewHelpers)
+@this(gmpMain: gmp_main, viewHelpers: ViewHelpers, govukRadios : GovukRadios, govukButton : GovukButton, govukErrorSummary : GovukErrorSummary)
 
 
 @(calculationType: Form[models.CalculationType])(implicit request: Request[_], messages: Messages, ac:ApplicationConfig)
 
 @implicitFormInstance = @{ Some(calculationType) }
 
-@gmpMain(title = Messages("gmp.scenarios.title") + " - " + Messages("service.title") + " - " + Messages("gov.uk")) {
+@gmpMain(title = Messages("gmp.scenarios.title")) {
 
     @includes.back_link(Messages("gmp.scenarios.title"))
 
-    @views.html.helpers.errorSummary(calculationType, formHeaderKey = "gmp.scenarios.title", focusId = Some("calcType-payableage"))
+@*//    @views.html.helpers.errorSummary(calculationType, formHeaderKey = "gmp.scenarios.title", focusId = Some("calcType-payableage"))*@
 
       @viewHelpers.form(action = routes.ScenarioController.post) {
-          <div class="form-field @if(!calculationType.errors.isEmpty) {form-field--error}">
-              @gmpRadioGroup(
-                calculationType("calcType"),
-                Seq(
-                    ("2", "payableage",  "none") -> Messages("gmp.scenarios.payable_age"),
-                    ("4", "spa", "none") -> Messages("gmp.scenarios.spa"),
-                    ("3", "survivor", "none") -> Messages("gmp.scenarios.survivor"),
-                    ("0", "leaving", "none") -> Messages("gmp.scenarios.leaving"),
-                    ("1", "specificdate",  "none") -> Messages("gmp.scenarios.specific_date")
-                ),
-                '_fieldsetAttributesLegend -> "calcType",
-                '_legend -> Messages("gmp.scenarios.title"),
-                '_labelAfter -> true,
-                '_trackGA -> true,
-                '_formHeaderKey -> "gmp.scenarios.title"
-              )
-          </div>
+          @if(calculationType.errors.isEmpty){
+              @govukErrorSummary(ErrorSummary().withFormErrorsAsText(calculationType))
+          }
+              @govukRadios(Radios(
+                  fieldset = Some(Fieldset(
+                      legend = Some(Legend(
+                          content = Text(Messages("gmp.scenarios.title")),
+                          classes = "govuk-fieldset__legend--l",
+                          isPageHeading = true
+                      ))
+                  )),
+                  idPrefix = Some("calcType"),
+                  name = "calcType",
+                  items = Seq(
+                      RadioItem(
+                          content = Text(Messages("gmp.scenarios.payable_age")),
+                          value = Some("2")
+                      ),
+                      RadioItem(
+                          content = Text(Messages("gmp.scenarios.spa")),
+                          value = Some("4")
+                      ),
+                      RadioItem(
+                          content = Text(Messages("gmp.scenarios.survivor")),
+                          value = Some("3")
+                      ),
+                      RadioItem(
+                          content = Text(Messages("gmp.scenarios.leaving")),
+                          value = Some("0")
+                      ),
+                      RadioItem(
+                          content = Text(Messages("gmp.scenarios.specific_date")),
+                          value = Some("1")
+                      )
+                  )
+              ))
+
 
           <div>
               <button data-journey-click='@Messages("gmp.ga-track.button.click"):@Messages("gmp.scenarios.title"):@Messages("gmp.continue.button")'
-                      class="button" type="submit" id="submit-button">@Messages("gmp.continue.button")</button>
+              class="govuk-button" type="submit" id="submit-button">@Messages("gmp.continue.button")</button>
           </div>
 
       }
