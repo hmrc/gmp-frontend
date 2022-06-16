@@ -16,9 +16,9 @@
 
 @import config.ApplicationConfig
 @import views.html.helpers._
-@import views.OldViewHelpers
+@import views.ViewHelpers
 
-@this(gmpMain: gmp_main_old, viewHelpers: OldViewHelpers)
+@this(gmpMain: gmp_main, viewHelpers: ViewHelpers)
 
 @(memberDetailsForm: Form[models.MemberDetails])(implicit request: Request[_], messages: Messages, ac:ApplicationConfig)
 

@@ -16,18 +16,18 @@
 
 package views.html
 
-import forms.PensionDetailsForm
-import models.PensionDetails
+import forms.PensionDetails_no_longer_used_Form
+import models.PensionDetailsScon
 import play.api.data.Form
 import play.api.data.Forms.{mapping, text}
 import play.twirl.api.Html
 import utils.GmpViewSpec
 import validation.SconValidate
-import views.OldViewHelpers
+import views.ViewHelpers
 
 class PensionDetailsSpec extends GmpViewSpec {
-  lazy val gmpMain = app.injector.instanceOf[gmp_main_old]
-  lazy val viewHelpers = app.injector.instanceOf[OldViewHelpers]
+  lazy val gmpMain = app.injector.instanceOf[gmp_main]
+  lazy val viewHelpers = app.injector.instanceOf[ViewHelpers]
 
   override def view: Html = new views.html.pension_details(gmpMain, viewHelpers)(pensionDetailsForm)
 
@@ -42,11 +42,11 @@ class PensionDetailsSpec extends GmpViewSpec {
     )(customApply)(customUnapply)
   )
 
-  def customUnapply (req:PensionDetails) = {
+  def customUnapply (req:PensionDetailsScon) = {
     Some(req.scon)
   }
   def customApply(scon: String) = {
-    new PensionDetails(scon)
+    new PensionDetailsScon(scon)
   }
 
   "PensionDetails page" must {

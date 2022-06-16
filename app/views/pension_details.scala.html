@@ -16,36 +16,56 @@
 
 @import config.ApplicationConfig
 @import views.html.helpers._
-@import views.OldViewHelpers
+@import views.ViewHelpers
+@import uk.gov.hmrc.govukfrontend.views.html.components._
+@import uk.gov.hmrc.govukfrontend.views.html.components.implicits._
+@import uk.gov.hmrc.hmrcfrontend.views.Implicits.RichErrorSummary
+@import uk.gov.hmrc.govukfrontend.views.Implicits.RichInput
 
-@this(gmpMain: gmp_main_old, viewHelpers: OldViewHelpers)
+@this(gmpMain: gmp_main,
+        viewHelpers: ViewHelpers,
+        govukButton : GovukButton,
+        govukErrorSummary : GovukErrorSummary,
+        govukInput : GovukInput
+    )
 
-@(pensionDetailsForm: Form[models.PensionDetails])(implicit request: Request[_], messages: Messages, ac:ApplicationConfig)
 
-@implicitFormInstance = @{ Some(pensionDetailsForm) }
+@(pensionDetailsForm: Form[models.PensionDetailsScon])(implicit request: Request[_], messages: Messages, ac:ApplicationConfig)
 
-
-@gmpMain(title = Messages("gmp.pension_details.header") + " - " + Messages("service.title") + " - " + Messages("gov.uk")) {
+@gmpMain(title = Messages("gmp.pension_details.header")) {
 
   @includes.back_link(Messages("gmp.bulk_reference.header"))
 
-  @views.html.helpers.errorSummary(pensionDetailsForm)
-
-
   @viewHelpers.form(action = routes.PensionDetailsController.post) {
+      @pensionDetailsForm.errors.map { err =>
+          @govukErrorSummary(ErrorSummary(
+              errorList = Seq(
+                  ErrorLink(
+                      href = Some("#scon"),
+                      content = Text(s"${messages(err.message)}")
+                  )
+              ),
+              title = Text(messages("gmp.generic.errors_heading"))
+          ))
+      }
+      @govukInput(Input(
+          id = "scon",
+          name = "scon",
+          label = Label(
+              isPageHeading = true,
+              classes = "govuk-label--l",
+              content = Text(Messages("gmp.pension_details.header")),
+          ),
+          classes = "govuk-input--width-10",
+          hint = Some(Hint(
+              content = Text(Messages("gmp.scon.hint"))
+          ))
+      ).withFormField(pensionDetailsForm("scon")))
 
-      <div id="scon-form-group">
-          @gmpInput(pensionDetailsForm("scon"),
-          '_id -> "scon",
-          '_maxLength -> 9,
-          '_hintText -> Messages("gmp.scon.hint"),
-          '_header -> Messages("gmp.pension_details.header"))
-      </div>
-
-      <p>@Messages("gmp.scon.message") <a data-journey-click='@Messages("gmp.ga-track.link.click"):@Messages("gmp.pension_details.header"):@Messages("gmp.contact.hmrc")'
+      <p class="govuk-body">@Messages("gmp.scon.message") <a class="govuk-link" data-journey-click='@Messages("gmp.ga-track.link.click"):@Messages("gmp.pension_details.header"):@Messages("gmp.contact.hmrc")'
                                           href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pensions-helpline-contracted-out">@Messages("gmp.contact.hmrc")</a>.</p>
 
-  <button data-journey-click='@Messages("gmp.ga-track.button.click"):@Messages("gmp.pension_details.header"):@Messages("gmp.continue.button")' class="button" type="submit" id="submit-button">@Messages("gmp.continue.button")</button>
+  <button data-journey-click='@Messages("gmp.ga-track.button.click"):@Messages("gmp.pension_details.header"):@Messages("gmp.continue.button")' class="govuk-button" type="submit" id="submit-button">@Messages("gmp.continue.button")</button>
 
   }
 }
