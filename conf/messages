@@ -306,7 +306,7 @@ gmp.error.solution.63150 = <a href="/guaranteed-minimum-pension/equalise">Go bac
 gmp.error.solution.63167 = Choose another <a href="/guaranteed-minimum-pension/revaluation-rate">revaluation rate</a>.
 
 gmp.error.no_conts_and_earnings = There are no contributions and earnings available for this period.
-gmp.error.session_parts_missing = You have not given us enough information about the member and type of calculation you need or it has been too long since you did so.<br/><br/><a href="{0}"">Go back</a> and fill in the information required.
+gmp.error.session_parts_missing = You have not given us enough information about the member and type of calculation you need or it has been too long since you did so.<br/><br/><a class="govuk-link" href="{0}"">Go back</a> and fill in the information required.
 
 error.expected.url = Download url is not a valid URL
 ############################################################################

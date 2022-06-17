@@ -24,10 +24,10 @@
 @gmpMain(title = header + " - " + Messages("service.title") + " - " + Messages("gov.uk"), supportLinkEnabled = false) {
 
   @includes.back_link(header)
-      <h1>@header</h1>
-      <hr class="govuk-section-break" aria-hidden = true/>
+      <h1 class="govuk-heading-l">@header</h1>
+<hr class="govuk-section-break govuk-section-break--m" aria-hidden = true />
 
 
-      <p>@Html(message)</p>
+      <p class="govuk-body">@Html(message)</p>
 
 }
