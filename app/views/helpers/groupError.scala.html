@@ -22,7 +22,7 @@
 
 @if(elements.hasErrors) {
     @{elements.errors.zipWithIndex.map { case (error, index) =>
-        <span style="display: block" class="govuk-error-summary" id="@(field.name)-error-@index">Messages(error)</span>
+        <span style="display: block" class="error-notification" id="@(field.name)-error-@index">Messages(error)</span>
     }
 }
 }

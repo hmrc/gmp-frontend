@@ -20,9 +20,9 @@ import com.google.inject.{Inject, Singleton}
 import config.{ApplicationConfig, GmpContext, GmpSessionCache}
 import connectors.GmpConnector
 import controllers.auth.AuthAction
-import forms.PensionDetails_no_longer_used_Form
+import forms.PensionDetailsForm
 import metrics.ApplicationMetrics
-import models.{PensionDetailsScon, ValidateSconRequest}
+import models.{PensionDetails, ValidateSconRequest}
 import play.api.Logging
 import play.api.i18n.Messages
 import play.api.mvc.MessagesControllerComponents
@@ -40,7 +40,7 @@ class PensionDetailsController @Inject()(authAction: AuthAction,
                                          implicit val config:GmpContext,
                                          metrics: ApplicationMetrics,
                                          ac:ApplicationConfig,
-                                         pdf:PensionDetails_no_longer_used_Form,
+                                         pdf:PensionDetailsForm,
                                          override val messagesControllerComponents: MessagesControllerComponents,
                                          implicit val executionContext: ExecutionContext,
                                          implicit val gmpSessionCache: GmpSessionCache,
@@ -51,7 +51,7 @@ class PensionDetailsController @Inject()(authAction: AuthAction,
   def get = authAction.async {
       implicit request => {
         sessionService.fetchPensionDetails.map {
-          case Some(scon) => Ok(views.pensionDetails(pensionDetailsForm.fill(PensionDetailsScon(scon))))
+          case Some(scon) => Ok(views.pensionDetails(pensionDetailsForm.fill(PensionDetails(scon))))
           case _ => Ok(views.pensionDetails(pensionDetailsForm))
         }
       }
@@ -81,7 +81,7 @@ class PensionDetailsController @Inject()(authAction: AuthAction,
                 else {
                   metrics.countNpsSconInvalid()
                   Future.successful(BadRequest(views.pensionDetails(pensionDetailsForm.fill(
-                    PensionDetailsScon(pensionDetails.scon)).withError("scon", Messages("gmp.error.scon.nps_invalid")))))
+                    PensionDetails(pensionDetails.scon)).withError("scon", Messages("gmp.error.scon.nps_invalid")))))
                 }
 
               }
