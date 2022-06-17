@@ -66,10 +66,10 @@ $.timeoutDialog = function (options) {
                 settings.time = ' minute'
             }
             $('<div id="timeout-dialog" class="timeout-dialog" role="dialog" aria-labelledby="timeout-message" tabindex=-1 aria-live="polite">' +
-                '<h1 class="govuk-heading-m push--top">' + settings.title + '</h1>' +
-                '<p class="govuk-body" id="timeout-message" role="text">' + settings.message + ' <span id="timeout-countdown" class="countdown">' + time.m + ' ' + settings.time + '</span>' + '.</p>' +
-                '<button id="timeout-keep-signin-btn" class="govuk-button">' + settings.keep_alive_button_text + '</button>' +
-                '<button id="timeout-sign-out-btn" class="govuk-button button--link">' + settings.sign_out_button_text + '</button>' +
+                '<h1 class="heading-medium push--top">' + settings.title + '</h1>' +
+                '<p id="timeout-message" role="text">' + settings.message + ' <span id="timeout-countdown" class="countdown">' + time.m + ' ' + settings.time + '</span>' + '.</p>' +
+                '<button id="timeout-keep-signin-btn" class="button">' + settings.keep_alive_button_text + '</button>' +
+                '<button id="timeout-sign-out-btn" class="button button--link">' + settings.sign_out_button_text + '</button>' +
                 '</div>' +
                 '<div id="timeout-overlay" class="timeout-overlay"></div>')
                 .appendTo('body')
