@@ -87,7 +87,7 @@
         ))
 
         @if(previousBulkCalculations.size > 3) {
-          <a id="more-calculations" href="@routes.MoreBulkResultsController.retrieveMoreBulkResults">@Messages("gmp.more_results_link")</a>
+          <a id="more-calculations" class="govuk-link" href="@routes.MoreBulkResultsController.retrieveMoreBulkResults">@Messages("gmp.more_results_link")</a>
         }
     } else {
       <h2 class="govuk-heading-m" id="no-previous-calculations">@Messages("gmp.previous_calculations")</h2>
