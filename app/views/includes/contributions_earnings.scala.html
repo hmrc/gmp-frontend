@@ -20,11 +20,11 @@
 @import scala.math.BigDecimal.RoundingMode
 
 @displayConts(contsAndEarnings :ContributionsAndEarnings) = {
-  <tr>
-    <td>
+  <tr class="govuk-table__row">
+    <td class="govuk-table__cell">
       @{s"6 April ${contsAndEarnings.taxYear} to 5 April ${contsAndEarnings.taxYear + 1}"}
     </td>
-    <td class="conts-and-earnings-table-col">
+    <td class="govuk-table__cell conts-and-earnings-table-col">
       £@contsAndEarnings.contEarnings
     </td>
   </tr>
@@ -43,23 +43,24 @@
         @period.contsAndEarnings match {
 
           case Some(contList: List[ContributionsAndEarnings]) if(period.errorCode == 0 && contList.nonEmpty) => {
-      <table id="contributions-earnings-table-@count">
-          <caption id="gmp-conts-and-earnings-header-@count">
+
+      <table class="govuk-table" id="contributions-earnings-table-@count">
+          <caption class="govuk-table__caption govuk-table__caption--m" id="gmp-conts-and-earnings-header-@count">
               @{Messages("gmp.contracted_out_period_table_header" ,s"${period.startDate.get.toString("d MMMM yyyy")} to ${period.endDate.toString("d MMMM yyyy")}")}
           </caption>
 
-                <thead>
-                  <tr>
-                    <th id="tax-year-table-col-header-@count">
+                <thead class="govuk-table__head">
+                  <tr  class="govuk-table__row">
+                    <th scope="col" class="govuk-table__header" id="tax-year-table-col-header-@count">
                       @{Messages("gmp.tax_year_table_column_header")}
                     </th>
-                    <th class="conts-and-earnings-table-col" id="contracted-out-period-table-header-@count">
+                    <th scope="col" class="govuk-table__header conts-and-earnings-table-col" id="contracted-out-period-table-header-@count">
                       @{Messages("gmp.contracted_out_period_table_column_header")}
                     </th>
                   </tr>
                 </thead>
-          <hr class="govuk-section-break" aria-hidden = true/>
-                <tbody>
+          <hr class="govuk-section-break govuk-section-break--m" aria-hidden = true/>
+                <tbody class="govuk-table__body">
                       @for((contsAndEarnings, count) <- contList.reverse.zipWithIndex){
                         @displayConts(contsAndEarnings)
                       }
@@ -68,18 +69,18 @@
 
           }
             case Some(contList: List[ContributionsAndEarnings]) if(period.errorCode != 0) => {
-                <h3 id="gmp-conts-and-earnings-header-@count">
+                <h3 class="govuk-heading-s" id="gmp-conts-and-earnings-header-@count">
                 @{Messages("gmp.contracted_out_period_table_header" ,s"${period.startDate.get.toString("d MMMM yyyy")} to ${period.endDate.toString("d MMMM yyyy")}")}
                 </h3>
-                <p class="error-message-left" id="period-row-in-error-@count">
+                <p class="govuk-body error-message-left" id="period-row-in-error-@count">
                     @{Messages("gmp.error.no_conts_and_earnings")}
                 </p>
             }
             case _ => {
-                <h3 id="gmp-conts-and-earnings-header-@count">
+                <h3 class="govuk-heading-s"  id="gmp-conts-and-earnings-header-@count">
                 @{Messages("gmp.contracted_out_period_table_header" ,s"${period.startDate.get.toString("d MMMM yyyy")} to ${period.endDate.toString("d MMMM yyyy")}")}
                 </h3>
-                <p id="period-row-in-error-@count">
+                <p class="govuk-body" id="period-row-in-error-@count">
                 @{Messages("gmp.error.no_conts_and_earnings")}
                 </p>
             }
@@ -87,4 +88,4 @@
         }
     }
 
-<hr class="govuk-section-break" aria-hidden = true/>
+<hr class="govuk-section-break govuk-section-break--m" aria-hidden = true/>
