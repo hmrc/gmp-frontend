@@ -16,7 +16,7 @@
 
 @import config.ApplicationConfig
 
-@this(gmpMain: gmp_main_old)
+@this(gmpMain: gmp_main)
 
 @(calculationResponse:CalculationResponse)(implicit request: Request[_], messages: Messages, ac:ApplicationConfig)
 
@@ -27,15 +27,15 @@
   }
 
   @includes.back_link(Messages("gmp.contributions_earnings.header"))
-  <h1 id="contributions-earnings-title">@Html(Messages("gmp.contributions_earnings.header"))</h1>
+  <h1 class="govuk-heading-l" id="contributions-earnings-title">@Html(Messages("gmp.contributions_earnings.header"))</h1>
 
   @includes.contributions_earnings(calculationResponse)
 
   @includes.member_details_result(calculationResponse)
 
     <span id="queryhandling">@Html(Messages("gmp.queryhandling.contsandearnings"))</span>
-    <hr class="govuk-section-break" aria-hidden = true/>
-    <hr class="govuk-section-break" aria-hidden = true/>
+    <hr class="govuk-section-break govuk-section-break--visible" aria-hidden = true/>
+    <hr class="govuk-section-break govuk-section-break--visible" aria-hidden = true/>
 
 
 @includes.request_another_button()
