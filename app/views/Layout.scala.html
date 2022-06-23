@@ -17,15 +17,12 @@
 @import play.twirl.api.HtmlFormat
 @import views.ViewHelpers
 @import views.html.helper._
-@import uk.gov.hmrc.hmrcfrontend.views.html.components.HmrcHeader
-@import uk.gov.hmrc.hmrcfrontend.views.html.components.Header
 @import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcLayout
 @import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcReportTechnicalIssueHelper
 @import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcTimeoutDialogHelper
 @import uk.gov.hmrc.hmrcfrontend.views.config.StandardBetaBanner
-@import uk.gov.hmrc.govukfrontend.views.html.components.TwoThirdsMainContent
 @import uk.gov.hmrc.govukfrontend.views.html.components.FixedWidthPageLayout
-
+@import uk.gov.hmrc.govukfrontend.views.html.components.TwoThirdsMainContent
 
 
 @this(
@@ -33,9 +30,9 @@
         standardBetaBanner: StandardBetaBanner,
         hmrcReportTechnicalIssueHelper:HmrcReportTechnicalIssueHelper,
         fullWidth: helpers.fullWidthContent,
+        viewHelpers: ViewHelpers,
         fixedWidthPageLayout: FixedWidthPageLayout,
-        defaultMainContent: TwoThirdsMainContent,
-        viewHelpers: ViewHelpers
+        defaultMainContent: TwoThirdsMainContent
 )
 
 @( useFullWidth:Boolean = false,
@@ -53,8 +50,8 @@
 
 @head = {
     <meta name="format-detection" content="telephone=no"/>
-    @linkElement
-    @customHead
+@linkElement
+@customHead
 }
 
 @scriptBlock = {
@@ -66,7 +63,6 @@
     @mainContent
     @hmrcReportTechnicalIssueHelper()
 }
-
 
 @hmrcLayout(
     pageTitle = Some(title),

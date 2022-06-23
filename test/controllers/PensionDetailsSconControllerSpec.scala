@@ -21,7 +21,7 @@ import java.util.UUID
 import config.{ApplicationConfig, GmpSessionCache}
 import connectors.GmpConnector
 import controllers.auth.{AuthAction, FakeAuthAction}
-import forms.PensionDetailsForm
+import forms.PensionDetails_no_longer_used_Form
 import metrics.ApplicationMetrics
 import models._
 import org.mockito.Matchers
@@ -42,7 +42,7 @@ import views.Views
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class PensionDetailsControllerSpec extends PlaySpec with GuiceOneServerPerSuite with MockitoSugar {
+class PensionDetailsSconControllerSpec extends PlaySpec with GuiceOneServerPerSuite with MockitoSugar {
 
   val mockAuthConnector = mock[AuthConnector]
   val mockSessionService = mock[SessionService]
@@ -55,7 +55,7 @@ class PensionDetailsControllerSpec extends PlaySpec with GuiceOneServerPerSuite 
   implicit val messagesProvider=MessagesImpl(Lang("en"), messagesAPI)
   implicit val ac=app.injector.instanceOf[ApplicationConfig]
   implicit val gmpSessionCache=app.injector.instanceOf[GmpSessionCache]
-  lazy val pensionDetailsForm = new PensionDetailsForm(mcc)
+  lazy val pensionDetailsForm = new PensionDetails_no_longer_used_Form(mcc)
   lazy val views = app.injector.instanceOf[Views]
 
   implicit val hc = new HeaderCarrier(sessionId = Some(SessionId(s"session-${UUID.randomUUID}")))
@@ -90,8 +90,8 @@ class PensionDetailsControllerSpec extends PlaySpec with GuiceOneServerPerSuite 
 
     "authenticated users" must {
 
-      val validGmpRequest = PensionDetails("S1301234T")
-      val emptySconGmpRequest = PensionDetails("")
+      val validGmpRequest = PensionDetailsScon("S1301234T")
+      val emptySconGmpRequest = PensionDetailsScon("")
       val gmpSession = GmpSession(MemberDetails("", "", ""), "S1301234T", "", None, None, Leaving(GmpDate(None, None, None), None), None)
 
       "validate scon and store scon and redirect" in {

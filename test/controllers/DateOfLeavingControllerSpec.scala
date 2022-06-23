@@ -71,7 +71,7 @@ class DateOfLeavingControllerSpec extends PlaySpec with GuiceOneServerPerSuite w
         val result = TestDateOfLeavingController.get(FakeRequest())
             when(mockSessionService.fetchGmpSession()(Matchers.any())).thenReturn(Future.successful(Some(session)))
             status(result) must equal(OK)
-            contentAsString(result) must include("Did the member leave the scheme before 6 April 2016?\n - Guaranteed Minimum Pension - GOV.UK")
+            contentAsString(result) must include("Did the member leave the scheme before 6 April 2016?")
             contentAsString(result) must include(Messages("gmp.date.header_text"))
             contentAsString(result) must include(Messages("gmp.date.example"))
             contentAsString(result) must include(Messages("gmp.back.link"))

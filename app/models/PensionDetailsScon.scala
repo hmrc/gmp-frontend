@@ -16,11 +16,23 @@
 
 package models
 
+import play.api.data.Form
+import play.api.data.Forms.{mapping, text}
 import play.api.libs.json.Json
+import validation.SconValidate
+import play.api.i18n.Messages
 
-case class PensionDetails (scon: String)
+case class PensionDetailsScon(scon: String)
 
-object PensionDetails {
-  implicit val formats = Json.format[PensionDetails]
+object PensionDetailsScon {
+  implicit val formats = Json.format[PensionDetailsScon]
 
+  def pensionDetailsSconForm()(implicit messages: Messages) = Form(
+    mapping(
+      "scon" -> text
+        .verifying(Messages("gmp.error.mandatory.new"), x => x.nonEmpty)
+        .verifying(Messages("gmp.error.scon.invalid"), x => x.isEmpty || SconValidate.isValid(x))
+
+    )(PensionDetailsScon.apply)(PensionDetailsScon.unapply)
+  )
 }
