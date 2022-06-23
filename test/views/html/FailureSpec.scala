@@ -20,7 +20,7 @@ import play.twirl.api.Html
 import utils.GmpViewSpec
 
 class FailureSpec extends GmpViewSpec{
-  lazy val gmpMain = app.injector.instanceOf[gmp_main]
+  lazy val gmpMain = app.injector.instanceOf[gmp_main_old]
   override def view: Html = new views.html.failure(gmpMain)(message, header, title)
   private val message : String = "message"
   private val header : String = "header"
