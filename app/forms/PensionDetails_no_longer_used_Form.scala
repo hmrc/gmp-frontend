@@ -18,7 +18,7 @@ package forms
 
 import com.google.inject.Singleton
 import javax.inject.Inject
-import models.PensionDetails
+import models.PensionDetailsScon
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.i18n.{Messages, MessagesImpl}
@@ -26,7 +26,7 @@ import play.api.mvc.MessagesControllerComponents
 import validation.SconValidate
 
 @Singleton
-class PensionDetailsForm @Inject()(mcc: MessagesControllerComponents) {
+class PensionDetails_no_longer_used_Form @Inject()(mcc: MessagesControllerComponents) {
   implicit lazy val messages: Messages = MessagesImpl(mcc.langs.availables.head, mcc.messagesApi)
 
 
@@ -39,11 +39,11 @@ class PensionDetailsForm @Inject()(mcc: MessagesControllerComponents) {
     )(customApply)(customUnapply)
   )
 
-  def customUnapply (req:PensionDetails) = {
+  def customUnapply (req:PensionDetailsScon) = {
     Some(req.scon)
   }
   def customApply(scon: String) = {
-    new PensionDetails(scon)
+    new PensionDetailsScon(scon)
   }
 }
 

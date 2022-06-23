@@ -43,40 +43,40 @@ class MemberDetailsController @Inject()(authAction: AuthAction,
   lazy val form=mdf.form()
 
   def get = authAction.async {
-      implicit request => {
-        sessionService.fetchMemberDetails() map {
-          case Some(memberDetails) => Ok(views.memberDetails(form.fill(memberDetails)))
-          case _ => Ok(views.memberDetails(form))
-        }
+    implicit request => {
+      sessionService.fetchMemberDetails() map {
+        case Some(memberDetails) => Ok(views.memberDetails(form.fill(memberDetails)))
+        case _ => Ok(views.memberDetails(form))
       }
+    }
   }
 
   def post = authAction.async {
-      implicit request => {
+    implicit request => {
 
-        logger.debug(s"[MemberDetailsController][POST] : ${request.body}")
+      logger.debug(s"[MemberDetailsController][POST] : ${request.body}")
 
-        form.bindFromRequest.fold(
-          formWithErrors => {
-            Future.successful(BadRequest(views.memberDetails(formWithErrors)))
-          },
-          memberDetails => {
-            sessionService.cacheMemberDetails(memberDetails) map {
-              case Some(session) => nextPage("MemberDetailsController", session)
-              case _ => throw new RuntimeException
-            }
+      form.bindFromRequest.fold(
+        formWithErrors => {
+          Future.successful(BadRequest(views.memberDetails(formWithErrors)))
+        },
+        memberDetails => {
+          sessionService.cacheMemberDetails(memberDetails) map {
+            case Some(session) => nextPage("MemberDetailsController", session)
+            case _ => throw new RuntimeException
           }
-        )
-      }
+        }
+      )
+    }
   }
 
   def back = authAction.async {
-      implicit request => {
-        sessionService.fetchGmpSession() map {
-          case Some(session) => previousPage("MemberDetailsController", session)
-          case _ => throw new RuntimeException
-        }
+    implicit request => {
+      sessionService.fetchGmpSession() map {
+        case Some(session) => previousPage("MemberDetailsController", session)
+        case _ => throw new RuntimeException
       }
+    }
   }
 
 }
