@@ -20,7 +20,7 @@
 
 @queryHandlingHeader = {
     @if(application.globalErrors.hasPath(s"$globalErrorCode.solution")){
-        <h2 class="error-h2" id="global-query-handling-header">@{ Messages("gmp.errors.query_handling.header") }</h2>
+        <h2 class="govuk-heading-m error-h2" id="global-query-handling-header">@{ Messages("gmp.errors.query_handling.header") }</h2>
     }
 }
 
@@ -28,7 +28,7 @@
 
         <div class="global-error">
             @if(application.globalErrors.hasPath(s"$globalErrorCode.cannot_calculate")){
-                <h1 class="error-h1" id="cannot-calculate-header">@{ Messages(application.globalErrors.getString(s"$globalErrorCode.cannot_calculate")) }</h1>
+                <h1 class="govuk-heading-l error-h1" id="cannot-calculate-header">@{ Messages(application.globalErrors.getString(s"$globalErrorCode.cannot_calculate")) }</h1>
             }
 
             @if(application.globalErrors.hasPath(s"$globalErrorCode.reason")){
@@ -38,18 +38,18 @@
 
         @if(application.globalErrors.hasPath(s"$globalErrorCode.solution")){
             <div>
-                <h2 class="error-h2" id="global-what-now">@Messages("gmp.what_now")</h2>
+                <h2 class="govuk-heading-l error-h2" id="global-what-now">@Messages("gmp.what_now")</h2>
                 @Html(Messages(application.globalErrors.getString(s"$globalErrorCode.solution")))
             </div>
         }
 
         @if(application.globalErrors.hasPath(s"$globalErrorCode.also")){
-    <hr class="govuk-section-break" aria-hidden = true/>
+    <hr class="govuk-section-break govuk-section-break--m" aria-hidden = true/>
             @queryHandlingHeader
             <div id="query-handling">@Html(Messages(application.globalErrors.getString(s"$globalErrorCode.also")))</div>
         }
         @if(application.globalErrors.hasPath(s"$globalErrorCode.help_link")){
-            <p id="query-handling-link">@Html(Messages(application.globalErrors.getString(s"$globalErrorCode.help_link")))</p>
+            <p class="govuk-body" id="query-handling-link">@Html(Messages(application.globalErrors.getString(s"$globalErrorCode.help_link")))</p>
         }
 
 

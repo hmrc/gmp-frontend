@@ -23,13 +23,13 @@
 <div id="multi-error-grid">
         <div class="global-error">
 
-            <h1 id="part-problem">@{ Messages("gmp.part_problem") }</h1>
+            <h1 class="govuk-heading-l" id="part-problem">@{ Messages("gmp.part_problem") }</h1>
 
-            <ul>
+            <ul class="govuk-list">
                 @for((period, count) <- calculationResponse.calculationPeriods.zipWithIndex) {
                 <li>
                     @if(period.errorCode > 0) {
-                        <a href="#reason-@count" class="error-list" id="from-to-error-@count">
+                        <a class="govuk-link" href="#reason-@count" class="error-list" id="from-to-error-@count">
                             @{ new LocalDate(period.startDate.get).toString("dd MMMM yyyy") } to @{ new LocalDate(period.endDate).toString("dd MMMM yyyy") }: @Messages("gmp.unavailable")
                         </a>
                     }
@@ -37,12 +37,12 @@
                 }
             </ul>
         </div>
-    <hr class="govuk-section-break" aria-hidden = true/>
+    <hr class="govuk-section-break govuk-section-break--visible" aria-hidden = true/>
         @includes.multi_results_table(calculationResponse)
         <div>
-            <h2 id="what-now">@Messages("gmp.what_now")</h2>
+            <h2 class="govuk-heading-m" id="what-now">@Messages("gmp.what_now")</h2>
 
-            <p id="multi-solution">@Messages("gmp.queryhandling.resultsmessage")</p>
+            <p class="govuk-body" id="multi-solution">@Messages("gmp.queryhandling.resultsmessage")</p>
         </div>
 
     @includes.print_page()
