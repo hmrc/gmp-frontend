@@ -19,11 +19,11 @@
 @import org.joda.time.LocalDate
 
 
-<table id="gmp-periods">
-    <thead>
-        <tr id="gmp-table-column-names">
-            <th>@Messages("gmp.table.period")</th>
-            <th>
+<table class="govuk-table" id="gmp-periods">
+    <thead class="govuk-table__head">
+        <tr class="govuk-table__row" id="gmp-table-column-names">
+            <th scope="col" class="govuk-table__header">@Messages("gmp.table.period")</th>
+            <th scope="col" class="govuk-table__header">
                 @if(calculationResponse.calcType == CalculationType.SURVIVOR.toInt) {
                 <span aria-hidden="true">@Messages("gmp.total.entitlement")</span>
                 <span class="hidden">@Messages("gmp.result.first-table-total.value")</span>
@@ -31,10 +31,10 @@
                 <span aria-hidden="true">@Messages("gmp.total")</span>
                 <span class="hidden">@Messages("gmp.result.first-table-total.value")</span>
                 }
-                <hr class="govuk-section-break" aria-hidden = true/><span>£@calculationResponse.totalGmp</span>
+                <hr class="govuk-section-break govuk-section-break--visible" aria-hidden = true/><span>£@calculationResponse.totalGmp</span>
             </th>
 
-            <th>
+            <th scope="col" class="govuk-table__header">
                 @if(calculationResponse.calcType == CalculationType.SURVIVOR.toInt) {
                 <span aria-hidden="true">@Messages("gmp.post88.entitlement")</span>
                 <span class="hidden">@Messages("gmp.result.first-table-post.value")</span>
@@ -42,22 +42,22 @@
                 <span aria-hidden="true"> @Messages("gmp.post.1988")</span>
                 <span class="hidden">@Messages("gmp.result.first-table-post.value")</span>
                 }
-                <hr class="govuk-section-break" aria-hidden = true/><span>£@calculationResponse.post88Gmp</span>
+                <hr class="govuk-section-break govuk-section-break--visible" aria-hidden = true/><span>£@calculationResponse.post88Gmp</span>
             </th>
             @if(calculationResponse.showRateColumn){
-                <th>@Messages("gmp.rate")</th>
+                <th scope="col" class="govuk-table__header">@Messages("gmp.rate")</th>
             }
         </tr>
     </thead>
 
     <tbody>
     @for((period, count) <- calculationResponse.calculationPeriods.zipWithIndex){
-        <tr>
-            <td><span><b class="bold">@{new LocalDate(period.startDate.get).toString("d MMM yyyy")}</b> @{Messages("gmp.date_to")} <b class="bold">@{new LocalDate(period.endDate).toString("d MMM yyyy")}</b></span></td>
-            <td id="gmp-total-@count">£@{ period.gmpTotal }<hr class="govuk-section-break" aria-hidden = true/>@Messages("gmp.frequency.weekly")</td>
-            <td id="post88-total-@count">£@{ period.post88GMPTotal }<hr class="govuk-section-break" aria-hidden = true/>@Messages("gmp.frequency.weekly")</td>
+        <tr class="govuk-table__row">
+            <td class="govuk-table__cell"><span><b class="bold">@{new LocalDate(period.startDate.get).toString("d MMM yyyy")}</b> @{Messages("gmp.date_to")} <b class="bold">@{new LocalDate(period.endDate).toString("d MMM yyyy")}</b></span></td>
+            <td class="govuk-table__cell" id="gmp-total-@count">£@{ period.gmpTotal }<hr class="govuk-section-break govuk-section-break--visible" aria-hidden = true/>@Messages("gmp.frequency.weekly")</td>
+            <td class="govuk-table__cell" id="post88-total-@count">£@{ period.post88GMPTotal }<hr class="govuk-section-break govuk-section-break--visible" aria-hidden = true/>@Messages("gmp.frequency.weekly")</td>
             @if(calculationResponse.showRateColumn) {
-                <td id="gmp-rate-@count">
+                <td id="gmp-rate-@count" class="govuk-table__cell">
                     <span>
                       @if(count == 0 && !period.endDate.isBefore(LocalDate.now)) {
                         --
@@ -76,45 +76,45 @@
 
 <h2 id="post90-header">@Messages("gmp.multi.dual_calc.header")</h2>
 
-<table id="post90-periods">
-    <thead>
-        <tr id="post90-table-column-names">
-            <th>@Messages("gmp.table.period")</th>
-            <th>
+<table class="govuk-table" id="post90-periods">
+    <thead class="govuk-table__head">
+        <tr class="govuk-table__row" id="post90-table-column-names">
+            <th scope="col" class="govuk-table__header">@Messages("gmp.table.period")</th>
+            <thscope="col" class="govuk-table__header">
                 <span aria-hidden="true">@Messages("gmp.post90.true")</span>
                 <span class="hidden">@Messages("gmp.post90.true.value")</span>
-                <hr class="govuk-section-break" aria-hidden = true/><span>£@calculationResponse.trueCalculation</span>
+                <hr class="govuk-section-break govuk-section-break--visible" aria-hidden = true/><span>£@calculationResponse.trueCalculation</span>
             </th>
-            <th>
+            <th scope="col" class="govuk-table__header">
                 <span aria-hidden="true">@Messages("gmp.post90.opposite")</span>
                 <span class="hidden">@Messages("gmp.post90.opposite.value")</span>
-                <hr class="govuk-section-break" aria-hidden = true/><span>£@calculationResponse.oppositeCalculation</span>
+                <hr class="govuk-section-break govuk-section-break--visible" aria-hidden = true/><span>£@calculationResponse.oppositeCalculation</span>
             </th>
             @if(calculationResponse.showRateColumn){
-            <th>@Messages("gmp.rate")</th>
+            <th scope="col" class="govuk-table__header">@Messages("gmp.rate")</th>
             }
         </tr>
     </thead>
     <tbody>
         @for((period, count) <- calculationResponse.calculationPeriods.zipWithIndex){
-            <tr>
-                <td><b class="bold">@{new LocalDate(period.startDate.get).toString("d MMM yyyy")}</b> @{Messages("gmp.date_to")} <b class="bold">@{new LocalDate(period.endDate).toString("d MMM yyyy")}</b></td>
-                <td id="post90-total-@count">
+            <tr class="govuk-table__row">
+                <td class="govuk-table__cell"><b class="bold">@{new LocalDate(period.startDate.get).toString("d MMM yyyy")}</b> @{Messages("gmp.date_to")} <b class="bold">@{new LocalDate(period.endDate).toString("d MMM yyyy")}</b></td>
+                <td id="post90-total-@count" class="govuk-table__cell">
                     @if(period.dualCalcPost90OppositeTotal != Some("0.00")) {
-                        <span>£@{ period.dualCalcPost90TrueTotal }<hr class="govuk-section-break" aria-hidden = true/>@Messages("gmp.frequency.weekly")</span>
+                        <span>£@{ period.dualCalcPost90TrueTotal }<hr class="govuk-section-break govuk-section-break--visible" aria-hidden = true/>@Messages("gmp.frequency.weekly")</span>
                     } else {
                         --
                     }
                 </td>
-                <td id="post90-opposite-@count">
+                <td id="post90-opposite-@count" class="govuk-table__cell">
                     @if(period.dualCalcPost90OppositeTotal != Some("0.00")) {
-                        <span>£@{ period.dualCalcPost90OppositeTotal }<hr class="govuk-section-break" aria-hidden = true/>@Messages("gmp.frequency.weekly")</span>
+                        <span>£@{ period.dualCalcPost90OppositeTotal }<hr class="govuk-section-break govuk-section-break--visible" aria-hidden = true/>@Messages("gmp.frequency.weekly")</span>
                     } else {
                         --
                     }
                 </td>
                 @if(calculationResponse.showRateColumn) {
-                    <td id="post90-rate-@count">
+                    <td id="post90-rate-@count" class="govuk-table__cell">
                         <span>@{ Messages(s"gmp.revaluation_rate.type_${period.revaluationRate}") }</span>
                     </td>
                 }
@@ -123,4 +123,4 @@
     </tbody>
 </table>
 }
-<hr class="govuk-section-break" aria-hidden = true/>
+<hr class="govuk-section-break " aria-hidden = true/>

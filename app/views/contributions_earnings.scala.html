@@ -16,7 +16,7 @@
 
 @import config.ApplicationConfig
 
-@this(gmpMain: gmp_main)
+@this(gmpMain: gmp_main, request_another_button: includes.request_another_button)
 
 @(calculationResponse:CalculationResponse)(implicit request: Request[_], messages: Messages, ac:ApplicationConfig)
 
@@ -38,6 +38,6 @@
     <hr class="govuk-section-break govuk-section-break--visible" aria-hidden = true/>
 
 
-@includes.request_another_button()
+@request_another_button()
 
 }

@@ -16,8 +16,10 @@
 
 @import config.ApplicationConfig
 @import views.html.helpers._
+@import uk.gov.hmrc.govukfrontend.views.html.components._
 
-@this(gmpMain: gmp_main)
+
+@this(gmpMain: gmp_main, govukButton : GovukButton)
 
 @()(implicit request: Request[_], messages: Messages, ac:ApplicationConfig)
 
@@ -30,8 +32,12 @@
           <h2 class="govuk-heading-m">@Messages("gmp.thank_you.what_now")</h2>
 
           <form action="@routes.DashboardController.get">
-              <button class="button" type="submit" id="request-another">@Messages("gmp.button.check_another")</button>
+             @govukButton(Button(
+                   content = Text(Messages("gmp.button.check_another")),
+                   inputType = Some("submit"),
+                   attributes = Map("id" -> "request-another")
+             ))
           </form>
-          <p>@Messages("gmp.or.go.to") <a href="https://www.gov.uk/">@Messages("gmp.gov.uk.homepage")</a>.</p>
+          <p class="govuk-body">@Messages("gmp.or.go.to") <a class="govuk-link" href="https://www.gov.uk/">@Messages("gmp.gov.uk.homepage")</a>.</p>
   </div>
 }

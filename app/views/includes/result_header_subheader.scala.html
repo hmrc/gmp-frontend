@@ -17,19 +17,19 @@
 @(calculationResponse:CalculationResponse, revalRateSubheader: Option[String], survivorSubheader: Option[String])(implicit messages: Messages)
 
 @includes.back_to_dashboard_link(Messages("gmp.results.h1"))
-<h1 id="page-title">@Messages("gmp.results.h1")</h1>
+<h1 class="govuk-heading-l" id="page-title">@Messages("gmp.results.h1")</h1>
 
-<p id="value-revealed">@Messages("gmp.results.p1")</p>
+<p class="govuk-body" id="value-revealed">@Messages("gmp.results.p1")</p>
 
-<h2  id="results-header">@calculationResponse.header(messages)</h2>
+<h2 class="govuk-heading-m" id="results-header">@calculationResponse.header(messages)</h2>
 
 @if(revalRateSubheader.isDefined) {
     <div id="revaluation-subheader">@Html(revalRateSubheader.get)</div>
 }
 
 @if(survivorSubheader.isDefined) {
-  <hr class="govuk-section-break" aria-hidden = true/>
+  <hr class="govuk-section-break govuk-section-break--visible" aria-hidden = true/>
   <div id="survivor-subheader" class="panel-indent">@survivorSubheader</div>
 }
 
-<hr class="govuk-section-break" aria-hidden = true/>
+<hr class="govuk-section-break govuk-section-break--visible" aria-hidden = true/>

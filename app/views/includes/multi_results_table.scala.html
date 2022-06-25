@@ -20,43 +20,43 @@
 
 @import org.joda.time.LocalDate
 
-<table id="periods">
-    <caption class="hidden">@Messages("gmp.results.table_caption")</caption>
-    <thead>
-        <tr id="table-column-names">
-            <th>@Messages("gmp.table.period")</th>
-            <th><span class="hidden">hidden text for empty th</span></th>
-            <th><span class="hidden">hidden text for empty th</span></th>
-            <th><span class="hidden">hidden text for empty th</span></th>
-            <th id="per-week">@Messages("gmp.per.week")</th>
-            <th id ="post-1988">@Messages("gmp.post.1988")</th>
+<table class="govuk-table" id="periods">
+    <caption class="govuk-table__caption govuk-table__caption--m hidden">@Messages("gmp.results.table_caption")</caption>
+    <thead class="govuk-table__head">
+        <tr class="govuk-table__row" id="table-column-names">
+            <th scope="col" class="govuk-table__header">@Messages("gmp.table.period")</th>
+            <th scope="col" class="govuk-table__header"><span class="hidden">hidden text for empty th</span></th>
+            <th scope="col" class="govuk-table__header"><span class="hidden">hidden text for empty th</span></th>
+            <th scope="col" class="govuk-table__header"><span class="hidden">hidden text for empty th</span></th>
+            <th scope="col" class="govuk-table__header" id="per-week">@Messages("gmp.per.week")</th>
+            <th scope="col" class="govuk-table__header" id ="post-1988">@Messages("gmp.post.1988")</th>
             @if(calculationResponse.dualCalc) {
-                <th id="true-table-column-header">@Messages("gmp.true")</th>
-                <th id="opposite-table-column-header">@Messages("gmp.opposite")</th>
+                <th scope="col" class="govuk-table__header" id="true-table-column-header">@Messages("gmp.true")</th>
+                <th scope="col" class="govuk-table__header" id="opposite-table-column-header">@Messages("gmp.opposite")</th>
             }
             @if(!calculationResponse.revaluationDate.isEmpty && calculationResponse.revaluationRate == Some("0")) {
-                <th id="hmrc-held-rate">@Messages("gmp.rate_hmrc_holds")</th>
+                <th scope="col" class="govuk-table__header" id="hmrc-held-rate">@Messages("gmp.rate_hmrc_holds")</th>
             }
         </tr>
     </thead>
-    <tbody>
+    <tbody class="govuk-table__body">
     @for((period, count) <- calculationResponse.calculationPeriods.zipWithIndex){
 
-    <tr @{if(period.errorCode> 0 )"class=error-row"}>
-        <td colspan="4">
+    <tr class="govuk-table__row" @{if(period.errorCode> 0 )"class=error-row"}>
+        <td class="govuk-table__cell" colspan="4">
             <span class="bold-xsmall" id="from-date-@count">@Messages("gmp.date_from")</span><hr class="govuk-section-break" aria-hidden = true/> @{ new LocalDate(period.startDate.get).toString("dd MMM yyyy") } <hr class="govuk-section-break" aria-hidden = true>
             <span class="bold-xsmall" id="to-date-@count">@Messages("gmp.date_To")</span><hr class="govuk-section-break" aria-hidden = true/> @{ new LocalDate(period.endDate).toString("dd MMM yyyy") }
         </td>
         @if(period.errorCode == 0) {
-            <td id="gmp-total-@count">
+            <td class="govuk-table__cell" id="gmp-total-@count">
                 <span class="bold-small">£@{ period.gmpTotal }</span>
             </td>
-            <td id="post-88-@count">
+            <td class="govuk-table__cell" id="post-88-@count">
                 <span class="bold-small">£@{ period.post88GMPTotal }</span>
             </td>
 
             @if(calculationResponse.dualCalc) {
-                <td id="true-@count">
+                <td class="govuk-table__cell"  id="true-@count">
                     <span class="bold-small">
                       @if(period.dualCalcPost90TrueTotal != Some("0.00")) {
                         £@{ period.dualCalcPost90TrueTotal }
@@ -65,7 +65,7 @@
                       }
                     </span>
                 </td>
-                <td id="opposite-@count">
+                <td class="govuk-table__cell" id="opposite-@count">
                     <span class="bold-small">
                       @if(period.dualCalcPost90OppositeTotal != Some("0.00")) {
                         £@{ period.dualCalcPost90OppositeTotal }
@@ -76,7 +76,7 @@
                 </td>
             }
             @if(!calculationResponse.revaluationDate.isEmpty && calculationResponse.revaluationRate == Some("0")) {
-                <td id="rate-@count">
+                <td class="govuk-table__cell"  id="rate-@count">
                     <span class="bold-small">
                       @if(count == 0 && !period.endDate.isBefore(LocalDate.now)) {
                         --
@@ -87,11 +87,11 @@
                 </td>
             }
         } else {
-            <td id="error-@count" colspan="5" class="table-error-message">
+            <td id="error-@count" colspan="5" class="govuk-table__cell table-error-message"  >
                 @if(applicationConfig.globalErrors.hasPath(s"${period.errorCode}.reason")){
-                    <p id="reason-@count">@Messages(applicationConfig.globalErrors.getString(s"${period.errorCode}.reason"))</p>
+                    <p class="govuk-body" id="reason-@count">@Messages(applicationConfig.globalErrors.getString(s"${period.errorCode}.reason"))</p>
                 } else {
-                    <p id="unavailable-@count">@Messages("gmp.unavailable")</p>
+                    <p class="govuk-body" id="unavailable-@count">@Messages("gmp.unavailable")</p>
                 }
             </td>
         }
