@@ -41,9 +41,7 @@
     <hr class="govuk-section-break govuk-section-break--m" aria-hidden="true">
     <h1 class="govuk-heading-l">@Messages("gmp.member_details.header")</h1>
 
-    @*//    @if(memberDetailsForm.errors.nonEmpty) {*@
-@*//        @govukErrorSummary(ErrorSummary().withFormErrorsAsText(memberDetailsForm))*@
-@*//    }*@
+
     @viewHelpers.form(action = routes.MemberDetailsController.post) {
 
         <div class="govuk-form-group">
@@ -82,11 +80,11 @@
 
         </div>
         <div>
-            @govukButton(Button(
-                content = Text(Messages("gmp.continue.button"))
-            ))
-            @*            <button data-journey-click='@Messages("gmp.ga-track.button.click"):@Messages("gmp.member_details.header"):@Messages("gmp.continue.button")'*@
-            @*            class="govuk-button" type="submit" id="submit-button">@Messages("gmp.continue.button")</button>*@
+          @govukButton(Button(
+            content = Text(Messages("gmp.continue.button")),
+            inputType = Some("submit"),
+            attributes = Map("data-journey-click" -> s"""@Messages("gmp.ga-track.button.click"):@Messages("gmp.member_details.header"):@Messages("gmp.continue.button")""")
+          ))
         </div>
     }
 }

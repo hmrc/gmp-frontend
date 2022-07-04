@@ -16,9 +16,12 @@
 
 @import config.ApplicationConfig
 @import views.html.helpers._
-@import views.OldViewHelpers
+@import views.ViewHelpers
+@import uk.gov.hmrc.govukfrontend.views.html.components._
+@import uk.gov.hmrc.govukfrontend.views.html.components.implicits._
+@import uk.gov.hmrc.hmrcfrontend.views.Implicits.RichErrorSummary
 
-@this(gmpMain: gmp_main_old, viewHelpers: OldViewHelpers)
+@this(gmpMain: gmp_main, viewHelpers: ViewHelpers,govukRadios : GovukRadios, govukButton : GovukButton, govukErrorSummary : GovukErrorSummary)
 
 @(inflationProofForm: Form[models.InflationProof])(implicit request: Request[_], messages: Messages, applicationConfig: ApplicationConfig)
 
@@ -35,26 +38,27 @@
 
     @includes.back_link(Messages("gmp.inflation_proof.question"))
 
-    @views.html.helpers.errorSummary(form = inflationProofForm, focusId = {if(!inflationProofForm.hasGlobalErrors && inflationProofForm.error("revaluate").isDefined) Some("revaluate-revaluation-date") else Some("revaluationDate_day")})
 
         @viewHelpers.form(action = routes.InflationProofController.post) {
+            @if(inflationProofForm.errors.nonEmpty){
+                @govukErrorSummary(ErrorSummary().withFormErrorsAsText(inflationProofForm))
+            }
+              @govukRadios(Radios(
+                  fieldset = Some(Fieldset(
+                      legend = Some(Legend(
+                          content = Text(Messages("gmp.inflation_proof.question")),
+                          classes = "govuk-fieldset__legend--l",
+                          isPageHeading = true
+                      ))
+                  )),
+                  idPrefix = Some("revaluate"),
+                  name = "revaluate",
+                  items = Seq(
+                      RadioItem( content = Text(Messages("gmp.generic.yes")), value = Some("Yes") , id = Some("revaluation-date")),
+                      RadioItem( content = Text(Messages("gmp.generic.no")), value = Some("No") , id = Some("none"))
+                  )
+              ).withFormField(inflationProofForm("revaluate")))
 
-        <div class="form-field @if(inflationProofForm.hasErrors && !inflationProofForm.hasGlobalErrors) {form-field--error}">
-
-            @gmpRadioGroup(
-                inflationProofForm("revaluate"),
-                Seq(
-                    ("Yes", "revaluation-date", "revaluation-date") -> Messages("gmp.generic.yes"),
-                    ("No", "none", "none") -> Messages("gmp.generic.no")
-                ),
-                '_fieldsetAttributes -> "class=inline",
-                '_fieldsetAttributesLegend -> "revaluate",
-                '_legend -> Messages("gmp.inflation_proof.question"),
-                '_labelAfter -> true,
-                '_labelClass -> "block-label",
-                '_groupClass -> "inline-block",
-                '_trackGA -> true)
-        </div>
 
             <div class="form-field js-hidden @if(inflationProofForm.hasErrors) {form-field--error}" id="revaluation-date">
 

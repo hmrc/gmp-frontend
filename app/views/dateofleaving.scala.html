@@ -167,13 +167,12 @@
             </div>
 
             <div>
-                <hr class="govuk-section-break" aria-hidden = true/>
-                @govukButton(Button(
-                    content = Text(Messages("gmp.continue.button"))
-                ))
-@*              <button class="button" data-journey-click='@Messages("gmp.ga-track.button.click"):@heading:@Messages("gmp.continue.button")'*@
-@*                      type="submit" id="submit-button">@Messages("gmp.continue.button")</button>*@
-@*            *@
+                <hr class="govuk-section-break govuk-section-break--m" aria-hidden = true/>
+                  @govukButton(Button(
+                    content = Text(Messages("gmp.continue.button")),
+                    inputType = Some("submit"),
+                    attributes = Map("data-journey-click" -> s"""@Messages("gmp.ga-track.button.click"):@Messages("gmp.continue.button")""")
+                  ))
             </div>
         }
 }

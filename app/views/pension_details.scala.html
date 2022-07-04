@@ -64,10 +64,12 @@
       <p class="govuk-body">@Messages("gmp.scon.message") <a class="govuk-link" data-journey-click='@Messages("gmp.ga-track.link.click"):@Messages("gmp.pension_details.header"):@Messages("gmp.contact.hmrc")'
       href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pensions-helpline-contracted-out">@Messages("gmp.contact.hmrc")</a>.</p>
 
-      @govukButton(Button(
-          content = Text(Messages("gmp.continue.button"))
-      ))
-@*  <button data-journey-click='@Messages("gmp.ga-track.button.click"):@Messages("gmp.pension_details.header"):@Messages("gmp.continue.button")' class="govuk-button" type="submit" id="submit-button">@Messages("gmp.continue.button")</button>*@
+        @govukButton(Button(
+            content = Text(Messages("gmp.continue.button")),
+            inputType = Some("submit"),
+            attributes = Map("data-journey-click" -> s"""@Messages("gmp.ga-track.button.click"):@Messages("gmp.pension_details.header"):@Messages("gmp.continue.button")""")
+        ))
+
 
   }
 }

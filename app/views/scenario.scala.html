@@ -33,8 +33,6 @@
 
     @includes.back_link(Messages("gmp.scenarios.title"))
 
-@*//    @views.html.helpers.errorSummary(calculationType, formHeaderKey = "gmp.scenarios.title", focusId = Some("calcType-payableage"))*@
-
       @viewHelpers.form(action = routes.ScenarioController.post) {
           @if(calculationType.errors.nonEmpty){
               @govukErrorSummary(ErrorSummary().withFormErrorsAsText(calculationType))
@@ -75,8 +73,12 @@
 
 
           <div>
-              <button data-journey-click='@Messages("gmp.ga-track.button.click"):@Messages("gmp.scenarios.title"):@Messages("gmp.continue.button")'
-              class="govuk-button" type="submit" id="submit-button">@Messages("gmp.continue.button")</button>
+              @govukButton(Button(
+                content = Text(Messages("gmp.continue.button")),
+                inputType = Some("submit"),
+                attributes = Map("data-journey-click" -> s"""@Messages("gmp.ga-track.button.click"):@Messages("gmp.scenarios.title"):@Messages("gmp.continue.button")""")
+              ))
+
           </div>
 
       }
