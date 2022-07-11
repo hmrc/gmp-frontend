@@ -20,10 +20,12 @@ import models.{CalculationPeriod, CalculationResponse, ContributionsAndEarnings}
 import org.joda.time.LocalDate
 import play.twirl.api.Html
 import utils.GmpViewSpec
+import views.html.includes.request_another_button
 
 class ContributionsEarningsSpec extends GmpViewSpec {
   lazy val gmpMain = app.injector.instanceOf[gmp_main]
-  override def view: Html = new views.html.contributions_earnings(gmpMain)(calculationResponse)
+  lazy val requestAnotherButton = app.injector.instanceOf[request_another_button]
+  override def view: Html = new views.html.contributions_earnings(gmpMain, requestAnotherButton)(calculationResponse)
 
   private val calculationResponse: CalculationResponse = CalculationResponse("name", "nino", "scon", Some("revaluationRate"),
     Some(LocalDate.now), List(CalculationPeriod(Some(LocalDate.now), LocalDate.now(), "gmpTotal", "post", 1, 2, Some(3), Some("string"),
