@@ -21,7 +21,7 @@
 @import uk.gov.hmrc.govukfrontend.views.html.components.implicits._
 @import uk.gov.hmrc.hmrcfrontend.views.Implicits.RichErrorSummary
 
-@this(gmpMain: gmp_main, viewHelpers: ViewHelpers,govukRadios : GovukRadios, govukButton : GovukButton, govukErrorSummary : GovukErrorSummary)
+@this(gmpMain: gmp_main, viewHelpers: ViewHelpers, govukRadios : GovukRadios, govukButton : GovukButton, govukErrorSummary : GovukErrorSummary, govukDateInput : GovukDateInput)
 
 @(inflationProofForm: Form[models.InflationProof])(implicit request: Request[_], messages: Messages, applicationConfig: ApplicationConfig)
 
@@ -32,6 +32,29 @@
 <script type="text/javascript" src='@controllers.routes.AssetsController.at("javascripts/progressive-reveal.js")'></script>
 <script type="text/javascript" src='@controllers.routes.AssetsController.at("javascripts/revaluation-date.js")'></script>
 }
+@dateHtml = {
+    @govukDateInput(DateInput(
+        id = "revaluationDate",
+        hint = Some(Hint(
+          content = Text(Messages("gmp.date.example"))
+        )),
+        items = Seq(
+            InputItem(name = "revaluationDate.day", classes = "govuk-input--width-2", label=Some("Day")),
+            InputItem(name = "revaluationDate.month", classes = "govuk-input--width-2", label=Some("Month")),
+            InputItem(name = "revaluationDate.year", classes = "govuk-input--width-4", label=Some("Year"))),
+        fieldset = Some(Fieldset(
+          legend = Some(Legend(
+            content = Text(Messages("gmp.inflation_proofed")),
+            classes = "govuk-fieldset__legend--l",
+            isPageHeading = true
+          ))
+        ))
+  ))
+<hr class="govuk-section-break govuk-section-break--m" aria-hidden = true />
+<p class="govuk-body">@Messages("gmp.inflationproof.subtext")</p>
+}
+
+
 
 @gmpMain(title = Messages("gmp.inflation_proof.question") + " - " + Messages("service.title") + " - " + Messages("gov.uk"), pageScripts = Some(pageScripts)) {
 
@@ -54,63 +77,17 @@
                   idPrefix = Some("revaluate"),
                   name = "revaluate",
                   items = Seq(
-                      RadioItem( content = Text(Messages("gmp.generic.yes")), value = Some("Yes") , id = Some("revaluation-date")),
+                      RadioItem( content = Text(Messages("gmp.generic.yes")), value = Some("Yes") , id = Some("revaluation-date"), conditionalHtml = Some(dateHtml)),
                       RadioItem( content = Text(Messages("gmp.generic.no")), value = Some("No") , id = Some("none"))
                   )
               ).withFormField(inflationProofForm("revaluate")))
 
 
-            <div class="form-field js-hidden @if(inflationProofForm.hasErrors) {form-field--error}" id="revaluation-date">
-
-                <fieldset>
-
-                    <legend>
-                        <span class="form-label-bold">@Messages("gmp.inflation_proofed")</span>
-                    </legend>
-                    <span class="form-hint" id="date-hint">@Messages("gmp.date.example")</span>
-
-                    <div class="form-date">
-
-                        @views.html.helpers.groupError(inflationProofForm("revaluationDate"))
-                        @if(inflationProofForm.hasGlobalErrors) {
-                            @inflationProofForm.globalErrors.zipWithIndex.map { case (error, index) =>
-                                <span style="display: block" class="error-notification" id="global-error-@index">@error.message</span>
-                            }
-                        }
-
-                        <div class="form-group form-group-day">
-                            @gmpInput(inflationProofForm("revaluationDate.day"),
-                            '_label -> Html(Messages("gmp.day")),
-                            '_id -> "revaluationDate_day",
-                            '_maxLength -> 2,
-                            '_dataAttributes -> "aria-describedby=date-hint")
-                        </div>
-                        <div class="form-group form-group-month">
-                            @gmpInput(inflationProofForm("revaluationDate.month"),
-                            '_label -> Html(Messages("gmp.month")),
-                            '_id -> "revaluationDate_month",
-                            '_maxLength -> 2,
-                            '_dataAttributes -> "aria-describedby=date-hint")
-                        </div>
-                        <div class="form-group form-group-year">
-                            @gmpInput(inflationProofForm("revaluationDate.year"),
-                            '_label -> Html(Messages("gmp.year")),
-                            '_id -> "revaluationDate_year",
-                            '_maxLength ->4,
-                            '_inputClass -> "form-control year-input",
-                            '_dataAttributes -> "aria-describedby=date-hint")
-                        </div>
-                        <hr class="govuk-section-break" aria-hidden = true>
-                        <hr class="govuk-section-break" aria-hidden = true>
-                        <hr class="govuk-section-break" aria-hidden = true>
-                        <p>@Messages("gmp.inflationproof.subtext")</p>
-
-                    </div>
-                </fieldset>
-            </div>
 
             <div class="continue-button">
-                <button class="button" type="submit" id="submit-button">@Messages("gmp.check_gmp.button")</button>
+                  @govukButton(Button(
+                    content = Text(Messages("gmp.check_gmp.button")),
+                    inputType = Some("submit")                  ))
             </div>
 
 

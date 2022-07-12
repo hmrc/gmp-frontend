@@ -15,71 +15,43 @@
  *@
 
 @import play.twirl.api.HtmlFormat
-@import views.OldViewHelpers
-@import views.html.layouts.GovUkTemplate
+@import views.ViewHelpers
+@import views.html.helper._
+@import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcLayout
+@import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcReportTechnicalIssueHelper
+@import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcTimeoutDialogHelper
+@import uk.gov.hmrc.hmrcfrontend.views.config.StandardBetaBanner
+@import uk.gov.hmrc.govukfrontend.views.html.components.FixedWidthPageLayout
+@import uk.gov.hmrc.govukfrontend.views.html.components.TwoThirdsMainContent
 
-@this(viewHelpers: OldViewHelpers,
-        govUkTemplate: GovUkTemplate)
+@this(hmrcLayout: HmrcLayout, viewHelpers: ViewHelpers, defaultMainContent: TwoThirdsMainContent)
 
 @(pageTitle: String, heading: String, message: String)(implicit request: Request[_], messages: Messages)
 
-@gmpPageTitle = {@pageTitle - @Messages("service.title") - @Messages("gov.uk")}
 
 @mainContent = {
     @includes.back_link(heading)
-    <h1 class="heading-xlarge">@heading</h1>
-    <p>@message</p>
+    <h1 class="govuk-heading-xl">@heading</h1>
+    <p class="govuk-body">@message</p>
 }
 
 @head = {
-    @viewHelpers.head(
-    linkElem = None,
-    headScripts = None)
     <meta name="format-detection" content="telephone=no"/>
 }
 
-@serviceInfo = {
-    @viewHelpers.serviceInfo(
-    betaBanner = HtmlFormat.empty,
-    includeGridWrapper = false,
-    serviceInfoContent = None,
-    includeHMRCBranding = false)
-}
 
 
-@content = {
-    @viewHelpers.mainContent(
-    article = viewHelpers.article(mainContent),
-    serviceInfo = serviceInfo)
-}
-
-
-@bodyEnd = {
-    @viewHelpers.footer(
-    analyticsToken = None,
-    analyticsHost = "",
-    ssoUrl = None,
-    scriptElem = None,
-    gaCalls = None)
-
+@scriptBlock = {
     <script src='@routes.AssetsController.at("javascripts/back.js")'> </script>
 }
 
-@footerTop = {}
+@hmrcLayout(
+    pageTitle = Some(pageTitle),
+    isWelshTranslationAvailable = false,
+    signOutUrl = Some(routes.ApplicationController.signout.url),
+    additionalHeadBlock = Some(head),
+    additionalScriptsBlock = Some(scriptBlock),
+    headerContainerClasses = "govuk-width-container",
+    mainContentLayout = Some(defaultMainContent(_))
+)(mainContent)
 
-@signOutLink = {
-    <li><a id="logOutStatusHref" href="@controllers.routes.ApplicationController.signout">@Messages("gmp.signout")</a></li>
-}
-
-@insideHeader = {
-    @viewHelpers.headerNav(
-        navTitle = Some(Messages("gmp.title")),
-        navTitleLink = None,
-        showBetaLink = false,
-        navLinks = Some(signOutLink)
-    )
-}
-
-@afterHeader = {}
-
-@govUkTemplate(Some(gmpPageTitle.toString), None)(head, bodyEnd, insideHeader, afterHeader, footerTop, Some(viewHelpers.footerLinks()), true)(content)

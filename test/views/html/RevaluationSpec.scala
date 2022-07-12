@@ -101,9 +101,9 @@ class RevaluationSpec extends GmpViewSpec{
 
     "have correct input labels with text" in {
       doc must haveParagraphWithText(messages("gmp.date.example"))
-      doc must haveInputLabelWithText("revaluationDate_day", messages("gmp.day"))
-      doc must haveInputLabelWithText("revaluationDate_month", messages("gmp.month"))
-      doc must haveInputLabelWithText("revaluationDate_year", messages("gmp.year"))
+      doc must haveInputLabelWithText("revaluationDate-day", messages("gmp.day"))
+      doc must haveInputLabelWithText("revaluationDate-month", messages("gmp.month"))
+      doc must haveInputLabelWithText("revaluationDate-year", messages("gmp.year"))
     }
 
     "have a submit button text" in {

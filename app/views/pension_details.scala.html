@@ -31,7 +31,7 @@
 
 @(pensionDetailsForm: Form[models.PensionDetailsScon])(implicit request: Request[_], messages: Messages, ac:ApplicationConfig)
 
-@gmpMain(title = Messages("gmp.pension_details.header")) {
+@gmpMain(title = Messages("gmp.pension_details.header") + " - " + Messages("service.title") + " - " + Messages("gov.uk")) {
 
   @includes.back_link(Messages("gmp.bulk_reference.header"))
 

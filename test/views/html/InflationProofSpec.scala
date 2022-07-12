@@ -21,14 +21,19 @@ import models.{GmpDate, InflationProof}
 import play.api.data.Form
 import play.api.data.Forms.{mapping, optional, text}
 import play.twirl.api.Html
+import uk.gov.hmrc.govukfrontend.views.html.components.{GovukButton, GovukDateInput, GovukErrorSummary, GovukRadios}
 import utils.GmpViewSpec
-import views.OldViewHelpers
+import views.ViewHelpers
 
 class InflationProofSpec extends GmpViewSpec {
-  lazy val gmpMain = app.injector.instanceOf[gmp_main_old]
-  lazy val viewHelpers = app.injector.instanceOf[OldViewHelpers]
+  lazy val gmpMain = app.injector.instanceOf[gmp_main]
+  lazy val viewHelpers = app.injector.instanceOf[ViewHelpers]
+  lazy val govukButton = app.injector.instanceOf[GovukButton]
+  lazy val govukRadios = app.injector.instanceOf[GovukRadios]
+  lazy val govukErrorSummary = app.injector.instanceOf[GovukErrorSummary]
+  lazy val govukDateInput = app.injector.instanceOf[GovukDateInput]
 
-  override def view: Html = new views.html.inflation_proof(gmpMain, viewHelpers)(inflationProofForm)
+  override def view: Html = new views.html.inflation_proof(gmpMain, viewHelpers, govukRadios, govukButton, govukErrorSummary, govukDateInput)(inflationProofForm)
 
   val inflationProofForm = Form(
     mapping(
@@ -71,9 +76,9 @@ class InflationProofSpec extends GmpViewSpec {
     }
 
     "have valid input labels" in {
-      doc must haveInputLabelWithText("revaluationDate_day", messages("gmp.day"))
-      doc must haveInputLabelWithText("revaluationDate_month", messages("gmp.month"))
-      doc must haveInputLabelWithText("revaluationDate_year", messages("gmp.year"))
+      doc must haveInputLabelWithText("revaluationDate-day", messages("gmp.day"))
+      doc must haveInputLabelWithText("revaluationDate-month", messages("gmp.month"))
+      doc must haveInputLabelWithText("revaluationDate-year", messages("gmp.year"))
       doc must haveParagraphWithText(messages("gmp.inflationproof.subtext"))
     }
 

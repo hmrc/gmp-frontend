@@ -16,7 +16,7 @@
 
 @import config.ApplicationConfig
 
-@this(gmpMain: gmp_main_old, request_another_button: includes.request_another_button)
+@this(gmpMain: gmp_main, request_another_button: includes.request_another_button, member_details_result:includes.member_details_result)
 
 @(
         calculationResponse:CalculationResponse,
@@ -52,7 +52,7 @@
   }
 }
 
-  @includes.member_details_result(calculationResponse)
+  @member_details_result(calculationResponse)
 
   @if(!calculationResponse.hasErrors){
         <p id="queryhandling">@Messages("gmp.queryhandling.resultsmessage")</p>

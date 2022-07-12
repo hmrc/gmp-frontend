@@ -21,14 +21,18 @@ import models._
 import play.api.data.Form
 import play.api.mvc.MessagesControllerComponents
 import play.twirl.api.Html
+import uk.gov.hmrc.govukfrontend.views.html.components.{GovukButton, GovukErrorSummary, GovukRadios}
 import utils.GmpViewSpec
-import views.OldViewHelpers
+import views.ViewHelpers
 
 abstract class RevaluationRateSpec extends GmpViewSpec {
-  lazy val gmpMain = app.injector.instanceOf[gmp_main_old]
-  lazy val viewHelpers = app.injector.instanceOf[OldViewHelpers]
+  lazy val gmpMain = app.injector.instanceOf[gmp_main]
+  lazy val viewHelpers = app.injector.instanceOf[ViewHelpers]
+  lazy val govukButton = app.injector.instanceOf[GovukButton]
+  lazy val govukRadios = app.injector.instanceOf[GovukRadios]
+  lazy val govukErrorSummary = app.injector.instanceOf[GovukErrorSummary]
 
-  override def view: Html = new views.html.revaluation_rate(gmpMain, viewHelpers)(revaluationRateForm, session)
+  override def view: Html = new views.html.revaluation_rate(gmpMain, viewHelpers, govukRadios, govukButton, govukErrorSummary)(revaluationRateForm, session)
 
   lazy val mcc = app.injector.instanceOf[MessagesControllerComponents]
 

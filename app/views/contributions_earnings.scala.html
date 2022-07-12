@@ -16,7 +16,7 @@
 
 @import config.ApplicationConfig
 
-@this(gmpMain: gmp_main, request_another_button: includes.request_another_button)
+@this(gmpMain: gmp_main, request_another_button: includes.request_another_button, member_details_result:includes.member_details_result)
 
 @(calculationResponse:CalculationResponse)(implicit request: Request[_], messages: Messages, ac:ApplicationConfig)
 
@@ -31,7 +31,7 @@
 
   @includes.contributions_earnings(calculationResponse)
 
-  @includes.member_details_result(calculationResponse)
+  @member_details_result(calculationResponse)
 
     <span id="queryhandling">@Html(Messages("gmp.queryhandling.contsandearnings"))</span>
     <hr class="govuk-section-break govuk-section-break--visible" aria-hidden = true/>
