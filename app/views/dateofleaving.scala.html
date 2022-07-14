@@ -35,14 +35,17 @@
 @conditionalHtml = {
     @govukDateInput(DateInput(
         id = "leavingDate",
-        namePrefix = Some("leavingDate"),
         hint = Some(Hint(
             content = Text(Messages("gmp.date.example"))
         )),
+        items = Seq(
+            InputItem(name = "leavingDate.day", classes = "govuk-input--width-2", label=Some("Day")),
+            InputItem(name = "leavingDate.month", classes = "govuk-input--width-2", label=Some("Month")),
+            InputItem(name = "leavingDate.year", classes = "govuk-input--width-4", label=Some("Year"))),
         fieldset = Some(Fieldset(
             legend = Some(Legend(
                 content = Text(Messages("gmp.date.header_text")),
-                classes = "govuk-fieldset__legend",
+                classes = "govuk-fieldset__legend--m",
                 isPageHeading = false
             ))
         ))
@@ -167,7 +170,6 @@
             </div>
 
             <div>
-                <hr class="govuk-section-break govuk-section-break--m" aria-hidden = true/>
                   @govukButton(Button(
                     content = Text(Messages("gmp.continue.button")),
                     inputType = Some("submit"),
