@@ -32,7 +32,7 @@
             }
 
             @if(application.globalErrors.hasPath(s"$globalErrorCode.reason")){
-                <div class="error-list" id="global-error-reason"><p class="govuk-body">@Messages(application.globalErrors.getString(s"$globalErrorCode.reason"))</p></div>
+                <div class="error-list" id="global-error-reason"><p class="govuk-error-message">@Messages(application.globalErrors.getString(s"$globalErrorCode.reason"))</p></div>
             }
         </div>
 
