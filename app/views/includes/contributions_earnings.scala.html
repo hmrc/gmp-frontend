@@ -72,7 +72,7 @@
                 <h3 class="govuk-heading-s" id="gmp-conts-and-earnings-header-@count">
                 @{Messages("gmp.contracted_out_period_table_header" ,s"${period.startDate.get.toString("d MMMM yyyy")} to ${period.endDate.toString("d MMMM yyyy")}")}
                 </h3>
-                <p class="govuk-body error-message-left" id="period-row-in-error-@count">
+                <p class="govuk-body" id="period-row-in-error-@count">
                     @{Messages("gmp.error.no_conts_and_earnings")}
                 </p>
             }
