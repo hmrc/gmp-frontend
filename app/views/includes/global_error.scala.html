@@ -16,34 +16,32 @@
 
 @(globalErrorCode: Integer)(implicit messages: Messages, application:config.ApplicationConfig)
 
-
-
 @queryHandlingHeader = {
     @if(application.globalErrors.hasPath(s"$globalErrorCode.solution")){
-        <h2 class="govuk-heading-m error-h2" id="global-query-handling-header">@{ Messages("gmp.errors.query_handling.header") }</h2>
+        <h2 class="govuk-heading-l" id="global-query-handling-header">@{ Messages("gmp.errors.query_handling.header") }</h2>
     }
 }
 
 <div id="global-results-grid">
+        @if(application.globalErrors.hasPath(s"$globalErrorCode.cannot_calculate")){
+            <h1 class="govuk-heading-l" id="cannot-calculate-header">@{ Messages(application.globalErrors.getString(s"$globalErrorCode.cannot_calculate")) }</h1>
+        }
 
-            @if(application.globalErrors.hasPath(s"$globalErrorCode.cannot_calculate")){
-                <h1 class="govuk-heading-l" id="cannot-calculate-header">@{ Messages(application.globalErrors.getString(s"$globalErrorCode.cannot_calculate")) }</h1>
-            }
-
-            @if(application.globalErrors.hasPath(s"$globalErrorCode.reason")){
-                <div class="govuk-error-message" id="global-error-reason"><p>@Messages(application.globalErrors.getString(s"$globalErrorCode.reason"))</p></div>
-            }
-        </div>
+        @if(application.globalErrors.hasPath(s"$globalErrorCode.reason")){
+            <div class="govuk-body" id="global-error-reason"><p>@Messages(application.globalErrors.getString(s"$globalErrorCode.reason"))</p></div>
+        }
+</div>
 
         @if(application.globalErrors.hasPath(s"$globalErrorCode.solution")){
             <div>
+                <hr class="govuk-section-break govuk-section-break--m" aria-hidden="true/">
                 <h2 class="govuk-heading-l" id="global-what-now">@Messages("gmp.what_now")</h2>
                 <p class="govuk-body">@Html(Messages(application.globalErrors.getString(s"$globalErrorCode.solution")))</p>
             </div>
         }
 
         @if(application.globalErrors.hasPath(s"$globalErrorCode.also")){
-    <hr class="govuk-section-break govuk-section-break--m" aria-hidden = true/>
+            <hr class="govuk-section-break govuk-section-break--m" aria-hidden = true/>
             @queryHandlingHeader
             <div id="query-handling">@Html(Messages(application.globalErrors.getString(s"$globalErrorCode.also")))</div>
         }
