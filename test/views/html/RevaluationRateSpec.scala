@@ -56,9 +56,9 @@ class RevaluationRatePaySpaSurSpec extends RevaluationRateSpec {
     behave like pageWithBackLink
 
     "have correct input labels with text" in {
-      doc must haveInputLabelWithText("rateType-hmrc", messages("gmp.revaluation_rate.rate_held_by_hmrc"))
-      doc must haveInputLabelWithText("rateType-fixed", messages("gmp.revaluation_rate.fixed"))
-      doc must haveInputLabelWithText("rateType-s148", messages("gmp.revaluation_rate.s148"))
+      doc must haveInputLabelWithText("hmrc", messages("gmp.revaluation_rate.rate_held_by_hmrc"))
+      doc must haveInputLabelWithText("fixed", messages("gmp.revaluation_rate.fixed"))
+      doc must haveInputLabelWithText("s148", messages("gmp.revaluation_rate.s148"))
       doc must haveLegendWithText(messages("gmp.revaluation_rate.header"))
     }
 
@@ -77,10 +77,10 @@ class RevaluationRateRevaSpec extends RevaluationRateSpec {
     behave like pageWithHeader(messages("gmp.revaluation_rate.header"))
 
     "have correct input labels with text" in {
-      doc must haveInputLabelWithText("rateType-hmrc", messages("gmp.revaluation_rate.rate_held_by_hmrc"))
-      doc must haveInputLabelWithText("rateType-fixed", messages("gmp.revaluation_rate.fixed"))
-      doc must haveInputLabelWithText("rateType-s148", messages("gmp.revaluation_rate.s148"))
-      doc must haveInputLabelWithText("rateType-limited", messages("gmp.revaluation_rate.limited"))
+      doc must haveInputLabelWithText("hmrc", messages("gmp.revaluation_rate.rate_held_by_hmrc"))
+      doc must haveInputLabelWithText("fixed", messages("gmp.revaluation_rate.fixed"))
+      doc must haveInputLabelWithText("s148", messages("gmp.revaluation_rate.s148"))
+      doc must haveInputLabelWithText("limited", messages("gmp.revaluation_rate.limited"))
       doc must haveLegendWithText(messages("gmp.revaluation_rate.header"))
     }
   }

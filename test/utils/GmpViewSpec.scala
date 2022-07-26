@@ -50,9 +50,9 @@ trait GmpViewSpec extends PlaySpec with JSoupMatchers with GuiceOneServerPerSuit
     }
   }
 
-  def pageWithTableCaption(id: String, captionText: String): Unit = {
+  def pageWithTableCaption(captionText: String): Unit = {
     s"have a table caption with text: $captionText" in {
-      doc must haveTableCaptionWithIdAndText(id, captionText)
+      doc must haveTableCaptionWithText(captionText)
     }
   }
 

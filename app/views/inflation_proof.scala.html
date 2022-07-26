@@ -38,18 +38,28 @@
         hint = Some(Hint(
           content = Text(Messages("gmp.date.example"))
         )),
-        items = Seq(
-            InputItem(name = "revaluationDate.day", classes = "govuk-input--width-2", label=Some("Day")),
-            InputItem(name = "revaluationDate.month", classes = "govuk-input--width-2", label=Some("Month")),
-            InputItem(name = "revaluationDate.year", classes = "govuk-input--width-4", label=Some("Year"))),
         fieldset = Some(Fieldset(
-          legend = Some(Legend(
-            content = Text(Messages("gmp.inflation_proofed")),
-            classes = "govuk-fieldset__legend--m",
-            isPageHeading = true
-          ))
-        ))
-  ))
+            legend = Some(Legend(
+                content = Text(Messages("gmp.inflation_proofed")),
+                classes = "govuk-fieldset__legend--m",
+                isPageHeading = true
+            ))
+        )),
+        items = Seq(
+            InputItem(
+                name = "revaluationDate.day",
+                classes = "govuk-input--width-2",
+                label=Some("Day")),
+            InputItem(
+                name = "revaluationDate.month",
+                classes = "govuk-input--width-2",
+                label=Some("Month")),
+            InputItem(
+                name = "revaluationDate.year",
+                classes = "govuk-input--width-4",
+                label=Some("Year"))),
+    ))
+
 <hr class="govuk-section-break govuk-section-break--m" aria-hidden = true />
 <p class="govuk-body">@Messages("gmp.inflationproof.subtext")</p>
 }

@@ -35,7 +35,7 @@ class ContributionsEarningsSpec extends GmpViewSpec {
   "Contributions Earnings page" must {
     behave like pageWithTitle(messages("gmp.contributions_earnings.header"))
     behave like pageWithHeader(messages("gmp.contributions_earnings.header"))
-    behave like pageWithTableCaption("details-table-caption", messages("gmp.entered_details.title"))
+    behave like pageWithTableCaption(messages("gmp.entered_details.title"))
 
     "have a correct span with text" in {
       doc must haveSpanWithText(messages("gmp.queryhandling.contsandearnings"))
