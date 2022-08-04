@@ -39,8 +39,8 @@ package object forms {
     val day = data.day
     val month = data.month
     val year = data.year
-    val r = checkValidDate(day, month, year)
-    r
+    checkValidDate(day, month, year)
+
   }
 
   def checkYearLength(year: Option[String]): Boolean = {

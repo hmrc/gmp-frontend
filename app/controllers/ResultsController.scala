@@ -93,7 +93,7 @@ class ResultsController @Inject()(authAction: AuthAction,
                 case _ if session.scon == "" => Future.successful(Ok(views.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/pension-details"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title"))))
                 case _ if session.memberDetails.nino == "" || session.memberDetails.firstForename == "" || session.memberDetails.surname == "" => Future.successful(Ok(views.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/member-details"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title"))))
                 case _ if session.scenario == "" => Future.successful(Ok(views.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/calculation-reason"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title"))))
-                case _ if !session.leaving.leaving.isDefined => Future.successful(Ok(views.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/left-scheme"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title"))))
+                case _ if ((session.leaving.leaving != Leaving.YES_AFTER) || (session.leaving.leaving != Leaving.YES_BEFORE) || (session.leaving.leaving != Leaving.NO)) => Future.successful(Ok(views.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/left-scheme"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title"))))
                 case _ =>
                   val calcRequest = createCalculationRequest(session)
                   calculationConnector.calculateSingle(calcRequest, link) map { response: CalculationResponse => {
@@ -171,7 +171,7 @@ class ResultsController @Inject()(authAction: AuthAction,
 
         case 2 | 3 | 4 => {
           leaving.leaving match {
-            case Some(Leaving.NO) => None
+            case Leaving.NO => None
             case _ => {
               if (response.revaluationRate.isDefined && response.revaluationRate == Some("0"))
                 Some(Messages("gmp.chosen_rate.subheader", Messages(s"gmp.revaluation_rate.type_${response.revaluationRate.get}")) + " <b class='bold'>(" + Messages(s"gmp.revaluation_rate.type_${response.calculationPeriods.head.revaluationRate}") + ")</b>")
@@ -195,7 +195,7 @@ class ResultsController @Inject()(authAction: AuthAction,
       response.calcType match {
         case 3 => {
           session.leaving.leaving match {
-            case Some(Leaving.NO) => None
+            case Leaving.NO => None
             case _ => {
               if (response.calculationPeriods.head.inflationProofBeyondDod == Some(0) && response.dodInSameTaxYearAsRevaluationDate)
                 Some(Messages("gmp.no_inflation.subheader"))

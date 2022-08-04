@@ -47,7 +47,8 @@ class DateOfLeavingController @Inject()(authAction: AuthAction,
       case CalculationType.SURVIVOR => Messages("gmp.survivor.dol.question.mandatory")
       case _ => Messages("gmp.leaving.dol.question.mandatory")
     }
-    dlf.dateOfLeavingForm(mandatoryErrorMessage)
+    println(" error message ::"+mandatoryErrorMessage)
+    dlf.dateOfLeavingForm1(mandatoryErrorMessage)
   }
 
   def get = authAction.async {
@@ -57,7 +58,8 @@ class DateOfLeavingController @Inject()(authAction: AuthAction,
             case _ if session.scon == "" => Ok(views.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/pension-details"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title")))
             case _ if session.memberDetails.nino == "" || session.memberDetails.firstForename == "" || session.memberDetails.surname == "" => Ok(views.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/member-details"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title")))
             case _ if session.scenario == "" => Ok(views.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/calculation-reason"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title")))
-            case _ => Ok (views.dateOfLeaving (dateOfLeavingForm(session.scenario), session.scenario) )
+            case _ => println("scenario is ::"+session.scenario)
+              Ok (views.dateOfLeaving (dateOfLeavingForm(session.scenario), session.scenario) )
           }
           case _ => Ok(views.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/dashboard"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title")))
         }
@@ -74,7 +76,8 @@ class DateOfLeavingController @Inject()(authAction: AuthAction,
         form.flatMap {f => f.bindFromRequest.fold(
             formWithErrors => {
               sessionService.fetchGmpSession.map {
-                case Some(session) => BadRequest(views.dateOfLeaving(formWithErrors, session.scenario))
+                case Some(session) => println("errors are2 ::"+formWithErrors.errors.head.key)
+                  BadRequest(views.dateOfLeaving(formWithErrors, session.scenario))
                 case _ => throw new RuntimeException
               }
             },

@@ -2,6 +2,7 @@
 # Page titles
 service.name = Guaranteed Minimum Pension (GMP) checker
 service.title=Guaranteed Minimum Pension
+generic.errorSummary = There is a problem
 gov.uk=GOV.UK
 ############################################################################
 gmp-pbik-gov.uk-title=GOV.UK
@@ -418,3 +419,9 @@ sessionTimeout.title = You are about to be signed out
 sessionTimeout.message = For security reasons, you will be signed out of this service in
 sessionTimeout.staySignedIn = Stay signed in
 sessionTimeout.signOut = Sign out
+
+leaving.error.required = Select whether the member had already left the scheme at date of death
+error.leaving.required = Select whether the member had already left the scheme at date of death
+LeavingDate.day = day
+LeavingDate.month = month
+LeavingDate.year = year

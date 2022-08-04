@@ -64,6 +64,7 @@ class PensionDetailsController @Inject()(authAction: AuthAction,
 
         pensionDetailsForm.bindFromRequest().fold(
           formWithErrors => {
+            println(" errors in pension ::"+formWithErrors.errors)
             Future.successful(BadRequest(views.pensionDetails(formWithErrors)))
           },
           pensionDetails => {
