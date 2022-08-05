@@ -20,7 +20,7 @@ import java.util.UUID
 import helpers.RandomNino
 import metrics.ApplicationMetrics
 import models._
-import org.mockito.Matchers
+import org.mockito.ArgumentMatchers._
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfter
 import org.scalatestplus.mockito.MockitoSugar
@@ -97,9 +97,10 @@ class GmpConnectorSpec extends PlaySpec with GuiceOneServerPerSuite with Mockito
           """
         )
 
-        val calculationRequest: CalculationRequest = CalculationRequest(scon = "S1234567T", nino = nino, surname = "Smith", firstForename = "Bill",
+        val calculationRequest: CalculationRequest = CalculationRequest(scon = "S1234567T", nino = nino,
+          surname = "Smith", firstForename = "Bill",
           1, None, Some(1))
-        when(mockHttpPost.POST[CalculationRequest, CalculationResponse](Matchers.any(), Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful((calcResponseJson.as[CalculationResponse])))
+        when(mockHttpPost.POST[CalculationRequest, CalculationResponse](any(), any(), any())(any(), any(), any(), any())).thenReturn(Future.successful((calcResponseJson.as[CalculationResponse])))
 
         val result = TestGmpConnector.calculateSingle(calculationRequest,link)
         val calcResponse = await(result)
@@ -134,7 +135,8 @@ class GmpConnectorSpec extends PlaySpec with GuiceOneServerPerSuite with Mockito
 
         val calculationRequest: CalculationRequest = CalculationRequest(scon = "S1401234Z", nino = "CB433298A", surname = "Smith", firstForename = "Bill",
           1, None, Some(1))
-        when(mockHttpPost.POST[CalculationRequest, CalculationResponse](Matchers.any(), Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful((calcResponseJson.as[CalculationResponse])))
+        when(mockHttpPost.POST[CalculationRequest, CalculationResponse](any(), any(), any())(any(), any(), any(), any()))
+          .thenReturn(Future.successful((calcResponseJson.as[CalculationResponse])))
 
         val result = TestGmpConnector.calculateSingle(calculationRequest,link)
         val calcResponse = await(result)
@@ -169,7 +171,7 @@ class GmpConnectorSpec extends PlaySpec with GuiceOneServerPerSuite with Mockito
 
         val calculationRequest: CalculationRequest = CalculationRequest(scon = "S1234567T", nino = nino, surname = "Smith", firstForename = "Bill",
           1, None, Some(1))
-        when(mockHttpPost.POST[CalculationRequest, CalculationResponse](Matchers.any(), Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful((calcResponseJson.as[CalculationResponse])))
+        when(mockHttpPost.POST[CalculationRequest, CalculationResponse](any(), any(), any())(any(), any(), any(), any())).thenReturn(Future.successful((calcResponseJson.as[CalculationResponse])))
 
         val result = TestGmpConnector.calculateSingle(calculationRequest,link)
         val calcResponse = await(result)
@@ -191,7 +193,7 @@ class GmpConnectorSpec extends PlaySpec with GuiceOneServerPerSuite with Mockito
                                       }"""
 
 
-        when(mockHttpPost.POST[CalculationRequest, CalculationResponse](Matchers.any(), Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.failed(UpstreamErrorResponse("Scon not found", 500, 500)))
+        when(mockHttpPost.POST[CalculationRequest, CalculationResponse](any(), any(), any())(any(), any(), any(), any())).thenReturn(Future.failed(UpstreamErrorResponse("Scon not found", 500, 500)))
 
         val result = TestGmpConnector.calculateSingle(Json.fromJson[CalculationRequest](Json.parse(calcRequestBody)).get,link)
         intercept[UpstreamErrorResponse] {
@@ -221,7 +223,7 @@ class GmpConnectorSpec extends PlaySpec with GuiceOneServerPerSuite with Mockito
         )
 
         val validateSconRequest: ValidateSconRequest = ValidateSconRequest(scon = "S1401234Z")
-        when(mockHttpPost.POST[ValidateSconRequest, ValidateSconResponse](Matchers.any(), Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful((validateSconResponseJson.as[ValidateSconResponse])))
+        when(mockHttpPost.POST[ValidateSconRequest, ValidateSconResponse](any(), any(), any())(any(), any(), any(), any())).thenReturn(Future.successful((validateSconResponseJson.as[ValidateSconResponse])))
 
         val result = TestGmpConnector.validateScon(validateSconRequest,link)
         val validateSconResponse = await(result)
@@ -248,7 +250,7 @@ class GmpConnectorSpec extends PlaySpec with GuiceOneServerPerSuite with Mockito
         )
 
         val validateSconRequest: ValidateSconRequest = ValidateSconRequest(scon = "S1401234Z")
-        when(mockHttpPost.POST[ValidateSconRequest, ValidateSconResponse](Matchers.any(), Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful((validateSconResponseJson.as[ValidateSconResponse])))
+        when(mockHttpPost.POST[ValidateSconRequest, ValidateSconResponse](any(), any(), any())(any(), any(), any(), any())).thenReturn(Future.successful((validateSconResponseJson.as[ValidateSconResponse])))
 
         val result = TestGmpConnector.validateScon(validateSconRequest,link)
         val validateSconResponse = await(result)
@@ -292,7 +294,7 @@ class GmpConnectorSpec extends PlaySpec with GuiceOneServerPerSuite with Mockito
 
         val calculationRequest: CalculationRequest = CalculationRequest(scon = "S1401234Z", nino = nino, surname = "Smith", firstForename = "Bill",
           1, None, Some(1), dualCalc = Some(1))
-        when(mockHttpPost.POST[CalculationRequest, CalculationResponse](Matchers.any(), Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful((calcResponseJson.as[CalculationResponse])))
+        when(mockHttpPost.POST[CalculationRequest, CalculationResponse](any(), any(), any())(any(), any(), any(), any())).thenReturn(Future.successful((calcResponseJson.as[CalculationResponse])))
 
         val result = TestGmpConnector.calculateSingle(calculationRequest,link)
         val calcResponse = await(result)

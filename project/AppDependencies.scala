@@ -29,7 +29,7 @@ object AppDependencies {
     "org.pegdown"             %  "pegdown"            % "1.6.0",
     "org.jsoup"               %  "jsoup"              % "1.14.3",
     "com.typesafe.play"       %% "play-test"          % PlayVersion.current,
-    "org.mockito"             %  "mockito-core"       % "1.10.19",
+    "org.mockito"             %  "mockito-core"       % "4.6.1",
     "com.github.tomakehurst"  %  "wiremock-jre8"      % "2.33.2",
     "com.vladsch.flexmark" % "flexmark-all" % "0.36.8"
   ).map(_ % "test")

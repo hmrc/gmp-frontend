@@ -20,7 +20,7 @@ import com.google.inject.Singleton
 import config.ApplicationConfig
 import controllers.auth.{AuthAction, ExternalUrls, FakeAuthAction, UUIDGenerator}
 import org.mockito.ArgumentCaptor
-import org.mockito.Matchers._
+import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.concurrent.ScalaFutures

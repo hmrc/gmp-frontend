@@ -17,7 +17,7 @@
 package connectors
 
 import com.google.inject.Inject
-import org.mockito.Matchers.{eq => meq, _}
+import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.mockito.MockitoSugar
@@ -33,7 +33,8 @@ import uk.gov.hmrc.http.HttpClient
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class ContactFrontendConnectorSpec @Inject()(servicesConfig: ServicesConfig) extends PlaySpec with GuiceOneAppPerSuite with MockitoSugar with BeforeAndAfterEach{
+class ContactFrontendConnectorSpec @Inject()(servicesConfig: ServicesConfig) extends PlaySpec with GuiceOneAppPerSuite
+  with MockitoSugar with BeforeAndAfterEach{
   implicit override lazy val app: Application = new GuiceApplicationBuilder()
   .configure(Map("Test.microservice.assets.url" -> "test-url", "Test.microservice.assets.version" -> "test-version"))
   .build
@@ -62,16 +63,16 @@ class ContactFrontendConnectorSpec @Inject()(servicesConfig: ServicesConfig) ext
 
       val response = HttpResponse(200, dummyResponseHtml)
 
-      when(mockHttp.GET[HttpResponse](meq(serviceUrl))(any(), any[HeaderCarrier], any[ExecutionContext])) thenReturn Future.successful(response)
+      when(mockHttp.GET[HttpResponse]((serviceUrl))(any(), any[HeaderCarrier], any[ExecutionContext])) thenReturn Future.successful(response)
 
       await(TestConnector.getHelpPartial)
 
-      verify(mockHttp).GET(meq(serviceUrl))(any(), any[HeaderCarrier], any[ExecutionContext])
+      verify(mockHttp).GET((serviceUrl))(any(), any[HeaderCarrier], any[ExecutionContext])
     }
 
     "return an empty string if a BadGatewayException is encountered" in {
 
-      when(mockHttp.GET[HttpResponse](meq(serviceUrl))(any(), any[HeaderCarrier], any[ExecutionContext])) thenReturn Future.failed(new BadGatewayException("Phony exception"))
+      when(mockHttp.GET[HttpResponse]((serviceUrl))(any(), any[HeaderCarrier], any[ExecutionContext])) thenReturn Future.failed(new BadGatewayException("Phony exception"))
 
       val result = await(TestConnector.getHelpPartial)
 
