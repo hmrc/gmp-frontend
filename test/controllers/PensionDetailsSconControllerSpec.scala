@@ -17,14 +17,13 @@
 package controllers
 
 import java.util.UUID
-
 import config.{ApplicationConfig, GmpSessionCache}
 import connectors.GmpConnector
 import controllers.auth.{AuthAction, FakeAuthAction}
 import forms.PensionDetails_no_longer_used_Form
 import metrics.ApplicationMetrics
 import models._
-import org.mockito.Matchers
+import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito._
 import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
@@ -68,7 +67,7 @@ class PensionDetailsSconControllerSpec extends PlaySpec with GuiceOneServerPerSu
     "authenticated users" must {
 
       "respond with ok" in {
-        when(mockSessionService.fetchPensionDetails()(Matchers.any())).thenReturn(Future.successful(None))
+        when(mockSessionService.fetchPensionDetails()(any())).thenReturn(Future.successful(None))
         val result = TestPensionDetailsController.get(FakeRequest())
             status(result) must equal(OK)
             contentAsString(result) must include(Messages("gmp.pension_details.header"))
@@ -79,7 +78,7 @@ class PensionDetailsSconControllerSpec extends PlaySpec with GuiceOneServerPerSu
       }
 
       "get page containing scon when retrieved" in {
-        when(mockSessionService.fetchPensionDetails()(Matchers.any())).thenReturn(Future.successful(Some("S1301234T")))
+        when(mockSessionService.fetchPensionDetails()(any())).thenReturn(Future.successful(Some("S1301234T")))
         val result = TestPensionDetailsController.get(FakeRequest())
             contentAsString(result) must include("S1301234T")
       }
@@ -95,8 +94,8 @@ class PensionDetailsSconControllerSpec extends PlaySpec with GuiceOneServerPerSu
       val gmpSession = GmpSession(MemberDetails("", "", ""), "S1301234T", "", None, None, Leaving(GmpDate(None, None, None), None), None)
 
       "validate scon and store scon and redirect" in {
-        when(mockSessionService.cachePensionDetails(Matchers.any())(Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
-        when(mockGmpConnector.validateScon(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful(ValidateSconResponse(true)))
+        when(mockSessionService.cachePensionDetails(any())(any())).thenReturn(Future.successful(Some(gmpSession)))
+        when(mockGmpConnector.validateScon(any(),any())(any())).thenReturn(Future.successful(ValidateSconResponse(true)))
           val result = TestPensionDetailsController.post()(FakeRequest().withJsonBody(Json.toJson(validGmpRequest)))
           status(result) must equal(SEE_OTHER)
       }
@@ -108,23 +107,23 @@ class PensionDetailsSconControllerSpec extends PlaySpec with GuiceOneServerPerSu
       }
 
       "respond with bad request when scon not validated" in {
-        when(mockGmpConnector.validateScon(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful(ValidateSconResponse(false)))
+        when(mockGmpConnector.validateScon(any(),any())(any())).thenReturn(Future.successful(ValidateSconResponse(false)))
           val result = TestPensionDetailsController.post()(FakeRequest().withJsonBody(Json.toJson(validGmpRequest)))
           status(result) must equal(BAD_REQUEST)
           contentAsString(result) must include(Messages("gmp.error.scon.nps_invalid", Messages("gmp.scon")))
       }
 
       "respond with exception when scon service throws exception" in {
-        when(mockSessionService.cachePensionDetails(Matchers.any())(Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
-        when(mockGmpConnector.validateScon(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful(null))
+        when(mockSessionService.cachePensionDetails(any())(any())).thenReturn(Future.successful(Some(gmpSession)))
+        when(mockGmpConnector.validateScon(any(),any())(any())).thenReturn(Future.successful(null))
           intercept[RuntimeException]{
             await(TestPensionDetailsController.post()(FakeRequest().withJsonBody(Json.toJson(validGmpRequest))))
         }
       }
 
       "respond with exception when cache service throws exception" in {
-        when(mockSessionService.cachePensionDetails(Matchers.any())(Matchers.any())).thenReturn(Future.successful(None))
-        when(mockGmpConnector.validateScon(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful(ValidateSconResponse(true)))
+        when(mockSessionService.cachePensionDetails(any())(any())).thenReturn(Future.successful(None))
+        when(mockGmpConnector.validateScon(any(),any())(any())).thenReturn(Future.successful(ValidateSconResponse(true)))
           intercept[RuntimeException]{
             await(TestPensionDetailsController.post()(FakeRequest().withJsonBody(Json.toJson(validGmpRequest))))
         }

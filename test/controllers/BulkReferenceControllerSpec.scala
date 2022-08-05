@@ -22,7 +22,7 @@ import config.{ApplicationConfig, GmpSessionCache}
 import controllers.auth.FakeAuthAction
 import forms.BulkReferenceForm
 import models._
-import org.mockito.Matchers
+import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito._
 import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
@@ -95,7 +95,7 @@ class BulkReferenceControllerSpec extends PlaySpec  with MockitoSugar with Guice
       }
 
       "throw an exception when can't cache email and reference" in {
-        when(mockSessionService.cacheEmailAndReference(Matchers.any(), Matchers.any())(Matchers.any())).thenReturn(Future.successful(None))
+        when(mockSessionService.cacheEmailAndReference(any(), any())(any())).thenReturn(Future.successful(None))
 
           val result = TestBulkReferenceController.post()(FakeRequest().withJsonBody(Json.toJson(validRequest)))
           intercept[RuntimeException]{
@@ -104,7 +104,7 @@ class BulkReferenceControllerSpec extends PlaySpec  with MockitoSugar with Guice
       }
 
       "validate email and reference, cache and redirect" in {
-        when(mockSessionService.cacheEmailAndReference(Matchers.any(), Matchers.any())(Matchers.any())).thenReturn(Future.successful(Some(gmpBulkSession)))
+        when(mockSessionService.cacheEmailAndReference(any(), any())(any())).thenReturn(Future.successful(Some(gmpBulkSession)))
 
           val result = TestBulkReferenceController.post()(FakeRequest().withJsonBody(Json.toJson(validRequest)))
           status(result) must equal(SEE_OTHER)
@@ -112,7 +112,7 @@ class BulkReferenceControllerSpec extends PlaySpec  with MockitoSugar with Guice
       }
 
       "validate email and reference with spaces, cache and redirect" in {
-        when(mockSessionService.cacheEmailAndReference(Matchers.any(), Matchers.any())(Matchers.any())).thenReturn(Future.successful(Some(gmpBulkSession)))
+        when(mockSessionService.cacheEmailAndReference(any(), any())(any())).thenReturn(Future.successful(Some(gmpBulkSession)))
 
           val result = TestBulkReferenceController.post()(FakeRequest().withJsonBody(Json.toJson(validRequestWithSpaces)))
           status(result) must equal(SEE_OTHER)
