@@ -102,13 +102,13 @@ class DateOfLeavingForm  @Inject()(mcc: MessagesControllerComponents) {
     radioButtons -> text.verifying(radioButtonSelected(mandatoryMessage))
   )(Leaving.apply)(Leaving.unapply))
 
-  private val formValueMapping = tuple(
-    "day" -> text,
-    "month" -> text,
-    "year" -> text
+  private def formValueMapping = tuple(
+    s"$leavingDate-day" -> text,
+    s"$leavingDate-month" -> text,
+    s"$leavingDate-year" -> text
   )
 
-
+  private def messageKeyForError(error: String) = s"$leavingDate.$error"
   private def invalid(error: String, params: String*) =
     Invalid(
       Seq(
@@ -118,22 +118,19 @@ class DateOfLeavingForm  @Inject()(mcc: MessagesControllerComponents) {
         )
       )
     )
-  private def messageKeyForError(error: String) = s"$leavingDate.error.$error"
+
 
 
   private def localDateFromValues(d: String, m: String, y: String) = Try(LocalDate.of(y.toInt, m.toInt, d.toInt))
 
   private val dateIsValid: RawFormValues => ValidationResult = {
-    case (d, m, y) if Try(s"$d$m$y".toInt).isFailure => println(": inside case 1")
-      invalid("gmp.error.date.leaving.invalid")
-    case (d, m, y) if localDateFromValues(d, m, y).isFailure => println(": inside case 2")
-      invalid("gmp.error.date.leaving.invalid")
+    case (d, m, y) if Try(s"$d$m$y".toInt).isFailure => invalid("gmp.error.date.leaving.invalid")
+    case (d, m, y) if localDateFromValues(d, m, y).isFailure => invalid("gmp.error.date.leaving.invalid")
     case _ => Valid
   }
 
   private def radioButtonSelected(mandatoryMessage: String) = Constraint[String] { r: String =>
-    if (r.isEmpty) Invalid(mandatoryMessage)
-    else Valid
+    if (r.isEmpty) invalid(mandatoryMessage) else Valid
   }
   private val dateFormatter = DateTimeFormatter.ofPattern("d M yyyy")
 
@@ -151,7 +148,7 @@ class DateOfLeavingForm  @Inject()(mcc: MessagesControllerComponents) {
   }
 
 
-  def dateMapping =  formValueMapping
+  def dateMapping: Mapping[GmpDate] =  formValueMapping
     .transform({ case (d, m, y) =>
       (d.trim, m.trim, y.trim) }, { v: RawFormValues => v })
     .verifying(Constraint(dateIsValid(_)))
@@ -159,7 +156,6 @@ class DateOfLeavingForm  @Inject()(mcc: MessagesControllerComponents) {
     .transform(
       { case (d, m, y) =>
         val date: LocalDate = LocalDate.parse(LocalDate.of(y.toInt, m.toInt, d.toInt).format(dateFormatter), dateFormatter)
-        println(" date is ::"+date)
         GmpDate(Some(date.getDayOfMonth.toString), Some(date.getMonthValue.toString), Some(y))
       },
       (d: GmpDate) => (d.day.getOrElse(""), d.month.getOrElse(""), d.year.getOrElse(""))

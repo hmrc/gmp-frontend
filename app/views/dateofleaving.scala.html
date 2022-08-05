@@ -41,7 +41,7 @@
             content = Text(Messages("gmp.date.example"))
         )),
         errorMessage = if (dateOfLeavingForm.hasErrors && dateOfLeavingForm.errors.head.key.contains("leavingDate")) {
-            Some(ErrorMessage(content = Text(s"${messages(s"${dateOfLeavingForm.errors.head.key}-${dateOfLeavingForm.errors.head.message}")}")))
+            Some(ErrorMessage(content = Text(s"${messages(s"${dateOfLeavingForm.errors.head.key}.${dateOfLeavingForm.errors.head.message}")}")))
         } else None,
         items = Seq(
             InputItem(name = "day", value = dateOfLeavingForm.data.get(s"leavingDate-day"), classes = "govuk-input--width-2" + inputErrorClass),
@@ -79,7 +79,7 @@
 
     @if(dateOfLeavingForm.errors.nonEmpty) {
         @govukErrorSummary(ErrorSummary(errorList = Seq(ErrorLink(
-            href = Some(s"#${dateOfLeavingForm.errors.head.key}"),
+            href = Some(s"#${if (dateOfLeavingForm.errors.head.key.contains("leavingDate")) s"leavingDate-day" else dateOfLeavingForm.errors.head.key }"),
             content = Text(s"${messages(s"${dateOfLeavingForm.errors.head.key}.${dateOfLeavingForm.errors.head.message}")}"),
         )), title = Text(messages("generic.errorSummary"))))
 
@@ -105,11 +105,13 @@
                             items = Seq(
                                 RadioItem(
                                     content = Text(Messages("gmp.generic.yes")),
-                                    value = Some(Leaving.YES_BEFORE)
+                                    value = Some(Leaving.YES_BEFORE),
+                                     checked = dateOfLeavingForm.data.values.toList.contains(Leaving.YES_BEFORE)
                                 ),
                                 RadioItem(
                                     content = Text(Messages("gmp.generic.no")),
                                     value = Some(Leaving.YES_AFTER),
+                                    checked = dateOfLeavingForm.data.values.toList.contains(Leaving.YES_AFTER),
                                     conditionalHtml = Some(conditionalHtml)
                                 )
                             )
@@ -132,15 +134,18 @@
                             items = Seq(
                                 RadioItem(
                                     content = Text(Messages("gmp.dol.threequestions.no.survivor")),
-                                    value = Some(Leaving.NO)
+                                    value = Some(Leaving.NO),
+                                     checked = dateOfLeavingForm.data.values.toList.contains(Leaving.NO)
                                 ),
                                 RadioItem(
                                     content = Text(Messages("gmp.dol.threequestions.before2016")),
-                                    value = Some(Leaving.YES_BEFORE)
+                                    value = Some(Leaving.YES_BEFORE),
+                                    checked = dateOfLeavingForm.data.values.toList.contains(Leaving.YES_BEFORE)
                                 ),
                                 RadioItem(
                                     content = Text(Messages("gmp.dol.threequestions.after2016")),
                                     value = Some(Leaving.YES_AFTER),
+                                    checked = dateOfLeavingForm.data.values.toList.contains(Leaving.YES_AFTER),
                                     conditionalHtml = Some(conditionalHtml)
                                 )
                             )

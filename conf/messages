@@ -425,3 +425,4 @@ error.leaving.required = Select whether the member had already left the scheme a
 LeavingDate.day = day
 LeavingDate.month = month
 LeavingDate.year = year
+#leavingDate.leavingDate-day.error.required=

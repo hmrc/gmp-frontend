@@ -47,7 +47,6 @@ class DateOfLeavingController @Inject()(authAction: AuthAction,
       case CalculationType.SURVIVOR => Messages("gmp.survivor.dol.question.mandatory")
       case _ => Messages("gmp.leaving.dol.question.mandatory")
     }
-    println(" error message ::"+mandatoryErrorMessage)
     dlf.dateOfLeavingForm1(mandatoryErrorMessage)
   }
 
@@ -75,8 +74,9 @@ class DateOfLeavingController @Inject()(authAction: AuthAction,
 
         form.flatMap {f => f.bindFromRequest.fold(
             formWithErrors => {
+              println(" formWithErrors day::"+formWithErrors)
               sessionService.fetchGmpSession.map {
-                case Some(session) => println("errors are2 ::"+formWithErrors.errors.head.key)
+                case Some(session) =>
                   BadRequest(views.dateOfLeaving(formWithErrors, session.scenario))
                 case _ => throw new RuntimeException
               }
