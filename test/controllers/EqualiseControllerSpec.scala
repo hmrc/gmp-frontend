@@ -134,7 +134,6 @@ class EqualiseControllerSpec extends PlaySpec with GuiceOneServerPerSuite with M
 
           "respond with error when rate not stored" in {
             when(mockSessionService.cacheEqualise(any())(any())).thenReturn(Future.successful(None))
-
               intercept[RuntimeException] {
                 await(TestEqualiseController.post(authenticatedFakeRequest().withMethod("POST")
                   .withFormUrlEncodedBody("Equalise.equalise" -> "1")))

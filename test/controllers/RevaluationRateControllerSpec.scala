@@ -65,6 +65,7 @@ class RevaluationRateControllerSpec extends PlaySpec with GuiceOneServerPerSuite
 
       val gmpSession = GmpSession(MemberDetails(nino, "A", "AAA"), "S1301234T", CalculationType.REVALUATION, None,
         Some(""), Leaving(GmpDate(None, None, None), Some(Leaving.NO)), None)
+
       when(mockSessionService.fetchGmpSession()(any())).thenReturn(Future.successful(Some(gmpSession)))
       "respond with ok" in {
 
@@ -104,8 +105,10 @@ class RevaluationRateControllerSpec extends PlaySpec with GuiceOneServerPerSuite
       }
 
       "go to failure page when session missing firstname" in {
+
         val emptySession = GmpSession(MemberDetails(nino, "", ""), "S1234567T", "", None, None,
           Leaving(GmpDate(None, None, None), None), None)
+
         when(mockSessionService.fetchGmpSession()(any())).thenReturn(Future.successful(Some(emptySession)))
 
           val result = TestRevaluationRateController.get(FakeRequest())
@@ -129,6 +132,7 @@ class RevaluationRateControllerSpec extends PlaySpec with GuiceOneServerPerSuite
       "go to failure page when session missing scenario" in {
         val emptySession = GmpSession(MemberDetails(nino, "A", "AAA"), "S1234567T", "", None, None,
           Leaving(GmpDate(None, None, None), None), None)
+
         when(mockSessionService.fetchGmpSession()(any())).thenReturn(Future.successful(Some(emptySession)))
 
           val result = TestRevaluationRateController.get(FakeRequest())
@@ -156,6 +160,7 @@ class RevaluationRateControllerSpec extends PlaySpec with GuiceOneServerPerSuite
       }
 
       "include the correct header when Survivor scenario selected" in {
+
         when(mockSessionService.fetchGmpSession()(any())).thenReturn(Future.successful(Some(gmpSession
           .copy(scenario = CalculationType.SURVIVOR))))
         val result = TestRevaluationRateController.get(FakeRequest())
@@ -163,41 +168,51 @@ class RevaluationRateControllerSpec extends PlaySpec with GuiceOneServerPerSuite
       }
 
       "include the correct header when non Payable Date scenario selected" in {
+
         when(mockSessionService.fetchGmpSession()(any())).thenReturn(Future.successful(Some(gmpSession
           .copy(scenario = CalculationType.DOL))))
+
         val result = TestRevaluationRateController.get(FakeRequest())
             contentAsString(result) must include(Messages("gmp.revaluation_rate.header"))
       }
 
       "include the correct header when non revaluation Scenario pre 06/04/2016 selected" in {
+
         val gmpSession = GmpSession(MemberDetails(nino, "A", "AAA"), "S1234567T", CalculationType.REVALUATION,
           Some(GmpDate(Some("1"), Some("1"), Some("2015"))), None, Leaving(GmpDate(None, None, None),
             Some(Leaving.YES_BEFORE)), None)
+
         when(mockSessionService.fetchGmpSession()(any())).thenReturn(Future.successful(Some(gmpSession)))
         val result = TestRevaluationRateController.get(FakeRequest())
             contentAsString(result) must include(Messages("gmp.revaluation_rate.header"))
       }
 
       "include the correct header when non revaluation Scenario after 06/04/2016 selected" in {
+
         val gmpSession = GmpSession(MemberDetails(nino, "A", "AAA"), "S1234567T", CalculationType.REVALUATION,
           Some(GmpDate(Some("1"), Some("1"), Some("2018"))), None, Leaving(GmpDate(None, None, None),
             Some(Leaving.YES_AFTER)), None)
+
         when(mockSessionService.fetchGmpSession()(any())).thenReturn(Future.successful(Some(gmpSession)))
         val result = TestRevaluationRateController.get(FakeRequest())
             contentAsString(result) must include(Messages("gmp.revaluation_rate.header"))
       }
 
       "not show limited rate option when leaving date after 06/04/2016 selected" in {
+
         val gmpSession = GmpSession(MemberDetails(nino, "A", "AAA"), "S1234567T", CalculationType.SPA, None, None,
           Leaving(GmpDate(Some("1"), Some("5"), Some("2016")), Some(Leaving.YES_AFTER)), None)
+
         when(mockSessionService.fetchGmpSession()(any())).thenReturn(Future.successful(Some(gmpSession)))
         val result = TestRevaluationRateController.get(FakeRequest())
             contentAsString(result) must not include (Messages("gmp.revaluation_rate.limited"))
       }
 
       "show limited rate option when leaving date before 06/04/2016 selected" in {
+
         val gmpSession = GmpSession(MemberDetails(nino, "A", "AAA"), "S1234567T", CalculationType.SPA, None, None,
           Leaving(GmpDate(None, None, None), Some(Leaving.YES_BEFORE)), None)
+
         when(mockSessionService.fetchGmpSession()(any())).thenReturn(Future.successful(Some(gmpSession)))
         val result = TestRevaluationRateController.get(FakeRequest())
             contentAsString(result) must include (Messages("gmp.revaluation_rate.limited"))
@@ -207,9 +222,11 @@ class RevaluationRateControllerSpec extends PlaySpec with GuiceOneServerPerSuite
 
 
   "Revaluation controller POST" must {
+
     def authenticatedFakeRequest(url: String = "") = {
       FakeRequest("GET", url).withSession()
     }
+
     when(mockSessionService.fetchScenario()(any())).thenReturn(Future.successful(None))
 
     "authenticated users" must {

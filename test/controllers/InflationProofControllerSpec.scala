@@ -99,6 +99,7 @@ class InflationProofControllerSpec extends PlaySpec with GuiceOneServerPerSuite 
               val result = TestInflationProofController.post(authenticatedFakeRequest().withMethod("POST")
                 .withFormUrlEncodedBody("gmpDate" -> "inflationProof.revaluationDate", "revaluate" -> "Some('No')"))
               status(result) mustBe(SEE_OTHER)
+
               redirectLocation(result).get must be(routes.ResultsController.get.url)
 
           }
@@ -108,6 +109,7 @@ class InflationProofControllerSpec extends PlaySpec with GuiceOneServerPerSuite 
               when(mockSessionService.cacheRevaluationDate(any())(any())).thenReturn(Future.successful(Some(session)))
               TestInflationProofController.post(authenticatedFakeRequest().withMethod("POST")
                 .withFormUrlEncodedBody("gmpDate" -> "inflationProof.revaluationDate", "revaluate" -> "inflationProof.revaluate"))
+
               verify(mockSessionService, atLeastOnce()).cacheRevaluationDate(any())(any())
 
           }
