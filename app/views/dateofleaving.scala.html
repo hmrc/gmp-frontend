@@ -32,13 +32,6 @@
 
 @(dateOfLeavingForm: Form[models.Leaving],scenario: String)(implicit request: Request[_], messages: Messages, applicationConfig: ApplicationConfig)
 @conditionalHtml = {
-@if(dateOfLeavingForm.hasGlobalErrors) {
-    @dateOfLeavingForm.globalErrors.zipWithIndex.map { case (error, index) =>
-        @if(error.key.contains("leavingDate")) {
-            <span style="display: block" class="govuk-error-message" id="global-error-@index">@error.message</span>
-        }
-    }
-}
 @govukDateInput(DateInput(
     id = "leavingDate",
     hint = Some(Hint(
