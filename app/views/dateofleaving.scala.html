@@ -78,13 +78,6 @@
             content = Text(s"${messages(s"${dateOfLeavingForm.errors.head.message}")}"),
         )), title = Text(messages("generic.errorSummary"))))
     }
-@*    @if((dateOfLeavingForm.hasGlobalErrors) ) {*@
-@*        @dateOfLeavingForm.globalErrors.zipWithIndex.map { case (error, index) =>*@
-@*            @if(error.key.contains("leaving")) {*@
-@*                <span style="display: block" class="govuk-error-message" id="global-error-@index">@error.message</span>*@
-@*            }*@
-@*        }*@
-@*    }*@
 
     @viewHelpers.form(action = routes.DateOfLeavingController.post) {
         @if(scenario == CalculationType.DOL) {
@@ -177,13 +170,14 @@
 
         </div>
         </div>
+        @govukButton(Button(content = Text(messages("gmp.continue.button"))))
 
-        <div>
-        @govukButton(Button(
-            content = Text(Messages("gmp.continue.button")),
-            inputType = Some("submit"),
-            attributes = Map("data-journey-click" -> s"""@Messages("gmp.ga-track.button.click"):@Messages("gmp.continue.button")""")
-        ))
-        </div>
+@*        <div>*@
+@*        @govukButton(Button(*@
+@*            content = Text(Messages("gmp.continue.button")),*@
+@*            inputType = Some("submit"),*@
+@*            attributes = Map("data-journey-click" -> s"""@Messages("gmp.ga-track.button.click"):@Messages("gmp.continue.button")""")*@
+@*        ))*@
+@*        </div>*@
     }
 }

@@ -54,7 +54,7 @@ class RevaluationRateController @Inject()( authAction: AuthAction,
           case _ if session.scon == "" => Ok(views.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/pension-details"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title")))
           case _ if session.memberDetails.nino == "" || session.memberDetails.firstForename == "" || session.memberDetails.surname == "" => Ok(views.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/member-details"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title")))
           case _ if session.scenario == "" => Ok(views.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/calculation-reason"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title")))
-          case _ if ((session.leaving.leaving != Leaving.YES_AFTER) || (session.leaving.leaving != Leaving.YES_BEFORE) || (session.leaving.leaving != Leaving.NO)) => Ok(views.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/left-scheme"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title")))
+          case _ if !session.leaving.leaving.isDefined => Ok(views.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/left-scheme"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title")))
           case _ => Ok(views.revaluationRate(revaluationRateForm, session))
         }
         case _ => throw new RuntimeException
