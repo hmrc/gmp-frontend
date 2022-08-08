@@ -29,7 +29,7 @@ import scala.concurrent.Future
 class SessionService @Inject()(metrics: ApplicationMetrics,gmpSessionCache: GmpSessionCache) extends Logging{
 
   val GMP_SESSION_KEY = "gmp_session"
-  val cleanSession = GmpSession(MemberDetails("", "", ""), "", "", None, None, Leaving(Some(GmpDate(None, None, None)), ""), None)
+  val cleanSession = GmpSession(MemberDetails("", "", ""), "", "", None, None, Leaving(GmpDate(None, None, None), None), None)
 
   val GMP_BULK_SESSION_KEY = "gmp_bulk_session"
   val CALLBACK_SESSION_KEY = "gmp_callback_session"
@@ -264,8 +264,8 @@ class SessionService @Inject()(metrics: ApplicationMetrics,gmpSessionCache: GmpS
         currentSession match {
           case Some(returnedSession) => {
             (returnedSession.scenario, returnedSession.leaving.leaving) match {
-              case (CalculationType.REVALUATION, Leaving.NO) =>
-                returnedSession.copy(revaluationDate = date, rate = Some(RevaluationRate.HMRC), leaving = Leaving(date, Leaving.NO))
+              case (CalculationType.REVALUATION, Some(Leaving.NO)) =>
+                returnedSession.copy(revaluationDate = date, rate = Some(RevaluationRate.HMRC), leaving = Leaving(date.get, Some(Leaving.NO)))
               case _ => returnedSession.copy(revaluationDate = date)
             }
           }

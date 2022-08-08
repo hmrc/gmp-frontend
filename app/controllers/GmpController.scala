@@ -19,7 +19,7 @@ package controllers
 
 import com.google.inject.{Inject, Singleton}
 import config.{ApplicationConfig, GmpContext}
-import models.{CalculationType, GmpDate, GmpSession, Leaving}
+import models.{CalculationType, GmpSession, Leaving}
 import play.api.Logging
 import play.api.i18n.{Messages, MessagesImpl}
 import play.api.mvc.{MessagesControllerComponents, Result}
@@ -62,9 +62,9 @@ class GmpPageFlow @Inject()(val authConnector: AuthConnector,
   val forwardNavigation: Map[String, GmpSession => Result] = Map(
     PageType.INFLATION_PROOF -> { (session: GmpSession) => Redirect(routes.ResultsController.get) },
     PageType.REVALUATION -> { (session: GmpSession) =>
-      if (session.leaving.leaving.equals(Leaving.NO))
+      if (session.leaving.leaving.isDefined && session.leaving.leaving.get.equals(Leaving.NO))
         Redirect(controllers.routes.EqualiseController.get)
-      else if (session.leaving.leaving.equals(Leaving.YES_BEFORE))
+      else if (session.leaving.leaving.isDefined && session.leaving.leaving.get.equals(Leaving.YES_BEFORE))
         Redirect(controllers.routes.RevaluationRateController.get)
       else if (sameTaxYear(session))
         Redirect(routes.EqualiseController.get)
@@ -88,14 +88,14 @@ class GmpPageFlow @Inject()(val authConnector: AuthConnector,
         case CalculationType.DOL => Redirect(controllers.routes.EqualiseController.get)
         case CalculationType.PAYABLE_AGE | CalculationType.SPA => {
           session.leaving.leaving match {
-            case Leaving.YES_AFTER | Leaving.YES_BEFORE => Redirect(controllers.routes.RevaluationRateController.get)
+            case Some(Leaving.YES_AFTER) | Some(Leaving.YES_BEFORE) => Redirect(controllers.routes.RevaluationRateController.get)
             case _ => Redirect(controllers.routes.EqualiseController.get)
           }
         }
         case CalculationType.REVALUATION => Redirect(controllers.routes.RevaluationController.get)
         case CalculationType.SURVIVOR => {
           session.leaving.leaving match {
-            case Leaving.YES_AFTER | Leaving.YES_BEFORE => Redirect(routes.RevaluationRateController.get)
+            case Some(Leaving.YES_AFTER) | Some(Leaving.YES_BEFORE) => Redirect(routes.RevaluationRateController.get)
             case _ => Redirect(controllers.routes.InflationProofController.get)
           }
         }
@@ -125,7 +125,7 @@ class GmpPageFlow @Inject()(val authConnector: AuthConnector,
     },
     PageType.INFLATION_PROOF -> { (session: GmpSession) =>
       session.leaving.leaving match {
-        case Leaving.YES_AFTER | Leaving.YES_BEFORE => Redirect(routes.RevaluationRateController.get)
+        case Some(Leaving.YES_AFTER) | Some(Leaving.YES_BEFORE) => Redirect(routes.RevaluationRateController.get)
         case _ => Redirect(routes.DateOfLeavingController.get)
       }
     },
@@ -133,7 +133,7 @@ class GmpPageFlow @Inject()(val authConnector: AuthConnector,
       session.scenario match {
         case (CalculationType.REVALUATION) => {
 
-          if (sameTaxYear(session) || (session.leaving.leaving.equals(Leaving.NO)))
+          if (sameTaxYear(session) || (session.leaving.leaving.isDefined && session.leaving.leaving.get.equals(Leaving.NO)))
             Redirect(routes.RevaluationController.get)
           else
             Redirect(routes.RevaluationRateController.get)
@@ -141,7 +141,7 @@ class GmpPageFlow @Inject()(val authConnector: AuthConnector,
         }
         case (CalculationType.SPA | CalculationType.PAYABLE_AGE) =>
           session.leaving.leaving match {
-            case Leaving.YES_AFTER | Leaving.YES_BEFORE => Redirect(routes.RevaluationRateController.get)
+            case Some(Leaving.YES_AFTER) | Some(Leaving.YES_BEFORE) => Redirect(routes.RevaluationRateController.get)
             case _ => Redirect(routes.DateOfLeavingController.get)
           }
 
@@ -168,7 +168,7 @@ class GmpPageFlow @Inject()(val authConnector: AuthConnector,
 
     session.revaluationDate match {
       case Some(rDate) => {
-        (rDate.getAsLocalDate, session.leaving.leavingDate.getOrElse(GmpDate(None, None, None)).getAsLocalDate) match {
+        (rDate.getAsLocalDate, session.leaving.leavingDate.getAsLocalDate) match {
           case (Some(revDate), Some(lDate)) => {
             TaxYear.taxYearFor(revDate) == TaxYear.taxYearFor(lDate)
           }

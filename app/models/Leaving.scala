@@ -18,7 +18,7 @@ package models
 
 import play.api.libs.json.Json
 
-case class Leaving(leavingDate: Option[GmpDate], leaving: String)
+case class Leaving(leavingDate: GmpDate, leaving: Option[String])
 
 object Leaving {
   implicit val formats = Json.format[Leaving]

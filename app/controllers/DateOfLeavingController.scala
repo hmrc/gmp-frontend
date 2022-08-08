@@ -47,57 +47,55 @@ class DateOfLeavingController @Inject()(authAction: AuthAction,
       case CalculationType.SURVIVOR => Messages("gmp.survivor.dol.question.mandatory")
       case _ => Messages("gmp.leaving.dol.question.mandatory")
     }
-    dlf.dateOfLeavingForm1(mandatoryErrorMessage)
+    dlf.dateOfLeavingForm(mandatoryErrorMessage)
   }
 
   def get = authAction.async {
-      implicit request =>
-        sessionService.fetchGmpSession.map {
-          case Some(session) => session match {
-            case _ if session.scon == "" => Ok(views.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/pension-details"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title")))
-            case _ if session.memberDetails.nino == "" || session.memberDetails.firstForename == "" || session.memberDetails.surname == "" => Ok(views.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/member-details"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title")))
-            case _ if session.scenario == "" => Ok(views.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/calculation-reason"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title")))
-            case _ => println("scenario is ::"+session.scenario)
-              Ok (views.dateOfLeaving (dateOfLeavingForm(session.scenario), session.scenario) )
-          }
-          case _ => Ok(views.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/dashboard"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title")))
+    implicit request =>
+      sessionService.fetchGmpSession.map {
+        case Some(session) => session match {
+          case _ if session.scon == "" => Ok(views.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/pension-details"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title")))
+          case _ if session.memberDetails.nino == "" || session.memberDetails.firstForename == "" || session.memberDetails.surname == "" => Ok(views.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/member-details"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title")))
+          case _ if session.scenario == "" => Ok(views.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/calculation-reason"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title")))
+          case _ => Ok (views.dateOfLeaving (dateOfLeavingForm(session.scenario), session.scenario) )
         }
+        case _ => Ok(views.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/dashboard"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title")))
+      }
   }
 
   def post = authAction.async {
-      implicit request => {
-        logger.debug(s"[DateOfLeavingController][post][POST] : ${request.body}")
-        val form = sessionService.fetchGmpSession.map{
-          case Some(session) => dateOfLeavingForm(session.scenario)
-          case None => throw new RuntimeException("No session found in order to retrieve scenario")
-        }
-
-        form.flatMap {f => f.bindFromRequest.fold(
-            formWithErrors => {
-              println(" formWithErrors day::"+formWithErrors)
-              sessionService.fetchGmpSession.map {
-                case Some(session) =>
-                  BadRequest(views.dateOfLeaving(formWithErrors, session.scenario))
-                case _ => throw new RuntimeException
-              }
-            },
-            leaving => {
-              sessionService.cacheLeaving(leaving).map {
-                case Some(session) => nextPage("DateOfLeavingController", session)
-                case _ => throw new RuntimeException
-              }
-            }
-          )
-        }
+    implicit request => {
+      logger.debug(s"[DateOfLeavingController][post][POST] : ${request.body}")
+      val form = sessionService.fetchGmpSession.map{
+        case Some(session) => dateOfLeavingForm(session.scenario)
+        case None => throw new RuntimeException("No session found in order to retrieve scenario")
       }
+
+      form.flatMap {f => f.bindFromRequest.fold(
+        formWithErrors => {
+          println("formWithErrors::"+formWithErrors)
+          sessionService.fetchGmpSession.map {
+            case Some(session) => BadRequest(views.dateOfLeaving(formWithErrors, session.scenario))
+            case _ => throw new RuntimeException
+          }
+        },
+        leaving => {
+          sessionService.cacheLeaving(leaving).map {
+            case Some(session) => nextPage("DateOfLeavingController", session)
+            case _ => throw new RuntimeException
+          }
+        }
+      )
+      }
+    }
   }
 
   def back = authAction.async {
-      implicit request => {
-        sessionService.fetchGmpSession() map {
-          case Some(session) => previousPage("DateOfLeavingController", session)
-          case _ => throw new RuntimeException
-        }
+    implicit request => {
+      sessionService.fetchGmpSession() map {
+        case Some(session) => previousPage("DateOfLeavingController", session)
+        case _ => throw new RuntimeException
       }
+    }
   }
 }

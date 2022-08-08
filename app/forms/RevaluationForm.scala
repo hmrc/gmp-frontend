@@ -23,7 +23,6 @@ import play.api.data.Forms._
 import play.api.data.validation.{Constraint, Invalid, Valid, ValidationError}
 import play.api.i18n.{Messages, MessagesImpl}
 import play.api.mvc.MessagesControllerComponents
-import uk.gov.voa.play.form.ConditionalMappings.mandatoryIfEqual
 
 @Singleton
 class RevaluationForm @Inject()(mcc: MessagesControllerComponents) {
@@ -39,16 +38,18 @@ class RevaluationForm @Inject()(mcc: MessagesControllerComponents) {
   val revaluationDateConstraint: Constraint[RevaluationDate] = Constraint("revaluationDate")({
     revaluationDate => {
       val errors =
-        if (revaluationDate.leaving.leaving.equals(Leaving.NO) &&
+        if (revaluationDate.leaving.leaving.isDefined &&
+            revaluationDate.leaving.leaving.get.equals(Leaving.NO) &&
             !revaluationDate.revaluationDate.isOnOrAfter06042016)
         {
           Seq(ValidationError(messages("gmp.error.revaluation_pre2016_not_left"), "revaluationDate")) // 2016
         }
-        else if (revaluationDate.revaluationDate.isBefore(revaluationDate.leaving.leavingDate.getOrElse(GmpDate(None, None, None))) &&
+        else if (revaluationDate.revaluationDate.isBefore(revaluationDate.leaving.leavingDate) &&
           revaluationDate.leaving.leaving != Some("no")) {
-          Seq(ValidationError(Messages("gmp.error.revaluation_before_leaving", revaluationDate.leaving.leavingDate.getOrElse(GmpDate(None, None, None)).getAsText), "revaluationDate"))
+          Seq(ValidationError(Messages("gmp.error.revaluation_before_leaving", revaluationDate.leaving.leavingDate.getAsText), "revaluationDate"))
         }
-        else if (revaluationDate.leaving.leaving.equals(Leaving.YES_BEFORE) &&
+        else if (revaluationDate.leaving.leaving.isDefined &&
+        revaluationDate.leaving.leaving.get.equals(Leaving.YES_BEFORE) &&
         !revaluationDate.revaluationDate.isOnOrAfter05041978){
           Seq(ValidationError(Messages("gmp.error.reval_date.from"), "revaluationDate"))
         }
@@ -75,12 +76,12 @@ class RevaluationForm @Inject()(mcc: MessagesControllerComponents) {
   )
 
   val leavingMapping = mapping(
-    "leavingDate" -> mandatoryIfEqual("leaving", "true", mapping(
+    "leavingDate" -> mapping(
       "day" -> optional(text),
       "month" -> optional(text),
       "year" -> optional(text)
-    )(GmpDate.apply)(GmpDate.unapply)),
-    "leaving" -> text
+    )(GmpDate.apply)(GmpDate.unapply),
+    "leaving" -> optional(text)
   )(Leaving.apply)(Leaving.unapply)
 
   val revaluationForm = Form(
