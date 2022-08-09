@@ -125,20 +125,18 @@ class InflationProofControllerSpec extends PlaySpec with GuiceOneServerPerSuite 
         "with invalid data" must {
 
           val revaluationDate = GmpDate(Some("a"), Some("b"), Some("c"))
-          val inflationProof = InflationProof(revaluationDate, Some("yes"))
-          val badGmpDate = (s"${revaluationDate.day.toString}, ${revaluationDate.month.toString}, ${revaluationDate.year.toString}")
-
+          val badGmpDate = "a,b,c"
           "respond with BAD_REQUEST" in {
 
               val result = TestInflationProofController.post(authenticatedFakeRequest().withMethod("POST")
-                .withFormUrlEncodedBody("gmpDate" -> badGmpDate, "revaluate" -> inflationProof.revaluate.toString))
+                .withFormUrlEncodedBody("revaluationDate" -> badGmpDate, "revaluate" -> "Yes"))
             status(result) mustBe(BAD_REQUEST)
           }
 
           "display the errors" in {
 
               val result = TestInflationProofController.post(authenticatedFakeRequest().withMethod("POST")
-                .withFormUrlEncodedBody("gmpDate" -> badGmpDate, "revaluate" -> inflationProof.revaluate.toString))
+                .withFormUrlEncodedBody("revaluationDate" -> badGmpDate, "revaluate" -> "Yes"))
               contentAsString(result) must include(Messages("gmp.error.date.nonnumber"))
           }
         }
