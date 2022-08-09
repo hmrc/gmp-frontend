@@ -219,7 +219,12 @@ class DateOfLeavingControllerSpec extends PlaySpec with GuiceOneServerPerSuite w
 
   }
 
+  def authenticatedFakeRequest(url: String = "") = {
+    FakeRequest("GET", url).withSession()
+  }
+
   "Date of Leaving controller POST" must {
+
 
     "authenticated users" must {
 
@@ -242,7 +247,8 @@ class DateOfLeavingControllerSpec extends PlaySpec with GuiceOneServerPerSuite w
               Leaving(baseValidDate.copy(day = Some("31"), month = Some("2"), year = Some("2015")), Some(Leaving.YES_AFTER))
             )
             when(mockSessionService.fetchGmpSession()(any())).thenReturn(Future.successful(Some(gmpSession)))
-            val result = TestDateOfLeavingController.post(FakeRequest().withJsonBody(postData))
+            val result = TestDateOfLeavingController.post(authenticatedFakeRequest().withMethod("POST")
+              .withFormUrlEncodedBody("Leaving.leavingDate" -> "31, 2, 2015", "Leaving.leaving" -> "yes-after"))
             contentAsString(result) must include(Messages("gmp.error.date.leaving.invalid"))
         }
 
