@@ -129,10 +129,13 @@ class ScenarioControllerSpec extends PlaySpec with GuiceOneServerPerSuite with M
   }
 
   "ScenarioController POST" must {
+    def authenticatedFakeRequest(url: String = "") = {
+      FakeRequest("GET", url).withSession()
+    }
 
     "respond with bad request must choose option" in {
 
-          val result = TestScenarioController.post()(FakeRequest())
+          val result = TestScenarioController.post(authenticatedFakeRequest().withMethod("POST"))
 
           status(result) must equal(BAD_REQUEST)
           contentAsString(result) must include(Messages("gmp.error.scenario.mandatory"))
@@ -145,15 +148,17 @@ class ScenarioControllerSpec extends PlaySpec with GuiceOneServerPerSuite with M
 
       val validReason = Json.toJson(CalculationType(Some(CalculationType.DOL)))
 
-        val result = TestScenarioController.post()(FakeRequest().withJsonBody(validReason))
-        status(result) must equal(SEE_OTHER)
+        val result = TestScenarioController.post(authenticatedFakeRequest().withMethod("POST")
+          .withFormUrlEncodedBody("CalculationType.calcType" -> "0"))
+        status(result) mustBe(SEE_OTHER)
     }
 
     "respond with exception when session cache fails" in {
       when(mockSessionService.cacheScenario(any())(any())).thenReturn(Future.successful(None))
       val validReason = Json.toJson(CalculationType(Some(CalculationType.DOL)))
         intercept[RuntimeException]{
-          (TestScenarioController.post()(FakeRequest().withJsonBody(validReason)).futureValue)
+          (TestScenarioController.post(authenticatedFakeRequest().withMethod("POST")
+            .withFormUrlEncodedBody("CalculationType.calcType" -> "0")).futureValue)
 
       }
     }

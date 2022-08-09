@@ -97,6 +97,11 @@ class EqualiseControllerSpec extends PlaySpec with GuiceOneServerPerSuite with M
   }
 
   val gmpSession = GmpSession(MemberDetails("", "", ""), "S1301234T", "", None, Some(""), Leaving(GmpDate(None, None, None), None), equalise = Some(1))
+
+  def authenticatedFakeRequest(url: String = "") = {
+    FakeRequest("GET", url).withSession()
+  }
+
   "EqualiseController POST" must {
 
     "with invalid data" must {
@@ -122,20 +127,17 @@ class EqualiseControllerSpec extends PlaySpec with GuiceOneServerPerSuite with M
 
             when(mockSessionService.cacheEqualise(any())(any())).thenReturn(Future.successful(Some(gmpSession)))
 
-              val postData = Json.toJson(
-                Equalise(Some(1))
-              )
-              val result = TestEqualiseController.post(FakeRequest().withJsonBody(postData))
-              status(result) must equal(SEE_OTHER)
+              val result = TestEqualiseController.post(authenticatedFakeRequest().withMethod("POST")
+                .withFormUrlEncodedBody("Equalise.equalise" -> "1"))
+              status(result) mustBe(SEE_OTHER)
           }
 
           "respond with error when rate not stored" in {
             when(mockSessionService.cacheEqualise(any())(any())).thenReturn(Future.successful(None))
-              val postData = Json.toJson(
-                Equalise(Some(1))
-              )
+
               intercept[RuntimeException] {
-                await(TestEqualiseController.post(FakeRequest().withJsonBody(postData)))
+                await(TestEqualiseController.post(authenticatedFakeRequest().withMethod("POST")
+                  .withFormUrlEncodedBody("Equalise.equalise" -> "1")))
             }
           }
         }
