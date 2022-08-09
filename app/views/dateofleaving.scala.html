@@ -94,11 +94,13 @@
                 items = Seq(
                     RadioItem(
                         content = Text(Messages("gmp.generic.yes")),
-                        value = Some(Leaving.YES_BEFORE)
+                        value = Some(Leaving.YES_BEFORE),
+                        checked = dateOfLeavingForm.data.values.toList.contains(Leaving.YES_BEFORE)
                     ),
                     RadioItem(
                         content = Text(Messages("gmp.generic.no")),
                         value = Some(Leaving.YES_AFTER),
+                        checked = dateOfLeavingForm.data.values.toList.contains(Leaving.YES_AFTER),
                         conditionalHtml = Some(conditionalHtml)
                     )
                 )
@@ -151,15 +153,18 @@
                 items = Seq(
                     RadioItem(
                         content = Text(Messages("gmp.dol.threequestions.no")),
-                        value = Some(Leaving.NO)
+                        value = Some(Leaving.NO),
+                        checked = dateOfLeavingForm.data.values.toList.contains(Leaving.NO)
                     ),
                     RadioItem(
                         content = Text(Messages("gmp.dol.threequestions.before2016")),
-                        value = Some(Leaving.YES_BEFORE)
+                        value = Some(Leaving.YES_BEFORE),
+                        checked = dateOfLeavingForm.data.values.toList.contains(Leaving.YES_BEFORE)
                     ),
                     RadioItem(
                         content = Text(Messages("gmp.dol.threequestions.after2016")),
                         value = Some(Leaving.YES_AFTER),
+                        checked = dateOfLeavingForm.data.values.toList.contains(Leaving.YES_AFTER),
                         conditionalHtml = Some(conditionalHtml)
                     )
                 ),
@@ -172,12 +177,5 @@
         </div>
         @govukButton(Button(content = Text(messages("gmp.continue.button"))))
 
-@*        <div>*@
-@*        @govukButton(Button(*@
-@*            content = Text(Messages("gmp.continue.button")),*@
-@*            inputType = Some("submit"),*@
-@*            attributes = Map("data-journey-click" -> s"""@Messages("gmp.ga-track.button.click"):@Messages("gmp.continue.button")""")*@
-@*        ))*@
-@*        </div>*@
     }
 }
