@@ -57,11 +57,9 @@ class InflationProofController @Inject()( authAction: AuthAction,
 
         inflationProofForm.bindFromRequest.fold(
           formWithErrors => {
-            println("form with errors " + formWithErrors)
             Future.successful(BadRequest(views.inflationProof(formWithErrors)))
           },
           revaluation => {
-            println("inside revaluation - recognises no errors")
             val dateToStore = revaluation.revaluate match {
               case Some("Yes") => Some(revaluation.revaluationDate)
               case _ => None

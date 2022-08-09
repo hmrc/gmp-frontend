@@ -124,7 +124,7 @@ class InflationProofControllerSpec extends PlaySpec with GuiceOneServerPerSuite 
 
         "with invalid data" must {
 
-          val revaluationDate = GmpDate(Some("a"), Some("b"), Some("c"))
+          // val revaluationDate = GmpDate(Some("a"), Some("b"), Some("c"))
           val badGmpDate = "a,b,c"
           "respond with BAD_REQUEST" in {
 
