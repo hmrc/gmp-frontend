@@ -16,41 +16,56 @@
 
 @import config.ApplicationConfig
 @import views.html.helpers._
-@import views.OldViewHelpers
+@import uk.gov.hmrc.govukfrontend.views.html.components._
+@import views.ViewHelpers
 
-@this(gmpMain: gmp_main_old, viewHelpers: OldViewHelpers)
+@this(gmpMain: gmp_main, viewHelpers: ViewHelpers,govukRadios : GovukRadios,
+        govukButton : GovukButton,
+        govukErrorMessage: GovukErrorMessage,
+        govukErrorSummary : GovukErrorSummary)
 
 @(equaliseForm: Form[models.Equalise])(implicit request: Request[_], messages: Messages, applicationConfig: ApplicationConfig)
 
-@gmpMain(title = Messages("gmp.equalise_header")+ " - " + Messages("service.title") + " - " + Messages("gov.uk")) {
+    @gmpMain(title = Messages("gmp.equalise_header")+ " - " + Messages("service.title") + " - " + Messages("gov.uk")) {
 
-      @includes.back_link(Messages("gmp.equalise_header"))
+        @includes.back_link(Messages("gmp.equalise_header"))
 
-      @views.html.helpers.errorSummary(equaliseForm, formHeaderKey = "gmp.equalise_header", focusId = Some("equalise-yes"))
+        @if(equaliseForm.errors.nonEmpty) {
+            @govukErrorSummary(ErrorSummary(errorList = Seq(ErrorLink(
+                href = Some(s"#equalise"),
+                content = Text(s"${messages(s"${equaliseForm.errors.head.message}")}"),
+            )), title = Text(messages("generic.errorSummary"))))
+        }
 
-      @viewHelpers.form(action = routes.EqualiseController.post) {
+        @viewHelpers.form(action = routes.EqualiseController.post) {
+
+            @govukRadios(Radios(
+                fieldset = Some(Fieldset(
+                    legend = Some(Legend(
+                        classes = "govuk-fieldset__legend--l",
+                        isPageHeading = true
+                    ))
+                )),
+                idPrefix = Some("equalise"),
+                name = "equalise",
+                items = Seq(
+                    RadioItem(
+                        content = Text(Messages("gmp.generic.yes")),
+                        value = Some("1"),
+                        checked = equaliseForm.data.values.toList.contains("1")
+                    ),
+                    RadioItem(
+                        content = Text(Messages("gmp.generic.no")),
+                        value = Some("0"),
+                        checked = equaliseForm.data.values.toList.contains("0")
+                    )
+                ),
+                errorMessage = equaliseForm.error("equalise").map(e => ErrorMessage(content = Text(messages(e.message))))
+            ))
+
+            @govukButton(Button(content = Text(messages("gmp.continue.button"))))
+
+        }
+    }
 
 
-        <div class="form-field inline @if(equaliseForm.hasErrors) {form-field--error}">
-
-          @gmpRadioGroup(
-            equaliseForm("equalise"),
-            Seq(
-              ("1", "yes", "none") -> Messages("gmp.generic.yes"),
-              ("0", "no", "none") -> Messages("gmp.generic.no")
-            ),
-            '_fieldsetAttributesLegend -> "equalise",
-            '_legend -> Messages("gmp.equalise_header"),
-            '_labelAfter -> true,
-            '_labelClass -> "block-label",
-            '_groupClass -> "inline-block",
-            '_trackGA -> true)
-
-        </div>
-
-          <button data-journey-click='@Messages("gmp.ga-track.button.click"):@Messages("gmp.equalise_header"):@Messages("gmp.continue.button")'
-                  class="button" type="submit" id="submit-button">@Messages("gmp.continue.button")</button>
-
-
-   }
-}
