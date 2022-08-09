@@ -57,9 +57,14 @@ class PensionDetailsSconControllerSpec extends PlaySpec with GuiceOneServerPerSu
   lazy val pensionDetailsForm = new PensionDetails_no_longer_used_Form(mcc)
   lazy val views = app.injector.instanceOf[Views]
 
+
   implicit val hc = new HeaderCarrier(sessionId = Some(SessionId(s"session-${UUID.randomUUID}")))
 
   object TestPensionDetailsController extends PensionDetailsController(FakeAuthAction, mockAuthConnector, mockGmpConnector,mockSessionService,FakeGmpContext, metrics,ac,pensionDetailsForm,mcc,ec,gmpSessionCache,views) {
+  }
+
+  def authenticatedFakeRequest(url: String = "") = {
+    FakeRequest("GET", url).withSession()
   }
 
   "pension details GET " must {
@@ -96,20 +101,23 @@ class PensionDetailsSconControllerSpec extends PlaySpec with GuiceOneServerPerSu
       "validate scon and store scon and redirect" in {
         when(mockSessionService.cachePensionDetails(any())(any())).thenReturn(Future.successful(Some(gmpSession)))
         when(mockGmpConnector.validateScon(any(),any())(any())).thenReturn(Future.successful(ValidateSconResponse(true)))
-          val result = TestPensionDetailsController.post()(FakeRequest().withJsonBody(Json.toJson(validGmpRequest)))
-          status(result) must equal(SEE_OTHER)
+          val result = TestPensionDetailsController.post(authenticatedFakeRequest().withMethod("POST")
+            .withFormUrlEncodedBody("scon" -> "S1301234T"))
+          status(result) mustBe SEE_OTHER
       }
 
       "respond with bad request missing SCON" in {
-          val result = TestPensionDetailsController.post()(FakeRequest().withJsonBody(Json.toJson(emptySconGmpRequest)))
-          status(result) must equal(BAD_REQUEST)
+          val result = TestPensionDetailsController.post(authenticatedFakeRequest().withMethod("POST")
+            .withFormUrlEncodedBody("scon" -> ""))
+          status(result) mustBe BAD_REQUEST
           contentAsString(result) must include(Messages("gmp.error.mandatory.new", Messages("gmp.scon")))
       }
 
       "respond with bad request when scon not validated" in {
         when(mockGmpConnector.validateScon(any(),any())(any())).thenReturn(Future.successful(ValidateSconResponse(false)))
-          val result = TestPensionDetailsController.post()(FakeRequest().withJsonBody(Json.toJson(validGmpRequest)))
-          status(result) must equal(BAD_REQUEST)
+          val result = TestPensionDetailsController.post(authenticatedFakeRequest().withMethod("POST")
+            .withFormUrlEncodedBody("scon" -> "S1301234T"))
+          status(result) mustBe BAD_REQUEST
           contentAsString(result) must include(Messages("gmp.error.scon.nps_invalid", Messages("gmp.scon")))
       }
 
@@ -117,7 +125,8 @@ class PensionDetailsSconControllerSpec extends PlaySpec with GuiceOneServerPerSu
         when(mockSessionService.cachePensionDetails(any())(any())).thenReturn(Future.successful(Some(gmpSession)))
         when(mockGmpConnector.validateScon(any(),any())(any())).thenReturn(Future.successful(null))
           intercept[RuntimeException]{
-            await(TestPensionDetailsController.post()(FakeRequest().withJsonBody(Json.toJson(validGmpRequest))))
+            await(TestPensionDetailsController.post(authenticatedFakeRequest().withMethod("POST")
+              .withFormUrlEncodedBody("scon" -> "S1301234T")))
         }
       }
 
@@ -125,7 +134,8 @@ class PensionDetailsSconControllerSpec extends PlaySpec with GuiceOneServerPerSu
         when(mockSessionService.cachePensionDetails(any())(any())).thenReturn(Future.successful(None))
         when(mockGmpConnector.validateScon(any(),any())(any())).thenReturn(Future.successful(ValidateSconResponse(true)))
           intercept[RuntimeException]{
-            await(TestPensionDetailsController.post()(FakeRequest().withJsonBody(Json.toJson(validGmpRequest))))
+            await(TestPensionDetailsController.post(authenticatedFakeRequest().withMethod("POST")
+              .withFormUrlEncodedBody("scon" -> "S1301234T")))
         }
       }
 
