@@ -247,7 +247,6 @@ class DateOfLeavingControllerSpec extends PlaySpec with GuiceOneServerPerSuite w
             when(mockSessionService.fetchGmpSession()(any())).thenReturn(Future.successful(Some(gmpSession)))
             val result = TestDateOfLeavingController.post(authenticatedFakeRequest().withMethod("POST")
               .withFormUrlEncodedBody("Leaving.leavingDate" -> "31, 2, 2015", "Leaving.leaving" -> "yes-after"))
-
             contentAsString(result) must include(Messages("gmp.error.date.leaving.invalid"))
         }
 

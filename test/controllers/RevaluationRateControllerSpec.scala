@@ -65,7 +65,6 @@ class RevaluationRateControllerSpec extends PlaySpec with GuiceOneServerPerSuite
 
       val gmpSession = GmpSession(MemberDetails(nino, "A", "AAA"), "S1301234T", CalculationType.REVALUATION, None,
         Some(""), Leaving(GmpDate(None, None, None), Some(Leaving.NO)), None)
-
       when(mockSessionService.fetchGmpSession()(any())).thenReturn(Future.successful(Some(gmpSession)))
       "respond with ok" in {
 
@@ -132,7 +131,6 @@ class RevaluationRateControllerSpec extends PlaySpec with GuiceOneServerPerSuite
       "go to failure page when session missing scenario" in {
         val emptySession = GmpSession(MemberDetails(nino, "A", "AAA"), "S1234567T", "", None, None,
           Leaving(GmpDate(None, None, None), None), None)
-
         when(mockSessionService.fetchGmpSession()(any())).thenReturn(Future.successful(Some(emptySession)))
 
           val result = TestRevaluationRateController.get(FakeRequest())
@@ -160,7 +158,6 @@ class RevaluationRateControllerSpec extends PlaySpec with GuiceOneServerPerSuite
       }
 
       "include the correct header when Survivor scenario selected" in {
-
         when(mockSessionService.fetchGmpSession()(any())).thenReturn(Future.successful(Some(gmpSession
           .copy(scenario = CalculationType.SURVIVOR))))
         val result = TestRevaluationRateController.get(FakeRequest())
@@ -181,7 +178,6 @@ class RevaluationRateControllerSpec extends PlaySpec with GuiceOneServerPerSuite
         val gmpSession = GmpSession(MemberDetails(nino, "A", "AAA"), "S1234567T", CalculationType.REVALUATION,
           Some(GmpDate(Some("1"), Some("1"), Some("2015"))), None, Leaving(GmpDate(None, None, None),
             Some(Leaving.YES_BEFORE)), None)
-
         when(mockSessionService.fetchGmpSession()(any())).thenReturn(Future.successful(Some(gmpSession)))
         val result = TestRevaluationRateController.get(FakeRequest())
             contentAsString(result) must include(Messages("gmp.revaluation_rate.header"))
@@ -192,7 +188,6 @@ class RevaluationRateControllerSpec extends PlaySpec with GuiceOneServerPerSuite
         val gmpSession = GmpSession(MemberDetails(nino, "A", "AAA"), "S1234567T", CalculationType.REVALUATION,
           Some(GmpDate(Some("1"), Some("1"), Some("2018"))), None, Leaving(GmpDate(None, None, None),
             Some(Leaving.YES_AFTER)), None)
-
         when(mockSessionService.fetchGmpSession()(any())).thenReturn(Future.successful(Some(gmpSession)))
         val result = TestRevaluationRateController.get(FakeRequest())
             contentAsString(result) must include(Messages("gmp.revaluation_rate.header"))
