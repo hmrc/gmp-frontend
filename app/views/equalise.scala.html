@@ -14,58 +14,57 @@
  * limitations under the License.
  *@
 
-@import config.ApplicationConfig
-@import views.html.helpers._
 @import uk.gov.hmrc.govukfrontend.views.html.components._
+@import config.ApplicationConfig
 @import views.ViewHelpers
 
-@this(gmpMain: gmp_main, viewHelpers: ViewHelpers,govukRadios : GovukRadios,
+
+@this(gmpMain: gmp_main,
+        viewHelpers: ViewHelpers,
+        govukRadios : GovukRadios,
         govukButton : GovukButton,
         govukErrorMessage: GovukErrorMessage,
         govukErrorSummary : GovukErrorSummary)
 
-@(equaliseForm: Form[models.Equalise])(implicit request: Request[_], messages: Messages, applicationConfig: ApplicationConfig)
+@(form: Form[models.Equalise])(implicit request: Request[_], messages: Messages, ac:ApplicationConfig)
+@title = @{messages(s"gmp.equalise_header")}
+@gmpMain(title = Messages("gmp.equalise_header") + " - " + Messages("service.title") + " - " + Messages("gov.uk")) {
 
-    @gmpMain(title = Messages("gmp.equalise_header")+ " - " + Messages("service.title") + " - " + Messages("gov.uk")) {
-
-        @includes.back_link(Messages("gmp.equalise_header"))
-
-        @if(equaliseForm.errors.nonEmpty) {
-            @govukErrorSummary(ErrorSummary(errorList = Seq(ErrorLink(
-                href = Some(s"#equalise"),
-                content = Text(s"${messages(s"${equaliseForm.errors.head.message}")}"),
-            )), title = Text(messages("generic.errorSummary"))))
-        }
-
-        @viewHelpers.form(action = routes.EqualiseController.post) {
-
-            @govukRadios(Radios(
-                fieldset = Some(Fieldset(
-                    legend = Some(Legend(
-                        classes = "govuk-fieldset__legend--l",
-                        isPageHeading = true
-                    ))
-                )),
-                idPrefix = Some("equalise"),
-                name = "equalise",
-                items = Seq(
-                    RadioItem(
-                        content = Text(Messages("gmp.generic.yes")),
-                        value = Some("1"),
-                        checked = equaliseForm.data.values.toList.contains("1")
-                    ),
-                    RadioItem(
-                        content = Text(Messages("gmp.generic.no")),
-                        value = Some("0"),
-                        checked = equaliseForm.data.values.toList.contains("0")
-                    )
-                ),
-                errorMessage = equaliseForm.error("equalise").map(e => ErrorMessage(content = Text(messages(e.message))))
-            ))
-
-            @govukButton(Button(content = Text(messages("gmp.continue.button"))))
-
-        }
+ @includes.back_link(Messages("gmp.equalise_header"))
+    @if(form.errors.nonEmpty) {
+        @govukErrorSummary(ErrorSummary(errorList = Seq(ErrorLink(
+            href = Some(s"#equalise"),
+            content = Text(s"${messages(s"${form.errors.head.message}")}"),
+        )), title = Text(messages("generic.errorSummary"))))
     }
 
+    @viewHelpers.form(action = routes.EqualiseController.post) {
 
+        @govukRadios(Radios(
+            fieldset = Some(Fieldset(
+                legend = Some(Legend(
+                    content = Text(title),
+                    classes = "govuk-fieldset__legend--l",
+                    isPageHeading = true
+                ))
+            )),
+            idPrefix = Some("equalise"),
+            name = "equalise",
+            errorMessage = form.error("equalise").map(e => ErrorMessage(content = Text(messages(e.message)))),
+            items = Seq(
+                RadioItem(
+                    content = Text(Messages("gmp.generic.yes")),
+                    value = Some("1"),
+                    checked = form.data.values.toList.contains("1")
+                ),
+                RadioItem(
+                    content = Text(Messages("gmp.generic.no")),
+                    value = Some("0"),
+                    checked = form.data.values.toList.contains("0")
+                )
+            )))
+
+        @govukButton(Button(content = Text(messages("gmp.continue.button"))))
+
+    }
+}

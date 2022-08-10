@@ -37,15 +37,16 @@
 
     @includes.back_link(Messages("gmp.bulk.results.banner"))
 
-    @views.html.helpers.errorSummary(memberDetailsForm, formHeaderKey = "gmp.member_details.header")
-    <hr class="govuk-section-break govuk-section-break--m" aria-hidden="true">
-    <h1 class="govuk-heading-l">@Messages("gmp.member_details.header")</h1>
+    @if(memberDetailsForm.errors.nonEmpty) {
+        @govukErrorSummary(ErrorSummary(errorList = memberDetailsForm.errors.map(e => ErrorLink(
+            href = Some(s"#${e.key}"),
+            content = Text(s"${messages(s"${e.message}", e.args: _*)}")
+        )), title = Text(messages("generic.errorSummary"))))
+    }
 
+    <h1 class="govuk-heading-xl">@Messages("gmp.member_details.header")</h1>
 
     @viewHelpers.form(action = routes.MemberDetailsController.post) {
-
-        <div class="govuk-form-group">
-
             @govukInput(
                 Input(
                     id = "firstForename",
@@ -78,7 +79,6 @@
                 ))
             ).withFormField(memberDetailsForm("nino")))
 
-        </div>
         <div>
           @govukButton(Button(
             content = Text(Messages("gmp.continue.button")),

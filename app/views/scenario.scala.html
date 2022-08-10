@@ -35,7 +35,10 @@
 
       @viewHelpers.form(action = routes.ScenarioController.post) {
           @if(calculationType.errors.nonEmpty){
-              @govukErrorSummary(ErrorSummary().withFormErrorsAsText(calculationType))
+              @govukErrorSummary(ErrorSummary(errorList = Seq(ErrorLink(
+                  href = Some(s"#${calculationType.errors.head.key}"),
+                  content = Text(s"${messages(s"${calculationType.errors.head.message}")}"),
+              )), title = Text(messages("generic.errorSummary"))))
           }
               @govukRadios(Radios(
                   fieldset = Some(Fieldset(
@@ -47,29 +50,37 @@
                   )),
                   idPrefix = Some("calcType"),
                   name = "calcType",
+                  errorMessage = if (calculationType.hasErrors) {
+                      Some(ErrorMessage(content = Text(s"${calculationType.errors.head.message}")))
+                  } else None,
                   items = Seq(
                       RadioItem(
                           content = Text(Messages("gmp.scenarios.payable_age")),
-                          value = Some("2")
+                          value = Some("2"),
+                          checked = calculationType.data.values.toList.contains("2")
                       ),
                       RadioItem(
                           content = Text(Messages("gmp.scenarios.spa")),
-                          value = Some("4")
+                          value = Some("4"),
+                          checked = calculationType.data.values.toList.contains("4")
                       ),
                       RadioItem(
                           content = Text(Messages("gmp.scenarios.survivor")),
-                          value = Some("3")
+                          value = Some("3"),
+                          checked = calculationType.data.values.toList.contains("3")
                       ),
                       RadioItem(
                           content = Text(Messages("gmp.scenarios.leaving")),
-                          value = Some("0")
+                          value = Some("0"),
+                          checked = calculationType.data.values.toList.contains("0")
                       ),
                       RadioItem(
                           content = Text(Messages("gmp.scenarios.specific_date")),
-                          value = Some("1")
+                          value = Some("1"),
+                          checked = calculationType.data.values.toList.contains("1")
                       )
                   )
-              ).withFormField(calculationType("calcType")))
+              ))
 
 
           <div>
