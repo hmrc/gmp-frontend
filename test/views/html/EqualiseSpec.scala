@@ -44,8 +44,8 @@ class EqualiseSpec extends GmpViewSpec {
     behave like pageWithBackLink
 
     "have correct input labels with text" in {
-      doc must haveInputLabelWithText("equalise-yes", messages("gmp.generic.yes"))
-      doc must haveInputLabelWithText("equalise-no", messages("gmp.generic.no"))
+      doc must haveInputLabelWithText("equalise", messages("gmp.generic.yes"))
+      doc must haveInputLabelWithText("equalise-2", messages("gmp.generic.no"))
     }
 
     "have correct legend with text" in {

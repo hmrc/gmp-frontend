@@ -63,7 +63,10 @@
                 )
             )))
 
-        @govukButton(Button(content = Text(messages("gmp.continue.button"))))
+        @govukButton(Button(
+            content = Text(Messages("gmp.continue.button")),
+            inputType = Some("submit")
+        ))
 
     }
 }
