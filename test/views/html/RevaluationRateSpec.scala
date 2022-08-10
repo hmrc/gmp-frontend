@@ -76,10 +76,10 @@ class RevaluationRateRevaSpec extends RevaluationRateSpec {
     behave like pageWithHeader(messages("gmp.revaluation_rate.header"))
 
     "have correct input labels with text" in {
-      doc must haveInputLabelWithText("hmrc", messages("gmp.revaluation_rate.rate_held_by_hmrc"))
-      doc must haveInputLabelWithText("fixed", messages("gmp.revaluation_rate.fixed"))
-      doc must haveInputLabelWithText("s148", messages("gmp.revaluation_rate.s148"))
-      doc must haveInputLabelWithText("limited", messages("gmp.revaluation_rate.limited"))
+      doc must haveInputLabelWithText("rateType-2", messages("gmp.revaluation_rate.rate_held_by_hmrc"))
+      doc must haveInputLabelWithText("rateType", messages("gmp.revaluation_rate.fixed"))
+      doc must haveInputLabelWithText("rateType-4", messages("gmp.revaluation_rate.s148"))
+      doc must haveInputLabelWithText("rateType-3", messages("gmp.revaluation_rate.limited"))
       doc must haveLegendWithText(messages("gmp.revaluation_rate.header"))
     }
   }
