@@ -20,17 +20,14 @@ import com.google.inject.Singleton
 import forms.DateOfLeavingForm.Fields.{leavingDate, radioButtons}
 
 import javax.inject.Inject
-import models.{GmpDate, Leaving, OptionalLeavingForm}
-import play.api.data.{Form, Forms, Mapping}
+import models.{GmpDate, Leaving}
+import play.api.data.Form
 import play.api.data.Forms._
-import play.api.data.validation.{Constraint, Invalid, Valid, ValidationError, ValidationResult}
+import play.api.data.validation.{Constraint, Invalid, Valid, ValidationError}
 import play.api.i18n.{Messages, MessagesImpl}
 import play.api.mvc.MessagesControllerComponents
-import uk.gov.voa.play.form.ConditionalMappings.mandatoryIfEqual
 
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
-import scala.util.Try
+
 @Singleton
 class DateOfLeavingForm  @Inject()(mcc: MessagesControllerComponents) {
   implicit lazy val messages: Messages = MessagesImpl(mcc.langs.availables.head, mcc.messagesApi)

@@ -16,9 +16,8 @@
 
 package views.html
 
-import forms.{DateOfLeavingForm, RevaluationRateForm}
+import forms.RevaluationRateForm
 import models._
-import play.api.data.Form
 import play.api.mvc.MessagesControllerComponents
 import play.twirl.api.Html
 import uk.gov.hmrc.govukfrontend.views.html.components.{GovukButton, GovukErrorSummary, GovukRadios}
@@ -56,9 +55,9 @@ class RevaluationRatePaySpaSurSpec extends RevaluationRateSpec {
     behave like pageWithBackLink
 
     "have correct input labels with text" in {
-      doc must haveInputLabelWithText("hmrc", messages("gmp.revaluation_rate.rate_held_by_hmrc"))
-      doc must haveInputLabelWithText("fixed", messages("gmp.revaluation_rate.fixed"))
-      doc must haveInputLabelWithText("s148", messages("gmp.revaluation_rate.s148"))
+      doc must haveInputLabelWithText("rateType-2", messages("gmp.revaluation_rate.rate_held_by_hmrc"))
+      doc must haveInputLabelWithText("rateType", messages("gmp.revaluation_rate.fixed"))
+      doc must haveInputLabelWithText("rateType-3", messages("gmp.revaluation_rate.s148"))
       doc must haveLegendWithText(messages("gmp.revaluation_rate.header"))
     }
 

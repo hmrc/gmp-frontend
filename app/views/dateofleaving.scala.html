@@ -91,6 +91,9 @@
                 )),
                 idPrefix = Some("leaving"),
                 name = "leaving",
+                errorMessage = if (dateOfLeavingForm.hasErrors && dateOfLeavingForm.errors.head.key == "leaving") {
+                    Some(ErrorMessage(content = Text(s"${dateOfLeavingForm.errors.head.message}")))
+                } else None,
                 items = Seq(
                     RadioItem(
                         content = Text(Messages("gmp.generic.yes")),
@@ -150,6 +153,9 @@
                 )),
                 idPrefix = Some("leaving"),
                 name = "leaving",
+                errorMessage = if (dateOfLeavingForm.hasErrors && dateOfLeavingForm.errors.head.key == "leaving") {
+                    Some(ErrorMessage(content = Text(s"${dateOfLeavingForm.errors.head.message}")))
+                } else None,
                 items = Seq(
                     RadioItem(
                         content = Text(Messages("gmp.dol.threequestions.no")),
@@ -173,8 +179,6 @@
         }
         }
 
-        </div>
-        </div>
         @govukButton(Button(content = Text(messages("gmp.continue.button"))))
 
     }

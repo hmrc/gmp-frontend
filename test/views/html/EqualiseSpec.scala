@@ -16,19 +16,22 @@
 
 package views.html
 
-import forms.EqualiseForm
 import models.Equalise
 import play.api.data.Form
 import play.api.data.Forms.{mapping, number, optional}
 import play.twirl.api.Html
+import uk.gov.hmrc.govukfrontend.views.html.components._
 import utils.GmpViewSpec
-import views.OldViewHelpers
+import views.ViewHelpers
 
 class EqualiseSpec extends GmpViewSpec {
-  lazy val gmpMain = app.injector.instanceOf[gmp_main_old]
-  lazy val viewHelpers = app.injector.instanceOf[OldViewHelpers]
+  lazy val gmpMain = app.injector.instanceOf[gmp_main]
+  lazy val viewHelpers = app.injector.instanceOf[ViewHelpers]
+  lazy val govukRadios = app.injector.instanceOf[GovukRadios]
+  lazy val govukButton = app.injector.instanceOf[GovukButton]
+  lazy val govukErrorSummary = app.injector.instanceOf[GovukErrorSummary]
 
-  override def view: Html = new views.html.equalise(gmpMain, viewHelpers)(equaliseForm)
+  override def view: Html = new views.html.equalise(gmpMain, viewHelpers, govukRadios, govukButton, govukErrorSummary)(equaliseForm)
 
   val equaliseForm = Form(
     mapping(

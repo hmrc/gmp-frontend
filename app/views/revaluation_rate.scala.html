@@ -24,7 +24,6 @@
         viewHelpers: ViewHelpers,
         govukRadios : GovukRadios,
         govukButton : GovukButton,
-        govukErrorMessage: GovukErrorMessage,
         govukErrorSummary : GovukErrorSummary)
 
 @(revaluationRateForm: Form[models.RevaluationRate], session: GmpSession)(implicit request: Request[_], messages: Messages, ac:ApplicationConfig)
@@ -107,7 +106,11 @@
                       )
                   }))
 
-              @govukButton(Button(content = Text(messages("gmp.continue.button"))))
+              @govukButton(Button(
+                  content = Text(Messages("gmp.continue.button")),
+                  inputType = Some("submit")
+              ))
+
 
           }
 }
