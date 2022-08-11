@@ -58,11 +58,9 @@ class MemberDetailsController @Inject()(authAction: AuthAction,
 
       form.bindFromRequest.fold(
         formWithErrors => {
-          println("form with errors" + formWithErrors)
           Future.successful(BadRequest(views.memberDetails(formWithErrors)))
         },
         memberDetails => {
-          println("no errors, moving on")
           sessionService.cacheMemberDetails(memberDetails) map {
             case Some(session) => nextPage("MemberDetailsController", session)
             case _ => throw new RuntimeException

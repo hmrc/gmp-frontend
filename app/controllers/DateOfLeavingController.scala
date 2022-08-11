@@ -73,12 +73,14 @@ class DateOfLeavingController @Inject()(authAction: AuthAction,
 
       form.flatMap {f => f.bindFromRequest.fold(
         formWithErrors => {
+          println("form with errors" + formWithErrors)
           sessionService.fetchGmpSession.map {
             case Some(session) => BadRequest(views.dateOfLeaving(formWithErrors, session.scenario))
             case _ => throw new RuntimeException
           }
         },
         leaving => {
+          println("outside of form with errors")
           sessionService.cacheLeaving(leaving).map {
             case Some(session) => nextPage("DateOfLeavingController", session)
             case _ => throw new RuntimeException
