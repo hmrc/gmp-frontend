@@ -161,13 +161,12 @@ class RevaluationControllerSpec extends PlaySpec with GuiceOneServerPerSuite wit
 
         "respond with error when rate not stored" in {
           when(mockSessionService.cacheRevaluationDate(any())(any())).thenReturn(Future.successful(None))
-            val postData = Json.toJson(
-              RevaluationDate(Leaving(GmpDate(None, None, None), None), baseValidDate.copy(day = Some("31"), month = Some("3"), year = Some("2015")))
-            )
+//            val postData = Json.toJson(
+//              RevaluationDate(Leaving(GmpDate(None, None, None), None), baseValidDate.copy(day = Some("31"), month = Some("3"), year = Some("2015")))
             intercept[RuntimeException] {
               await(TestRevaluationController.post(authenticatedFakeRequest().withMethod("POST")
-                .withFormUrlEncodedBody("RevaluationDate.Leaving.leavingDate.GmpDate" -> "",
-                  "RevaluationDate.revaluationDate" -> "31, 3, 2015")))
+                .withFormUrlEncodedBody("leaving" -> " ",
+                  "revaluationDate" -> "31, 3, 2015")))
           }
         }
       }

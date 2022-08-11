@@ -79,6 +79,7 @@ class DateOfLeavingController @Inject()(authAction: AuthAction,
           }
         },
         leaving => {
+          println("outside of form with errors")
           sessionService.cacheLeaving(leaving).map {
             case Some(session) => nextPage("DateOfLeavingController", session)
             case _ => throw new RuntimeException

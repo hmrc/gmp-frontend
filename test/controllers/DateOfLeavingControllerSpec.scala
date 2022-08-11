@@ -229,14 +229,15 @@ class DateOfLeavingControllerSpec extends PlaySpec with GuiceOneServerPerSuite w
     "authenticated users" must {
 
       "with invalid data" must {
-        val gmpSession = GmpSession(MemberDetails(nino, "A", "AAA"), "S1234567T", CalculationType.DOL, None, None, Leaving(GmpDate(None, None, None), None), None)
+        val gmpSession = GmpSession(MemberDetails(nino, "A", "AAA"), "S1234567T", CalculationType.DOL, None, None,
+          Leaving(GmpDate(None, None, None), None), None)
         when(mockSessionService.fetchGmpSession()(any())).thenReturn(Future.successful(Some(gmpSession)))
 
         "respond with BAD_REQUEST" in {
 
             when(mockSessionService.fetchGmpSession()(any())).thenReturn(Future.successful(Some(gmpSession)))
             val result = TestDateOfLeavingController.post(authenticatedFakeRequest().withMethod("POST")
-              .withFormUrlEncodedBody("Leaving.leavingDate" -> "31,2,2015", "Leaving.leaving" -> "yes-after"))
+              .withFormUrlEncodedBody("leavingDate" -> "31,2,2015", "leaving" -> "YES_AFTER"))
             status(result) mustBe(BAD_REQUEST)
         }
 
@@ -246,7 +247,7 @@ class DateOfLeavingControllerSpec extends PlaySpec with GuiceOneServerPerSuite w
             )
             when(mockSessionService.fetchGmpSession()(any())).thenReturn(Future.successful(Some(gmpSession)))
             val result = TestDateOfLeavingController.post(authenticatedFakeRequest().withMethod("POST")
-              .withFormUrlEncodedBody("Leaving.leavingDate" -> "31, 2, 2015", "Leaving.leaving" -> "yes-after"))
+              .withFormUrlEncodedBody("leavingDate" -> "31, 2, 2015", "leaving" -> "YES_AFTER"))
             contentAsString(result) must include(Messages("gmp.error.date.leaving.invalid"))
         }
 
@@ -255,7 +256,6 @@ class DateOfLeavingControllerSpec extends PlaySpec with GuiceOneServerPerSuite w
             when(mockSessionService.fetchGmpSession()(any())).thenReturn(Future.successful(None))
             val result = TestDateOfLeavingController.post(authenticatedFakeRequest().withMethod("POST")
               .withFormUrlEncodedBody("Leaving.leavingDate" -> "31, 2, 2015", "Leaving.leaving" -> "yes-after"))
-
             intercept[RuntimeException] {
               contentAsString(result) must include(Messages("gmp.error.date.invalid"))
           }
@@ -263,7 +263,8 @@ class DateOfLeavingControllerSpec extends PlaySpec with GuiceOneServerPerSuite w
       }
 
       "with valid data" must {
-        val gmpSession = GmpSession(MemberDetails(nino, "A", "AAA"), "S1234567T", CalculationType.DOL, None, None, Leaving(GmpDate(None, None, None), None), None)
+        val gmpSession = GmpSession(MemberDetails(nino, "A", "AAA"), "S1234567T", CalculationType.DOL, None, None,
+          Leaving(GmpDate(None, None, None), None), None)
         "redirect" in {
 
           when(mockSessionService.fetchGmpSession()(any())).thenReturn(Future.successful(Some(gmpSession)))
@@ -273,7 +274,7 @@ class DateOfLeavingControllerSpec extends PlaySpec with GuiceOneServerPerSuite w
           val leaving = Json.toJson(Leaving(GmpDate(Some("06"), Some("04"), Some("2016")), Some("Y")))
 
             val result = TestDateOfLeavingController.post(authenticatedFakeRequest().withMethod("POST")
-              .withFormUrlEncodedBody("Leaving.leavingDate" -> "06,04,2016", "Leaving.leaving" -> "yes-after"))
+              .withFormUrlEncodedBody("leavingDate" -> "06,04,2016", "leaving" -> "YES_AFTER"))
             status(result) must equal(SEE_OTHER)
         }
 
@@ -282,42 +283,41 @@ class DateOfLeavingControllerSpec extends PlaySpec with GuiceOneServerPerSuite w
 
           when(mockSessionService.cacheLeaving(any())(any())).thenReturn(Future.successful(None))
 
-          val leaving = Json.toJson(Leaving(GmpDate(Some("06"), Some("04"), Some("2016")), Some("Y")))
-
             val result = TestDateOfLeavingController.post(authenticatedFakeRequest().withMethod("POST")
-              .withFormUrlEncodedBody("Leaving.leavingDate" -> "06,04,2016", "Leaving.leaving" -> "yes-after"))
+              .withFormUrlEncodedBody("leavingDate" -> "06,04,2016", "leaving" -> "YES_AFTER"))
             intercept[RuntimeException] {
               status(result) mustBe(SEE_OTHER)
           }
         }
 
         "redirect to revaluation when revaluation scenario is selected" in {
-          when(mockSessionService.cacheLeaving(any())(any())).thenReturn(Future.successful(Some(gmpSession.copy(scenario = CalculationType.REVALUATION))))
-          val validReason = Json.toJson(Leaving(baseValidDate.copy(day = Some("06"), month = Some("4"), year = Some("2016")), Some(Leaving.YES_AFTER)))
+          when(mockSessionService.cacheLeaving(any())(any())).thenReturn(Future.successful(Some(gmpSession.copy
+          (scenario = CalculationType.REVALUATION))))
+          val validReason = Json.toJson(Leaving(baseValidDate.copy(day = Some("06"), month = Some("4"),
+            year = Some("2016")), Some(Leaving.YES_AFTER)))
 
             val result = TestDateOfLeavingController.post(authenticatedFakeRequest().withMethod("POST")
-              .withFormUrlEncodedBody("Leaving.leavingDate" -> "06,4,2016", "Leaving.leaving" -> "yes-after"))
+              .withFormUrlEncodedBody("leavingDate" -> "06,4,2016", "leaving" -> "YES_AFTER"))
             status(result) mustBe(SEE_OTHER)
             redirectLocation(result).get must include("/relevant-date")
         }
 
         "redirect to revaluation rate when spa and has left" in {
           when(mockSessionService.cacheLeaving(any())(any())).thenReturn(Future.successful(Some(
-            gmpSession.copy(scenario = CalculationType.SPA, leaving = Leaving(GmpDate(Some("06"), Some("4"), Some("2016")), leaving = Some(Leaving.YES_AFTER))))))
-          val validReason = Json.toJson(Leaving(baseValidDate.copy(day = Some("06"), month = Some("4"), year = Some("2016")), Some(Leaving.YES_AFTER)))
+            gmpSession.copy(scenario = CalculationType.SPA, leaving = Leaving(GmpDate(Some("06"), Some("4"),
+              Some("2016")), leaving = Some(Leaving.YES_AFTER))))))
 
             val result = TestDateOfLeavingController.post(authenticatedFakeRequest().withMethod("POST")
-              .withFormUrlEncodedBody("Leaving.leavingDate" -> "06,4,2016", "Leaving.leaving" -> "yes-after"))
+              .withFormUrlEncodedBody("leavingDate" -> "06,4,2016", "leaving" -> "YES_AFTER"))
             status(result) mustBe(SEE_OTHER)
             redirectLocation(result).get must include("/revaluation-rate")
         }
 
         "redirect to equalisation when payable age and has not left" in {
-          when(mockSessionService.cacheLeaving(any())(any())).thenReturn(Future.successful(Some(gmpSession.copy(scenario = CalculationType.PAYABLE_AGE))))
-          val validReason = Json.toJson(Leaving(baseValidDate.copy(day = None, month = None, year = None), Some(Leaving.YES_BEFORE)))
-
+          when(mockSessionService.cacheLeaving(any())(any())).thenReturn(Future.successful(Some(gmpSession.copy
+          (scenario = CalculationType.PAYABLE_AGE))))
             val result = TestDateOfLeavingController.post(authenticatedFakeRequest().withMethod("POST")
-              .withFormUrlEncodedBody("Leaving.leavingDate" -> "", "Leaving.leaving" -> "yes-before"))
+              .withFormUrlEncodedBody("leavingDate" -> "", "leaving" -> "YES_BEFORE"))
             status(result) mustBe(SEE_OTHER)
 
             redirectLocation(result).get must include("/equalise")
@@ -325,37 +325,44 @@ class DateOfLeavingControllerSpec extends PlaySpec with GuiceOneServerPerSuite w
         }
 
         "redirect to equalise when dol" in {
-          when(mockSessionService.cacheLeaving(any())(any())).thenReturn(Future.successful(Some(gmpSession.copy(leaving = Leaving(GmpDate(Some(""), Some(""), Some("")), leaving = None)))))
+          when(mockSessionService.cacheLeaving(any())(any())).thenReturn(Future.successful(Some(gmpSession.copy
+          (leaving = Leaving(GmpDate(Some(""), Some(""), Some("")), leaving = None)))))
 
-            val result = TestDateOfLeavingController.post(authenticatedFakeRequest().withMethod("POST").withFormUrlEncodedBody("Leaving.leavingDate" -> "06,4,2016", "Leaving.leaving" -> "yes-after"))
+            val result = TestDateOfLeavingController.post(authenticatedFakeRequest().withMethod("POST")
+              .withFormUrlEncodedBody("leavingDate" -> "06,4,2016", "leaving" -> "YES_AFTER"))
             status(result) mustBe(SEE_OTHER)
             redirectLocation(result).get must include("/equalise")
         }
 
         "redirect to the revaluation rate page when survivor has left before 6/4/16" in {
-          when(mockSessionService.cacheLeaving(any())(any())).thenReturn(Future.successful(Some(gmpSession.copy(scenario = CalculationType.SURVIVOR, leaving = Leaving(GmpDate(Some(""), Some(""), Some("")), Some(Leaving.YES_BEFORE))))))
+          when(mockSessionService.cacheLeaving(any())(any())).thenReturn(Future.successful(Some(gmpSession.copy
+          (scenario = CalculationType.SURVIVOR, leaving = Leaving(GmpDate(Some(""), Some(""), Some("")),
+            Some(Leaving.YES_BEFORE))))))
 
             val result = TestDateOfLeavingController.post(authenticatedFakeRequest().withMethod("POST")
-              .withFormUrlEncodedBody("Leaving.leavingDate" -> "20,04,2015", "Leaving.leaving" -> "yes-after"))
+              .withFormUrlEncodedBody("leavingDate" -> "20,04,2015", "leaving" -> "YES_AFTER"))
             status(result) mustBe(SEE_OTHER)
             redirectLocation(result).get must be(routes.RevaluationRateController.get.url)
         }
 
         "redirect to the revaluation rate page when survivor has left on or after 6/4/16" in {
-          when(mockSessionService.cacheLeaving(any())(any())).thenReturn(Future.successful(Some(gmpSession.copy(scenario = CalculationType.SURVIVOR, leaving = Leaving(GmpDate(Some(""), Some(""), Some("")), Some(Leaving.YES_AFTER))))))
+          when(mockSessionService.cacheLeaving(any())(any())).thenReturn(Future.successful(Some(gmpSession.copy
+          (scenario = CalculationType.SURVIVOR, leaving = Leaving(GmpDate(Some(""), Some(""), Some("")),
+            Some(Leaving.YES_AFTER))))))
 
             val result = TestDateOfLeavingController.post(authenticatedFakeRequest().withMethod("POST")
-              .withFormUrlEncodedBody("leavingDate" -> "06, 04, 2016", "leaving" -> "yes-after"))
+              .withFormUrlEncodedBody("leavingDate" -> "06, 04, 2016", "leaving" -> "YES_AFTER"))
             status(result) mustBe(SEE_OTHER)
             redirectLocation(result).get must be(routes.RevaluationRateController.get.url)
         }
 
 
         "redirect to inflation proof page when survivor has not left" in {
-          when(mockSessionService.cacheLeaving(any())(any())).thenReturn(Future.successful(Some(gmpSession.copy(scenario = CalculationType.SURVIVOR, leaving = Leaving(GmpDate(Some(""), Some(""), Some("")), Some(Leaving.NO))))))
+          when(mockSessionService.cacheLeaving(any())(any())).thenReturn(Future.successful(Some(gmpSession.copy
+          (scenario = CalculationType.SURVIVOR, leaving = Leaving(GmpDate(Some(""), Some(""), Some("")), Some(Leaving.NO))))))
 
             val result = TestDateOfLeavingController.post(authenticatedFakeRequest().withMethod("POST")
-              .withFormUrlEncodedBody("Leaving.leavingDate" -> "6,4,2016", "Leaving.leaving" -> "yes-after"))
+              .withFormUrlEncodedBody("leavingDate" -> "6,4,2016", "leaving" -> "YES_AFTER"))
             status(result) mustBe(SEE_OTHER)
             redirectLocation(result).get must be(routes.InflationProofController.get.url)
         }
