@@ -128,7 +128,7 @@ class EqualiseControllerSpec extends PlaySpec with GuiceOneServerPerSuite with M
             when(mockSessionService.cacheEqualise(any())(any())).thenReturn(Future.successful(Some(gmpSession)))
 
               val result = TestEqualiseController.post(authenticatedFakeRequest().withMethod("POST")
-                .withFormUrlEncodedBody("Equalise.equalise" -> "1"))
+                .withFormUrlEncodedBody("equalise" -> "1"))
               status(result) mustBe(SEE_OTHER)
           }
 
@@ -137,7 +137,7 @@ class EqualiseControllerSpec extends PlaySpec with GuiceOneServerPerSuite with M
 
               intercept[RuntimeException] {
                 await(TestEqualiseController.post(authenticatedFakeRequest().withMethod("POST")
-                  .withFormUrlEncodedBody("Equalise.equalise" -> "1")))
+                  .withFormUrlEncodedBody("equalise" -> "1")))
             }
           }
         }
