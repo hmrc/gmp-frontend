@@ -146,19 +146,19 @@ class ScenarioControllerSpec extends PlaySpec with GuiceOneServerPerSuite with M
 
       when(mockSessionService.cacheScenario(any())(any())).thenReturn(Future.successful(Some(gmpSession)))
 
-      val validReason = Json.toJson(CalculationType(Some(CalculationType.DOL)))
+//      val validReason = Json.toJson(CalculationType(Some(CalculationType.DOL)))
 
         val result = TestScenarioController.post(authenticatedFakeRequest().withMethod("POST")
-          .withFormUrlEncodedBody("CalculationType.calcType" -> "0"))
+          .withFormUrlEncodedBody("calcType" -> "0"))
         status(result) mustBe(SEE_OTHER)
     }
 
     "respond with exception when session cache fails" in {
       when(mockSessionService.cacheScenario(any())(any())).thenReturn(Future.successful(None))
-      val validReason = Json.toJson(CalculationType(Some(CalculationType.DOL)))
+//      val validReason = Json.toJson(CalculationType(Some(CalculationType.DOL)))
         intercept[RuntimeException]{
           (TestScenarioController.post(authenticatedFakeRequest().withMethod("POST")
-            .withFormUrlEncodedBody("CalculationType.calcType" -> "0")).futureValue)
+            .withFormUrlEncodedBody("calcType" -> "0")).futureValue)
 
       }
     }
