@@ -123,7 +123,6 @@ class EqualiseControllerSpec extends PlaySpec with GuiceOneServerPerSuite with M
           "redirect" in {
 
             when(mockSessionService.cacheEqualise(any())(any())).thenReturn(Future.successful(Some(gmpSession)))
-
               val result = TestEqualiseController.post(FakeRequest().withMethod("POST")
                 .withFormUrlEncodedBody("equalise" -> "1"))
               status(result) mustBe(SEE_OTHER)
