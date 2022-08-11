@@ -224,17 +224,16 @@ class DateOfLeavingControllerSpec extends PlaySpec with GuiceOneServerPerSuite w
     "authenticated users" must {
 
       "with invalid data" must {
-        val gmpSession = GmpSession(MemberDetails(nino, "A", "AAA"), "S1234567T", CalculationType.DOL, None, None, Leaving(GmpDate(Some("31"), Some("2"), Some("2015")), Some(Leaving.YES_AFTER)), None)
+        val gmpSession = GmpSession(MemberDetails(nino, "A", "AAA"), "S1234567T", CalculationType.DOL, None, None,
+          Leaving(GmpDate(None, None, None), None), None)
         when(mockSessionService.fetchGmpSession()(any())).thenReturn(Future.successful(Some(gmpSession)))
 
         "respond with BAD_REQUEST" in {
 
-          val postData = Json.toJson(
-            Leaving(baseValidDate.copy(day = Some("31"), month = Some("2"), year = Some("2015")), Some("Yes"))
-          )
-          when(mockSessionService.fetchGmpSession()(any())).thenReturn(Future.successful(Some(gmpSession)))
-          val result = TestDateOfLeavingController.post(FakeRequest().withJsonBody(postData))
-          status(result) must equal(BAD_REQUEST)
+            when(mockSessionService.fetchGmpSession()(any())).thenReturn(Future.successful(Some(gmpSession)))
+            val result = TestDateOfLeavingController.post(FakeRequest().withMethod("POST")
+              .withFormUrlEncodedBody("leavingDate" -> "31,2,2015", "leaving" -> "YES_AFTER"))
+            status(result) mustBe(BAD_REQUEST)
         }
 
         "display the errors" in {
@@ -268,18 +267,19 @@ class DateOfLeavingControllerSpec extends PlaySpec with GuiceOneServerPerSuite w
           val result = TestDateOfLeavingController.post()(FakeRequest().withMethod("POST").withFormUrlEncodedBody("leaving" -> Leaving.YES_BEFORE,
             "leavingDate.day" -> "06", "leavingDate.month" -> "4", "leavingDate.year" -> "2016" ))
           status(result) must equal(SEE_OTHER)
+
         }
 
         "throw exception when can't cache session" in {
 
 
           when(mockSessionService.cacheLeaving(any())(any())).thenReturn(Future.successful(None))
-          val leaving = Json.toJson(Leaving(GmpDate(Some("06"), Some("04"), Some("2016")), Some("Y")))
 
-          val result = TestDateOfLeavingController.post()(FakeRequest().withMethod("POST")
-            .withFormUrlEncodedBody("leavingDate" -> "06,04,2016", "leaving" -> "YES_AFTER"))
-          intercept[RuntimeException] {
-            status(result) must equal(SEE_OTHER)
+            val result = TestDateOfLeavingController.post(FakeRequest().withMethod("POST")
+              .withFormUrlEncodedBody("leavingDate" -> "06,04,2016", "leaving" -> "YES_AFTER"))
+            intercept[RuntimeException] {
+              status(result) mustBe(SEE_OTHER)
+
           }
         }
 
@@ -290,6 +290,7 @@ class DateOfLeavingControllerSpec extends PlaySpec with GuiceOneServerPerSuite w
             "leavingDate.day" -> "06", "leavingDate.month" -> "4", "leavingDate.year" -> "2016" ))
           status(result) must equal(SEE_OTHER)
           redirectLocation(result).get must include("/relevant-date")
+
         }
 
         "redirect to revaluation rate when spa and has left" in {
