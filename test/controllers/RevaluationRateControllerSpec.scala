@@ -230,19 +230,12 @@ class RevaluationRateControllerSpec extends PlaySpec with GuiceOneServerPerSuite
 
         "respond with BAD_REQUEST" in {
 
-            val postData = Json.toJson(
-              RevaluationRate(None)
-            )
             val result = TestRevaluationRateController.post(authenticatedFakeRequest().withMethod("POST")
               .withFormUrlEncodedBody("rateType" -> ""))
             status(result) must equal(BAD_REQUEST)
         }
 
         "display the errors" in {
-
-            val postData = Json.toJson(
-              RevaluationRate(None)
-            )
             val result = TestRevaluationRateController.post(authenticatedFakeRequest().withMethod("POST")
               .withFormUrlEncodedBody("rateType" -> ""))
             contentAsString(result) must include(Messages("gmp.error.revaluation.rate.error"))
@@ -251,9 +244,6 @@ class RevaluationRateControllerSpec extends PlaySpec with GuiceOneServerPerSuite
         "respond with error when can't get session" in {
           when(mockSessionService.fetchGmpSession()(any())).thenReturn(Future.successful(None))
 
-            val postData = Json.toJson(
-              RevaluationRate(None)
-            )
             intercept[RuntimeException] {
               await(TestRevaluationRateController.post(authenticatedFakeRequest().withMethod("POST")
                 .withFormUrlEncodedBody("rateType" -> "")))
@@ -269,9 +259,6 @@ class RevaluationRateControllerSpec extends PlaySpec with GuiceOneServerPerSuite
         "redirect" in {
 
           when(mockSessionService.cacheRevaluationRate(any())(any())).thenReturn(Future.successful(Some(gmpSession)))
-            val postData = Json.toJson(
-              RevaluationRate(Some("hmrc"))
-            )
             val result = TestRevaluationRateController.post(authenticatedFakeRequest().withMethod("POST")
               .withFormUrlEncodedBody("rateType" -> "hmrc"))
             status(result) must equal(SEE_OTHER)
@@ -280,9 +267,6 @@ class RevaluationRateControllerSpec extends PlaySpec with GuiceOneServerPerSuite
 
         "respond with error when rate not stored" in {
           when(mockSessionService.cacheRevaluationRate(any())(any())).thenReturn(Future.successful(None))
-            val postData = Json.toJson(
-              RevaluationRate(Some("hmrc"))
-            )
             intercept[RuntimeException] {
               await(TestRevaluationRateController.post(authenticatedFakeRequest().withMethod("POST")
                 .withFormUrlEncodedBody("rateType" -> "hmrc")))
