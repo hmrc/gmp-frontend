@@ -100,9 +100,6 @@ class MemberDetailsControllerSpec extends PlaySpec with GuiceOneServerPerSuite w
   }
 
   "POST" must {
-    def authenticatedFakeRequest(url: String = "") = {
-      FakeRequest("GET", url).withSession()
-    }
 
     "authenticated users" must {
 
@@ -113,18 +110,18 @@ class MemberDetailsControllerSpec extends PlaySpec with GuiceOneServerPerSuite w
 
         "redirect" in {
           when(mockSessionService.cacheMemberDetails(any())(any())).thenReturn(Future.successful(Some(session)))
-            val result = TestMemberDetailsController.post(authenticatedFakeRequest().withMethod("POST")
-              .withFormUrlEncodedBody("memberDetails.firstForename" -> "Bob", "memberDetails.surname" -> "Jones",
-                "memberDetails.nino" -> memberDetails.nino))
+            val result = TestMemberDetailsController.post(FakeRequest().withMethod("POST")
+              .withFormUrlEncodedBody("firstForename" -> "Bob", "surname" -> "Jones",
+                "nino" -> memberDetails.nino))
             status(result) mustBe SEE_OTHER
         }
 
         "save details to keystore" in {
 
           when(mockSessionService.cacheMemberDetails(any())(any())).thenReturn(Future.successful(Some(session)))
-            TestMemberDetailsController.post(authenticatedFakeRequest().withMethod("POST")
-              .withFormUrlEncodedBody("memberDetails.firstForename" -> "Bob", "memberDetails.surname" -> "Jones",
-                "memberDetails.nino" -> memberDetails.nino))
+            TestMemberDetailsController.post(FakeRequest().withMethod("POST")
+              .withFormUrlEncodedBody("firstForename" -> "Bob", "surname" -> "Jones",
+                "nino" -> memberDetails.nino))
             verify(mockSessionService, atLeastOnce()).cacheMemberDetails(any())(any())
         }
 
@@ -132,7 +129,9 @@ class MemberDetailsControllerSpec extends PlaySpec with GuiceOneServerPerSuite w
           reset(mockSessionService)
           when(mockSessionService.cacheMemberDetails(any())(any())).thenReturn(Future.successful(None))
             intercept[RuntimeException]{
-              await(TestMemberDetailsController.post(authenticatedFakeRequest().withMethod("POST")))
+              await(TestMemberDetailsController.post(FakeRequest().withMethod("POST")
+              .withFormUrlEncodedBody("firstForename" -> "Bob", "surname" -> "Jones",
+                "nino" -> RandomNino.generate)))
           }
         }
 
@@ -142,16 +141,16 @@ class MemberDetailsControllerSpec extends PlaySpec with GuiceOneServerPerSuite w
         val memberDetails = MemberDetails("Bob", "Jones", RandomNino.generate)
 
         "respond with BAD_REQUEST" in {
-            val result = TestMemberDetailsController.post(authenticatedFakeRequest().withMethod("POST")
-              .withFormUrlEncodedBody("memberDetails.firstForename" -> None.toString, "memberDetails.surname" -> "Jones",
-                "memberDetails.nino" -> memberDetails.nino))
+            val result = TestMemberDetailsController.post(FakeRequest().withMethod("POST")
+              .withFormUrlEncodedBody("firstForename" -> "", "surname" -> "Jones",
+                "nino" -> memberDetails.nino))
             status(result) must equal(BAD_REQUEST)
         }
 
         "display the errors" in {
-            val result = TestMemberDetailsController.post(authenticatedFakeRequest().withMethod("POST")
-              .withFormUrlEncodedBody("memberDetails.firstForename" -> "Bob", "memberDetails.surname" -> None.toString,
-                "memberDetails.nino" -> memberDetails.nino))
+            val result = TestMemberDetailsController.post(FakeRequest().withMethod("POST")
+              .withFormUrlEncodedBody("firstForename" -> "Bob", "surname" -> "",
+                "nino" -> memberDetails.nino))
           contentAsString(result) must include(Messages("gmp.error.member.lastname.mandatory"))
         }
 
