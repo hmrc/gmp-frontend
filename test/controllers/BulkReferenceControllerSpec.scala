@@ -62,10 +62,6 @@ class BulkReferenceControllerSpec extends PlaySpec  with MockitoSugar with Guice
 
   }
 
-  def authenticatedFakeRequest(url: String = "") = {
-    FakeRequest("GET", url).withSession()
-  }
-
   "BulkReferenceController" must {
 
     "bulk reference GET " must {
@@ -92,7 +88,7 @@ class BulkReferenceControllerSpec extends PlaySpec  with MockitoSugar with Guice
 
       "respond with bad request missing email and reference" in {
 
-          val result = TestBulkReferenceController.post(authenticatedFakeRequest().withMethod("POST")
+          val result = TestBulkReferenceController.post(FakeRequest().withMethod("POST")
             .withFormUrlEncodedBody("email" -> "", "reference" -> ""))
           status(result) mustBe BAD_REQUEST
           contentAsString(result) must include(Messages("gmp.error.mandatory", Messages("gmp.reference")))
@@ -101,7 +97,7 @@ class BulkReferenceControllerSpec extends PlaySpec  with MockitoSugar with Guice
       "throw an exception when can't cache email and reference" in {
         when(mockSessionService.cacheEmailAndReference(any(), any())(any())).thenReturn(Future.successful(None))
 
-          val result = TestBulkReferenceController.post(authenticatedFakeRequest().withMethod("POST")
+          val result = TestBulkReferenceController.post(FakeRequest().withMethod("POST")
             .withFormUrlEncodedBody("email" -> validRequest.email, "reference" -> validRequest.reference))
           intercept[RuntimeException]{
             status(result) must equal(BAD_REQUEST)
@@ -111,7 +107,7 @@ class BulkReferenceControllerSpec extends PlaySpec  with MockitoSugar with Guice
       "validate email and reference, cache and redirect" in {
         when(mockSessionService.cacheEmailAndReference(any(), any())(any())).thenReturn(Future.successful(Some(gmpBulkSession)))
 
-          val result = TestBulkReferenceController.post(authenticatedFakeRequest().withMethod("POST")
+          val result = TestBulkReferenceController.post(FakeRequest().withMethod("POST")
             .withFormUrlEncodedBody("email" -> validRequest.email, "reference" -> validRequest.reference))
           status(result) must equal(SEE_OTHER)
           redirectLocation(result).get must include("/request-received")
@@ -120,7 +116,7 @@ class BulkReferenceControllerSpec extends PlaySpec  with MockitoSugar with Guice
       "validate email and reference with spaces, cache and redirect" in {
         when(mockSessionService.cacheEmailAndReference(any(), any())(any())).thenReturn(Future.successful(Some(gmpBulkSession)))
 
-          val result = TestBulkReferenceController.post()(authenticatedFakeRequest().withMethod("POST")
+          val result = TestBulkReferenceController.post()(FakeRequest().withMethod("POST")
             .withFormUrlEncodedBody("email" -> validRequestWithSpaces.email,
               "reference" -> validRequestWithSpaces.reference))
           status(result) must equal(SEE_OTHER)
