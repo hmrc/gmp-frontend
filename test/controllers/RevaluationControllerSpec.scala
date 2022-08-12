@@ -154,21 +154,12 @@ class RevaluationControllerSpec extends PlaySpec with GuiceOneServerPerSuite wit
 
         "respond with error when rate not stored" in {
           when(mockSessionService.cacheRevaluationDate(any())(any())).thenReturn(Future.successful(None))
-<<<<<<< HEAD
+
             intercept[RuntimeException] {
               await(TestRevaluationController.post(FakeRequest().withMethod("POST")
                 .withFormUrlEncodedBody("leaving.leavingDate.day" -> "", "leaving.leavingDate.month" -> "",
                   "leaving.leavingDate.year" -> "", "leaving.leaving" -> "", "revaluationDate.day" -> "31",
                   "revaluationDate.month" -> "3", "revaluationDate.year" -> "2015")))
-=======
-//            val postData = Json.toJson(
-//              RevaluationDate(Leaving(GmpDate(None, None, None), None), baseValidDate.copy(day = Some("31"), month = Some("3"), year = Some("2015")))
-            intercept[RuntimeException] {
-              await(TestRevaluationController.post(authenticatedFakeRequest().withMethod("POST")
-                .withFormUrlEncodedBody("leaving" -> " ",
-                  "revaluationDate" -> "31, 3, 2015")))
->>>>>>> 2e8860f (update DOl spec file to boostrap requirements - null pointer exception occuring - will fix next)
-          }
         }
       }
     }
