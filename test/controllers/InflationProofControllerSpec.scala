@@ -53,9 +53,6 @@ class InflationProofControllerSpec extends PlaySpec with GuiceOneServerPerSuite 
   object TestInflationProofController extends InflationProofController(FakeAuthAction, mockAuthConnector,mockSessionService,
     FakeGmpContext,mcc,inflationProofForm,ac,ec,gmpSessionCache,views)
 
-  def authenticatedFakeRequest(url: String = "") = {
-    FakeRequest("GET", url).withSession()
-  }
 
   "InflationProofController" must {
 
@@ -86,7 +83,7 @@ class InflationProofControllerSpec extends PlaySpec with GuiceOneServerPerSuite 
           "redirect to the results" in {
 
               when(mockSessionService.cacheRevaluationDate(any())(any())).thenReturn(Future.successful(Some(session)))
-              val result = TestInflationProofController.post(authenticatedFakeRequest().withMethod("POST")
+              val result = TestInflationProofController.post(FakeRequest().withMethod("POST")
                 .withFormUrlEncodedBody("gmpDate" -> "inflationProof.revaluationDate", "revaluate" -> "inflationProof.revaluate"))
               status(result) mustBe SEE_OTHER
               redirectLocation(result).get must be(routes.ResultsController.get.url)
@@ -96,7 +93,7 @@ class InflationProofControllerSpec extends PlaySpec with GuiceOneServerPerSuite 
           "redirect to the results when not revaluated" in {
 
               when(mockSessionService.cacheRevaluationDate(any())(any())).thenReturn(Future.successful(Some(session)))
-              val result = TestInflationProofController.post(authenticatedFakeRequest().withMethod("POST")
+              val result = TestInflationProofController.post(FakeRequest().withMethod("POST")
                 .withFormUrlEncodedBody("gmpDate" -> "inflationProof.revaluationDate", "revaluate" -> "Some('No')"))
               status(result) mustBe(SEE_OTHER)
               redirectLocation(result).get must be(routes.ResultsController.get.url)
@@ -106,7 +103,7 @@ class InflationProofControllerSpec extends PlaySpec with GuiceOneServerPerSuite 
           "save revaluation date to session cache" in {
 
               when(mockSessionService.cacheRevaluationDate(any())(any())).thenReturn(Future.successful(Some(session)))
-              TestInflationProofController.post(authenticatedFakeRequest().withMethod("POST")
+              TestInflationProofController.post(FakeRequest().withMethod("POST")
                 .withFormUrlEncodedBody("gmpDate" -> "inflationProof.revaluationDate", "revaluate" -> "inflationProof.revaluate"))
               verify(mockSessionService, atLeastOnce()).cacheRevaluationDate(any())(any())
 
@@ -116,7 +113,7 @@ class InflationProofControllerSpec extends PlaySpec with GuiceOneServerPerSuite 
             reset(mockSessionService)
             when(mockSessionService.cacheRevaluationDate(any())(any())).thenReturn(Future.successful(None))
               intercept[RuntimeException] {
-                await(TestInflationProofController.post(authenticatedFakeRequest().withMethod("POST")
+                await(TestInflationProofController.post(FakeRequest().withMethod("POST")
                   .withFormUrlEncodedBody("gmpDate" -> "inflationProof.revaluationDate", "revaluate" -> "inflationProof.revaluate")))
             }
           }
@@ -128,16 +125,15 @@ class InflationProofControllerSpec extends PlaySpec with GuiceOneServerPerSuite 
           val badGmpDate = "a,b,c"
           "respond with BAD_REQUEST" in {
 
-              val result = TestInflationProofController.post(authenticatedFakeRequest().withMethod("POST")
+              val result = TestInflationProofController.post(FakeRequest().withMethod("POST")
                 .withFormUrlEncodedBody("revaluationDate" -> badGmpDate, "revaluate" -> "Yes"))
             status(result) mustBe(BAD_REQUEST)
           }
 
           "display the errors" in {
-
-              val result = TestInflationProofController.post(authenticatedFakeRequest().withMethod("POST")
-
-                .withFormUrlEncodedBody("revaluationDate" -> badGmpDate, "revaluate" -> "Yes"))
+              val result = TestInflationProofController.post(FakeRequest().withMethod("POST")
+                .withFormUrlEncodedBody("revaluationDate.day" -> "a", "revaluationDate.month" -> "b",
+                  "revaluationDate.year" -> "c", "revaluate" -> "Yes"))
               contentAsString(result) must include(Messages("gmp.error.date.nonnumber"))
           }
         }

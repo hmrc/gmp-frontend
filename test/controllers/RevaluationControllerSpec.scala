@@ -109,9 +109,6 @@ class RevaluationControllerSpec extends PlaySpec with GuiceOneServerPerSuite wit
   }
 
   "Revaluation controller POST" must {
-    def authenticatedFakeRequest(url: String = "") = {
-      FakeRequest("GET", url).withSession()
-    }
 
     "authenticated users" must {
 
@@ -121,7 +118,7 @@ class RevaluationControllerSpec extends PlaySpec with GuiceOneServerPerSuite wit
             val postData = Json.toJson(
               RevaluationDate(Leaving(GmpDate(None, None, None), None), baseValidDate.copy(day = Some("31"), month = Some("2"), year = Some("2015")))
             )
-            val result = TestRevaluationController.post(authenticatedFakeRequest().withMethod("POST")
+            val result = TestRevaluationController.post(FakeRequest().withMethod("POST")
               .withFormUrlEncodedBody("RevaluationDate.Leaving.leavingDate.GmpDate" -> "",
                 "RevaluationDate.revaluationDate" -> "31, 2, 2015"))
             status(result) mustBe(BAD_REQUEST)
@@ -129,13 +126,11 @@ class RevaluationControllerSpec extends PlaySpec with GuiceOneServerPerSuite wit
 
         "display the errors" in {
 
-            val postData = Json.toJson(
-              RevaluationDate(Leaving(GmpDate(None, None, None), None), baseValidDate.copy(day = Some("31"),
-                month = Some("2"), year = Some("2015")))
-            )
-            val result = TestRevaluationController.post(authenticatedFakeRequest().withMethod("POST")
-              .withFormUrlEncodedBody("RevaluationDate.Leaving.leavingDate.GmpDate" -> "",
-                "RevaluationDate.revaluationDate" -> "31, 2, 2015"))
+            val result = TestRevaluationController.post(FakeRequest().withMethod("POST")
+              .withFormUrlEncodedBody( "leaving.leavingDate.day" -> "", "leaving.leavingDate.month" -> "",
+                "leaving.leavingDate.year" -> "", "leaving.leaving" -> "", "revaluationDate.day" -> "31",
+                "revaluationDate.month" -> "2", "revaluationDate.year" -> "2015"))
+
             contentAsString(result) must include(Messages("gmp.error.date.invalid"))
         }
       }
@@ -148,25 +143,22 @@ class RevaluationControllerSpec extends PlaySpec with GuiceOneServerPerSuite wit
         "redirect" in {
 
           when(mockSessionService.cacheRevaluationDate(any())(any())).thenReturn(Future.successful(Some(gmpSession)))
-            val postData = Json.toJson(
-              RevaluationDate(Leaving(GmpDate(None, None, None), None), baseValidDate.copy(day = Some("31"),
-                month = Some("3"), year = Some("2015")))
-            )
-            val result = TestRevaluationController.post(authenticatedFakeRequest().withMethod("POST")
-              .withFormUrlEncodedBody("RevaluationDate.Leaving.leavingDate.GmpDate" -> "",
-                "RevaluationDate.revaluationDate" -> "31, 3, 2015"))
+
+            val result = TestRevaluationController.post(FakeRequest().withMethod("POST")
+              .withFormUrlEncodedBody("leaving.leavingDate.day" -> "", "leaving.leavingDate.month" -> "",
+                "leaving.leavingDate.year" -> "", "leaving.leaving" -> "", "revaluationDate.day" -> "31",
+                "revaluationDate.month" -> "3", "revaluationDate.year" -> "2015"))
             status(result) must equal(SEE_OTHER)
         }
 
 
         "respond with error when rate not stored" in {
           when(mockSessionService.cacheRevaluationDate(any())(any())).thenReturn(Future.successful(None))
-//            val postData = Json.toJson(
-//              RevaluationDate(Leaving(GmpDate(None, None, None), None), baseValidDate.copy(day = Some("31"), month = Some("3"), year = Some("2015")))
             intercept[RuntimeException] {
-              await(TestRevaluationController.post(authenticatedFakeRequest().withMethod("POST")
-                .withFormUrlEncodedBody("leaving" -> " ",
-                  "revaluationDate" -> "31, 3, 2015")))
+              await(TestRevaluationController.post(FakeRequest().withMethod("POST")
+                .withFormUrlEncodedBody("leaving.leavingDate.day" -> "", "leaving.leavingDate.month" -> "",
+                  "leaving.leavingDate.year" -> "", "leaving.leaving" -> "", "revaluationDate.day" -> "31",
+                  "revaluationDate.month" -> "3", "revaluationDate.year" -> "2015")))
           }
         }
       }
