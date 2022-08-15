@@ -20,7 +20,7 @@ import com.google.inject.{Inject, Singleton}
 import models.{GmpDate, Leaving, RevaluationDate}
 import play.api.data.Form
 import play.api.data.Forms._
-import play.api.data.validation.{Constraint, Invalid, Valid, ValidationError}
+import play.api.data.validation.{Constraint, Invalid, Valid, ValidationError, ValidationResult}
 import play.api.i18n.{Messages, MessagesImpl}
 import play.api.mvc.MessagesControllerComponents
 
@@ -65,15 +65,47 @@ class RevaluationForm @Inject()(mcc: MessagesControllerComponents) {
     }
   })
 
+  private val allDateValuesEntered: GmpDate => ValidationResult = {
+    case GmpDate(None, None, None) => invalid("date.emptyfields")
+    case GmpDate(None, None, _) => invalid("day-and-month.missing")
+    case GmpDate(_, None, None) => invalid("month-and-year.missing")
+    case GmpDate(None, _, None) => invalid("day-and-year.missing")
+    case GmpDate(None, _, _) => invalid("day.missing")
+    case GmpDate(_, None, _) => invalid("month.missing")
+    case GmpDate(_, _, None) => invalid("year.missing")
+    case _ => Valid
+  }
+
+  private val dateIsReal: GmpDate => ValidationResult = {
+    case d:GmpDate if(checkValidDate(d))=> Valid
+    case _ => invalid("gmp.error.date.invalid")
+  }
+
+  private val checkDateOnBefore: GmpDate => ValidationResult = {
+    case d: GmpDate if(checkDateOnOBeforeGMPEnd(d)) => Valid
+    case _ => invalid("gmp.error.reval_date.to")
+  }
+
+  private def invalid(error: String, params: String*) =
+    Invalid(
+      Seq(
+        ValidationError(
+          messageKeyForError(error),
+          params: _*
+        )
+      )
+    )
+
+  private def messageKeyForError(error: String) = s"reval-date.error.$error"
+
   val revaluationDateMapping = mapping(
       "day" -> optional(text),
       "month" -> optional(text),
       "year" -> optional(text)
     )(GmpDate.apply)(GmpDate.unapply)
-      .verifying(Messages("gmp.error.reval_date.mandatory"), x => mandatoryDate(x))
-      .verifying(Messages("gmp.error.date.invalid"), x => checkValidDate(x))
-      .verifying(Messages("gmp.error.reval_date.to"), x => checkDateOnOBeforeGMPEnd(x)
-  )
+    .verifying(Constraint(allDateValuesEntered))
+      .verifying(Constraint(dateIsReal))
+      .verifying(Constraint(checkDateOnBefore))
 
   val leavingMapping = mapping(
     "leavingDate" -> mapping(

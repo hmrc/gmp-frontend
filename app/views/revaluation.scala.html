@@ -15,10 +15,11 @@
  *@
 
 @import config.ApplicationConfig
-@import views.html.helpers._
 @import views.OldViewHelpers
+@import uk.gov.hmrc.govukfrontend.views.html.components._
 
-@this(gmpMain: gmp_main_old, viewHelpers: OldViewHelpers)
+@this(gmpMain: gmp_main_old, viewHelpers: OldViewHelpers,  govukButton: GovukButton, govukDateInput: GovukDateInput, govukErrorMessage: GovukErrorMessage,
+        govukErrorSummary: GovukErrorSummary)
 
 @(revaluationForm: Form[models.RevaluationDate])(implicit request: Request[_], messages: Messages, ac:ApplicationConfig)
 
@@ -28,71 +29,79 @@
 
 @includes.back_link(Messages("gmp.revaluation.question"))
 
-@views.html.helpers.errorSummary(revaluationForm, formHeaderKey="gmp.revaluation.question")
-
 <h1>@Messages("gmp.revaluation.question")</h1>
 
 
     @viewHelpers.form(action = routes.RevaluationController.post) {
 
-        @if(revaluationForm.hasErrors || revaluationForm.hasGlobalErrors) {
-          <div class="form-field--error form-date" id="revaluation-date">
-        } else {
-          <div class="form-date" id="revaluation-Date">
-        }
 
-            @views.html.helpers.groupError(revaluationForm("revaluationDate"))
-              @if(revaluationForm.hasGlobalErrors) {
-                @revaluationForm.globalErrors.zipWithIndex.map { case (error, index) =>
-                    <span style="display: block" class="govuk-error-message" id="global-error-@index">@error.message</span>
-                }
-              }
+@*            @views.html.helpers.groupError(revaluationForm("revaluationDate"))*@
+@*              @if(revaluationForm.hasGlobalErrors) {*@
+@*                @revaluationForm.globalErrors.zipWithIndex.map { case (error, index) =>*@
+@*                    <span style="display: block" class="govuk-error-message" id="global-error-@index">@error.message</span>*@
+@*                }*@
+@*              }*@
 
-            <p class="form-hint">@Messages("gmp.date.example")</p>
+        @govukDateInput(DateInput(
+            id = "revaluationDate",
+            hint = Some(Hint(
+                content = Text(Messages("gmp.date.example"))
+            )),
+            errorMessage = revaluationForm.errors.headOption.map(e => ErrorMessage(content = Text(messages(e.message, e.args:_*)))),
+            items = Seq(
+                InputItem(name = "revaluationDate.day", classes = "govuk-input--width-2", label=Some("Day"), value = revaluationForm.data.get("revaluationDate.day")),
+                InputItem(name = "revaluationDate.month", classes = "govuk-input--width-2", label=Some("Month"), value = revaluationForm.data.get("revaluationDate.month")),
+                InputItem(name = "revaluationDate.year", classes = "govuk-input--width-4", label=Some("Year"), value = revaluationForm.data.get("revaluationDate.year"))),
+            fieldset = Some(Fieldset(
+                legend = Some(Legend(
+                    content = Text(Messages("gmp.date.header_text")),
+                    classes = "govuk-fieldset__legend--m",
+                    isPageHeading = false
+                ))
+            ))
+        ))
 
-            <fieldset id="revaluationDate">
+@*            <fieldset id="revaluationDate">*@
 
-                <legend id="reval-date" class="govuk-visually-hidden">
-                    @Messages("gmp.revaluation.question")
-                </legend>
+@*                <legend id="reval-date" class="govuk-visually-hidden">*@
+@*                    @Messages("gmp.revaluation.question")*@
+@*                </legend>*@
 
-                <div class="form-group">
-                    @gmpInput(revaluationForm("revaluationDate.day"),
-                    '_label -> Html(Messages("gmp.day")),
-                    '_id -> "revaluationDate-day",
-                    '_maxLength -> 2)
-                </div>
-                <div class="form-group">
-                    @gmpInput(revaluationForm("revaluationDate.month"),
-                    '_label -> Html(Messages("gmp.month")),
-                    '_id -> "revaluationDate-month",
-                    '_maxLength -> 2)
-                </div>
-                <div class="form-group">
-                    @gmpInput(revaluationForm("revaluationDate.year"),
-                    '_label -> Html(Messages("gmp.year")),
-                    '_id -> "revaluationDate-year",
-                    '_maxLength ->4,
-                    '_inputClass -> "form-control year-input")
-                </div>
-                <hr class="govuk-section-break" aria-hidden = true>
-                <hr class="govuk-section-break" aria-hidden = true>
-                <hr class="govuk-section-break" aria-hidden = true>
+@*                <div class="form-group">*@
+@*                    @gmpInput(revaluationForm("revaluationDate.day"),*@
+@*                    '_label -> Html(Messages("gmp.day")),*@
+@*                    '_id -> "revaluationDate-day",*@
+@*                    '_maxLength -> 2)*@
+@*                </div>*@
+@*                <div class="form-group">*@
+@*                    @gmpInput(revaluationForm("revaluationDate.month"),*@
+@*                    '_label -> Html(Messages("gmp.month")),*@
+@*                    '_id -> "revaluationDate-month",*@
+@*                    '_maxLength -> 2)*@
+@*                </div>*@
+@*                <div class="form-group">*@
+@*                    @gmpInput(revaluationForm("revaluationDate.year"),*@
+@*                    '_label -> Html(Messages("gmp.year")),*@
+@*                    '_id -> "revaluationDate-year",*@
+@*                    '_maxLength ->4,*@
+@*                    '_inputClass -> "form-control year-input")*@
+@*                </div>*@
+@*                <hr class="govuk-section-break" aria-hidden = true>*@
+@*                <hr class="govuk-section-break" aria-hidden = true>*@
+@*                <hr class="govuk-section-break" aria-hidden = true>*@
 
-            </fieldset>
+@*            </fieldset>*@
 
-        </div>
 
-        <!-- hidden part of form -->
-          <input type="hidden" id="leavingDate_day" name="leaving.leavingDate.day" value="@revaluationForm("leaving.leavingDate.day").value"/>
-          <input type="hidden" id="leavingDate_month" name="leaving.leavingDate.month" value="@revaluationForm("leaving.leavingDate.month").value"/>
-          <input type="hidden" id="leavingDate_year" name="leaving.leavingDate.year" value="@revaluationForm("leaving.leavingDate.year").value"/>
-          <input type="hidden" id="leavingText" name="leaving.leaving" value="@revaluationForm("leaving.leaving").value"/>
-        <!-- hidden part of form -->
 
-        <div class="continue-button">
-            <button class="button" type="submit" id="submit-button">@Messages("gmp.continue.button")</button>
-        </div>
+@*        <!-- hidden part of form -->*@
+@*          <input type="hidden" id="leavingDate_day" name="leaving.leavingDate.day" value="@revaluationForm("leaving.leavingDate.day").value"/>*@
+@*          <input type="hidden" id="leavingDate_month" name="leaving.leavingDate.month" value="@revaluationForm("leaving.leavingDate.month").value"/>*@
+@*          <input type="hidden" id="leavingDate_year" name="leaving.leavingDate.year" value="@revaluationForm("leaving.leavingDate.year").value"/>*@
+@*          <input type="hidden" id="leavingText" name="leaving.leaving" value="@revaluationForm("leaving.leaving").value"/>*@
+@*        <!-- hidden part of form -->*@
+
+        @govukButton(Button(content = Text(messages("gmp.continue.button"))))
 
     }
 

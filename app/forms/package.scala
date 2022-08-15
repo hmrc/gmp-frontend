@@ -15,6 +15,7 @@
  */
 
 import models.GmpDate
+import play.api.data.validation.Valid
 import validation.DateValidate
 
 package object forms {
@@ -23,7 +24,7 @@ package object forms {
   val nameRegex = "^[-a-zA-Z'][-a-zA-Z' ]+$".r
 
 
-  def checkValidDate(data: GmpDate): Boolean = {
+  def checkValidDate(data: GmpDate) = {
 
     def checkValidDate(day: Option[String], month: Option[String], year: Option[String]): Boolean = {
       val tDay: String = day.getOrElse("")
@@ -40,7 +41,6 @@ package object forms {
     val month = data.month
     val year = data.year
     checkValidDate(day, month, year)
-
   }
 
   def checkYearLength(year: Option[String]): Boolean = {
