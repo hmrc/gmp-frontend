@@ -25,7 +25,7 @@ import helpers.RandomNino
 import models._
 import models.upscan.UploadedSuccessfully
 import org.joda.time.{LocalDate, LocalDateTime}
-import org.mockito.Matchers
+import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito._
 import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
@@ -84,9 +84,9 @@ class BulkRequestReceivedControllerSpec extends PlaySpec with GuiceOneServerPerS
 
         "respond with ok" in {
 
-          when(mockSessionService.fetchGmpBulkSession()(Matchers.any())).thenReturn(Future.successful(Some(gmpBulkSession)))
-          when(mockBulkRequestCreationService.createBulkRequest(Matchers.any(),Matchers.any(),Matchers.any())).thenReturn(Right(bulkRequest1))
-          when(mockGmpBulkConnector.sendBulkRequest(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful(OK))
+          when(mockSessionService.fetchGmpBulkSession()(any())).thenReturn(Future.successful(Some(gmpBulkSession)))
+          when(mockBulkRequestCreationService.createBulkRequest(any(),any(),any())).thenReturn(Right(bulkRequest1))
+          when(mockGmpBulkConnector.sendBulkRequest(any(),any())(any())).thenReturn(Future.successful(OK))
 
           val result = TestBulkRequestReceivedController.get(FakeRequest())
               status(result) must equal(OK)
@@ -99,9 +99,9 @@ class BulkRequestReceivedControllerSpec extends PlaySpec with GuiceOneServerPerS
 
         "respond with ok and failure page if conflict received usually for a duplicate record trying to be inserted" in {
 
-          when(mockSessionService.fetchGmpBulkSession()(Matchers.any())).thenReturn(Future.successful(Some(gmpBulkSession)))
-          when(mockBulkRequestCreationService.createBulkRequest(Matchers.any(),Matchers.any(),Matchers.any())).thenReturn(Right(bulkRequest1))
-          when(mockGmpBulkConnector.sendBulkRequest(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful(CONFLICT))
+          when(mockSessionService.fetchGmpBulkSession()(any())).thenReturn(Future.successful(Some(gmpBulkSession)))
+          when(mockBulkRequestCreationService.createBulkRequest(any(),any(),any())).thenReturn(Right(bulkRequest1))
+          when(mockGmpBulkConnector.sendBulkRequest(any(),any())(any())).thenReturn(Future.successful(CONFLICT))
 
           val result = TestBulkRequestReceivedController.get(FakeRequest())
               status(result) must equal(OK)
@@ -111,9 +111,9 @@ class BulkRequestReceivedControllerSpec extends PlaySpec with GuiceOneServerPerS
 
         "respond with ok and failure page if file too large" in {
 
-          when(mockSessionService.fetchGmpBulkSession()(Matchers.any())).thenReturn(Future.successful(Some(gmpBulkSession)))
-          when(mockBulkRequestCreationService.createBulkRequest(Matchers.any(),Matchers.any(),Matchers.any())).thenReturn(Right(bulkRequest1))
-          when(mockGmpBulkConnector.sendBulkRequest(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful(REQUEST_ENTITY_TOO_LARGE))
+          when(mockSessionService.fetchGmpBulkSession()(any())).thenReturn(Future.successful(Some(gmpBulkSession)))
+          when(mockBulkRequestCreationService.createBulkRequest(any(),any(),any())).thenReturn(Right(bulkRequest1))
+          when(mockGmpBulkConnector.sendBulkRequest(any(),any())(any())).thenReturn(Future.successful(REQUEST_ENTITY_TOO_LARGE))
 
           val result = TestBulkRequestReceivedController.get(FakeRequest())
               status(result) must equal(OK)
@@ -123,8 +123,8 @@ class BulkRequestReceivedControllerSpec extends PlaySpec with GuiceOneServerPerS
 
         "respond with ok and failure page if file row limit exceeded" in {
 
-          when(mockSessionService.fetchGmpBulkSession()(Matchers.any())).thenReturn(Future.successful(Some(gmpBulkSession)))
-          when(mockBulkRequestCreationService.createBulkRequest(Matchers.any(),Matchers.any(),Matchers.any())).thenReturn(Left(DataLimitExceededException))
+          when(mockSessionService.fetchGmpBulkSession()(any())).thenReturn(Future.successful(Some(gmpBulkSession)))
+          when(mockBulkRequestCreationService.createBulkRequest(any(),any(),any())).thenReturn(Left(DataLimitExceededException))
 
           val result = TestBulkRequestReceivedController.get(FakeRequest())
               status(result) must equal(OK)
@@ -134,9 +134,9 @@ class BulkRequestReceivedControllerSpec extends PlaySpec with GuiceOneServerPerS
 
         "generic failure page if bulk fails for 5XX reason" in {
 
-          when(mockSessionService.fetchGmpBulkSession()(Matchers.any())).thenReturn(Future.successful(Some(gmpBulkSession)))
-          when(mockBulkRequestCreationService.createBulkRequest(Matchers.any(),Matchers.any(),Matchers.any())).thenReturn(Right(bulkRequest1))
-          when(mockGmpBulkConnector.sendBulkRequest(Matchers.any(),Matchers.any())(Matchers.any())).thenReturn(Future.successful(500))
+          when(mockSessionService.fetchGmpBulkSession()(any())).thenReturn(Future.successful(Some(gmpBulkSession)))
+          when(mockBulkRequestCreationService.createBulkRequest(any(),any(),any())).thenReturn(Right(bulkRequest1))
+          when(mockGmpBulkConnector.sendBulkRequest(any(),any())(any())).thenReturn(Future.successful(500))
 
           val result = TestBulkRequestReceivedController.get(FakeRequest())
               status(result) must equal(OK)
@@ -146,7 +146,7 @@ class BulkRequestReceivedControllerSpec extends PlaySpec with GuiceOneServerPerS
 
         "throw exception when fails to get session" in {
 
-          when(mockSessionService.fetchGmpBulkSession()(Matchers.any())).thenReturn(Future.successful(None))
+          when(mockSessionService.fetchGmpBulkSession()(any())).thenReturn(Future.successful(None))
 
           val result = TestBulkRequestReceivedController.get(FakeRequest())
               contentAsString(result)replaceAll("&#x27;", "'") must include (Messages("gmp.cannot_calculate.gmp"))
@@ -155,8 +155,8 @@ class BulkRequestReceivedControllerSpec extends PlaySpec with GuiceOneServerPerS
 
 
         "redirect to an error page explaining they have uploaded an incorrectly encoded file when they upload an incorrectly encoded file" in {
-          when(mockSessionService.fetchGmpBulkSession()(Matchers.any())).thenReturn(Future.successful(Some(gmpBulkSession)))
-          when(mockBulkRequestCreationService.createBulkRequest(Matchers.any(),Matchers.any(),Matchers.any())).thenReturn(Left(new UnsupportedOperationException))
+          when(mockSessionService.fetchGmpBulkSession()(any())).thenReturn(Future.successful(Some(gmpBulkSession)))
+          when(mockBulkRequestCreationService.createBulkRequest(any(),any(),any())).thenReturn(Left(new UnsupportedOperationException))
 
           val result = TestBulkRequestReceivedController.get(FakeRequest())
 

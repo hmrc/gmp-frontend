@@ -19,25 +19,27 @@
 @this(govukTable: GovukTable)
 
 @(calculationResponse:CalculationResponse)(implicit messages: Messages)
+    @title = @{if(calculationResponse.calcType == CalculationType.SURVIVOR.toInt){
+        Some(Messages("gmp.entered_details.title.survivor"))
+    } else{
+        Some(Messages("gmp.entered_details.title"))
+    }}
 
     @govukTable(Table(
-        caption = if(calculationResponse.calcType == CalculationType.SURVIVOR.toInt){
-                        Some(Messages("gmp.entered_details.title.survivor"))
-                    } else{
-                        Some(Messages("gmp.entered_details.title"))
-                    },
-        captionClasses = "table-caption",
+        caption = title,
+        captionClasses = "govuk-table__caption--m",
+        firstCellIsHeader = true,
         head = Some(Seq(HeadCell(content = Text(Messages("gmp.name"))),
-                        HeadCell(content = Text(Messages("gmp.scon.noabrv"))),
-                        HeadCell(content = Text(Messages("gmp.nino"))))),
+            HeadCell(content = Text(Messages("gmp.scon.noabrv"))),
+            HeadCell(content = Text(Messages("gmp.nino"))))),
         rows = Seq(
-                    Seq(
-                                TableRow(content = Text(calculationResponse.name)),
-                                TableRow(content = Text(calculationResponse.scon)),
-                                TableRow(content = Text(calculationResponse.nino))
-                        )
-                    )
-        ))
+            Seq(
+                TableRow(content = Text(calculationResponse.name)),
+                TableRow(content = Text(calculationResponse.scon)),
+                TableRow(content = Text(calculationResponse.nino))
+            )
+        )
+    ))
 
 
 

@@ -52,7 +52,6 @@ class EqualiseController @Inject()(authAction: AuthAction,
         logger.debug(s"[EqualiseController][POST] : ${request.body}")
 
         equaliseForm.bindFromRequest().fold(
-
           formWithErrors => {Future.successful(BadRequest(views.equalise(formWithErrors)))},
 
           equalise => {

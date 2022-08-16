@@ -15,8 +15,9 @@
  *@
 
 @import config.ApplicationConfig
+@import uk.gov.hmrc.govukfrontend.views.html.components._
 
-@this(gmpMain: gmp_main, request_another_button: includes.request_another_button, member_details_result:includes.member_details_result)
+@this(gmpMain: gmp_main,govukErrorSummary : GovukErrorSummary, request_another_button: includes.request_another_button, member_details_result:includes.member_details_result)
 
 @(
         calculationResponse:CalculationResponse,

@@ -15,14 +15,16 @@
  *@
 
 @import uk.gov.hmrc.govukfrontend.views.html.components._
-@import uk.gov.hmrc.govukfrontend.views.html.components.implicits._
 @import config.ApplicationConfig
-@import views.html.helpers._
 @import models.CalculationType
 @import views.ViewHelpers
-@import uk.gov.hmrc.hmrcfrontend.views.Implicits.RichErrorSummary
 
-@this(gmpMain: gmp_main, viewHelpers: ViewHelpers, govukRadios : GovukRadios, govukButton : GovukButton, govukErrorSummary : GovukErrorSummary)
+
+@this(gmpMain: gmp_main,
+        viewHelpers: ViewHelpers,
+        govukRadios : GovukRadios,
+        govukButton : GovukButton,
+        govukErrorSummary : GovukErrorSummary)
 
 @(revaluationRateForm: Form[models.RevaluationRate], session: GmpSession)(implicit request: Request[_], messages: Messages, ac:ApplicationConfig)
 
@@ -41,14 +43,14 @@
 @gmpMain(title = heading + " - " + Messages("service.title") + " - " + Messages("gov.uk")) {
 
         @includes.back_link(Messages("gmp.revaluation_rate.header"))
-
+    @if(revaluationRateForm.errors.nonEmpty) {
+        @govukErrorSummary(ErrorSummary(errorList = Seq(ErrorLink(
+            href = Some(s"#${revaluationRateForm.errors.head.key}"),
+            content = Text(s"${messages(s"${revaluationRateForm.errors.head.message}")}"),
+        )), title = Text(messages("generic.errorSummary"))))
+    }
 
           @viewHelpers.form(action = routes.RevaluationRateController.post) {
-            @if(revaluationRateForm.errors.nonEmpty){
-                @govukErrorSummary(ErrorSummary().withFormErrorsAsText(revaluationRateForm))
-            }
-
-            <div class="form-group @if(revaluationRateForm.hasErrors) {form-field--error}" id="rateType">
 
               @govukRadios(Radios(
                   fieldset = Some(Fieldset(
@@ -60,28 +62,55 @@
                   )),
                   idPrefix = Some("rateType"),
                   name = "rateType",
-                  items = session.leaving.leaving match{
-                            case Some(Leaving.YES_AFTER) | Some(Leaving.NO) => Seq(
-                                RadioItem( content = Text(Messages("gmp.revaluation_rate.fixed")), value = Some("fixed"), id = Some("fixed"), attributes=Map("data-journey-click" -> "radio - select:Guaranteed Minimum Pension:fixed")),
-                                RadioItem( content = Text(Messages("gmp.revaluation_rate.rate_held_by_hmrc")), value = Some("hmrc"), id = Some("hmrc")),
-                                RadioItem( content = Text(Messages("gmp.revaluation_rate.s148")), value = Some("s148"), id = Some("s148")))
-                            case _ => Seq(
-                                RadioItem( content = Text(Messages("gmp.revaluation_rate.fixed")), value = Some("fixed"), id = Some("fixed")),
-                                RadioItem( content = Text(Messages("gmp.revaluation_rate.rate_held_by_hmrc")), value = Some("hmrc"), id = Some("hmrc")),
-                                RadioItem( content = Text(Messages("gmp.revaluation_rate.limited")), value = Some("limited"), id = Some("limited")),
-                                RadioItem( content = Text(Messages("gmp.revaluation_rate.s148")), value = Some("s148"), id = Some("s148")))}
+                  errorMessage = revaluationRateForm.error("rateType").map(e => ErrorMessage(content = Text(messages(e.message)))),
+                  items = session.leaving.leaving match {
+                      case Some(Leaving.YES_AFTER) | Some(Leaving.NO) => Seq(
+                          RadioItem(
+                              content = Text(Messages("gmp.revaluation_rate.fixed")),
+                              value = Some("fixed"),
+                              checked = revaluationRateForm.data.values.toList.contains("fixed")
+                          ),
+                          RadioItem(
+                              content = Text(Messages("gmp.revaluation_rate.rate_held_by_hmrc")),
+                              value = Some("hmrc"),
+                              checked = revaluationRateForm.data.values.toList.contains("hmrc")
+                          ),
+                          RadioItem(
+                              content = Text(Messages("gmp.revaluation_rate.s148")),
+                              value = Some("s148"),
+                              checked = revaluationRateForm.data.values.toList.contains("s148")
+                          ))
+                      case _ => Seq(
 
-              ).withFormField(revaluationRateForm("rateType")))
+                          RadioItem(
+                              content = Text(Messages("gmp.revaluation_rate.fixed")),
+                              value = Some("fixed"),
+                              checked = revaluationRateForm.data.values.toList.contains("fixed")
+                          ),
+                          RadioItem(
+                              content = Text(Messages("gmp.revaluation_rate.rate_held_by_hmrc")),
+                              value = Some("hmrc"),
+                              checked = revaluationRateForm.data.values.toList.contains("hmrc")
+                          ),
+                          RadioItem(
+                              content = Text(Messages("gmp.revaluation_rate.limited")),
+                              value = Some("limited"),
+                              checked = revaluationRateForm.data.values.toList.contains("limited")
+                          ),
+                          RadioItem(
+                              content = Text(Messages("gmp.revaluation_rate.s148")),
+                              value = Some("s148"),
+                              checked = revaluationRateForm.data.values.toList.contains("s148")
+                          )
 
+                      )
+                  }))
 
-            </div>
-          <div>
               @govukButton(Button(
-                content = Text(Messages("gmp.continue.button")),
-                inputType = Some("submit")
+                  content = Text(Messages("gmp.continue.button")),
+                  inputType = Some("submit")
               ))
 
-          </div>
 
           }
 }

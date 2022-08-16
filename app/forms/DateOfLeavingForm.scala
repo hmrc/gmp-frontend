@@ -17,6 +17,8 @@
 package forms
 
 import com.google.inject.Singleton
+import forms.DateOfLeavingForm.Fields.{leavingDate, radioButtons}
+
 import javax.inject.Inject
 import models.{GmpDate, Leaving}
 import play.api.data.Form
@@ -24,6 +26,8 @@ import play.api.data.Forms._
 import play.api.data.validation.{Constraint, Invalid, Valid, ValidationError}
 import play.api.i18n.{Messages, MessagesImpl}
 import play.api.mvc.MessagesControllerComponents
+
+
 @Singleton
 class DateOfLeavingForm  @Inject()(mcc: MessagesControllerComponents) {
   implicit lazy val messages: Messages = MessagesImpl(mcc.langs.availables.head, mcc.messagesApi)
@@ -64,24 +68,27 @@ class DateOfLeavingForm  @Inject()(mcc: MessagesControllerComponents) {
     }
   })
 
+
   def dateOfLeavingForm(mandatoryMessage: String) = Form(
     mapping(
-      "leavingDate" -> mapping(
+      leavingDate -> mapping(
         "day" -> optional(text),
         "month" -> optional(text),
         "year" -> optional(text)
-      )(GmpDate.apply)(GmpDate.unapply)
-//        .verifying(Messages("gmp.error.date.nonnumber"), x => checkForNumber(x.day) && checkForNumber(x.month) && checkForNumber(x.year))
-//        .verifying(Messages("gmp.error.day.invalid"), x => checkDayRange(x.day))
-//        .verifying(Messages("gmp.error.month.invalid"), x => checkMonthRange(x.month))
-//        .verifying(Messages("gmp.error.year.invalid.format"), x => checkYearLength(x.year))
-      ,
-      "leaving" -> optional(text).verifying(mandatoryMessage, {
+      )(GmpDate.apply)(GmpDate.unapply),
+      radioButtons -> optional(text).verifying(mandatoryMessage, {
         _.isDefined
       })
     )(Leaving.apply)(Leaving.unapply)
       .verifying(dateOfLeavingConstraint)
   )
 
+}
+
+object DateOfLeavingForm {
+  object Fields {
+    val radioButtons = "leaving"
+    val leavingDate = "leavingDate"
+  }
 }
 

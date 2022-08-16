@@ -26,7 +26,7 @@ import play.api.Application
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.inject.bind
 import org.mockito.Mockito._
-import org.mockito.Matchers.any
+import org.mockito.ArgumentMatchers.any
 import org.scalatest.concurrent.ScalaFutures
 import play.api.mvc.Request
 import play.api.test.FakeRequest

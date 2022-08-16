@@ -16,11 +16,9 @@
 
 @(globalErrorCode: Integer)(implicit messages: Messages, application:config.ApplicationConfig)
 
-
-
 @queryHandlingHeader = {
     @if(application.globalErrors.hasPath(s"$globalErrorCode.solution")){
-        <h2 class="govuk-heading-m error-h2" id="global-query-handling-header">@{ Messages("gmp.errors.query_handling.header") }</h2>
+        <h2 class="govuk-heading-l" id="global-query-handling-header">@{ Messages("gmp.errors.query_handling.header") }</h2>
     }
 }
 

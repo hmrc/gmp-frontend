@@ -22,13 +22,12 @@ import config.{ApplicationConfig, GmpSessionCache}
 import controllers.auth.FakeAuthAction
 import forms.BulkReferenceForm
 import models._
-import org.mockito.Matchers
+import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito._
 import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl}
-import play.api.libs.json.Json
 import play.api.mvc.MessagesControllerComponents
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -63,7 +62,7 @@ class BulkReferenceControllerSpec extends PlaySpec  with MockitoSugar with Guice
 
   }
 
-  "BulkRerefenceController" must {
+  "BulkReferenceController" must {
 
     "bulk reference GET " must {
 
@@ -89,32 +88,37 @@ class BulkReferenceControllerSpec extends PlaySpec  with MockitoSugar with Guice
 
       "respond with bad request missing email and reference" in {
 
-          val result = TestBulkReferenceController.post()(FakeRequest().withJsonBody(Json.toJson(emptyRequest)))
-          status(result) must equal(BAD_REQUEST)
+          val result = TestBulkReferenceController.post(FakeRequest().withMethod("POST")
+            .withFormUrlEncodedBody("email" -> "", "reference" -> ""))
+          status(result) mustBe BAD_REQUEST
           contentAsString(result) must include(Messages("gmp.error.mandatory", Messages("gmp.reference")))
       }
 
       "throw an exception when can't cache email and reference" in {
-        when(mockSessionService.cacheEmailAndReference(Matchers.any(), Matchers.any())(Matchers.any())).thenReturn(Future.successful(None))
+        when(mockSessionService.cacheEmailAndReference(any(), any())(any())).thenReturn(Future.successful(None))
 
-          val result = TestBulkReferenceController.post()(FakeRequest().withJsonBody(Json.toJson(validRequest)))
+          val result = TestBulkReferenceController.post(FakeRequest().withMethod("POST")
+            .withFormUrlEncodedBody("email" -> validRequest.email, "reference" -> validRequest.reference))
           intercept[RuntimeException]{
             status(result) must equal(BAD_REQUEST)
         }
       }
 
       "validate email and reference, cache and redirect" in {
-        when(mockSessionService.cacheEmailAndReference(Matchers.any(), Matchers.any())(Matchers.any())).thenReturn(Future.successful(Some(gmpBulkSession)))
+        when(mockSessionService.cacheEmailAndReference(any(), any())(any())).thenReturn(Future.successful(Some(gmpBulkSession)))
 
-          val result = TestBulkReferenceController.post()(FakeRequest().withJsonBody(Json.toJson(validRequest)))
+          val result = TestBulkReferenceController.post(FakeRequest().withMethod("POST")
+            .withFormUrlEncodedBody("email" -> validRequest.email, "reference" -> validRequest.reference))
           status(result) must equal(SEE_OTHER)
           redirectLocation(result).get must include("/request-received")
       }
 
       "validate email and reference with spaces, cache and redirect" in {
-        when(mockSessionService.cacheEmailAndReference(Matchers.any(), Matchers.any())(Matchers.any())).thenReturn(Future.successful(Some(gmpBulkSession)))
+        when(mockSessionService.cacheEmailAndReference(any(), any())(any())).thenReturn(Future.successful(Some(gmpBulkSession)))
 
-          val result = TestBulkReferenceController.post()(FakeRequest().withJsonBody(Json.toJson(validRequestWithSpaces)))
+          val result = TestBulkReferenceController.post()(FakeRequest().withMethod("POST")
+            .withFormUrlEncodedBody("email" -> validRequestWithSpaces.email,
+              "reference" -> validRequestWithSpaces.reference))
           status(result) must equal(SEE_OTHER)
           redirectLocation(result).get must include("/request-received")
       }

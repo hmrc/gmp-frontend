@@ -20,12 +20,13 @@ import models.{CalculationPeriod, CalculationResponse, ContributionsAndEarnings}
 import org.joda.time.LocalDate
 import play.twirl.api.Html
 import utils.GmpViewSpec
-import views.html.includes.request_another_button
+import views.html.includes.{member_details_result, request_another_button}
 
 class ContributionsEarningsSpec extends GmpViewSpec {
   lazy val gmpMain = app.injector.instanceOf[gmp_main]
   lazy val requestAnotherButton = app.injector.instanceOf[request_another_button]
-  override def view: Html = new views.html.contributions_earnings(gmpMain, requestAnotherButton)(calculationResponse)
+  lazy val memberDetailsResult = app.injector.instanceOf[member_details_result]
+  override def view: Html = new views.html.contributions_earnings(gmpMain, requestAnotherButton, memberDetailsResult)(calculationResponse)
 
   private val calculationResponse: CalculationResponse = CalculationResponse("name", "nino", "scon", Some("revaluationRate"),
     Some(LocalDate.now), List(CalculationPeriod(Some(LocalDate.now), LocalDate.now(), "gmpTotal", "post", 1, 2, Some(3), Some("string"),
@@ -34,7 +35,7 @@ class ContributionsEarningsSpec extends GmpViewSpec {
   "Contributions Earnings page" must {
     behave like pageWithTitle(messages("gmp.contributions_earnings.header"))
     behave like pageWithHeader(messages("gmp.contributions_earnings.header"))
-    behave like pageWithTableCaption("details-table-caption", messages("gmp.entered_details.title"))
+    behave like pageWithTableCaption(messages("gmp.entered_details.title"))
 
     "have a correct span with text" in {
       doc must haveSpanWithText(messages("gmp.queryhandling.contsandearnings"))

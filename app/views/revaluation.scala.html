@@ -44,7 +44,7 @@
             @views.html.helpers.groupError(revaluationForm("revaluationDate"))
               @if(revaluationForm.hasGlobalErrors) {
                 @revaluationForm.globalErrors.zipWithIndex.map { case (error, index) =>
-                    <span style="display: block" class="error-notification" id="global-error-@index">@error.message</span>
+                    <span style="display: block" class="govuk-error-message" id="global-error-@index">@error.message</span>
                 }
               }
 
@@ -52,7 +52,7 @@
 
             <fieldset id="revaluationDate">
 
-                <legend id="reval-date" class="hidden">
+                <legend id="reval-date" class="govuk-visually-hidden">
                     @Messages("gmp.revaluation.question")
                 </legend>
 

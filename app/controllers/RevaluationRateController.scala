@@ -21,6 +21,7 @@ import com.google.inject.{Inject, Singleton}
 import config.{ApplicationConfig, GmpContext, GmpSessionCache}
 import controllers.auth.AuthAction
 import forms.RevaluationRateForm
+import models.Leaving
 import play.api.Logging
 import play.api.i18n.Messages
 import play.api.mvc.MessagesControllerComponents
