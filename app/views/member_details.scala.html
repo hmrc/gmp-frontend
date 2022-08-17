@@ -26,7 +26,8 @@
         viewHelpers: ViewHelpers,
         govukButton : GovukButton,
         govukInput : GovukInput,
-        govukErrorSummary: GovukErrorSummary
+        govukErrorSummary: GovukErrorSummary,
+        govukBackLink: GovukBackLink
 )
 
 @(memberDetailsForm: Form[models.MemberDetails])(implicit request: Request[_], messages: Messages, ac:ApplicationConfig)
@@ -35,7 +36,10 @@
 
 @gmpMain(title = Messages("gmp.member_details.header") + " - " + Messages("service.title") + " - " + Messages("gov.uk")) {
 
-    @includes.back_link(Messages("gmp.bulk.results.banner"))
+    @govukBackLink(BackLink(
+        href = controllers.routes.PensionDetailsController.get.url,
+        content = Text("Back")
+    ))
 
     @if(memberDetailsForm.errors.nonEmpty) {
         @govukErrorSummary(ErrorSummary(errorList = memberDetailsForm.errors.map(e => ErrorLink(

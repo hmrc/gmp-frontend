@@ -14,23 +14,9 @@
  * limitations under the License.
  *@
 
-@(calculationResponse:CalculationResponse)(implicit messages: Messages)
+@import uk.gov.hmrc.govukfrontend.views.html.components._
 
-@import org.joda.time.LocalDate
-@import scala.math.BigDecimal.RoundingMode
-
-@displayConts(contsAndEarnings :ContributionsAndEarnings) = {
-  <tr class="govuk-table__row">
-    <td class="govuk-table__cell">
-      @{s"6 April ${contsAndEarnings.taxYear} to 5 April ${contsAndEarnings.taxYear + 1}"}
-    </td>
-    <td class="govuk-table__cell conts-and-earnings-table-col">
-      £@contsAndEarnings.contEarnings
-    </td>
-  </tr>
-
-}
-
+@(calculationResponse:CalculationResponse, govukTable: GovukTable)(implicit messages: Messages)
 
     @if(calculationResponse.hasErrors){
         @includes.contributions_and_earnings_error(calculationResponse)
@@ -44,29 +30,20 @@
 
           case Some(contList: List[ContributionsAndEarnings]) if(period.errorCode == 0 && contList.nonEmpty) => {
 
-      <table class="govuk-table" id="contributions-earnings-table-@count">
-          <caption class="govuk-table__caption govuk-table__caption--m" id="gmp-conts-and-earnings-header-@count">
-              @{Messages("gmp.contracted_out_period_table_header" ,s"${period.startDate.get.toString("d MMMM yyyy")} to ${period.endDate.toString("d MMMM yyyy")}")}
-          </caption>
-
-                <thead class="govuk-table__head">
-                  <tr  class="govuk-table__row">
-                    <th scope="col" class="govuk-table__header" id="tax-year-table-col-header-@count">
-                      @{Messages("gmp.tax_year_table_column_header")}
-                    </th>
-                    <th scope="col" class="govuk-table__header conts-and-earnings-table-col" id="contracted-out-period-table-header-@count">
-                      @{Messages("gmp.contracted_out_period_table_column_header")}
-                    </th>
-                  </tr>
-                </thead>
-          <hr class="govuk-section-break govuk-section-break--m" aria-hidden = true/>
-                <tbody class="govuk-table__body">
-                      @for((contsAndEarnings, count) <- contList.reverse.zipWithIndex){
-                        @displayConts(contsAndEarnings)
-                      }
-                </tbody>
-              </table>
-
+              @govukTable(Table(
+                  caption = Some(Messages("gmp.contracted_out_period_table_header" ,s"${period.startDate.get.toString("d MMMM yyyy")} to ${period.endDate.toString("d MMMM yyyy")}")),
+                  captionClasses = "govuk-table__caption--m",
+                  firstCellIsHeader = false,
+                  head = Some(Seq(HeadCell(content = Text(Messages("gmp.tax_year_table_column_header")), classes = "govuk-!-width-full"),
+                      HeadCell(content = Text(Messages("gmp.contracted_out_period_table_column_header"))))),
+                  rows = contList.reverse.zipWithIndex.map{ response =>
+                    val(contsAndEarnings, count) = response
+                      Seq(
+                          TableRow(content = Text(s"6 April ${contsAndEarnings.taxYear} to 5 April ${contsAndEarnings.taxYear + 1}")),
+                          TableRow(content = Text(s"£${contsAndEarnings.contEarnings}")),
+                      )
+                  }
+              ))
           }
             case Some(contList: List[ContributionsAndEarnings]) if(period.errorCode != 0) => {
                 <h3 class="govuk-heading-s" id="gmp-conts-and-earnings-header-@count">
@@ -88,4 +65,4 @@
         }
     }
 
-<hr class="govuk-section-break govuk-section-break--m" aria-hidden = true/>
+<br>

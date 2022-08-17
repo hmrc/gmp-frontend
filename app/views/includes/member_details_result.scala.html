@@ -28,8 +28,8 @@
     @govukTable(Table(
         caption = title,
         captionClasses = "govuk-table__caption--m",
-        firstCellIsHeader = true,
-        head = Some(Seq(HeadCell(content = Text(Messages("gmp.name"))),
+        firstCellIsHeader = false,
+        head = Some(Seq(HeadCell(content = Text(Messages("gmp.name")), classes = "govuk-!-width-one-half"),
             HeadCell(content = Text(Messages("gmp.scon.noabrv"))),
             HeadCell(content = Text(Messages("gmp.nino"))))),
         rows = Seq(

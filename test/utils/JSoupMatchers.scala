@@ -43,11 +43,15 @@ trait JSoupMatchers {
 
   class CssSelectorWithTextMatcher(expectedContent: String, selector: String) extends Matcher[Document] {
     def apply(left: Document): MatchResult = {
+
+      println(" selector is ::"+selector)
       val elements: List[String] =
         left.select(selector)
           .asScala
           .toList
           .map(_.text)
+
+      println(" elements are :;"+elements)
 
       lazy val elementContents = elements.mkString("\t", "\n\t", "")
 
@@ -216,6 +220,7 @@ trait JSoupMatchers {
   def haveCaptionWithText (expectedText: String) = new CssSelectorWithTextMatcher(expectedText,"caption")
   def haveContinueSubmitInput = new CssSelectorWithAttributeValueMatcher("value", "Continue", "input[type=submit]")
   def haveSubmitButton(expectedText: String) = new CssSelectorWithTextMatcher(expectedText,"button[type=submit]")
+  def haveNewSubmitButton(expectedText: String) = new CssSelectorWithTextMatcher(expectedText,"button[class=govuk-button]")
   def haveSummaryWithText (expectedText: String) = new CssSelectorWithTextMatcher(expectedText,"summary")
   def haveFormWithSubmitUrl(url: String) = new CssSelectorWithAttributeValueMatcher("action", url, "form[method=POST]")
   def haveDescriptionListWithId(id: String) = new CssSelectorWithAttributeValueMatcher("id", id, "dl")
@@ -263,6 +268,7 @@ trait JSoupMatchers {
   def haveLinkElement(id:String, href: String, text: String) = new IdSelectorWithUrlAndTextMatcher(id, href, text)
 
   def haveInputLabelWithText (id:String, expectedText: String) = new CssSelectorWithTextMatcher(expectedText, s"label[for=$id]")
+
   //def haveInputLabelWithText2 (id:String, expectedText: String) = new CssSelectorWithTextMatcher(expectedText, s"label[for=$id]")
 
 

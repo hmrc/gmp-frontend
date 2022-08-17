@@ -24,7 +24,8 @@
         viewHelpers: ViewHelpers,
         govukRadios : GovukRadios,
         govukButton : GovukButton,
-        govukErrorSummary : GovukErrorSummary)
+        govukErrorSummary : GovukErrorSummary,
+        govukBackLink : GovukBackLink)
 
 @(revaluationRateForm: Form[models.RevaluationRate], session: GmpSession)(implicit request: Request[_], messages: Messages, ac:ApplicationConfig)
 
@@ -42,7 +43,10 @@
 }
 @gmpMain(title = heading + " - " + Messages("service.title") + " - " + Messages("gov.uk")) {
 
-        @includes.back_link(Messages("gmp.revaluation_rate.header"))
+    @govukBackLink(BackLink(
+        href = controllers.routes.DateOfLeavingController.get.url,
+        content = Text("Back")
+    ))
     @if(revaluationRateForm.errors.nonEmpty) {
         @govukErrorSummary(ErrorSummary(errorList = Seq(ErrorLink(
             href = Some(s"#${revaluationRateForm.errors.head.key}"),

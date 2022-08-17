@@ -46,7 +46,7 @@ class DateOfLeavingForm  @Inject()(mcc: MessagesControllerComponents) {
     leaving => {
       val errors =
         if (!dateMustBePresentIfHaveDateOfLeavingAfterApril2016(leaving)) {
-          Seq(ValidationError(messages("gmp.error.leaving_date.mandatory"), "leavingDate"))
+          Seq(ValidationError(messages("gmp.error.leaving_date.daymonthyear.mandatory"), "leavingDate"))
         } else if (!checkValidDate(leaving.leavingDate)) {
           Seq(ValidationError(messages("gmp.error.date.leaving.invalid"), "leavingDate"))
         }
@@ -68,6 +68,22 @@ class DateOfLeavingForm  @Inject()(mcc: MessagesControllerComponents) {
     }
   })
 
+  private val allDateValuesEnteredConstraint: Constraint[Leaving] = Constraint("leavingDate")({
+    leaving => {
+      if(leaving.leaving.isDefined && leaving.leaving.get == Leaving.YES_AFTER){
+        (leaving.leavingDate.day, leaving.leavingDate.month, leaving.leavingDate.year) match {
+          case (None, Some(_), Some(_)) => Invalid(Seq(ValidationError(messages("gmp.error.leaving_date.day.missing"), "leavingDate")))
+          case (Some(_), None, Some(_)) => Invalid(Seq(ValidationError(messages("gmp.error.leaving_date.month.missing"), "leavingDate")))
+          case (Some(_), Some(_), None) => Invalid(Seq(ValidationError(messages("gmp.error.leaving_date.year.missing"), "leavingDate")))
+          case (None, None, Some(_)) => Invalid(Seq(ValidationError(messages("gmp.error.leaving_date.daymonth.missing"), "leavingDate")))
+          case (None, Some(_), None) => Invalid(Seq(ValidationError(messages("gmp.error.leaving_date.dayyear.missing"), "leavingDate")))
+          case (Some(_), None, None) => Invalid(Seq(ValidationError(messages("gmp.error.leaving_date.monthyear.missing"), "leavingDate")))
+          case _ => Valid
+        }
+      } else Valid
+    }
+  })
+
 
   def dateOfLeavingForm(mandatoryMessage: String) = Form(
     mapping(
@@ -80,6 +96,7 @@ class DateOfLeavingForm  @Inject()(mcc: MessagesControllerComponents) {
         _.isDefined
       })
     )(Leaving.apply)(Leaving.unapply)
+      .verifying(allDateValuesEnteredConstraint)
       .verifying(dateOfLeavingConstraint)
   )
 

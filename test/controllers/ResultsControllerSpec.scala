@@ -193,7 +193,14 @@ class ResultsControllerSpec extends PlaySpec with GuiceOneServerPerSuite with Mo
   val dualCalcResponse2 = CalculationResponse("John Johnson", nino, "S1234567T", Some("2"), Some(new LocalDate),
     List(
       CalculationPeriod(Some(new LocalDate(2015, 11, 10)), new LocalDate(2015, 11, 10), "1.11", "2.22", 1, 0, Some(0), Some("0.00"), Some("4.56")),
-      CalculationPeriod(Some(new LocalDate(2014, 11, 9)), new LocalDate(2014, 11, 10), "1.11", "2.22", 1, 0, Some(0), Some("1.23"), Some("0.00"))
+      CalculationPeriod(startDate = Some(new LocalDate(2014, 11, 9)),
+        endDate = new LocalDate(2014, 11, 10),
+        gmpTotal = "1.11",
+        post88GMPTotal = "2.22",
+        revaluationRate = 1,
+        errorCode = 0,
+        revalued = Some(0),
+        dualCalcPost90TrueTotal = Some("1.23"), dualCalcPost90OppositeTotal = Some("0.00"))
     ), 0, None, None, None, true, 1)
 
   val nonDualCalcResponse = CalculationResponse("John Johnson", nino, "S1234567T", Some("2"), Some(new LocalDate),
@@ -370,7 +377,7 @@ class ResultsControllerSpec extends PlaySpec with GuiceOneServerPerSuite with Mo
             contentAsString(result) must not include (Messages("gmp.no_inflation.subheader"))
         }
 
-        // Single/Multiple DOL
+         //Single/Multiple DOL
 
         "show the correct header and subheader when leaving the scheme with single result" in {
           when(mockSessionService.fetchGmpSession()(Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
@@ -673,7 +680,6 @@ class ResultsControllerSpec extends PlaySpec with GuiceOneServerPerSuite with Mo
 
       }
 
-
       "subheader" must {
 
         "be non existent when errors are returned" in {
@@ -786,6 +792,7 @@ class ResultsControllerSpec extends PlaySpec with GuiceOneServerPerSuite with Mo
             contentAsString(result) must not include (Messages("gmp.no_inflation.subheader"))
         }
       }
+
     }
 
     "Get contributions and earnings" must {
@@ -930,7 +937,6 @@ class ResultsControllerSpec extends PlaySpec with GuiceOneServerPerSuite with Mo
           result.requestEarnings must be(Some(1))
       }
     }
-
 
     "Having left the scheme" must {
       "set dol in request model" in {

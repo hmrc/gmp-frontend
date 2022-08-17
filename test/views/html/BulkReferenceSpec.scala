@@ -16,7 +16,6 @@
 
 package views.html
 
-import forms.BulkReferenceForm
 import models.BulkReference
 import play.api.data.Form
 import play.api.data.Forms.{mapping, text}
@@ -24,7 +23,7 @@ import play.api.data.validation.{Constraint, Invalid, Valid, ValidationError}
 import play.twirl.api.Html
 import uk.gov.hmrc.emailaddress.EmailAddress
 import utils.GmpViewSpec
-import views.{ViewHelpers, OldViewHelpers}
+import views.{ViewHelpers}
 
 class BulkReferenceSpec extends GmpViewSpec {
 

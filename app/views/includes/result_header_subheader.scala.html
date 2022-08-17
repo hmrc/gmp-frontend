@@ -24,12 +24,12 @@
 <h2 class="govuk-heading-m" id="results-header">@calculationResponse.header(messages)</h2>
 
 @if(revalRateSubheader.isDefined) {
-    <div id="revaluation-subheader">@Html(revalRateSubheader.get)</div>
+    <div class="govuk-body">@Html(revalRateSubheader.get)</div>
 }
 
 @if(survivorSubheader.isDefined) {
-  <hr class="govuk-section-break govuk-section-break--visible" aria-hidden = true/>
-  <div id="survivor-subheader" class="panel-indent">@survivorSubheader</div>
+  <br>
+ <div class="govuk-body">@survivorSubheader</div>
 }
 
-<hr class="govuk-section-break govuk-section-break--visible" aria-hidden = true/>
+

@@ -20,7 +20,7 @@ import forms.RevaluationRateForm
 import models._
 import play.api.mvc.MessagesControllerComponents
 import play.twirl.api.Html
-import uk.gov.hmrc.govukfrontend.views.html.components.{GovukButton, GovukErrorSummary, GovukRadios}
+import uk.gov.hmrc.govukfrontend.views.html.components._
 import utils.GmpViewSpec
 import views.ViewHelpers
 
@@ -30,8 +30,9 @@ abstract class RevaluationRateSpec extends GmpViewSpec {
   lazy val govukButton = app.injector.instanceOf[GovukButton]
   lazy val govukRadios = app.injector.instanceOf[GovukRadios]
   lazy val govukErrorSummary = app.injector.instanceOf[GovukErrorSummary]
+  lazy val backLink = app.injector.instanceOf[GovukBackLink]
 
-  override def view: Html = new views.html.revaluation_rate(gmpMain, viewHelpers, govukRadios, govukButton, govukErrorSummary)(revaluationRateForm, session)
+  override def view: Html = new views.html.revaluation_rate(gmpMain, viewHelpers, govukRadios, govukButton, govukErrorSummary, backLink)(revaluationRateForm, session)
 
   lazy val mcc = app.injector.instanceOf[MessagesControllerComponents]
 
@@ -52,7 +53,7 @@ class RevaluationRatePaySpaSurSpec extends RevaluationRateSpec {
   "RevaluationRateRatePaySpaSur page" must {
     behave like pageWithTitle(messages("gmp.revaluation_rate.header"))
     behave like pageWithHeader(messages("gmp.revaluation_rate.header"))
-    behave like pageWithBackLink
+    behave like pageWithNewBackLink()
 
     "have correct input labels with text" in {
       doc must haveInputLabelWithText("rateType-2", messages("gmp.revaluation_rate.rate_held_by_hmrc"))
