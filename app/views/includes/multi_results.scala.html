@@ -18,7 +18,7 @@
 @(calculationResponse:CalculationResponse, revalRateSubheader: Option[String], survivorSubheader: Option[String], govukTable : GovukTable)(implicit messages: Messages)
 
 @includes.result_header_subheader(calculationResponse, revalRateSubheader, survivorSubheader)
-<br>
+
 @includes.results_table(calculationResponse, govukTable)
 
 @includes.conts_and_earnings_link(calculationResponse)
