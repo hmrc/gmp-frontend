@@ -67,9 +67,9 @@ class RevaluationForm @Inject()(mcc: MessagesControllerComponents) {
 
   private val allDateValuesEntered: GmpDate => ValidationResult = {
     case GmpDate(None, None, None) => invalid("date.emptyfields")
-    case GmpDate(None, None, _) => invalid("day-and-month.missing")
-    case GmpDate(_, None, None) => invalid("month-and-year.missing")
-    case GmpDate(None, _, None) => invalid("day-and-year.missing")
+    case GmpDate(None, None, _) => invalid("daymonth.missing")
+    case GmpDate(_, None, None) => invalid("monthyear.missing")
+    case GmpDate(None, _, None) => invalid("dayyear.missing")
     case GmpDate(None, _, _) => invalid("day.missing")
     case GmpDate(_, None, _) => invalid("month.missing")
     case GmpDate(_, _, None) => invalid("year.missing")

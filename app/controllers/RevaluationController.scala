@@ -57,6 +57,8 @@ class RevaluationController @Inject()( authAction: AuthAction,
         logger.debug(s"[RevaluationController][post][POST] : ${request.body}")
         revalForm.bindFromRequest.fold(
           formWithErrors => {
+
+            println(" form with errors ::"+formWithErrors)
             Future.successful(BadRequest(views.revaluation(formWithErrors)))
           },
           revaluation => {

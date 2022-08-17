@@ -426,3 +426,12 @@ sessionTimeout.message = For security reasons, you will be signed out of this se
 sessionTimeout.staySignedIn = Stay signed in
 sessionTimeout.signOut = Sign out
 
+############################################################################
+reval-date.error.date.emptyfields = Enter when you would like the calculation made to
+reval-date.error.day.missing = Date must have a day
+reval-date.error.month.missing = Date must have a month
+reval-date.error.year.missing= Date must have a year
+reval-date.error.daymonth.missing = Date must have a day and month
+reval-date.error.monthyear.missing = Date must have a month and year
+reval-date.error.dayyear.missing = Date must have a day and year
+reval-date.error.gmp.error.date.invalid = Enter a real date when you would like the calculation made to
