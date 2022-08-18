@@ -23,8 +23,7 @@
         member_details_result:includes.member_details_result,
         govukTable : GovukTable)
 
-@(
-        calculationResponse:CalculationResponse,
+@(calculationResponse:CalculationResponse,
         revalRateSubheader: Option[String],
         survivorSubheader: Option[String])(implicit request: Request[_], messages: Messages, applicationConfig: ApplicationConfig)
 

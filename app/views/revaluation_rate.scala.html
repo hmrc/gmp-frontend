@@ -44,7 +44,7 @@
 @gmpMain(title = heading + " - " + Messages("service.title") + " - " + Messages("gov.uk")) {
 
     @govukBackLink(BackLink(
-        href = controllers.routes.DateOfLeavingController.get.url,
+        href = controllers.routes.RevaluationRateController.back.url,
         content = Text("Back")
     ))
     @if(revaluationRateForm.errors.nonEmpty) {

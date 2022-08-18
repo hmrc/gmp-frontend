@@ -24,7 +24,8 @@
 @(revaluationForm: Form[models.RevaluationDate])(implicit request: Request[_], messages: Messages, ac:ApplicationConfig)
 @inputHasErrors(input: String) = @{input match {
     case i: String if revaluationForm.hasErrors && revaluationForm.errors.head.toString.contains(i) => true
-    case i: String if revaluationForm.hasErrors && revaluationForm.errors.head.toString.contains("date") => true
+    case i: String if revaluationForm.hasErrors && revaluationForm.errors.head.toString.contains("emptyfields") => true
+    case i: String if revaluationForm.hasErrors && revaluationForm.errors.head.toString.contains("invalid") => true
     case _ => false
 }}
 @deriveErrorKey(message: String) = @{message match {

@@ -72,12 +72,10 @@
 
 @gmpMain(title = Messages("gmp.inflation_proof.question") + " - " + Messages("service.title") + " - " + Messages("gov.uk"), pageScripts = Some(pageScripts)) {
 
-
         @govukBackLink(BackLink(
             href = controllers.routes.InflationProofController.back.url,
             content = Text("Back")
         ))
-
 
         @viewHelpers.form(action = routes.InflationProofController.post) {
             @if(inflationProofForm.errors.nonEmpty){

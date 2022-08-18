@@ -31,7 +31,7 @@
 @gmpMain(title = Messages("gmp.equalise_header") + " - " + Messages("service.title") + " - " + Messages("gov.uk")) {
 
     @govukBackLink(BackLink(
-        href = controllers.routes.RevaluationRateController.get.url,
+        href = controllers.routes.EqualiseController.back.url,
         content = Text("Back")
     ))
     @if(form.errors.nonEmpty) {

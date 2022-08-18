@@ -15,11 +15,8 @@
  *@
 
 @import config.ApplicationConfig
-@import views.html.helpers._
 @import views.ViewHelpers
 @import uk.gov.hmrc.govukfrontend.views.html.components._
-@import uk.gov.hmrc.govukfrontend.views.html.components.implicits._
-@import uk.gov.hmrc.hmrcfrontend.views.Implicits.RichErrorSummary
 @import uk.gov.hmrc.govukfrontend.views.Implicits.RichInput
 
 @this(gmpMain: gmp_main,
@@ -33,7 +30,10 @@
 
 @gmpMain(title = Messages("gmp.pension_details.header") + " - " + Messages("service.title") + " - " + Messages("gov.uk")) {
 
-  @includes.back_link(Messages("gmp.bulk_reference.header"))
+    @viewHelpers.govukBackLink(BackLink(
+        href = controllers.routes.DashboardController.get.url,
+        content = Text("Back")
+    ))
 
   @viewHelpers.form(action = routes.PensionDetailsController.post) {
       @pensionDetailsForm.errors.map { err =>
