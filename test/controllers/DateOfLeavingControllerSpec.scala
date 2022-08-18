@@ -247,13 +247,11 @@ class DateOfLeavingControllerSpec extends PlaySpec with GuiceOneServerPerSuite w
 
         "throw an exception when session not fetched" in {
 
-          val postData = Json.toJson(
-            Leaving(baseValidDate.copy(day = Some("31"), month = Some("2"), year = Some("2015")), Some(Leaving.YES_AFTER))
-          )
-          when(mockSessionService.fetchGmpSession()(any())).thenReturn(Future.successful(None))
-          val result = TestDateOfLeavingController.post(FakeRequest().withJsonBody(postData))
-          intercept[RuntimeException] {
-            contentAsString(result) must include(Messages("gmp.error.date.invalid"))
+            when(mockSessionService.fetchGmpSession()(any())).thenReturn(Future.successful(None))
+            val result = TestDateOfLeavingController.post(FakeRequest().withMethod("POST")
+              .withFormUrlEncodedBody("Leaving.leavingDate" -> "31, 2, 2015", "Leaving.leaving" -> "yes-after"))
+            intercept[RuntimeException] {
+              contentAsString(result) must include(Messages("gmp.error.date.invalid"))
           }
         }
       }
