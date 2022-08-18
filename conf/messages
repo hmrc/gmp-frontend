@@ -259,7 +259,13 @@ gmp.error.member.nino.mandatory = Enter member’s National Insurance number
 gmp.error.member.lastname.mandatory = Enter member’s last name
 gmp.error.nino.temporary = This is a temporary National Insurance number. You need a permanent one to calculate a GMP.
 gmp.error.reval_date.mandatory = Enter when you would like the calculation made to
-gmp.error.leaving_date.mandatory = Enter a leaving date
+gmp.error.leaving_date.daymonthyear.mandatory = Enter a leaving date
+gmp.error.leaving_date.day.missing = Date must include the day
+gmp.error.leaving_date.month.missing = Date must include the month
+gmp.error.leaving_date.year.missing = Date must include the year
+gmp.error.leaving_date.daymonth.missing = Date must include the day and month
+gmp.error.leaving_date.dayyear.missing = Date must include the day and year
+gmp.error.leaving_date.monthyear.missing = Date must include the month and year
 gmp.error.revaluation.rate.error = Select the revaluation rate you want HMRC to use
 
 gmp.error.csv.date.invalid = Enter a date in the same format as the example given in the instructions file
@@ -420,9 +426,3 @@ sessionTimeout.message = For security reasons, you will be signed out of this se
 sessionTimeout.staySignedIn = Stay signed in
 sessionTimeout.signOut = Sign out
 
-leaving.error.required = Select whether the member had already left the scheme at date of death
-error.leaving.required = Select whether the member had already left the scheme at date of death
-LeavingDate.day = day
-LeavingDate.month = month
-LeavingDate.year = year
-#leavingDate.leavingDate-day.error.required=

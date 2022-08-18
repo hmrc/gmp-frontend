@@ -20,7 +20,7 @@ import com.google.inject.{Inject, Singleton}
 import config.{ApplicationConfig, GmpContext, GmpSessionCache}
 import controllers.auth.AuthAction
 import forms.DateOfLeavingForm
-import models.CalculationType
+import models.{CalculationType, GmpSession}
 import play.api.Logging
 import play.api.i18n.Messages
 import play.api.mvc.MessagesControllerComponents
@@ -40,14 +40,14 @@ class DateOfLeavingController @Inject()(authAction: AuthAction,
                                         implicit val gmpSessionCache: GmpSessionCache,
                                         views: Views) extends GmpPageFlow(authConnector,sessionService,config,messagesControllerComponents,ac) with Logging{
 
-  def dateOfLeavingForm(scenario: String)= {
-    val mandatoryErrorMessage = scenario match {
+  def dateOfLeavingForm(session: GmpSession)= {
+    val mandatoryErrorMessage = session.scenario match {
       case CalculationType.DOL => Messages("gmp.leaving.dol.question.mandatory")
       case CalculationType.SPA | CalculationType.PAYABLE_AGE | CalculationType.REVALUATION => Messages("gmp.other.dol.left.question.mandatory")
       case CalculationType.SURVIVOR => Messages("gmp.survivor.dol.question.mandatory")
       case _ => Messages("gmp.leaving.dol.question.mandatory")
     }
-    dlf.dateOfLeavingForm(mandatoryErrorMessage)
+    dlf.dateOfLeavingForm(mandatoryErrorMessage).fill(session.leaving)
   }
 
   def get = authAction.async {
@@ -57,7 +57,7 @@ class DateOfLeavingController @Inject()(authAction: AuthAction,
           case _ if session.scon == "" => Ok(views.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/pension-details"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title")))
           case _ if session.memberDetails.nino == "" || session.memberDetails.firstForename == "" || session.memberDetails.surname == "" => Ok(views.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/member-details"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title")))
           case _ if session.scenario == "" => Ok(views.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/calculation-reason"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title")))
-          case _ => Ok (views.dateOfLeaving (dateOfLeavingForm(session.scenario), session.scenario) )
+          case _ => Ok (views.dateOfLeaving (dateOfLeavingForm(session), session.scenario) )
         }
         case _ => Ok(views.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/dashboard"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title")))
       }
@@ -67,7 +67,7 @@ class DateOfLeavingController @Inject()(authAction: AuthAction,
     implicit request => {
       logger.debug(s"[DateOfLeavingController][post][POST] : ${request.body}")
       val form = sessionService.fetchGmpSession.map{
-        case Some(session) => dateOfLeavingForm(session.scenario)
+        case Some(session) => dateOfLeavingForm(session)
         case None => throw new RuntimeException("No session found in order to retrieve scenario")
       }
 

@@ -19,7 +19,7 @@ package views.html
 import models.{CalculationPeriod, CalculationResponse, ContributionsAndEarnings}
 import org.joda.time.LocalDate
 import play.twirl.api.Html
-import uk.gov.hmrc.govukfrontend.views.html.components.GovukErrorSummary
+import uk.gov.hmrc.govukfrontend.views.html.components._
 import utils.GmpViewSpec
 import views.html.includes.{member_details_result, request_another_button}
 
@@ -28,8 +28,9 @@ class ResultsSpec extends GmpViewSpec{
   lazy val requestAnotherButton = app.injector.instanceOf[request_another_button]
   lazy val memberDetailsResult = app.injector.instanceOf[member_details_result]
   lazy val govukErrorSummary = app.injector.instanceOf[GovukErrorSummary]
+  lazy val govTable = app.injector.instanceOf[GovukTable]
 
-  override def view: Html = new views.html.results(gmpMain, govukErrorSummary,  requestAnotherButton, memberDetailsResult)( calculationResponse, Some("revalRateSubheader"), Some("survivorSubheader"))
+  override def view: Html = new views.html.results(gmpMain, govukErrorSummary,  requestAnotherButton, memberDetailsResult, govTable)( calculationResponse, Some("revalRateSubheader"), Some("survivorSubheader"))
 
   private val calculationResponse : CalculationResponse = CalculationResponse(
     "name", "nino", "scon", Some("revaluationRate"), Some(LocalDate.now),

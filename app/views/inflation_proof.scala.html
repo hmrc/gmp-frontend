@@ -25,7 +25,6 @@
 
 @(inflationProofForm: Form[models.InflationProof])(implicit request: Request[_], messages: Messages, applicationConfig: ApplicationConfig)
 
-@implicitFormInstance = @{ Some(inflationProofForm) }
 
 @pageScripts = {
 <script type="text/javascript" src='@controllers.routes.AssetsController.at("javascripts/selection-buttons.js")'></script>

@@ -37,6 +37,8 @@ trait GmpViewSpec extends PlaySpec with JSoupMatchers with GuiceOneServerPerSuit
 
   override def haveBackLink = new CssSelector("a[id=back-link]")
 
+  private val backLink = new CssSelector("a[class=govuk-back-link]")
+
   implicit val request = FakeRequest()
   implicit val context = FakeGmpContext
 
@@ -86,6 +88,12 @@ trait GmpViewSpec extends PlaySpec with JSoupMatchers with GuiceOneServerPerSuit
   def pageWithBackLink(): Unit = {
     "have a back link" in {
       doc must haveBackLink
+    }
+  }
+
+  def pageWithNewBackLink(): Unit = {
+    "have a back link" in {
+      doc must backLink
     }
   }
 

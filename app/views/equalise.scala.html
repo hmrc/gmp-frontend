@@ -23,13 +23,17 @@
         viewHelpers: ViewHelpers,
         govukRadios : GovukRadios,
         govukButton : GovukButton,
-        govukErrorSummary : GovukErrorSummary)
+        govukErrorSummary : GovukErrorSummary,
+        govukBackLink : GovukBackLink)
 
 @(form: Form[models.Equalise])(implicit request: Request[_], messages: Messages, ac:ApplicationConfig)
 @title = @{messages(s"gmp.equalise_header")}
 @gmpMain(title = Messages("gmp.equalise_header") + " - " + Messages("service.title") + " - " + Messages("gov.uk")) {
 
- @includes.back_link(Messages("gmp.equalise_header"))
+    @govukBackLink(BackLink(
+        href = controllers.routes.RevaluationRateController.get.url,
+        content = Text("Back")
+    ))
     @if(form.errors.nonEmpty) {
         @govukErrorSummary(ErrorSummary(errorList = Seq(ErrorLink(
             href = Some(s"#equalise"),

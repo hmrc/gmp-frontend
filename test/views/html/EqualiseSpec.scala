@@ -30,8 +30,9 @@ class EqualiseSpec extends GmpViewSpec {
   lazy val govukRadios = app.injector.instanceOf[GovukRadios]
   lazy val govukButton = app.injector.instanceOf[GovukButton]
   lazy val govukErrorSummary = app.injector.instanceOf[GovukErrorSummary]
+  lazy val govBackLInk = app.injector.instanceOf[GovukBackLink]
 
-  override def view: Html = new views.html.equalise(gmpMain, viewHelpers, govukRadios, govukButton, govukErrorSummary)(equaliseForm)
+  override def view: Html = new views.html.equalise(gmpMain, viewHelpers, govukRadios, govukButton, govukErrorSummary, govBackLInk)(equaliseForm)
 
   val equaliseForm = Form(
     mapping(
@@ -41,7 +42,7 @@ class EqualiseSpec extends GmpViewSpec {
   "Equalise page" must {
     behave like pageWithTitle("Do you also want an opposite gender calculation?")
     behave like pageWithHeader(messages("gmp.equalise_header"))
-    behave like pageWithBackLink
+    behave like pageWithNewBackLink
 
     "have correct input labels with text" in {
       doc must haveInputLabelWithText("equalise", messages("gmp.generic.yes"))
