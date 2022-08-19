@@ -34,9 +34,9 @@
             HeadCell(content = Text(Messages("gmp.nino"))))),
         rows = Seq(
             Seq(
-                TableRow(content = Text(calculationResponse.name)),
-                TableRow(content = Text(calculationResponse.scon)),
-                TableRow(content = Text(calculationResponse.nino))
+                TableRow(content = Text(calculationResponse.name), classes = "app-custom-class"),
+                TableRow(content = Text(calculationResponse.scon), classes = "app-custom-class"),
+                TableRow(content = Text(calculationResponse.nino), classes = "app-custom-class")
             )
         )
     ))

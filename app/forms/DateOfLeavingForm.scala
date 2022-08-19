@@ -47,7 +47,7 @@ class DateOfLeavingForm  @Inject()(mcc: MessagesControllerComponents) {
       val errors =
         if (!dateMustBePresentIfHaveDateOfLeavingAfterApril2016(leaving)) {
           Seq(ValidationError(messages("gmp.error.leaving_date.daymonthyear.mandatory"), "leavingDate"))
-        } else if (!checkValidDate(leaving.leavingDate)) {
+        } else if (leaving.leaving.isDefined && leaving.leaving.get.equals(Leaving.YES_AFTER) && !checkValidDate(leaving.leavingDate)) {
           Seq(ValidationError(messages("gmp.error.date.leaving.invalid"), "leavingDate"))
         }
         else if (leaving.leaving.isDefined && leaving.leaving.get.equals(Leaving.YES_AFTER) && !leaving.leavingDate.isOnOrAfter06042016) {
@@ -70,6 +70,7 @@ class DateOfLeavingForm  @Inject()(mcc: MessagesControllerComponents) {
 
   private val allDateValuesEnteredConstraint: Constraint[Leaving] = Constraint("leavingDate")({
     leaving => {
+      println(" leaving is in form :;"+leaving)
       if(leaving.leaving.isDefined && leaving.leaving.get == Leaving.YES_AFTER){
         (leaving.leavingDate.day, leaving.leavingDate.month, leaving.leavingDate.year) match {
           case (None, Some(_), Some(_)) => Invalid(Seq(ValidationError(messages("gmp.error.leaving_date.day.missing"), "leavingDate")))

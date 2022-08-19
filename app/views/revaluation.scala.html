@@ -36,19 +36,17 @@
 }}
 
 @gmpMain(title = Messages("gmp.revaluation.question")+ " - " + Messages("service.title") + " - " + Messages("gov.uk")) {
-
-@viewHelpers.govukBackLink(BackLink(
-        href = controllers.routes.DateOfLeavingController.get.url,
-        content = Text("Back")
-    ))
-    <h1 class="govuk-heading-l">@Messages("gmp.revaluation.question")</h1>
-
     @if(revaluationForm.errors.nonEmpty) {
         @viewHelpers.govukErrorSummary(ErrorSummary(errorList = Seq(ErrorLink(
             href = Some(s"#${deriveErrorKey(revaluationForm.errors.head.message)}"),
             content = Text(s"${messages(s"${revaluationForm.errors.head.message}")}"),
         )), title = Text(messages("generic.errorSummary"))))
     }
+@viewHelpers.govukBackLink(BackLink(
+        href = controllers.routes.DateOfLeavingController.get.url,
+        content = Text("Back")
+    ))
+    <h1 class="govuk-heading-l">@Messages("gmp.revaluation.question")</h1>
 
     @viewHelpers.form(action = routes.RevaluationController.post) {
 

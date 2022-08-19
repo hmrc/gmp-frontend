@@ -44,9 +44,11 @@ class RevaluationController @Inject()( authAction: AuthAction,
 
   lazy val revalForm = rvform.revaluationForm
   def get = authAction.async {
-      implicit request => sessionService.fetchLeaving.map {
-        case Some(leaving) => {
-          Ok(views.revaluation(revalForm.fill(RevaluationDate(leaving, GmpDate(None, None, None)))))
+      implicit request => sessionService.fetchGmpSession.map {
+        case Some(session) => {
+          val revalDate = session.revaluationDate.fold(GmpDate(None, None, None))(identity)
+          println(" leaving is ::"+revalDate)
+          Ok(views.revaluation(revalForm.fill(RevaluationDate(session.leaving, revalDate))))
         }
         case _ => Ok(views.revaluation(revalForm))
       }
@@ -62,6 +64,7 @@ class RevaluationController @Inject()( authAction: AuthAction,
             Future.successful(BadRequest(views.revaluation(formWithErrors)))
           },
           revaluation => {
+            println("revaluation date is ::"+revaluation)
             sessionService.cacheRevaluationDate(Some(revaluation.revaluationDate)).map {
               case Some(session) => nextPage("RevaluationController", session)
               case _ => throw new RuntimeException

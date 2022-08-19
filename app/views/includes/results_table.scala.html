@@ -21,12 +21,12 @@
 
 @heading1 = @{
     if(calculationResponse.calcType == CalculationType.SURVIVOR.toInt) s"${Messages("gmp.total.entitlement")} £${calculationResponse.totalGmp}"
-     else s"${Messages("gmp.total")} £${calculationResponse.totalGmp}"
+     else s"${Messages("gmp.total")}<br>£${calculationResponse.totalGmp}"
     }
 
 @heading2 = @{
     if(calculationResponse.calcType == CalculationType.SURVIVOR.toInt) s"${Messages("gmp.post88.entitlement")} £${calculationResponse.post88Gmp}"
-    else s"${Messages("gmp.post.1988")} £${calculationResponse.post88Gmp}"
+    else s"${Messages("gmp.post.1988")}<br>£${calculationResponse.post88Gmp}"
 }
 
 
@@ -37,12 +37,12 @@
 
 @htmlContent1(period: CalculationPeriod) = @{
     if(period.dualCalcPost90OppositeTotal != Some("0.00"))
-        s"£${period.dualCalcPost90TrueTotal}<br>${Messages("gmp.frequency.weekly")}" else
+        s"£${period.dualCalcPost90TrueTotal.getOrElse("--")}<br>${Messages("gmp.frequency.weekly")}" else
         s"--"
 }
 @htmlContent2(period: CalculationPeriod) = @{
     if(period.dualCalcPost90OppositeTotal != Some("0.00"))
-        s"£${period.dualCalcPost90OppositeTotal}<br>${Messages("gmp.frequency.weekly")}" else
+        s"£${period.dualCalcPost90OppositeTotal.getOrElse("--")}<br>${Messages("gmp.frequency.weekly")}" else
         s"--"
 }
 
@@ -78,11 +78,11 @@
             classes = "govuk-!-width-one-half"
         ),
         HeadCell(
-            content = Text(heading1),
+            content = HtmlContent(heading1),
             classes = "govuk-!-width-one-quarter"
         ),
         HeadCell(
-            content = Text(heading2),
+            content = HtmlContent(heading2),
             classes = "govuk-!-width-one-quarter"
         ),
         if(calculationResponse.showRateColumn){
@@ -127,20 +127,20 @@
         head = Some(Seq(
             HeadCell(
                 content = Text(Messages("gmp.table.period")),
-                classes = "govuk-!-width-one-half"
+                classes  = "app-custom-class"
             ),
             HeadCell(
                 content = HtmlContent(s"${Messages("gmp.post90.true")}<br>£${calculationResponse.trueCalculation}"),
-                classes = "govuk-!-width-one-quarter"
+                classes = "app-custom-class"
             ),
             HeadCell(
                 content = HtmlContent(s"${Messages("gmp.post90.opposite")}<br>£${calculationResponse.oppositeCalculation}"),
-                classes = "govuk-!-width-one-quarter"
+                classes = "app-custom-class"
             ),
             if(calculationResponse.showRateColumn){
                 HeadCell(
                     content = Text( Messages("gmp.rate")),
-                    classes = "govuk-!-width-one-quarter"
+                    classes = "app-custom-class"
                 )
             } else HeadCell()
 

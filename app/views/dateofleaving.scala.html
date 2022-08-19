@@ -84,7 +84,7 @@
 
     @if(dateOfLeavingForm.errors.nonEmpty) {
         @govukErrorSummary(ErrorSummary(errorList = Seq(ErrorLink(
-            href = Some(s"#${if (dateOfLeavingForm.errors.head.key.contains("leaving")) dateOfLeavingForm.errors.head.key else s"leavingDate-leavingDate.day" }"),
+            href = Some(s"#${if (dateOfLeavingForm.errors.head.key.contains("leaving") && dateOfLeavingForm.data.get("leaving").equals("yes-after")) dateOfLeavingForm.errors.head.key else s"leavingDate-leavingDate.day" }"),
             content = Text(s"${messages(s"${dateOfLeavingForm.errors.head.message}")}"),
         )), title = Text(messages("generic.errorSummary"))))
     }

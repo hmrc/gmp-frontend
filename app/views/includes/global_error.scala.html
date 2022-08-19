@@ -22,7 +22,7 @@
     }
 }
 
-<div id="global-results-grid">
+<p id="global-results-grid">
 
         <div class="global-error">
             @if(application.globalErrors.hasPath(s"$globalErrorCode.cannot_calculate")){
@@ -37,14 +37,14 @@
         @if(application.globalErrors.hasPath(s"$globalErrorCode.solution")){
             <div>
                 <h2 class="govuk-heading-l" id="global-what-now">@Messages("gmp.what_now")</h2>
-                <p class="govuk-body">@Html(Messages(application.globalErrors.getString(s"$globalErrorCode.solution")))</p>
+                <div class="govuk-body">@Html(Messages(application.globalErrors.getString(s"$globalErrorCode.solution")))</div>
             </div>
         }
 
         @if(application.globalErrors.hasPath(s"$globalErrorCode.also")){
     <hr class="govuk-section-break govuk-section-break--m" aria-hidden = true/>
             @queryHandlingHeader
-            <div id="query-handling">@Html(Messages(application.globalErrors.getString(s"$globalErrorCode.also")))</div>
+            <p class="govuk-body">@Html(Messages(application.globalErrors.getString(s"$globalErrorCode.also")))</p>
         }
         @if(application.globalErrors.hasPath(s"$globalErrorCode.help_link")){
             <p class="govuk-body" id="query-handling-link">@Html(Messages(application.globalErrors.getString(s"$globalErrorCode.help_link")))</p>
