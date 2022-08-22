@@ -84,12 +84,7 @@ trait GmpViewSpec extends PlaySpec with JSoupMatchers with GuiceOneServerPerSuit
       doc must haveFormWithSubmitUrl(submitUrl)
     }
   }
-
-  def pageWithBackLink(): Unit = {
-    "have a back link" in {
-      doc must haveBackLink
-    }
-  }
+  
 
   def pageWithNewBackLink(): Unit = {
     "have a back link" in {

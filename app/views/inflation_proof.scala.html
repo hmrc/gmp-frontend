@@ -21,9 +21,14 @@
 @import uk.gov.hmrc.govukfrontend.views.html.components.implicits._
 @import uk.gov.hmrc.hmrcfrontend.views.Implicits.RichErrorSummary
 
-@this(gmpMain: gmp_main, viewHelpers: ViewHelpers, govukRadios : GovukRadios, govukButton : GovukButton, govukErrorSummary : GovukErrorSummary, govukDateInput : GovukDateInput)
+@this(gmpMain: gmp_main, viewHelpers: ViewHelpers, govukRadios : GovukRadios, govukButton : GovukButton, govukErrorSummary : GovukErrorSummary, govukDateInput : GovukDateInput, govukBackLink : GovukBackLink)
 
 @(inflationProofForm: Form[models.InflationProof])(implicit request: Request[_], messages: Messages, applicationConfig: ApplicationConfig)
+
+@inputHasErrors(input: String) = @{input match {
+    case i: String if inflationProofForm.hasErrors && inflationProofForm.errors.head.toString.contains(i) => true
+    case _ => false
+}}
 
 
 @pageScripts = {
@@ -47,15 +52,15 @@
         items = Seq(
             InputItem(
                 name = "revaluationDate.day",
-                classes = "govuk-input--width-2",
+                classes = s"govuk-input--width-2 ${if(inputHasErrors("day")){" govuk-input--error"} else {""}}",
                 label=Some("Day")),
             InputItem(
                 name = "revaluationDate.month",
-                classes = "govuk-input--width-2",
+                classes = s"govuk-input--width-2${if(inputHasErrors("month")){" govuk-input--error"} else {""}}",
                 label=Some("Month")),
             InputItem(
                 name = "revaluationDate.year",
-                classes = "govuk-input--width-4",
+                classes = s"govuk-input--width-4${if(inputHasErrors("year")){" govuk-input--error"} else {""}}",
                 label=Some("Year"))),
     ))
 
@@ -68,13 +73,20 @@
 @gmpMain(title = Messages("gmp.inflation_proof.question") + " - " + Messages("service.title") + " - " + Messages("gov.uk"), pageScripts = Some(pageScripts)) {
 
 
-    @includes.back_link(Messages("gmp.inflation_proof.question"))
+        @govukBackLink(BackLink(
+            href = controllers.routes.InflationProofController.back.url,
+            content = Text("Back")
+        ))
 
 
         @viewHelpers.form(action = routes.InflationProofController.post) {
             @if(inflationProofForm.errors.nonEmpty){
-                @govukErrorSummary(ErrorSummary().withFormErrorsAsText(inflationProofForm))
+                @govukErrorSummary(ErrorSummary(errorList = Seq(ErrorLink(
+                href = Some(s"#${if (inflationProofForm.errors.head.key.contains("revaluation")) inflationProofForm.errors.head.key else s"revaluationDate-revaluationDate.day" }"),
+                content = Text(s"${messages(s"${inflationProofForm.errors.head.message}")}"),
+                )), title = Text(messages("generic.errorSummary"))))
             }
+
               @govukRadios(Radios(
                   fieldset = Some(Fieldset(
                       legend = Some(Legend(

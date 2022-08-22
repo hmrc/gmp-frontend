@@ -21,7 +21,7 @@ import models.{GmpDate, InflationProof}
 import play.api.data.Form
 import play.api.data.Forms.{mapping, optional, text}
 import play.twirl.api.Html
-import uk.gov.hmrc.govukfrontend.views.html.components.{GovukButton, GovukDateInput, GovukErrorSummary, GovukRadios}
+import uk.gov.hmrc.govukfrontend.views.html.components.{GovukBackLink, GovukButton, GovukDateInput, GovukErrorSummary, GovukRadios}
 import utils.GmpViewSpec
 import views.ViewHelpers
 
@@ -32,8 +32,9 @@ class InflationProofSpec extends GmpViewSpec {
   lazy val govukRadios = app.injector.instanceOf[GovukRadios]
   lazy val govukErrorSummary = app.injector.instanceOf[GovukErrorSummary]
   lazy val govukDateInput = app.injector.instanceOf[GovukDateInput]
+  lazy val govukBackLink = app.injector.instanceOf[GovukBackLink]
 
-  override def view: Html = new views.html.inflation_proof(gmpMain, viewHelpers, govukRadios, govukButton, govukErrorSummary, govukDateInput)(inflationProofForm)
+  override def view: Html = new views.html.inflation_proof(gmpMain, viewHelpers, govukRadios, govukButton, govukErrorSummary, govukDateInput, govukBackLink)(inflationProofForm)
 
   val inflationProofForm = Form(
     mapping(

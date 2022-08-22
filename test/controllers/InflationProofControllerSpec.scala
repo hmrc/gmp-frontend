@@ -130,8 +130,9 @@ class InflationProofControllerSpec extends PlaySpec with GuiceOneServerPerSuite 
           }
 
           "display the errors" in {
-
-              val result = TestInflationProofController.post(FakeRequest().withJsonBody(Json.toJson(inflationProof)))
+              val result = TestInflationProofController.post(FakeRequest().withMethod("POST")
+                .withFormUrlEncodedBody("revaluationDate.day" -> "a", "revaluationDate.month" -> "b",
+                  "revaluationDate.year" -> "c", "revaluate" -> "Yes"))
               contentAsString(result) must include(Messages("gmp.error.date.nonnumber"))
           }
         }
