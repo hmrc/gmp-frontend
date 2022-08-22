@@ -31,7 +31,7 @@ class BulkReferenceSpec extends GmpViewSpec {
 
     behave like pageWithTitle(messages("gmp.bulk_reference.header"))
     behave like pageWithHeader(messages("gmp.bulk_reference.header"))
-    behave like pageWithBackLink
+    behave like pageWithBackLink()
 
     behave like pageWithButtonForm(
       "/guaranteed-minimum-pension/getting-results",
