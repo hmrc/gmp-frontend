@@ -102,7 +102,7 @@ class GmpBulkConnectorSpec extends PlaySpec with GuiceOneServerPerSuite with Moc
           "bob", "bobbleton", Some("bobby"), Some(0), Some("2012-02-02"), None, None, 0)),
           None, None)))
 
-      val result = testGmpBulkConnector.sendBulkRequest(bcr,link).futureValue
+      val result = await(testGmpBulkConnector.sendBulkRequest(bcr,link))
       (result) must be(500)
     }
 
