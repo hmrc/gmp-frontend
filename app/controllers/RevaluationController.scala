@@ -43,8 +43,8 @@ class RevaluationController @Inject()( authAction: AuthAction,
                                      ) extends GmpPageFlow(authConnector,sessionService,config,messagesControllerComponents,ac) with Logging {
 
   lazy val revalForm = rvform.revaluationForm
-  def get = authAction.async {
-      implicit request => sessionService.fetchGmpSession.map {
+  def get = authAction.async { implicit request =>
+    sessionService.fetchGmpSession.map {
         case Some(session) => {
           val revalDate = session.revaluationDate.fold(GmpDate(None, None, None))(identity)
           println(" leaving is ::"+revalDate)

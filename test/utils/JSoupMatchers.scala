@@ -25,11 +25,13 @@ trait JSoupMatchers {
 
   class TagWithTextMatcher(expectedContent: String, tag: String) extends Matcher[Document] {
     def apply(left: Document): MatchResult = {
+
       val elements: List[String] =
         left.getElementsByTag(tag)
           .asScala
           .toList
           .map(_.text)
+          println(" elements are ::"+elements)
 
       lazy val elementContents = elements.mkString("\t", "\n\t", "")
 
@@ -207,6 +209,7 @@ trait JSoupMatchers {
   def haveDescriptionTermWithIdAndText(id: String, expectedText: String) = new CssSelectorWithTextMatcher(expectedText, s"dt[id=${id}]")
   def haveTermDescriptionWithIdAndText(id: String, expectedText: String) = new CssSelectorWithTextMatcher(expectedText, s"dd[id=${id}]")
   def haveParagraphWithText (expectedText: String) = new TagWithTextMatcher(expectedText, "p")
+  def haveParagraphWithHint (expectedText: String) = new CssSelectorWithTextMatcher(expectedText, ".govuk-hint")
   def haveSpanWithText (expectedText: String) = new TagWithTextMatcher(expectedText, "span")
   def haveDivWithText (expectedText: String) = new TagWithTextMatcher(expectedText, "div")
   def haveListItemWithText (expectedText: String) = new TagWithTextMatcher(expectedText, "li")

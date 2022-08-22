@@ -228,27 +228,14 @@ class DateOfLeavingControllerSpec extends PlaySpec with GuiceOneServerPerSuite w
         when(mockSessionService.fetchGmpSession()(any())).thenReturn(Future.successful(Some(gmpSession)))
 
         "respond with BAD_REQUEST" in {
-
-<<<<<<< HEAD
             when(mockSessionService.fetchGmpSession()(any())).thenReturn(Future.successful(Some(gmpSession)))
             val result = TestDateOfLeavingController.post(FakeRequest().withMethod("POST")
-              .withFormUrlEncodedBody("leavingDate" -> "31,2,2015", "leaving" -> "YES_AFTER"))
+              .withFormUrlEncodedBody("leavingDate.day" -> "31", "leavingDate.month" -> "2", "leavingDate.year" -> "2015", "leaving" -> Leaving.YES_AFTER))
             status(result) mustBe(BAD_REQUEST)
         }
 
         "display the errors" in {
 
-=======
-          val postData = Json.toJson(
-            Leaving(baseValidDate.copy(day = Some("31"), month = Some("2"), year = Some("2015")), Some("Yes"))
-          )
-          when(mockSessionService.fetchGmpSession()(any())).thenReturn(Future.successful(Some(gmpSession)))
-          val result = TestDateOfLeavingController.post(FakeRequest().withJsonBody(postData))
-          status(result) must equal(BAD_REQUEST)
-        }
-
-        "display the errors" in {
->>>>>>> 6821d18 (DLS-4589 fix test cases for conditional form)
           when(mockSessionService.fetchGmpSession()(any())).thenReturn(Future.successful(Some(gmpSession)))
           val result = TestDateOfLeavingController.post(FakeRequest().withMethod("POST").withFormUrlEncodedBody("leaving" -> Leaving.YES_AFTER,
             "leavingDate.day" -> "31", "leavingDate.month" -> "2", "leavingDate.year" -> "2015" ))

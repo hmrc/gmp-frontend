@@ -59,12 +59,12 @@ class RevaluationFormSpec extends PlaySpec with GuiceOneAppPerSuite {
 
       "return an error on the date when it is not a number" in {
         val revaluationFormResults = revaluationForm.bind(Json.toJson(RevaluationDate(leaving, GmpDate(Some("a"), Some("01"), Some("2012")))),fromJsonMaxChars)
-        revaluationFormResults.errors must contain(FormError("revaluationDate", List(Messages("gmp.error.date.invalid"))))
+        revaluationFormResults.errors must contain(FormError("revaluationDate","reval-date.error.gmp.error.date.invalid"))
       }
 
       "return an error on the date when it is out of range" in {
         val revaluationFormResults = revaluationForm.bind(Json.toJson(RevaluationDate(leaving, new GmpDate(Some("32"), Some("01"), Some("2012")))),fromJsonMaxChars)
-        revaluationFormResults.errors must contain(FormError("revaluationDate", List(Messages("gmp.error.date.invalid"))))
+        revaluationFormResults.errors must contain(FormError("revaluationDate", List("reval-date.error.gmp.error.date.invalid")))
       }
     }
 
@@ -72,12 +72,12 @@ class RevaluationFormSpec extends PlaySpec with GuiceOneAppPerSuite {
 
       "return an error on the date when it is not a number" in {
         val revaluationFormResults = revaluationForm.bind(Json.toJson(RevaluationDate(leaving, new GmpDate(Some("01"), Some("a"), Some("2012")))),fromJsonMaxChars)
-        revaluationFormResults.errors must contain(FormError("revaluationDate", List(Messages("gmp.error.date.invalid"))))
+        revaluationFormResults.errors must contain(FormError("revaluationDate", List("reval-date.error.gmp.error.date.invalid")))
       }
 
       "return an error on the date when it is out of range" in {
         val revaluationFormResults = revaluationForm.bind(Json.toJson(RevaluationDate(leaving, new GmpDate(Some("01"), Some("13"), Some("2012")))),fromJsonMaxChars)
-        revaluationFormResults.errors must contain(FormError("revaluationDate", List(Messages("gmp.error.date.invalid"))))
+        revaluationFormResults.errors must contain(FormError("revaluationDate", List("reval-date.error.gmp.error.date.invalid")))
       }
     }
 
@@ -85,27 +85,27 @@ class RevaluationFormSpec extends PlaySpec with GuiceOneAppPerSuite {
 
       "return an error on the date when it is not a number" in {
         val revaluationFormResults = revaluationForm.bind(Json.toJson(RevaluationDate(leaving, new GmpDate(Some("01"), Some("12"), Some("21a1")))),fromJsonMaxChars)
-        revaluationFormResults.errors must contain(FormError("revaluationDate", List(Messages("gmp.error.date.invalid"))))
+        revaluationFormResults.errors must contain(FormError("revaluationDate", List("reval-date.error.gmp.error.date.invalid")))
       }
 
       "return an error on the date when it is not the correct format" in {
         val revaluationFormResults = revaluationForm.bind(Json.toJson(RevaluationDate(leaving, new GmpDate(Some("01"), Some("11"), Some("190")))),fromJsonMaxChars)
-        revaluationFormResults.errors must contain(FormError("revaluationDate", List(Messages("gmp.error.date.invalid"))))
+        revaluationFormResults.errors must contain(FormError("revaluationDate", List("reval-date.error.gmp.error.date.invalid")))
       }
     }
 
     "entering invalid dates" must {
       "return an error when the day is missing" in {
         val revaluationFormResults = revaluationForm.bind(Json.toJson(RevaluationDate(leaving, new GmpDate(Some(""), Some("04"), Some("1978")))),fromJsonMaxChars)
-        revaluationFormResults.errors must contain(FormError("revaluationDate", List(Messages("gmp.error.date.invalid"))))
+        revaluationFormResults.errors must contain(FormError("revaluationDate", List("reval-date.error.day.missing")))
       }
       "return an error when the month is missing" in {
         val revaluationFormResults = revaluationForm.bind(Json.toJson(RevaluationDate(leaving, new GmpDate(Some("04"), Some(""), Some("1978")))),fromJsonMaxChars)
-        revaluationFormResults.errors must contain(FormError("revaluationDate", List(Messages("gmp.error.date.invalid"))))
+        revaluationFormResults.errors must contain(FormError("revaluationDate", List("reval-date.error.month.missing")))
       }
       "return an error when the year is missing" in {
         val revaluationFormResults = revaluationForm.bind(Json.toJson(RevaluationDate(leaving, new GmpDate(Some("04"), Some("04"), Some("")))),fromJsonMaxChars)
-        revaluationFormResults.errors must contain(FormError("revaluationDate", List(Messages("gmp.error.date.invalid"))))
+        revaluationFormResults.errors must contain(FormError("revaluationDate", List("reval-date.error.year.missing")))
       }
     }
 
@@ -128,17 +128,17 @@ class RevaluationFormSpec extends PlaySpec with GuiceOneAppPerSuite {
 
       "return an error when after 04/04/2046" in {
         val revaluationFormResults = revaluationForm.bind(Json.toJson(RevaluationDate(leaving, new GmpDate(Some("05"), Some("04"), Some("2046")))),fromJsonMaxChars)
-        revaluationFormResults.errors must contain(FormError("revaluationDate", List(Messages("gmp.error.reval_date.to"))))
+        revaluationFormResults.errors must contain(FormError("revaluationDate", List(Messages("reval-date.error.gmp.error.reval_date.to"))))
       }
 
       "not return an error when on 04/04/2046" in {
         val revaluationFormResults = revaluationForm.bind(Json.toJson(RevaluationDate(leaving, new GmpDate(Some("04"), Some("04"), Some("2046")))),fromJsonMaxChars)
-        revaluationFormResults.errors must not contain(FormError("revaluationDate", List(Messages("gmp.error.reval_date.to"))))
+        revaluationFormResults.errors must not contain(FormError("revaluationDate", List(Messages("reval-date.error.gmp.error.reval_date.to"))))
       }
 
       "not return an error when before 04/04/2046" in {
         val revaluationFormResults = revaluationForm.bind(Json.toJson(RevaluationDate(leaving, new GmpDate(Some("03"), Some("04"), Some("2046")))),fromJsonMaxChars)
-        revaluationFormResults.errors must not contain(FormError("revaluationDate", List(Messages("gmp.error.reval_date.to"))))
+        revaluationFormResults.errors must not contain(FormError("revaluationDate", List(Messages("reval-date.error.gmp.error.reval_date.to"))))
       }
     }
 
