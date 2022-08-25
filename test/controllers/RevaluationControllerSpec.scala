@@ -123,11 +123,12 @@ class RevaluationControllerSpec extends PlaySpec with GuiceOneServerPerSuite wit
     "authenticated users" must {
 
       "with invalid data" must {
+        val gmpSession = GmpSession(MemberDetails("", "", ""), "S1301234T", CalculationType.REVALUATION, None, Some(""),
+          Leaving(GmpDate(None, None, None), None), None)
 
         "respond with BAD_REQUEST" in {
-          val postData = Json.toJson(
-            RevaluationDate(Leaving(GmpDate(None, None, None), None), baseValidDate.copy(day = Some("31"), month = Some("2"), year = Some("2015")))
-          )
+
+          when(mockSessionService.fetchGmpSession()(any())).thenReturn(Future.successful(Some(gmpSession)))
           val result = TestRevaluationController.post(FakeRequest().withMethod("POST")
             .withFormUrlEncodedBody("RevaluationDate.Leaving.leavingDate.GmpDate" -> "",
               "RevaluationDate.revaluationDate" -> "31, 2, 2015"))
@@ -135,7 +136,7 @@ class RevaluationControllerSpec extends PlaySpec with GuiceOneServerPerSuite wit
         }
 
         "display the errors" in {
-
+          when(mockSessionService.fetchGmpSession()(any())).thenReturn(Future.successful(Some(gmpSession)))
           val result = TestRevaluationController.post(FakeRequest().withMethod("POST")
             .withFormUrlEncodedBody("leaving.leavingDate.day" -> "", "leaving.leavingDate.month" -> "",
               "leaving.leavingDate.year" -> "", "leaving.leaving" -> "", "revaluationDate.day" -> "31",
@@ -151,7 +152,7 @@ class RevaluationControllerSpec extends PlaySpec with GuiceOneServerPerSuite wit
           Leaving(GmpDate(None, None, None), None), None)
 
         "redirect" in {
-
+          when(mockSessionService.fetchGmpSession()(any())).thenReturn(Future.successful(Some(gmpSession)))
           when(mockSessionService.cacheRevaluationDate(any())(any())).thenReturn(Future.successful(Some(gmpSession)))
 
           val result = TestRevaluationController.post(FakeRequest().withMethod("POST")

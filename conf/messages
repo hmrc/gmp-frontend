@@ -131,7 +131,11 @@ gmp.print = Print this page
 gmp.link.contributions-earnings = View contributions and earnings
 gmp.bulk_reference.button = Confirm and submit
 gmp.bulk_request_received.button = Upload another file
-gmp.download.link = Download
+gmp.download.link = Download CSV
+gmp.download.link.allResults = Download CSV for all results
+gmp.download.link.totalGmp = Download CSV for total GMP calculated
+gmp.download.link.noTotalGmp = Download CSV for no total GMP calculated
+gmp.download.link.ce = Download CSV for contributions and earnings
 gmp.upload = Upload
 gmp.upload.label = File to upload
 

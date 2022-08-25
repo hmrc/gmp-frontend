@@ -31,7 +31,6 @@ trait JSoupMatchers {
           .asScala
           .toList
           .map(_.text)
-          println(" elements are ::"+elements)
 
       lazy val elementContents = elements.mkString("\t", "\n\t", "")
 

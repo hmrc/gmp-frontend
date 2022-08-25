@@ -70,7 +70,6 @@ class DateOfLeavingForm  @Inject()(mcc: MessagesControllerComponents) {
 
   private val allDateValuesEnteredConstraint: Constraint[Leaving] = Constraint("leavingDate")({
     leaving => {
-      println(" leaving is in form :;"+leaving)
       if(leaving.leaving.isDefined && leaving.leaving.get == Leaving.YES_AFTER){
         (leaving.leavingDate.day, leaving.leavingDate.month, leaving.leavingDate.year) match {
           case (None, Some(_), Some(_)) => Invalid(Seq(ValidationError(messages("gmp.error.leaving_date.day.missing"), "leavingDate")))

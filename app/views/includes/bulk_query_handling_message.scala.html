@@ -16,9 +16,9 @@
 
 @()(implicit messages: Messages)
 <hr class="govuk-section-break govuk-section-break--visible">
-
-  <div class="query-handling-message">
-    <hr class="govuk-section-break" aria-hidden = true/>
-    <p class="govuk-body" id="query-handling-header">@Html(Messages("gmp.bulk.query_handling_message.header"))</p>
-    <p class="govuk-body" id="query-handling-body">@Html(Messages("gmp.bulk.query_handling_message.body"))</p>
+<div class="govuk-!-padding-top-4"></div>
+  <div class="govuk-body">
+    <hr class="govuk-section-break" role="presentation" aria-hidden = true/>
+      <h2 class="govuk-heading-m">@Html(Messages("gmp.bulk.query_handling_message.header"))</h2>
+    <p class="govuk-body">@Html(Messages("gmp.bulk.query_handling_message.body"))</p>
   </div>

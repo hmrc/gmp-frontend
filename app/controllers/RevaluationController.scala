@@ -20,8 +20,11 @@ import com.google.inject.{Inject, Singleton}
 import config.{ApplicationConfig, GmpContext, GmpSessionCache}
 import controllers.auth.AuthAction
 import forms.RevaluationForm
-import models.{GmpDate, RevaluationDate}
+import models.{GmpDate, GmpSession, Leaving, RevaluationDate}
 import play.api.Logging
+import play.api.data.Form
+import play.api.data.Forms.{mapping, optional, text}
+import play.api.data.validation.Constraint
 import play.api.mvc.MessagesControllerComponents
 import services.SessionService
 import uk.gov.hmrc.auth.core.AuthConnector
@@ -41,37 +44,49 @@ class RevaluationController @Inject()( authAction: AuthAction,
                                        implicit val gmpSessionCache: GmpSessionCache,
                                        views: Views
                                      ) extends GmpPageFlow(authConnector,sessionService,config,messagesControllerComponents,ac) with Logging {
+  //def revalForm(session: GmpSession) = rvform.revaluationForm(session)
+//val rForm = rvform.revaluationForm
+  def revalForm(session: GmpSession) = {
+    val revalDate = session.revaluationDate.fold(GmpDate(None, None, None))(identity)
+  rvform.revaluationForm(session).fill(RevaluationDate(session.leaving, revalDate))
+  }
 
-  lazy val revalForm = rvform.revaluationForm
   def get = authAction.async { implicit request =>
     sessionService.fetchGmpSession.map {
         case Some(session) => {
           val revalDate = session.revaluationDate.fold(GmpDate(None, None, None))(identity)
-          println(" leaving is ::"+revalDate)
-          Ok(views.revaluation(revalForm.fill(RevaluationDate(session.leaving, revalDate))))
+          Ok(views.revaluation(revalForm(session).fill(RevaluationDate(session.leaving, revalDate))))
         }
-        case _ => Ok(views.revaluation(revalForm))
+        case _ => sys.error(" Session not present")
       }
   }
 
-  def post = authAction.async {
-      implicit request => {
-        logger.debug(s"[RevaluationController][post][POST] : ${request.body}")
-        revalForm.bindFromRequest.fold(
-          formWithErrors => {
 
-            println(" form with errors ::"+formWithErrors)
+  def post = authAction.async {
+    implicit request => {
+      logger.debug(s"[RevaluationController][post][POST] : ${request.body}")
+      val form = sessionService.fetchGmpSession.map {
+        _ match {
+          case Some(session) => revalForm(session)
+          case None => throw new RuntimeException("No session found in order to retrieve scenario")
+        }
+      }
+
+      form.flatMap { f =>
+        f.bindFromRequest.fold(
+          formWithErrors => {
             Future.successful(BadRequest(views.revaluation(formWithErrors)))
           },
           revaluation => {
-            println("revaluation date is ::"+revaluation)
             sessionService.cacheRevaluationDate(Some(revaluation.revaluationDate)).map {
               case Some(session) => nextPage("RevaluationController", session)
               case _ => throw new RuntimeException
             }
           }
         )
+
       }
+    }
   }
 
   def back = authAction.async {
