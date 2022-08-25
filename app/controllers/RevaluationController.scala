@@ -44,8 +44,7 @@ class RevaluationController @Inject()( authAction: AuthAction,
                                        implicit val gmpSessionCache: GmpSessionCache,
                                        views: Views
                                      ) extends GmpPageFlow(authConnector,sessionService,config,messagesControllerComponents,ac) with Logging {
-  //def revalForm(session: GmpSession) = rvform.revaluationForm(session)
-//val rForm = rvform.revaluationForm
+
   def revalForm(session: GmpSession) = {
     val revalDate = session.revaluationDate.fold(GmpDate(None, None, None))(identity)
   rvform.revaluationForm(session).fill(RevaluationDate(session.leaving, revalDate))

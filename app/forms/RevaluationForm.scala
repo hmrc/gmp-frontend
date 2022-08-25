@@ -45,7 +45,7 @@ class RevaluationForm @Inject()(mcc: MessagesControllerComponents) {
           Seq(ValidationError(messages("gmp.error.revaluation_pre2016_not_left"), "revaluationDate")) // 2016
         }
         else if (revaluationDate.revaluationDate.isBefore(session.leaving.leavingDate) &&
-          revaluationDate.leaving.leaving != Some("no")) {
+          session.leaving.leaving == Some(Leaving.YES_AFTER)) {
           Seq(ValidationError(Messages("gmp.error.revaluation_before_leaving", session.leaving.leavingDate.getAsText), "revaluationDate"))
         }
         else if (session.leaving.leaving.isDefined &&

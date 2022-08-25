@@ -32,6 +32,7 @@ class RevaluationFormSpec extends PlaySpec with GuiceOneAppPerSuite {
   val leaving = Leaving(leavingDate, None)
   val leavingBefore2016 = Leaving(leavingDate, Some(Leaving.YES_BEFORE))
   val leavingWithDate = Leaving(GmpDate(Some("01"), Some("01"), Some("2012")), None)
+  val leavingWithDateAfter = Leaving(GmpDate(Some("01"), Some("01"), Some("2012")), Some(Leaving.YES_AFTER))
   val leavingWithDateAndNO = Leaving(GmpDate(Some("01"), Some("01"), Some("2012")), Some(Leaving.NO))
   implicit lazy val messagesAPI=app.injector.instanceOf[MessagesApi]
   implicit lazy val messagesProvider=MessagesImpl(Lang("en"), messagesAPI)
@@ -169,8 +170,8 @@ class RevaluationFormSpec extends PlaySpec with GuiceOneAppPerSuite {
 
     "revaluationDate" must {
       "return an error if before leavingDate" in {
-        val revaluationForm = new RevaluationForm(mcc).revaluationForm(session.copy(leaving = leavingWithDate))
-        val revaluationFormResults = revaluationForm.bind(Json.toJson(RevaluationDate(leavingWithDate, revaluationDate)),fromJsonMaxChars)
+        val revaluationForm = new RevaluationForm(mcc).revaluationForm(session.copy(leaving = leavingWithDateAfter))
+        val revaluationFormResults = revaluationForm.bind(Json.toJson(RevaluationDate(leavingWithDateAfter, revaluationDate)),fromJsonMaxChars)
         revaluationFormResults.errors must contain(FormError("", List(Messages("gmp.error.revaluation_before_leaving", leavingWithDate.leavingDate.getAsText)), List("revaluationDate")))
       }
 
