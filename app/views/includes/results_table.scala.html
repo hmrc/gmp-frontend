@@ -36,7 +36,7 @@
 }
 
 @htmlContent1(period: CalculationPeriod) = @{
-    if(period.dualCalcPost90OppositeTotal != Some("0.00"))
+    if(period.dualCalcPost90TrueTotal != Some("0.00"))
         s"£${period.dualCalcPost90TrueTotal.getOrElse("--")}<br>${Messages("gmp.frequency.weekly")}" else
         s"--"
 }

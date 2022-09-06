@@ -17,7 +17,7 @@
 @(calculationResponse:CalculationResponse)(implicit messages: Messages)
 
 @if(calculationResponse.globalErrorCode == 0 && calculationResponse.numPeriodsInError < calculationResponse.calculationPeriods.size) {
-    <div id="conts-earnings-link-div">
+    <div class="govuk-body">
             <a class="govuk-link" href="@routes.ResultsController.getContributionsAndEarnings" id="conts-earnings-link">
                 @Html(Messages("gmp.link.contributions-earnings"))
             </a>

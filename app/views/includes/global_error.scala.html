@@ -22,17 +22,13 @@
     }
 }
 
-<p id="global-results-grid">
+@if(application.globalErrors.hasPath(s"$globalErrorCode.cannot_calculate")){
+   <h1 class="govuk-heading-l" id="cannot-calculate-header">@{ Messages(application.globalErrors.getString(s"$globalErrorCode.cannot_calculate")) }</h1>
+}
+@if(application.globalErrors.hasPath(s"$globalErrorCode.reason")){
+   <div class="govuk-body">@Messages(application.globalErrors.getString(s"$globalErrorCode.reason"))</div>
+}
 
-        <div class="global-error">
-            @if(application.globalErrors.hasPath(s"$globalErrorCode.cannot_calculate")){
-                <h1 class="govuk-heading-l" id="cannot-calculate-header">@{ Messages(application.globalErrors.getString(s"$globalErrorCode.cannot_calculate")) }</h1>
-            }
-
-            @if(application.globalErrors.hasPath(s"$globalErrorCode.reason")){
-                <div class="error-list" id="global-error-reason"><p class="govuk-error-message">@Messages(application.globalErrors.getString(s"$globalErrorCode.reason"))</p></div>
-            }
-        </div>
 
         @if(application.globalErrors.hasPath(s"$globalErrorCode.solution")){
             <div>

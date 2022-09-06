@@ -328,7 +328,7 @@ gmp.spa.header = GMP value at State Pension age ({0})
 gmp.leaving.scheme.header = GMP value at {0}
 gmp.leaving.revalued.header = GMP revalued to {0}
 gmp.per.week = GMP a week
-gmp.post.1988 = Post 1988
+gmp.post.1988 = After 1988
 gmp.rate = Rate
 gmp.rate_hmrc_holds = Rate
 

@@ -16,23 +16,12 @@
 
 @(calculationResponse:CalculationResponse)(implicit messages: Messages)
 
-
-    <div class="govuk-error-summary" aria-labelledby="error-summary-title" role="alert" data-module="govuk-error-summary">
-
         <h2 class="govuk-error-summary__title" id="conts-and-earnings-error-header">@{Messages("gmp.only_part_problem")}</h2>
-
-        <div id="conts-and-earnings-error-message" class="govuk-error-summary__body">
-            <ul class="govuk-list govuk-error-summary__list">
                 @for((period, count) <- calculationResponse.calculationPeriods.zipWithIndex){
                     @if(period.errorCode != 0){
-                        <li>
-                            <a href="#period-row-in-error-@count">@{Messages("gmp.contracted_out_period_error" ,s"${period.startDate.get.toString("d MMMM yyyy")}", s"${period.endDate.toString("d MMMM yyyy")}")}</a>
-                        </li>
+                        <div class="govuk-inset-text">
+                           @{Messages("gmp.contracted_out_period_error" ,s"${period.startDate.get.toString("d MMMM yyyy")}", s"${period.endDate.toString("d MMMM yyyy")}")}
+                        </div>
                     }
                 }
-            </ul>
-        </div>
 
-    </div>
-
-<hr class="govuk-section-break" aria-hidden = true/>

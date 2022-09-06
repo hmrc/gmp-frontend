@@ -17,55 +17,54 @@
 @import config.ApplicationConfig
 @import uk.gov.hmrc.govukfrontend.views.html.components._
 
-@this(gmpMain: gmp_main,
-        govukErrorSummary : GovukErrorSummary,
+@this(gmpMain: gmp_main, govukErrorSummary : GovukErrorSummary,
         request_another_button: includes.request_another_button,
         member_details_result:includes.member_details_result,
         govukTable : GovukTable)
 
-@(calculationResponse:CalculationResponse,
-        revalRateSubheader: Option[String],
-        survivorSubheader: Option[String])(implicit request: Request[_], messages: Messages, applicationConfig: ApplicationConfig)
+
+@(calculationResponse:CalculationResponse, revalRateSubheader: Option[String], survivorSubheader: Option[String])(implicit request: Request[_], messages: Messages, applicationConfig: ApplicationConfig)
+@gmpMain(title = {
+            if(calculationResponse.globalErrorCode > 0 ||
+                    (calculationResponse.calculationPeriods.length == 1 && calculationResponse.calculationPeriods.head.errorCode > 0)){
+                Messages("gmp.results.error")
+            }else{
+                Messages("gmp.results.h1") + " - " + Messages("service.title") + " - " + Messages("gov.uk")
+            }
+        },
+        supportLinkEnabled = false,
+        dashboardLinkEnabled = !calculationResponse.hasErrors) {
 
 
+        @{
+            if(calculationResponse.globalErrorCode > 0) {
+                includes.global_error(calculationResponse.globalErrorCode)
+            } else if (calculationResponse.calculationPeriods.length == 1 && calculationResponse.calculationPeriods.head.errorCode > 0) {
+                includes.global_error(calculationResponse.calculationPeriods.head.errorCode)
+            } else {
+                if(calculationResponse.hasErrors) {
+                    includes.multi_error(calculationResponse, govukTable)
+                } else {
+                    includes.multi_results(calculationResponse, revalRateSubheader, survivorSubheader, govukTable)
+                }
+            }
+        }
 
-@gmpMain(
-  title = {
-    if(calculationResponse.globalErrorCode > 0 ||
-      (calculationResponse.calculationPeriods.length == 1 && calculationResponse.calculationPeriods.head.errorCode > 0)){
-        Messages("gmp.results.error")
-    }else{
-        Messages("gmp.results.h1") + " - " + Messages("service.title") + " - " + Messages("gov.uk")
+        @member_details_result(calculationResponse)
+
+        @if(!calculationResponse.hasErrors){
+            <p class="govuk-body">@Messages("gmp.queryhandling.resultsmessage")</p>
+        }
+
+        @if(!calculationResponse.hasErrors) {
+            @includes.print_page()
+        }
+
+        @request_another_button()
+
     }
-  },
-  supportLinkEnabled = false,
-  dashboardLinkEnabled = !calculationResponse.hasErrors) {
 
 
-@{
-  if(calculationResponse.globalErrorCode > 0) {
-    includes.global_error(calculationResponse.globalErrorCode)
-  } else if (calculationResponse.calculationPeriods.length == 1 && calculationResponse.calculationPeriods.head.errorCode > 0) {
-    includes.global_error(calculationResponse.calculationPeriods.head.errorCode)
-  } else {
-   if(calculationResponse.hasErrors) {
-      includes.multi_error(calculationResponse)
-    } else {
-      includes.multi_results(calculationResponse, revalRateSubheader, survivorSubheader, govukTable)
-    }
-  }
-}
 
-  @member_details_result(calculationResponse)
 
-  @if(!calculationResponse.hasErrors){
-      <p class="govuk-body">@Messages("gmp.queryhandling.resultsmessage")</p>
-  }
 
-@if(!calculationResponse.hasErrors) {
-    @includes.print_page()
-}
-
-  @request_another_button()
-
-}

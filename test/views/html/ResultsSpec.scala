@@ -33,18 +33,31 @@ class ResultsSpec extends GmpViewSpec{
   override def view: Html = new views.html.results(gmpMain, govukErrorSummary,  requestAnotherButton, memberDetailsResult, govTable)( calculationResponse, Some("revalRateSubheader"), Some("survivorSubheader"))
 
   private val calculationResponse : CalculationResponse = CalculationResponse(
-    "name", "nino", "scon", Some("revaluationRate"), Some(LocalDate.now),
-    List(CalculationPeriod(Some(LocalDate.now), LocalDate.now(), "gmpTotal", "post", 1, 2, Some(3), Some("string"),
-      Some("string2"), Some(4), Some(List(ContributionsAndEarnings(2018, "2000")))),CalculationPeriod(Some(LocalDate.now), LocalDate.now(),"gmpTotal","post", 1, 2, Some(3), Some("string"),
-      Some("string2"), Some(4), Some(List(ContributionsAndEarnings(2018, "2000"))))),
-    0, Some(LocalDate.now), Some(LocalDate.now), Some(LocalDate.now), true, 2)
+    name = "name",
+    nino = "nino",
+    scon = "scon",
+    revaluationRate = Some("revaluationRate"),
+    revaluationDate = Some(LocalDate.now),
+    calculationPeriods = List(
+      CalculationPeriod(Some(LocalDate.now),
+        LocalDate.now(), "gmpTotal",
+        "post", 1, 2, Some(3),
+        Some("string"),
+        Some("string2"), Some(4),
+        Some(List(ContributionsAndEarnings(2018, "2000")))
+      ),
+      CalculationPeriod(
+        Some(LocalDate.now), LocalDate.now(), "gmpTotal", "post", 1, 2, Some(3), Some("string"),
+        Some("string2"), Some(4), Some(List(ContributionsAndEarnings(2018, "2000"))))),
+    globalErrorCode = 0,
+    spaDate = Some(LocalDate.now),
+    payableAgeDate = Some(LocalDate.now),
+    dateOfDeath = Some(LocalDate.now),
+    dualCalc = true, calcType = 2)
 
   "Results page" must {
     behave like pageWithTitle(messages("gmp.results.h1"))
 
-    "have a span" in {
-      doc must haveParagraphWithText(messages("If you do not agree with this result, contact HMRC by creating a new entry in the ‘single queries database’ in the Shared Workspace eRoom."))
-    }
   }
 
 
