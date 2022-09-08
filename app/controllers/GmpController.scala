@@ -20,12 +20,12 @@ package controllers
 import com.google.inject.{Inject, Singleton}
 import config.{ApplicationConfig, GmpContext}
 import models.{CalculationType, GmpSession, Leaving}
-import play.api.Logging
 import play.api.i18n.{Messages, MessagesImpl}
 import play.api.mvc.{MessagesControllerComponents, Result}
 import services.SessionService
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
+
 import uk.gov.hmrc.time.TaxYear
 
 @Singleton
@@ -65,7 +65,7 @@ class GmpPageFlow @Inject()(val authConnector: AuthConnector,
       if (session.leaving.leaving.isDefined && session.leaving.leaving.get.equals(Leaving.NO))
         Redirect(controllers.routes.EqualiseController.get)
       else if (session.leaving.leaving.isDefined && session.leaving.leaving.get.equals(Leaving.YES_BEFORE))
-        Redirect(controllers.routes.RevaluationRateController.get)
+        Redirect(routes.RevaluationRateController.get)
       else if (sameTaxYear(session))
         Redirect(routes.EqualiseController.get)
       else
@@ -76,7 +76,7 @@ class GmpPageFlow @Inject()(val authConnector: AuthConnector,
     PageType.REVALUATION_RATE -> { (session: GmpSession) => {
       session.scenario match {
         case (CalculationType.PAYABLE_AGE | CalculationType.SPA | CalculationType.REVALUATION) => Redirect(routes.EqualiseController.get)
-        case CalculationType.SURVIVOR => Redirect(controllers.routes.InflationProofController.get)
+        case CalculationType.SURVIVOR => Redirect(routes.InflationProofController.get)
       }
     }
     },
