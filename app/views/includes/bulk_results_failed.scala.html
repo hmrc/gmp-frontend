@@ -23,30 +23,26 @@
 @import views.html.helpers._
 
 <div class="divider--top clearfix">
-    <hr class="govuk-section-break govuk-section-break--visible">
-
+    <hr class="govuk-section-break govuk-section-break--visible" role="presentation">
+    <div class="govuk-!-padding-bottom-3"></div>
     <h3 class="govuk-heading-s" id="failed-calculations">@Messages("gmp.bulk.subheaders.failedcalculations") (@bulkResultsSummary.failed)</h3>
-  <div class="column-three-quarters">
     <ul class="govuk-list govuk-list--bullet font-xsmall">
       <li id="exp-failed-1" class="font-xsmall">@Messages("gmp.bulk.explanations.failed.1")</li>
       <li id="exp-failed-2" class="font-xsmall">@Messages("gmp.bulk.explanations.failed.2")</li>
       <li id="exp-failed-3" class="font-xsmall">@Messages("gmp.bulk.explanations.failed.3")</li>
     </ul>
-  </div>
-  <div class="column-one-quarter govuk-!-text-align-right"><a id="download-failed" data-journey-click="gmp-bulk:click:download_failed" href="@routes.BulkResultsController.getResultsAsCsv(uploadReference, failed)">
-  @Messages("gmp.download.link")<span class="hidden"> @Messages("gmp.download.description.failed")</span></a></div>
+ <a id="download-failed" class ="govuk-link" href="@routes.BulkResultsController.getResultsAsCsv(uploadReference, failed)">
+  @Messages("gmp.download.link.noTotalGmp")</a>
+    <div class="govuk-!-padding-bottom-3"></div>
 </div>
 
 <div class="divider--top divider--bottom clearfix">
     <hr class="govuk-section-break govuk-section-break--visible">
-
     <h3 class="govuk-heading-s" id="conts-and-earnings">@Messages("gmp.bulk.subheaders.contsandearnings")</h3>
-  <div class="column-three-quarters">
     <ul class="govuk-list govuk-list--bullet font-xsmall">
       <li id="exp-conts" class="font-xsmall">@Messages("gmp.bulk.explanations.contsandearnings")</li>
     </ul>
-  </div>
-  <div class="column-one-quarter govuk-!-text-align-right"><a id="download-conts" data-journey-click="gmp-bulk:click:download_ce" href="@routes.BulkResultsController.getContributionsAndEarningsAsCsv(uploadReference)">
-  @Messages("gmp.download.link")<span class="hidden"> @Messages("gmp.download.description.contributions")</span></a></div>
-
+    <a id="download-conts" class ="govuk-link" href="@routes.BulkResultsController.getContributionsAndEarningsAsCsv(uploadReference)">
+  @Messages("gmp.download.link.ce")</a>
+    <div class="govuk-!-padding-bottom-3"></div>
 </div>

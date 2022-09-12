@@ -15,11 +15,8 @@
  *@
 
 @import config.ApplicationConfig
-@import views.html.helpers._
 @import views.ViewHelpers
 @import uk.gov.hmrc.govukfrontend.views.html.components._
-@import uk.gov.hmrc.govukfrontend.views.html.components.implicits._
-@import uk.gov.hmrc.hmrcfrontend.views.Implicits.RichErrorSummary
 @import uk.gov.hmrc.govukfrontend.views.Implicits.RichInput
 
 @this(gmpMain: gmp_main,
@@ -31,9 +28,12 @@
 
 @(pensionDetailsForm: Form[models.PensionDetailsScon])(implicit request: Request[_], messages: Messages, ac:ApplicationConfig)
 
-@gmpMain(title = Messages("gmp.pension_details.header")) {
+@gmpMain(title = Messages("gmp.pension_details.header") + " - " + Messages("service.title") + " - " + Messages("gov.uk")) {
 
-  @includes.back_link(Messages("gmp.bulk_reference.header"))
+    @viewHelpers.govukBackLink(BackLink(
+        href = controllers.routes.DashboardController.get.url,
+        content = Text("Back")
+    ))
 
   @viewHelpers.form(action = routes.PensionDetailsController.post) {
       @pensionDetailsForm.errors.map { err =>
@@ -64,10 +64,12 @@
       <p class="govuk-body">@Messages("gmp.scon.message") <a class="govuk-link" data-journey-click='@Messages("gmp.ga-track.link.click"):@Messages("gmp.pension_details.header"):@Messages("gmp.contact.hmrc")'
       href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pensions-helpline-contracted-out">@Messages("gmp.contact.hmrc")</a>.</p>
 
-      @govukButton(Button(
-          content = Text(Messages("gmp.continue.button"))
-      ))
-@*  <button data-journey-click='@Messages("gmp.ga-track.button.click"):@Messages("gmp.pension_details.header"):@Messages("gmp.continue.button")' class="govuk-button" type="submit" id="submit-button">@Messages("gmp.continue.button")</button>*@
+        @govukButton(Button(
+            content = Text(Messages("gmp.continue.button")),
+            inputType = Some("submit"),
+            attributes = Map("data-journey-click" -> s"""@Messages("gmp.ga-track.button.click"):@Messages("gmp.pension_details.header"):@Messages("gmp.continue.button")""")
+        ))
+
 
   }
 }

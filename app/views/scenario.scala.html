@@ -21,7 +21,7 @@
 @import uk.gov.hmrc.hmrcfrontend.views.Implicits.RichErrorSummary
 @import uk.gov.hmrc.govukfrontend.views.html.components.implicits._
 
-@this(gmpMain: gmp_main, viewHelpers: ViewHelpers, govukRadios : GovukRadios, govukButton : GovukButton, govukErrorSummary : GovukErrorSummary)
+@this(gmpMain: gmp_main, viewHelpers: ViewHelpers, govukRadios : GovukRadios, govukButton : GovukButton, govukErrorSummary : GovukErrorSummary, govukBackLink : GovukBackLink)
 
 
 
@@ -29,15 +29,19 @@
 
 @implicitFormInstance = @{ Some(calculationType) }
 
-@gmpMain(title = Messages("gmp.scenarios.title")) {
+@gmpMain(title = Messages("gmp.scenarios.title") + " - " + Messages("service.title") + " - " + Messages("gov.uk")) {
 
-    @includes.back_link(Messages("gmp.scenarios.title"))
-
-@*//    @views.html.helpers.errorSummary(calculationType, formHeaderKey = "gmp.scenarios.title", focusId = Some("calcType-payableage"))*@
+    @govukBackLink(BackLink(
+        href = controllers.routes.ScenarioController.back.url,
+        content = Text("Back")
+    ))
 
       @viewHelpers.form(action = routes.ScenarioController.post) {
           @if(calculationType.errors.nonEmpty){
-              @govukErrorSummary(ErrorSummary().withFormErrorsAsText(calculationType))
+              @govukErrorSummary(ErrorSummary(errorList = Seq(ErrorLink(
+                  href = Some(s"#${calculationType.errors.head.key}"),
+                  content = Text(s"${messages(s"${calculationType.errors.head.message}")}"),
+              )), title = Text(messages("generic.errorSummary"))))
           }
               @govukRadios(Radios(
                   fieldset = Some(Fieldset(
@@ -49,34 +53,46 @@
                   )),
                   idPrefix = Some("calcType"),
                   name = "calcType",
+                  errorMessage = if (calculationType.hasErrors) {
+                      Some(ErrorMessage(content = Text(s"${calculationType.errors.head.message}")))
+                  } else None,
                   items = Seq(
                       RadioItem(
                           content = Text(Messages("gmp.scenarios.payable_age")),
-                          value = Some("2")
+                          value = Some("2"),
+                          checked = calculationType.data.values.toList.contains("2")
                       ),
                       RadioItem(
                           content = Text(Messages("gmp.scenarios.spa")),
-                          value = Some("4")
+                          value = Some("4"),
+                          checked = calculationType.data.values.toList.contains("4")
                       ),
                       RadioItem(
                           content = Text(Messages("gmp.scenarios.survivor")),
-                          value = Some("3")
+                          value = Some("3"),
+                          checked = calculationType.data.values.toList.contains("3")
                       ),
                       RadioItem(
                           content = Text(Messages("gmp.scenarios.leaving")),
-                          value = Some("0")
+                          value = Some("0"),
+                          checked = calculationType.data.values.toList.contains("0")
                       ),
                       RadioItem(
                           content = Text(Messages("gmp.scenarios.specific_date")),
-                          value = Some("1")
+                          value = Some("1"),
+                          checked = calculationType.data.values.toList.contains("1")
                       )
                   )
-              ).withFormField(calculationType("calcType")))
+              ))
 
 
           <div>
-              <button data-journey-click='@Messages("gmp.ga-track.button.click"):@Messages("gmp.scenarios.title"):@Messages("gmp.continue.button")'
-              class="govuk-button" type="submit" id="submit-button">@Messages("gmp.continue.button")</button>
+              @govukButton(Button(
+                content = Text(Messages("gmp.continue.button")),
+                inputType = Some("submit"),
+                attributes = Map("data-journey-click" -> s"""@Messages("gmp.ga-track.button.click"):@Messages("gmp.scenarios.title"):@Messages("gmp.continue.button")""")
+              ))
+
           </div>
 
       }

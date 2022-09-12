@@ -14,12 +14,18 @@
  * limitations under the License.
  *@
 
+@import uk.gov.hmrc.govukfrontend.views.html.components._
 @import config.ApplicationConfig
-@import views.html.helpers._
 @import models.CalculationType
-@import views.OldViewHelpers
+@import views.ViewHelpers
 
-@this(gmpMain: gmp_main_old, viewHelpers: OldViewHelpers)
+
+@this(gmpMain: gmp_main,
+        viewHelpers: ViewHelpers,
+        govukRadios : GovukRadios,
+        govukButton : GovukButton,
+        govukErrorSummary : GovukErrorSummary,
+        govukBackLink : GovukBackLink)
 
 @(revaluationRateForm: Form[models.RevaluationRate], session: GmpSession)(implicit request: Request[_], messages: Messages, ac:ApplicationConfig)
 
@@ -37,47 +43,78 @@
 }
 @gmpMain(title = heading + " - " + Messages("service.title") + " - " + Messages("gov.uk")) {
 
-        @includes.back_link(Messages("gmp.revaluation_rate.header"))
-
-        @views.html.helpers.errorSummary(revaluationRateForm)
+    @govukBackLink(BackLink(
+        href = controllers.routes.RevaluationRateController.back.url,
+        content = Text("Back")
+    ))
+    @if(revaluationRateForm.errors.nonEmpty) {
+        @govukErrorSummary(ErrorSummary(errorList = Seq(ErrorLink(
+            href = Some(s"#${revaluationRateForm.errors.head.key}"),
+            content = Text(s"${messages(s"${revaluationRateForm.errors.head.message}")}"),
+        )), title = Text(messages("generic.errorSummary"))))
+    }
 
           @viewHelpers.form(action = routes.RevaluationRateController.post) {
-            <div class="form-group @if(revaluationRateForm.hasErrors) {form-field--error}" id="rateType">
-              @gmpRadioGroup(
-                  revaluationRateForm("rateType"),
-                    session.leaving.leaving match{
-                    case Some(Leaving.YES_AFTER) | Some(Leaving.NO) =>
-                    Seq(
-                        ("fixed", "fixed", "none")  -> Messages("gmp.revaluation_rate.fixed"),
-                        ("hmrc", "hmrc", "none")  -> Messages("gmp.revaluation_rate.rate_held_by_hmrc"),
-                        ("s148", "s148", "none")  -> Messages("gmp.revaluation_rate.s148")
-                    )
-                    case _ =>
-                  Seq(
-                        ("fixed", "fixed", "none")  -> Messages("gmp.revaluation_rate.fixed"),
-                        ("hmrc", "hmrc", "none")  -> Messages("gmp.revaluation_rate.rate_held_by_hmrc"),
-                        ("limited", "limited", "none") -> Messages("gmp.revaluation_rate.limited"),
-                        ("s148", "s148", "none")  -> Messages("gmp.revaluation_rate.s148")
-                  )},
-                  session.scenario match {
-                    case CalculationType.PAYABLE_AGE | CalculationType.SPA | CalculationType.SURVIVOR => '_legend -> Messages("gmp.revaluation_rate.header")
-                    case CalculationType.REVALUATION => {
-                        session.revaluationDate match {
-                            case Some(rd) if(!rd.isOnOrAfter06042016) => '_legend -> Messages("gmp.revaluation_rate.header")
-                            case _ => '_legend -> Messages("gmp.revaluation_rate.header")
-                        }
-                    }
-                    case _ => '_legend -> Messages("gmp.revaluation_rate.header")
-                  },
-                  '_labelAfter -> true,
-                  '_labelClass -> "block-label",
-                  '_groupClass -> "inline-block",
-                  '_trackGA -> true
-              )
-            </div>
 
-            <div>
-                <button class="button" type="submit" id="submit-button">@Messages("gmp.continue.button")</button>
-            </div>
+              @govukRadios(Radios(
+                  fieldset = Some(Fieldset(
+                      legend = Some(Legend(
+                          content = Text(Messages("gmp.revaluation_rate.header")),
+                          classes = "govuk-fieldset__legend--l",
+                          isPageHeading = true
+                      ))
+                  )),
+                  idPrefix = Some("rateType"),
+                  name = "rateType",
+                  errorMessage = revaluationRateForm.error("rateType").map(e => ErrorMessage(content = Text(messages(e.message)))),
+                  items = session.leaving.leaving match {
+                      case Some(Leaving.YES_AFTER) | Some(Leaving.NO) => Seq(
+                          RadioItem(
+                              content = Text(Messages("gmp.revaluation_rate.fixed")),
+                              value = Some("fixed"),
+                              checked = revaluationRateForm.data.values.toList.contains("fixed")
+                          ),
+                          RadioItem(
+                              content = Text(Messages("gmp.revaluation_rate.rate_held_by_hmrc")),
+                              value = Some("hmrc"),
+                              checked = revaluationRateForm.data.values.toList.contains("hmrc")
+                          ),
+                          RadioItem(
+                              content = Text(Messages("gmp.revaluation_rate.s148")),
+                              value = Some("s148"),
+                              checked = revaluationRateForm.data.values.toList.contains("s148")
+                          ))
+                      case _ => Seq(
+
+                          RadioItem(
+                              content = Text(Messages("gmp.revaluation_rate.fixed")),
+                              value = Some("fixed"),
+                              checked = revaluationRateForm.data.values.toList.contains("fixed")
+                          ),
+                          RadioItem(
+                              content = Text(Messages("gmp.revaluation_rate.rate_held_by_hmrc")),
+                              value = Some("hmrc"),
+                              checked = revaluationRateForm.data.values.toList.contains("hmrc")
+                          ),
+                          RadioItem(
+                              content = Text(Messages("gmp.revaluation_rate.limited")),
+                              value = Some("limited"),
+                              checked = revaluationRateForm.data.values.toList.contains("limited")
+                          ),
+                          RadioItem(
+                              content = Text(Messages("gmp.revaluation_rate.s148")),
+                              value = Some("s148"),
+                              checked = revaluationRateForm.data.values.toList.contains("s148")
+                          )
+
+                      )
+                  }))
+
+              @govukButton(Button(
+                  content = Text(Messages("gmp.continue.button")),
+                  inputType = Some("submit")
+              ))
+
+
           }
 }

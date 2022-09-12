@@ -20,7 +20,7 @@ import config.{ApplicationConfig, GmpSessionCache}
 import controllers.auth.{AuthAction, FakeAuthAction}
 import forms.EqualiseForm
 import models._
-import org.mockito.Matchers
+import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito._
 import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
@@ -63,7 +63,7 @@ class EqualiseControllerSpec extends PlaySpec with GuiceOneServerPerSuite with M
     }
 
     "present the equalise page" in {
-      when(mockSessionService.fetchMemberDetails()(Matchers.any())).thenReturn(Future.successful(None))
+      when(mockSessionService.fetchMemberDetails()(any())).thenReturn(Future.successful(None))
 
         val result = TestEqualiseController.get(FakeRequest())
         contentAsString(result) must include(Messages("gmp.equalise_header"))
@@ -80,14 +80,14 @@ class EqualiseControllerSpec extends PlaySpec with GuiceOneServerPerSuite with M
       val memberDetails = MemberDetails("", "", "")
       val session = GmpSession(memberDetails, "", CalculationType.REVALUATION, None, None, Leaving(GmpDate(None, None, None), None), None)
 
-        when(mockSessionService.fetchGmpSession()(Matchers.any())).thenReturn(Future.successful(Some(session)))
+        when(mockSessionService.fetchGmpSession()(any())).thenReturn(Future.successful(Some(session)))
         val result = TestEqualiseController.back(FakeRequest())
         status(result) must equal(SEE_OTHER)
     }
 
     "throw an exception when session not fetched" in {
 
-        when(mockSessionService.fetchGmpSession()(Matchers.any())).thenReturn(Future.successful(None))
+        when(mockSessionService.fetchGmpSession()(any())).thenReturn(Future.successful(None))
         val result = TestEqualiseController.back(FakeRequest())
         intercept[RuntimeException] {
           status(result)
@@ -97,6 +97,8 @@ class EqualiseControllerSpec extends PlaySpec with GuiceOneServerPerSuite with M
   }
 
   val gmpSession = GmpSession(MemberDetails("", "", ""), "S1301234T", "", None, Some(""), Leaving(GmpDate(None, None, None), None), equalise = Some(1))
+
+
   "EqualiseController POST" must {
 
     "with invalid data" must {
@@ -120,22 +122,17 @@ class EqualiseControllerSpec extends PlaySpec with GuiceOneServerPerSuite with M
 
           "redirect" in {
 
-            when(mockSessionService.cacheEqualise(Matchers.any())(Matchers.any())).thenReturn(Future.successful(Some(gmpSession)))
-
-              val postData = Json.toJson(
-                Equalise(Some(1))
-              )
-              val result = TestEqualiseController.post(FakeRequest().withJsonBody(postData))
-              status(result) must equal(SEE_OTHER)
+            when(mockSessionService.cacheEqualise(any())(any())).thenReturn(Future.successful(Some(gmpSession)))
+              val result = TestEqualiseController.post(FakeRequest().withMethod("POST")
+                .withFormUrlEncodedBody("equalise" -> "1"))
+              status(result) mustBe(SEE_OTHER)
           }
 
           "respond with error when rate not stored" in {
-            when(mockSessionService.cacheEqualise(Matchers.any())(Matchers.any())).thenReturn(Future.successful(None))
-              val postData = Json.toJson(
-                Equalise(Some(1))
-              )
+            when(mockSessionService.cacheEqualise(any())(any())).thenReturn(Future.successful(None))
               intercept[RuntimeException] {
-                await(TestEqualiseController.post(FakeRequest().withJsonBody(postData)))
+                await(TestEqualiseController.post(FakeRequest().withMethod("POST")
+                  .withFormUrlEncodedBody("equalise" -> "1")))
             }
           }
         }

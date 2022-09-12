@@ -22,27 +22,30 @@
 @import uk.gov.hmrc.play.views.html.helpers._
 @import views.html.helpers._
 
-
-<div class="divider--top">
-    <hr class="govuk-section-break govuk-section-break--visible">
-
-    <h3 class="govuk-heading-s" id="successful-calculations">@Messages("gmp.bulk.subheaders.successfulcalculations") (@{bulkResultsSummary.getNumberOfSuccessfulCalculations})</h3>
-    <ul class="govuk-list govuk-list--bullet font-xsmall">
-      <li id="exp-success-1" class="font-xsmall">@Messages("gmp.bulk.explanations.successful.1")</li>
-      <li id="exp-success-2" class="font-xsmall">@Messages("gmp.bulk.explanations.successful.2")</li>
-    </ul>
-  <div class="govuk-!-text-align-right"><a id="download-success" data-journey-click="gmp-bulk:click:download_successful" href="@routes.BulkResultsController.getResultsAsCsv(uploadReference, successful)">
-  @Messages("gmp.download.link")<span class="hidden"> @Messages("gmp.download.description.success")</span></a></div>
+<div class="divider--top divider--bottom clearfix">
+    <hr class="govuk-section-break govuk-section-break--visible" role="presentation">
+    <div class="govuk-!-padding-bottom-3"></div>
+        <h3 class="govuk-heading-s">@Messages("gmp.bulk.subheaders.successfulcalculations") (@{bulkResultsSummary.getNumberOfSuccessfulCalculations})</h3>
+        <ul class="govuk-list govuk-list--bullet font-xsmall">
+            <li id="exp-success-1" class="font-xsmall">@Messages("gmp.bulk.explanations.successful.1")</li>
+            <li id="exp-success-2" class="font-xsmall">@Messages("gmp.bulk.explanations.successful.2")</li>
+        </ul>
+        <a id="download-success" class ="govuk-link" href="@routes.BulkResultsController.getResultsAsCsv(uploadReference, successful)">
+            @Messages("gmp.download.link.totalGmp")</a>
+    <div class="govuk-!-padding-bottom-3"></div>
 </div>
 
-<div class="divider--top divider--bottom">
-    <hr class="govuk-section-break govuk-section-break--visible">
 
-    <h3 class="govuk-heading-s" id="conts-and-earnings">@Messages("gmp.bulk.subheaders.contsandearnings")</h3>
-    <ul class="govuk-list govuk-list--bullet font-xsmall">
-      <li id="exp-conts" class="font-xsmall">@Messages("gmp.bulk.explanations.contsandearnings")</li>
-    </ul>
-  <div class="govuk-!-text-align-right"><a id="download-conts" data-journey-click="gmp-bulk:click:download_ce" href="@routes.BulkResultsController.getContributionsAndEarningsAsCsv(uploadReference)">
-  @Messages("gmp.download.link")<span class="hidden"> @Messages("gmp.download.description.contributions")</span></a></div>
+<div class="divider--top divider--bottom clearfix">
+    <hr class="govuk-section-break govuk-section-break--visible" role="presentation">
+    <div class="govuk-!-padding-bottom-3"></div>
+        <h3 class="govuk-heading-s">@Messages("gmp.bulk.subheaders.contsandearnings")</h3>
+        <ul class="govuk-list govuk-list--bullet font-xsmall">
+            <li id="exp-conts" class="font-xsmall">@Messages("gmp.bulk.explanations.contsandearnings")</li>
+        </ul>
+        <a id="download-conts" class ="govuk-link" href="@routes.BulkResultsController.getContributionsAndEarningsAsCsv(uploadReference)">
+        @Messages("gmp.download.link.ce")</a>
+    <div class="govuk-!-padding-bottom-3"></div>
+
 </div>
 
