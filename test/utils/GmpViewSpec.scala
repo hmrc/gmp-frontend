@@ -37,6 +37,8 @@ trait GmpViewSpec extends PlaySpec with JSoupMatchers with GuiceOneServerPerSuit
 
   override def haveBackLink = new CssSelector("a[id=back-link]")
 
+  private val backLink = new CssSelector("a[class=govuk-back-link]")
+
   implicit val request = FakeRequest()
   implicit val context = FakeGmpContext
 
@@ -50,9 +52,9 @@ trait GmpViewSpec extends PlaySpec with JSoupMatchers with GuiceOneServerPerSuit
     }
   }
 
-  def pageWithTableCaption(id: String, captionText: String): Unit = {
+  def pageWithTableCaption(captionText: String): Unit = {
     s"have a table caption with text: $captionText" in {
-      doc must haveTableCaptionWithIdAndText(id, captionText)
+      doc must haveTableCaptionWithText(captionText)
     }
   }
 
@@ -86,6 +88,12 @@ trait GmpViewSpec extends PlaySpec with JSoupMatchers with GuiceOneServerPerSuit
   def pageWithBackLink(): Unit = {
     "have a back link" in {
       doc must haveBackLink
+    }
+  }
+
+  def pageWithNewBackLink(): Unit = {
+    "have a back link" in {
+      doc must backLink
     }
   }
 

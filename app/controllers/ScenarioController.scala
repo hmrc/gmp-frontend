@@ -20,6 +20,7 @@ import com.google.inject.{Inject, Singleton}
 import config.{ApplicationConfig, GmpContext, GmpSessionCache}
 import controllers.auth.AuthAction
 import forms.ScenarioForm
+import models.CalculationType
 import play.api.Logging
 import play.api.i18n.Messages
 import play.api.mvc.MessagesControllerComponents
@@ -50,7 +51,7 @@ class ScenarioController @Inject()(authAction: AuthAction,
         case Some(session) => session match {
           case _ if session.scon == "" => Ok(views.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/pension-details"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title")))
           case _ if session.memberDetails.nino == "" || session.memberDetails.firstForename == "" || session.memberDetails.surname == "" => Ok(views.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/member-details"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title")))
-          case _ => Ok(views.scenario(scenarioForm))
+          case _ => Ok(views.scenario(scenarioForm.fill(CalculationType(Some(session.scenario)))))
         }
         case _ => Ok(views.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/dashboard"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title")))
       }      

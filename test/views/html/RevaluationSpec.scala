@@ -16,18 +16,18 @@
 
 package views.html
 
-import forms.{RevaluationForm, checkDateOnOBeforeGMPEnd, checkDateOnOrAfterGMPStart, checkValidDate}
+import forms.{checkDateOnOBeforeGMPEnd, checkDateOnOrAfterGMPStart, checkValidDate}
 import models.{GmpDate, Leaving, RevaluationDate}
 import play.api.data.Form
 import play.api.data.Forms.{mapping, optional, text}
 import play.api.data.validation.{Constraint, Invalid, Valid, ValidationError}
 import play.twirl.api.Html
 import utils.GmpViewSpec
-import views.OldViewHelpers
+import views.ViewHelpers
 
 class RevaluationSpec extends GmpViewSpec{
-  lazy val gmpMain = app.injector.instanceOf[gmp_main_old]
-  lazy val viewHelpers = app.injector.instanceOf[OldViewHelpers]
+  lazy val gmpMain = app.injector.instanceOf[gmp_main]
+  lazy val viewHelpers = app.injector.instanceOf[ViewHelpers]
 
   override def view: Html = new views.html.revaluation(gmpMain, viewHelpers)(revaluationForm)
 //  private val revaluationForm: Form[models.RevaluationDate] = RevaluationForm.revaluationForm
@@ -93,17 +93,17 @@ class RevaluationSpec extends GmpViewSpec{
   "Revaluation page" must {
     behave like pageWithTitle(messages("gmp.revaluation.question"))
     behave like pageWithHeader(messages("gmp.revaluation.question"))
-    behave like pageWithBackLink
+    behave like pageWithNewBackLink()
 
     "have a paragraph with text" in {
-      doc must haveParagraphWithText(messages("gmp.date.example"))
+      doc must haveParagraphWithHint(messages("gmp.date.example"))
     }
 
     "have correct input labels with text" in {
-      doc must haveParagraphWithText(messages("gmp.date.example"))
-      doc must haveInputLabelWithText("revaluationDate_day", messages("gmp.day"))
-      doc must haveInputLabelWithText("revaluationDate_month", messages("gmp.month"))
-      doc must haveInputLabelWithText("revaluationDate_year", messages("gmp.year"))
+      doc must haveParagraphWithHint(messages("gmp.date.example"))
+      doc must haveInputLabelWithText("revaluationDate-revaluationDate.day", messages("gmp.day"))
+      doc must haveInputLabelWithText("revaluationDate-revaluationDate.month", messages("gmp.month"))
+      doc must haveInputLabelWithText("revaluationDate-revaluationDate.year", messages("gmp.year"))
     }
 
     "have a submit button text" in {

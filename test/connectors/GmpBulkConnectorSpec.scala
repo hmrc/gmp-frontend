@@ -19,7 +19,7 @@ package connectors
 import java.util.UUID
 import helpers.RandomNino
 import models._
-import org.mockito.Matchers
+import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfter
 import org.scalatest.concurrent.ScalaFutures
@@ -51,7 +51,7 @@ class GmpBulkConnectorSpec extends PlaySpec with GuiceOneServerPerSuite with Moc
 
     "send a bulk request with valid data" in {
 
-      when(mockHttpPost.POST[BulkCalculationRequest, HttpResponse](Matchers.any(), Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any(), Matchers.any()))
+      when(mockHttpPost.POST[BulkCalculationRequest, HttpResponse](any(), any(), any())(any(), any(), any(), any()))
         .thenReturn(Future.successful(HttpResponse(OK, "200")))
 
       val bcr = BulkCalculationRequest("upload1", "jim@jarmusch.com", "idreference",
@@ -66,7 +66,7 @@ class GmpBulkConnectorSpec extends PlaySpec with GuiceOneServerPerSuite with Moc
 
     "send a bulk request with valid data but there is a duplicate" in {
 
-      when(mockHttpPost.POST[BulkCalculationRequest, HttpResponse](Matchers.any(), Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any(), Matchers.any()))
+      when(mockHttpPost.POST[BulkCalculationRequest, HttpResponse](any(), any(), any())(any(), any(), any(), any()))
         .thenReturn(Future.failed(UpstreamErrorResponse("Tried to insert duplicate", 409, 409)))
 
       val bcr = BulkCalculationRequest("upload1", "jim@jarmusch.com", "idreference",
@@ -80,7 +80,7 @@ class GmpBulkConnectorSpec extends PlaySpec with GuiceOneServerPerSuite with Moc
 
     "send a bulk request with valid data but the file is too large" in {
 
-      when(mockHttpPost.POST[BulkCalculationRequest, HttpResponse](Matchers.any(), Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any(), Matchers.any()))
+      when(mockHttpPost.POST[BulkCalculationRequest, HttpResponse](any(), any(), any())(any(), any(), any(), any()))
         .thenReturn(Future.failed(UpstreamErrorResponse("File too large", 413, 413)))
 
       val bcr = BulkCalculationRequest("upload1", "jim@jarmusch.com", "idreference",
@@ -94,7 +94,7 @@ class GmpBulkConnectorSpec extends PlaySpec with GuiceOneServerPerSuite with Moc
 
     "send a bulk request with valid data but bulk fails" in {
 
-      when(mockHttpPost.POST[BulkCalculationRequest, HttpResponse](Matchers.any(), Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any(), Matchers.any()))
+      when(mockHttpPost.POST[BulkCalculationRequest, HttpResponse](any(), any(), any())(any(), any(), any(), any()))
         .thenReturn(Future.failed(UpstreamErrorResponse("Failed generically", 500, 500)))
 
       val bcr = BulkCalculationRequest("upload1", "jim@jarmusch.com", "idreference",
@@ -102,7 +102,7 @@ class GmpBulkConnectorSpec extends PlaySpec with GuiceOneServerPerSuite with Moc
           "bob", "bobbleton", Some("bobby"), Some(0), Some("2012-02-02"), None, None, 0)),
           None, None)))
 
-      val result = testGmpBulkConnector.sendBulkRequest(bcr,link).futureValue
+      val result = await(testGmpBulkConnector.sendBulkRequest(bcr,link))
       (result) must be(500)
     }
 
@@ -112,7 +112,7 @@ class GmpBulkConnectorSpec extends PlaySpec with GuiceOneServerPerSuite with Moc
         """[{"uploadReference":"uploadRef","reference":"ref","timestamp":"2016-04-27T14:53:18.308","processedDateTime":"2016-05-18T17:50:55.511"}]"""
       )
 
-      when(mockHttpGet.GET[List[BulkPreviousRequest]]( Matchers.any(), Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any()))
+      when(mockHttpGet.GET[List[BulkPreviousRequest]]( any(), any(), any())(any(), any(), any()))
         .thenReturn(Future.successful(bulkPreviousRequest.as[List[BulkPreviousRequest]]))
 
       val result = testGmpBulkConnector.getPreviousBulkRequests(link)
@@ -124,7 +124,7 @@ class GmpBulkConnectorSpec extends PlaySpec with GuiceOneServerPerSuite with Moc
 
     "return a bulk results summary" in {
 
-      when(mockHttpGet.GET[BulkResultsSummary](Matchers.any(), Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(BulkResultsSummary("test",1,1)))
+      when(mockHttpGet.GET[BulkResultsSummary](any(), any(), any())(any(), any(), any())).thenReturn(Future.successful(BulkResultsSummary("test",1,1)))
 
       val result = testGmpBulkConnector.getBulkResultsSummary("",link).futureValue
       (result).reference must be("test")
@@ -132,7 +132,7 @@ class GmpBulkConnectorSpec extends PlaySpec with GuiceOneServerPerSuite with Moc
 
     "return all bulk request as csv" in {
 
-      when(mockHttpGet.GET[HttpResponse](Matchers.any(), Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(HttpResponse(OK, "THIS IS A CSV STRING")))
+      when(mockHttpGet.GET[HttpResponse](any(), any(), any())(any(), any(), any())).thenReturn(Future.successful(HttpResponse(OK, "THIS IS A CSV STRING")))
 
       val result = testGmpBulkConnector.getResultsAsCsv("","",link)
       val resolvedResult = (result).futureValue
@@ -142,7 +142,7 @@ class GmpBulkConnectorSpec extends PlaySpec with GuiceOneServerPerSuite with Moc
 
     "return all contributions and earnings as a csv" in {
 
-      when(mockHttpGet.GET[HttpResponse](Matchers.any(), Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(HttpResponse(OK, "THIS IS A CSV STRING")))
+      when(mockHttpGet.GET[HttpResponse](any(), any(), any())(any(), any(), any())).thenReturn(Future.successful(HttpResponse(OK, "THIS IS A CSV STRING")))
 
       val result = testGmpBulkConnector.getContributionsAndEarningsAsCsv("",link)
       val resolvedResult = (result).futureValue

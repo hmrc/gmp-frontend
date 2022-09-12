@@ -21,14 +21,20 @@ import models.{GmpDate, InflationProof}
 import play.api.data.Form
 import play.api.data.Forms.{mapping, optional, text}
 import play.twirl.api.Html
+import uk.gov.hmrc.govukfrontend.views.html.components.{GovukBackLink, GovukButton, GovukDateInput, GovukErrorSummary, GovukRadios}
 import utils.GmpViewSpec
-import views.OldViewHelpers
+import views.ViewHelpers
 
 class InflationProofSpec extends GmpViewSpec {
-  lazy val gmpMain = app.injector.instanceOf[gmp_main_old]
-  lazy val viewHelpers = app.injector.instanceOf[OldViewHelpers]
+  lazy val gmpMain = app.injector.instanceOf[gmp_main]
+  lazy val viewHelpers = app.injector.instanceOf[ViewHelpers]
+  lazy val govukButton = app.injector.instanceOf[GovukButton]
+  lazy val govukRadios = app.injector.instanceOf[GovukRadios]
+  lazy val govukErrorSummary = app.injector.instanceOf[GovukErrorSummary]
+  lazy val govukDateInput = app.injector.instanceOf[GovukDateInput]
+  lazy val govukBackLink = app.injector.instanceOf[GovukBackLink]
 
-  override def view: Html = new views.html.inflation_proof(gmpMain, viewHelpers)(inflationProofForm)
+  override def view: Html = new views.html.inflation_proof(gmpMain, viewHelpers, govukRadios, govukButton, govukErrorSummary, govukDateInput, govukBackLink)(inflationProofForm)
 
   val inflationProofForm = Form(
     mapping(
@@ -56,24 +62,18 @@ class InflationProofSpec extends GmpViewSpec {
   "Inflation Proof page" must {
     behave like pageWithTitle(messages("gmp.inflation_proof.question"))
     behave like pageWithHeader(messages("gmp.inflation_proof.question"))
-    behave like pageWithBackLink
+    behave like pageWithNewBackLink()
 
     "have correct input labels with text" in {
-      println(doc);
-      doc must haveInputLabelWithText("revaluate-revaluation-date", messages("gmp.generic.yes"))
-      doc must haveInputLabelWithText("revaluate-none", messages("gmp.generic.no"))
+      doc must haveInputLabelWithText("revaluation-date", messages("gmp.generic.yes"))
+      doc must haveInputLabelWithText("none", messages("gmp.generic.no"))
       doc must haveLegendWithText(messages("gmp.inflation_proof.question"))
     }
 
-    "have correct span and a paragraph" in {
-      doc must haveSpanWithText(messages("gmp.inflation_proofed"))
-      doc must haveSpanWithText(messages("gmp.date.example"))
-    }
-
     "have valid input labels" in {
-      doc must haveInputLabelWithText("revaluationDate_day", messages("gmp.day"))
-      doc must haveInputLabelWithText("revaluationDate_month", messages("gmp.month"))
-      doc must haveInputLabelWithText("revaluationDate_year", messages("gmp.year"))
+      doc must haveInputLabelWithText("revaluationDate-revaluationDate.day", messages("gmp.day"))
+      doc must haveInputLabelWithText("revaluationDate-revaluationDate.month", messages("gmp.month"))
+      doc must haveInputLabelWithText("revaluationDate-revaluationDate.year", messages("gmp.year"))
       doc must haveParagraphWithText(messages("gmp.inflationproof.subtext"))
     }
 

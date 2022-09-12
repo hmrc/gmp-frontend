@@ -24,9 +24,10 @@
 @(bulkReferenceForm: Form[models.BulkReference])(implicit request: Request[_], messages: Messages, ac:ApplicationConfig)
 
 @gmpMain(title = Messages("gmp.bulk_reference.header") + " - " + Messages("service.title") + " - " + Messages("gov.uk"), supportLinkEnabled = true) {
-
-
-    @includes.back_link(Messages("gmp.bulk_reference.header"))
+    @viewHelpers.govukBackLink(BackLink(
+        href = controllers.routes.FileUploadController.get.url,
+        content = Text("Back")
+    ))
 
     @views.html.helpers.errorSummary(bulkReferenceForm)
 

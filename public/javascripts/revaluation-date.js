@@ -34,9 +34,9 @@ $(document).ready(function() {
   }
 
   $('#revaluate-no').click(function(){
-    $('#revaluationDate_day').val('');
-    $('#revaluationDate_month').val('');
-    $('#revaluationDate_year').val('');
+    $('#revaluationDate-day').val('');
+    $('#revaluationDate-month').val('');
+    $('#revaluationDate-year').val('');
   });
 
 

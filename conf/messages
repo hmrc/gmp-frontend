@@ -2,6 +2,7 @@
 # Page titles
 service.name = Guaranteed Minimum Pension (GMP) checker
 service.title=Guaranteed Minimum Pension
+generic.errorSummary = There is a problem
 gov.uk=GOV.UK
 ############################################################################
 gmp-pbik-gov.uk-title=GOV.UK
@@ -130,7 +131,11 @@ gmp.print = Print this page
 gmp.link.contributions-earnings = View contributions and earnings
 gmp.bulk_reference.button = Confirm and submit
 gmp.bulk_request_received.button = Upload another file
-gmp.download.link = Download
+gmp.download.link = Download CSV
+gmp.download.link.allResults = Download CSV for all results
+gmp.download.link.totalGmp = Download CSV for total GMP calculated
+gmp.download.link.noTotalGmp = Download CSV for no total GMP calculated
+gmp.download.link.ce = Download CSV for contributions and earnings
 gmp.upload = Upload
 gmp.upload.label = File to upload
 
@@ -258,7 +263,13 @@ gmp.error.member.nino.mandatory = Enter member’s National Insurance number
 gmp.error.member.lastname.mandatory = Enter member’s last name
 gmp.error.nino.temporary = This is a temporary National Insurance number. You need a permanent one to calculate a GMP.
 gmp.error.reval_date.mandatory = Enter when you would like the calculation made to
-gmp.error.leaving_date.mandatory = Enter a leaving date
+gmp.error.leaving_date.daymonthyear.mandatory = Enter a leaving date
+gmp.error.leaving_date.day.missing = Date must include the day
+gmp.error.leaving_date.month.missing = Date must include the month
+gmp.error.leaving_date.year.missing = Date must include the year
+gmp.error.leaving_date.daymonth.missing = Date must include the day and month
+gmp.error.leaving_date.dayyear.missing = Date must include the day and year
+gmp.error.leaving_date.monthyear.missing = Date must include the month and year
 gmp.error.revaluation.rate.error = Select the revaluation rate you want HMRC to use
 
 gmp.error.csv.date.invalid = Enter a date in the same format as the example given in the instructions file
@@ -317,7 +328,7 @@ gmp.spa.header = GMP value at State Pension age ({0})
 gmp.leaving.scheme.header = GMP value at {0}
 gmp.leaving.revalued.header = GMP revalued to {0}
 gmp.per.week = GMP a week
-gmp.post.1988 = Post 1988
+gmp.post.1988 = After 1988
 gmp.rate = Rate
 gmp.rate_hmrc_holds = Rate
 
@@ -418,3 +429,13 @@ sessionTimeout.title = You are about to be signed out
 sessionTimeout.message = For security reasons, you will be signed out of this service in
 sessionTimeout.staySignedIn = Stay signed in
 sessionTimeout.signOut = Sign out
+
+############################################################################
+reval-date.error.date.emptyfields = Enter when you would like the calculation made to
+reval-date.error.day.missing = Date must have a day
+reval-date.error.month.missing = Date must have a month
+reval-date.error.year.missing= Date must have a year
+reval-date.error.daymonth.missing = Date must have a day and month
+reval-date.error.monthyear.missing = Date must have a month and year
+reval-date.error.dayyear.missing = Date must have a day and year
+reval-date.error.gmp.error.date.invalid = Enter a real date when you would like the calculation made to

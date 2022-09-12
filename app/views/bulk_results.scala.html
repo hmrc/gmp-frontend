@@ -30,12 +30,12 @@
         title = Text(Messages("gmp.bulk.results.banner")),
         content = Text(Messages("gmp.bulk.results.reference", bulkResultsSummary.reference))
     ))
-
-    <hr class="govuk-section-break" aria-hidden = true>
-    <hr class="govuk-section-break govuk-section-break--visible">
-
-    <div id="results-heading" class="column-three-quarters">@Messages("gmp.bulk.results")</div>
-    <div id="csv-heading" class="column-one-quarter govuk-!-text-align-right">@Messages("gmp.bulk.results.csv")</div>
+    <div class="govuk-!-padding-bottom-3"></div>
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full govuk-!-text-align-left">
+            <h2 class="govuk-heading-m">@Messages("gmp.bulk.results")</h2>
+        </div>
+    </div>
 
 
     @if(bulkResultsSummary.total == bulkResultsSummary.getNumberOfSuccessfulCalculations) {

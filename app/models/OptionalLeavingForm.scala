@@ -1,4 +1,4 @@
-@*
+/*
  * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,15 +12,16 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *@
+ */
 
-@import uk.gov.hmrc.govukfrontend.views.html.components.GovukTable
-@(calculationResponse:CalculationResponse, revalRateSubheader: Option[String], survivorSubheader: Option[String], govukTable : GovukTable)(implicit messages: Messages)
+package models
 
-@includes.result_header_subheader(calculationResponse, revalRateSubheader, survivorSubheader)
+import play.api.libs.json.{Format, Json}
+case class OptionalLeavingForm(
+                              setValue: String,
+                              value: Option[Leaving]
+                              )
 
-@includes.results_table(calculationResponse, govukTable)
-
-@includes.conts_and_earnings_link(calculationResponse)
-
-@includes.survivor_disclaimer(calculationResponse.calcType == CalculationType.SURVIVOR.toInt)
+object OptionalLeavingForm {
+  implicit val format: Format[OptionalLeavingForm] = Json.format[OptionalLeavingForm]
+}
