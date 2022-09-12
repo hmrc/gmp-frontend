@@ -24,10 +24,8 @@ import play.api.Logging
 import play.api.mvc.MessagesControllerComponents
 import services.SessionService
 import uk.gov.hmrc.auth.core.AuthConnector
-import uk.gov.hmrc.hmrcfrontend.controllers.routes
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import views.Views
-
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton

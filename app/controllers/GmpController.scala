@@ -65,7 +65,7 @@ class GmpPageFlow @Inject()(val authConnector: AuthConnector,
       if (session.leaving.leaving.isDefined && session.leaving.leaving.get.equals(Leaving.NO))
         Redirect(controllers.routes.EqualiseController.get)
       else if (session.leaving.leaving.isDefined && session.leaving.leaving.get.equals(Leaving.YES_BEFORE))
-        Redirect(routes.RevaluationRateController.get)
+        Redirect(controllers.routes.RevaluationRateController.get)
       else if (sameTaxYear(session))
         Redirect(routes.EqualiseController.get)
       else
