@@ -43,8 +43,8 @@
 @tableRowWithErrorCode0(currentDate: String, endDate: String, period: CalculationPeriod, count: Int) = @{
         Seq(
             TableRow(content = HtmlContent(s"<b>${messages("gmp.date_from")}<br></b>$currentDate<br><b>${Messages("gmp.date_to")}</b><br>$endDate")),
-            TableRow(content = HtmlContent(s"<b>£${period.gmpTotal}</b>")),
-            TableRow(content = HtmlContent(s"<b>£${period.post88GMPTotal}</b>")),
+            TableRow(content = HtmlContent(s"<br><b>£${period.gmpTotal}</b>")),
+            TableRow(content = HtmlContent(s"<br><b>£${period.post88GMPTotal}</b>")),
             if(calculationResponse.dualCalc) {
                 TableRow(content = Text(htmlContent1(period)))
             }else TableRow(),
@@ -60,7 +60,7 @@
 @tableRowWithErrorCodeNonZero(currentDate: String, endDate: String, period: CalculationPeriod) = @{
     Seq(
         TableRow(content = HtmlContent(s"<b>${messages("gmp.date_from")}<br></b>$currentDate<br><b>${Messages("gmp.date_to")}</b><br>$endDate")),
-        TableRow(content = HtmlContent(htmlContent4(period))),
+        TableRow(content = HtmlContent(s"<br>${htmlContent4(period)}")),
         TableRow(),
         TableRow(),
         TableRow(),
@@ -83,32 +83,32 @@
     head = Some(Seq(
         HeadCell(
             content = Text(Messages("gmp.table.period")),
-            classes = "govuk-!-width-one-half"
+            classes = "govuk-!-width-one-third"
         ),
         HeadCell(
             content = Text(Messages("gmp.per.week")),
-            classes = "govuk-!-width-one-quarter"
+            classes = "govuk-!-width-one-third"
         ),
         HeadCell(
             content = Text(messages("gmp.post.1988")),
-            classes = "govuk-!-width-one-quarter"
+            classes = "govuk-!-width-one-third"
         ),
         if(calculationResponse.dualCalc){
             HeadCell(
                 content = Text( Messages("gmp.true")),
-                classes = "govuk-!-width-one-quarter"
+                classes = "govuk-!-width-one-third"
             )
         } else HeadCell(),
         if(calculationResponse.dualCalc){
             HeadCell(
                 content = Text( Messages("gmp.opposite")),
-                classes = "govuk-!-width-one-quarter"
+                classes = "govuk-!-width-one-third"
             )
         } else HeadCell(),
         if(!calculationResponse.revaluationDate.isEmpty && calculationResponse.revaluationRate == Some("0")){
             HeadCell(
                 content = Text( Messages("gmp.rate_hmrc_holds")),
-                classes = "govuk-!-width-one-quarter"
+                classes = "govuk-!-width-one-third"
             )
         } else HeadCell(),
     )
