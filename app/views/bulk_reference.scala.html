@@ -38,7 +38,7 @@
           <div class="govuk-form-group">
                 @gmpInput(bulkReferenceForm("email"),
                 '_label -> Html(Messages("gmp.email.address")),
-                '_labelClass -> "form-label-bold",
+                '_labelClass -> "govuk-label govuk-label--l strong",
                 '_id -> "email",
                 '_inputClass -> "govuk-input govuk-!-width-one-third",
                 '_hintText -> Messages("gmp.bulk_reference.email_text"))
@@ -46,7 +46,7 @@
           <div class="govuk-form-group">
                 @gmpInput(bulkReferenceForm("reference"),
                 '_label -> Html(Messages("gmp.reference.calcname")),
-                '_labelClass -> "form-label-bold",
+                '_labelClass -> "govuk-label govuk-label--l strong",
                 '_id -> "reference",
                 '_maxLength -> 40,
                 '_inputClass -> "govuk-input govuk-!-width-one-third",
