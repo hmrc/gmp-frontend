@@ -1,5 +1,5 @@
 @*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,11 +14,12 @@
  * limitations under the License.
  *@
 
-@(calculationResponse:CalculationResponse, revalRateSubheader: Option[String], survivorSubheader: Option[String])(implicit messages: Messages)
+@import uk.gov.hmrc.govukfrontend.views.html.components.GovukTable
+@(calculationResponse:CalculationResponse, revalRateSubheader: Option[String], survivorSubheader: Option[String], govukTable : GovukTable)(implicit messages: Messages)
 
 @includes.result_header_subheader(calculationResponse, revalRateSubheader, survivorSubheader)
 
-@includes.results_table(calculationResponse)
+@includes.results_table(calculationResponse, govukTable)
 
 @includes.conts_and_earnings_link(calculationResponse)
 

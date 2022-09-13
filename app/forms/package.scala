@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
  */
 
 import models.GmpDate
+import play.api.data.validation.Valid
 import validation.DateValidate
 
 package object forms {
@@ -23,7 +24,7 @@ package object forms {
   val nameRegex = "^[-a-zA-Z'][-a-zA-Z' ]+$".r
 
 
-  def checkValidDate(data: GmpDate): Boolean = {
+  def checkValidDate(data: GmpDate) = {
 
     def checkValidDate(day: Option[String], month: Option[String], year: Option[String]): Boolean = {
       val tDay: String = day.getOrElse("")
@@ -39,8 +40,7 @@ package object forms {
     val day = data.day
     val month = data.month
     val year = data.year
-    val r = checkValidDate(day, month, year)
-    r
+    checkValidDate(day, month, year)
   }
 
   def checkYearLength(year: Option[String]): Boolean = {

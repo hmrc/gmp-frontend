@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@ import controllers.auth.{AuthAction, FakeAuthAction}
 import forms.MemberDetailsForm
 import helpers.RandomNino
 import models._
-import org.mockito.Matchers
+import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito._
 import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
@@ -58,13 +58,13 @@ class MemberDetailsControllerSpec extends PlaySpec with GuiceOneServerPerSuite w
     "authenticated users" must {
 
       "respond with ok" in {
-        when(mockSessionService.fetchMemberDetails()(Matchers.any())).thenReturn(Future.successful(None))
+        when(mockSessionService.fetchMemberDetails()(any())).thenReturn(Future.successful(None))
           val result = TestMemberDetailsController.get(FakeRequest())
           status(result) must equal(OK)
       }
 
       "present the member's details page" in {
-        when(mockSessionService.fetchMemberDetails()(Matchers.any())).thenReturn(Future.successful(None))
+        when(mockSessionService.fetchMemberDetails()(any())).thenReturn(Future.successful(None))
           val result = TestMemberDetailsController.get(FakeRequest())
           contentAsString(result) must include(Messages("gmp.member_details.header"))
           contentAsString(result) must include(Messages("gmp.nino"))
@@ -75,7 +75,7 @@ class MemberDetailsControllerSpec extends PlaySpec with GuiceOneServerPerSuite w
 
       "load the details from the session storage if present" in {
         val nino = RandomNino.generate
-        when(mockSessionService.fetchMemberDetails()(Matchers.any())).thenReturn(Future.successful(Some
+        when(mockSessionService.fetchMemberDetails()(any())).thenReturn(Future.successful(Some
         (MemberDetails("Bob", "Jones", nino))))
           val result = TestMemberDetailsController.get(FakeRequest())
           contentAsString(result) must include(nino)
@@ -92,7 +92,7 @@ class MemberDetailsControllerSpec extends PlaySpec with GuiceOneServerPerSuite w
       val memberDetails = MemberDetails("", "", "")
       val session = GmpSession(memberDetails, "", "", None, None, Leaving(GmpDate(None, None, None), None), None)
 
-        when(mockSessionService.fetchGmpSession()(Matchers.any())).thenReturn(Future.successful(Some(session)))
+        when(mockSessionService.fetchGmpSession()(any())).thenReturn(Future.successful(Some(session)))
         val result = TestMemberDetailsController.back(FakeRequest())
         status(result) must equal(SEE_OTHER)
     }
@@ -109,57 +109,54 @@ class MemberDetailsControllerSpec extends PlaySpec with GuiceOneServerPerSuite w
         val session = GmpSession(memberDetails, "SCON1234", "", None, None, Leaving(GmpDate(None, None, None), None), None)
 
         "redirect" in {
-          when(mockSessionService.cacheMemberDetails(Matchers.any())(Matchers.any())).thenReturn(Future.successful(Some(session)))
-            val result = TestMemberDetailsController.post(FakeRequest().withJsonBody(Json.toJson(memberDetails)))
-            status(result) must equal(SEE_OTHER)
+          when(mockSessionService.cacheMemberDetails(any())(any())).thenReturn(Future.successful(Some(session)))
+            val result = TestMemberDetailsController.post(FakeRequest().withMethod("POST")
+              .withFormUrlEncodedBody("firstForename" -> "Bob", "surname" -> "Jones",
+                "nino" -> memberDetails.nino))
+            status(result) mustBe SEE_OTHER
         }
 
         "save details to keystore" in {
-          when(mockSessionService.cacheMemberDetails(Matchers.any())(Matchers.any())).thenReturn(Future.successful(Some(session)))
-            TestMemberDetailsController.post(FakeRequest().withJsonBody(Json.toJson(memberDetails)))
-            verify(mockSessionService, atLeastOnce()).cacheMemberDetails(Matchers.any())(Matchers.any())
+
+          when(mockSessionService.cacheMemberDetails(any())(any())).thenReturn(Future.successful(Some(session)))
+            TestMemberDetailsController.post(FakeRequest().withMethod("POST")
+              .withFormUrlEncodedBody("firstForename" -> "Bob", "surname" -> "Jones",
+                "nino" -> memberDetails.nino))
+            verify(mockSessionService, atLeastOnce()).cacheMemberDetails(any())(any())
         }
 
         "respond with an exception when the session cache is unavailable" in {
           reset(mockSessionService)
-          when(mockSessionService.cacheMemberDetails(Matchers.any())(Matchers.any())).thenReturn(Future.successful(None))
-            val postData = Json.obj(
-              "firstForename" -> "Bob",
-              "surname" -> "Jones",
-              "nino" -> RandomNino.generate
-            )
+          when(mockSessionService.cacheMemberDetails(any())(any())).thenReturn(Future.successful(None))
             intercept[RuntimeException]{
-              await(TestMemberDetailsController.post(FakeRequest().withJsonBody(postData)))
+              await(TestMemberDetailsController.post(FakeRequest().withMethod("POST")
+              .withFormUrlEncodedBody("firstForename" -> "Bob", "surname" -> "Jones",
+                "nino" -> RandomNino.generate)))
           }
         }
 
       }
 
       "with invalid data" must {
+        val memberDetails = MemberDetails("Bob", "Jones", RandomNino.generate)
 
         "respond with BAD_REQUEST" in {
-            val postData = Json.obj(
-              "firstForename" -> "",
-              "surname" -> "Jones",
-              "nino" -> RandomNino.generate
-            )
-            val result = TestMemberDetailsController.post(FakeRequest().withJsonBody(postData))
+            val result = TestMemberDetailsController.post(FakeRequest().withMethod("POST")
+              .withFormUrlEncodedBody("firstForename" -> "", "surname" -> "Jones",
+                "nino" -> memberDetails.nino))
             status(result) must equal(BAD_REQUEST)
         }
 
         "display the errors" in {
-            val postData = Json.obj(
-              "firstForename" -> "Bob",
-              "surname" -> "",
-              "nino" -> RandomNino.generate
-            )
-            val result = TestMemberDetailsController.post(FakeRequest().withJsonBody(postData))
-            contentAsString(result) must include(Messages("gmp.error.member.lastname.mandatory"))
+            val result = TestMemberDetailsController.post(FakeRequest().withMethod("POST")
+              .withFormUrlEncodedBody("firstForename" -> "Bob", "surname" -> "",
+                "nino" -> memberDetails.nino))
+          contentAsString(result) must include(Messages("gmp.error.member.lastname.mandatory"))
         }
 
         "throw an exception when session not fetched" in {
 
-            when(mockSessionService.fetchGmpSession()(Matchers.any())).thenReturn(Future.successful(None))
+            when(mockSessionService.fetchGmpSession()(any())).thenReturn(Future.successful(None))
             val result = TestMemberDetailsController.back(FakeRequest())
             intercept[RuntimeException] {
               status(result)

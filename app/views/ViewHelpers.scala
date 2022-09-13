@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,44 +16,27 @@
 
 package views
 
+import uk.gov.hmrc.govukfrontend.views.html.components.{GovukBackLink, GovukButton, GovukDateInput, GovukDetails, GovukErrorMessage, GovukErrorSummary, GovukFileUpload, GovukInput, GovukPanel, GovukRadios, GovukWarningText}
+import uk.gov.hmrc.hmrcfrontend.views.html.components.HmrcHeader
+import uk.gov.hmrc.hmrcfrontend.views.html.helpers.{HmrcHead, HmrcTrackingConsentSnippet}
+import uk.gov.hmrc.play.views.html.helpers.FormWithCSRF
+
 import javax.inject.Inject
-import uk.gov.hmrc.play.views.html.helpers._
-import uk.gov.hmrc.play.views.html.layouts._
 
 class ViewHelpers @Inject()(
-//copied from uk.gov.hmrc.play.views.html.helpers
-val address: Address,
-val dateFields: DateFields,
-val dateFieldsFreeInline: DateFieldsFreeInline,
-val dateFieldsFreeInlineLegend: DateFieldsFreeInlineLegend,
-val dateFieldsFreeYearInline: DateFieldsFreeYearInline,
-val dateFieldsFreeYear: DateFieldsFreeYear,
-val dateFieldsInline: DateFieldsInline,
-val dropdown: Dropdown,
-val errorInline: ErrorInline,
-val errorNotifications: ErrorNotifications,
-val errorSummary: ErrorSummary,
-val fieldGroup: FieldGroup,
-val form: FormWithCSRF,
-val input: Input,
-val inputRadioGroup: InputRadioGroup,
-val reportAProblemLink: ReportAProblemLink,
-val singleCheckbox: SingleCheckbox,
-val textArea: TextArea,
-//copied from uk.gov.hmrc.play.views.html.layouts
-val article: Article,
-val attorneyBanner: AttorneyBanner,
-val betaBanner: BetaBanner,
-val footer: Footer,
-val euExitLinks: EuExitLinks,
-val footerLinks: FooterLinks,
-val head: Head,
-val headWithTrackingConsent: HeadWithTrackingConsent,
-val headerNav: HeaderNav,
-val loginStatus: LoginStatus,
-val mainContent: MainContent,
-val mainContentHeader: MainContentHeader,
-val gtmSnippet: GTMSnippet,
-val serviceInfo: ServiceInfo,
-val sidebar: Sidebar
-)
+                                val hmrcTrackingConsentSnippet: HmrcTrackingConsentSnippet,
+                                val hmrcHeader:                 HmrcHeader,
+                                val hmrcHead:                  HmrcHead,
+                                val govukButton:                GovukButton,
+                                val govukErrorSummary:          GovukErrorSummary,
+                                val govUkRadios:                GovukRadios,
+                                val govukDateInput:             GovukDateInput,
+                                val govukInput:                 GovukInput,
+                                val govukFileUpload:            GovukFileUpload,
+                                val govUkDetails:               GovukDetails,
+                                val govukWarningText:           GovukWarningText,
+                                val govukPanel:                 GovukPanel,
+                                val form:                       FormWithCSRF,
+                                val govukErrorMessage:          GovukErrorMessage,
+                                val govukBackLink:              GovukBackLink
+                              )

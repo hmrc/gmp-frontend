@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,7 +33,7 @@ class GmpModule(environment: Environment,
   override def configure(): Unit = {
     bind(classOf[HttpClient]).to(classOf[DefaultHttpClient])
       bind(classOf[AuthConnector]).to(classOf[DefaultAuthConnector])
-      bind(classOf[AuditConnector]).to(classOf[DefaultAuditConnector])
+
 
 }
 

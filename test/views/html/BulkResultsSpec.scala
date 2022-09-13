@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ package views.html
 
 import controllers.routes
 import models.BulkResultsSummary
+import uk.gov.hmrc.govukfrontend.views.html.components.{GovukButton, GovukPanel}
 import utils.GmpViewSpec
 
 abstract class BulkResultsSpec extends GmpViewSpec{
@@ -25,9 +26,10 @@ abstract class BulkResultsSpec extends GmpViewSpec{
   val bulkResultsSummary:BulkResultsSummary
   val uploadReference: String
   val comingFromPage: Int
-
+  lazy val panel = app.injector.instanceOf[GovukPanel]
+  lazy val button = app.injector.instanceOf[GovukButton]
   lazy val gmpMain = app.injector.instanceOf[gmp_main]
-  override def view = new views.html.bulk_results(gmpMain)(bulkResultsSummary, uploadReference, comingFromPage)
+  override def view = new views.html.bulk_results(gmpMain, panel, button)(bulkResultsSummary, uploadReference, comingFromPage)
 }
 
 
@@ -41,15 +43,14 @@ class BulkResultsSuccessSpec extends BulkResultsSpec {
 
     behave like pageWithTitle(messages("gmp.bulk.results.banner"))
     behave like pageWithHeader(messages("gmp.bulk.results.banner"))
-    behave like pageWithH2Header(messages("gmp.bulk.results.reference", bulkResultsSummary.reference))
     behave like haveBackLink
+
+    "have a div with reference text" in {
+      doc must haveDivWithText(messages("gmp.bulk.results.reference", bulkResultsSummary.reference))
+    }
 
     "have a div with results text" in {
       doc must haveDivWithText(messages("gmp.bulk.results"))
-    }
-
-    "have a div with csv results text" in {
-      doc must haveDivWithText(messages("gmp.bulk.results.csv"))
     }
 
     // Success-specific
@@ -68,7 +69,7 @@ class BulkResultsSuccessSpec extends BulkResultsSpec {
 
     "have a download success anchor with correct URL and text" in {
       doc.select("#download-success").first must haveLinkURL(routes.BulkResultsController.getResultsAsCsv(uploadReference, "successful").url)
-      doc must haveLinkWithText(s"${messages("gmp.download.link")} ${messages("gmp.download.description.success")}")
+      doc must haveLinkWithText(s"${messages("gmp.download.link.totalGmp")}")
     }
 
     "have a heading level 3 with conts and earnings" in {
@@ -81,7 +82,7 @@ class BulkResultsSuccessSpec extends BulkResultsSpec {
 
     "have a download conts anchor with correct URL and text" in {
       doc.select("#download-conts").first must haveLinkURL(routes.BulkResultsController.getContributionsAndEarningsAsCsv(uploadReference).url)
-      doc must haveLinkWithText(s"${messages("gmp.download.link")} ${messages("gmp.download.description.contributions")}")
+      doc must haveLinkWithText(s"${messages("gmp.download.link.ce")}")
     }
 
     // Not have Failure specific
@@ -130,7 +131,7 @@ class BulkResultsFailureSpec extends BulkResultsSpec {
 
     "have a download failure anchor with correct URL and text" in {
       doc.select("#download-failed").first must haveLinkURL(routes.BulkResultsController.getResultsAsCsv(uploadReference, "failed").url)
-      doc must haveLinkWithText(s"${messages("gmp.download.link")} ${messages("gmp.download.description.failed")}")
+      doc must haveLinkWithText(s"${messages("gmp.download.link.noTotalGmp")}")
     }
 
     "have a heading level 3 with failure conts and earnings" in {
@@ -143,7 +144,7 @@ class BulkResultsFailureSpec extends BulkResultsSpec {
 
     "have a failure download conts anchor with correct URL and text" in {
       doc.select("#download-conts").first must haveLinkURL(routes.BulkResultsController.getContributionsAndEarningsAsCsv(uploadReference).url)
-      doc must haveLinkWithText(s"${messages("gmp.download.link")} ${messages("gmp.download.description.contributions")}")
+      doc must haveLinkWithText(s"${messages("gmp.download.link.ce")}")
     }
 
     // Not have Success-specific
@@ -186,7 +187,7 @@ class BulkResultsAllSpec extends BulkResultsSpec {
 
     "have a download success anchor with correct URL and text" in {
       doc.select("#download-all").first must haveLinkURL(routes.BulkResultsController.getResultsAsCsv(uploadReference, "all").url)
-      doc must haveLinkWithText(s"${messages("gmp.download.link")} ${messages("gmp.download.description.success")}")
+      doc must haveLinkWithText(s"${messages("gmp.download.link.allResults")}")
     }
 
     "have a heading level 3 with aaall page" in {
@@ -203,7 +204,7 @@ class BulkResultsAllSpec extends BulkResultsSpec {
 
     "have aaa download success anchor with correct URL and text" in {
       doc.select("#download-success").first must haveLinkURL(routes.BulkResultsController.getResultsAsCsv(uploadReference, "successful").url)
-      doc must haveLinkWithText(s"${messages("gmp.download.link")} ${messages("gmp.download.description.success")}")
+      doc must haveLinkWithText(s"${messages("gmp.download.link.totalGmp")}")
     }
 
     "have a heading level 3 for failed calculations" in {
@@ -224,7 +225,7 @@ class BulkResultsAllSpec extends BulkResultsSpec {
 
     "have a download failed anchor with correct URL and text" in {
       doc.select("#download-failed").first must haveLinkURL(routes.BulkResultsController.getResultsAsCsv(uploadReference, "failed").url)
-      doc must haveLinkWithText(s"${messages("gmp.download.link")} ${messages("gmp.download.description.failed")}")
+      doc must haveLinkWithText(s"${messages("gmp.download.link.noTotalGmp")}")
     }
 
     "have a heading level 3 for conts and earnings" in {
@@ -237,7 +238,7 @@ class BulkResultsAllSpec extends BulkResultsSpec {
 
     "have a download conts anchor with correct URL and text" in {
       doc.select("#download-conts").first must haveLinkURL(routes.BulkResultsController.getContributionsAndEarningsAsCsv(uploadReference).url)
-      doc must haveLinkWithText(s"${messages("gmp.download.link")} ${messages("gmp.download.description.contributions")}")
+      doc must haveLinkWithText(s"${messages("gmp.download.link.ce")}")
     }
   }
 }
@@ -248,11 +249,6 @@ class BulkResultsQueryHandlingMessageSpec extends BulkResultsSpec {
   override val comingFromPage: Int = 1
 
   "BulkResults page for query handling message" must {
-
-  //Query handling message
-    "have a query handling message header" in {
-      doc must haveParagraphWithText(messages("gmp.bulk.query_handling_message.header"))
-    }
 
     "have a paragraph" in {
       doc must haveParagraphWithText(messages("If the instruction is to contact HMRC because we cannot calculate a GMP, or if you disagree with the result of a successful calculation, you can do so in Shared Workspace’s eRoom. To query several calculations at once, create a bulk query document from the template in the guidance and templates folder. Drag and drop the query document into a new entry in the bulk queries database. To query a small number of calculations, create a new entry in the single queries database for each calculation."))

@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,14 +17,14 @@
 package views.html
 
 import play.twirl.api.Html
+import uk.gov.hmrc.govukfrontend.views.html.components.{GovukButton, GovukPanel}
 import utils.GmpViewSpec
 
 class BulkRequestReceivedSpec extends GmpViewSpec{
 
   "BulkRequestReceived page" must {
     behave like pageWithTitle(messages("gmp.bulk_request_received.banner"))
-    behave like pageWithHeader(messages("gmp.bulk_request_received.banner"))
-    behave like pageWithH2Header(messages("gmp.bulk_request_received.header"))
+    behave like pageWitStrong(messages("gmp.bulk_request_received.banner"))
   }
 
   "have bullet points with description, reference displaying at paragraph two" in {
@@ -36,8 +36,10 @@ class BulkRequestReceivedSpec extends GmpViewSpec{
    doc must haveSubmitButton(messages("gmp.bulk_request_received.button"))
   }
 
+  lazy val panel = app.injector.instanceOf[GovukPanel]
+  lazy val button = app.injector.instanceOf[GovukButton]
   lazy val gmpMain = app.injector.instanceOf[gmp_main]
-  override def view: Html = new views.html.bulk_request_received(gmpMain)(reference)
+  override def view: Html = new views.html.bulk_request_received(gmpMain, panel, button)(reference)
 
   val reference: String = "Fake reference"
 }

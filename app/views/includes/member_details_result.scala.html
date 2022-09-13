@@ -1,5 +1,5 @@
 @*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,34 +14,34 @@
  * limitations under the License.
  *@
 
+@import uk.gov.hmrc.govukfrontend.views.html.components._
+
+@this(govukTable: GovukTable)
+
 @(calculationResponse:CalculationResponse)(implicit messages: Messages)
+    @title = @{if(calculationResponse.calcType == CalculationType.SURVIVOR.toInt){
+        Some(Messages("gmp.entered_details.title.survivor"))
+    } else{
+        Some(Messages("gmp.entered_details.title"))
+    }}
 
-    <table id="member-details">
-        <caption id="details-table-caption" class="table-caption">
-        @if(calculationResponse.calcType == CalculationType.SURVIVOR.toInt){
-            @Messages("gmp.entered_details.title.survivor")
-        } else{
-            @Messages("gmp.entered_details.title")
-        }
-        </caption>
+    @govukTable(Table(
+        caption = title,
+        captionClasses = "govuk-table__caption--m",
+        firstCellIsHeader = false,
+        head = Some(Seq(HeadCell(content = Text(Messages("gmp.name")), classes = "govuk-!-width-one-half"),
+            HeadCell(content = Text(Messages("gmp.scon.noabrv"))),
+            HeadCell(content = Text(Messages("gmp.nino"))))),
+        rows = Seq(
+            Seq(
+                TableRow(content = Text(calculationResponse.name), classes = "app-custom-class"),
+                TableRow(content = Text(calculationResponse.scon), classes = "app-custom-class"),
+                TableRow(content = Text(calculationResponse.nino), classes = "app-custom-class")
+            )
+        )
+    ))
 
-        <thead>
-            <tr>
-                <th>@Messages("gmp.name")</th>
-                <th>@Messages("gmp.scon.noabrv")</th>
-                <th>@Messages("gmp.nino")</th>
-            </tr>
-        </thead>
 
-      <tbody>
-        <tr>
-          <td class="width-47" id="full-name">@calculationResponse.name</td>
-          <td class="width-47" id="scon">@calculationResponse.scon</td>
-          <td class="width-47" id="nino">@calculationResponse.nino</td>
-        </tr>
-      </tbody>
 
-    </table>
-
-    <br/>
+<hr class="govuk-section-break" aria-hidden = true/>
 

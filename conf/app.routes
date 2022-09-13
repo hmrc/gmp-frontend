@@ -2,7 +2,8 @@
 
 ->          /template                                     template.Routes
 
-GET         /assets/*file                                 controllers.AssetsController.at(path="/public", file)
+GET         /assets/*file                                 controllers.Assets.versioned(path = "/public", file: Asset)
+GET         /assetsController/*file                                 controllers.AssetsController.at(path="/public", file)
 
 GET         /pension-details                              controllers.PensionDetailsController.get
 POST        /pension-details                              controllers.PensionDetailsController.post
@@ -66,3 +67,5 @@ GET         /bulk/results/csv/:uploadReference            controllers.BulkResult
 GET         /bulk/results/:uploadReference/:fromPage      controllers.BulkResultsController.get(uploadReference:String, fromPage:Int)
 
 GET         /more-bulk-results                            controllers.MoreBulkResultsController.retrieveMoreBulkResults
+
+->         /hmrc-frontend                                 hmrcfrontend.Routes

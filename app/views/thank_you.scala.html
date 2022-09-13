@@ -1,5 +1,5 @@
 @*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,8 +16,10 @@
 
 @import config.ApplicationConfig
 @import views.html.helpers._
+@import uk.gov.hmrc.govukfrontend.views.html.components._
 
-@this(gmpMain: gmp_main)
+
+@this(gmpMain: gmp_main, govukButton : GovukButton)
 
 @()(implicit request: Request[_], messages: Messages, ac:ApplicationConfig)
 
@@ -25,13 +27,17 @@
 
   <div id="thank-you-page">
       @includes.back_link(Messages("gmp.thank_you.header"))
-          <h1>@Messages("gmp.thank_you.header")</h1>
+          <h1 class="govuk-heading-l">@Messages("gmp.thank_you.header")</h1>
 
-          <h2>@Messages("gmp.thank_you.what_now")</h2>
+          <h2 class="govuk-heading-m">@Messages("gmp.thank_you.what_now")</h2>
 
           <form action="@routes.DashboardController.get">
-              <button class="button" type="submit" id="request-another">@Messages("gmp.button.check_another")</button>
+             @govukButton(Button(
+                   content = Text(Messages("gmp.button.check_another")),
+                   inputType = Some("submit"),
+                   attributes = Map("id" -> "request-another")
+             ))
           </form>
-          <p>@Messages("gmp.or.go.to") <a href="https://www.gov.uk/">@Messages("gmp.gov.uk.homepage")</a>.</p>
+          <p class="govuk-body">@Messages("gmp.or.go.to") <a class="govuk-link" href="https://www.gov.uk/">@Messages("gmp.gov.uk.homepage")</a>.</p>
   </div>
 }

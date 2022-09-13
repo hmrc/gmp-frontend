@@ -1,5 +1,5 @@
 @*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@
 @formHeaderKey = @{ elements.args.get('_formHeaderKey).getOrElse("service.title").asInstanceOf[String] }
 
 
-<fieldset
+<fieldset class="govuk-fieldset"
   @if(elements.args.get('_fieldsetAttributes).isDefined) {
     @elements.args.get('_fieldsetAttributes)
   }>
@@ -38,21 +38,21 @@
 
     @commonHelper(field,errors)
 
-    <legend
+    <legend class="govuk-fieldset__legend"
       @if(elements.args.get('_legendClass).isDefined) {
         class="@elements.args.get('_legendClass)"
       }
       @if(elements.args.get('_fieldsetAttributesLegend).isDefined) {
         id="@elements.args.get('_fieldsetAttributesLegend)"
-      }><h1>@elements.args.get('_legend)</h1></legend>
+      }><h1 class="govuk-heading-l">@elements.args.get('_legend)</h1></legend>
 
     @if(elements.args.get('_fieldsetQuestion).isDefined) {
       <details role="group">
         <summary role="button" aria-controls="details-content-0" tabindex="0">
-          <span class="summary" id="@if(elements.args.get('_fieldsetAttributesHelpQuestion).isDefined){@elements.args.get('_fieldsetAttributesHelpQuestion)}">@elements.args.get('_fieldsetQuestion)</span>
+          <span class="govuk-details govuk-details__summary" id="@if(elements.args.get('_fieldsetAttributesHelpQuestion).isDefined){@elements.args.get('_fieldsetAttributesHelpQuestion)}">@elements.args.get('_fieldsetQuestion)</span>
         </summary>
-        <div class="panel-indent" id="details-content-0">
-          <p id="@if(elements.args.get('_fieldsetAttributesHelpQuestion).isDefined){@elements.args.get('_fieldsetAttributesHelpQuestion)}Answer">@if(elements.args.get('_HelpQuestionAnswer).isDefined) {@elements.args.get('_HelpQuestionAnswer)}</p>
+        <div class="govuk-inset-text" id="details-content-0">
+          <p class="govuk-body-l" id="@if(elements.args.get('_fieldsetAttributesHelpQuestion).isDefined){@elements.args.get('_fieldsetAttributesHelpQuestion)}Answer">@if(elements.args.get('_HelpQuestionAnswer).isDefined) {@elements.args.get('_HelpQuestionAnswer)}</p>
         </div>
       </details>
     }
@@ -62,33 +62,34 @@
   @radioOptions.map { case ((value, id, dataTarget), label) =>
   @defining(s"${elements.field.name}-${id.toLowerCase.replace(" ","_")}")  {inputId =>
 
-    <div class="multiple-choice" @if(dataTarget != "none"){data-target="@dataTarget"}>
+    <div class="govuk-radios govuk-radios__item" @if(dataTarget != "none"){data-target="@dataTarget"}>
         <input
                 type="radio"
                 id="@inputId"
                 name="@elements.field.name"
                 value="@value"
+                class="govuk-radios__input"
                 @if(dataTarget != "none"){aria-controls="@dataTarget"}
-                @elements.args.get('_inputClass).map{inputClass => class="@inputClass"}
+                @elements.args.get('_inputClass).map{inputClass => class="govuk-radios__input"}
         @if(elements.args.contains('_dataAttributes) ){ @elements.args.get('_dataAttributes)}
         @if(trackGA){data-journey-click="radio - select:@Messages(formHeaderKey):@id"}
         @field.value.filter( _ == value).map{_ => checked="checked"}/>
 
-        <label for="@inputId" @elements.args.get('_labelClass).map{labelClass => class="@labelClass@field.value.filter( _ == value).map{_ => selected}"}>
+        <label for="@inputId" @elements.args.get('_labelClass).map{labelClass => class="@labelClass@field.value.filter( _ == value).map{_ => selected} govuk-label govuk-radios__label"}>
             @if(!labelAfter) {
               @if(elements.args.get('_stackedLabel)) {
                 @if(label.split(" ").length < 2) {
-                  <br>@label
+                    <hr class="govuk-section-break" aria-hidden = true/>@label
                 } else {
                   @for( (l, index) <- label.split(" ").zipWithIndex) {
-                    @if(index != 0) {<br>}@l
+                    @if(index != 0) {<hr class="govuk-section-break" aria-hidden = true/>}@l
                   }
                 }
               } else { @label }
             }
 
 
-          @if(labelAfter){@if(elements.args.get('_stackedLabel)){@if(label.split(" ").length < 2){<br>@label}else{@for((l, index) <- label.split(" ").zipWithIndex){@if(index != 0){<br>}@l}}}else{@Html(label)}}</label>
+          @if(labelAfter){@if(elements.args.get('_stackedLabel)){@if(label.split(" ").length < 2){<hr class="govuk-section-break" aria-hidden = true/>@label}else{@for((l, index) <- label.split(" ").zipWithIndex){@if(index != 0){<hr class="govuk-section-break" aria-hidden = true/>}@l}}}else{@Html(label)}}</label>
     </div>
   }
 }

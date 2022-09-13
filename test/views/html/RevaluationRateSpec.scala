@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,19 +16,23 @@
 
 package views.html
 
-import forms.{DateOfLeavingForm, RevaluationRateForm}
+import forms.RevaluationRateForm
 import models._
-import play.api.data.Form
 import play.api.mvc.MessagesControllerComponents
 import play.twirl.api.Html
+import uk.gov.hmrc.govukfrontend.views.html.components._
 import utils.GmpViewSpec
 import views.ViewHelpers
 
 abstract class RevaluationRateSpec extends GmpViewSpec {
   lazy val gmpMain = app.injector.instanceOf[gmp_main]
   lazy val viewHelpers = app.injector.instanceOf[ViewHelpers]
+  lazy val govukButton = app.injector.instanceOf[GovukButton]
+  lazy val govukRadios = app.injector.instanceOf[GovukRadios]
+  lazy val govukErrorSummary = app.injector.instanceOf[GovukErrorSummary]
+  lazy val backLink = app.injector.instanceOf[GovukBackLink]
 
-  override def view: Html = new views.html.revaluation_rate(gmpMain, viewHelpers)(revaluationRateForm, session)
+  override def view: Html = new views.html.revaluation_rate(gmpMain, viewHelpers, govukRadios, govukButton, govukErrorSummary, backLink)(revaluationRateForm, session)
 
   lazy val mcc = app.injector.instanceOf[MessagesControllerComponents]
 
@@ -49,12 +53,12 @@ class RevaluationRatePaySpaSurSpec extends RevaluationRateSpec {
   "RevaluationRateRatePaySpaSur page" must {
     behave like pageWithTitle(messages("gmp.revaluation_rate.header"))
     behave like pageWithHeader(messages("gmp.revaluation_rate.header"))
-    behave like pageWithBackLink
+    behave like pageWithNewBackLink()
 
     "have correct input labels with text" in {
-      doc must haveInputLabelWithText("rateType-hmrc", messages("gmp.revaluation_rate.rate_held_by_hmrc"))
-      doc must haveInputLabelWithText("rateType-fixed", messages("gmp.revaluation_rate.fixed"))
-      doc must haveInputLabelWithText("rateType-s148", messages("gmp.revaluation_rate.s148"))
+      doc must haveInputLabelWithText("rateType-2", messages("gmp.revaluation_rate.rate_held_by_hmrc"))
+      doc must haveInputLabelWithText("rateType", messages("gmp.revaluation_rate.fixed"))
+      doc must haveInputLabelWithText("rateType-3", messages("gmp.revaluation_rate.s148"))
       doc must haveLegendWithText(messages("gmp.revaluation_rate.header"))
     }
 
@@ -73,10 +77,10 @@ class RevaluationRateRevaSpec extends RevaluationRateSpec {
     behave like pageWithHeader(messages("gmp.revaluation_rate.header"))
 
     "have correct input labels with text" in {
-      doc must haveInputLabelWithText("rateType-hmrc", messages("gmp.revaluation_rate.rate_held_by_hmrc"))
-      doc must haveInputLabelWithText("rateType-fixed", messages("gmp.revaluation_rate.fixed"))
-      doc must haveInputLabelWithText("rateType-s148", messages("gmp.revaluation_rate.s148"))
-      doc must haveInputLabelWithText("rateType-limited", messages("gmp.revaluation_rate.limited"))
+      doc must haveInputLabelWithText("rateType-2", messages("gmp.revaluation_rate.rate_held_by_hmrc"))
+      doc must haveInputLabelWithText("rateType", messages("gmp.revaluation_rate.fixed"))
+      doc must haveInputLabelWithText("rateType-4", messages("gmp.revaluation_rate.s148"))
+      doc must haveInputLabelWithText("rateType-3", messages("gmp.revaluation_rate.limited"))
       doc must haveLegendWithText(messages("gmp.revaluation_rate.header"))
     }
   }

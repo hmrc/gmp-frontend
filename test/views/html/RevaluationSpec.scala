@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 
 package views.html
 
-import forms.{RevaluationForm, checkDateOnOBeforeGMPEnd, checkDateOnOrAfterGMPStart, checkValidDate}
+import forms.{checkDateOnOBeforeGMPEnd, checkDateOnOrAfterGMPStart, checkValidDate}
 import models.{GmpDate, Leaving, RevaluationDate}
 import play.api.data.Form
 import play.api.data.Forms.{mapping, optional, text}
@@ -93,17 +93,17 @@ class RevaluationSpec extends GmpViewSpec{
   "Revaluation page" must {
     behave like pageWithTitle(messages("gmp.revaluation.question"))
     behave like pageWithHeader(messages("gmp.revaluation.question"))
-    behave like pageWithBackLink
+    behave like pageWithNewBackLink()
 
     "have a paragraph with text" in {
-      doc must haveParagraphWithText(messages("gmp.date.example"))
+      doc must haveParagraphWithHint(messages("gmp.date.example"))
     }
 
     "have correct input labels with text" in {
-      doc must haveParagraphWithText(messages("gmp.date.example"))
-      doc must haveInputLabelWithText("revaluationDate_day", messages("gmp.day"))
-      doc must haveInputLabelWithText("revaluationDate_month", messages("gmp.month"))
-      doc must haveInputLabelWithText("revaluationDate_year", messages("gmp.year"))
+      doc must haveParagraphWithHint(messages("gmp.date.example"))
+      doc must haveInputLabelWithText("revaluationDate-revaluationDate.day", messages("gmp.day"))
+      doc must haveInputLabelWithText("revaluationDate-revaluationDate.month", messages("gmp.month"))
+      doc must haveInputLabelWithText("revaluationDate-revaluationDate.year", messages("gmp.year"))
     }
 
     "have a submit button text" in {

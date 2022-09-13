@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@ package controllers
 import config.{ApplicationConfig, GmpSessionCache}
 import controllers.auth.{AuthAction, FakeAuthAction}
 import metrics.ApplicationMetrics
-import org.mockito.Matchers
+import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito._
 import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
@@ -55,13 +55,13 @@ class SessionCacheControllerSpec extends PlaySpec with GuiceOneServerPerSuite wi
   "new-calculation" must {
 
     "reset the cached calculation parameters except for scon" in {
-        when(mockSessionService.resetGmpSessionWithScon()(Matchers.any())).thenReturn(Future.successful(Some(new SessionService(metrics, gmpSessionCache).cleanSession)))
+        when(mockSessionService.resetGmpSessionWithScon()(any())).thenReturn(Future.successful(Some(new SessionService(metrics, gmpSessionCache).cleanSession)))
         await(TestSessionCacheController.newCalculation(FakeRequest()))
-        verify(mockSessionService, atLeastOnce()).resetGmpSessionWithScon()(Matchers.any())
+        verify(mockSessionService, atLeastOnce()).resetGmpSessionWithScon()(any())
     }
 
     "redirect to the pension details page" in {
-        when(mockSessionService.resetGmpSessionWithScon()(Matchers.any())).thenReturn(Future.successful(Some(new SessionService(metrics, gmpSessionCache).cleanSession)))
+        when(mockSessionService.resetGmpSessionWithScon()(any())).thenReturn(Future.successful(Some(new SessionService(metrics, gmpSessionCache).cleanSession)))
         val result = TestSessionCacheController.newCalculation(FakeRequest())
         status(result) must be(SEE_OTHER)
         redirectLocation(result).get must be("/guaranteed-minimum-pension/pension-details")
@@ -69,7 +69,7 @@ class SessionCacheControllerSpec extends PlaySpec with GuiceOneServerPerSuite wi
 
     "raise an error when the session service is unreachable" in {
 
-        when(mockSessionService.resetGmpSessionWithScon()(Matchers.any())).thenReturn(Future.successful(None))
+        when(mockSessionService.resetGmpSessionWithScon()(any())).thenReturn(Future.successful(None))
         intercept[RuntimeException]{
           await(TestSessionCacheController.newCalculation(FakeRequest()))
       }
@@ -80,14 +80,14 @@ class SessionCacheControllerSpec extends PlaySpec with GuiceOneServerPerSuite wi
 
     "reset the cached calculation parameters" in {
 
-        when(mockSessionService.resetGmpBulkSession()(Matchers.any())).thenReturn(Future.successful(Some(new SessionService(metrics, gmpSessionCache).cleanBulkSession)))
+        when(mockSessionService.resetGmpBulkSession()(any())).thenReturn(Future.successful(Some(new SessionService(metrics, gmpSessionCache).cleanBulkSession)))
         await(TestSessionCacheController.newBulkCalculation(FakeRequest()))
-        verify(mockSessionService, atLeastOnce()).resetGmpBulkSession()(Matchers.any())
+        verify(mockSessionService, atLeastOnce()).resetGmpBulkSession()(any())
     }
 
     "redirect to the upload csv page" in {
 
-        when(mockSessionService.resetGmpBulkSession()(Matchers.any())).thenReturn(Future.successful(Some(new SessionService(metrics, gmpSessionCache).cleanBulkSession)))
+        when(mockSessionService.resetGmpBulkSession()(any())).thenReturn(Future.successful(Some(new SessionService(metrics, gmpSessionCache).cleanBulkSession)))
         val result = TestSessionCacheController.newBulkCalculation(FakeRequest())
         status(result) must be(SEE_OTHER)
         redirectLocation(result).get must be("/guaranteed-minimum-pension/upload-csv")
@@ -95,7 +95,7 @@ class SessionCacheControllerSpec extends PlaySpec with GuiceOneServerPerSuite wi
 
     "raise an error when the session service is unreachable" in {
 
-        when(mockSessionService.resetGmpBulkSession()(Matchers.any())).thenReturn(Future.successful(None))
+        when(mockSessionService.resetGmpBulkSession()(any())).thenReturn(Future.successful(None))
         intercept[RuntimeException]{
           await(TestSessionCacheController.newBulkCalculation(FakeRequest()))
       }

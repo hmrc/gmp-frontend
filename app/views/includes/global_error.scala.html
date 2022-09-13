@@ -1,5 +1,5 @@
 @*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,40 +16,34 @@
 
 @(globalErrorCode: Integer)(implicit messages: Messages, application:config.ApplicationConfig)
 
-
-
 @queryHandlingHeader = {
     @if(application.globalErrors.hasPath(s"$globalErrorCode.solution")){
-        <h2 class="error-h2" id="global-query-handling-header">@{ Messages("gmp.errors.query_handling.header") }</h2>
+        <h2 class="govuk-heading-l" id="global-query-handling-header">@{ Messages("gmp.errors.query_handling.header") }</h2>
     }
 }
 
-<div id="global-results-grid">
+@if(application.globalErrors.hasPath(s"$globalErrorCode.cannot_calculate")){
+   <h1 class="govuk-heading-l" id="cannot-calculate-header">@{ Messages(application.globalErrors.getString(s"$globalErrorCode.cannot_calculate")) }</h1>
+}
+@if(application.globalErrors.hasPath(s"$globalErrorCode.reason")){
+   <div class="govuk-body">@Messages(application.globalErrors.getString(s"$globalErrorCode.reason"))</div>
+}
 
-        <div class="global-error">
-            @if(application.globalErrors.hasPath(s"$globalErrorCode.cannot_calculate")){
-                <h1 class="error-h1" id="cannot-calculate-header">@{ Messages(application.globalErrors.getString(s"$globalErrorCode.cannot_calculate")) }</h1>
-            }
-
-            @if(application.globalErrors.hasPath(s"$globalErrorCode.reason")){
-                <div class="error-list" id="global-error-reason">@Messages(application.globalErrors.getString(s"$globalErrorCode.reason"))</div>
-            }
-        </div>
 
         @if(application.globalErrors.hasPath(s"$globalErrorCode.solution")){
             <div>
-                <h2 class="error-h2" id="global-what-now">@Messages("gmp.what_now")</h2>
-                @Html(Messages(application.globalErrors.getString(s"$globalErrorCode.solution")))
+                <h2 class="govuk-heading-l" id="global-what-now">@Messages("gmp.what_now")</h2>
+                <div class="govuk-body">@Html(Messages(application.globalErrors.getString(s"$globalErrorCode.solution")))</div>
             </div>
         }
 
         @if(application.globalErrors.hasPath(s"$globalErrorCode.also")){
-            <br/>
+    <hr class="govuk-section-break govuk-section-break--m" aria-hidden = true/>
             @queryHandlingHeader
-            <div id="query-handling">@Html(Messages(application.globalErrors.getString(s"$globalErrorCode.also")))</div>
+            <p class="govuk-body">@Html(Messages(application.globalErrors.getString(s"$globalErrorCode.also")))</p>
         }
         @if(application.globalErrors.hasPath(s"$globalErrorCode.help_link")){
-            <p id="query-handling-link">@Html(Messages(application.globalErrors.getString(s"$globalErrorCode.help_link")))</p>
+            <p class="govuk-body" id="query-handling-link">@Html(Messages(application.globalErrors.getString(s"$globalErrorCode.help_link")))</p>
         }
 
 

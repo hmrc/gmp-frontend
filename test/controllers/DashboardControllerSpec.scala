@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@ import connectors.GmpBulkConnector
 import controllers.auth.{AuthAction, FakeAuthAction}
 import models._
 import org.joda.time.LocalDateTime
-import org.mockito.Matchers
+import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito._
 import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
@@ -58,20 +58,11 @@ class DashboardControllerSpec extends PlaySpec with GuiceOneServerPerSuite with 
           ac,mockSessionService,FakeGmpContext,mcc,ec,gmpSessionCache,views) {
    }
 
-  "DashboardController" must {
 
-    "Contain Ur banner" in {
-
-        val result = TestDashboardController.get(FakeRequest())
-        contentAsString(result) must include(Messages("urbanner.message.text"))
-        contentAsString(result) must include(Messages("urbanner.message.open.new.window"))
-        contentAsString(result) must include(Messages("urbanner.message.reject"))
-   }
-  }
 
   val recentBulkCalculations = List(new BulkPreviousRequest("1234","abcd",LocalDateTime.now(),LocalDateTime.now()), new BulkPreviousRequest("5678","efgh", LocalDateTime.now(),LocalDateTime.now()))
 
-  when(mockGmpBulkConnector.getPreviousBulkRequests(Matchers.any())(Matchers.any())).thenReturn(Future.successful(recentBulkCalculations))
+  when(mockGmpBulkConnector.getPreviousBulkRequests(any())(any())).thenReturn(Future.successful(recentBulkCalculations))
 
   "dashboard GET " must {
 
@@ -113,7 +104,7 @@ class DashboardControllerSpec extends PlaySpec with GuiceOneServerPerSuite with 
                     ac,mockSessionService,FakeGmpContext,mcc,ec,gmpSessionCache,views) {
          }
 
-        when(brokenGmpBulkConnector.getPreviousBulkRequests(Matchers.any())(Matchers.any())).thenReturn(Future.failed(UpstreamErrorResponse("failed",503,503)))
+        when(brokenGmpBulkConnector.getPreviousBulkRequests(any())(any())).thenReturn(Future.failed(UpstreamErrorResponse("failed",503,503)))
           val result = BrokenDashboardController.get(FakeRequest())
           contentAsString(result) must include(Messages("gmp.previous_calculations"))
       }

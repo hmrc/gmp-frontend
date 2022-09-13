@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,8 +20,11 @@ import com.google.inject.{Inject, Singleton}
 import config.{ApplicationConfig, GmpContext, GmpSessionCache}
 import controllers.auth.AuthAction
 import forms.RevaluationForm
-import models.{GmpDate, RevaluationDate}
+import models.{GmpDate, GmpSession, Leaving, RevaluationDate}
 import play.api.Logging
+import play.api.data.Form
+import play.api.data.Forms.{mapping, optional, text}
+import play.api.data.validation.Constraint
 import play.api.mvc.MessagesControllerComponents
 import services.SessionService
 import uk.gov.hmrc.auth.core.AuthConnector
@@ -42,20 +45,34 @@ class RevaluationController @Inject()( authAction: AuthAction,
                                        views: Views
                                      ) extends GmpPageFlow(authConnector,sessionService,config,messagesControllerComponents,ac) with Logging {
 
-  lazy val revalForm = rvform.revaluationForm
-  def get = authAction.async {
-      implicit request => sessionService.fetchLeaving.map {
-        case Some(leaving) => {
-          Ok(views.revaluation(revalForm.fill(RevaluationDate(leaving, GmpDate(None, None, None)))))
+  def revalForm(session: GmpSession) = {
+    val revalDate = session.revaluationDate.fold(GmpDate(None, None, None))(identity)
+  rvform.revaluationForm(session).fill(RevaluationDate(session.leaving, revalDate))
+  }
+
+  def get = authAction.async { implicit request =>
+    sessionService.fetchGmpSession.map {
+        case Some(session) => {
+          val revalDate = session.revaluationDate.fold(GmpDate(None, None, None))(identity)
+          Ok(views.revaluation(revalForm(session).fill(RevaluationDate(session.leaving, revalDate))))
         }
-        case _ => Ok(views.revaluation(revalForm))
+        case _ => sys.error(" Session not present")
       }
   }
 
+
   def post = authAction.async {
-      implicit request => {
-        logger.debug(s"[RevaluationController][post][POST] : ${request.body}")
-        revalForm.bindFromRequest.fold(
+    implicit request => {
+      logger.debug(s"[RevaluationController][post][POST] : ${request.body}")
+      val form = sessionService.fetchGmpSession.map {
+        _ match {
+          case Some(session) => revalForm(session)
+          case None => throw new RuntimeException("No session found in order to retrieve scenario")
+        }
+      }
+
+      form.flatMap { f =>
+        f.bindFromRequest.fold(
           formWithErrors => {
             Future.successful(BadRequest(views.revaluation(formWithErrors)))
           },
@@ -66,7 +83,9 @@ class RevaluationController @Inject()( authAction: AuthAction,
             }
           }
         )
+
       }
+    }
   }
 
   def back = authAction.async {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,12 +19,14 @@ package views.html
 import models.upscan.{Reference, UpscanInitiateRequest, UpscanInitiateResponse}
 import play.twirl.api.Html
 import utils.GmpViewSpec
+import views.ViewHelpers
 
 class UploadFileSpec extends GmpViewSpec {
 
   val upscanInitiate = UpscanInitiateResponse(Reference("reference"), "download", Map())
   lazy val gmpMain = app.injector.instanceOf[gmp_main]
-  override def view: Html = new views.html.upscan_csv_file_upload(gmpMain)(upscanInitiate)
+  lazy val viewHelper = app.injector.instanceOf[ViewHelpers]
+  override def view: Html = new views.html.upscan_csv_file_upload(gmpMain, viewHelper)(upscanInitiate)
 
   "UploadFiles page" must {
     behave like pageWithTitle(messages("gmp.fileupload.header"))

@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ class FailureSpec extends GmpViewSpec{
   override def view: Html = new views.html.failure(gmpMain)(message, header, title)
   private val message : String = "message"
   private val header : String = "header"
-  private val title : String = "header - Guaranteed Minimum Pension - GOV.UK"
+  private val title : String = "header - "
 
   "Failure page" must {
     behave like pageWithTitle(title)

@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,11 +16,12 @@
 
 package models
 
-import play.api.libs.json.Json
+import play.api.libs.json.{Format, Json}
+case class OptionalLeavingForm(
+                              setValue: String,
+                              value: Option[Leaving]
+                              )
 
-case class PensionDetails (scon: String)
-
-object PensionDetails {
-  implicit val formats = Json.format[PensionDetails]
-
+object OptionalLeavingForm {
+  implicit val format: Format[OptionalLeavingForm] = Json.format[OptionalLeavingForm]
 }

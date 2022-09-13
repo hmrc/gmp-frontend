@@ -1,5 +1,5 @@
 @*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,84 +17,81 @@
 @import config.ApplicationConfig
 @import views.html.helpers._
 @import org.joda.time.{Days, LocalDate, LocalDateTime}
+@import uk.gov.hmrc.govukfrontend.views.html.components._
 
-@this(gmpMain: gmp_main)
+
+@this(gmpMain: gmp_main,govukTable : GovukTable)
 
 @(previousBulkCalculations: List[BulkPreviousRequest])(implicit request: Request[_], messages: Messages, ac:ApplicationConfig)
 
-@gmpMain(title = Messages("gmp.dashboard_header") + " - " + Messages("service.title") + " - " + Messages("gov.uk"), dashboardLinkEnabled = false, showUserResearchBanner = true, mainClass=Some("gmp-dashboard")) {
+@gmpMain(fullWidth = true, title = Messages("gmp.dashboard_header") + " - " + Messages("service.title") + " - " + Messages("gov.uk"), dashboardLinkEnabled = false, showUserResearchBanner = true, mainClass=Some("gmp-dashboard")) {
 
-    <h1 id="gmp-dashboard-header">@Messages("gmp.dashboard_header")</h1>
-    <h2 id="choose-calculation-type">@Messages("gmp.dashboard.choose_calculation_type")</h2>
+    <h1  class="govuk-heading-l" id="gmp-dashboard-header">@Messages("gmp.dashboard_header")</h1>
+    <h2  class="govuk-heading-m" id="choose-calculation-type">@Messages("gmp.dashboard.choose_calculation_type")</h2>
 
 
-    <div class="grid-row">
-      <br/>
-      <div class="column-one-half">
+    <div class="govuk-grid-row">
+        <hr class="govuk-section-break" aria-hidden = true />
+        <div class="govuk-grid-column-one-half">
         <a data-journey-click='@Messages("gmp.ga-track.link.click"):@Messages("gmp.dashboard_header"):@Messages("gmp.single_calculation_link")'
-           class ="large-underlined-link" id="single-calculation-link" href="@routes.PensionDetailsController.get">
-           @Messages("gmp.single_calculation_link")</a></br></br>
-        <p id="single-calculation-description">@Html(Messages("gmp.single_calculation_text"))</p>
+           class ="govuk-link large-underlined-link" id="single-calculation-link" href="@routes.PensionDetailsController.get">
+           @Messages("gmp.single_calculation_link")</a>
+           <hr class="govuk-section-break govuk-section-break--m" aria-hidden = true />
+        <p class="govuk-body" id="single-calculation-description">@Html(Messages("gmp.single_calculation_text"))</p>
       </div>
 
-      <div class="column-one-half">
-        <a class ="large-underlined-link" id="bulk-calculation-link"
+      <div class="govuk-grid-column-one-half">
+        <a class ="govuk-link large-underlined-link" id="bulk-calculation-link"
            data-journey-click='@Messages("gmp.ga-track.link.click"):@Messages("gmp.dashboard_header"):@Messages("gmp.bulk_calculation_link")'
-           href="@routes.FileUploadController.get">@Messages("gmp.bulk_calculation_link")</a></br></br>
-        <p id="bulk-calculation-description">@Html(Messages("gmp.bulk_calculation_text"))</p>
+           href="@routes.FileUploadController.get">@Messages("gmp.bulk_calculation_link")</a>
+          <hr class="govuk-section-break govuk-section-break--m" aria-hidden = true />
+        <p class="govuk-body" id="bulk-calculation-description">@Html(Messages("gmp.bulk_calculation_text"))</p>
       </div>
     </div>
 
-    <a id="download-template-link" class="icon-file-download"
+    <a id="download-template-link" class="icon-file-download govuk-link"
        data-journey-click='@messages("gmp.ga-track.link.click"):@Messages("gmp.dashboard_header"):@messages("gmp.download_templates_link")'
        href="@routes.AssetsController.at("csv/GMP_template_and_instructions.zip")">@Messages("gmp.download_templates_link")</a>
 
+<hr class="govuk-section-break govuk-section-break--m" aria-hidden = true />
+
 @if(previousBulkCalculations.size > 0) {
 
-    <h2 id="previous-calculations">@Messages("gmp.previous_calculations")</h2>
-    <p id="previous-calculations-description">@Messages("gmp.previous_calculations_text")</p>
+    <h2 class="govuk-heading-m" id="previous-calculations">@Messages("gmp.previous_calculations")</h2>
+    <p class="govuk-body" id="previous-calculations-description">@Messages("gmp.previous_calculations_text")</p>
 
 
-    <table id="recent-calculations-table">
+    @govukTable(Table(
+        caption = Some(Messages("gmp.caption")),
+        captionClasses = "hidden",
+        head = Some(Seq(
+                        HeadCell(
+                        content = Text(Messages("gmp.th.reference"))),
+                        HeadCell(
+                        content = Text(Messages("gmp.th.upload_date"))),
+                        HeadCell(
+                        content = Text(Messages("gmp.th.time_left")))
+                       )),
+        rows = previousBulkCalculations.zipWithIndex.take(3).map { case(calculation, count) =>
+                        val days = 30 - Days.daysBetween(new LocalDate(calculation.timestamp), LocalDate.now()).getDays
+                                Seq(
+                                TableRow(
+                                    content = HtmlContent(s"""<a href="${routes.BulkResultsController.get(calculation.uploadReference, 0)}">${calculation.reference}</a>""")),
+                                TableRow(
+                                    content = Text({ new LocalDateTime(calculation.timestamp).toString("dd MMMM yyyy") })),
+                                TableRow(
+                                    content = Text(Messages("gmp.days_left", days.toString, days match {case 1 => "";case _ => "s";})))
+                                )
 
-        <caption class="hidden" id="recent-calcualtions-caption">@Messages("gmp.caption")</caption>
+                    }.toSeq
+        ))
 
-      <colgroup>
-        <col class="col-width-2">
-        <col class="col-width-2">
-        <col class="col-width-2">
-      </colgroup>
-
-
-      <thead>
-        <tr id="table-row">
-          <th><span>@Messages("gmp.th.reference")</span></th>
-          <th id="upload-date-table-header" class="r-padding numeric"><span>@Messages("gmp.th.upload_date")</span></th>
-          <th id="time-left-table-header" class="r-padding numeric"><span>@Messages("gmp.th.time_left")</span></th>
-        </tr>
-      </thead>
-
-      <tbody>
-
-        @for((calculation, count) <- previousBulkCalculations.zipWithIndex if(count < 3)){
-          @defining(30 - Days.daysBetween(new LocalDate(calculation.timestamp), LocalDate.now()).getDays){ days =>
-            <tr>
-              <td class="r-padding" id="reference-@count"><a href="@routes.BulkResultsController.get(calculation.uploadReference, 0)">@{calculation.reference}</a></td>
-              <td class="r-padding numeric" id="upload-date-@count">@{ new LocalDateTime(calculation.timestamp).toString("dd MMMM yyyy") }</td>
-              <td class="r-padding numeric" id="days-left-@count">@{Messages("gmp.days_left", days.toString, days match {case 1 => "";case _ => "s";})}</td>
-            </tr>
-          }
+        @if(previousBulkCalculations.size > 3) {
+          <a id="more-calculations" class="govuk-link" href="@routes.MoreBulkResultsController.retrieveMoreBulkResults">@Messages("gmp.more_results_link")</a>
         }
-
-      </tbody>
-    </table>
-
-  @if(previousBulkCalculations.size > 3) {
-      <a id="more-calculations" href="@routes.MoreBulkResultsController.retrieveMoreBulkResults">@Messages("gmp.more_results_link")</a>
+    } else {
+      <h2 class="govuk-heading-m" id="no-previous-calculations">@Messages("gmp.previous_calculations")</h2>
+      <p class="govuk-body"  id="no-previous-calculations-description">@Messages("gmp.no_previous_calculations_text")</p>
   }
 
-} else {
-      <h2 id="no-previous-calculations">@Messages("gmp.previous_calculations")</h2>
-      <p id="no-previous-calculations-description">@Messages("gmp.no_previous_calculations_text")</p>
-}
 }

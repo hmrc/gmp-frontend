@@ -1,5 +1,5 @@
 @*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,10 +14,19 @@
  * limitations under the License.
  *@
 
+@import uk.gov.hmrc.govukfrontend.views.html.components._
+
+@this(govukButton: GovukButton)
+
 @()(implicit messages: Messages)
 
 <div id="request-another-div">
     <form action="@routes.SessionCacheController.newCalculation">
-      <button class="button" type="submit" id="request-another" data-journey-click="gmp:click:request_another">@Messages("gmp.button.request-another")</button>
+     @govukButton(Button(
+           content = Text(Messages("gmp.button.request-another")),
+           inputType = Some("submit"),
+           attributes = Map("data-journey-click" -> "gmp:click:request_another")
+     ))
+
     </form>
 </div>

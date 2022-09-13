@@ -1,0 +1,77 @@
+@*
+ * Copyright 2022 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import play.twirl.api.HtmlFormat
+@import views.ViewHelpers
+@import views.html.helper._
+@import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcLayout
+@import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcReportTechnicalIssueHelper
+@import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcTimeoutDialogHelper
+@import uk.gov.hmrc.hmrcfrontend.views.config.StandardBetaBanner
+@import uk.gov.hmrc.govukfrontend.views.html.components.FixedWidthPageLayout
+@import uk.gov.hmrc.govukfrontend.views.html.components.TwoThirdsMainContent
+
+
+@this(
+        hmrcLayout: HmrcLayout,
+        standardBetaBanner: StandardBetaBanner,
+        hmrcReportTechnicalIssueHelper:HmrcReportTechnicalIssueHelper,
+        fullWidth: helpers.fullWidthContent,
+        viewHelpers: ViewHelpers,
+        fixedWidthPageLayout: FixedWidthPageLayout,
+        defaultMainContent: TwoThirdsMainContent
+)
+
+@( useFullWidth:Boolean = false,
+    applicationConfig: config.ApplicationConfig,
+    title: String,
+    contentHeader: Option[Html] = None,
+    userLoggedIn: Boolean = false,
+    linkElement : Option[Html] = None,
+    mainClass : Option[String] = None,
+    scriptElement : Option[Html] = None,
+    isUserResearchBannerVisible:Boolean = false,
+    signOutEnabled:Boolean,
+    customHead: Option[Html] = None)(mainContent: Html = HtmlFormat.empty)(implicit request: Request[_], messages: Messages)
+
+
+@head = {
+    <meta name="format-detection" content="telephone=no"/>
+@linkElement
+@customHead
+}
+
+@scriptBlock = {
+    @scriptElement
+    <script src='@routes.AssetsController.at("javascripts/back.js")'> </script>
+}
+
+@content = {
+    @mainContent
+    @hmrcReportTechnicalIssueHelper()
+}
+
+@hmrcLayout(
+    pageTitle = Some(title),
+    isWelshTranslationAvailable = false,
+    signOutUrl = if(signOutEnabled) Some(routes.ApplicationController.signout.url) else None,
+    additionalHeadBlock = Some(head),
+    additionalScriptsBlock = Some(scriptBlock),
+    userResearchBannerUrl = if(isUserResearchBannerVisible) {Some(applicationConfig.urBannerLink)} else {None},
+    headerContainerClasses = "govuk-width-container",
+    mainContentLayout = if(useFullWidth) Some(fullWidth(_)) else Some(defaultMainContent(_)),
+    nonce = CSPNonce.get
+)(content)

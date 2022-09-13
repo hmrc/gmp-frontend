@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 
 package forms
 
-import models.PensionDetails
+import models.PensionDetailsScon
 import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import org.scalatestplus.play.PlaySpec
@@ -25,19 +25,19 @@ import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl}
 import play.api.libs.json.Json
 import play.api.mvc.MessagesControllerComponents
 
-class PensionDetailsFormSpec extends PlaySpec with GuiceOneAppPerSuite with MockitoSugar{
+class PensionDetailsSconFormSpec extends PlaySpec with GuiceOneAppPerSuite with MockitoSugar{
 
   implicit lazy val messagesAPI=app.injector.instanceOf[MessagesApi]
   implicit lazy val messagesProvider=MessagesImpl(Lang("en"), messagesAPI)
   lazy val mcc = app.injector.instanceOf[MessagesControllerComponents]
-  lazy val pensionDetailsForm = new PensionDetailsForm(mcc).pensionDetailsForm
+  lazy val pensionDetailsForm = new PensionDetails_no_longer_used_Form(mcc).pensionDetailsForm
   val fromJsonMaxChars: Int = 102400
 
   "Pension details form" must {
 
     "return no errors with valid scon" in {
 
-      val gmpRequest = Json.toJson(PensionDetails("S1301234T"))
+      val gmpRequest = Json.toJson(PensionDetailsScon("S1301234T"))
       val pensionDetailsResult = pensionDetailsForm.bind(gmpRequest, fromJsonMaxChars)
 
       assert(!pensionDetailsResult.errors.contains(FormError("scon",List(Messages("gmp.error.scon.invalid")))))
@@ -46,7 +46,7 @@ class PensionDetailsFormSpec extends PlaySpec with GuiceOneAppPerSuite with Mock
 
     "return error when scon is empty" in {
 
-      val gmpRequest = Json.toJson(PensionDetails(""))
+      val gmpRequest = Json.toJson(PensionDetailsScon(""))
       val pensionDetailsResult = pensionDetailsForm.bind(gmpRequest, fromJsonMaxChars)
 
       assert(pensionDetailsResult.errors.contains(FormError("scon",List(Messages("gmp.error.mandatory.new", Messages("gmp.scon"))))))
@@ -55,7 +55,7 @@ class PensionDetailsFormSpec extends PlaySpec with GuiceOneAppPerSuite with Mock
 
     "return error when scon is invalid" in {
 
-      val gmpRequest = Json.toJson(PensionDetails("ABCD"))
+      val gmpRequest = Json.toJson(PensionDetailsScon("ABCD"))
       val pensionDetailsResult = pensionDetailsForm.bind(gmpRequest, fromJsonMaxChars)
 
       assert(pensionDetailsResult.errors.contains(FormError("scon",List(Messages("gmp.error.scon.invalid")))))

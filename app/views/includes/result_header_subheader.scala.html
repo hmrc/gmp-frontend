@@ -1,5 +1,5 @@
 @*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,19 +17,18 @@
 @(calculationResponse:CalculationResponse, revalRateSubheader: Option[String], survivorSubheader: Option[String])(implicit messages: Messages)
 
 @includes.back_to_dashboard_link(Messages("gmp.results.h1"))
-<h1 id="page-title">@Messages("gmp.results.h1")</h1>
+<h1 class="govuk-heading-l" id="page-title">@Messages("gmp.results.h1")</h1>
 
-<p id="value-revealed">@Messages("gmp.results.p1")</p>
+<p class="govuk-body" id="value-revealed">@Messages("gmp.results.p1")</p>
 
-<h2  id="results-header">@calculationResponse.header(messages)</h2>
+<h2 class="govuk-heading-m" id="results-header">@calculationResponse.header(messages)</h2>
 
 @if(revalRateSubheader.isDefined) {
-    <div id="revaluation-subheader">@Html(revalRateSubheader.get)</div>
+    <div class="govuk-body">@Html(revalRateSubheader.get)</div>
 }
 
 @if(survivorSubheader.isDefined) {
-  <br/>
-  <div id="survivor-subheader" class="panel-indent">@survivorSubheader</div>
+ <div class="govuk-body">@survivorSubheader</div>
 }
 
-<br/>
+

@@ -1,5 +1,5 @@
 @*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,7 +38,7 @@
 }) {
     @includes.back_link(Messages("gmp.fileupload.result.scanning.header"))
 
-    <h1>@status match {
+    <h1 class="govuk-heading-l">@status match {
         case InProgress => { @Messages("gmp.fileupload.result.scanning.header")}
         case NotStarted => { @Messages("gmp.fileupload.result.scanning.header")}
         case s : UploadedSuccessfully => { @Messages("gmp.fileupload.result.success.header") }
@@ -50,24 +50,24 @@
             }
         }
     }</h1>
-
-    @status match {
-        case InProgress => {}
-        case NotStarted => {}
-        case s : UploadedSuccessfully => { @Messages("gmp.bulk.successful") }
-        case f : UploadedFailed => {
-            @f.failureDetails.failureReason match {
-            case "QUARANTINE" => { @Html(Messages("gmp.bulk.failure.antivirus")) }
-            case "REJECTED"   => { @Html(Messages("gmp.bulk.failure.wrong_type")) }
-            case _            => { @Html(Messages("gmp.bulk.failure.rejected")) }
+    <p class="govuk-body">
+        @status match {
+            case InProgress => {}
+            case NotStarted => {}
+            case s : UploadedSuccessfully => { @Messages("gmp.bulk.successful") }
+            case f : UploadedFailed => {
+                @f.failureDetails.failureReason match {
+                case "QUARANTINE" => { @Html(Messages("gmp.bulk.failure.antivirus")) }
+                case "REJECTED"   => { @Html(Messages("gmp.bulk.failure.wrong_type")) }
+                case _            => { @Html(Messages("gmp.bulk.failure.rejected")) }
+                }
             }
         }
-    }
-
+    </p>
     @status match {
         case s : UploadedSuccessfully => {
-            <div class="section">
-                <a class="button" href="@routes.BulkReferenceController.get">@Messages("gmp.continue.button")</a>
+            <div class="govuk-section">
+                <a class="govuk-button" href="@routes.BulkReferenceController.get">@Messages("gmp.continue.button")</a>
             </div>
         }
         case NotStarted => {

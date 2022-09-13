@@ -1,5 +1,5 @@
 @*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,10 +14,12 @@
  * limitations under the License.
  *@
 
+@import uk.gov.hmrc.govukfrontend.views.html.components._
 @import config.ApplicationConfig
 @import views.html.helpers._
 
-@this(gmpMain: gmp_main)
+
+@this(gmpMain: gmp_main, govukPanel : GovukPanel, govukButton: GovukButton)
 
 @(reference: String)(implicit request: Request[_], messages: Messages, ac:ApplicationConfig)
 
@@ -25,22 +27,23 @@
 
       @includes.back_to_dashboard_link(Messages("gmp.bulk_request_received.banner"))
 
-        <div class="govuk-box-highlight">
-          <h1>
-            <img src='@routes.AssetsController.at("images/tick.png")' alt=""/>
-            @Messages("gmp.bulk_request_received.banner")
-          </h1>
-        </div>
+        @govukPanel(Panel(
+            content = HtmlContent(s"""<img src='${routes.AssetsController.at("images/tick.png")}'/><strong>${Messages("gmp.bulk_request_received.banner")}</strong>""")
+        ))
 
-        <h2>@Messages("gmp.bulk_request_received.header")</h2>
+        <h2 class="govuk-heading-m">@Messages("gmp.bulk_request_received.header")</h2>
 
         @Html(Messages("gmp.bulk_request_received.text", reference))
 
         <form action="@routes.SessionCacheController.newBulkCalculation">
-          <button class="upload-file-button button" type="submit" id="submit-button" data-journey-click="gmp-bulk:click:bulk_upload_another">@Messages("gmp.bulk_request_received.button")</button>
+            @govukButton(Button(
+                content = Text(Messages("gmp.bulk_request_received.button")),
+                inputType = Some("submit"),
+                attributes = Map("data-journey-click" -> "gmp-bulk:click:bulk_upload_another")
+            ))
         </form>
 
-        <br>
+    <hr class="govuk-section-break govuk-section-break--m" aria-hidden = true />
 
 
 

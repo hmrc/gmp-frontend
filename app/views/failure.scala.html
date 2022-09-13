@@ -1,5 +1,5 @@
 @*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,9 +24,8 @@
 @gmpMain(title = header + " - " + Messages("service.title") + " - " + Messages("gov.uk"), supportLinkEnabled = false) {
 
   @includes.back_link(header)
-      <h1>@header</h1>
-      <br/>
-
-      <p>@Html(message)</p>
+      <h1 class="govuk-heading-l">@header</h1>
+      <hr class="govuk-section-break govuk-section-break--m" aria-hidden = true />
+      <p class="govuk-body">@Html(message)</p>
 
 }

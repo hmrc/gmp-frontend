@@ -1,5 +1,5 @@
 @*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,25 +14,28 @@
  * limitations under the License.
  *@
 
+@import uk.gov.hmrc.govukfrontend.views.html.components._
+
 @import config.ApplicationConfig
 
-@this(gmpMain: gmp_main)
+@this(gmpMain: gmp_main, govukPanel : GovukPanel, govukButton: GovukButton)
 
 @(bulkResultsSummary: BulkResultsSummary, uploadReference: String, comingFromPage: Int)(implicit request: Request[_], messages: Messages, ac:ApplicationConfig)
 
 @gmpMain(title = Messages("gmp.bulk.results.banner") + " - " + Messages("service.title") + " - " + Messages("gov.uk")) {
 
     @includes.back_link(Messages("gmp.bulk.results.banner"))
-        <div class="govuk-box-highlight">
-            <h1 id="calc-ready" class="heading-large">
-                @Messages("gmp.bulk.results.banner")
-            </h1>
-            <h2 id="reference">@Messages("gmp.bulk.results.reference", bulkResultsSummary.reference)</h2>
-        </div>
 
-      <br>
-        <div id="results-heading" class="column-three-quarters">@Messages("gmp.bulk.results")</div>
-        <div id="csv-heading" class="column-one-quarter text--right">@Messages("gmp.bulk.results.csv")</div>
+    @govukPanel(Panel(
+        title = Text(Messages("gmp.bulk.results.banner")),
+        content = Text(Messages("gmp.bulk.results.reference", bulkResultsSummary.reference))
+    ))
+    <div class="govuk-!-padding-bottom-3"></div>
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full govuk-!-text-align-left">
+            <h2 class="govuk-heading-m">@Messages("gmp.bulk.results")</h2>
+        </div>
+    </div>
 
 
     @if(bulkResultsSummary.total == bulkResultsSummary.getNumberOfSuccessfulCalculations) {

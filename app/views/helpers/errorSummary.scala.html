@@ -1,5 +1,5 @@
 @*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,10 +17,12 @@
 @(form: Form[_], formHeaderKey: String = "gmp.bulk.problem.header", focusId: Option[String] = None)(implicit messages: Messages)
 
 @if(form.hasGlobalErrors || form.hasErrors) {
-
-    <div id="errors" class="error-summary">
-        <h2 class="h2-heading error-summary-heading" id="errorMessageHeadingText">@Messages("gmp.generic.errors_heading")</h2>
-        <ul class="error-summary-list">
+    <div class="govuk-error-summary" aria-labelledby="error-summary-title" role="alert" data-module="govuk-error-summary">
+        <h2 class="govuk-error-summary__title" id="error-summary-title">
+            @Messages("gmp.generic.errors_heading")
+        </h2>
+        <div class="govuk-error-summary__body">
+            <ul class="govuk-list govuk-error-summary__list">
             @form.errors.map { error =>
                 @defining(
                     error.args.nonEmpty match {
@@ -35,12 +37,13 @@
                     }
                 ) { anchor =>
                 <li data-journey='@Messages("gmp.bulk.problem.error.field"):@Messages(formHeaderKey):@error.message'>
-                    <a href="#@{if(focusId.isDefined) focusId.get else anchor}" data-focuses="@{if(focusId.isDefined) focusId.get else error.key}">
+                    <a class="govuk-link" href="#@{if(focusId.isDefined) focusId.get else anchor}" data-focuses="@{if(focusId.isDefined) focusId.get else error.key}">
                         @Messages(error.message)
                     </a>
                 </li>
                 }
             }
-        </ul>
+            </ul>
+        </div>
     </div>
 }

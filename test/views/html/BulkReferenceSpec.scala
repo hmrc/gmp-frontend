@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,6 @@
 
 package views.html
 
-import forms.BulkReferenceForm
 import models.BulkReference
 import play.api.data.Form
 import play.api.data.Forms.{mapping, text}
@@ -24,7 +23,7 @@ import play.api.data.validation.{Constraint, Invalid, Valid, ValidationError}
 import play.twirl.api.Html
 import uk.gov.hmrc.emailaddress.EmailAddress
 import utils.GmpViewSpec
-import views.ViewHelpers
+import views.{ViewHelpers}
 
 class BulkReferenceSpec extends GmpViewSpec {
 
@@ -32,7 +31,7 @@ class BulkReferenceSpec extends GmpViewSpec {
 
     behave like pageWithTitle(messages("gmp.bulk_reference.header"))
     behave like pageWithHeader(messages("gmp.bulk_reference.header"))
-    behave like pageWithBackLink
+    behave like pageWithNewBackLink()
 
     behave like pageWithButtonForm(
       "/guaranteed-minimum-pension/getting-results",

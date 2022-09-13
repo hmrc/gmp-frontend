@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,8 +16,9 @@
 
 package validation
 
-import java.text.{ParseException, SimpleDateFormat}
+import play.api.data.validation.{Constraint, Invalid, Valid, ValidationError}
 
+import java.text.{ParseException, SimpleDateFormat}
 import uk.gov.hmrc.domain.Nino
 
 import scala.annotation.tailrec
@@ -46,6 +47,7 @@ object SconValidate extends Validator with Modulus19CheckDigit {
 }
 
 object NinoValidate extends Validator {
+
   override def isValid(nino: String): Boolean = Nino.isValid(nino.replaceAll("\\s", "").toUpperCase)
 }
 

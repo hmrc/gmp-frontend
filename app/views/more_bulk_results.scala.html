@@ -1,5 +1,5 @@
 @*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,48 +17,40 @@
 @import config.ApplicationConfig
 @import views.html.helpers._
 @import org.joda.time.{Days, LocalDateTime, LocalDate}
+@import uk.gov.hmrc.govukfrontend.views.html.components._
 
-@this(gmpMain: gmp_main)
+@this(gmpMain: gmp_main,govukTable : GovukTable)
 
 @(previousBulkCalculations: List[BulkPreviousRequest])(implicit request: Request[_], messages: Messages, ac:ApplicationConfig)
 
 @gmpMain(title = Messages("gmp.more_bulk_results.header") + " - " + Messages("service.title") + " - " + Messages("gov.uk")) {
 
-</br>
+<hr class="govuk-section-break" aria-hidden = true/>
     @includes.back_link(Messages("gmp.more_bulk_results.header"))
-    <h1 id="recent-bulk-calculations-header">@Messages("gmp.more_bulk_results.header")</h1>
+    <h1 class="govuk-heading-l" id="recent-bulk-calculations-header">@Messages("gmp.more_bulk_results.header")</h1>
 
+    @govukTable(Table(
+        head = Some(Seq(
+                        HeadCell(
+                        content = Text(Messages("gmp.th.reference"))),
+                        HeadCell(
+                        content = Text(Messages("gmp.th.upload_date"))),
+                        HeadCell(
+                        content = Text(Messages("gmp.th.time_left")))
+                       )),
+        rows = previousBulkCalculations.zipWithIndex.drop(3).map { case(calculation, count) =>
+                        val days = 30 - Days.daysBetween(new LocalDate(calculation.timestamp), LocalDate.now()).getDays
+                                Seq(
+                                TableRow(
+                                    content = HtmlContent(s"""<a href="${routes.BulkResultsController.get(calculation.uploadReference, 0)}">${calculation.reference}</a>""")),
+                                TableRow(
+                                    content = Text({ new LocalDateTime(calculation.timestamp).toString("dd MMMM yyyy") })),
+                                TableRow(
+                                    content = Text(Messages("gmp.days_left", days.toString, days match {case 1 => "";case _ => "s";})))
+                                )
 
-    <table id="recent-calculations-table">
-        <caption class="hidden" id="recent-calcualtions-caption">@Messages("gmp.caption")</caption>
+                    }.toSeq
+        ))
 
-      <colgroup>
-        <col class="col-width-2">
-        <col class="col-width-2">
-        <col class="col-width-2">
-      </colgroup>
-
-      <thead>
-        <tr id="table-row">
-          <th><span>@Messages("gmp.th.reference")</span></th>
-          <th id="upload-date-table-header" class="r-padding numeric"><span>@Messages("gmp.th.upload_date")</span></th>
-          <th id="time-left-table-header" class="r-padding numeric"><span>@Messages("gmp.th.time_left")</span></th>
-        </tr>
-      </thead>
-
-      <tbody>
-
-        @for((calculation, count) <- previousBulkCalculations.drop(3).zipWithIndex){
-          @defining(30 - Days.daysBetween(new LocalDate(calculation.timestamp), LocalDate.now()).getDays){ days =>
-            <tr>
-              <td class="r-padding" id="reference-@count"><a href="@routes.BulkResultsController.get(calculation.uploadReference, 1)">@{calculation.reference}</a></td>
-              <td class="r-padding numeric" id="upload-date-@count">@{ new LocalDate(calculation.timestamp).toString("dd MMMM yyyy") }</td>
-              <td class="r-padding numeric" id="days-left-@count">@{Messages("gmp.days_left", days.toString, days match {case 1 => "";case _ => "s";})}</td>
-            </tr>
-          }
-        }
-
-      </tbody>
-    </table>
 
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,19 +16,23 @@
 
 package views.html
 
-import forms.EqualiseForm
 import models.Equalise
 import play.api.data.Form
 import play.api.data.Forms.{mapping, number, optional}
 import play.twirl.api.Html
+import uk.gov.hmrc.govukfrontend.views.html.components._
 import utils.GmpViewSpec
 import views.ViewHelpers
 
 class EqualiseSpec extends GmpViewSpec {
   lazy val gmpMain = app.injector.instanceOf[gmp_main]
   lazy val viewHelpers = app.injector.instanceOf[ViewHelpers]
+  lazy val govukRadios = app.injector.instanceOf[GovukRadios]
+  lazy val govukButton = app.injector.instanceOf[GovukButton]
+  lazy val govukErrorSummary = app.injector.instanceOf[GovukErrorSummary]
+  lazy val govBackLInk = app.injector.instanceOf[GovukBackLink]
 
-  override def view: Html = new views.html.equalise(gmpMain, viewHelpers)(equaliseForm)
+  override def view: Html = new views.html.equalise(gmpMain, viewHelpers, govukRadios, govukButton, govukErrorSummary, govBackLInk)(equaliseForm)
 
   val equaliseForm = Form(
     mapping(
@@ -36,13 +40,13 @@ class EqualiseSpec extends GmpViewSpec {
     )(Equalise.apply)(Equalise.unapply)
   )
   "Equalise page" must {
-    behave like pageWithTitle("Do you also want an opposite gender calculation? - Guaranteed Minimum Pension - GOV.UK")
+    behave like pageWithTitle("Do you also want an opposite gender calculation?")
     behave like pageWithHeader(messages("gmp.equalise_header"))
-    behave like pageWithBackLink
+    behave like pageWithNewBackLink
 
     "have correct input labels with text" in {
-      doc must haveInputLabelWithText("equalise-yes", messages("gmp.generic.yes"))
-      doc must haveInputLabelWithText("equalise-no", messages("gmp.generic.no"))
+      doc must haveInputLabelWithText("equalise", messages("gmp.generic.yes"))
+      doc must haveInputLabelWithText("equalise-2", messages("gmp.generic.no"))
     }
 
     "have correct legend with text" in {

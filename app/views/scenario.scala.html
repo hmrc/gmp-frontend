@@ -1,5 +1,5 @@
 @*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,8 +17,12 @@
 @import config.ApplicationConfig
 @import views.html.helpers._
 @import views.ViewHelpers
+@import uk.gov.hmrc.govukfrontend.views.html.components._
+@import uk.gov.hmrc.hmrcfrontend.views.Implicits.RichErrorSummary
+@import uk.gov.hmrc.govukfrontend.views.html.components.implicits._
 
-@this(gmpMain: gmp_main, viewHelpers: ViewHelpers)
+@this(gmpMain: gmp_main, viewHelpers: ViewHelpers, govukRadios : GovukRadios, govukButton : GovukButton, govukErrorSummary : GovukErrorSummary, govukBackLink : GovukBackLink)
+
 
 
 @(calculationType: Form[models.CalculationType])(implicit request: Request[_], messages: Messages, ac:ApplicationConfig)
@@ -27,32 +31,68 @@
 
 @gmpMain(title = Messages("gmp.scenarios.title") + " - " + Messages("service.title") + " - " + Messages("gov.uk")) {
 
-    @includes.back_link(Messages("gmp.scenarios.title"))
-
-    @views.html.helpers.errorSummary(calculationType, formHeaderKey = "gmp.scenarios.title", focusId = Some("calcType-payableage"))
+    @govukBackLink(BackLink(
+        href = controllers.routes.ScenarioController.back.url,
+        content = Text("Back")
+    ))
 
       @viewHelpers.form(action = routes.ScenarioController.post) {
-          <div class="form-field @if(!calculationType.errors.isEmpty) {form-field--error}">
-              @gmpRadioGroup(
-                calculationType("calcType"),
-                Seq(
-                    ("2", "payableage",  "none") -> Messages("gmp.scenarios.payable_age"),
-                    ("4", "spa", "none") -> Messages("gmp.scenarios.spa"),
-                    ("3", "survivor", "none") -> Messages("gmp.scenarios.survivor"),
-                    ("0", "leaving", "none") -> Messages("gmp.scenarios.leaving"),
-                    ("1", "specificdate",  "none") -> Messages("gmp.scenarios.specific_date")
-                ),
-                '_fieldsetAttributesLegend -> "calcType",
-                '_legend -> Messages("gmp.scenarios.title"),
-                '_labelAfter -> true,
-                '_trackGA -> true,
-                '_formHeaderKey -> "gmp.scenarios.title"
-              )
-          </div>
+          @if(calculationType.errors.nonEmpty){
+              @govukErrorSummary(ErrorSummary(errorList = Seq(ErrorLink(
+                  href = Some(s"#${calculationType.errors.head.key}"),
+                  content = Text(s"${messages(s"${calculationType.errors.head.message}")}"),
+              )), title = Text(messages("generic.errorSummary"))))
+          }
+              @govukRadios(Radios(
+                  fieldset = Some(Fieldset(
+                      legend = Some(Legend(
+                          content = Text(Messages("gmp.scenarios.title")),
+                          classes = "govuk-fieldset__legend--l",
+                          isPageHeading = true
+                      ))
+                  )),
+                  idPrefix = Some("calcType"),
+                  name = "calcType",
+                  errorMessage = if (calculationType.hasErrors) {
+                      Some(ErrorMessage(content = Text(s"${calculationType.errors.head.message}")))
+                  } else None,
+                  items = Seq(
+                      RadioItem(
+                          content = Text(Messages("gmp.scenarios.payable_age")),
+                          value = Some("2"),
+                          checked = calculationType.data.values.toList.contains("2")
+                      ),
+                      RadioItem(
+                          content = Text(Messages("gmp.scenarios.spa")),
+                          value = Some("4"),
+                          checked = calculationType.data.values.toList.contains("4")
+                      ),
+                      RadioItem(
+                          content = Text(Messages("gmp.scenarios.survivor")),
+                          value = Some("3"),
+                          checked = calculationType.data.values.toList.contains("3")
+                      ),
+                      RadioItem(
+                          content = Text(Messages("gmp.scenarios.leaving")),
+                          value = Some("0"),
+                          checked = calculationType.data.values.toList.contains("0")
+                      ),
+                      RadioItem(
+                          content = Text(Messages("gmp.scenarios.specific_date")),
+                          value = Some("1"),
+                          checked = calculationType.data.values.toList.contains("1")
+                      )
+                  )
+              ))
+
 
           <div>
-              <button data-journey-click='@Messages("gmp.ga-track.button.click"):@Messages("gmp.scenarios.title"):@Messages("gmp.continue.button")'
-                      class="button" type="submit" id="submit-button">@Messages("gmp.continue.button")</button>
+              @govukButton(Button(
+                content = Text(Messages("gmp.continue.button")),
+                inputType = Some("submit"),
+                attributes = Map("data-journey-click" -> s"""@Messages("gmp.ga-track.button.click"):@Messages("gmp.scenarios.title"):@Messages("gmp.continue.button")""")
+              ))
+
           </div>
 
       }

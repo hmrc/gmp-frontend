@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,12 +19,14 @@ package views.html
 import models.BulkPreviousRequest
 import org.joda.time.LocalDateTime
 import play.twirl.api.Html
+import uk.gov.hmrc.govukfrontend.views.html.components.GovukTable
 import utils.GmpViewSpec
 
 class MoreBulkResultsSpec extends GmpViewSpec {
 
   lazy val gmpMain = app.injector.instanceOf[gmp_main]
-  override def view: Html = new views.html.more_bulk_results(gmpMain)(bulkPreviousRequestsList)
+  lazy val table = app.injector.instanceOf[GovukTable]
+  override def view: Html = new views.html.more_bulk_results(gmpMain, table)(bulkPreviousRequestsList)
 
   "MoreBulkResults page" must {
 

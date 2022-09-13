@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,10 +17,10 @@
 package forms
 
 import com.google.inject.{Inject, Singleton}
-import models.{GmpDate, Leaving, RevaluationDate}
+import models.{GmpDate, GmpSession, Leaving, RevaluationDate}
 import play.api.data.Form
 import play.api.data.Forms._
-import play.api.data.validation.{Constraint, Invalid, Valid, ValidationError}
+import play.api.data.validation.{Constraint, Invalid, Valid, ValidationError, ValidationResult}
 import play.api.i18n.{Messages, MessagesImpl}
 import play.api.mvc.MessagesControllerComponents
 
@@ -35,21 +35,21 @@ class RevaluationForm @Inject()(mcc: MessagesControllerComponents) {
     date.day.isDefined || date.month.isDefined || date.year.isDefined
   }
 
-  val revaluationDateConstraint: Constraint[RevaluationDate] = Constraint("revaluationDate")({
+  def  revaluationDateConstraint(session: GmpSession): Constraint[RevaluationDate] = Constraint("revaluationDate")({
     revaluationDate => {
       val errors =
-        if (revaluationDate.leaving.leaving.isDefined &&
-            revaluationDate.leaving.leaving.get.equals(Leaving.NO) &&
+        if (session.leaving.leaving.isDefined &&
+          session.leaving.leaving.get.equals(Leaving.NO) &&
             !revaluationDate.revaluationDate.isOnOrAfter06042016)
         {
           Seq(ValidationError(messages("gmp.error.revaluation_pre2016_not_left"), "revaluationDate")) // 2016
         }
-        else if (revaluationDate.revaluationDate.isBefore(revaluationDate.leaving.leavingDate) &&
-          revaluationDate.leaving.leaving != Some("no")) {
-          Seq(ValidationError(Messages("gmp.error.revaluation_before_leaving", revaluationDate.leaving.leavingDate.getAsText), "revaluationDate"))
+        else if (revaluationDate.revaluationDate.isBefore(session.leaving.leavingDate) &&
+          session.leaving.leaving == Some(Leaving.YES_AFTER)) {
+          Seq(ValidationError(Messages("gmp.error.revaluation_before_leaving", session.leaving.leavingDate.getAsText), "revaluationDate"))
         }
-        else if (revaluationDate.leaving.leaving.isDefined &&
-        revaluationDate.leaving.leaving.get.equals(Leaving.YES_BEFORE) &&
+        else if (session.leaving.leaving.isDefined &&
+        session.leaving.leaving.get.equals(Leaving.YES_BEFORE) &&
         !revaluationDate.revaluationDate.isOnOrAfter05041978){
           Seq(ValidationError(Messages("gmp.error.reval_date.from"), "revaluationDate"))
         }
@@ -65,15 +65,47 @@ class RevaluationForm @Inject()(mcc: MessagesControllerComponents) {
     }
   })
 
-  val revaluationDateMapping = mapping(
+  private val allDateValuesEntered: GmpDate => ValidationResult = {
+    case GmpDate(None, None, None) => invalid("date.emptyfields")
+    case GmpDate(None, None, _) => invalid("daymonth.missing")
+    case GmpDate(_, None, None) => invalid("monthyear.missing")
+    case GmpDate(None, _, None) => invalid("dayyear.missing")
+    case GmpDate(None, _, _) => invalid("day.missing")
+    case GmpDate(_, None, _) => invalid("month.missing")
+    case GmpDate(_, _, None) => invalid("year.missing")
+    case _ => Valid
+  }
+
+  private val dateIsReal: GmpDate => ValidationResult = {
+    case d:GmpDate if(checkValidDate(d))=> Valid
+    case _ => invalid("gmp.error.date.invalid")
+  }
+
+  private val checkDateOnBefore: GmpDate => ValidationResult = {
+    case d: GmpDate if(checkDateOnOBeforeGMPEnd(d)) => Valid
+    case _ => invalid("gmp.error.reval_date.to")
+  }
+
+  private def invalid(error: String, params: String*) =
+    Invalid(
+      Seq(
+        ValidationError(
+          messageKeyForError(error),
+          params: _*
+        )
+      )
+    )
+
+  private def messageKeyForError(error: String) = s"reval-date.error.$error"
+
+  lazy val revaluationDateMapping = mapping(
       "day" -> optional(text),
       "month" -> optional(text),
       "year" -> optional(text)
     )(GmpDate.apply)(GmpDate.unapply)
-      .verifying(Messages("gmp.error.reval_date.mandatory"), x => mandatoryDate(x))
-      .verifying(Messages("gmp.error.date.invalid"), x => checkValidDate(x))
-      .verifying(Messages("gmp.error.reval_date.to"), x => checkDateOnOBeforeGMPEnd(x)
-  )
+    .verifying(Constraint(allDateValuesEntered))
+      .verifying(Constraint(dateIsReal))
+      .verifying(Constraint(checkDateOnBefore))
 
   val leavingMapping = mapping(
     "leavingDate" -> mapping(
@@ -84,12 +116,12 @@ class RevaluationForm @Inject()(mcc: MessagesControllerComponents) {
     "leaving" -> optional(text)
   )(Leaving.apply)(Leaving.unapply)
 
-  val revaluationForm = Form(
+  def revaluationForm(session: GmpSession) = Form(
     mapping(
       "leaving" -> leavingMapping,
       "revaluationDate" -> revaluationDateMapping
     )(RevaluationDate.apply)(RevaluationDate.unapply)
-      .verifying(revaluationDateConstraint)
+      .verifying(revaluationDateConstraint(session))
   )
 }
 
