@@ -16,10 +16,9 @@
 
 package views
 
-import uk.gov.hmrc.govukfrontend.views.html.components.{GovukBackLink, GovukButton, GovukDateInput, GovukDetails, GovukErrorMessage, GovukErrorSummary, GovukFileUpload, GovukInput, GovukPanel, GovukRadios, GovukWarningText}
+import uk.gov.hmrc.govukfrontend.views.html.components.{FormWithCSRF, GovukBackLink, GovukButton, GovukDateInput, GovukDetails, GovukErrorMessage, GovukErrorSummary, GovukFileUpload, GovukInput, GovukPanel, GovukRadios, GovukWarningText}
 import uk.gov.hmrc.hmrcfrontend.views.html.components.HmrcHeader
 import uk.gov.hmrc.hmrcfrontend.views.html.helpers.{HmrcHead, HmrcTrackingConsentSnippet}
-import uk.gov.hmrc.play.views.html.helpers.FormWithCSRF
 
 import javax.inject.Inject
 

@@ -32,7 +32,7 @@
     <hr class="govuk-section-break" aria-hidden = true>
     <p class="govuk-body">@Html(Messages("gmp.fileupload.hint", routes.AssetsController.at("csv/GMP_template_and_instructions.zip"), Messages("gmp.fileupload.header")))</p>
 
-   <label for="fileToUpload" class="hidden">@Html(Messages("gmp.fileupload.header"))</label>
+   <label for="fileToUpload" class="govuk-visually-hidden">@Html(Messages("gmp.fileupload.header"))</label>
 
     <div class="govuk-form-group">
         <form action="@upscanInitiateResponse.postTarget" method="post" enctype="multipart/form-data">

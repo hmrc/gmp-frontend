@@ -17,15 +17,15 @@
 @import config.ApplicationConfig
 @import views.html.helpers._
 
-@this(gmpMain: gmp_main_old)
+@this(gmpMain: gmp_main)
 
 @(message: String, header: String)(implicit request: Request[_], messages: Messages, applicationConfig: ApplicationConfig)
 
 @gmpMain(title = s"$header - ${Messages("service.title")} - ${Messages("gov.uk")}") {
 
 @includes.back_link(header)
-<h1 class="heading-xlarge">@header</h1>
+<h1 class="govuk-heading-xl">@header</h1>
 
-<p>@Html(message)</p>
+<p class="govuk-body">@Html(message)</p>
 
 }
