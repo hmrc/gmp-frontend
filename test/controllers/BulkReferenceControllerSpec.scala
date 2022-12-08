@@ -83,7 +83,6 @@ class BulkReferenceControllerSpec extends PlaySpec  with MockitoSugar with Guice
 
       val validRequest = BulkReference("dan@hmrc.com", "Reference")
       val validRequestWithSpaces = BulkReference("dan@hmrc.com   ", "Reference   ")
-      val emptyRequest = BulkReference("", "")
       val gmpBulkSession = GmpBulkSession(None, None, None)
 
       "respond with bad request missing email and reference" in {

@@ -77,7 +77,6 @@ class InflationProofControllerSpec extends PlaySpec with GuiceOneServerPerSuite 
         "with valid data" must {
 
           val revaluationDate = GmpDate(Some("1"), Some("1"), Some("2000"))
-          val inflationProof = InflationProof(revaluationDate, Some("Yes"))
           val session = GmpSession(MemberDetails("", "", ""), "", "3", Some(revaluationDate), None, Leaving(GmpDate(None, None, None), None), None)
 
           "redirect to the results" in {

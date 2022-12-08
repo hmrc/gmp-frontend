@@ -32,8 +32,6 @@
 
 @(memberDetailsForm: Form[models.MemberDetails])(implicit request: Request[_], messages: Messages, ac:ApplicationConfig)
 
-@implicitFormInstance = @{ Some(memberDetailsForm) }
-
 @gmpMain(title = Messages("gmp.member_details.header") + " - " + Messages("service.title") + " - " + Messages("gov.uk")) {
 
     @govukBackLink(BackLink(
