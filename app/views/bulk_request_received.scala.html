@@ -28,7 +28,7 @@
       @includes.back_to_dashboard_link(Messages("gmp.bulk_request_received.banner"))
 
         @govukPanel(Panel(
-            content = HtmlContent(s"""<img src='${routes.AssetsController.at("images/tick.png")}'/><strong>${Messages("gmp.bulk_request_received.banner")}</strong>""")
+            title = Text(Messages("gmp.bulk_request_received.banner"))
         ))
 
         <h2 class="govuk-heading-m">@Messages("gmp.bulk_request_received.header")</h2>
