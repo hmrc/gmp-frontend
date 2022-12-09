@@ -90,8 +90,6 @@ class PensionDetailsSconControllerSpec extends PlaySpec with GuiceOneServerPerSu
 
     "authenticated users" must {
 
-      val validGmpRequest = PensionDetailsScon("S1301234T")
-      val emptySconGmpRequest = PensionDetailsScon("")
       val gmpSession = GmpSession(MemberDetails("", "", ""), "S1301234T", "", None, None, Leaving(GmpDate(None, None, None), None), None)
 
       "validate scon and store scon and redirect" in {
