@@ -29,7 +29,6 @@
 @includes.back_link(Messages("gmp.fileupload.header"))
     <h1 class="govuk-heading-l">@Messages("gmp.fileupload.header")</h1>
 
-    <hr class="govuk-section-break" aria-hidden = true>
     <p class="govuk-body">@Html(Messages("gmp.fileupload.hint", routes.AssetsController.at("csv/GMP_template_and_instructions.zip"), Messages("gmp.fileupload.header")))</p>
 
    <label for="fileToUpload" class="govuk-visually-hidden">@Html(Messages("gmp.fileupload.header"))</label>

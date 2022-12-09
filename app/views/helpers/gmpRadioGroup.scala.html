@@ -79,17 +79,17 @@
             @if(!labelAfter) {
               @if(elements.args.get('_stackedLabel)) {
                 @if(label.split(" ").length < 2) {
-                    <hr class="govuk-section-break" aria-hidden = true/>@label
+                    @label
                 } else {
                   @for( (l, index) <- label.split(" ").zipWithIndex) {
-                    @if(index != 0) {<hr class="govuk-section-break" aria-hidden = true/>}@l
+                    @if(index != 0) {}@l
                   }
                 }
               } else { @label }
             }
 
 
-          @if(labelAfter){@if(elements.args.get('_stackedLabel)){@if(label.split(" ").length < 2){<hr class="govuk-section-break" aria-hidden = true/>@label}else{@for((l, index) <- label.split(" ").zipWithIndex){@if(index != 0){<hr class="govuk-section-break" aria-hidden = true/>}@l}}}else{@Html(label)}}</label>
+          @if(labelAfter){@if(elements.args.get('_stackedLabel)){@if(label.split(" ").length < 2){@label}else{@for((l, index) <- label.split(" ").zipWithIndex){@if(index != 0){}@l}}}else{@Html(label)}}</label>
     </div>
   }
 }

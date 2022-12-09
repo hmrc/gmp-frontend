@@ -38,7 +38,7 @@
         }
 
         @if(application.globalErrors.hasPath(s"$globalErrorCode.also")){
-    <hr class="govuk-section-break govuk-section-break--m" aria-hidden = true/>
+    <hr class="govuk-section-break govuk-section-break--m" role="presentation" />
             @queryHandlingHeader
             <p class="govuk-body">@Html(Messages(application.globalErrors.getString(s"$globalErrorCode.also")))</p>
         }

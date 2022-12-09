@@ -66,7 +66,7 @@ trait GmpViewSpec extends PlaySpec with JSoupMatchers with GuiceOneServerPerSuit
 
   def pageWitStrong(text: String): Unit = {
     "have a static strong" in {
-      doc must haveStrongWithText(text)
+      doc must haveHeadingWithText(text)
     }
   }
 
