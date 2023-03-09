@@ -19,16 +19,12 @@ package connectors
 import com.google.inject.{Inject, Singleton}
 import metrics.ApplicationMetrics
 import models._
-import play.api.Mode
-import play.api.{Configuration, Environment, Logging}
-import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
-import uk.gov.hmrc.http.HttpClient
-import play.api.libs.json.JodaWrites._
-import play.api.libs.json.JodaReads._
+import play.api.{Configuration, Environment, Logging, Mode}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 import uk.gov.hmrc.http.HttpReads.Implicits._
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
+
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class GmpConnector @Inject()(environment: Environment,
@@ -37,7 +33,8 @@ class GmpConnector @Inject()(environment: Environment,
                              httpPost: HttpClient,
                              httpGet: HttpClient,
                              httpPut: HttpClient,
-                             val servicesConfig: ServicesConfig) extends Logging  {
+                             val servicesConfig: ServicesConfig,
+                             implicit val executionContext: ExecutionContext) extends Logging  {
 
    def mode: Mode = environment.mode
 

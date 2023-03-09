@@ -26,14 +26,14 @@ import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import uk.gov.hmrc.http.HttpClient
 import uk.gov.hmrc.http.HttpReads.Implicits._
 
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 class GmpBulkConnector @Inject()(environment: Environment,
                                  val runModeConfiguration: Configuration,
                                  httpGet: HttpClient,
                                  httpPost: HttpClient,
-                                 servicesConfig: ServicesConfig) extends Logging {
+                                 servicesConfig: ServicesConfig,
+                                 implicit val executionContext: ExecutionContext) extends Logging {
 
    def mode: Mode = environment.mode
 

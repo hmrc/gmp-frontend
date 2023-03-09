@@ -31,7 +31,7 @@ object AppDependencies {
     "org.mockito"             %  "mockito-core"           % "5.1.1",
     "com.github.tomakehurst"  %  "wiremock-jre8"          % "2.35.0",
     "com.vladsch.flexmark"    %  "flexmark-all"           % "0.62.2",
-    "uk.gov.hmrc"             %% "bootstrap-test-play-28" % "7.13.0"
+    "uk.gov.hmrc"             %% "bootstrap-test-play-28" % "7.14.0"
 
   ).map(_ % "test")
 
