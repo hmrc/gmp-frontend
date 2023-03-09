@@ -26,7 +26,7 @@ lazy val microservice = Project(appName, file("."))
     scalaSettings,
     defaultSettings(),
     majorVersion := 4,
-    scalaVersion := "2.12.13",
+    scalaVersion := "2.13.8",
     libraryDependencies ++= AppDependencies.all,
     Test / parallelExecution := false,
     Test / fork := false,
