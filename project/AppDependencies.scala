@@ -13,7 +13,7 @@ object AppDependencies {
     "uk.gov.hmrc"                                %% "play-partials"              % "8.3.0-play-28",
     "uk.gov.hmrc"                                %% "emailaddress"               % "3.7.0",
     "uk.gov.hmrc"                                %% "govuk-template"             % "5.78.0-play-28",
-    "uk.gov.hmrc"                                %% "play-frontend-hmrc"         % "3.34.0-play-28",
+    "uk.gov.hmrc"                                %% "play-frontend-hmrc"         % "4.0.0-play-28",
     "com.typesafe.play"                          %% "play-json-joda"             % "2.9.3",
     "com.typesafe.play"                          %% "play-iteratees"             % "2.6.1",
     "com.fasterxml.jackson.module"               %% "jackson-module-scala"       % "2.14.1",
