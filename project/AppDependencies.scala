@@ -12,8 +12,7 @@ object AppDependencies {
     "uk.gov.hmrc"                                %% "tax-year"                   % "1.1.0",
     "uk.gov.hmrc"                                %% "play-partials"              % "8.3.0-play-28",
     "uk.gov.hmrc"                                %% "emailaddress"               % "3.7.0",
-    "uk.gov.hmrc"                                %% "govuk-template"             % "5.78.0-play-28",
-    "uk.gov.hmrc"                                %% "play-frontend-hmrc"         % "3.34.0-play-28",
+    "uk.gov.hmrc"                                %% "play-frontend-hmrc"         % "7.4.0-play-28",
     "com.typesafe.play"                          %% "play-json-joda"             % "2.9.3",
     "com.typesafe.play"                          %% "play-iteratees"             % "2.6.1",
     "com.fasterxml.jackson.module"               %% "jackson-module-scala"       % "2.14.1",
@@ -22,6 +21,7 @@ object AppDependencies {
   )
 
   val test: Seq[ModuleID] = Seq(
+    "uk.gov.hmrc"             %% "bootstrap-test-play-28" % "7.12.0",
     "org.scalatest"           %% "scalatest"             % "3.2.14",
     "org.scalatestplus.play"  %% "scalatestplus-play"    % "5.1.0",
     "org.scalatestplus"       %% "scalatestplus-mockito" % "1.0.0-M2",

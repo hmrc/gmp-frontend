@@ -72,6 +72,5 @@
     additionalScriptsBlock = Some(scriptBlock),
     userResearchBannerUrl = if(isUserResearchBannerVisible) {Some(applicationConfig.urBannerLink)} else {None},
     headerContainerClasses = "govuk-width-container",
-    mainContentLayout = if(useFullWidth) Some(fullWidth(_)) else Some(defaultMainContent(_)),
-    nonce = CSPNonce.get
+    mainContentLayout = if(useFullWidth) Some(fullWidth(_)) else Some(defaultMainContent(_))
 )(content)
