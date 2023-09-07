@@ -17,9 +17,7 @@
 @import play.twirl.api.HtmlFormat
 @import views.ViewHelpers
 @import views.html.helper._
-@import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcLayout
-@import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcReportTechnicalIssueHelper
-@import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcTimeoutDialogHelper
+@import uk.gov.hmrc.hmrcfrontend.views.html.helpers.{HmrcLayout, HmrcReportTechnicalIssueHelper, HmrcTimeoutDialogHelper}
 @import uk.gov.hmrc.hmrcfrontend.views.config.StandardBetaBanner
 @import uk.gov.hmrc.govukfrontend.views.html.components.FixedWidthPageLayout
 @import uk.gov.hmrc.govukfrontend.views.html.components.TwoThirdsMainContent
@@ -32,7 +30,8 @@
         fullWidth: helpers.fullWidthContent,
         viewHelpers: ViewHelpers,
         fixedWidthPageLayout: FixedWidthPageLayout,
-        defaultMainContent: TwoThirdsMainContent
+        defaultMainContent: TwoThirdsMainContent,
+        hmrcTimeoutDialogHelper: HmrcTimeoutDialogHelper
 )
 
 @( useFullWidth:Boolean = false,
@@ -50,8 +49,11 @@
 
 @head = {
     <meta name="format-detection" content="telephone=no"/>
-@linkElement
-@customHead
+    @if(userLoggedIn) {
+        @hmrcTimeoutDialogHelper(signOutUrl = routes.ApplicationController.signout.url)
+    }
+    @linkElement
+    @customHead
 }
 
 @scriptBlock = {
