@@ -58,11 +58,6 @@ class ApplicationController @Inject()(authAction: AuthAction,
         auditConnector.sendEvent(dataEvent)
         Redirect(externalUrls.signOutCallback).withSession(("feedbackId", uuid))
   }
-
-  def keepAlive: Action[AnyContent] = authAction {
-    _ =>
-      Ok("OK")
-  }
 }
 
 
