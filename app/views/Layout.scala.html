@@ -50,7 +50,11 @@
 @head = {
     <meta name="format-detection" content="telephone=no"/>
     @if(userLoggedIn) {
-        @hmrcTimeoutDialogHelper(signOutUrl = routes.ApplicationController.signout.url)
+        @hmrcTimeoutDialogHelper(
+            signOutUrl = routes.ApplicationController.signout.url,
+            timeout = Some(applicationConfig.timeout),
+            countdown = Some(applicationConfig.timeoutCountdown)
+        )
     }
     @linkElement
     @customHead
