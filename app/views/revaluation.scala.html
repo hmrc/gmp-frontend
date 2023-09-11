@@ -46,7 +46,6 @@
         href = controllers.routes.DateOfLeavingController.get.url,
         content = Text("Back")
     ))
-    <h1 class="govuk-heading-l">@Messages("gmp.revaluation.question")</h1>
 
     @viewHelpers.form(action = routes.RevaluationController.post) {
 
@@ -62,8 +61,9 @@
                 InputItem(name = "revaluationDate.year", classes = s"govuk-input--width-4${if(inputHasErrors("year")){" govuk-input--error"} else {""}}", label=Some("Year"), value = revaluationForm.data.get("revaluationDate.year"))),
             fieldset = Some(Fieldset(
                 legend = Some(Legend(
-                    classes = "govuk-fieldset__legend--m",
-                    isPageHeading = false
+                    content = Text(messages("gmp.revaluation.question")),
+                    classes = "govuk-fieldset__legend--l",
+                    isPageHeading = true
                 ))
             ))
         ))
