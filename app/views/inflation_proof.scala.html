@@ -30,12 +30,6 @@
     case _ => false
 }}
 
-
-@pageScripts = {
-<script type="text/javascript" src='@controllers.routes.AssetsController.at("javascripts/selection-buttons.js")'></script>
-<script type="text/javascript" src='@controllers.routes.AssetsController.at("javascripts/progressive-reveal.js")'></script>
-<script type="text/javascript" src='@controllers.routes.AssetsController.at("javascripts/revaluation-date.js")'></script>
-}
 @dateHtml = {
     @govukDateInput(DateInput(
         id = "revaluationDate",
@@ -70,7 +64,7 @@
 
 
 
-@gmpMain(title = Messages("gmp.inflation_proof.question") + " - " + Messages("service.title") + " - " + Messages("gov.uk"), pageScripts = Some(pageScripts)) {
+@gmpMain(title = Messages("gmp.inflation_proof.question") + " - " + Messages("service.title") + " - " + Messages("gov.uk")) {
 
         @govukBackLink(BackLink(
             href = controllers.routes.InflationProofController.back.url,
