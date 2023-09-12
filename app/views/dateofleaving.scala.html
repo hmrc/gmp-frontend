@@ -59,12 +59,6 @@
 ))
 }
 
-@pageScripts = {
-    <script type="text/javascript" src='@controllers.routes.AssetsController.at("javascripts/selection-buttons.js")'></script>
-    <script type="text/javascript" src='@controllers.routes.AssetsController.at("javascripts/progressive-reveal.js")'></script>
-    <script type="text/javascript" src='@controllers.routes.AssetsController.at("javascripts/leaving-date.js")'></script>
-}
-
 @heading = {
 @{scenario match {
     case CalculationType.DOL => Messages("gmp.leaving.dol.question")
@@ -73,7 +67,7 @@
 }
 }
 
-@gmpMain(title = heading + " - " + Messages("service.title") + " - " + Messages("gov.uk"), pageScripts = Some(pageScripts)) {
+@gmpMain(title = heading + " - " + Messages("service.title") + " - " + Messages("gov.uk")) {
 
     @govukBackLink(BackLink(
         href = controllers.routes.DateOfLeavingController.back.url,
