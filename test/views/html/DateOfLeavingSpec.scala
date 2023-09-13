@@ -25,7 +25,7 @@ import utils.GmpViewSpec
 import views.ViewHelpers
 
 abstract class DateOfLeavingSpec extends GmpViewSpec  {
-  lazy val gmpMain = app.injector.instanceOf[gmp_main]
+  lazy val layout = app.injector.instanceOf[views.html.Layout]
   lazy val viewHelpers = app.injector.instanceOf[ViewHelpers]
   lazy val radios = app.injector.instanceOf[GovukRadios]
   lazy val govButton = app.injector.instanceOf[GovukButton]
@@ -34,10 +34,10 @@ abstract class DateOfLeavingSpec extends GmpViewSpec  {
   lazy val govUkSummary = app.injector.instanceOf[GovukErrorSummary]
   lazy val govUkBack = app.injector.instanceOf[GovukBackLink]
 
-  override def view: Html = new views.html.dateofleaving(gmpMain, viewHelpers, radios, govButton, govDateInput, govErrorMsg, govUkSummary, govUkBack)(dateOfLeavingForm, scenario)
+  override def view: Html = new views.html.dateofleaving(layout, viewHelpers, radios, govButton, govDateInput, govErrorMsg, govUkSummary, govUkBack)(dateOfLeavingForm, scenario)
   val mcc = app.injector.instanceOf[MessagesControllerComponents]
 
-  val dateOfLeavingForm = new DateOfLeavingForm(mcc).dateOfLeavingForm("")
+  val dateOfLeavingForm = new DateOfLeavingForm(mcc).dateOfLeavingForm()
 
 
 

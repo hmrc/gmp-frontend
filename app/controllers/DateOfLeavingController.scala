@@ -41,13 +41,7 @@ class DateOfLeavingController @Inject()(authAction: AuthAction,
                                         views: Views) extends GmpPageFlow(authConnector,sessionService,config,messagesControllerComponents,ac) with Logging{
 
   def dateOfLeavingForm(session: GmpSession)= {
-    val mandatoryErrorMessage = session.scenario match {
-      case CalculationType.DOL => Messages("gmp.leaving.dol.question.mandatory")
-      case CalculationType.SPA | CalculationType.PAYABLE_AGE | CalculationType.REVALUATION => Messages("gmp.other.dol.left.question.mandatory")
-      case CalculationType.SURVIVOR => Messages("gmp.survivor.dol.question.mandatory")
-      case _ => Messages("gmp.leaving.dol.question.mandatory")
-    }
-    dlf.dateOfLeavingForm(mandatoryErrorMessage).fill(session.leaving)
+    dlf.dateOfLeavingForm().fill(session.leaving)
   }
 
   def get = authAction.async {

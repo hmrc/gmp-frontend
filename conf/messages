@@ -3,6 +3,7 @@
 service.name = Guaranteed Minimum Pension (GMP) checker
 service.title=Guaranteed Minimum Pension
 generic.errorSummary = There is a problem
+generic.errorPrefix = Error
 gov.uk=GOV.UK
 ############################################################################
 gmp-pbik-gov.uk-title=GOV.UK
@@ -439,3 +440,26 @@ reval-date.error.daymonth.missing = Date must have a day and month
 reval-date.error.monthyear.missing = Date must have a month and year
 reval-date.error.dayyear.missing = Date must have a day and year
 reval-date.error.gmp.error.date.invalid = Enter a real date when you would like the calculation made to
+
+############################################################################
+# Error message keys using format s"${contextKey}${fieldName}.error.${errorType}"
+############################################################################
+
+survivor.leaving.error.required = Select whether the member had already left the scheme at date of death
+leaving.leaving.error.required = Select whether the member left the scheme before 6 April 2016
+other.leaving.error.required = Select whether the member has left the scheme
+
+leavingDate.error.required = Enter a leaving date
+leavingDate.error.invalid = Enter a real leaving date
+leavingDate.day.error.invalid = Enter a real leaving date
+leavingDate.month.error.invalid = Enter a real leaving date
+leavingDate.year.error.invalid = Enter a real leaving date
+leavingDate.error.tooFarInPast = Enter a leaving date after 5 April 2016
+leavingDate.error.tooFuture = Enter a leaving date before 5 April 2046
+leavingDate.day.error.dayRequired = Date must include the day
+leavingDate.day.error.dayAndYearRequired = Date must include the day and year
+leavingDate.day.error.dayAndMonthRequired = Date must include the day and month
+leavingDate.month.error.monthRequired = Date must include the month
+leavingDate.month.error.monthAndYearRequired = Date must include the month and year
+leavingDate.year.error.yearRequired = Date must include the year
+leavingDate.year.error.yearLength = Date must include the year
