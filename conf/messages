@@ -462,4 +462,4 @@ leavingDate.day.error.dayAndMonthRequired = Date must include the day and month
 leavingDate.month.error.monthRequired = Date must include the month
 leavingDate.month.error.monthAndYearRequired = Date must include the month and year
 leavingDate.year.error.yearRequired = Date must include the year
-leavingDate.year.error.yearLength = Date must include the year
+leavingDate.year.error.yearLength = Enter the year in full (4 numbers)

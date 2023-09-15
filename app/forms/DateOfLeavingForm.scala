@@ -39,14 +39,6 @@ class DateOfLeavingForm  @Inject()(mcc: MessagesControllerComponents) {
 
   val YEAR_FIELD_LENGTH: Int = 4
 
-  def dateMustBePresentIfHaveDateOfLeavingAfterApril2016(x: Leaving): Boolean = {
-    if (x.leaving.contains(Leaving.YES_AFTER)) {
-      x.leavingDate.day.nonEmpty &&
-        x.leavingDate.month.nonEmpty && x.leavingDate.year.nonEmpty
-    } else {
-      false
-    }
-  }
   def isValidDate(x: GmpDate): Boolean =
     try {
       x.getAsLocalDate.isDefined
