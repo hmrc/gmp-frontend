@@ -26,15 +26,14 @@ import utils.GmpViewSpec
 import views.ViewHelpers
 
 class InflationProofSpec extends GmpViewSpec {
-  lazy val gmpMain = app.injector.instanceOf[gmp_main]
+  lazy val layout = app.injector.instanceOf[views.html.Layout]
   lazy val viewHelpers = app.injector.instanceOf[ViewHelpers]
   lazy val govukButton = app.injector.instanceOf[GovukButton]
   lazy val govukRadios = app.injector.instanceOf[GovukRadios]
   lazy val govukErrorSummary = app.injector.instanceOf[GovukErrorSummary]
   lazy val govukDateInput = app.injector.instanceOf[GovukDateInput]
-  lazy val govukBackLink = app.injector.instanceOf[GovukBackLink]
 
-  override def view: Html = new views.html.inflation_proof(gmpMain, viewHelpers, govukRadios, govukButton, govukErrorSummary, govukDateInput, govukBackLink)(inflationProofForm)
+  override def view: Html = new views.html.inflation_proof(layout, viewHelpers, govukRadios, govukButton, govukErrorSummary, govukDateInput)(inflationProofForm)
 
   val inflationProofForm = Form(
     mapping(

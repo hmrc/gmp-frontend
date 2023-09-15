@@ -17,30 +17,28 @@
 @import config.ApplicationConfig
 @import uk.gov.hmrc.govukfrontend.views.html.components._
 
-@this(gmpMain: gmp_main, request_another_button: includes.request_another_button, member_details_result:includes.member_details_result, govukBackLink : GovukBackLink, govukTable: GovukTable)
-
+@this(
+        layout: Layout,
+        request_another_button: includes.request_another_button,
+        member_details_result:includes.member_details_result,
+        govukTable: GovukTable
+)
 
 @(calculationResponse:CalculationResponse)(implicit request: Request[_], messages: Messages, ac:ApplicationConfig)
 
-@gmpMain(title = Messages("gmp.contributions_earnings.header")+ " - " + Messages("service.title") + " - " + Messages("gov.uk"), supportLinkEnabled = false, dashboardLinkEnabled = !calculationResponse.hasErrors) {
+@title = @{messages("gmp.contributions_earnings.header")}
 
-  @if(calculationResponse.hasSuccessfulCalculations) {
-    @includes.print_page()
-  }
-    @govukBackLink(BackLink(
-        href = controllers.routes.ResultsController.get.url,
-        content = Text("Back")
-    ))
-
-  <h1 class="govuk-heading-l" id="contributions-earnings-title">@Html(Messages("gmp.contributions_earnings.header"))</h1>
-
-  @includes.contributions_earnings(calculationResponse, govukTable)
-
-  @member_details_result(calculationResponse)
-
-    <p class="govuk-body">@Messages("gmp.queryhandling.contsandearnings")</p>
-
-
-@request_another_button()
-
+@layout(
+    applicationConfig = ac,
+    title = title,
+    backLink = Some(BackLinkParams(controllers.routes.ResultsController.get.url))
+) {
+    <h1 class="govuk-heading-l" id="contributions-earnings-title">@title</h1>
+    @if(calculationResponse.hasSuccessfulCalculations) {
+        @includes.print_page()
+    }
+    @includes.contributions_earnings(calculationResponse, govukTable)
+    @member_details_result(calculationResponse)
+    <p class="govuk-body">@messages("gmp.queryhandling.contsandearnings")</p>
+    @request_another_button()
 }

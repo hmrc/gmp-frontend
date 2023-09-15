@@ -26,10 +26,10 @@ import utils.GmpViewSpec
 import views.ViewHelpers
 
 class RevaluationSpec extends GmpViewSpec{
-  lazy val gmpMain = app.injector.instanceOf[gmp_main]
+  lazy val layout = app.injector.instanceOf[views.html.Layout]
   lazy val viewHelpers = app.injector.instanceOf[ViewHelpers]
 
-  override def view: Html = new views.html.revaluation(gmpMain, viewHelpers)(revaluationForm)
+  override def view: Html = new views.html.revaluation(layout, viewHelpers)(revaluationForm)
 //  private val revaluationForm: Form[models.RevaluationDate] = RevaluationForm.revaluationForm
 
   val YEAR_FIELD_LENGTH: Int = 4

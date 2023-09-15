@@ -35,7 +35,7 @@ trait GmpViewSpec extends PlaySpec with JSoupMatchers with GuiceOneServerPerSuit
 
   implicit val applicationConfig=app.injector.instanceOf[ApplicationConfig]
 
-  override def haveBackLink = new CssSelector("a[id=back-link]")
+  override def haveBackLink = new CssSelector("a[id='back-link'], a[id='js-back-link']")
 
   private val backLink = new CssSelector("a[class=govuk-back-link]")
 

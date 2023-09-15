@@ -14,44 +14,51 @@
  * limitations under the License.
  *@
 
-@import play.twirl.api.HtmlFormat
 @import views.ViewHelpers
-@import views.html.helper._
-@import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcLayout
-@import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcReportTechnicalIssueHelper
-@import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcTimeoutDialogHelper
-@import uk.gov.hmrc.hmrcfrontend.views.config.StandardBetaBanner
-@import uk.gov.hmrc.govukfrontend.views.html.components.FixedWidthPageLayout
-@import uk.gov.hmrc.govukfrontend.views.html.components.TwoThirdsMainContent
+@import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcStandardPage
+@import uk.gov.hmrc.hmrcfrontend.views.viewmodels.hmrcstandardpage._
+@import uk.gov.hmrc.hmrcfrontend.views.html.helpers.{HmrcReportTechnicalIssueHelper, HmrcTimeoutDialogHelper}
+@import uk.gov.hmrc.govukfrontend.views.Aliases.BackLink
+@import uk.gov.hmrc.govukfrontend.views.html.components._
 
-@this(hmrcLayout: HmrcLayout, viewHelpers: ViewHelpers, defaultMainContent: TwoThirdsMainContent)
+@this(
+        hmrcStandardPage: HmrcStandardPage,
+        hmrcReportTechnicalIssueHelper:HmrcReportTechnicalIssueHelper,
+        viewHelpers: ViewHelpers,
+        hmrcTimeoutDialogHelper: HmrcTimeoutDialogHelper
+)
 
 @(pageTitle: String, heading: String, message: String)(implicit request: Request[_], messages: Messages)
-
-
-@mainContent = {
-    @includes.back_link(heading)
-    <h1 class="govuk-heading-xl">@heading</h1>
-    <p class="govuk-body">@message</p>
-}
-
 @head = {
     <meta name="format-detection" content="telephone=no"/>
+    @hmrcTimeoutDialogHelper(signOutUrl = routes.ApplicationController.signout.url)
+    <link rel="stylesheet" href='@controllers.routes.AssetsController.at("stylesheets/gmp.css")'/>
 }
-
-
-
-@scriptBlock = {
-    <script src='@routes.AssetsController.at("javascripts/back.js")'> </script>
+@mainContent = {
+    <h1 class="govuk-heading-xl">@heading</h1>
+    <p class="govuk-body">@message</p>
+    @hmrcReportTechnicalIssueHelper()
 }
+@scriptBlock = {<script src='@routes.AssetsController.at("javascripts/back.js")'> </script>}
 
-@hmrcLayout(
-    pageTitle = Some(pageTitle),
-    isWelshTranslationAvailable = false,
-    signOutUrl = Some(routes.ApplicationController.signout.url),
-    additionalHeadBlock = Some(head),
-    additionalScriptsBlock = Some(scriptBlock),
-    headerContainerClasses = "govuk-width-container",
-    mainContentLayout = Some(defaultMainContent(_))
+@hmrcStandardPage(
+    HmrcStandardPageParams(
+        serviceURLs = ServiceURLs(
+            signOutUrl = Some(routes.ApplicationController.signout.url)
+        ),
+        templateOverrides = TemplateOverrides(
+            additionalHeadBlock = Some(head),
+            additionalScriptsBlock = Some(scriptBlock)
+        ),
+        serviceName = Some(messages("service.title")),
+        pageTitle = Some(heading + " - " + messages("service.title") + " - GOV.UK"),
+        isWelshTranslationAvailable = false,
+        backLink = Some(BackLink(
+            href = "#",
+            content = Text(messages("gmp.back.link")),
+            attributes = Map("id" -> "js-back-link"),
+            classes = "js-hidden"
+        ))
+    )
 )(mainContent)
 

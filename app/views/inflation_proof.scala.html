@@ -15,18 +15,26 @@
  *@
 
 @import config.ApplicationConfig
-@import views.html.helpers._
 @import views.ViewHelpers
 @import uk.gov.hmrc.govukfrontend.views.html.components._
 @import uk.gov.hmrc.govukfrontend.views.html.components.implicits._
-@import uk.gov.hmrc.hmrcfrontend.views.Implicits.RichErrorSummary
 
-@this(gmpMain: gmp_main, viewHelpers: ViewHelpers, govukRadios : GovukRadios, govukButton : GovukButton, govukErrorSummary : GovukErrorSummary, govukDateInput : GovukDateInput, govukBackLink : GovukBackLink)
+@this(
+        layout: Layout,
+        viewHelpers: ViewHelpers,
+        govukRadios : GovukRadios,
+        govukButton : GovukButton,
+        govukErrorSummary : GovukErrorSummary,
+        govukDateInput : GovukDateInput
+)
 
 @(inflationProofForm: Form[models.InflationProof])(implicit request: Request[_], messages: Messages, applicationConfig: ApplicationConfig)
 
+@title = @{messages("gmp.inflation_proof.question")}
+@hasErrors = @{inflationProofForm.hasErrors}
+
 @inputHasErrors(input: String) = @{input match {
-    case i: String if inflationProofForm.hasErrors && inflationProofForm.errors.head.toString.contains(i) => true
+    case i: String if hasErrors && inflationProofForm.errors.head.toString.contains(i) => true
     case _ => false
 }}
 
@@ -62,17 +70,15 @@
 <p class="govuk-body">@Messages("gmp.inflationproof.subtext")</p>
 }
 
-
-
-@gmpMain(title = Messages("gmp.inflation_proof.question") + " - " + Messages("service.title") + " - " + Messages("gov.uk")) {
-
-        @govukBackLink(BackLink(
-            href = controllers.routes.InflationProofController.back.url,
-            content = Text("Back")
-        ))
+@layout(
+    applicationConfig = applicationConfig,
+    title = title,
+    backLink = Some(BackLinkParams(controllers.routes.InflationProofController.back.url)),
+    hasErrors = hasErrors
+) {
 
         @viewHelpers.form(action = routes.InflationProofController.post) {
-            @if(inflationProofForm.errors.nonEmpty){
+            @if(hasErrors){
                 @govukErrorSummary(ErrorSummary(errorList = Seq(ErrorLink(
                 href = Some(s"#${if (inflationProofForm.errors.head.key.contains("revaluation")) inflationProofForm.errors.head.key else s"revaluationDate-revaluationDate.day" }"),
                 content = Text(s"${messages(s"${inflationProofForm.errors.head.message}")}"),

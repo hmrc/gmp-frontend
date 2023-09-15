@@ -26,10 +26,10 @@
 //import views.OldViewHelpers
 //
 //class PensionDetailsSconSpec extends GmpViewSpec {
-//  lazy val gmpMain = app.injector.instanceOf[gmp_main]
+//  lazy val layout = app.injector.instanceOf[views.html.Layout]
 //  lazy val viewHelpers = app.injector.instanceOf[OldViewHelpers]
 //
-//  override def view: Html = new views.html.pension_details(gmpMain, viewHelpers)(pensionDetailsForm)
+//  override def view: Html = new views.html.pension_details(layout, viewHelpers)(pensionDetailsForm)
 //
 // // private val pensionDetailsForm: Form[models.PensionDetails] = PensionDetailsForm.pensionDetailsForm
 //

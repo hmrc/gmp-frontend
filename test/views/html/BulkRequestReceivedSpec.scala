@@ -38,8 +38,8 @@ class BulkRequestReceivedSpec extends GmpViewSpec{
 
   lazy val panel = app.injector.instanceOf[GovukPanel]
   lazy val button = app.injector.instanceOf[GovukButton]
-  lazy val gmpMain = app.injector.instanceOf[gmp_main]
-  override def view: Html = new views.html.bulk_request_received(gmpMain, panel, button)(reference)
+  lazy val layout = app.injector.instanceOf[views.html.Layout]
+  override def view: Html = new views.html.bulk_request_received(layout, panel, button)(reference)
 
   val reference: String = "Fake reference"
 }

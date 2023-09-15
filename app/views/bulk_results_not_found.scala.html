@@ -15,20 +15,20 @@
  *@
 
 @import config.ApplicationConfig
-@import views.html.helpers._
 
-@this(gmpMain: gmp_main)
+@this(layout: Layout)
 
 @()(implicit request: Request[_], messages: Messages, ac:ApplicationConfig)
 
-@gmpMain(title = Messages("gmp.bulk.results_not_found") + " - " + Messages("service.title") + " - " + Messages("gov.uk"),supportLinkEnabled = false, dashboardLinkEnabled = false) {
+@title = @{messages("gmp.bulk.results_not_found")}
 
-    @includes.back_link(Messages("gmp.bulk.results.banner"))
-        <h1 class="govuk-heading-l">@Messages("gmp.bulk.results_not_found")</h1>
-
-        <p class="govuk-body">@Html(Messages("gmp.bulk.results_not_found.1"))</p>
-        <p class="govuk-body">@Html(Messages("gmp.bulk.results_not_found.2"))</p>
-        <p class="govuk-body">@Html(Messages("gmp.bulk.results_not_found.3"))</p>
-
-
+@layout(
+    applicationConfig = ac,
+    title = title,
+    backLink = Some(BackLinkParams("#"))
+) {
+    <h1 class="govuk-heading-l">@title</h1>
+    <p class="govuk-body">@Html(messages("gmp.bulk.results_not_found.1"))</p>
+    <p class="govuk-body">@Html(messages("gmp.bulk.results_not_found.2"))</p>
+    <p class="govuk-body">@Html(messages("gmp.bulk.results_not_found.3"))</p>
 }

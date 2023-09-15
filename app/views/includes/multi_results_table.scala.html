@@ -73,6 +73,7 @@
 
 
 @govukTable(Table(
+    attributes = Map("id" -> "multi-results-table"),
     captionClasses = "govuk-table__caption--m",
     firstCellIsHeader = false,
     rows = calculationResponse.calculationPeriods.zipWithIndex.map { result =>

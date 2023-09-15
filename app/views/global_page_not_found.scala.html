@@ -17,7 +17,7 @@
 @import play.api.i18n.Messages
 @import play.twirl.api.HtmlFormat
 
-@this(gmpMain: gmp_main)
+@this(layout: Layout)
 
 @(
     signOutEnabled: Boolean = true,
@@ -25,26 +25,20 @@
     supportLinkEnabled: Boolean = true
 )(implicit messages: Messages, request: Request[_], applicationConfig:config.ApplicationConfig)
 
-@anchor(serviceName: String, url: String) = {
-    <a href="@url">@serviceName</a>
+@title = @{messages("gmp.page_not_found.tabtitle")}
+
+@layout(
+    applicationConfig = applicationConfig,
+    title = title
+) {
+    <h1 id="header" class="govuk-heading-xl">@title</h1>
+    <p class="govuk-body">@messages("gmp.page.not.found.error.check.web.address.correct")</p>
+    <p class="govuk-body">@messages("gmp.page.not.found.error.check.web.address.full")</p>
+    <p class="govuk-body">
+        @messages("gmp.page.not.found.error.contact")
+        <a class="govuk-link" href="@messages("gmp.page.not.found.error.pension.scheme.url")">
+            @messages("gmp.page.not.found.error.service")
+        </a>
+        @messages("gmp.page.not.found.error.contact.end")
+    </p>
 }
-
-@gmpMain(title = Messages("gmp.page_not_found.tabtitle")) {
-    <div class="grid-row">
-        <div class="content">
-
-            <div class="row">
-                <h1 id="header" class="heading-xlarge">@Messages("gmp.page_not_found.heading")</h1>
-            </div>
-
-            <div class="row">
-                <p>@messages("gmp.page.not.found.error.check.web.address.correct")</p>
-                <p>@messages("gmp.page.not.found.error.check.web.address.full")</p>
-                <p>@messages("gmp.page.not.found.error.contact")
-                    @anchor(Messages("gmp.page.not.found.error.service"), Messages("gmp.page.not.found.error.pension.scheme.url"))
-                    @messages("gmp.page.not.found.error.contact.end")
-                </p>
-            </div>
-        </div>
-    </div>
-}  

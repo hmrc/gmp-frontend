@@ -19,7 +19,7 @@
 @import uk.gov.hmrc.govukfrontend.views.html.components._
 @import uk.gov.hmrc.govukfrontend.views.Implicits.RichInput
 
-@this(gmpMain: gmp_main,
+@this(layout: views.html.Layout,
         viewHelpers: ViewHelpers,
         govukButton : GovukButton,
         govukErrorSummary : GovukErrorSummary,
@@ -28,12 +28,15 @@
 
 @(pensionDetailsForm: Form[models.PensionDetailsScon])(implicit request: Request[_], messages: Messages, ac:ApplicationConfig)
 
-@gmpMain(title = Messages("gmp.pension_details.header") + " - " + Messages("service.title") + " - " + Messages("gov.uk")) {
+@title = @{messages("gmp.pension_details.header")}
+@hasErrors = @{pensionDetailsForm.hasErrors}
 
-    @viewHelpers.govukBackLink(BackLink(
-        href = controllers.routes.DashboardController.get.url,
-        content = Text("Back")
-    ))
+@layout(
+    applicationConfig = ac,
+    title = title,
+    backLink = Some(BackLinkParams(controllers.routes.DashboardController.get.url)),
+    hasErrors = hasErrors
+) {
 
   @viewHelpers.form(action = routes.PensionDetailsController.post) {
       @pensionDetailsForm.errors.map { err =>

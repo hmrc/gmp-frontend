@@ -20,8 +20,8 @@ import play.twirl.api.Html
 import utils.GmpViewSpec
 
 class UnauthorisedSpec extends GmpViewSpec {
-  lazy val gmpMain = app.injector.instanceOf[gmp_main]
-  override def view: Html = new views.html.unauthorised(gmpMain)()
+  lazy val layout = app.injector.instanceOf[views.html.Layout]
+  override def view: Html = new views.html.unauthorised(layout)()
 
   "Unauthorised page" must {
     behave like pageWithTitle(messages("gmp.unauthorised.message"))

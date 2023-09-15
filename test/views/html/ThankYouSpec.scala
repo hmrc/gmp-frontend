@@ -22,10 +22,10 @@ import utils.GmpViewSpec
 import views.html.includes.request_another_button
 
 class ThankYouSpec extends GmpViewSpec{
-  lazy val gmpMain = app.injector.instanceOf[gmp_main]
+  lazy val layout = app.injector.instanceOf[views.html.Layout]
   lazy val govUkButton = app.injector.instanceOf[GovukButton]
 
-  override def view: Html = new views.html.thank_you(gmpMain, govUkButton)()
+  override def view: Html = new views.html.thank_you(layout, govUkButton)()
 
   "Thank you page" must {
     behave like pageWithTitle(messages("gmp.thank_you.header"))

@@ -28,8 +28,8 @@ abstract class BulkResultsSpec extends GmpViewSpec{
   val comingFromPage: Int
   lazy val panel = app.injector.instanceOf[GovukPanel]
   lazy val button = app.injector.instanceOf[GovukButton]
-  lazy val gmpMain = app.injector.instanceOf[gmp_main]
-  override def view = new views.html.bulk_results(gmpMain, panel, button)(bulkResultsSummary, uploadReference, comingFromPage)
+  lazy val layout = app.injector.instanceOf[views.html.Layout]
+  override def view = new views.html.bulk_results(layout, panel, button)(bulkResultsSummary, uploadReference, comingFromPage)
 }
 
 

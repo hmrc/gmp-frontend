@@ -22,9 +22,6 @@
     }
 }
 
-@if(application.globalErrors.hasPath(s"$globalErrorCode.cannot_calculate")){
-   <h1 class="govuk-heading-l" id="cannot-calculate-header">@{ Messages(application.globalErrors.getString(s"$globalErrorCode.cannot_calculate")) }</h1>
-}
 @if(application.globalErrors.hasPath(s"$globalErrorCode.reason")){
    <div class="govuk-body">@Messages(application.globalErrors.getString(s"$globalErrorCode.reason"))</div>
 }
@@ -48,5 +45,3 @@
 
 
     @includes.print_page()
-
-</div>

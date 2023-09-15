@@ -15,19 +15,26 @@
  *@
 
 @import config.ApplicationConfig
-@import views.html.helpers._
 @import uk.gov.hmrc.govukfrontend.views.html.components._
 
-
-@this(gmpMain: gmp_main, govukButton : GovukButton)
+@this(
+        layout: Layout,
+        govukButton : GovukButton
+)
 
 @()(implicit request: Request[_], messages: Messages, ac:ApplicationConfig)
 
-@gmpMain(title = Messages("gmp.thank_you.header") + " - " + Messages("service.title") + " - " + Messages("gov.uk"),supportLinkEnabled = false, dashboardLinkEnabled = false) {
+@title = @{messages("gmp.thank_you.header")}
+
+@layout(
+    applicationConfig = ac,
+    title = title,
+    backLink = Some(BackLinkParams("#"))
+) {
 
   <div id="thank-you-page">
-      @includes.back_link(Messages("gmp.thank_you.header"))
-          <h1 class="govuk-heading-l">@Messages("gmp.thank_you.header")</h1>
+
+          <h1 class="govuk-heading-l">@title</h1>
 
           <h2 class="govuk-heading-m">@Messages("gmp.thank_you.what_now")</h2>
 

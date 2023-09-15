@@ -1,11 +1,9 @@
-#choose-calculation-type{
-  font-weight: normal;
+body:not(.js-enabled) .js-hidden {
+    display: none;
 }
 
-.large-underlined-link {
-  font-size: 24px;
-  text-decoration: underline;
-  font-weight: bold;
+#choose-calculation-type{
+  font-weight: normal;
 }
 
 #previous-calculations {

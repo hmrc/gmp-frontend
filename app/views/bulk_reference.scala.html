@@ -15,46 +15,67 @@
  *@
 
 @import config.ApplicationConfig
-@import views.html.helpers._
 @import views.ViewHelpers
 @import uk.gov.hmrc.govukfrontend.views.html.components._
 
-@this(gmpMain: gmp_main, viewHelpers: ViewHelpers)
+@this(
+        layout: Layout,
+        viewHelpers: ViewHelpers
+)
 
 @(bulkReferenceForm: Form[models.BulkReference])(implicit request: Request[_], messages: Messages, ac:ApplicationConfig)
 
-@gmpMain(title = Messages("gmp.bulk_reference.header") + " - " + Messages("service.title") + " - " + Messages("gov.uk"), supportLinkEnabled = true) {
-    @viewHelpers.govukBackLink(BackLink(
-        href = controllers.routes.FileUploadController.get.url,
-        content = Text("Back")
-    ))
+@title = @{messages("gmp.bulk_reference.header")}
+
+@layout(
+    applicationConfig = ac,
+    title =  title,
+    backLink = Some(BackLinkParams(href = controllers.routes.FileUploadController.get.url)),
+    hasErrors = bulkReferenceForm.hasErrors
+) {
 
     @views.html.helpers.errorSummary(bulkReferenceForm)
 
-        <h1 class="govuk-heading-l">@Messages("gmp.bulk_reference.header")</h1>
+    <h1 class="govuk-heading-l">@title</h1>
 
-        @viewHelpers.form(action = routes.BulkReferenceController.post) {
+    @viewHelpers.form(action = routes.BulkReferenceController.post) {
 
-          <div class="govuk-form-group">
-                @gmpInput(bulkReferenceForm("email"),
-                '_label -> Html(Messages("gmp.email.address")),
-                '_labelClass -> "govuk-label govuk-label--l strong",
-                '_id -> "email",
-                '_inputClass -> "govuk-input govuk-!-width-one-third",
-                '_hintText -> Messages("gmp.bulk_reference.email_text"))
-          </div>
-          <div class="govuk-form-group">
-                @gmpInput(bulkReferenceForm("reference"),
-                '_label -> Html(Messages("gmp.reference.calcname")),
-                '_labelClass -> "govuk-label govuk-label--l strong",
-                '_id -> "reference",
-                '_maxLength -> 40,
-                '_inputClass -> "govuk-input govuk-!-width-one-third",
-                '_hintText -> Messages("gmp.bulk_reference.reference_text"))
-          </div>
+        @viewHelpers.govukInput(Input(
+            id = "email",
+            name = "email",
+            label = Label(
+                content = Text(messages("gmp.email.address"))
+            ),
+            hint = Some(Hint(
+                content = Text(messages("gmp.bulk_reference.email_text"))
+            )),
+            errorMessage = bulkReferenceForm.error("email").map(e => ErrorMessage(
+                content = Text(messages(e.message))
+            )),
+            classes = "govuk-!-width-two-thirds",
+            inputType = "email",
+            autocomplete = Some("email")
+        ))
+
+        @viewHelpers.govukInput(Input(
+            id = "reference",
+            name = "reference",
+            label = Label(
+                content = Text(messages("gmp.reference.calcname"))
+            ),
+            hint = Some(Hint(
+                content = Text(messages("gmp.bulk_reference.reference_text"))
+            )),
+            errorMessage = bulkReferenceForm.error("reference").map(e => ErrorMessage(
+                content = Text(messages(e.message))
+            )),
+            classes = "govuk-!-width-two-thirds",
+            autocomplete = Some("On")
+        ))
+
           <div>
               @viewHelpers.govukButton(Button(
-                content = Text(Messages("gmp.bulk_reference.button")),
+                content = Text(messages("gmp.bulk_reference.button")),
                 inputType = Some("submit"),
                 attributes = Map("id" -> "submit-button")
               ))

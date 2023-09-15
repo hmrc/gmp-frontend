@@ -16,19 +16,16 @@
 
 @(calculationResponse:CalculationResponse, revalRateSubheader: Option[String], survivorSubheader: Option[String])(implicit messages: Messages)
 
-@includes.back_to_dashboard_link(Messages("gmp.results.h1"))
-<h1 class="govuk-heading-l" id="page-title">@Messages("gmp.results.h1")</h1>
-
 <p class="govuk-body" id="value-revealed">@Messages("gmp.results.p1")</p>
 
 <h2 class="govuk-heading-m" id="results-header">@calculationResponse.header(messages)</h2>
 
 @if(revalRateSubheader.isDefined) {
-    <div class="govuk-body">@Html(revalRateSubheader.get)</div>
+    <div class="govuk-body" id="revaluation-rate-chosen">@Html(revalRateSubheader.get)</div>
 }
 
 @if(survivorSubheader.isDefined) {
- <div class="govuk-body">@survivorSubheader</div>
+ <div class="govuk-body" id="survivor-header">@survivorSubheader</div>
 }
 
 
