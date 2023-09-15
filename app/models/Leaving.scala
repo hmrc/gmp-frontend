@@ -25,4 +25,5 @@ object Leaving {
   val YES_BEFORE = "yes-before"
   val YES_AFTER = "yes-after"
   val NO = "no"
+  val emptyForm = Leaving(GmpDate.emptyDate, None)
 }

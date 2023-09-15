@@ -19,166 +19,176 @@
 @import views.ViewHelpers
 @import uk.gov.hmrc.govukfrontend.views.html.components._
 
-
 @this(
-        gmpMain: gmp_main,
+        layout: views.html.Layout,
         viewHelpers: ViewHelpers,
         govukRadios : GovukRadios,
         govukButton: GovukButton,
         govukDateInput: GovukDateInput,
         govukErrorMessage: GovukErrorMessage,
         govukErrorSummary: GovukErrorSummary,
-        govukBackLink : GovukBackLink)
+        govukBackLink : GovukBackLink
+)
 
+@(form: Form[models.Leaving],scenario: String)(implicit request: Request[_], messages: Messages, applicationConfig: ApplicationConfig)
 
-@(dateOfLeavingForm: Form[models.Leaving],scenario: String)(implicit request: Request[_], messages: Messages, applicationConfig: ApplicationConfig)
-@inputHasErrors(input: String) = @{input match {
-    case i: String if dateOfLeavingForm.hasErrors && dateOfLeavingForm.errors.head.toString.contains(i) => true
-    case i: String if dateOfLeavingForm.hasErrors && dateOfLeavingForm.errors.head.toString.contains("Enter a leaving date") => true
-    case _ => false
-}}
-
+@key = @{"leaving"}
+@dateKey = @{"leavingDate"}
+@scenarioKey = @{
+    scenario match {
+        case CalculationType.DOL => "leaving"
+        case CalculationType.SPA | CalculationType.PAYABLE_AGE | CalculationType.REVALUATION => "other"
+        case CalculationType.SURVIVOR => "survivor"
+        case _ => "leaving"
+    }
+}
+@hasErrors = @{form.hasErrors}
+@dateInputHasErrors(input: String) = @{form.error(s"$dateKey.$input").isDefined || form.error(dateKey).isDefined}
+@dateError = @{
+    if(form.error(dateKey).isDefined) {
+        form.error(dateKey)
+    } else if (form.error(s"$dateKey.day").isDefined) {
+        form.error(s"$dateKey.day")
+    } else if (form.error(s"$dateKey.month").isDefined) {
+        form.error(s"$dateKey.month")
+    } else if (form.error(s"$dateKey.year").isDefined) {
+        form.error(s"$dateKey.year")
+    } else None
+}
 @conditionalHtml = {
-@govukDateInput(DateInput(
-    id = "leavingDate",
-    hint = Some(Hint(
-        content = Text(Messages("gmp.date.example"))
-    )),
-    errorMessage = dateOfLeavingForm.errors.headOption.map(e => ErrorMessage(content = Text(messages(e.message, e.args:_*)))),
-    items = Seq(
-        InputItem(name = "leavingDate.day", classes = s"govuk-input--width-2 ${if(inputHasErrors("day")){" govuk-input--error"} else {""}}", label=Some("Day"), value = dateOfLeavingForm.data.get("leavingDate.day")),
-        InputItem(name = "leavingDate.month", classes = s"govuk-input--width-2${if(inputHasErrors("month")){" govuk-input--error"} else {""}}", label=Some("Month"), value = dateOfLeavingForm.data.get("leavingDate.month")),
-        InputItem(name = "leavingDate.year", classes = s"govuk-input--width-4${if(inputHasErrors("year")){" govuk-input--error"} else {""}}", label=Some("Year"), value = dateOfLeavingForm.data.get("leavingDate.year"))),
-    fieldset = Some(Fieldset(
-        legend = Some(Legend(
-            content = Text(Messages("gmp.date.header_text")),
-            classes = "govuk-fieldset__legend--m",
-            isPageHeading = false
+    @govukDateInput(DateInput(
+        id = dateKey,
+        hint = Some(Hint(
+            content = Text(Messages("gmp.date.example"))
+        )),
+        errorMessage = dateError map { e => ErrorMessage(
+            content = Text(messages(s"${e.key}.${e.message}")),
+            visuallyHiddenText = Some(messages("generic.errorPrefix"))
+        )},
+        items = Seq(
+            InputItem(
+                name = s"$dateKey.day",
+                classes = s"govuk-input--width-2 ${if(dateInputHasErrors("day")){" govuk-input--error"} else {""}}",
+                label=Some("Day"),
+                value = form.data.get(s"$dateKey.day")
+            ),
+            InputItem(
+                name = s"$dateKey.month",
+                classes = s"govuk-input--width-2${if(dateInputHasErrors("month")){" govuk-input--error"} else {""}}",
+                label=Some("Month"),
+                value = form.data.get(s"$dateKey.month")
+            ),
+            InputItem(
+                name = s"$dateKey.year",
+                classes = s"govuk-input--width-4${if(dateInputHasErrors("year")){" govuk-input--error"} else {""}}",
+                label=Some("Year"),
+                value = form.data.get(s"$dateKey.year")
+            )
+        ),
+        fieldset = Some(Fieldset(
+            legend = Some(Legend(
+                content = Text(messages("gmp.date.header_text")),
+                classes = "govuk-fieldset__legend--m",
+                isPageHeading = false
+            ))
         ))
     ))
-))
 }
 
-@heading = {
-@{scenario match {
-    case CalculationType.DOL => Messages("gmp.leaving.dol.question")
-    case CalculationType.SPA | CalculationType.PAYABLE_AGE | CalculationType.REVALUATION => Messages("gmp.other.dol.left.question")
-    case CalculationType.SURVIVOR => Messages("gmp.survivor.dol.question")}
-}
-}
+@title = @{scenario match {
+    case CalculationType.DOL => messages("gmp.leaving.dol.question")
+    case CalculationType.SURVIVOR => messages("gmp.survivor.dol.question")
+    case _ => messages("gmp.other.dol.left.question")
+}}
 
-@gmpMain(title = heading + " - " + Messages("service.title") + " - " + Messages("gov.uk")) {
+@layout(
+    applicationConfig = applicationConfig,
+    title = title,
+    hasErrors = hasErrors,
+    backLink = Some(controllers.routes.DateOfLeavingController.back.url)
+) {
 
-    @govukBackLink(BackLink(
-        href = controllers.routes.DateOfLeavingController.back.url,
-        content = Text("Back")
-    ))
-
-    @if(dateOfLeavingForm.errors.nonEmpty) {
-        @govukErrorSummary(ErrorSummary(errorList = Seq(ErrorLink(
-            href = Some(s"#${if (dateOfLeavingForm.errors.head.key.contains("leaving") && dateOfLeavingForm.data.get("leaving").equals("yes-after")) dateOfLeavingForm.errors.head.key else s"leavingDate-leavingDate.day" }"),
-            content = Text(s"${messages(s"${dateOfLeavingForm.errors.head.message}")}"),
-        )), title = Text(messages("generic.errorSummary"))))
+    @if(hasErrors) {
+        @govukErrorSummary(ErrorSummary(
+            errorList = form.errors.map(error =>
+                ErrorLink(
+                    href = Some(s"#${if(error.key.startsWith(dateKey)) { s"$dateKey-${error.key}" } else { error.key } }${if(error.key.matches(dateKey)) { ".day" } else ""}"),
+                    content = Text(messages(s"${if(error.key.matches(key)) s"$scenarioKey." else ""}${error.key}.${error.message}"))
+                )
+            ).take(1),
+            title = Text(messages("generic.errorSummary"))
+        ))
     }
 
     @viewHelpers.form(action = routes.DateOfLeavingController.post) {
-        @if(scenario == CalculationType.DOL) {
+        @if(scenario.matches(CalculationType.DOL)) {
             @govukRadios(Radios(
                 fieldset = Some(Fieldset(
                     legend = Some(Legend(
-                        content = Text(Messages("gmp.leaving.dol.question")),
+                        content = Text(title),
                         classes = "govuk-fieldset__legend--l",
                         isPageHeading = true
                     ))
                 )),
-                idPrefix = Some("leaving"),
-                name = "leaving",
-                errorMessage = if (dateOfLeavingForm.hasErrors && dateOfLeavingForm.errors.head.key == "leaving") {
-                    Some(ErrorMessage(content = Text(s"${dateOfLeavingForm.errors.head.message}")))
-                } else None,
+                idPrefix = Some(key),
+                name = key,
+                errorMessage = form.error(key) map { e =>
+                    ErrorMessage(
+                        content = Text(messages(s"$scenarioKey.$key.${e.message}")),
+                        visuallyHiddenText = Some(messages("generic.errorPrefix"))
+                    )
+                },
                 items = Seq(
                     RadioItem(
-                        content = Text(Messages("gmp.generic.yes")),
+                        content = Text(messages("gmp.generic.yes")),
                         value = Some(Leaving.YES_BEFORE),
-                        checked = dateOfLeavingForm.data.values.toList.contains(Leaving.YES_BEFORE)
+                        checked = form.data.values.toList.contains(Leaving.YES_BEFORE)
                     ),
                     RadioItem(
-                        content = Text(Messages("gmp.generic.no")),
+                        content = Text(messages("gmp.generic.no")),
                         value = Some(Leaving.YES_AFTER),
-                        checked = dateOfLeavingForm.data.values.toList.contains(Leaving.YES_AFTER),
+                        checked = form.data.values.toList.contains(Leaving.YES_AFTER),
                         conditionalHtml = Some(conditionalHtml)
                     )
                 )
             ))
 
-        } else { @if(scenario == CalculationType.SURVIVOR) {
-            @govukRadios(Radios(
-                fieldset = Some(Fieldset(
-                    legend = Some(Legend(
-                        content = Text(Messages("gmp.survivor.dol.question")),
-                        classes = "govuk-fieldset__legend--l",
-                        isPageHeading = true
-                    ))
-                )),
-                idPrefix = Some("leaving"),
-                name = "leaving",
-                errorMessage = if (dateOfLeavingForm.hasErrors && dateOfLeavingForm.errors.head.key == "leaving") {
-                    Some(ErrorMessage(content = Text(s"${dateOfLeavingForm.errors.head.message}")))
-                } else None,
-                items = Seq(
-                    RadioItem(
-                        content = Text(Messages("gmp.dol.threequestions.no.survivor")),
-                        value = Some(Leaving.NO),
-                        checked = dateOfLeavingForm.data.values.toList.contains(Leaving.NO)
-                    ),
-                    RadioItem(
-                        content = Text(Messages("gmp.dol.threequestions.before2016")),
-                        value = Some(Leaving.YES_BEFORE),
-                        checked = dateOfLeavingForm.data.values.toList.contains(Leaving.YES_BEFORE)
-                    ),
-                    RadioItem(
-                        content = Text(Messages("gmp.dol.threequestions.after2016")),
-                        value = Some(Leaving.YES_AFTER),
-                        checked = dateOfLeavingForm.data.values.toList.contains(Leaving.YES_AFTER),
-                        conditionalHtml = Some(conditionalHtml)
-                    )
-                )
-            ))
         } else {
             @govukRadios(Radios(
                 fieldset = Some(Fieldset(
                     legend = Some(Legend(
-                        content = Text(Messages("gmp.other.dol.left.question")),
+                        content = Text(title),
                         classes = "govuk-fieldset__legend--l",
                         isPageHeading = true
                     ))
                 )),
-                idPrefix = Some("leaving"),
-                name = "leaving",
-                errorMessage = if (dateOfLeavingForm.hasErrors && dateOfLeavingForm.errors.head.key == "leaving") {
-                    Some(ErrorMessage(content = Text(s"${dateOfLeavingForm.errors.head.message}")))
-                } else None,
+                idPrefix = Some(key),
+                name = key,
+                errorMessage = form.error(key) map { e =>
+                    ErrorMessage(
+                        content = Text(messages(s"$scenarioKey.$key.${e.message}")),
+                        visuallyHiddenText = Some(messages("generic.errorPrefix"))
+                    )
+                },
                 items = Seq(
                     RadioItem(
-                        content = Text(Messages("gmp.dol.threequestions.no")),
+                        content = Text(messages(s"gmp.dol.threequestions.no${if(scenario.matches(CalculationType.SURVIVOR)) { ".survivor" } else { "" }}")),
                         value = Some(Leaving.NO),
-                        checked = dateOfLeavingForm.data.values.toList.contains(Leaving.NO)
+                        checked = form.data.values.toList.contains(Leaving.NO)
                     ),
                     RadioItem(
-                        content = Text(Messages("gmp.dol.threequestions.before2016")),
+                        content = Text(messages("gmp.dol.threequestions.before2016")),
                         value = Some(Leaving.YES_BEFORE),
-                        checked = dateOfLeavingForm.data.values.toList.contains(Leaving.YES_BEFORE)
+                        checked = form.data.values.toList.contains(Leaving.YES_BEFORE)
                     ),
                     RadioItem(
-                        content = Text(Messages("gmp.dol.threequestions.after2016")),
+                        content = Text(messages("gmp.dol.threequestions.after2016")),
                         value = Some(Leaving.YES_AFTER),
-                        checked = dateOfLeavingForm.data.values.toList.contains(Leaving.YES_AFTER),
+                        checked = form.data.values.toList.contains(Leaving.YES_AFTER),
                         conditionalHtml = Some(conditionalHtml)
                     )
                 ),
             ))
-
-        }
         }
 
         @govukButton(Button(content = Text(messages("gmp.continue.button"))))

@@ -34,18 +34,21 @@
         hmrcTimeoutDialogHelper: HmrcTimeoutDialogHelper
 )
 
-@( useFullWidth:Boolean = false,
-    applicationConfig: config.ApplicationConfig,
-    title: String,
-    contentHeader: Option[Html] = None,
-    userLoggedIn: Boolean = false,
-    linkElement : Option[Html] = None,
-    mainClass : Option[String] = None,
-    scriptElement : Option[Html] = None,
-    isUserResearchBannerVisible:Boolean = false,
-    signOutEnabled:Boolean,
-    customHead: Option[Html] = None)(mainContent: Html = HtmlFormat.empty)(implicit request: Request[_], messages: Messages)
-
+@(
+        useFullWidth:Boolean = false,
+        applicationConfig: config.ApplicationConfig,
+        title: String,
+        contentHeader: Option[Html] = None,
+        userLoggedIn: Boolean = true,
+        linkElement : Option[Html] = None,
+        mainClass : Option[String] = None,
+        scriptElement : Option[Html] = None,
+        isUserResearchBannerVisible:Boolean = false,
+        signOutEnabled:Boolean = true,
+        customHead: Option[Html] = None,
+        hasErrors: Boolean = false,
+        backLink: Option[String] = None
+)(mainContent: Html = HtmlFormat.empty)(implicit request: Request[_], messages: Messages)
 
 @head = {
     <meta name="format-detection" content="telephone=no"/>
@@ -69,14 +72,20 @@
     @mainContent
     @hmrcReportTechnicalIssueHelper()
 }
+@gdsSuffix = @{" - " + messages("service.title") + " - GOV.UK"}
+@errorPrefix = @{messages("generic.errorPrefix") + ": "}
+@gdsTitle = @{
+    s"${if(hasErrors && !title.startsWith(errorPrefix)) { s"$errorPrefix$title" } else { title }}${if(!title.endsWith("GOV.UK")) { gdsSuffix } else { "" }}"
+}
 
 @hmrcLayout(
-    pageTitle = Some(title),
+    pageTitle = Some(gdsTitle),
     isWelshTranslationAvailable = false,
     signOutUrl = if(signOutEnabled) Some(routes.ApplicationController.signout.url) else None,
     additionalHeadBlock = Some(head),
     additionalScriptsBlock = Some(scriptBlock),
     userResearchBannerUrl = if(isUserResearchBannerVisible) {Some(applicationConfig.urBannerLink)} else {None},
     headerContainerClasses = "govuk-width-container",
-    mainContentLayout = if(useFullWidth) Some(fullWidth(_)) else Some(defaultMainContent(_))
+    mainContentLayout = if(useFullWidth) Some(fullWidth(_)) else Some(defaultMainContent(_)),
+    backLinkUrl = backLink
 )(content)

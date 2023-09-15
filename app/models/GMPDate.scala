@@ -75,5 +75,6 @@ case class GmpDate(day: Option[String], month: Option[String], year: Option[Stri
 }
 
 object GmpDate {
+  val emptyDate = GmpDate(None, None, None)
   implicit val formats = Json.format[GmpDate]
 }

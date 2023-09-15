@@ -38,18 +38,18 @@ class RevaluationForm @Inject()(mcc: MessagesControllerComponents) {
   def  revaluationDateConstraint(session: GmpSession): Constraint[RevaluationDate] = Constraint("revaluationDate")({
     revaluationDate => {
       val errors =
-        if (session.leaving.leaving.isDefined &&
-          session.leaving.leaving.get.equals(Leaving.NO) &&
+        if (session.leaving.leaving.nonEmpty &&
+          session.leaving.leaving.contains(Leaving.NO) &&
             !revaluationDate.revaluationDate.isOnOrAfter06042016)
         {
           Seq(ValidationError(messages("gmp.error.revaluation_pre2016_not_left"), "revaluationDate")) // 2016
         }
         else if (revaluationDate.revaluationDate.isBefore(session.leaving.leavingDate) &&
-          session.leaving.leaving == Some(Leaving.YES_AFTER)) {
+          session.leaving.leaving.contains(Leaving.YES_AFTER)) {
           Seq(ValidationError(Messages("gmp.error.revaluation_before_leaving", session.leaving.leavingDate.getAsText), "revaluationDate"))
         }
-        else if (session.leaving.leaving.isDefined &&
-        session.leaving.leaving.get.equals(Leaving.YES_BEFORE) &&
+        else if (session.leaving.leaving.nonEmpty &&
+        session.leaving.leaving.contains(Leaving.YES_BEFORE) &&
         !revaluationDate.revaluationDate.isOnOrAfter05041978){
           Seq(ValidationError(Messages("gmp.error.reval_date.from"), "revaluationDate"))
         }
@@ -110,6 +110,7 @@ class RevaluationForm @Inject()(mcc: MessagesControllerComponents) {
   val leavingMapping = mapping(
     "leavingDate" -> mapping(
       "day" -> optional(text),
+
       "month" -> optional(text),
       "year" -> optional(text)
     )(GmpDate.apply)(GmpDate.unapply),
