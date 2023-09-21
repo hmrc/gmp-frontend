@@ -16,15 +16,17 @@
 
 package models
 
-import org.joda.time.LocalDate
+import java.time.LocalDate
 import play.api.libs.json.Json
+
+import java.time.format.DateTimeFormatter
 
 case class GmpDate(day: Option[String], month: Option[String], year: Option[String]) {
 
   def getAsLocalDate: Option[LocalDate] = {
 
     if (day.isDefined && month.isDefined && year.isDefined)
-      Some(new LocalDate(year.get.toInt, month.get.toInt, day.get.toInt))
+      Some( LocalDate.of(year.get.toInt, month.get.toInt, day.get.toInt))
     else
       None
 
@@ -32,7 +34,7 @@ case class GmpDate(day: Option[String], month: Option[String], year: Option[Stri
 
   def isOnOrAfter06042016: Boolean = {
     if (getAsLocalDate.isDefined) {
-      val thatDate = new LocalDate(2016, 4, 6)
+      val thatDate = LocalDate.of(2016, 4, 6)
       getAsLocalDate.get.isAfter(thatDate) || getAsLocalDate.get.isEqual(thatDate)
     }
     else
@@ -41,7 +43,7 @@ case class GmpDate(day: Option[String], month: Option[String], year: Option[Stri
 
   def isOnOrAfter05041978: Boolean = {
     if (getAsLocalDate.isDefined) {
-      val thatDate = new LocalDate(1978, 4, 5)
+      val thatDate = LocalDate.of(1978, 4, 5)
       getAsLocalDate.get.isAfter(thatDate) || getAsLocalDate.get.isEqual(thatDate)
     }
     else
@@ -50,7 +52,7 @@ case class GmpDate(day: Option[String], month: Option[String], year: Option[Stri
 
   def isBefore05042046: Boolean = {
     if (getAsLocalDate.isDefined) {
-      val thatDate = new LocalDate(2046, 4, 5)
+      val thatDate = LocalDate.of(2046, 4, 5)
       getAsLocalDate.get.isBefore(thatDate)
     }
     else
@@ -59,7 +61,7 @@ case class GmpDate(day: Option[String], month: Option[String], year: Option[Stri
 
   def getAsText: String = {
     getAsLocalDate match {
-      case Some(date) => date.toString("dd MMMM yyyy")
+      case Some(date) => date.format( DateTimeFormatter.ofPattern("dd MMMM yyyy"))
       case _ => ""
     }
   }

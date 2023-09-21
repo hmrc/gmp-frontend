@@ -24,7 +24,7 @@ import controllers.auth.{AuthAction, FakeAuthAction}
 import helpers.RandomNino
 import metrics.ApplicationMetrics
 import models._
-import org.joda.time.LocalDate
+import java.time.LocalDate
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito._
 import org.scalatestplus.mockito.MockitoSugar
@@ -98,37 +98,33 @@ class ResultsControllerSpec extends PlaySpec with GuiceOneServerPerSuite with Mo
   val gmpSessionDifferentTaxYear = GmpSession(MemberDetails("John", "Johnson", nino), "S1234567T", CalculationType.REVALUATION, Some(GmpDate(Some("07"), Some("07"), Some("2015"))), None,
                                                                                                                                      Leaving(GmpDate(Some("07"), Some("07"), Some("2017")), Some(Leaving.YES_AFTER)),None)
 
-  val validCalculationResponse = CalculationResponse("John Johnson", nino, "S1234567T", None, None, List(CalculationPeriod(Some(new
-      LocalDate(2015,
+  val validCalculationResponse = CalculationResponse("John Johnson", nino, "S1234567T", None, None, List(CalculationPeriod(Some(LocalDate.of(2015,
         11, 10)),
-    new LocalDate(2015, 11, 10), "1.11", "2.22", 1, 0, Some(0))), 0, None, None, None, false, 1)
+    LocalDate.of(2015, 11, 10), "1.11", "2.22", 1, 0, Some(0))), 0, None, None, None, false, 1)
 
 
   val revaluationNotRevaluedSingleResponse = CalculationResponse("John Johnson", nino, "S1234567T", Some("1"),
-    revaluationDate = Some(new LocalDate(2015, 7, 7)), List(CalculationPeriod(Some(new LocalDate(2015, 11, 10)),
-    new LocalDate(2015, 11, 10), "1.11", "2.22", 1, 0, Some(1))), 0, None, None, None, false, 1)
+    revaluationDate = Some(LocalDate.of(2015, 7, 7)), List(CalculationPeriod(Some(LocalDate.of(2015, 11, 10)),
+    LocalDate.of(2015, 11, 10), "1.11", "2.22", 1, 0, Some(1))), 0, None, None, None, false, 1)
 
-  val validRevalCalculationResponseMultiplePeriod = CalculationResponse("John Johnson", nino, "S1234567T", Some("2"), Some(new
-      LocalDate), List(
-    CalculationPeriod(Some(new LocalDate(2015, 11, 10)), new LocalDate(2015, 11, 10), "1.11", "2.22", 1, 0, Some(0)),
-    CalculationPeriod(Some(new LocalDate(2014, 11, 9)), new LocalDate(2014, 11, 10), "1.11", "2.22", 1, 56067, Some(0))), 0, None, None, None, false, 1)
+  val validRevalCalculationResponseMultiplePeriod = CalculationResponse("John Johnson", nino, "S1234567T", Some("2"), Some(LocalDate.now), List(
+    CalculationPeriod(Some(LocalDate.of(2015, 11, 10)), LocalDate.of(2015, 11, 10), "1.11", "2.22", 1, 0, Some(0)),
+    CalculationPeriod(Some(LocalDate.of(2014, 11, 9)), LocalDate.of(2014, 11, 10), "1.11", "2.22", 1, 56067, Some(0))), 0, None, None, None, false, 1)
 
-  val validRevalCalculationResponseMultiplePeriodErrors = CalculationResponse("John Johnson", nino, "S1234567T", Some("2"), Some(new
-      LocalDate), List(
-    CalculationPeriod(Some(new LocalDate(2015, 11, 10)), new LocalDate(2015, 11, 10), "1.11", "2.22", 1, 56067, Some(0)),
-    CalculationPeriod(Some(new LocalDate(2014, 11, 9)), new LocalDate(2014, 11, 10), "1.11", "2.22", 1, 56067, Some(0))), 0, None, None, None, false, 1)
+  val validRevalCalculationResponseMultiplePeriodErrors = CalculationResponse("John Johnson", nino, "S1234567T", Some("2"), Some(LocalDate.now), List(
+    CalculationPeriod(Some(LocalDate.of(2015, 11, 10)), LocalDate.of(2015, 11, 10), "1.11", "2.22", 1, 56067, Some(0)),
+    CalculationPeriod(Some(LocalDate.of(2014, 11, 9)), LocalDate.of(2014, 11, 10), "1.11", "2.22", 1, 56067, Some(0))), 0, None, None, None, false, 1)
 
-  val validRevalCalculationResponseSinglePeriod = CalculationResponse("John Johnson", nino, "S1234567T", Some("2"), Some(new
-      LocalDate), List(CalculationPeriod(Some(new LocalDate(2014, 11, 9)), new LocalDate(2014, 11, 10), "1.11", "2.22", 1, 0, Some(0))), 0, None, None, None, false, 1)
+  val validRevalCalculationResponseSinglePeriod = CalculationResponse("John Johnson", nino, "S1234567T", Some("2"), Some(LocalDate.now), List(CalculationPeriod(Some(LocalDate.of(2014, 11, 9)), LocalDate.of(2014, 11, 10), "1.11", "2.22", 1, 0, Some(0))), 0, None, None, None, false, 1)
 
-  val multiErrorResponse = CalculationResponse("John Johnson", nino, "S1234567T", None, Some(new LocalDate(2000, 11, 11)), List(CalculationPeriod
-  (Some(new LocalDate(2015, 11, 10)),
-    new LocalDate(2015, 11, 10), "0.00", "0.00", 0, 56070, Some(0)), CalculationPeriod(Some(new LocalDate(2010, 11, 10)),
-    new LocalDate(2011, 11, 10), "0.00", "0.00", 0, 56007, Some(0))), 0, None, None, None, false, 1)
+  val multiErrorResponse = CalculationResponse("John Johnson", nino, "S1234567T", None, Some(LocalDate.of(2000, 11, 11)), List(CalculationPeriod
+  (Some(LocalDate.of(2015, 11, 10)),
+    LocalDate.of(2015, 11, 10), "0.00", "0.00", 0, 56070, Some(0)), CalculationPeriod(Some(LocalDate.of(2010, 11, 10)),
+    LocalDate.of(2011, 11, 10), "0.00", "0.00", 0, 56007, Some(0))), 0, None, None, None, false, 1)
 
   val validNonRevalMultipleCalculationResponse = CalculationResponse("John Johnson", nino, "S1234567T", None, None,
-    List(CalculationPeriod(Some(new LocalDate(2015, 11, 10)), new LocalDate(2015, 11, 10), "1.11", "2.22", 3, 0, Some(1)),
-      CalculationPeriod(Some(new LocalDate(2015, 11, 10)), new LocalDate(2015, 11, 10), "1.11", "2.22", 3, 0, Some(0))), 0, None, None, None, false, 0)
+    List(CalculationPeriod(Some(LocalDate.of(2015, 11, 10)), LocalDate.of(2015, 11, 10), "1.11", "2.22", 3, 0, Some(1)),
+      CalculationPeriod(Some(LocalDate.of(2015, 11, 10)), LocalDate.of(2015, 11, 10), "1.11", "2.22", 3, 0, Some(0))), 0, None, None, None, false, 0)
 
   val dobNotFoundCalculationResponseNino = RandomNino.generate
 
@@ -137,64 +133,61 @@ class ResultsControllerSpec extends PlaySpec with GuiceOneServerPerSuite with Mo
   val transLinkErrorCalculationResponseNino = RandomNino.generate
   val transLinkErrorCalculationResponse = CalculationResponse("Garne", transLinkErrorCalculationResponseNino, "S1608717T", None, None, Nil, 56012, None, None, None, false, 1)
 
-  val single63123ErrorResponse = CalculationResponse("John Johnson", nino, "S1234567T", None, Some(new LocalDate(2000, 11, 11)), List(CalculationPeriod
-  (Some(new LocalDate(2015, 11, 10)), new LocalDate(2015, 11, 10), "0.00", "0.00", 0, 63123, Some(0))), 0, None, None, None, false, 1)
+  val single63123ErrorResponse = CalculationResponse("John Johnson", nino, "S1234567T", None, Some(LocalDate.of(2000, 11, 11)), List(CalculationPeriod
+  (Some(LocalDate.of(2015, 11, 10)), LocalDate.of(2015, 11, 10), "0.00", "0.00", 0, 63123, Some(0))), 0, None, None, None, false, 1)
 
   val global63119ErrorResponse = CalculationResponse("John Johnson", nino, "S1234567T", None, None, List(), 63119, None, None, None, false, 1)
 
-  val validCalculationSpaResponse = CalculationResponse("John Johnson", nino, "S1234567T", None, None, List(CalculationPeriod(Some(new
-      LocalDate(2015, 11, 10)), new LocalDate(2015, 11, 10), "1.11", "2.22", 1, 0, Some(0))), 0, Some(new LocalDate(2015, 11, 10)), None, None, false, CalculationType.SPA.toInt)
+  val validCalculationSpaResponse = CalculationResponse("John Johnson", nino, "S1234567T", None, None, List(CalculationPeriod(Some(LocalDate.of(2015, 11, 10)), LocalDate.of(2015, 11, 10), "1.11", "2.22", 1, 0, Some(0))), 0, Some(LocalDate.of(2015, 11, 10)), None, None, false, CalculationType.SPA.toInt)
 
-  val validCalculationPayableAgeResponse = CalculationResponse("John Johnson", nino, "S1234567T", None, None, List(CalculationPeriod(Some(new
-      LocalDate(2015, 11, 10)), new LocalDate(2015, 11, 10), "1.11", "2.22", 1, 0, Some(0))), 0, None, Some(new LocalDate(2015, 11, 10)), None, false, CalculationType.PAYABLE_AGE.toInt)
+  val validCalculationPayableAgeResponse = CalculationResponse("John Johnson", nino, "S1234567T", None, None, List(CalculationPeriod(Some(LocalDate.of(2015, 11, 10)), LocalDate.of(2015, 11, 10), "1.11", "2.22", 1, 0, Some(0))), 0, None, Some(LocalDate.of(2015, 11, 10)), None, false, CalculationType.PAYABLE_AGE.toInt)
 
-  val validCalculationWithContsAndEarningsResponse = CalculationResponse("John Johnson", nino, "S1234567T", None, None, List(CalculationPeriod(Some(new
-      LocalDate(2014, 11, 10)), new LocalDate(2015, 11, 10), "1.11", "2.22", 1, 0, Some(0), None, None, None, Some(List(ContributionsAndEarnings(2015, "234.00"),
-    ContributionsAndEarnings(2014, "124.00"))))), 0, None, Some(new LocalDate(2015, 11, 10)), None, false, 1)
+  val validCalculationWithContsAndEarningsResponse = CalculationResponse("John Johnson", nino, "S1234567T", None, None, List(CalculationPeriod(Some(LocalDate.of(2014, 11, 10)), LocalDate.of(2015, 11, 10), "1.11", "2.22", 1, 0, Some(0), None, None, None, Some(List(ContributionsAndEarnings(2015, "234.00"),
+    ContributionsAndEarnings(2014, "124.00"))))), 0, None, Some(LocalDate.of(2015, 11, 10)), None, false, 1)
 
   val validCalculationWithContsAndEarningsErroredResponse = CalculationResponse("John Johnson", nino, "S1234567T", None, None,
     List(
       CalculationPeriod(
-        Some(new LocalDate(2014, 11, 10)), new LocalDate(2015, 11, 10), "1.11", "2.22", 1, 0, Some(0), None, None, None,
+        Some(LocalDate.of(2014, 11, 10)), LocalDate.of(2015, 11, 10), "1.11", "2.22", 1, 0, Some(0), None, None, None,
         Some(List(
           ContributionsAndEarnings(2015, "234.00"),
           ContributionsAndEarnings(2014, "124.00"))
         )
       ),
       CalculationPeriod(
-        Some(new LocalDate(2014, 11, 10)), new LocalDate(2015, 11, 10), "1.11", "2.22", 1, 56067, Some(0), None, None, None,
+        Some(LocalDate.of(2014, 11, 10)), LocalDate.of(2015, 11, 10), "1.11", "2.22", 1, 56067, Some(0), None, None, None,
         Some(List(
           ContributionsAndEarnings(2015, "234.00"),
           ContributionsAndEarnings(2014, "124.00"))
         )
       ),
       CalculationPeriod(
-        Some(new LocalDate(2014, 11, 10)), new LocalDate(2015, 11, 10), "1.11", "2.22", 1, 0, Some(0), None, None, None,
+        Some(LocalDate.of(2014, 11, 10)), LocalDate.of(2015, 11, 10), "1.11", "2.22", 1, 0, Some(0), None, None, None,
         Some(List(
           ContributionsAndEarnings(2015, "234.00"),
           ContributionsAndEarnings(2014, "124.00"))
         )
       ),
       CalculationPeriod(
-        Some(new LocalDate(2014, 11, 10)), new LocalDate(2015, 11, 10), "1.11", "2.22", 1, 0, Some(0), None, None, None,
+        Some(LocalDate.of(2014, 11, 10)), LocalDate.of(2015, 11, 10), "1.11", "2.22", 1, 0, Some(0), None, None, None,
         Some(List(
           ContributionsAndEarnings(2015, "234.00"),
           ContributionsAndEarnings(2014, "124.00"))
         )
       )
-    ), 0, None, Some(new LocalDate(2015, 11, 10)), None, false, 1)
+    ), 0, None, Some(LocalDate.of(2015, 11, 10)), None, false, 1)
 
-  val dualCalcResponse = CalculationResponse("John Johnson", nino, "S1234567T", Some("2"), Some(new LocalDate),
+  val dualCalcResponse = CalculationResponse("John Johnson", nino, "S1234567T", Some("2"), Some(LocalDate.now),
     List(
-      CalculationPeriod(Some(new LocalDate(2015, 11, 10)), new LocalDate(2015, 11, 10), "1.11", "2.22", 1, 0, Some(0), Some("1.23"), Some("4.56")),
-      CalculationPeriod(Some(new LocalDate(2014, 11, 9)), new LocalDate(2014, 11, 10), "1.11", "2.22", 1, 0, Some(0), Some("1.23"), Some("4.56"))
+      CalculationPeriod(Some(LocalDate.of(2015, 11, 10)), LocalDate.of(2015, 11, 10), "1.11", "2.22", 1, 0, Some(0), Some("1.23"), Some("4.56")),
+      CalculationPeriod(Some(LocalDate.of(2014, 11, 9)), LocalDate.of(2014, 11, 10), "1.11", "2.22", 1, 0, Some(0), Some("1.23"), Some("4.56"))
     ), 0, None, None, None, true, 1)
 
-  val dualCalcResponse2 = CalculationResponse("John Johnson", nino, "S1234567T", Some("2"), Some(new LocalDate),
+  val dualCalcResponse2 = CalculationResponse("John Johnson", nino, "S1234567T", Some("2"), Some(LocalDate.now),
     List(
-      CalculationPeriod(Some(new LocalDate(2015, 11, 10)), new LocalDate(2015, 11, 10), "1.11", "2.22", 1, 0, Some(0), Some("0.00"), Some("4.56")),
-      CalculationPeriod(startDate = Some(new LocalDate(2014, 11, 9)),
-        endDate = new LocalDate(2014, 11, 10),
+      CalculationPeriod(Some(LocalDate.of(2015, 11, 10)), LocalDate.of(2015, 11, 10), "1.11", "2.22", 1, 0, Some(0), Some("0.00"), Some("4.56")),
+      CalculationPeriod(startDate = Some(LocalDate.of(2014, 11, 9)),
+        endDate = LocalDate.of(2014, 11, 10),
         gmpTotal = "1.11",
         post88GMPTotal = "2.22",
         revaluationRate = 1,
@@ -203,51 +196,42 @@ class ResultsControllerSpec extends PlaySpec with GuiceOneServerPerSuite with Mo
         dualCalcPost90TrueTotal = Some("1.23"), dualCalcPost90OppositeTotal = Some("0.00"))
     ), 0, None, None, None, true, 1)
 
-  val nonDualCalcResponse = CalculationResponse("John Johnson", nino, "S1234567T", Some("2"), Some(new LocalDate),
+  val nonDualCalcResponse = CalculationResponse("John Johnson", nino, "S1234567T", Some("2"), Some(LocalDate.now),
     List(
-      CalculationPeriod(Some(new LocalDate(2015, 11, 10)), new LocalDate(2015, 11, 10), "1.11", "2.22", 1, 0, Some(0), None, None),
-      CalculationPeriod(Some(new LocalDate(2014, 11, 9)), new LocalDate(2014, 11, 10), "1.11", "2.22", 1, 0, Some(0), None, None)
+      CalculationPeriod(Some(LocalDate.of(2015, 11, 10)), LocalDate.of(2015, 11, 10), "1.11", "2.22", 1, 0, Some(0), None, None),
+      CalculationPeriod(Some(LocalDate.of(2014, 11, 9)), LocalDate.of(2014, 11, 10), "1.11", "2.22", 1, 0, Some(0), None, None)
     ), 0, None, None, None, false, 1)
 
-  val validRevaluationMultipleSameTaxYear = CalculationResponse("John Johnson", nino, "S1234567T", Some("0"), Some(new LocalDate(2016,8,24)),
+  val validRevaluationMultipleSameTaxYear = CalculationResponse("John Johnson", nino, "S1234567T", Some("0"), Some(LocalDate.of(2016,8,24)),
     List(
-      CalculationPeriod(Some(new LocalDate(2015, 11, 10)), new LocalDate(2016, 8, 24), "1.11", "2.22", 1, 0, Some(1), None, None),
-      CalculationPeriod(Some(new LocalDate(2014, 11, 9)), new LocalDate(2014, 11, 10), "1.11", "2.22", 1, 0, Some(0), None, None)
+      CalculationPeriod(Some(LocalDate.of(2015, 11, 10)), LocalDate.of(2016, 8, 24), "1.11", "2.22", 1, 0, Some(1), None, None),
+      CalculationPeriod(Some(LocalDate.of(2014, 11, 9)), LocalDate.of(2014, 11, 10), "1.11", "2.22", 1, 0, Some(0), None, None)
     ), 0, None, None, None, false, 1)
 
-  val validRevalSingleSameTaxYear = CalculationResponse("John Johnson", nino, "S1234567T", Some("0"), Some(new LocalDate(2016,8,24)),
+  val validRevalSingleSameTaxYear = CalculationResponse("John Johnson", nino, "S1234567T", Some("0"), Some(LocalDate.of(2016,8,24)),
     List(
-      CalculationPeriod(Some(new LocalDate(2015, 11, 10)), new LocalDate(2016, 8, 24), "1.11", "2.22", 1, 0, Some(1), None, None)), 0, None, None, None, false, 1)
+      CalculationPeriod(Some(LocalDate.of(2015, 11, 10)), LocalDate.of(2016, 8, 24), "1.11", "2.22", 1, 0, Some(1), None, None)), 0, None, None, None, false, 1)
 
-  val single58161CalculationResponse = CalculationResponse("John Johnson", nino, "S1234567T", None, None, List(CalculationPeriod(Some(new
-      LocalDate(2015, 11, 10)), new LocalDate(2015, 11, 10), "1.11", "2.22", 0, 58161, Some(0))), 0, None, None, None, false, 1)
+  val single58161CalculationResponse = CalculationResponse("John Johnson", nino, "S1234567T", None, None, List(CalculationPeriod(Some(LocalDate.of(2015, 11, 10)), LocalDate.of(2015, 11, 10), "1.11", "2.22", 0, 58161, Some(0))), 0, None, None, None, false, 1)
 
-  val survivorCalculationResponse = CalculationResponse("John Johnson", nino, "S1234567T", None, None, List(CalculationPeriod(Some(new
-      LocalDate(2015, 11, 10)), new LocalDate(2015, 11, 10), "1.11", "2.22", 0, 0, Some(0))), 0, None, None, None, false, CalculationType.SURVIVOR.toInt)
+  val survivorCalculationResponse = CalculationResponse("John Johnson", nino, "S1234567T", None, None, List(CalculationPeriod(Some(LocalDate.of(2015, 11, 10)), LocalDate.of(2015, 11, 10), "1.11", "2.22", 0, 0, Some(0))), 0, None, None, None, false, CalculationType.SURVIVOR.toInt)
 
-  val survivorRevaluationCalculationResponse = CalculationResponse("John Johnson", nino, "S1234567T", None, Some(new LocalDate(2010, 11, 10)), List(CalculationPeriod(Some(new
-      LocalDate(2015, 11, 10)), new LocalDate(2015, 11, 10), "1.11", "2.22", 0, 0, Some(0), inflationProofBeyondDod = Some(1))), 0, None, None, None, false, CalculationType.SURVIVOR.toInt)
+  val survivorRevaluationCalculationResponse = CalculationResponse("John Johnson", nino, "S1234567T", None, Some(LocalDate.of(2010, 11, 10)), List(CalculationPeriod(Some(LocalDate.of(2015, 11, 10)), LocalDate.of(2015, 11, 10), "1.11", "2.22", 0, 0, Some(0), inflationProofBeyondDod = Some(1))), 0, None, None, None, false, CalculationType.SURVIVOR.toInt)
 
-  val survivorRevaluationCalculationResponseNoInflation = CalculationResponse("John Johnson", nino, "S1234567T", None, revaluationDate = Some(new LocalDate(2015, 9,12)),
-        List(CalculationPeriod(Some(new LocalDate(2015, 11, 10)), new LocalDate(2015, 11, 10), "1.11", "2.22", 0, 0, Some(0), inflationProofBeyondDod = Some(0))), 0, None, None, Some(new LocalDate(2016,2,2)), false, CalculationType.SURVIVOR.toInt)
+  val survivorRevaluationCalculationResponseNoInflation = CalculationResponse("John Johnson", nino, "S1234567T", None, revaluationDate = Some(LocalDate.of(2015, 9,12)),
+        List(CalculationPeriod(Some(LocalDate.of(2015, 11, 10)), LocalDate.of(2015, 11, 10), "1.11", "2.22", 0, 0, Some(0), inflationProofBeyondDod = Some(0))), 0, None, None, Some(LocalDate.of(2016,2,2)), false, CalculationType.SURVIVOR.toInt)
 
-  val single63151CalculationResponse = CalculationResponse("John Johnson", nino, "S1234567T", None, None, List(CalculationPeriod(Some(new
-      LocalDate(2015, 11, 10)), new LocalDate(2015, 11, 10), "1.11", "2.22", 0, 63151, Some(0))), 0, None, None, None, false, 1)
+  val single63151CalculationResponse = CalculationResponse("John Johnson", nino, "S1234567T", None, None, List(CalculationPeriod(Some(LocalDate.of(2015, 11, 10)), LocalDate.of(2015, 11, 10), "1.11", "2.22", 0, 63151, Some(0))), 0, None, None, None, false, 1)
 
-  val single63149CalculationResponse = CalculationResponse("John Johnson", nino, "S1234567T", None, None, List(CalculationPeriod(Some(new
-      LocalDate(2015, 11, 10)), new LocalDate(2015, 11, 10), "1.11", "2.22", 0, 63149, Some(0))), 0, None, None, None, false, 1)
+  val single63149CalculationResponse = CalculationResponse("John Johnson", nino, "S1234567T", None, None, List(CalculationPeriod(Some(LocalDate.of(2015, 11, 10)), LocalDate.of(2015, 11, 10), "1.11", "2.22", 0, 63149, Some(0))), 0, None, None, None, false, 1)
 
-  val single63148CalculationResponse = CalculationResponse("John Johnson", nino, "S1234567T", None, None, List(CalculationPeriod(Some(new
-      LocalDate(2015, 11, 10)), new LocalDate(2015, 11, 10), "1.11", "2.22", 0, 63148, Some(0))), 0, None, None, None, false, 1)
+  val single63148CalculationResponse = CalculationResponse("John Johnson", nino, "S1234567T", None, None, List(CalculationPeriod(Some(LocalDate.of(2015, 11, 10)), LocalDate.of(2015, 11, 10), "1.11", "2.22", 0, 63148, Some(0))), 0, None, None, None, false, 1)
 
-  val single63147CalculationResponse = CalculationResponse("John Johnson", nino, "S1234567T", None, None, List(CalculationPeriod(Some(new
-      LocalDate(2015, 11, 10)), new LocalDate(2015, 11, 10), "1.11", "2.22", 0, 63147, Some(0))), 0, None, None, None, false, 1)
+  val single63147CalculationResponse = CalculationResponse("John Johnson", nino, "S1234567T", None, None, List(CalculationPeriod(Some(LocalDate.of(2015, 11, 10)), LocalDate.of(2015, 11, 10), "1.11", "2.22", 0, 63147, Some(0))), 0, None, None, None, false, 1)
 
-  val single63150CalculationResponse = CalculationResponse("John Johnson", nino, "S1234567T", None, None, List(CalculationPeriod(Some(new
-      LocalDate(2015, 11, 10)), new LocalDate(2015, 11, 10), "1.11", "2.22", 0, 63150, Some(0))), 0, None, None, None, false, 1)
+  val single63150CalculationResponse = CalculationResponse("John Johnson", nino, "S1234567T", None, None, List(CalculationPeriod(Some(LocalDate.of(2015, 11, 10)), LocalDate.of(2015, 11, 10), "1.11", "2.22", 0, 63150, Some(0))), 0, None, None, None, false, 1)
 
-  val single63167CalculationResponse = CalculationResponse("John Johnson", nino, "S1234567T", None, None, List(CalculationPeriod(Some(new
-      LocalDate(2015, 11, 10)), new LocalDate(2015, 11, 10), "1.11", "2.22", 0, 63167, Some(0))), 0, None, None, None, false, 1)
+  val single63167CalculationResponse = CalculationResponse("John Johnson", nino, "S1234567T", None, None, List(CalculationPeriod(Some(LocalDate.of(2015, 11, 10)), LocalDate.of(2015, 11, 10), "1.11", "2.22", 0, 63167, Some(0))), 0, None, None, None, false, 1)
 
   val survivor63167CalculationResponse = CalculationResponse("John Johnson", nino, "S1234567T", None, None, List(), 0, None, None, None, false, 3)
 
@@ -371,7 +355,7 @@ class ResultsControllerSpec extends PlaySpec with GuiceOneServerPerSuite with Mo
         "show the returned date of death and the correct header when survivor and no inflation proof" in {
           when(mockSessionService.fetchGmpSession()(any())).thenReturn(Future.successful(Some(gmpSession.copy(scenario = CalculationType.SURVIVOR))))
           when(mockCalculationConnector.calculateSingle(any(),any())(any())).thenReturn(Future.successful(
-            survivorRevaluationCalculationResponseNoInflation.copy(dateOfDeath = Some(new LocalDate("2017-01-01")), revaluationDate = None)))
+            survivorRevaluationCalculationResponseNoInflation.copy(dateOfDeath = Some(LocalDate.of(2017, 1, 1)), revaluationDate = None)))
             val result = TestResultsController.get(FakeRequest())
             contentAsString(result) must include("Surviving partner’s GMP entitlement at date of death (1 January 2017)")
             contentAsString(result) must not include (Messages("gmp.no_inflation.subheader"))
@@ -423,7 +407,7 @@ class ResultsControllerSpec extends PlaySpec with GuiceOneServerPerSuite with Mo
         "show the revalued header correctly when transferring with single result" in {
           when(mockSessionService.fetchGmpSession()(any())).thenReturn(Future.successful(Some(gmpSession)))
           when(mockCalculationConnector.calculateSingle(any(),any())(any())).thenReturn(Future.successful
-          (validCalculationResponse.copy(revaluationDate = Some(new LocalDate(2000, 11, 11)), revaluationRate = Some("1"))))
+          (validCalculationResponse.copy(revaluationDate = Some(LocalDate.of(2000, 11, 11)), revaluationRate = Some("1"))))
             val result = TestResultsController.get(FakeRequest())
             contentAsString(result) must include(Messages("gmp.leaving.revalued.header", "11 November 2000", "S148"))
         }
@@ -440,7 +424,7 @@ class ResultsControllerSpec extends PlaySpec with GuiceOneServerPerSuite with Mo
         "not show the returned rate on member details table when transferring with single result" in {
           when(mockSessionService.fetchGmpSession()(any())).thenReturn(Future.successful(Some(gmpSession)))
           when(mockCalculationConnector.calculateSingle(any(),any())(any())).thenReturn(Future.successful
-          (validCalculationResponse.copy(revaluationDate = Some(new LocalDate(2000, 11, 11)), revaluationRate = Some("1"))))
+          (validCalculationResponse.copy(revaluationDate = Some(LocalDate.of(2000, 11, 11)), revaluationRate = Some("1"))))
             val result = TestResultsController.get(FakeRequest())
             contentAsString(result) must not include ("<td id=\"gmp-rate\">")
             contentAsString(result).replaceAll("&#x27;", "'") must include(Messages("gmp.queryhandling.resultsmessage"))
@@ -449,7 +433,7 @@ class ResultsControllerSpec extends PlaySpec with GuiceOneServerPerSuite with Mo
         "show the revalued header correctly when divorcing with single result" in {
           when(mockSessionService.fetchGmpSession()(any())).thenReturn(Future.successful(Some(gmpSession)))
           when(mockCalculationConnector.calculateSingle(any(),any())(any())).thenReturn(Future.successful
-          (validCalculationResponse.copy(revaluationDate = Some(new LocalDate(2000, 11, 11)), revaluationRate = Some("1"))))
+          (validCalculationResponse.copy(revaluationDate = Some(LocalDate.of(2000, 11, 11)), revaluationRate = Some("1"))))
             val result = TestResultsController.get(FakeRequest())
             contentAsString(result) must include(Messages("gmp.leaving.revalued.header", "11 November 2000", "S148"))
         }
@@ -459,7 +443,7 @@ class ResultsControllerSpec extends PlaySpec with GuiceOneServerPerSuite with Mo
         "show the revalued header correctly when transferring with multiple result" in {
           when(mockSessionService.fetchGmpSession()(any())).thenReturn(Future.successful(Some(gmpSession)))
           when(mockCalculationConnector.calculateSingle(any(),any())(any())).thenReturn(Future.successful
-          (validNonRevalMultipleCalculationResponse.copy(revaluationDate = Some(new LocalDate(2000, 11, 11)), revaluationRate = Some("0"))))
+          (validNonRevalMultipleCalculationResponse.copy(revaluationDate = Some(LocalDate.of(2000, 11, 11)), revaluationRate = Some("0"))))
             val result = TestResultsController.get(FakeRequest())
             contentAsString(result) must include(Messages("gmp.leaving.revalued.header", "11 November 2000", "HMRC held"))
         }
@@ -467,7 +451,7 @@ class ResultsControllerSpec extends PlaySpec with GuiceOneServerPerSuite with Mo
         "show the revalued header correctly when divorcing with multiple result" in {
           when(mockSessionService.fetchGmpSession()(any())).thenReturn(Future.successful(Some(gmpSession)))
           when(mockCalculationConnector.calculateSingle(any(),any())(any())).thenReturn(Future.successful
-          (validNonRevalMultipleCalculationResponse.copy(revaluationDate = Some(new LocalDate(2000, 11, 11)), revaluationRate = Some("3"))))
+          (validNonRevalMultipleCalculationResponse.copy(revaluationDate = Some(LocalDate.of(2000, 11, 11)), revaluationRate = Some("3"))))
             val result = TestResultsController.get(FakeRequest())
             contentAsString(result) must include(Messages("gmp.leaving.revalued.header", "11 November 2000", "Limited"))
         }
@@ -477,7 +461,7 @@ class ResultsControllerSpec extends PlaySpec with GuiceOneServerPerSuite with Mo
           when(mockCalculationConnector.calculateSingle(any(),any())(any())).thenReturn(Future.successful(revaluationNotRevaluedSingleResponse))
 
             val result = TestResultsController.get(FakeRequest())
-            contentAsString(result) must include(Messages("gmp.leaving.scheme.header", formatDate(new LocalDate(2015, 7, 7))))
+            contentAsString(result) must include(Messages("gmp.leaving.scheme.header", formatDate(LocalDate.of(2015, 7, 7))))
             contentAsString(result) must include(Messages("gmp.notrevalued.subheader"))
         }
 
@@ -766,7 +750,7 @@ class ResultsControllerSpec extends PlaySpec with GuiceOneServerPerSuite with Mo
           val date = GmpDate(day = Some("24"), month = Some("08"), year = Some("2016"))
           when(mockSessionService.fetchGmpSession()(any())).thenReturn(Future.successful(Some(gmpSessionWithHMRCRate.copy(leaving = Leaving(date, Some(Leaving.YES_AFTER))))))
           when(mockCalculationConnector.calculateSingle(any(),any())(any())).thenReturn(Future.successful(survivorRevaluationCalculationResponseNoInflation.copy(revaluationRate = Some("0"),
-            calculationPeriods = List(CalculationPeriod(Some(new LocalDate(2015, 11, 10)), new LocalDate(2015, 11, 10), "1.11", "2.22", 1, 0, Some(0), inflationProofBeyondDod = Some(0))))))
+            calculationPeriods = List(CalculationPeriod(Some(LocalDate.of(2015, 11, 10)), LocalDate.of(2015, 11, 10), "1.11", "2.22", 1, 0, Some(0), inflationProofBeyondDod = Some(0))))))
             val result = TestResultsController.get(FakeRequest())
             contentAsString(result) must include("""Revaluation rate chosen: <b class="bold">HMRC held rate</b> <b class='bold'>(S148)</b>""")
             contentAsString(result) must include(Messages("gmp.no_inflation.subheader"))
@@ -775,8 +759,7 @@ class ResultsControllerSpec extends PlaySpec with GuiceOneServerPerSuite with Mo
         "show the correct subheader when survivor and member left scheme, rate entered and inflation proof" in {
           val date = GmpDate(day = Some("24"), month = Some("08"), year = Some("2016"))
           when(mockSessionService.fetchGmpSession()(any())).thenReturn(Future.successful(Some(gmpSessionWithHMRCRate.copy(leaving = Leaving(date, Some(Leaving.YES_AFTER))))))
-          when(mockCalculationConnector.calculateSingle(any(),any())(any())).thenReturn(Future.successful(survivorRevaluationCalculationResponse.copy(revaluationRate = Some("1"), calculationPeriods = List(CalculationPeriod(Some(new
-              LocalDate(2015, 11, 10)), new LocalDate(2015, 11, 10), "1.11", "2.22", 1, 0, Some(0), inflationProofBeyondDod = Some(1))))))
+          when(mockCalculationConnector.calculateSingle(any(),any())(any())).thenReturn(Future.successful(survivorRevaluationCalculationResponse.copy(revaluationRate = Some("1"), calculationPeriods = List(CalculationPeriod(Some(LocalDate.of(2015, 11, 10)), LocalDate.of(2015, 11, 10), "1.11", "2.22", 1, 0, Some(0), inflationProofBeyondDod = Some(1))))))
             val result = TestResultsController.get(FakeRequest())
             contentAsString(result) must include("""Revaluation rate chosen: <b class="bold">S148</b>""")
             contentAsString(result) must not include (Messages("gmp.no_inflation.subheader"))
@@ -786,7 +769,7 @@ class ResultsControllerSpec extends PlaySpec with GuiceOneServerPerSuite with Mo
           val date = GmpDate(day = Some("24"), month = Some("08"), year = Some("2016"))
           when(mockSessionService.fetchGmpSession()(any())).thenReturn(Future.successful(Some(gmpSessionWithRate.copy(leaving = Leaving(date, Some(Leaving.NO))))))
           when(mockCalculationConnector.calculateSingle(any(),any())(any())).thenReturn(Future.successful(survivorRevaluationCalculationResponseNoInflation.copy(revaluationRate = Some("0"),
-            calculationPeriods = List(CalculationPeriod(Some(new LocalDate(2015, 11, 10)), new LocalDate(2015, 11, 10), "1.11", "2.22", 1, 0, Some(0), inflationProofBeyondDod = Some(0))))))
+            calculationPeriods = List(CalculationPeriod(Some(LocalDate.of(2015, 11, 10)), LocalDate.of(2015, 11, 10), "1.11", "2.22", 1, 0, Some(0), inflationProofBeyondDod = Some(0))))))
             val result = TestResultsController.get(FakeRequest())
             contentAsString(result) must not include ("Revaluation rate chosen: HMRC held rate (S148)")
             contentAsString(result) must not include (Messages("gmp.no_inflation.subheader"))
@@ -942,7 +925,7 @@ class ResultsControllerSpec extends PlaySpec with GuiceOneServerPerSuite with Mo
       "set dol in request model" in {
 
           val result = TestResultsController.createCalculationRequest(gmpSession2.copy(leaving = Leaving(GmpDate(Some("1"), Some("1"), Some("2010")), leaving = Some("Yes"))))
-          result.terminationDate must be(Some(new LocalDate(2010, 1, 1)))
+          result.terminationDate.get.toString must be(LocalDate.of(2010, 1, 1).toString)
 
       }
     }

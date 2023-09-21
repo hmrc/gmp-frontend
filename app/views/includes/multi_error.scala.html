@@ -18,18 +18,14 @@
 @import uk.gov.hmrc.govukfrontend.views.html.components.GovukTable
 @(calculationResponse:CalculationResponse, govukTable: GovukTable)(implicit messages: Messages, ac:ApplicationConfig)
 
-
-@import org.joda.time.LocalDate
-
+@import java.time.format.DateTimeFormatter
 
 <h1 class="govuk-heading-l" id="part-problem">@{Messages("gmp.part_problem")}</h1>
 @for((period, count) <- calculationResponse.calculationPeriods.zipWithIndex) {
     @if(period.errorCode > 0) {
         <div class="govuk-inset-text">
-            @{
-                new LocalDate(period.startDate.get).toString("dd MMMM yyyy")
-            } to @{
-            new LocalDate(period.endDate).toString("dd MMMM yyyy")
+            @{period.startDate.get.format( DateTimeFormatter.ofPattern("dd MMMM yyyy"))} to @{
+            period.endDate.format(DateTimeFormatter.ofPattern("dd MMMM yyyy"))
         }: @Messages("gmp.unavailable")
         </div>
         @if(ac.globalErrors.hasPath(s"${period.errorCode}.reason")) {

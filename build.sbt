@@ -26,7 +26,7 @@ lazy val microservice = Project(appName, file("."))
     scalaSettings,
     defaultSettings(),
     majorVersion := 4,
-    scalaVersion := "2.12.13",
+    scalaVersion := "2.13.8",
     libraryDependencies ++= AppDependencies.all,
     Test / parallelExecution := false,
     Test / fork := false,
@@ -37,12 +37,12 @@ lazy val microservice = Project(appName, file("."))
     scalacOptions ++= List(
       "-Yrangepos",
       "-Xlint:-missing-interpolator,_",
-      "-Yno-adapted-args",
       "-feature",
       "-unchecked",
       "-language:implicitConversions",
       "-P:silencer:pathFilters=routes;TestStorage",
-      "-P:silencer:globalFilters=Unused import"
+      "-P:silencer:globalFilters=Unused import",
+      "-Wconf:cat=lint-multiarg-infix:silent"
     )
   )
   .disablePlugins(JUnitXmlReportPlugin) //Required to prevent https://github.com/scalatest/scalatest/issues/1427

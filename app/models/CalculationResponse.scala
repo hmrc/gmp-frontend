@@ -16,9 +16,7 @@
 
 package models
 
-import org.joda.time.LocalDate
-import play.api.libs.json.JodaWrites._
-import play.api.libs.json.JodaReads._
+import java.time.LocalDate
 import play.api.i18n.Messages
 import play.api.libs.json.Json
 import uk.gov.hmrc.time.TaxYear
