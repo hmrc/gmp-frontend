@@ -18,7 +18,10 @@
 @import uk.gov.hmrc.govukfrontend.views.html.components._
 @(calculationResponse:CalculationResponse, govukTable : GovukTable)(implicit messages: Messages)
 
-@import org.joda.time.LocalDate
+@import java.time.LocalDate
+@import java.time.format.DateTimeFormatter
+
+@dateFormatter = @{DateTimeFormatter.ofPattern("d MMM yyyy")}
 
 @htmlContent1(period: CalculationPeriod) = @{
     if(period.dualCalcPost90TrueTotal != Some("0.00"))
@@ -75,8 +78,8 @@
     rows = calculationResponse.calculationPeriods.zipWithIndex.map { result =>
         val (period, count) = result
 
-        val currentDate = new LocalDate(period.startDate.get).toString("d MMM yyyy")
-        val endDate = new LocalDate(period.endDate).toString("d MMM yyyy")
+        val currentDate = period.startDate.get.format(dateFormatter)
+        val endDate = period.endDate.format(dateFormatter)
         if(period.errorCode == 0) tableRowWithErrorCode0(currentDate, endDate, period, count) else tableRowWithErrorCodeNonZero(currentDate, endDate, period)
     }
     ,

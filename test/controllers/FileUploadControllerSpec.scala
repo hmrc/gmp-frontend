@@ -109,7 +109,7 @@ class FileUploadControllerSpec extends PlaySpec with GuiceOneServerPerSuite with
 
     "successfully store callback data in session cache" in {
       when(mockSessionService.cacheCallBackData(any())(any())).thenReturn(Future.successful(Some(gmpBulkSession)))
-      when(mockSessionService.updateCallbackRecord(any(), any())(any())).thenReturn(Future.successful(Unit))
+      when(mockSessionService.updateCallbackRecord(any(), any())(any())).thenReturn(Future.successful(()))
       val result = TestFileUploadController.callback("session1")(fakeRequest)
       status(result) must be(OK)
 

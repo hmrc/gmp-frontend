@@ -16,15 +16,15 @@
 
 package views.helpers
 
-import org.joda.time.LocalDate
-import org.joda.time.format.DateTimeFormat
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 object GmpDateFormatter {
 
-  val dateFormatter = DateTimeFormat.forPattern("d MMMM yyyy")
+  val dateFormatter = DateTimeFormatter.ofPattern("d MMMM yyyy")
 
   def formatDate(localDate: LocalDate): String = {
-    localDate.toString(dateFormatter)
+    localDate.format(dateFormatter)
   }
 
 }

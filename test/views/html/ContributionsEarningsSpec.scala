@@ -17,7 +17,7 @@
 package views.html
 
 import models.{CalculationPeriod, CalculationResponse, ContributionsAndEarnings}
-import org.joda.time.LocalDate
+import java.time.LocalDate
 import play.twirl.api.Html
 import uk.gov.hmrc.govukfrontend.views.html.components.{GovukBackLink, GovukTable}
 import utils.GmpViewSpec

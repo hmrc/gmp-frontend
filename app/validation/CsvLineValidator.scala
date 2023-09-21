@@ -16,8 +16,8 @@
 
 package validation
 
-import org.joda.time.LocalDate
-import org.joda.time.format.DateTimeFormat
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import play.api.i18n.Messages
 import services.BulkRequestCsvColumn
 import uk.gov.hmrc.time.TaxYear
@@ -26,7 +26,7 @@ trait FieldValidator {
 
   val MAX_NAME_LENGTH = 99
   val DATE_FORMAT_PATTERN = "dd/MM/yyyy"
-  val DATE_FORMAT = DateTimeFormat.forPattern(DATE_FORMAT_PATTERN)
+  val DATE_FORMAT = DateTimeFormatter.ofPattern(DATE_FORMAT_PATTERN)
 
   def validateScon(scon: String)(implicit messages: Messages): Option[String] = {
     scon match {

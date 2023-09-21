@@ -16,11 +16,15 @@
 
 @(calculationResponse:CalculationResponse)(implicit messages: Messages)
 
+@import java.time.format.DateTimeFormatter
+
+@dateFormatter = @{DateTimeFormatter.ofPattern("d MMMM yyyy")}
+
         <h2 class="govuk-error-summary__title" id="conts-and-earnings-error-header">@{Messages("gmp.only_part_problem")}</h2>
                 @for((period, count) <- calculationResponse.calculationPeriods.zipWithIndex){
                     @if(period.errorCode != 0){
                         <div class="govuk-inset-text">
-                           @{Messages("gmp.contracted_out_period_error" ,s"${period.startDate.get.toString("d MMMM yyyy")}", s"${period.endDate.toString("d MMMM yyyy")}")}
+                           @{Messages("gmp.contracted_out_period_error" ,s"${period.startDate.get.format(dateFormatter)}", s"${period.endDate.format(dateFormatter)}")}
                         </div>
                     }
                 }

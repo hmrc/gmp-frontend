@@ -19,8 +19,8 @@ package services
 import com.google.inject.Inject
 import models.upscan.UploadedSuccessfully
 import models.{BulkCalculationRequest, BulkCalculationRequestLine, CalculationRequestLine}
-import org.joda.time.LocalDate
-import org.joda.time.format.DateTimeFormat
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import play.api.i18n.{Messages, MessagesImpl}
 import play.api.mvc.MessagesControllerComponents
 import play.api.{Configuration, Environment, Logging, Mode}
@@ -81,9 +81,9 @@ class BulkRequestCreationService @Inject()(environment: Environment,
   val LINE_FEED: Int = 10
   val MAX_LINES = 25001     // Limit is 25,000 rows, but we add one to account for the header
 
-  private val DATE_FORMAT: String = "yyyy-MM-dd"
+  private val DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd")
 
-  val inputDateFormatter = DateTimeFormat.forPattern("dd/MM/yyyy")
+  val inputDateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
 
   private def enterLineNumbers(bulkCalculationRequestLines: List[BulkCalculationRequestLine]): List[BulkCalculationRequestLine] = {
     for ((x, i) <- bulkCalculationRequestLines.zipWithIndex) yield x.copy(lineId = i + 1)
@@ -165,7 +165,7 @@ class BulkRequestCreationService @Inject()(environment: Environment,
   }
 
   private def protectedDateConvert(date: String): Option[String] = {
-    val tryConverting = Try(LocalDate.parse(date, inputDateFormatter).toString(DATE_FORMAT))
+    val tryConverting = Try(LocalDate.parse(date, inputDateFormatter).format(DATE_FORMAT))
 
     tryConverting match {
       case Success(convertedDate) => Some(convertedDate)
@@ -187,7 +187,7 @@ class BulkRequestCreationService @Inject()(environment: Environment,
         val convertedDate = LocalDate.parse(termDate, inputDateFormatter)
         val thatDate = TaxYear(2016).starts.minusDays(1)
         if (convertedDate.isAfter(thatDate))
-          Some(convertedDate.toString(DATE_FORMAT))
+          Some(convertedDate.format(DATE_FORMAT))
         else
           None
       }

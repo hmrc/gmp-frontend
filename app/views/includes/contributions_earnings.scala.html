@@ -15,8 +15,11 @@
  *@
 
 @import uk.gov.hmrc.govukfrontend.views.html.components._
+@import java.time.format.DateTimeFormatter
 
 @(calculationResponse:CalculationResponse, govukTable: GovukTable)(implicit messages: Messages)
+
+@dateFormatter = @{DateTimeFormatter.ofPattern("d MMMM yyyy")}
 
     @if(calculationResponse.hasErrors){
         @includes.contributions_and_earnings_error(calculationResponse)
@@ -31,7 +34,7 @@
           case Some(contList: List[ContributionsAndEarnings]) if(period.errorCode == 0 && contList.nonEmpty) => {
 
               @govukTable(Table(
-                  caption = Some(Messages("gmp.contracted_out_period_table_header" ,s"${period.startDate.get.toString("d MMMM yyyy")} to ${period.endDate.toString("d MMMM yyyy")}")),
+                  caption = Some(Messages("gmp.contracted_out_period_table_header" ,s"${period.startDate.get.format(dateFormatter)} to ${period.endDate.format(dateFormatter)}")),
                   captionClasses = "govuk-table__caption--m",
                   firstCellIsHeader = false,
                   head = Some(Seq(HeadCell(content = Text(Messages("gmp.tax_year_table_column_header")), classes = "govuk-!-width-full"),
@@ -47,7 +50,7 @@
           }
             case Some(contList: List[ContributionsAndEarnings]) if(period.errorCode != 0) => {
                 <h3 class="govuk-heading-s" id="gmp-conts-and-earnings-header-@count">
-                @{Messages("gmp.contracted_out_period_table_header" ,s"${period.startDate.get.toString("d MMMM yyyy")} to ${period.endDate.toString("d MMMM yyyy")}")}
+                @{Messages("gmp.contracted_out_period_table_header" ,s"${period.startDate.get.format(dateFormatter)} to ${period.endDate.format(dateFormatter)}")}
                 </h3>
                 <p class="govuk-body" id="period-row-in-error-@count">
                     @{Messages("gmp.error.no_conts_and_earnings")}
@@ -55,7 +58,7 @@
             }
             case _ => {
                 <h3 class="govuk-heading-s"  id="gmp-conts-and-earnings-header-@count">
-                @{Messages("gmp.contracted_out_period_table_header" ,s"${period.startDate.get.toString("d MMMM yyyy")} to ${period.endDate.toString("d MMMM yyyy")}")}
+                @{Messages("gmp.contracted_out_period_table_header" ,s"${period.startDate.get.format(dateFormatter)} to ${period.endDate.format(dateFormatter)}")}
                 </h3>
                 <p class="govuk-body" id="period-row-in-error-@count">
                 @{Messages("gmp.error.no_conts_and_earnings")}
