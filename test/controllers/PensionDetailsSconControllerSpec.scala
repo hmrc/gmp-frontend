@@ -75,7 +75,6 @@ class PensionDetailsSconControllerSpec extends PlaySpec with GuiceOneServerPerSu
             contentAsString(result) must include(Messages("gmp.scon"))
             contentAsString(result) must include(Messages("gmp.signout"))
             contentAsString(result) must include(Messages("gmp.back.link"))
-            contentAsString(result) must include(Messages("gmp.scon.message"))
       }
 
       "get page containing scon when retrieved" in {
@@ -104,7 +103,7 @@ class PensionDetailsSconControllerSpec extends PlaySpec with GuiceOneServerPerSu
           val result = TestPensionDetailsController.post(FakeRequest().withMethod("POST")
             .withFormUrlEncodedBody("scon" -> ""))
           status(result) mustBe BAD_REQUEST
-          contentAsString(result) must include(Messages("gmp.error.mandatory.new", Messages("gmp.scon")))
+          contentAsString(result) must include(Messages("scon.error.required"))
       }
 
       "respond with bad request when scon not validated" in {
@@ -112,7 +111,8 @@ class PensionDetailsSconControllerSpec extends PlaySpec with GuiceOneServerPerSu
           val result = TestPensionDetailsController.post(FakeRequest().withMethod("POST")
             .withFormUrlEncodedBody("scon" -> "S1301234T"))
           status(result) mustBe BAD_REQUEST
-          contentAsString(result) must include(Messages("gmp.error.scon.nps_invalid", Messages("gmp.scon")))
+          contentAsString(result) must include(Messages("scon.error.notRecognised"))
+          contentAsString(result) must include(Messages("gmp.scon.message"))
       }
 
       "respond with exception when scon service throws exception" in {

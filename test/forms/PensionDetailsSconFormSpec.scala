@@ -40,7 +40,7 @@ class PensionDetailsSconFormSpec extends PlaySpec with GuiceOneAppPerSuite with 
       val gmpRequest = Json.toJson(PensionDetailsScon("S1301234T"))
       val pensionDetailsResult = pensionDetailsForm.bind(gmpRequest, fromJsonMaxChars)
 
-      assert(!pensionDetailsResult.errors.contains(FormError("scon",List(Messages("gmp.error.scon.invalid")))))
+      assert(!pensionDetailsResult.errors.contains(FormError("scon",List("error.invalid"))))
 
     }
 
@@ -49,7 +49,7 @@ class PensionDetailsSconFormSpec extends PlaySpec with GuiceOneAppPerSuite with 
       val gmpRequest = Json.toJson(PensionDetailsScon(""))
       val pensionDetailsResult = pensionDetailsForm.bind(gmpRequest, fromJsonMaxChars)
 
-      assert(pensionDetailsResult.errors.contains(FormError("scon",List(Messages("gmp.error.mandatory.new", Messages("gmp.scon"))))))
+      assert(pensionDetailsResult.errors.contains(FormError("scon", List("error.required"))))
 
     }
 
@@ -58,7 +58,7 @@ class PensionDetailsSconFormSpec extends PlaySpec with GuiceOneAppPerSuite with 
       val gmpRequest = Json.toJson(PensionDetailsScon("ABCD"))
       val pensionDetailsResult = pensionDetailsForm.bind(gmpRequest, fromJsonMaxChars)
 
-      assert(pensionDetailsResult.errors.contains(FormError("scon",List(Messages("gmp.error.scon.invalid")))))
+      assert(pensionDetailsResult.errors.contains(FormError("scon", List("error.invalid"))))
 
     }
   }

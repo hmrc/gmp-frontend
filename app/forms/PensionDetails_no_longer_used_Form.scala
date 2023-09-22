@@ -17,10 +17,13 @@
 package forms
 
 import com.google.inject.Singleton
+
 import javax.inject.Inject
-import models.PensionDetailsScon
-import play.api.data.Form
+import models.{GmpDate, PensionDetailsScon}
+import play.api.data.{Form, FormError}
 import play.api.data.Forms._
+import play.api.data.format.Formatter
+import play.api.data.validation.{Constraint, Invalid, Valid, ValidationResult}
 import play.api.i18n.{Messages, MessagesImpl}
 import play.api.mvc.MessagesControllerComponents
 import validation.SconValidate
@@ -29,21 +32,32 @@ import validation.SconValidate
 class PensionDetails_no_longer_used_Form @Inject()(mcc: MessagesControllerComponents) {
   implicit lazy val messages: Messages = MessagesImpl(mcc.langs.availables.head, mcc.messagesApi)
 
+  def strip(scon: String): String = scon.replaceAll(" ", "")
 
-  def pensionDetailsForm = Form(
+  def validateScon(s: String): ValidationResult = {
+    val simpleFormat = "^\\w{1}\\d{7}\\w{1}$"
+    val stripped = strip(s)
+    if(stripped.nonEmpty && !stripped.matches(simpleFormat)) {
+      Invalid("error.invalid")
+    } else if (stripped.nonEmpty && !SconValidate.isValid(stripped)) {
+      Invalid("error.notRecognised")
+    } else {
+      Valid
+    }
+  }
+  val validScon: Constraint[String] = Constraint(validateScon)
+  def pensionDetailsForm: Form[PensionDetailsScon] = Form(
     mapping(
-      "scon" -> text
-        .verifying(messages("gmp.error.mandatory.new"), x => x.length != 0)
-        .verifying(messages("gmp.error.scon.invalid"), x => x.length == 0 || SconValidate.isValid(x))
-
+      "scon" -> nonEmptyText.verifying(validScon)
     )(customApply)(customUnapply)
   )
 
-  def customUnapply (req:PensionDetailsScon) = {
-    Some(req.scon)
+  def customUnapply (req:PensionDetailsScon): Some[String] = {
+    Some(strip(req.scon))
   }
-  def customApply(scon: String) = {
-    new PensionDetailsScon(scon)
+
+  def customApply(scon: String): PensionDetailsScon = {
+    new PensionDetailsScon(strip(scon))
   }
 }
 

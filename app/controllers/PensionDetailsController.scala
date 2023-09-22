@@ -81,7 +81,7 @@ class PensionDetailsController @Inject()(authAction: AuthAction,
                 else {
                   metrics.countNpsSconInvalid()
                   Future.successful(BadRequest(views.pensionDetails(pensionDetailsForm.fill(
-                    PensionDetailsScon(pensionDetails.scon)).withError("scon", Messages("gmp.error.scon.nps_invalid")))))
+                    PensionDetailsScon(pensionDetails.scon)).withError("scon", "error.notRecognised"))))
                 }
 
               }
