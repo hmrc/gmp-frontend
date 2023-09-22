@@ -105,7 +105,7 @@
     applicationConfig = applicationConfig,
     title = title,
     hasErrors = hasErrors,
-    backLink = Some(controllers.routes.DateOfLeavingController.back.url)
+    backLink = Some(BackLinkParams(controllers.routes.DateOfLeavingController.back.url))
 ) {
 
     @if(hasErrors) {

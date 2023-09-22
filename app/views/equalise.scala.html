@@ -18,22 +18,26 @@
 @import config.ApplicationConfig
 @import views.ViewHelpers
 
-
-@this(gmpMain: gmp_main,
+@this(
+        layout: Layout,
         viewHelpers: ViewHelpers,
         govukRadios : GovukRadios,
         govukButton : GovukButton,
-        govukErrorSummary : GovukErrorSummary,
-        govukBackLink : GovukBackLink)
+        govukErrorSummary : GovukErrorSummary
+)
 
 @(form: Form[models.Equalise])(implicit request: Request[_], messages: Messages, ac:ApplicationConfig)
-@title = @{messages(s"gmp.equalise_header")}
-@gmpMain(title = Messages("gmp.equalise_header") + " - " + Messages("service.title") + " - " + Messages("gov.uk")) {
 
-    @govukBackLink(BackLink(
-        href = controllers.routes.EqualiseController.back.url,
-        content = Text("Back")
-    ))
+@title = @{messages(s"gmp.equalise_header")}
+@hasErrors = @{form.hasErrors}
+
+@layout(
+    applicationConfig = ac,
+    title = title,
+    backLink = Some(BackLinkParams(controllers.routes.EqualiseController.back.url)),
+    hasErrors = hasErrors
+) {
+
     @if(form.errors.nonEmpty) {
         @govukErrorSummary(ErrorSummary(errorList = Seq(ErrorLink(
             href = Some(s"#equalise"),

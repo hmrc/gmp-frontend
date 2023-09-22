@@ -501,7 +501,7 @@ class ResultsControllerSpec extends PlaySpec with GuiceOneServerPerSuite with Mo
           when(mockCalculationConnector.calculateSingle(any(),any())(any())).thenReturn(Future.successful(single63123ErrorResponse))
             val result = TestResultsController.get(FakeRequest())
             val content = contentAsString(result).replaceAll("&#x27;", "'")
-            content must include(Messages("gmp.results.error"))
+            content must include(Messages("gmp.cannot_calculate"))
         }
 
         "show error box with member details single period" in {

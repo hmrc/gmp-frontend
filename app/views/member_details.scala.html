@@ -15,14 +15,13 @@
  *@
 
 @import config.ApplicationConfig
-@import views.html.helpers._
+
 @import views.ViewHelpers
 @import uk.gov.hmrc.govukfrontend.views.html.components._
 @import uk.gov.hmrc.govukfrontend.views.html.components.implicits._
-@import uk.gov.hmrc.hmrcfrontend.views.Implicits.RichErrorSummary
-@import models.MemberDetails
+
 @this(
-        gmpMain: gmp_main,
+        layout: Layout,
         viewHelpers: ViewHelpers,
         govukButton : GovukButton,
         govukInput : GovukInput,
@@ -32,12 +31,15 @@
 
 @(memberDetailsForm: Form[models.MemberDetails])(implicit request: Request[_], messages: Messages, ac:ApplicationConfig)
 
-@gmpMain(title = Messages("gmp.member_details.header") + " - " + Messages("service.title") + " - " + Messages("gov.uk")) {
+@title = @{messages("gmp.member_details.header")}
+@hasErrors = @{memberDetailsForm.hasErrors}
 
-    @govukBackLink(BackLink(
-        href = controllers.routes.MemberDetailsController.back.url,
-        content = Text("Back")
-    ))
+@layout(
+    applicationConfig = ac,
+    title = title,
+    backLink = Some(BackLinkParams(controllers.routes.MemberDetailsController.back.url)),
+    hasErrors = hasErrors
+) {
 
     @if(memberDetailsForm.errors.nonEmpty) {
         @govukErrorSummary(ErrorSummary(errorList = memberDetailsForm.errors.map(e => ErrorLink(

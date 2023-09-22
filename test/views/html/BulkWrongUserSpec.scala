@@ -21,9 +21,9 @@ import play.twirl.api.Html
 import utils.GmpViewSpec
 
 class BulkWrongUserSpec extends GmpViewSpec{
-  lazy val gmpMain = app.injector.instanceOf[gmp_main]
+  lazy val layout = app.injector.instanceOf[views.html.Layout]
   lazy val externalUrls = app.injector.instanceOf[ExternalUrls]
-  override def view: Html = new views.html.bulk_wrong_user(gmpMain, externalUrls)()
+  override def view: Html = new views.html.bulk_wrong_user(layout, externalUrls)()
 
   "BulkWrongUser page" must {
     behave like pageWithTitle(messages("gmp.bulk.problem.header"))

@@ -18,14 +18,19 @@
 @import views.ViewHelpers
 @import uk.gov.hmrc.govukfrontend.views.html.components._
 
-@this(gmpMain: gmp_main, viewHelpers: ViewHelpers)
-
+@this(
+        layout: Layout,
+        viewHelpers: ViewHelpers
+)
 
 @(revaluationForm: Form[models.RevaluationDate])(implicit request: Request[_], messages: Messages, ac:ApplicationConfig)
+@title = @{messages("gmp.revaluation.question")}
+@hasErrors = @{revaluationForm.hasErrors}
+
 @inputHasErrors(input: String) = @{input match {
-    case i: String if revaluationForm.hasErrors && revaluationForm.errors.head.toString.contains(i) => true
-    case i: String if revaluationForm.hasErrors && revaluationForm.errors.head.toString.contains("emptyfields") => true
-    case i: String if revaluationForm.hasErrors && revaluationForm.errors.head.toString.contains("invalid") => true
+    case i: String if hasErrors && revaluationForm.errors.head.toString.contains(i) => true
+    case i: String if hasErrors && revaluationForm.errors.head.toString.contains("emptyfields") => true
+    case i: String if hasErrors && revaluationForm.errors.head.toString.contains("invalid") => true
     case _ => false
 }}
 @deriveErrorKey(message: String) = @{message match {
@@ -35,17 +40,18 @@
     case _ => "revaluationDate-revaluationDate.day"
 }}
 
-@gmpMain(title = Messages("gmp.revaluation.question")+ " - " + Messages("service.title") + " - " + Messages("gov.uk")) {
-    @if(revaluationForm.errors.nonEmpty) {
+@layout(
+    applicationConfig = ac,
+    title = title,
+    backLink = Some(BackLinkParams(controllers.routes.DateOfLeavingController.get.url)),
+    hasErrors = hasErrors
+) {
+    @if(hasErrors) {
         @viewHelpers.govukErrorSummary(ErrorSummary(errorList = Seq(ErrorLink(
             href = Some(s"#${deriveErrorKey(revaluationForm.errors.head.message)}"),
             content = Text(s"${messages(s"${revaluationForm.errors.head.message}")}"),
         )), title = Text(messages("generic.errorSummary"))))
     }
-@viewHelpers.govukBackLink(BackLink(
-        href = controllers.routes.DateOfLeavingController.get.url,
-        content = Text("Back")
-    ))
 
     @viewHelpers.form(action = routes.RevaluationController.post) {
 

@@ -25,14 +25,14 @@ import utils.GmpViewSpec
 import views.ViewHelpers
 
 abstract class RevaluationRateSpec extends GmpViewSpec {
-  lazy val gmpMain = app.injector.instanceOf[gmp_main]
+  lazy val layout = app.injector.instanceOf[views.html.Layout]
   lazy val viewHelpers = app.injector.instanceOf[ViewHelpers]
   lazy val govukButton = app.injector.instanceOf[GovukButton]
   lazy val govukRadios = app.injector.instanceOf[GovukRadios]
   lazy val govukErrorSummary = app.injector.instanceOf[GovukErrorSummary]
   lazy val backLink = app.injector.instanceOf[GovukBackLink]
 
-  override def view: Html = new views.html.revaluation_rate(gmpMain, viewHelpers, govukRadios, govukButton, govukErrorSummary, backLink)(revaluationRateForm, session)
+  override def view: Html = new views.html.revaluation_rate(layout, viewHelpers, govukRadios, govukButton, govukErrorSummary, backLink)(revaluationRateForm, session)
 
   lazy val mcc = app.injector.instanceOf[MessagesControllerComponents]
 

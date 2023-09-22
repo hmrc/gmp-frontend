@@ -19,16 +19,23 @@
 @import org.joda.time.{Days, LocalDateTime, LocalDate}
 @import uk.gov.hmrc.govukfrontend.views.html.components._
 
-@this(gmpMain: gmp_main,govukTable : GovukTable)
+@this(
+    layout: Layout,
+    govukTable : GovukTable
+)
 
 @(previousBulkCalculations: List[BulkPreviousRequest])(implicit request: Request[_], messages: Messages, ac:ApplicationConfig)
+@title = @{messages("gmp.more_bulk_results.header")}
+@layout(
+    applicationConfig = ac,
+    title =  title,
+    backLink = Some(BackLinkParams("#"))
+) {
 
-@gmpMain(title = Messages("gmp.more_bulk_results.header") + " - " + Messages("service.title") + " - " + Messages("gov.uk")) {
-
-    @includes.back_link(Messages("gmp.more_bulk_results.header"))
-    <h1 class="govuk-heading-l" id="recent-bulk-calculations-header">@Messages("gmp.more_bulk_results.header")</h1>
+    <h1 class="govuk-heading-l" id="recent-bulk-calculations-header">@title</h1>
 
     @govukTable(Table(
+        attributes = Map("id" -> "previous-calculations-table"),
         head = Some(Seq(
                         HeadCell(
                         content = Text(Messages("gmp.th.reference"))),

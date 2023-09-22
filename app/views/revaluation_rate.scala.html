@@ -20,33 +20,38 @@
 @import views.ViewHelpers
 
 
-@this(gmpMain: gmp_main,
+@this(
+        layout: Layout,
         viewHelpers: ViewHelpers,
         govukRadios : GovukRadios,
         govukButton : GovukButton,
         govukErrorSummary : GovukErrorSummary,
-        govukBackLink : GovukBackLink)
+        govukBackLink : GovukBackLink
+)
 
 @(revaluationRateForm: Form[models.RevaluationRate], session: GmpSession)(implicit request: Request[_], messages: Messages, ac:ApplicationConfig)
 
-@heading = {
-        @{session.scenario match {
-        case CalculationType.PAYABLE_AGE | CalculationType.SPA | CalculationType.SURVIVOR => Messages("gmp.revaluation_rate.header")
+@heading = @{
+    session.scenario match {
+        case CalculationType.PAYABLE_AGE | CalculationType.SPA | CalculationType.SURVIVOR => messages("gmp.revaluation_rate.header")
         case CalculationType.REVALUATION => {
-        session.revaluationDate match {
-        case Some(rd) if(!rd.isOnOrAfter06042016) => Messages("gmp.revaluation_rate.header")
-        case _ => Messages("gmp.revaluation_rate.header")
+            session.revaluationDate match {
+                case Some(rd) if(!rd.isOnOrAfter06042016) => messages("gmp.revaluation_rate.header")
+                case _ => messages("gmp.revaluation_rate.header")
+            }
         }
-        }
-        case _ => Messages("gmp.revaluation_rate.header")
-        }}
+        case _ => messages("gmp.revaluation_rate.header")
+    }
 }
-@gmpMain(title = heading + " - " + Messages("service.title") + " - " + Messages("gov.uk")) {
+@hasErrors = @{revaluationRateForm.hasErrors}
 
-    @govukBackLink(BackLink(
-        href = controllers.routes.RevaluationRateController.back.url,
-        content = Text("Back")
-    ))
+@layout(
+    applicationConfig = ac,
+    title = heading,
+    backLink = Some(BackLinkParams(controllers.routes.RevaluationRateController.back.url)),
+    hasErrors = hasErrors
+) {
+
     @if(revaluationRateForm.errors.nonEmpty) {
         @govukErrorSummary(ErrorSummary(errorList = Seq(ErrorLink(
             href = Some(s"#${revaluationRateForm.errors.head.key}"),

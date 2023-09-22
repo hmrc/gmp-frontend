@@ -18,22 +18,27 @@
 
 @import config.ApplicationConfig
 
-@this(gmpMain: gmp_main, govukPanel : GovukPanel, govukButton: GovukButton)
+@this(
+        layout: Layout,
+        govukPanel : GovukPanel,
+        govukButton: GovukButton
+)
 
 @(bulkResultsSummary: BulkResultsSummary, uploadReference: String, comingFromPage: Int)(implicit request: Request[_], messages: Messages, ac:ApplicationConfig)
-
-@gmpMain(title = Messages("gmp.bulk.results.banner") + " - " + Messages("service.title") + " - " + Messages("gov.uk")) {
-
-    @includes.back_link(Messages("gmp.bulk.results.banner"))
-
+@title = @{messages("gmp.bulk.results.banner")}
+@layout(
+    applicationConfig = ac,
+    title = title,
+    backLink = Some(BackLinkParams(href = "#"))
+) {
     @govukPanel(Panel(
-        title = Text(Messages("gmp.bulk.results.banner")),
-        content = Text(Messages("gmp.bulk.results.reference", bulkResultsSummary.reference))
+        title = Text(title),
+        content = Text(messages("gmp.bulk.results.reference", bulkResultsSummary.reference))
     ))
     <div class="govuk-!-padding-bottom-3"></div>
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-full govuk-!-text-align-left">
-            <h2 class="govuk-heading-m">@Messages("gmp.bulk.results")</h2>
+            <h2 class="govuk-heading-m">@messages("gmp.bulk.results")</h2>
         </div>
     </div>
 

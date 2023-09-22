@@ -50,9 +50,8 @@
         s"--"
 }
 
-
-
 @govukTable(Table(
+    attributes = Map("id" -> "results-table"),
     rows = calculationResponse.calculationPeriods.zipWithIndex.map { result =>
         val (period, count) = result
 
@@ -99,12 +98,13 @@
     )),
     captionClasses = "govuk-table__caption--m",
     firstCellIsHeader = false,
-    caption = None,
+    caption = None
 ))
 
 @if(calculationResponse.dualCalc){
 
     @govukTable(Table(
+        attributes = Map("id" -> "dual-results-table"),
         rows = calculationResponse.calculationPeriods.zipWithIndex.map { result =>
             val (period, count) = result
 

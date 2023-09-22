@@ -49,7 +49,7 @@
 //  lazy val gmpMain = app.injector.instanceOf[gmp_main_old]
 //  lazy val viewHelpers = app.injector.instanceOf[OldViewHelpers]
 //
-//  override def view: Html = new views.html.member_details(gmpMain, viewHelpers)(form)
+//  override def view: Html = new views.html.member_details(layout, viewHelpers)(form)
 //  //private val memberDetailsForm: Form[models.MemberDetails] = MemberDetailsForm.form
 //
 //  def form()(implicit messages: Messages) = Form(

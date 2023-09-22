@@ -101,7 +101,7 @@ gmp.bulk.query_handling_message.body = If the instruction is to contact HMRC bec
 
 gmp.bulk.results_not_found.1 = We only keep results for 30 days. If you still need these calculations, you will have to <a href="/guaranteed-minimum-pension/upload-csv">upload the file again</a>.
 gmp.bulk.results_not_found.2 = If you need access to a calculation result for longer than 30 days, you can save the file on your own computer or network after you have downloaded it.
-gmp.bulk.results_not_found.3 = To check other calculation results, <a href="/guaranteed-minimum-pension/dashboard">go to the GMP dashboard</a>.
+gmp.bulk.results_not_found.3 = To check other calculation results, <a class="govuk-link" href="/guaranteed-minimum-pension/dashboard">go to the GMP dashboard</a>.
 
 gmp.th.reference = Reference
 gmp.th.upload_date = Date file returned
@@ -193,7 +193,7 @@ gmp.reference = calculation name
 gmp.reference.calcname = Calculation name
 gmp.bulk_reference.reference_text = You can change the filename to help you recognise your results when they are returned (40 characters)
 gmp.bulk_request_received.text = <ul class="govuk-list govuk-list--bullet"><li>Your calculation should be complete in less than 72 hours</li><li>It will then appear on the GMP checker dashboard with the reference {0}</li></ul>
-gmp.fileupload.hint = The file must contain mandatory information and in a specific format. You can <a data-journey-click="link - click:{1}:download a template and instructions as a ZIP file (3Kb)" href="{0}"> download a template and instructions as a ZIP file (3Kb)</a> on how to create your file first.
+gmp.fileupload.hint = The file must contain mandatory information and in a specific format. You can <a class="govuk-link" data-journey-click="link - click:{1}:download a template and instructions as a ZIP file (3Kb)" href="{0}"> download a template and instructions as a ZIP file (3Kb)</a> on how to create your file first.
 gmp.dashboard_header = Guaranteed Minimum Pension (GMP) checker
 gmp.dashboard.choose_calculation_type = Choose the type of calculation you need.
 gmp.single_calculation_link = Single calculation
@@ -212,13 +212,13 @@ gmp.revaluation_rate = Revaluation rate
 gmp.bulk.results = Results
 gmp.bulk.results.csv = CSV
 gmp.bulk.results.reference = Reference {0}
-gmp.bulk.failure.antivirus = The selected file contains a virus. <a href="/guaranteed-minimum-pension/new-bulk-calculation" id="bulk-back-link">Create the file again and upload it</a>.
-gmp.bulk.failure.missing = You did not select a file to upload. Please go <a href="/guaranteed-minimum-pension/new-bulk-calculation">back</a>, browse for a file and try again.
-gmp.bulk.failure.generic = Something went wrong with uploading your file. <br/>There is probably a problem with the system so <a href="/guaranteed-minimum-pension/new-bulk-calculation">try again in a few moments</a>.
-gmp.bulk.failure.duplicate_upload = <span class="lede">We think you have already uploaded this file.</span><br/><br/>We recommend you wait for the results to be ready and do not duplicate file uploads. If you want to process the same file again, perhaps to give it a different name, <a href="/guaranteed-minimum-pension/upload-csv">resubmit it</a>.
-gmp.bulk.failure.too_large = You should include the details of no more than 25,000 members in each file. Try splitting the calculation requests across 2 or more files and <a href="/guaranteed-minimum-pension/upload-csv">upload the separate files with less than 25,000 members in each.</a>
-gmp.bulk.failure.wrong_type = No file was selected. <a href="/guaranteed-minimum-pension/new-bulk-calculation" id="bulk-back-link">Select a file in CSV format and upload it</a>.
-gmp.bulk.failure.rejected = Something went wrong with uploading your file. Please check it for any obvious faults, or try to <a href="/guaranteed-minimum-pension/new-bulk-calculation" id="bulk-back-link">select a file in CSV format and upload it</a> again in a few moments.
+gmp.bulk.failure.antivirus = The selected file contains a virus. <a class="govuk-link" href="/guaranteed-minimum-pension/new-bulk-calculation" id="bulk-back-link">Create the file again and upload it</a>.
+gmp.bulk.failure.missing = You did not select a file to upload. Please go <a class="govuk-link" href="/guaranteed-minimum-pension/new-bulk-calculation">back</a>, browse for a file and try again.
+gmp.bulk.failure.generic = Something went wrong with uploading your file. <br/>There is probably a problem with the system so <a class="govuk-link" href="/guaranteed-minimum-pension/new-bulk-calculation">try again in a few moments</a>.
+gmp.bulk.failure.duplicate_upload = <span class="lede">We think you have already uploaded this file.</span><br/><br/>We recommend you wait for the results to be ready and do not duplicate file uploads. If you want to process the same file again, perhaps to give it a different name, <a class="govuk-link" href="/guaranteed-minimum-pension/upload-csv">resubmit it</a>.
+gmp.bulk.failure.too_large = You should include the details of no more than 25,000 members in each file. Try splitting the calculation requests across 2 or more files and <a class="govuk-link" href="/guaranteed-minimum-pension/upload-csv">upload the separate files with less than 25,000 members in each.</a>
+gmp.bulk.failure.wrong_type = No file was selected. <a class="govuk-link" href="/guaranteed-minimum-pension/new-bulk-calculation" id="bulk-back-link">Select a file in CSV format and upload it</a>.
+gmp.bulk.failure.rejected = Something went wrong with uploading your file. Please check it for any obvious faults, or try to <a class="govuk-link" href="/guaranteed-minimum-pension/new-bulk-calculation" id="bulk-back-link">select a file in CSV format and upload it</a> again in a few moments.
 gmp.back_to_dashboard = Back to the GMP checker
 gmp.bulk.successful = Your file has been successfully uploaded.
 
@@ -282,7 +282,7 @@ gmp.error.csv.member_ref.spaces.invalid = The calculation name cannot have space
 gmp.error.csv.member_ref.length.invalid = The calculation name must have fewer than 99 letters or numbers
 gmp.error.member_previous_names = If we still cannot calculate a GMP, ask if the member has any previous names that may not have been updated with HM Revenue and Customs.
 gmp.error.contact_us_shared_workspace = Contact us by creating a new entry in the single queries database in Shared Workspace’s eRoom.
-gmp.error.contact.scon = If you think the SCON is correct, <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pensions-helpline-contracted-out">call HMRC</a>.
+gmp.error.contact.scon = If you think the SCON is correct, <a class="govuk-link" href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pensions-helpline-contracted-out">call HMRC</a>.
 gmp.error.also.contact = If you still cannot get a calculation result, contact HM Revenue and Customs by creating a new entry in the single queries database in Shared Workspace’s eRoom.
 gmp.error.also.death = If you think the date of death held on the member’s record is wrong, contact HM Revenue and Customs by creating a new entry in the single queries database in Shared Workspace’s eRoom.
 
@@ -306,16 +306,16 @@ gmp.error.reason.56010 = This is because we need the member to confirm their dat
 
 gmp.error.solution.contact_hmrc = If you think our records are incorrect, contact us by creating a new entry in the single queries database in Shared Workspace’s eRoom.
 gmp.error.solution.bullets = <ul class="list-number"><li>Check you have spelled the name correctly</li><li>Check you have entered the correct National Insurance number</li><li><a href="/guaranteed-minimum-pension/member-details">Try the calculation again</a></li></ul>
-gmp.error.solution.63121 = If you still need a GMP, choose the survivor calculation option and <a href="/guaranteed-minimum-pension/calculation-reason">try again</a>.
-gmp.error.solution.63123 = <a href="/guaranteed-minimum-pension/revaluation">Change the revaluation date</a> to one after the member left the scheme and try the calculation again.
-gmp.error.solution.check_scon = Check you have entered the correct SCON and <a href="/guaranteed-minimum-pension/pension-details">try the calculation again</a>.
+gmp.error.solution.63121 = If you still need a GMP, choose the survivor calculation option and <a class="govuk-link" href="/guaranteed-minimum-pension/calculation-reason">try again</a>.
+gmp.error.solution.63123 = <a class="govuk-link" href="/guaranteed-minimum-pension/revaluation">Change the revaluation date</a> to one after the member left the scheme and try the calculation again.
+gmp.error.solution.check_scon = Check you have entered the correct SCON and <a class="govuk-link" href="/guaranteed-minimum-pension/pension-details">try the calculation again</a>.
 gmp.error.solution.56018 = Ask the member to contact us if they disagree with the information we hold.
-gmp.error.solution.56002 = Submit a new request once <a href="http://www.legislation.gov.uk/all?title=The%20Social%20Security%20Revaluation%20of%20Earnings%20Factors%20Order%20">the orders are published</a>.<br/>
-gmp.error.solution.try_again = Check your records and <a href="/guaranteed-minimum-pension/pension-details">try the calculation again</a>.
-gmp.error.solution.leaving_date = Check you have entered the correct leaving date and <a href="/guaranteed-minimum-pension/left-scheme">try again</a>.
-gmp.error.solution.63148 = Check the date up to which you would like the calculation to apply and <a href="/guaranteed-minimum-pension/inflation-proof">try again</a>.
-gmp.error.solution.63150 = <a href="/guaranteed-minimum-pension/equalise">Go back</a> and select ‘No’ when asked if you want an opposite gender calculation.
-gmp.error.solution.63167 = Choose another <a href="/guaranteed-minimum-pension/revaluation-rate">revaluation rate</a>.
+gmp.error.solution.56002 = Submit a new request once <a class="govuk-link" href="http://www.legislation.gov.uk/all?title=The%20Social%20Security%20Revaluation%20of%20Earnings%20Factors%20Order%20">the orders are published</a>.<br/>
+gmp.error.solution.try_again = Check your records and <a class="govuk-link" href="/guaranteed-minimum-pension/pension-details">try the calculation again</a>.
+gmp.error.solution.leaving_date = Check you have entered the correct leaving date and <a class="govuk-link" href="/guaranteed-minimum-pension/left-scheme">try again</a>.
+gmp.error.solution.63148 = Check the date up to which you would like the calculation to apply and <a class="govuk-link" href="/guaranteed-minimum-pension/inflation-proof">try again</a>.
+gmp.error.solution.63150 = <a class="govuk-link" href="/guaranteed-minimum-pension/equalise">Go back</a> and select ‘No’ when asked if you want an opposite gender calculation.
+gmp.error.solution.63167 = Choose another <a class="govuk-link" href="/guaranteed-minimum-pension/revaluation-rate">revaluation rate</a>.
 
 gmp.error.no_conts_and_earnings = There are no contributions and earnings available for this period.
 gmp.error.session_parts_missing = You have not given us enough information about the member and type of calculation you need or it has been too long since you did so.<br/><br/><a class="govuk-link" href="{0}"">Go back</a> and fill in the information required.
@@ -343,7 +343,7 @@ gmp.revaluation_rate.type_3 = Limited
 
 gmp.notrevalued.subheader = This GMP is not revalued.
 gmp.notrevalued.multi.subheader = This GMP is not revalued and is the sum of the amounts for each period shown below.
-gmp.results.survivior.disclaimer = This amount is subject to qualifying conditions of the <a href="https://www.gov.uk/browse/benefits/bereavement">type of bereavement benefit</a> the surviving partner is entitled to.
+gmp.results.survivior.disclaimer = This amount is subject to qualifying conditions of the <a class="govuk-link" href="https://www.gov.uk/browse/benefits/bereavement">type of bereavement benefit</a> the surviving partner is entitled to.
 gmp.reval_rate.subheader = Revaluation rate: <b class="bold">{0}</b>
 gmp.held_rate.subheader = Revaluation rate held for this SCON: <b class="bold">{0}</b>
 gmp.chosen_rate.subheader = Revaluation rate chosen: <b class="bold">{0}</b>
@@ -375,7 +375,7 @@ gmp.only_part_problem = There is a problem with part of the calculation
 gmp.part_problem = There is a problem with all or part of the calculation
 gmp.unavailable = No GMP available
 
-gmp.page_not_found.tabtitle = Page not found - Guaranteed Minimum Pension - GOV.UK
+gmp.page_not_found.tabtitle = Page not found
 gmp.page_not_found.heading = Page not found
 gmp.page.not.found.error.check.web.address.correct = If you typed the web address, check it is correct.
 gmp.page.not.found.error.check.web.address.full = If you pasted the web address, check you copied the entire address.
@@ -389,7 +389,7 @@ gmp.page.not.found.error.service =  contact the pension schemes helpline
 ############################################################################
 gmp.queryhandling.resultsmessage = If you do not agree with this result, contact HMRC by creating a new entry in the ‘single queries database’ in the Shared Workspace eRoom.
 gmp.queryhandling.contsandearnings = If you do not agree with this result, contact HMRC by creating a new entry in the ‘single queries database’ in the Shared Workspace eRoom.
-gmp.queryhandling.changedetails.link = <a href="https://www.gov.uk/tell-hmrc-change-of-details" rel="external">How the member can tell HMRC their personal details have changed</a>
+gmp.queryhandling.changedetails.link = <a class="govuk-link" href="https://www.gov.uk/tell-hmrc-change-of-details" rel="external">How the member can tell HMRC their personal details have changed</a>
 
 ############################################################################
 # Service unavailable

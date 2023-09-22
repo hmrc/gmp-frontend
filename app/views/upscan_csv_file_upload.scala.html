@@ -16,22 +16,27 @@
 
 @import config.ApplicationConfig
 @import models.upscan.UpscanInitiateResponse
-@import views.html.helpers._
 @import views.ViewHelpers
 @import uk.gov.hmrc.govukfrontend.views.html.components._
 
-@this(gmpMain: gmp_main, viewHelpers: ViewHelpers)
+@this(
+        layout: Layout,
+        viewHelpers: ViewHelpers
+)
 
 @(upscanInitiateResponse: UpscanInitiateResponse)(implicit request: Request[_], messages: Messages,ac:ApplicationConfig)
 
-@gmpMain(title = Messages("gmp.fileupload.header") + " - " + Messages("service.title") + " - " + Messages("gov.uk")) {
+@title = @{messages("gmp.fileupload.header")}
 
-@includes.back_link(Messages("gmp.fileupload.header"))
-    <h1 class="govuk-heading-l">@Messages("gmp.fileupload.header")</h1>
+@layout(
+    applicationConfig = ac,
+    title =  title,
+    backLink = Some(BackLinkParams("#"))
+) {
+
+    <h1 class="govuk-heading-l">@title</h1>
 
     <p class="govuk-body">@Html(Messages("gmp.fileupload.hint", routes.AssetsController.at("csv/GMP_template_and_instructions.zip"), Messages("gmp.fileupload.header")))</p>
-
-   <label for="fileToUpload" class="govuk-visually-hidden">@Html(Messages("gmp.fileupload.header"))</label>
 
     <div class="govuk-form-group">
         <form action="@upscanInitiateResponse.postTarget" method="post" enctype="multipart/form-data">
@@ -49,7 +54,8 @@
             ))
             <div class="govuk-section">
                 @viewHelpers.govukButton(Button(
-                    content = Text(Messages("gmp.upload"))
+                    content = Text(Messages("gmp.upload")),
+                    attributes = Map("id" -> "upload-button")
                 ))
             </div>
 

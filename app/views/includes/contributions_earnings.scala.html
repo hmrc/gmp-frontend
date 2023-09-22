@@ -34,11 +34,12 @@
           case Some(contList: List[ContributionsAndEarnings]) if(period.errorCode == 0 && contList.nonEmpty) => {
 
               @govukTable(Table(
-                  caption = Some(Messages("gmp.contracted_out_period_table_header" ,s"${period.startDate.get.format(dateFormatter)} to ${period.endDate.format(dateFormatter)}")),
+                  attributes = Map("id" -> "contracted-out-table"),
+                  caption = Some(messages("gmp.contracted_out_period_table_header" ,s"${period.startDate.get.format(dateFormatter)} to ${period.endDate.format(dateFormatter)}")),
                   captionClasses = "govuk-table__caption--m",
                   firstCellIsHeader = false,
-                  head = Some(Seq(HeadCell(content = Text(Messages("gmp.tax_year_table_column_header")), classes = "govuk-!-width-full"),
-                      HeadCell(content = Text(Messages("gmp.contracted_out_period_table_column_header"))))),
+                  head = Some(Seq(HeadCell(content = Text(messages("gmp.tax_year_table_column_header")), classes = "govuk-!-width-full"),
+                      HeadCell(content = Text(messages("gmp.contracted_out_period_table_column_header"))))),
                   rows = contList.reverse.zipWithIndex.map{ response =>
                     val(contsAndEarnings, count) = response
                       Seq(
@@ -50,18 +51,18 @@
           }
             case Some(contList: List[ContributionsAndEarnings]) if(period.errorCode != 0) => {
                 <h3 class="govuk-heading-s" id="gmp-conts-and-earnings-header-@count">
-                @{Messages("gmp.contracted_out_period_table_header" ,s"${period.startDate.get.format(dateFormatter)} to ${period.endDate.format(dateFormatter)}")}
+                    @{messages("gmp.contracted_out_period_table_header" ,s"${period.startDate.get.format(dateFormatter)} to ${period.endDate.format(dateFormatter)}")}
                 </h3>
                 <p class="govuk-body" id="period-row-in-error-@count">
-                    @{Messages("gmp.error.no_conts_and_earnings")}
+                    @{messages("gmp.error.no_conts_and_earnings")}
                 </p>
             }
             case _ => {
                 <h3 class="govuk-heading-s"  id="gmp-conts-and-earnings-header-@count">
-                @{Messages("gmp.contracted_out_period_table_header" ,s"${period.startDate.get.format(dateFormatter)} to ${period.endDate.format(dateFormatter)}")}
+                @{messages("gmp.contracted_out_period_table_header", s"${period.startDate.get.format(dateFormatter)} to ${period.endDate.format(dateFormatter)}")}
                 </h3>
                 <p class="govuk-body" id="period-row-in-error-@count">
-                @{Messages("gmp.error.no_conts_and_earnings")}
+                @{messages("gmp.error.no_conts_and_earnings")}
                 </p>
             }
 

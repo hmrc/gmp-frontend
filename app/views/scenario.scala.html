@@ -15,25 +15,30 @@
  *@
 
 @import config.ApplicationConfig
-@import views.html.helpers._
 @import views.ViewHelpers
 @import uk.gov.hmrc.govukfrontend.views.html.components._
-@import uk.gov.hmrc.hmrcfrontend.views.Implicits.RichErrorSummary
-@import uk.gov.hmrc.govukfrontend.views.html.components.implicits._
 
-@this(gmpMain: gmp_main, viewHelpers: ViewHelpers, govukRadios : GovukRadios, govukButton : GovukButton, govukErrorSummary : GovukErrorSummary, govukBackLink : GovukBackLink)
 
+@this(
+        layout: Layout,
+        viewHelpers: ViewHelpers,
+        govukRadios : GovukRadios,
+        govukButton : GovukButton,
+        govukErrorSummary : GovukErrorSummary
+)
 
 
 @(calculationType: Form[models.CalculationType])(implicit request: Request[_], messages: Messages, ac:ApplicationConfig)
 
+@title = @{messages("gmp.scenarios.title")}
+@hasErrors = @{calculationType.hasErrors}
 
-@gmpMain(title = Messages("gmp.scenarios.title") + " - " + Messages("service.title") + " - " + Messages("gov.uk")) {
-
-    @govukBackLink(BackLink(
-        href = controllers.routes.ScenarioController.back.url,
-        content = Text("Back")
-    ))
+@layout(
+    applicationConfig = ac,
+    title =  title,
+    backLink = Some(BackLinkParams(controllers.routes.ScenarioController.back.url)),
+    hasErrors = hasErrors
+) {
 
       @viewHelpers.form(action = routes.ScenarioController.post) {
           @if(calculationType.errors.nonEmpty){
@@ -45,7 +50,7 @@
               @govukRadios(Radios(
                   fieldset = Some(Fieldset(
                       legend = Some(Legend(
-                          content = Text(Messages("gmp.scenarios.title")),
+                          content = Text(title),
                           classes = "govuk-fieldset__legend--l",
                           isPageHeading = true
                       ))

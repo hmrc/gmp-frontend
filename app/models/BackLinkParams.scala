@@ -1,4 +1,4 @@
-@*
+/*
  * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,17 +12,9 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *@
+ */
 
-@(field: play.api.data.Field, args: (Symbol,Any)*)(implicit messages: Messages)
+package models
 
-@import views.html.helper._
-@import play.api.i18n._
-@elements = @{ new FieldElements(field.id, field, null, args.toMap, messages) }
+case class BackLinkParams(href: String, label: Option[String] = None)
 
-@if(elements.hasErrors) {
-    @{elements.errors.zipWithIndex.map { case (error, index) =>
-        <span style="display: block" class="govuk-error-summary" id="@(field.name)-error-@index">Messages(error)</span>
-    }
-}
-}

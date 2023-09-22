@@ -25,14 +25,13 @@ import utils.GmpViewSpec
 import views.ViewHelpers
 
 class EqualiseSpec extends GmpViewSpec {
-  lazy val gmpMain = app.injector.instanceOf[gmp_main]
+  lazy val layout = app.injector.instanceOf[views.html.Layout]
   lazy val viewHelpers = app.injector.instanceOf[ViewHelpers]
   lazy val govukRadios = app.injector.instanceOf[GovukRadios]
   lazy val govukButton = app.injector.instanceOf[GovukButton]
   lazy val govukErrorSummary = app.injector.instanceOf[GovukErrorSummary]
-  lazy val govBackLInk = app.injector.instanceOf[GovukBackLink]
 
-  override def view: Html = new views.html.equalise(gmpMain, viewHelpers, govukRadios, govukButton, govukErrorSummary, govBackLInk)(equaliseForm)
+  override def view: Html = new views.html.equalise(layout, viewHelpers, govukRadios, govukButton, govukErrorSummary)(equaliseForm)
 
   val equaliseForm = Form(
     mapping(

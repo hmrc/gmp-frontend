@@ -18,48 +18,48 @@
 @import models.upscan.UploadStatus
 @import models.upscan.{InProgress, UploadedSuccessfully, UploadedFailed, NotStarted}
 @import views.html.helpers.spinner
-@import models.upscan.UploadedFailed
 
-@this(gmpMain: gmp_main)
+@this(layout: Layout)
 
 @(status : UploadStatus)(implicit request: Request[_], messages: Messages, appConfig: ApplicationConfig)
+
+@title = @{status match {
+    case InProgress => messages("gmp.fileupload.result.scanning.header")
+    case NotStarted => messages("gmp.fileupload.result.scanning.header")
+    case s : UploadedSuccessfully => messages("gmp.fileupload.result.success.header")
+    case f : UploadedFailed => f.failureDetails.failureReason match {
+        case "QUARANTINE" => messages("gmp.generic.errors_heading")
+        case "REJECTED"   => messages("gmp.generic.errors_heading")
+        case _            => messages("gmp.generic.errors_heading")
+    }
+}}
 
 @refreshHeader = {
     <meta http-equiv="refresh" content="3"/>
 }
 
-@gmpMain(title = Messages("gmp.fileupload.verifying.title"),
-    customHead = {
-    status match {
+@layout(
+    applicationConfig = appConfig,
+    title = title,
+    customHead = status match {
         case InProgress => Some(refreshHeader)
         case NotStarted => Some(refreshHeader)
         case _ => None
-    }
-}) {
-    @includes.back_link(Messages("gmp.fileupload.result.scanning.header"))
+    },
+    backLink = Some(BackLinkParams("#"))
+) {
 
-    <h1 class="govuk-heading-l">@status match {
-        case InProgress => { @Messages("gmp.fileupload.result.scanning.header")}
-        case NotStarted => { @Messages("gmp.fileupload.result.scanning.header")}
-        case s : UploadedSuccessfully => { @Messages("gmp.fileupload.result.success.header") }
-        case f : UploadedFailed => {
-            @f.failureDetails.failureReason match {
-                case "QUARANTINE" => { @Messages("gmp.generic.errors_heading") }
-                case "REJECTED"   => { @Messages("gmp.generic.errors_heading") }
-                case _            => { @Messages("gmp.generic.errors_heading") }
-            }
-        }
-    }</h1>
+    <h1 class="govuk-heading-l">@title</h1>
     <p class="govuk-body">
         @status match {
             case InProgress => {}
             case NotStarted => {}
-            case s : UploadedSuccessfully => { @Messages("gmp.bulk.successful") }
+            case s : UploadedSuccessfully => { @messages("gmp.bulk.successful") }
             case f : UploadedFailed => {
                 @f.failureDetails.failureReason match {
-                case "QUARANTINE" => { @Html(Messages("gmp.bulk.failure.antivirus")) }
-                case "REJECTED"   => { @Html(Messages("gmp.bulk.failure.wrong_type")) }
-                case _            => { @Html(Messages("gmp.bulk.failure.rejected")) }
+                case "QUARANTINE" => { @Html(messages("gmp.bulk.failure.antivirus")) }
+                case "REJECTED"   => { @Html(messages("gmp.bulk.failure.wrong_type")) }
+                case _            => { @Html(messages("gmp.bulk.failure.rejected")) }
                 }
             }
         }
@@ -67,7 +67,7 @@
     @status match {
         case s : UploadedSuccessfully => {
             <div class="govuk-section">
-                <a class="govuk-button" href="@routes.BulkReferenceController.get">@Messages("gmp.continue.button")</a>
+                <a class="govuk-button" href="@routes.BulkReferenceController.get">@messages("gmp.continue.button")</a>
             </div>
         }
         case NotStarted => {

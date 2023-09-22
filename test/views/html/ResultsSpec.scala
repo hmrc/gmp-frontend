@@ -24,13 +24,13 @@ import utils.GmpViewSpec
 import views.html.includes.{member_details_result, request_another_button}
 
 class ResultsSpec extends GmpViewSpec{
-  lazy val gmpMain = app.injector.instanceOf[gmp_main]
+  lazy val layout = app.injector.instanceOf[views.html.Layout]
   lazy val requestAnotherButton = app.injector.instanceOf[request_another_button]
   lazy val memberDetailsResult = app.injector.instanceOf[member_details_result]
   lazy val govukErrorSummary = app.injector.instanceOf[GovukErrorSummary]
   lazy val govTable = app.injector.instanceOf[GovukTable]
 
-  override def view: Html = new views.html.results(gmpMain, govukErrorSummary,  requestAnotherButton, memberDetailsResult, govTable)( calculationResponse, Some("revalRateSubheader"), Some("survivorSubheader"))
+  override def view: Html = new views.html.results(layout, govukErrorSummary,  requestAnotherButton, memberDetailsResult, govTable)( calculationResponse, Some("revalRateSubheader"), Some("survivorSubheader"))
 
   private val calculationResponse : CalculationResponse = CalculationResponse(
     name = "name",
@@ -56,10 +56,10 @@ class ResultsSpec extends GmpViewSpec{
     dualCalc = true, calcType = 2)
 
   "Results page" must {
-    behave like pageWithTitle(messages("gmp.results.h1"))
+    behave like pageWithTitle(messages("gmp.part_problem"))
 
     "have a message" in {
-      doc must haveParagraphWithText(messages("If you do not agree with this result, contact HMRC by creating a new entry in the ‘single queries database’ in the Shared Workspace eRoom."))
+      doc must haveParagraphWithText("If you do not agree with this result, contact HMRC by creating a new entry in the ‘single queries database’ in the Shared Workspace eRoom.")
     }
   }
 

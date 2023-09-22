@@ -17,7 +17,6 @@
 import play.api.i18n.Messages
 import play.twirl.api.Html
 import utils.GmpViewSpec
-import views.html.{gmp_main}
 
 class IncorrectlyEncodedSpec extends GmpViewSpec {
 
@@ -25,8 +24,8 @@ class IncorrectlyEncodedSpec extends GmpViewSpec {
   val title = s"$header - ${Messages("service.title")} - ${Messages("gov.uk")}"
   val message = Messages("gmp.bulk.incorrectlyEncoded")
 
-  lazy val gmpMain = app.injector.instanceOf[gmp_main]
-  override def view: Html = new views.html.incorrectlyEncoded(gmpMain)(message, header)
+  lazy val layout = app.injector.instanceOf[views.html.Layout]
+  override def view: Html = new views.html.incorrectlyEncoded(layout)(message, header)
 
   "Incorrectly encoded page" must {
     behave like pageWithTitle(title)

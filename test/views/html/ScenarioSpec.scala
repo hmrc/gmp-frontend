@@ -29,7 +29,7 @@
 //  lazy val gmpMain = app.injector.instanceOf[gmp_main_old]
 //  lazy val viewHelpers = app.injector.instanceOf[OldViewHelpers]
 //
-//  override def view: Html = new views.html.scenario(gmpMain, viewHelpers)(scenarioForm)
+//  override def view: Html = new views.html.scenario(layout, viewHelpers)(scenarioForm)
 // // private val pensionDetailsForm: Form[models.CalculationType] = ScenarioForm.scenarioForm
 //
 //  val scenarioForm = Form(

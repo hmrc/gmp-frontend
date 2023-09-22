@@ -16,38 +16,31 @@
 
 @import play.twirl.api.HtmlFormat
 @import views.ViewHelpers
-@import views.html.helper._
-@import uk.gov.hmrc.hmrcfrontend.views.html.helpers.{HmrcLayout, HmrcReportTechnicalIssueHelper, HmrcTimeoutDialogHelper}
-@import uk.gov.hmrc.hmrcfrontend.views.config.StandardBetaBanner
-@import uk.gov.hmrc.govukfrontend.views.html.components.FixedWidthPageLayout
-@import uk.gov.hmrc.govukfrontend.views.html.components.TwoThirdsMainContent
-
+@import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcStandardPage
+@import uk.gov.hmrc.hmrcfrontend.views.viewmodels.hmrcstandardpage._
+@import uk.gov.hmrc.hmrcfrontend.views.html.helpers.{HmrcReportTechnicalIssueHelper, HmrcTimeoutDialogHelper}
+@import uk.gov.hmrc.hmrcfrontend.views.viewmodels.userresearchbanner.UserResearchBanner
+@import uk.gov.hmrc.govukfrontend.views.Aliases.BackLink
+@import uk.gov.hmrc.govukfrontend.views.html.components._
 
 @this(
-        hmrcLayout: HmrcLayout,
-        standardBetaBanner: StandardBetaBanner,
+        hmrcStandardPage: HmrcStandardPage,
         hmrcReportTechnicalIssueHelper:HmrcReportTechnicalIssueHelper,
         fullWidth: helpers.fullWidthContent,
         viewHelpers: ViewHelpers,
-        fixedWidthPageLayout: FixedWidthPageLayout,
-        defaultMainContent: TwoThirdsMainContent,
         hmrcTimeoutDialogHelper: HmrcTimeoutDialogHelper
 )
 
 @(
-        useFullWidth:Boolean = false,
+        useFullWidth: Boolean = false,
         applicationConfig: config.ApplicationConfig,
         title: String,
-        contentHeader: Option[Html] = None,
         userLoggedIn: Boolean = true,
-        linkElement : Option[Html] = None,
-        mainClass : Option[String] = None,
-        scriptElement : Option[Html] = None,
         isUserResearchBannerVisible:Boolean = false,
         signOutEnabled:Boolean = true,
         customHead: Option[Html] = None,
         hasErrors: Boolean = false,
-        backLink: Option[String] = None
+        backLink: Option[BackLinkParams] = None
 )(mainContent: Html = HtmlFormat.empty)(implicit request: Request[_], messages: Messages)
 
 @head = {
@@ -59,14 +52,18 @@
             countdown = Some(applicationConfig.timeoutCountdown)
         )
     }
-    @linkElement
+    <link rel="stylesheet" href='@controllers.routes.AssetsController.at("stylesheets/gmp.css")'/>
     @customHead
 }
 
 @scriptBlock = {
-    @scriptElement
     <script src='@routes.AssetsController.at("javascripts/back.js")'> </script>
 }
+
+@backLinkIsJS = @{backLink match {
+    case Some(b: BackLinkParams) => b.href.matches("#")
+    case _ => false
+}}
 
 @content = {
     @mainContent
@@ -78,14 +75,27 @@
     s"${if(hasErrors && !title.startsWith(errorPrefix)) { s"$errorPrefix$title" } else { title }}${if(!title.endsWith("GOV.UK")) { gdsSuffix } else { "" }}"
 }
 
-@hmrcLayout(
-    pageTitle = Some(gdsTitle),
-    isWelshTranslationAvailable = false,
-    signOutUrl = if(signOutEnabled) Some(routes.ApplicationController.signout.url) else None,
-    additionalHeadBlock = Some(head),
-    additionalScriptsBlock = Some(scriptBlock),
-    userResearchBannerUrl = if(isUserResearchBannerVisible) {Some(applicationConfig.urBannerLink)} else {None},
-    headerContainerClasses = "govuk-width-container",
-    mainContentLayout = if(useFullWidth) Some(fullWidth(_)) else Some(defaultMainContent(_)),
-    backLinkUrl = backLink
+@hmrcStandardPage(
+    HmrcStandardPageParams(
+        serviceURLs = ServiceURLs(
+            signOutUrl = if(signOutEnabled) Some(routes.ApplicationController.signout.url) else None
+        ),
+        banners =  Banners(
+            userResearchBanner = if(isUserResearchBannerVisible) Some(UserResearchBanner(url = applicationConfig.urBannerLink)) else None
+        ),
+        templateOverrides = TemplateOverrides(
+            additionalHeadBlock = Some(head),
+            additionalScriptsBlock = Some(scriptBlock),
+            mainContentLayout = if(useFullWidth) Some(fullWidth()(_)) else None
+        ),
+        serviceName = Some(messages("service.title")),
+        pageTitle = Some(gdsTitle),
+        isWelshTranslationAvailable = false,
+        backLink = backLink.map(b => BackLink(
+            href = b.href,
+            content = if(b.label.isDefined) Text(b.label.get) else Text(messages("gmp.back.link")),
+            attributes = Map("id" -> s"${if(backLinkIsJS) "js-back-link" else "back-link"}"),
+            classes = s"${if(backLinkIsJS) "js-hidden test" else ""}"
+        ))
+    )
 )(content)

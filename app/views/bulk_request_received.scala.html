@@ -16,35 +16,38 @@
 
 @import uk.gov.hmrc.govukfrontend.views.html.components._
 @import config.ApplicationConfig
-@import views.html.helpers._
 
-
-@this(gmpMain: gmp_main, govukPanel : GovukPanel, govukButton: GovukButton)
+@this(
+        layout: Layout,
+        govukPanel : GovukPanel,
+        govukButton: GovukButton
+)
 
 @(reference: String)(implicit request: Request[_], messages: Messages, ac:ApplicationConfig)
 
-@gmpMain(title = Messages("gmp.bulk_request_received.banner") + " - " + Messages("service.title") + " - " + Messages("gov.uk"), supportLinkEnabled = true) {
+@title = @{messages("gmp.bulk_request_received.banner")}
 
-      @includes.back_to_dashboard_link(Messages("gmp.bulk_request_received.banner"))
+@layout(
+    applicationConfig = ac,
+    title = title,
+    backLink = Some(BackLinkParams(href = controllers.routes.DashboardController.get.url, label = Some(messages("gmp.back_to_dashboard"))))
+) {
 
-        @govukPanel(Panel(
-            title = Text(Messages("gmp.bulk_request_received.banner"))
+    @govukPanel(Panel(
+        title = Text(title)
+    ))
+
+    <h2 class="govuk-heading-m">@messages("gmp.bulk_request_received.header")</h2>
+
+    @Html(messages("gmp.bulk_request_received.text", reference))
+
+    <form action="@routes.SessionCacheController.newBulkCalculation">
+        @govukButton(Button(
+            content = Text(messages("gmp.bulk_request_received.button")),
+            inputType = Some("submit"),
+            attributes = Map("data-journey-click" -> "gmp-bulk:click:bulk_upload_another")
         ))
-
-        <h2 class="govuk-heading-m">@Messages("gmp.bulk_request_received.header")</h2>
-
-        @Html(Messages("gmp.bulk_request_received.text", reference))
-
-        <form action="@routes.SessionCacheController.newBulkCalculation">
-            @govukButton(Button(
-                content = Text(Messages("gmp.bulk_request_received.button")),
-                inputType = Some("submit"),
-                attributes = Map("data-journey-click" -> "gmp-bulk:click:bulk_upload_another")
-            ))
-        </form>
+    </form>
 
     <hr class="govuk-section-break govuk-section-break--m" role="presentation" />
-
-
-
 }
