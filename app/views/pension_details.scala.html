@@ -30,6 +30,9 @@
 
 @title = @{messages("gmp.pension_details.header")}
 @hasErrors = @{pensionDetailsForm.hasErrors}
+@isNotRecognisedError = @{pensionDetailsForm.error("scon").map(e =>
+    e.message.matches("error.notRecognised")
+)}
 
 @layout(
     applicationConfig = ac,
@@ -39,17 +42,18 @@
 ) {
 
   @viewHelpers.form(action = routes.PensionDetailsController.post) {
-      @pensionDetailsForm.errors.map { err =>
+      @if(hasErrors) {
           @govukErrorSummary(ErrorSummary(
-              errorList = Seq(
+              errorList = pensionDetailsForm.errors.map(e =>
                   ErrorLink(
                       href = Some("#scon"),
-                      content = Text(s"${messages(err.message)}")
+                      content = Text(messages(s"${e.key}.${e.message}"))
                   )
               ),
               title = Text(messages("gmp.generic.errors_heading"))
           ))
       }
+
       @govukInput(Input(
           id = "scon",
           name = "scon",
@@ -61,11 +65,14 @@
           classes = "govuk-input--width-10",
           hint = Some(Hint(
               content = Text(Messages("gmp.scon.hint"))
-          ))
+          )),
+          errorMessage = pensionDetailsForm.error("scon").map(e => ErrorMessage(content = Text(messages(s"${e.key}.${e.message}"))))
       ).withFormField(pensionDetailsForm("scon")))
 
-      <p class="govuk-body">@Messages("gmp.scon.message") <a class="govuk-link" data-journey-click='@Messages("gmp.ga-track.link.click"):@Messages("gmp.pension_details.header"):@Messages("gmp.contact.hmrc")'
-      href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pensions-helpline-contracted-out">@Messages("gmp.contact.hmrc")</a>.</p>
+      @if(isNotRecognisedError.contains(true)){
+          <p class="govuk-body">@messages("gmp.scon.message") <a class="govuk-link" data-journey-click='@messages("gmp.ga-track.link.click"):@messages("gmp.pension_details.header"):@Messages("gmp.contact.hmrc")'
+          href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pensions-helpline-contracted-out">@messages("gmp.contact.hmrc")</a>.</p>
+      }
 
         @govukButton(Button(
             content = Text(Messages("gmp.continue.button")),

@@ -445,6 +445,11 @@ reval-date.error.gmp.error.date.invalid = Enter a real date when you would like 
 # Error message keys using format s"${contextKey}${fieldName}.error.${errorType}"
 ############################################################################
 
+scon.error.required = Enter a Scheme Contracted Out Number
+bulk.scon.error.invalid = Scheme Contracted Out Numbers must be 1 letter and 7 numbers followed by 1 letter, like the example
+scon.error.invalid = Scheme Contracted Out Numbers must be 1 letter and 7 numbers followed by 1 letter, like the example
+scon.error.notRecognised = The Scheme Contracted Out Number entered is not recognised, check and try again
+
 survivor.leaving.error.required = Select whether the member had already left the scheme at date of death
 leaving.leaving.error.required = Select whether the member left the scheme before 6 April 2016
 other.leaving.error.required = Select whether the member has left the scheme
