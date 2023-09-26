@@ -31,22 +31,35 @@
 @(inflationProofForm: Form[models.InflationProof])(implicit request: Request[_], messages: Messages, applicationConfig: ApplicationConfig)
 
 @title = @{messages("gmp.inflation_proof.question")}
+@key = @{"revaluate"}
+@dateKey = @{"revaluationDate"}
 @hasErrors = @{inflationProofForm.hasErrors}
 
-@inputHasErrors(input: String) = @{input match {
-    case i: String if hasErrors && inflationProofForm.errors.head.toString.contains(i) => true
-    case _ => false
-}}
-
+@inputHasErrors(input: String) =  @{inflationProofForm.error(s"$dateKey.$input").isDefined || inflationProofForm.error(dateKey).isDefined}
+@dateError = @{
+if(inflationProofForm.error(dateKey).isDefined) {
+inflationProofForm.error(dateKey)
+} else if (inflationProofForm.error(s"$dateKey.day").isDefined) {
+inflationProofForm.error(s"$dateKey.day")
+} else if (inflationProofForm.error(s"$dateKey.month").isDefined) {
+inflationProofForm.error(s"$dateKey.month")
+} else if (inflationProofForm.error(s"$dateKey.year").isDefined) {
+inflationProofForm.error(s"$dateKey.year")
+} else None
+}
 @dateHtml = {
     @govukDateInput(DateInput(
         id = "revaluationDate",
         hint = Some(Hint(
-          content = Text(Messages("gmp.date.example"))
+          content = Text(messages("gmp.date.example"))
         )),
+        errorMessage = dateError map { e => ErrorMessage(
+        content = Text(messages(s"${e.key}.${e.message}")),
+        visuallyHiddenText = Some(messages("generic.errorPrefix"))
+        )},
         fieldset = Some(Fieldset(
             legend = Some(Legend(
-                content = Text(Messages("gmp.inflation_proofed")),
+                content = Text(messages("gmp.inflation_proofed")),
                 classes = "govuk-fieldset__legend--m",
                 isPageHeading = true
             ))
@@ -88,7 +101,7 @@
               @govukRadios(Radios(
                   fieldset = Some(Fieldset(
                       legend = Some(Legend(
-                          content = Text(Messages("gmp.inflation_proof.question")),
+                          content = Text(messages("gmp.inflation_proof.question")),
                           classes = "govuk-fieldset__legend--l",
                           isPageHeading = true
                       ))
@@ -96,8 +109,8 @@
                   idPrefix = Some("revaluate"),
                   name = "revaluate",
                   items = Seq(
-                      RadioItem( content = Text(Messages("gmp.generic.yes")), value = Some("Yes") , id = Some("revaluation-date"), conditionalHtml = Some(dateHtml)),
-                      RadioItem( content = Text(Messages("gmp.generic.no")), value = Some("No") , id = Some("none"))
+                      RadioItem( content = Text(messages("gmp.generic.yes")), value = Some("Yes") , id = Some("revaluation-date"), conditionalHtml = Some(dateHtml)),
+                      RadioItem( content = Text(messages("gmp.generic.no")), value = Some("No") , id = Some("none"))
                   )
               ).withFormField(inflationProofForm("revaluate")))
 
@@ -105,7 +118,7 @@
 
             <div class="continue-button">
                   @govukButton(Button(
-                    content = Text(Messages("gmp.check_gmp.button")),
+                    content = Text(messages("gmp.check_gmp.button")),
                     inputType = Some("submit")                  ))
             </div>
 
