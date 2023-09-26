@@ -20,24 +20,26 @@
 
 @(calculationResponse:CalculationResponse)(implicit messages: Messages)
     @title = @{if(calculationResponse.calcType == CalculationType.SURVIVOR.toInt){
-        Some(Messages("gmp.entered_details.title.survivor"))
+        Some(messages("gmp.entered_details.title.survivor"))
     } else{
-        Some(Messages("gmp.entered_details.title"))
+        Some(messages("gmp.entered_details.title"))
     }}
 
     @govukTable(Table(
         attributes = Map("id" -> "member-details-table"),
         caption = title,
         captionClasses = "govuk-table__caption--m",
-        firstCellIsHeader = false,
-        head = Some(Seq(HeadCell(content = Text(Messages("gmp.name")), classes = "govuk-!-width-one-half"),
-            HeadCell(content = Text(Messages("gmp.scon.noabrv"))),
-            HeadCell(content = Text(Messages("gmp.nino"))))),
+        firstCellIsHeader = true,
+        head = Some(Seq(
+            HeadCell(content = Text(messages("gmp.name")), classes = "govuk-!-width-one-half"),
+            HeadCell(content = Text(messages("gmp.scon.noabrv"))),
+            HeadCell(content = Text(messages("gmp.nino")))
+        )),
         rows = Seq(
             Seq(
-                TableRow(content = Text(calculationResponse.name), classes = "app-custom-class"),
-                TableRow(content = Text(calculationResponse.scon), classes = "app-custom-class"),
-                TableRow(content = Text(calculationResponse.nino), classes = "app-custom-class")
+                TableRow(content = Text(calculationResponse.name)),
+                TableRow(content = Text(calculationResponse.scon)),
+                TableRow(content = Text(calculationResponse.nino))
             )
         )
     ))
