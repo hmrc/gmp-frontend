@@ -14,18 +14,26 @@
  * limitations under the License.
  *@
 
-@(calculationResponse:CalculationResponse, revalRateSubheader: Option[String], survivorSubheader: Option[String])(implicit messages: Messages)
+@(
+        calculationResponse: CalculationResponse,
+        revalRateSubheader: Option[String],
+        survivorSubheader: Option[String]
+)(implicit messages: Messages)
 
-<p class="govuk-body" id="value-revealed">@Messages("gmp.results.p1")</p>
+<p class="govuk-body" id="value-revealed">@messages("gmp.results.p1")</p>
 
-<h2 class="govuk-heading-m" id="results-header">@calculationResponse.header(messages)</h2>
+<h2 class="govuk-heading-m" id="results-header">
+ @calculationResponse.header(messages)
+</h2>
 
-@if(revalRateSubheader.isDefined) {
-    <div class="govuk-body" id="revaluation-rate-chosen">@Html(revalRateSubheader.get)</div>
-}
+@revalRateSubheader.map { s: String => {
+  <div class="govuk-body" id="revaluation-rate-chosen">
+   @Html(s)
+  </div>
+}}
 
-@if(survivorSubheader.isDefined) {
- <div class="govuk-body" id="survivor-header">@survivorSubheader</div>
-}
-
-
+@survivorSubheader.map { s: String => {
+ <div class="govuk-body" id="survivor-header">
+  @s
+ </div>
+}}
