@@ -26,14 +26,14 @@
  @calculationResponse.header(messages)
 </h2>
 
-@revalRateSubheader.map { s: String => {
+@revalRateSubheader.map { s: String =>
   <div class="govuk-body" id="revaluation-rate-chosen">
    @Html(s)
   </div>
-}}
+}
 
-@survivorSubheader.map { s: String => {
+@survivorSubheader.map { s: String =>
  <div class="govuk-body" id="survivor-header">
   @s
  </div>
-}}
+}
