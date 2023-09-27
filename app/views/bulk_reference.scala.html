@@ -30,7 +30,8 @@
 @layout(
     applicationConfig = ac,
     title =  title,
-    backLink = Some(BackLinkParams(href = "javascript:history.back()"))
+    backLink = Some(BackLinkParams(href = "javascript:history.back()")),
+    hasErrors = bulkReferenceForm.hasErrors
 ) {
 
     @views.html.helpers.errorSummary(bulkReferenceForm)
