@@ -30,8 +30,7 @@
 @layout(
     applicationConfig = ac,
     title =  title,
-    backLink = Some(BackLinkParams(href = controllers.routes.FileUploadController.get.url)),
-    hasErrors = bulkReferenceForm.hasErrors
+    backLink = Some(BackLinkParams(href = "javascript:history.back()"))
 ) {
 
     @views.html.helpers.errorSummary(bulkReferenceForm)
