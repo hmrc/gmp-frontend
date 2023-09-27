@@ -14,23 +14,22 @@
  * limitations under the License.
  *@
 
-@import config.ApplicationConfig
 @import uk.gov.hmrc.govukfrontend.views.html.components._
-@(calculationResponse:CalculationResponse, govukTable : GovukTable)(implicit messages: Messages)
-
 @import java.time.LocalDate
 @import java.time.format.DateTimeFormatter
+
+@(calculationResponse:CalculationResponse, govukTable : GovukTable)(implicit messages: Messages)
 
 @dateFormatter = @{DateTimeFormatter.ofPattern("d MMM yyyy")}
 
 @htmlContent1(period: CalculationPeriod) = @{
-    if(period.dualCalcPost90TrueTotal != Some("0.00"))
+    if(!period.dualCalcPost90TrueTotal.contains("0.00"))
         s"<b>£${period.dualCalcPost90TrueTotal.getOrElse("--")}</b" else
         s"--"
 }
 
 @htmlContent2(period: CalculationPeriod) = @{
-    if(period.dualCalcPost90OppositeTotal != Some("0.00"))
+    if(!period.dualCalcPost90OppositeTotal.contains("0.00"))
         s"<b>£${period.dualCalcPost90OppositeTotal.getOrElse("--")}</b>" else
         s"--"
 }
@@ -41,79 +40,71 @@
     } else {messages(s"gmp.revaluation_rate.type_${period.revaluationRate}")}
 }
 
-@htmlContent4(period: CalculationPeriod) = @{messages("gmp.unavailable")}
-
-@tableRowWithErrorCode0(currentDate: String, endDate: String, period: CalculationPeriod, count: Int) = @{
-        Seq(
-            TableRow(content = HtmlContent(s"<b>${messages("gmp.date_from")}<br></b>$currentDate<br><b>${Messages("gmp.date_to")}</b><br>$endDate")),
-            TableRow(content = HtmlContent(s"<br><b>£${period.gmpTotal}</b>")),
-            TableRow(content = HtmlContent(s"<br><b>£${period.post88GMPTotal}</b>")),
-            if(calculationResponse.dualCalc) {
-                TableRow(content = Text(htmlContent1(period)))
-            }else TableRow(),
-            if(calculationResponse.dualCalc) {
-                TableRow(content = Text(htmlContent2(period)))
-            }else TableRow(),
-            if(!calculationResponse.revaluationDate.isEmpty && calculationResponse.revaluationRate == Some("0")) {
-                TableRow(content = Text(htmlContent3(period, count)))
-            } else TableRow(),
-            )
-    }
-
-@tableRowWithErrorCodeNonZero(currentDate: String, endDate: String, period: CalculationPeriod) = @{
-    Seq(
-        TableRow(content = HtmlContent(s"<b>${messages("gmp.date_from")}<br></b>$currentDate<br><b>${Messages("gmp.date_to")}</b><br>$endDate")),
-        TableRow(content = HtmlContent(s"<br>${htmlContent4(period)}")),
-        TableRow(),
-        TableRow(),
-        TableRow(),
-    )
+@columnCount = @{
+    val minimumCols = 3
+    val a = if(calculationResponse.dualCalc) 2 else 0
+    val b = if(calculationResponse.revaluationRate.contains("0")) 1 else 0
+    minimumCols + a + b
 }
 
+@tableRowWithErrorCode0(currentDate: String, endDate: String, period: CalculationPeriod, count: Int) = @{
+    Seq(
+        Some(TableRow(content = HtmlContent(s"<b>${messages("gmp.date_from")}<br></b>$currentDate<br><b>${messages("gmp.date_to")}</b><br>$endDate"))),
+        Some(TableRow(content = HtmlContent(s"<b>£${period.gmpTotal}</b>"))),
+        Some(TableRow(content = HtmlContent(s"<b>£${period.post88GMPTotal}</b>"))),
+        if(calculationResponse.dualCalc) {
+            Some(TableRow(content = Text(htmlContent1(period))))
+        } else None,
+        if(calculationResponse.dualCalc) {
+            Some(TableRow(content = Text(htmlContent2(period))))
+        } else None,
+        if(calculationResponse.revaluationRate.contains("0")) {
+            Some(TableRow(content = Text(htmlContent3(period, count))))
+        } else None
+    ).collect { case Some(r) => r }
+}
 
+@tableRowWithErrorCodeNonZero(currentDate: String, endDate: String, period: CalculationPeriod) = @{
+    val unavailableHeader = List(
+        TableRow(content = HtmlContent(s"<b>${messages("gmp.date_from")}<br></b>$currentDate<br><b>${messages("gmp.date_to")}</b><br>$endDate")),
+    )
+    val unavailableCells = List.fill(columnCount - 1)(TableRow(content = Text(messages("gmp.unavailable"))))
+    unavailableHeader ::: unavailableCells
+}
+
+@head = @{
+    Seq(
+        Some(HeadCell(
+            content = Text(messages("gmp.table.period")),
+            classes = "govuk-!-width-one-half"
+        )),
+        Some(HeadCell(content = Text(messages("gmp.per.week")))),
+        Some(HeadCell(content = Text(messages("gmp.post.1988")))),
+        if(calculationResponse.dualCalc){
+            Some(HeadCell(content = Text(messages("gmp.true"))))
+        } else None,
+        if(calculationResponse.dualCalc){
+            Some(HeadCell(content = Text(messages("gmp.opposite"))))
+        } else None,
+        if(calculationResponse.revaluationRate.contains("0")){
+            Some(HeadCell(content = Text(messages("gmp.rate_hmrc_holds"))))
+        } else None
+    ).collect { case Some(r) => r }
+}
 
 @govukTable(Table(
+    captionClasses = "govuk-visually-hidden",
+    firstCellIsHeader = true,
+    caption = Some(calculationResponse.header(messages)),
     attributes = Map("id" -> "multi-results-table"),
-    captionClasses = "govuk-table__caption--m",
-    firstCellIsHeader = false,
     rows = calculationResponse.calculationPeriods.zipWithIndex.map { result =>
         val (period, count) = result
-
         val currentDate = period.startDate.get.format(dateFormatter)
         val endDate = period.endDate.format(dateFormatter)
-        if(period.errorCode == 0) tableRowWithErrorCode0(currentDate, endDate, period, count) else tableRowWithErrorCodeNonZero(currentDate, endDate, period)
-    }
-    ,
-    head = Some(Seq(
-        HeadCell(
-            content = Text(Messages("gmp.table.period")),
-            classes = "govuk-!-width-one-third"
-        ),
-        HeadCell(
-            content = Text(Messages("gmp.per.week")),
-            classes = "govuk-!-width-one-third"
-        ),
-        HeadCell(
-            content = Text(messages("gmp.post.1988")),
-            classes = "govuk-!-width-one-third"
-        ),
-        if(calculationResponse.dualCalc){
-            HeadCell(
-                content = Text( Messages("gmp.true")),
-                classes = "govuk-!-width-one-third"
-            )
-        } else HeadCell(),
-        if(calculationResponse.dualCalc){
-            HeadCell(
-                content = Text( Messages("gmp.opposite")),
-                classes = "govuk-!-width-one-third"
-            )
-        } else HeadCell(),
-        if(!calculationResponse.revaluationDate.isEmpty && calculationResponse.revaluationRate == Some("0")){
-            HeadCell(
-                content = Text( Messages("gmp.rate_hmrc_holds")),
-                classes = "govuk-!-width-one-third"
-            )
-        } else HeadCell(),
-    )
-)))
+        if(period.errorCode == 0)
+            tableRowWithErrorCode0(currentDate, endDate, period, count)
+        else
+            tableRowWithErrorCodeNonZero(currentDate, endDate, period)
+    },
+    head = Some(head)
+))

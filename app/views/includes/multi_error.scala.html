@@ -16,17 +16,16 @@
 
 @import config.ApplicationConfig
 @import uk.gov.hmrc.govukfrontend.views.html.components.GovukTable
-@(calculationResponse:CalculationResponse, govukTable: GovukTable)(implicit messages: Messages, ac:ApplicationConfig)
-
 @import java.time.format.DateTimeFormatter
 
-<h1 class="govuk-heading-l" id="part-problem">@{Messages("gmp.part_problem")}</h1>
+@(calculationResponse:CalculationResponse, govukTable: GovukTable)(implicit messages: Messages, ac:ApplicationConfig)
+    
 @for((period, count) <- calculationResponse.calculationPeriods.zipWithIndex) {
     @if(period.errorCode > 0) {
         <div class="govuk-inset-text">
-            @{period.startDate.get.format( DateTimeFormatter.ofPattern("dd MMMM yyyy"))} to @{
+            @{period.startDate.get.format(DateTimeFormatter.ofPattern("dd MMMM yyyy"))} to @{
             period.endDate.format(DateTimeFormatter.ofPattern("dd MMMM yyyy"))
-        }: @Messages("gmp.unavailable")
+        }: @messages("gmp.unavailable")
         </div>
         @if(ac.globalErrors.hasPath(s"${period.errorCode}.reason")) {
             <p class="govuk-body">@messages(ac.globalErrors.getString(s"${period.errorCode}.reason"))</p>
@@ -34,17 +33,14 @@
     }
 }
 
+@includes.multi_results_table(calculationResponse, govukTable)
 
-        @includes.multi_results_table(calculationResponse, govukTable)
-        <div>
-            <h2 class="govuk-heading-m" id="what-now">@Messages("gmp.what_now")</h2>
+<div>
+    <h2 class="govuk-heading-m" id="what-now">@messages("gmp.what_now")</h2>
+    <p class="govuk-body" id="multi-solution">@messages("gmp.queryhandling.resultsmessage")</p>
+</div>
 
-            <p class="govuk-body" id="multi-solution">@Messages("gmp.queryhandling.resultsmessage")</p>
-        </div>
-
-    @includes.print_page()
-
-
+@includes.print_page()
 
 @includes.survivor_disclaimer(calculationResponse.calcType == CalculationType.SURVIVOR.toInt)
 
