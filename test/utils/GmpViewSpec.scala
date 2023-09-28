@@ -97,5 +97,13 @@ trait GmpViewSpec extends PlaySpec with JSoupMatchers with GuiceOneServerPerSuit
     }
   }
 
+  def pageWithJsBackLink(): Unit = {
+    "have a back link that uses JS for navigation" in {
+      val backButton = doc.select("a.govuk-back-link[href=\"#\"]")
+      backButton.size mustBe 1
+    }
+  }
+
+
 }
 
