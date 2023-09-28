@@ -31,7 +31,8 @@ class GMPLocalDateFormatter(maximumDateInclusive: Option[LocalDate],
                             yearKey: String,
                             dateKey: String,
                             tooRecentArgs: Seq[String] = Seq.empty,
-                            tooFarInPastArgs: Seq[String] = Seq.empty) extends Formatter[GmpDate]{
+                            tooFarInPastArgs: Seq[String] = Seq.empty,
+                            parentField: Option[String] = None) extends Formatter[GmpDate]{
     val YEAR_FIELD_LENGTH: Int = 4
     def isValidDate(x: GmpDate): Boolean =
       try {
@@ -80,7 +81,7 @@ class GMPLocalDateFormatter(maximumDateInclusive: Option[LocalDate],
                        key: String,
                        data: Map[String, String]
                      ): Either[Seq[FormError], GmpDate] = {
-      if (data.get("leaving").contains(Leaving.YES_AFTER)) {
+     if(parentField.isDefined && data.get(parentField.getOrElse("")).contains(Leaving.YES_AFTER)) {
         for {
           dateFields <- dateFieldStringValues(data)
           (dayStr, monthStr, yearStr) = dateFields
