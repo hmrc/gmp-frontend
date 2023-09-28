@@ -20,12 +20,12 @@
 @import uk.gov.hmrc.govukfrontend.views.html.components.implicits._
 
 @this(
-        layout: Layout,
-        viewHelpers: ViewHelpers,
-        govukRadios : GovukRadios,
-        govukButton : GovukButton,
-        govukErrorSummary : GovukErrorSummary,
-        govukDateInput : GovukDateInput
+  layout: Layout,
+  viewHelpers: ViewHelpers,
+  govukRadios : GovukRadios,
+  govukButton : GovukButton,
+  govukErrorSummary : GovukErrorSummary,
+  govukDateInput : GovukDateInput
 )
 
 @(inflationProofForm: Form[models.InflationProof])(implicit request: Request[_], messages: Messages, applicationConfig: ApplicationConfig)
@@ -39,76 +39,75 @@
 }}
 
 @dateHtml = {
-    @govukDateInput(DateInput(
-        id = "revaluationDate",
-        hint = Some(Hint(
-          content = Text(Messages("gmp.date.example"))
-        )),
-        fieldset = Some(Fieldset(
-            legend = Some(Legend(
-                content = Text(Messages("gmp.inflation_proofed")),
-                classes = "govuk-fieldset__legend--m",
-                isPageHeading = true
-            ))
-        )),
-        items = Seq(
-            InputItem(
-                name = "revaluationDate.day",
-                classes = s"govuk-input--width-2 ${if(inputHasErrors("day")){" govuk-input--error"} else {""}}",
-                label=Some("Day")),
-            InputItem(
-                name = "revaluationDate.month",
-                classes = s"govuk-input--width-2${if(inputHasErrors("month")){" govuk-input--error"} else {""}}",
-                label=Some("Month")),
-            InputItem(
-                name = "revaluationDate.year",
-                classes = s"govuk-input--width-4${if(inputHasErrors("year")){" govuk-input--error"} else {""}}",
-                label=Some("Year"))),
-    ))
+  @govukDateInput(DateInput(
+    id = "revaluationDate",
+    hint = Some(Hint(
+      content = Text(Messages("gmp.date.example"))
+    )),
+    fieldset = Some(Fieldset(
+      legend = Some(Legend(
+        content = Text(Messages("gmp.inflation_proofed")),
+        classes = "govuk-fieldset__legend--m",
+        isPageHeading = false
+      )),
+      describedBy = "gmp.inflationproof.subtext"
+    )),
+    items = Seq(
+      InputItem(
+        name = "revaluationDate.day",
+        classes = s"govuk-input--width-2 ${if(inputHasErrors("day")){" govuk-input--error"} else {""}}",
+        label=Some("Day")),
+      InputItem(
+        name = "revaluationDate.month",
+        classes = s"govuk-input--width-2${if(inputHasErrors("month")){" govuk-input--error"} else {""}}",
+        label=Some("Month")),
+      InputItem(
+        name = "revaluationDate.year",
+        classes = s"govuk-input--width-4${if(inputHasErrors("year")){" govuk-input--error"} else {""}}",
+        label=Some("Year"))
+    )
+  ))
 
-<hr class="govuk-section-break govuk-section-break--m" role="presentation" />
-<p class="govuk-body">@Messages("gmp.inflationproof.subtext")</p>
+  <hr class="govuk-section-break govuk-section-break--m" role="presentation" />
+  <p class="govuk-body" id="gmp.inflationproof.subtext">@Messages("gmp.inflationproof.subtext")</p>
 }
 
 @layout(
-    applicationConfig = applicationConfig,
-    title = title,
-    backLink = Some(BackLinkParams(controllers.routes.InflationProofController.back.url)),
-    hasErrors = hasErrors
+  applicationConfig = applicationConfig,
+  title = title,
+  backLink = Some(BackLinkParams(controllers.routes.InflationProofController.back.url)),
+  hasErrors = hasErrors
 ) {
 
-        @viewHelpers.form(action = routes.InflationProofController.post) {
-            @if(hasErrors){
-                @govukErrorSummary(ErrorSummary(errorList = Seq(ErrorLink(
-                href = Some(s"#${if (inflationProofForm.errors.head.key.contains("revaluation")) inflationProofForm.errors.head.key else s"revaluationDate-revaluationDate.day" }"),
-                content = Text(s"${messages(s"${inflationProofForm.errors.head.message}")}"),
-                )), title = Text(messages("generic.errorSummary"))))
-            }
+  @viewHelpers.form(action = routes.InflationProofController.post) {
+    @if(hasErrors){
+      @govukErrorSummary(ErrorSummary(errorList = Seq(ErrorLink(
+        href = Some(s"#${if (inflationProofForm.errors.head.key.contains("revaluation")) inflationProofForm.errors.head.key else s"revaluationDate-revaluationDate.day" }"),
+        content = Text(s"${messages(s"${inflationProofForm.errors.head.message}")}"),
+      )), title = Text(messages("gmp.inflation_proof.error"))))
+    }
 
-              @govukRadios(Radios(
-                  fieldset = Some(Fieldset(
-                      legend = Some(Legend(
-                          content = Text(Messages("gmp.inflation_proof.question")),
-                          classes = "govuk-fieldset__legend--l",
-                          isPageHeading = true
-                      ))
-                  )),
-                  idPrefix = Some("revaluate"),
-                  name = "revaluate",
-                  items = Seq(
-                      RadioItem( content = Text(Messages("gmp.generic.yes")), value = Some("Yes") , id = Some("revaluation-date"), conditionalHtml = Some(dateHtml)),
-                      RadioItem( content = Text(Messages("gmp.generic.no")), value = Some("No") , id = Some("none"))
-                  )
-              ).withFormField(inflationProofForm("revaluate")))
+    @govukRadios(Radios(
+      fieldset = Some(Fieldset(
+        legend = Some(Legend(
+          content = Text(Messages("gmp.inflation_proof.question")),
+          classes = "govuk-fieldset__legend--l",
+          isPageHeading = true
+        ))
+      )),
+      idPrefix = Some("revaluate"),
+      name = "revaluate",
+      items = Seq(
+        RadioItem( content = Text(Messages("gmp.generic.yes")), value = Some("Yes") , id = Some("revaluation-date"), conditionalHtml = Some(dateHtml)),
+        RadioItem( content = Text(Messages("gmp.generic.no")), value = Some("No") , id = Some("none"))
+      )
+    ).withFormField(inflationProofForm("revaluate")))
 
-
-
-            <div class="continue-button">
-                  @govukButton(Button(
-                    content = Text(Messages("gmp.check_gmp.button")),
-                    inputType = Some("submit")                  ))
-            </div>
-
-
-        }
+    <div class="continue-button">
+      @govukButton(Button(
+        content = Text(Messages("gmp.Continue.button")),
+        inputType = Some("submit")
+      ))
+    </div>
+  }
 }

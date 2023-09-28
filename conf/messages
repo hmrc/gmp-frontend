@@ -160,7 +160,7 @@ gmp.contact.hmrc = contact HMRC
 gmp.continue = Continue
 gmp.date.example = For example, 12 1 2018
 gmp.year = Year
-gmp.inflation_proofed = Enter the date.
+gmp.inflation_proofed = Enter the date for the calculation
 gmp.caption = Recent calculations
 gmp.revaluation.rate = Revaluation rate
 gmp.revaluation_rate.rate_held_by_hmrc = HMRC’s rate
@@ -319,6 +319,8 @@ gmp.error.solution.63167 = Choose another <a class="govuk-link" href="/guarantee
 
 gmp.error.no_conts_and_earnings = There are no contributions and earnings available for this period.
 gmp.error.session_parts_missing = You have not given us enough information about the member and type of calculation you need or it has been too long since you did so.<br/><br/><a class="govuk-link" href="{0}"">Go back</a> and fill in the information required.
+
+gmp.inflation_proof.error = Select yes if you would like a calculation for a date after the date of death
 
 error.expected.url = Download url is not a valid URL
 ############################################################################
