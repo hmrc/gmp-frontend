@@ -31,8 +31,9 @@ trait Mappings {
                               yearKey: String,
                               dateKey: String,
                               tooRecentArgs: Seq[String] = Seq.empty,
-                              tooFarInPastArgs: Seq[String] = Seq.empty): FieldMapping[GmpDate]=
+                              tooFarInPastArgs: Seq[String] = Seq.empty,
+                              parentField: Option[String] = None): FieldMapping[GmpDate]=
 
-  of(new GMPLocalDateFormatter(maximumDateInclusive, minimumDateInclusive, dayKey, monthKey, yearKey, dateKey, tooRecentArgs, tooFarInPastArgs))
+  of(new GMPLocalDateFormatter(maximumDateInclusive, minimumDateInclusive, dayKey, monthKey, yearKey, dateKey, tooRecentArgs, tooFarInPastArgs, parentField))
 }
 

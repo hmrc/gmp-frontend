@@ -42,7 +42,8 @@ class DateOfLeavingForm  @Inject()(mcc: MessagesControllerComponents) extends Ma
         "leavingDate.year",
         "leavingDate",
         tooRecentArgs = Seq("5 April " + maxYear.toString),
-        tooFarInPastArgs = Seq("6 April " + minYear.toString)
+        tooFarInPastArgs = Seq("6 April " + minYear.toString),
+        Some("leaving")
       ),
       "leaving" -> optional(text).verifying("error.required",{_.isDefined}))(Leaving.apply)(Leaving.unapply))
   }
