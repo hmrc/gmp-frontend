@@ -77,7 +77,7 @@ class InflationProofSpec extends GmpViewSpec {
     }
 
     "have a submit button text" in {
-      doc must haveSubmitButton(messages("gmp.Continue.button"))
+      doc must haveSubmitButton(messages("gmp.continue.button"))
     }
   }
 
