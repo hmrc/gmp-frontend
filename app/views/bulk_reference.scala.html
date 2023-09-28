@@ -30,7 +30,7 @@
 @layout(
     applicationConfig = ac,
     title =  title,
-    backLink = Some(BackLinkParams(href = controllers.routes.FileUploadController.get.url)),
+    backLink = Some(BackLinkParams("#")),
     hasErrors = bulkReferenceForm.hasErrors
 ) {
 
