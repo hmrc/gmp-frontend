@@ -65,7 +65,7 @@ class InflationProofControllerSpec extends PlaySpec with GuiceOneServerPerSuite 
             status(result) must equal(OK)
             contentAsString(result) must include(Messages("gmp.inflation_proof.question"))
             contentAsString(result) must include(Messages("gmp.back.link"))
-            contentAsString(result) must include(Messages("gmp.check_gmp.button"))
+            contentAsString(result) must include(Messages("gmp.Continue.button"))
         }
       }
     }
