@@ -20,6 +20,7 @@ import cats.syntax.either._
 import models.{GmpDate, Leaving}
 import play.api.data.FormError
 import play.api.data.format.Formatter
+import play.api.mvc.Call
 
 import java.time.LocalDate
 import scala.util.{Left, Try}
@@ -32,7 +33,7 @@ class GMPDateFormatter(maximumDateInclusive: Option[LocalDate],
                        dateKey: String,
                        tooRecentArgs: Seq[String] = Seq.empty,
                        tooFarInPastArgs: Seq[String] = Seq.empty,
-                       parentField: Option[String] = None) extends Formatter[GmpDate] {
+                       onlyRequiredIf: Option[Call] = None) extends Formatter[GmpDate] {
   val YEAR_FIELD_LENGTH: Int = 4
 
   def isValidDate(x: GmpDate): Boolean =
@@ -82,7 +83,7 @@ class GMPDateFormatter(maximumDateInclusive: Option[LocalDate],
             key: String,
             data: Map[String, String]
           ): Either[Seq[FormError], GmpDate] = {
-    if(parentField.isDefined && data.get(parentField.getOrElse("")).contains(Leaving.YES_AFTER)) {
+    if(onlyRequiredIf.isEmpty || onlyRequiredIf.fold(false)(x => x(data).isRequired)) {
       for {
         dateFields <- dateFieldStringValues(data)
         (dayStr, monthStr, yearStr) = dateFields

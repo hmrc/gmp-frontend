@@ -32,6 +32,9 @@ import javax.inject.Inject
 class DateOfLeavingForm @Inject()(mcc: MessagesControllerComponents) extends Mappings {
   implicit lazy val messages: Messages = MessagesImpl(mcc.langs.availables.head, mcc.messagesApi)
 
+  case class dateCondition(data: Map[String, String]){
+    def isRequired: Boolean = data.get("leaving").contains(Leaving.YES_AFTER)
+  }
   def dateOfLeavingForm(minYear: Int = 2016, maxYear: Int = 2046) = {
     Form(mapping(
       "leavingDate" -> gmpDate(
@@ -43,7 +46,7 @@ class DateOfLeavingForm @Inject()(mcc: MessagesControllerComponents) extends Map
         "leavingDate",
         tooRecentArgs = Seq("5 April " + maxYear.toString),
         tooFarInPastArgs = Seq("6 April " + minYear.toString),
-        parentField = Some("leaving")
+        onlyRequiredIf = Some(dateCondition.is)
       ),
       "leaving" -> optional(text).verifying("error.required", {
         _.isDefined
