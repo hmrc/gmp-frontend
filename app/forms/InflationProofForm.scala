@@ -17,18 +17,20 @@
 package forms
 
 import com.google.inject.Singleton
-import javax.inject.Inject
-import models.{GmpDate, InflationProof}
+import forms.helper.Mappings
+import models.InflationProof
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.i18n.{Messages, MessagesImpl}
 import play.api.mvc.MessagesControllerComponents
+
+import java.time.LocalDate
+import javax.inject.Inject
+
 @Singleton
-class InflationProofForm  @Inject()(mcc: MessagesControllerComponents) {
+class InflationProofForm @Inject()(mcc: MessagesControllerComponents) extends Mappings {
   implicit lazy val messages: Messages = MessagesImpl(mcc.langs.availables.head, mcc.messagesApi)
 
-
-  val YEAR_FIELD_LENGTH: Int = 4
 
   def dateMustBePresentIfRevaluationWanted(x: InflationProof): Boolean = {
     x.revaluate match {
@@ -37,24 +39,22 @@ class InflationProofForm  @Inject()(mcc: MessagesControllerComponents) {
     }
   }
 
-  val inflationProofForm = Form(
-    mapping(
-      "revaluationDate" -> mapping(
-        "day" -> optional(text),
-        "month" -> optional(text),
-        "year" -> optional(text)
-      )(GmpDate.apply)(GmpDate.unapply)
-        .verifying(messages("gmp.error.date.nonnumber"), x => checkForNumber(x.day) && checkForNumber(x.month) && checkForNumber(x.year))
-        .verifying(messages("gmp.error.day.invalid"), x => checkDayRange(x.day))
-        .verifying(messages("gmp.error.month.invalid"), x => checkMonthRange(x.month))
-        .verifying(messages("gmp.error.year.invalid.format"), x => checkYearLength(x.year))
-      ,
-      "revaluate" -> optional(text).verifying(messages("gmp.error.reason.mandatory"),{_.isDefined})
+  def inflationProofForm(minYear: Int, maxYear: Int) = {
+    Form(mapping(
+      "revaluationDate" -> gmpDate(
+        maximumDateInclusive = Some(LocalDate.of(maxYear, 4, 5)),
+        minimumDateInclusive = Some(LocalDate.of(minYear, 4, 6)),
+        "day",
+        "month",
+        "year",
+        "revaluationDate",
+        tooRecentArgs = Seq("5 April " + maxYear.toString),
+        tooFarInPastArgs = Seq("6 April " + minYear.toString),
+        parentField = Some("revaluate")), //todo: add implementation to use dateMustBePresentIfRevaluationWanted
+      "revaluate" -> optional(text).verifying(messages("gmp.error.reason.mandatory"), {
+        _.isDefined
+      })
     )(InflationProof.apply)(InflationProof.unapply)
-      .verifying(messages("gmp.error.reval_date.mandatory"), x => dateMustBePresentIfRevaluationWanted(x))
-      .verifying(messages("gmp.error.date.invalid"), x => checkValidDate(x.revaluationDate))
-      .verifying(messages("gmp.error.reval_date.from"), x => checkDateOnOrAfterGMPStart(x.revaluationDate))
-      .verifying(messages("gmp.error.reval_date.to"), x => checkDateOnOBeforeGMPEnd(x.revaluationDate))
-  )
-
+    )
+  }
 }

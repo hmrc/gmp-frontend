@@ -36,17 +36,17 @@
 @hasErrors = @{inflationProofForm.hasErrors}
 
 @inputHasErrors(input: String) =  @{inflationProofForm.error(s"$dateKey.$input").isDefined || inflationProofForm.error(dateKey).isDefined}
-@dateError = @{
-if(inflationProofForm.error(dateKey).isDefined) {
-inflationProofForm.error(dateKey)
-} else if (inflationProofForm.error(s"$dateKey.day").isDefined) {
-inflationProofForm.error(s"$dateKey.day")
-} else if (inflationProofForm.error(s"$dateKey.month").isDefined) {
-inflationProofForm.error(s"$dateKey.month")
-} else if (inflationProofForm.error(s"$dateKey.year").isDefined) {
-inflationProofForm.error(s"$dateKey.year")
-} else None
-}
+        @dateError = @{
+        if(inflationProofForm.error(dateKey).isDefined) {
+            inflationProofForm.error(dateKey)
+        } else if (inflationProofForm.error(s"$dateKey.day").isDefined) {
+            inflationProofForm.error(s"$dateKey.day")
+        } else if (inflationProofForm.error(s"$dateKey.month").isDefined) {
+            inflationProofForm.error(s"$dateKey.month")
+        } else if (inflationProofForm.error(s"$dateKey.year").isDefined) {
+            inflationProofForm.error(s"$dateKey.year")
+        } else None
+        }
 @dateHtml = {
     @govukDateInput(DateInput(
         id = "revaluationDate",
