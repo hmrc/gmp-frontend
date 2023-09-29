@@ -23,17 +23,17 @@ import play.api.data.Forms.of
 import java.time.LocalDate
 
 trait Mappings {
-  protected def gmpLocalDate(
-                              maximumDateInclusive: Option[LocalDate],
-                              minimumDateInclusive: Option[LocalDate],
-                              dayKey: String,
-                              monthKey: String,
-                              yearKey: String,
-                              dateKey: String,
-                              tooRecentArgs: Seq[String] = Seq.empty,
-                              tooFarInPastArgs: Seq[String] = Seq.empty,
-                              parentField: Option[String] = None): FieldMapping[GmpDate]=
+  protected def gmpDate(
+                         maximumDateInclusive: Option[LocalDate],
+                         minimumDateInclusive: Option[LocalDate],
+                         dayKey: String,
+                         monthKey: String,
+                         yearKey: String,
+                         dateKey: String,
+                         tooRecentArgs: Seq[String] = Seq.empty,
+                         tooFarInPastArgs: Seq[String] = Seq.empty,
+                         parentField: Option[String] = None): FieldMapping[GmpDate] =
 
-  of(new GMPLocalDateFormatter(maximumDateInclusive, minimumDateInclusive, dayKey, monthKey, yearKey, dateKey, tooRecentArgs, tooFarInPastArgs, parentField))
+    of(new GMPDateFormatter(maximumDateInclusive, minimumDateInclusive, dayKey, monthKey, yearKey, dateKey, tooRecentArgs, tooFarInPastArgs, parentField))
 }
 

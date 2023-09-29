@@ -29,12 +29,12 @@ import javax.inject.Inject
 
 
 @Singleton
-class DateOfLeavingForm  @Inject()(mcc: MessagesControllerComponents) extends Mappings {
+class DateOfLeavingForm @Inject()(mcc: MessagesControllerComponents) extends Mappings {
   implicit lazy val messages: Messages = MessagesImpl(mcc.langs.availables.head, mcc.messagesApi)
 
   def dateOfLeavingForm(minYear: Int = 2016, maxYear: Int = 2046) = {
     Form(mapping(
-      "leavingDate" -> gmpLocalDate(
+      "leavingDate" -> gmpDate(
         maximumDateInclusive = Some(LocalDate.of(maxYear, 4, 5)),
         minimumDateInclusive = Some(LocalDate.of(minYear, 4, 6)),
         "leavingDate.day",
@@ -43,9 +43,11 @@ class DateOfLeavingForm  @Inject()(mcc: MessagesControllerComponents) extends Ma
         "leavingDate",
         tooRecentArgs = Seq("5 April " + maxYear.toString),
         tooFarInPastArgs = Seq("6 April " + minYear.toString),
-        Some("leaving")
+        parentField = Some("leaving")
       ),
-      "leaving" -> optional(text).verifying("error.required",{_.isDefined}))(Leaving.apply)(Leaving.unapply))
+      "leaving" -> optional(text).verifying("error.required", {
+        _.isDefined
+      }))(Leaving.apply)(Leaving.unapply))
   }
 
 }
