@@ -44,9 +44,9 @@ class InflationProofForm @Inject()(mcc: MessagesControllerComponents) extends Ma
       "revaluationDate" -> gmpDate(
         maximumDateInclusive = Some(LocalDate.of(maxYear, 4, 5)),
         minimumDateInclusive = Some(LocalDate.of(minYear, 4, 6)),
-        "day",
-        "month",
-        "year",
+        "revaluationDate.day",
+        "revaluationDate.month",
+        "revaluationDate.year",
         "revaluationDate",
         tooRecentArgs = Seq("5 April " + maxYear.toString),
         tooFarInPastArgs = Seq("6 April " + minYear.toString),
