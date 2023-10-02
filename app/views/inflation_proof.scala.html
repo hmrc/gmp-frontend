@@ -81,10 +81,17 @@
 
   @viewHelpers.form(action = routes.InflationProofController.post) {
     @if(hasErrors){
-      @govukErrorSummary(ErrorSummary(errorList = Seq(ErrorLink(
-        href = Some(s"#${if (inflationProofForm.errors.head.key.contains("revaluation")) inflationProofForm.errors.head.key else s"revaluationDate-revaluationDate.day" }"),
-        content = Text(s"${messages(s"${inflationProofForm.errors.head.message}")}"),
-      )), title = Text(messages("gmp.inflation_proof.error"))))
+      @govukErrorSummary(
+        ErrorSummary(
+          errorList = Seq(
+            ErrorLink(
+              href = Some(s"#${if (inflationProofForm.errors.head.key.contains("revaluation")) inflationProofForm.errors.head.key else s"revaluationDate-revaluationDate.day" }"),
+              content = Text(s"${messages(s"${inflationProofForm.errors.head.message}")}"),
+            )
+          ),
+          title = Text(messages("generic.errorSummary"))
+        )
+      )
     }
 
     @govukRadios(Radios(
