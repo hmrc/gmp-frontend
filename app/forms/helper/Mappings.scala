@@ -33,7 +33,7 @@ trait Mappings {
                          dateKey: String,
                          tooRecentArgs: Seq[String] = Seq.empty,
                          tooFarInPastArgs: Seq[String] = Seq.empty,
-                         onlyRequiredIf: Option[Call] = None): FieldMapping[GmpDate] =
+                         onlyRequiredIf: Option[Map[String, String] => Boolean] = None): FieldMapping[GmpDate] =
 
     of(new GMPDateFormatter(maximumDateInclusive, minimumDateInclusive, dayKey, monthKey, yearKey, dateKey, tooRecentArgs, tooFarInPastArgs, onlyRequiredIf))
 }
