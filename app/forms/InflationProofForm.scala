@@ -31,29 +31,21 @@ import javax.inject.Inject
 class InflationProofForm @Inject()(mcc: MessagesControllerComponents) extends Mappings {
   implicit lazy val messages: Messages = MessagesImpl(mcc.langs.availables.head, mcc.messagesApi)
 
-
-  def dateMustBePresentIfRevaluationWanted(x: InflationProof): Boolean = {
-    x.revaluate match {
-      case Some("Yes") => x.revaluationDate.day.isDefined || x.revaluationDate.month.isDefined || x.revaluationDate.year.isDefined
-      case _ => true
-    }
-  }
-
+  def dateCondition(data: Map[String, String]): Boolean = data.get("revaluate").contains("Yes")
   def inflationProofForm(minYear: Int, maxYear: Int) = {
     Form(mapping(
       "revaluationDate" -> gmpDate(
         maximumDateInclusive = Some(LocalDate.of(maxYear, 4, 5)),
         minimumDateInclusive = Some(LocalDate.of(minYear, 4, 6)),
-        "day",
-        "month",
-        "year",
+        "revaluationDate.day",
+        "revaluationDate.month",
+        "revaluationDate.year",
         "revaluationDate",
         tooRecentArgs = Seq("5 April " + maxYear.toString),
         tooFarInPastArgs = Seq("6 April " + minYear.toString),
-        parentField = Some("revaluate")), //todo: add implementation to use dateMustBePresentIfRevaluationWanted
-      "revaluate" -> optional(text).verifying(messages("gmp.error.reason.mandatory"), {
-        _.isDefined
-      })
+        onlyRequiredIf = Some(dateCondition)
+      ),
+      "revaluate" -> optional(text).verifying("error.required",{_.isDefined})
     )(InflationProof.apply)(InflationProof.unapply)
     )
   }

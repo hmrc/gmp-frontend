@@ -94,12 +94,16 @@
 ) {
 
         @viewHelpers.form(action = routes.InflationProofController.post) {
-            @if(hasErrors){
-                @govukErrorSummary(ErrorSummary(errorList = Seq(ErrorLink(
-                href = Some(s"#${if (inflationProofForm.errors.head.key.contains("revaluation")) inflationProofForm.errors.head.key else s"revaluationDate-revaluationDate.day" }"),
-                content = Text(s"${messages(s"${inflationProofForm.errors.head.message}")}"),
-                )), title = Text(messages("generic.errorSummary"))))
-            }
+        @if(hasErrors){
+            @govukErrorSummary(ErrorSummary(
+                errorList = inflationProofForm.errors.map(error =>
+                ErrorLink(
+                href = Some(s"#${if(error.key.startsWith(key)) { s"key-${error.key}" } else { error.key } }${if(error.key.matches(key)) { ".day" } else ""}"),
+                content = Text(messages(s"${if(error.key.matches(key)) s"revaluation." else ""}${error.key}.${error.message}")),
+                )).take(1),
+                title = Text(messages("gmp.error.inflation_proof"))
+            ))
+        }
 
       @govukRadios(Radios(
           fieldset = Some(Fieldset(
@@ -111,6 +115,12 @@
           )),
           idPrefix = Some("revaluate"),
           name = "revaluate",
+          errorMessage = inflationProofForm.error(key) map { e =>
+          ErrorMessage(
+              content = Text(messages(s"revaluation.$key.${e.message}")),
+              visuallyHiddenText = Some(messages("generic.errorPrefix"))
+          )
+        },
           items = Seq(
               RadioItem( content = Text(messages("gmp.generic.yes")), value = Some("Yes") , id = Some("revaluation-date"), conditionalHtml = Some(dateHtml)),
               RadioItem( content = Text(messages("gmp.generic.no")), value = Some("No") , id = Some("none"))
