@@ -484,4 +484,4 @@ revaluationDate.month.error.monthRequired = Date must include the month
 revaluationDate.month.error.monthAndYearRequired = Date must include the month and year
 revaluationDate.year.error.yearRequired = Date must include the year
 revaluationDate.year.error.yearLength = Enter the year in full (4 numbers)
-revaluation.revaluate.error.required = Select an option
+revaluate.error.required = Select yes if you would like a calculation for a date after the date of death

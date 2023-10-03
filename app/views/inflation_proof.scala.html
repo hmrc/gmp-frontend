@@ -93,15 +93,16 @@
     hasErrors = hasErrors
 ) {
 
-        @viewHelpers.form(action = routes.InflationProofController.post) {
+   @viewHelpers.form(action = routes.InflationProofController.post) {
         @if(hasErrors){
             @govukErrorSummary(ErrorSummary(
                 errorList = inflationProofForm.errors.map(error =>
-                ErrorLink(
-                href = Some(s"#${if(error.key.startsWith(key)) { s"key-${error.key}" } else { error.key } }${if(error.key.matches(key)) { ".day" } else ""}"),
-                content = Text(messages(s"${if(error.key.matches(key)) s"revaluation." else ""}${error.key}.${error.message}")),
-                )).take(1),
-                title = Text(messages("gmp.error.inflation_proof"))
+                    ErrorLink(
+                        href = Some(s"#${if(error.key.matches(dateKey)) { s"$dateKey.day" } else error.key}"),
+                        content = Text(messages(s"${error.key}.${error.message}"))
+                    )
+                ).take(1),
+                title = Text(messages("generic.errorSummary"))
             ))
         }
 
@@ -117,7 +118,7 @@
           name = "revaluate",
           errorMessage = inflationProofForm.error(key) map { e =>
           ErrorMessage(
-              content = Text(messages(s"revaluation.$key.${e.message}")),
+              content = Text(messages(s"$key.${e.message}")),
               visuallyHiddenText = Some(messages("generic.errorPrefix"))
           )
         },
