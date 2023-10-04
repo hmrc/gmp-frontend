@@ -42,7 +42,7 @@ class InflationProofController @Inject()( authAction: AuthAction,
                                         ) extends GmpPageFlow(authConnector,sessionService,config,messagesControllerComponents,ac) with Logging{
 
 
-  lazy val inflationProofForm=ipf.inflationProofForm
+  lazy val inflationProofForm=ipf.inflationProofForm(1978,2046)
 
 
   def get = authAction.async {

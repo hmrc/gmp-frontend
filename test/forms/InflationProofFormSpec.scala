@@ -28,10 +28,11 @@ class inflationProofFormSpec extends PlaySpec with GuiceOneAppPerSuite {
   implicit lazy val messagesAPI=app.injector.instanceOf[MessagesApi]
   implicit lazy val messagesProvider=MessagesImpl(Lang("en"), messagesAPI)
   lazy val mcc = app.injector.instanceOf[MessagesControllerComponents]
-  lazy val inflationProofForm = new InflationProofForm(mcc).inflationProofForm
+  lazy val inflationProofForm = new InflationProofForm(mcc).inflationProofForm(1978,2046)
 
   val fromJsonMaxChars: Int = 102400
   val inflationProofDate = GmpDate(Some("01"), Some("02"), Some("2010"))
+  def invalidDateError(key: String = "revaluationDate", error: String = "error.invalid"): FormError = FormError(key, List(error), List.empty)
 
   "InflationProof Form" must {
     "return no errors when valid values are entered" in {
@@ -70,12 +71,12 @@ class inflationProofFormSpec extends PlaySpec with GuiceOneAppPerSuite {
 
       "return an error on the date when it is not a number" in {
         val inflationProofFormResults = inflationProofForm.bind(Json.toJson(InflationProof(new GmpDate(Some("a"), Some("01"), Some("2012")),Some("Yes"))), fromJsonMaxChars)
-        inflationProofFormResults.errors must contain(FormError("revaluationDate", List(Messages("gmp.error.date.nonnumber"))))
+        inflationProofFormResults.errors must contain(invalidDateError("revaluationDate.day"))
       }
 
       "return an error on the date when it is out of range" in {
         val inflationProofFormResults = inflationProofForm.bind(Json.toJson(InflationProof(new GmpDate(Some("32"), Some("01"), Some("2012")),Some("Yes"))), fromJsonMaxChars)
-        inflationProofFormResults.errors must contain(FormError("revaluationDate", List(Messages("gmp.error.day.invalid"))))
+        inflationProofFormResults.errors must contain(invalidDateError("revaluationDate.day"))
       }
     }
 
@@ -83,12 +84,12 @@ class inflationProofFormSpec extends PlaySpec with GuiceOneAppPerSuite {
 
       "return an error on the date when it is not a number" in {
         val inflationProofFormResults = inflationProofForm.bind(Json.toJson(InflationProof(new GmpDate(Some("01"), Some("a"), Some("2012")),Some("Yes"))), fromJsonMaxChars)
-        inflationProofFormResults.errors must contain(FormError("revaluationDate", List(Messages("gmp.error.date.nonnumber"))))
+        inflationProofFormResults.errors must contain(invalidDateError("revaluationDate.month"))
       }
 
       "return an error on the date when it is out of range" in {
         val inflationProofFormResults = inflationProofForm.bind(Json.toJson(InflationProof(new GmpDate(Some("01"), Some("13"), Some("2012")),Some("Yes"))), fromJsonMaxChars)
-        inflationProofFormResults.errors must contain(FormError("revaluationDate", List(Messages("gmp.error.month.invalid"))))
+        inflationProofFormResults.errors must contain(invalidDateError("revaluationDate.month"))
       }
     }
 
@@ -96,28 +97,28 @@ class inflationProofFormSpec extends PlaySpec with GuiceOneAppPerSuite {
 
       "return an error on the date when it is not a number" in {
         val inflationProofFormResults = inflationProofForm.bind(Json.toJson(InflationProof(new GmpDate(Some("01"), Some("12"), Some("21a1")),Some("Yes"))), fromJsonMaxChars)
-        inflationProofFormResults.errors must contain(FormError("revaluationDate", List(Messages("gmp.error.date.nonnumber"))))
+        inflationProofFormResults.errors must contain(invalidDateError("revaluationDate.year"))
       }
 
       "return an error on the date when it is not the correct format" in {
         val inflationProofFormResults = inflationProofForm.bind(Json.toJson(InflationProof(new GmpDate(Some("01"), Some("11"), Some("190")),Some("Yes"))), fromJsonMaxChars)
-        inflationProofFormResults.errors must contain(FormError("revaluationDate", List(Messages("gmp.error.year.invalid.format"))))
-        inflationProofFormResults.errors must not contain(FormError("revaluationDate", List(Messages("gmp.error.year.invalid"))))
+        inflationProofFormResults.errors must contain(invalidDateError("revaluationDate.year", "error.yearLength"))
+        inflationProofFormResults.errors must not contain(invalidDateError("revaluationDate.day"))
       }
     }
 
     "entering invalid dates" must {
       "return an error when the day is missing" in {
         val inflationProofFormResults = inflationProofForm.bind(Json.toJson(InflationProof(new GmpDate(Some(""), Some("04"), Some("1978")),Some("Yes"))), fromJsonMaxChars)
-        inflationProofFormResults.errors must contain(FormError("", List(Messages("gmp.error.date.invalid"))))
+        inflationProofFormResults.errors must contain(invalidDateError("revaluationDate.day", "error.dayRequired"))
       }
       "return an error when the month is missing" in {
         val inflationProofFormResults = inflationProofForm.bind(Json.toJson(InflationProof(new GmpDate(Some("04"), Some(""), Some("1978")),Some("Yes"))), fromJsonMaxChars)
-        inflationProofFormResults.errors must contain(FormError("", List(Messages("gmp.error.date.invalid"))))
+        inflationProofFormResults.errors must contain(invalidDateError("revaluationDate.month", "error.monthRequired"))
       }
       "return an error when the year is missing" in {
         val inflationProofFormResults = inflationProofForm.bind(Json.toJson(InflationProof(new GmpDate(Some("04"), Some("04"), Some("")),Some("Yes"))), fromJsonMaxChars)
-        inflationProofFormResults.errors must contain(FormError("", List(Messages("gmp.error.date.invalid"))))
+        inflationProofFormResults.errors must contain(invalidDateError("revaluationDate.year", "error.yearRequired"))
       }
     }
 
@@ -125,32 +126,32 @@ class inflationProofFormSpec extends PlaySpec with GuiceOneAppPerSuite {
 
       "return an error when before 05/04/1978" in {
         val inflationProofFormResults = inflationProofForm.bind(Json.toJson(InflationProof(new GmpDate(Some("04"), Some("04"), Some("1978")),Some("Yes"))), fromJsonMaxChars)
-        inflationProofFormResults.errors must contain(FormError("", List(Messages("gmp.error.reval_date.from"))))
+        inflationProofFormResults.errors must contain(FormError("revaluationDate", List("error.tooFarInPast"), List("6 April 1978")))
       }
 
       "not return an error when on 05/04/1978" in {
         val inflationProofFormResults = inflationProofForm.bind(Json.toJson(InflationProof(new GmpDate(Some("05"), Some("04"), Some("1978")),Some("Yes"))), fromJsonMaxChars)
-        inflationProofFormResults.errors must not contain(FormError("", List(Messages("gmp.error.reval_date.from"))))
+        inflationProofFormResults.errors must not contain(invalidDateError("revaluationDate.day"))
       }
 
       "not return an error when after 05/04/1978" in {
         val inflationProofFormResults = inflationProofForm.bind(Json.toJson(InflationProof(new GmpDate(Some("06"), Some("04"), Some("1978")),Some("Yes"))), fromJsonMaxChars)
-        inflationProofFormResults.errors must not contain(FormError("", List(Messages("gmp.error.reval_date.from"))))
+        inflationProofFormResults.errors must not contain(invalidDateError("revaluationDate.day"))
       }
 
       "return an error when after 04/04/2046" in {
         val inflationProofFormResults = inflationProofForm.bind(Json.toJson(InflationProof(new GmpDate(Some("05"), Some("04"), Some("2046")),Some("Yes"))), fromJsonMaxChars)
-        inflationProofFormResults.errors must contain(FormError("", List(Messages("gmp.error.reval_date.to"))))
+        inflationProofFormResults.errors.size must be(0)
       }
 
       "not return an error when on 04/04/2046" in {
         val inflationProofFormResults = inflationProofForm.bind(Json.toJson(InflationProof(new GmpDate(Some("04"), Some("04"), Some("2046")),Some("Yes"))), fromJsonMaxChars)
-        inflationProofFormResults.errors must not contain(FormError("", List(Messages("gmp.error.reval_date.to"))))
+        inflationProofFormResults.errors must not contain(invalidDateError("revaluationDate.day"))
       }
 
       "not return an error when before 04/04/2046" in {
         val inflationProofFormResults = inflationProofForm.bind(Json.toJson(InflationProof(new GmpDate(Some("03"), Some("04"), Some("2046")),Some("Yes"))), fromJsonMaxChars)
-        inflationProofFormResults.errors must not contain(FormError("", List(Messages("gmp.error.reval_date.to"))))
+        inflationProofFormResults.errors must not contain(invalidDateError("revaluationDate.day"))
       }
     }
 
