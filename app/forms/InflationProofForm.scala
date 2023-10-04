@@ -36,13 +36,13 @@ class InflationProofForm @Inject()(mcc: MessagesControllerComponents) extends Ma
     Form(mapping(
       "revaluationDate" -> gmpDate(
         maximumDateInclusive = Some(LocalDate.of(maxYear, 4, 5)),
-        minimumDateInclusive = Some(LocalDate.of(minYear, 4, 6)),
+        minimumDateInclusive = Some(LocalDate.of(minYear, 4, 4)),
         "revaluationDate.day",
         "revaluationDate.month",
         "revaluationDate.year",
         "revaluationDate",
         tooRecentArgs = Seq("5 April " + maxYear.toString),
-        tooFarInPastArgs = Seq("6 April " + minYear.toString),
+        tooFarInPastArgs = Seq("4 April " + minYear.toString),
         onlyRequiredIf = Some(dateCondition)
       ),
       "revaluate" -> optional(text).verifying("error.required",{_.isDefined})
