@@ -125,8 +125,8 @@ class inflationProofFormSpec extends PlaySpec with GuiceOneAppPerSuite {
     "entering a date outside valid GMP dates" must {
 
       "return an error when before 05/04/1978" in {
-        val inflationProofFormResults = inflationProofForm.bind(Json.toJson(InflationProof(new GmpDate(Some("03"), Some("04"), Some("1978")),Some("Yes"))), fromJsonMaxChars)
-        inflationProofFormResults.errors must contain(FormError("revaluationDate", List("error.tooFarInPast"), List("4 April 1978")))
+        val inflationProofFormResults = inflationProofForm.bind(Json.toJson(InflationProof(new GmpDate(Some("04"), Some("04"), Some("1978")),Some("Yes"))), fromJsonMaxChars)
+        inflationProofFormResults.errors must contain(FormError("revaluationDate", List("error.tooFarInPast"), List("5 April 1978")))
       }
 
       "not return an error when on 05/04/1978" in {
