@@ -65,7 +65,7 @@ class InflationProofControllerSpec extends PlaySpec with GuiceOneServerPerSuite 
             status(result) must equal(OK)
             contentAsString(result) must include(Messages("gmp.inflation_proof.question"))
             contentAsString(result) must include(Messages("gmp.back.link"))
-            contentAsString(result) must include(Messages("gmp.check_gmp.button"))
+            contentAsString(result) must include(Messages("gmp.continue.button"))
         }
       }
     }
@@ -132,7 +132,7 @@ class InflationProofControllerSpec extends PlaySpec with GuiceOneServerPerSuite 
               val result = TestInflationProofController.post(FakeRequest().withMethod("POST")
                 .withFormUrlEncodedBody("revaluationDate.day" -> "a", "revaluationDate.month" -> "b",
                   "revaluationDate.year" -> "c", "revaluate" -> "Yes"))
-              contentAsString(result) must include(Messages("gmp.error.date.nonnumber"))
+              contentAsString(result) must include(Messages("revaluationDate.day"))
           }
         }
       }

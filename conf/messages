@@ -160,7 +160,7 @@ gmp.contact.hmrc = contact HMRC
 gmp.continue = Continue
 gmp.date.example = For example, 12 1 2018
 gmp.year = Year
-gmp.inflation_proofed = Enter the date.
+gmp.inflation_proofed = Enter the date for the calculation
 gmp.caption = Recent calculations
 gmp.revaluation.rate = Revaluation rate
 gmp.revaluation_rate.rate_held_by_hmrc = HMRC’s rate
@@ -245,7 +245,6 @@ gmp.error.reval_date.from = When you would like the calculation to be made must 
 gmp.error.reval_date.to = When you would like the calculation to be made must be before 5 April 2046
 gmp.error.year.invalid.format = Enter the year in full (4 numbers)
 gmp.error.date.nonnumber = Enter a date using numbers only
-gmp.error.reason.mandatory = Select an option
 gmp.error.equalise.error_message = Select yes if you want an opposite gender calculation
 gmp.error.scenario.mandatory = Select the type of calculation you need
 gmp.generic.errors_heading = There is a problem
@@ -319,6 +318,8 @@ gmp.error.solution.63167 = Choose another <a class="govuk-link" href="/guarantee
 
 gmp.error.no_conts_and_earnings = There are no contributions and earnings available for this period.
 gmp.error.session_parts_missing = You have not given us enough information about the member and type of calculation you need or it has been too long since you did so.<br/><br/><a class="govuk-link" href="{0}"">Go back</a> and fill in the information required.
+
+gmp.error.inflation_proof = Select yes if you would like a calculation for a date after the date of death
 
 error.expected.url = Download url is not a valid URL
 ############################################################################
@@ -468,3 +469,19 @@ leavingDate.month.error.monthRequired = Date must include the month
 leavingDate.month.error.monthAndYearRequired = Date must include the month and year
 leavingDate.year.error.yearRequired = Date must include the year
 leavingDate.year.error.yearLength = Enter the year in full (4 numbers)
+
+revaluationDate.error.required = Enter a date when you would like the calculation made to
+revaluationDate.error.invalid = Enter a real date when you would like the calculation made to
+revaluationDate.day.error.invalid = Enter a real date when you would like the calculation made to
+revaluationDate.month.error.invalid = Enter a real date when you would like the calculation made to
+revaluationDate.year.error.invalid = Enter a real date when you would like the calculation made to
+revaluationDate.error.tooFarInPast = Enter a date when you would like the calculation made to after 4 April 1978
+revaluationDate.error.tooFuture = Enter a date when you would like the calculation made to before 5 April 2046
+revaluationDate.day.error.dayRequired = Date must include the day
+revaluationDate.day.error.dayAndYearRequired = Date must include the day and year
+revaluationDate.day.error.dayAndMonthRequired = Date must include the day and month
+revaluationDate.month.error.monthRequired = Date must include the month
+revaluationDate.month.error.monthAndYearRequired = Date must include the month and year
+revaluationDate.year.error.yearRequired = Date must include the year
+revaluationDate.year.error.yearLength = Enter the year in full (4 numbers)
+revaluate.error.required = Select yes if you would like a calculation for a date after the date of death

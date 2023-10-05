@@ -47,7 +47,7 @@ class InflationProofSpec extends GmpViewSpec {
         .verifying(messages("gmp.error.month.invalid"), x => checkMonthRange(x.month))
         .verifying(messages("gmp.error.year.invalid.format"), x => checkYearLength(x.year))
       ,
-      "revaluate" -> optional(text).verifying(messages("gmp.error.reason.mandatory"),{_.isDefined})
+      "revaluate" -> optional(text).verifying(messages("revaluate.error.required"),{_.isDefined})
     )(InflationProof.apply)(InflationProof.unapply)
       .verifying(messages("gmp.error.reval_date.mandatory"), x => dateMustBePresentIfRevaluationWanted(x))
 
@@ -77,7 +77,7 @@ class InflationProofSpec extends GmpViewSpec {
     }
 
     "have a submit button text" in {
-      doc must haveSubmitButton(messages("gmp.check_gmp.button"))
+      doc must haveSubmitButton(messages("gmp.continue.button"))
     }
   }
 
