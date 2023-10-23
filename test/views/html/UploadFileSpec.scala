@@ -34,8 +34,8 @@ class UploadFileSpec extends GmpViewSpec {
 
 
     "display an explanation text paragraph" in {
-      doc must haveParagraphWithText("The file must contain mandatory information and in a specific format. " +
-        "You can download a template and instructions as a ZIP file (3Kb) on how to create your file first.")
+      doc must haveParagraphWithText("The file must contain mandatory information and be in a specific format. " +
+        "To create your file you can download a template and instructions as a ZIP file (3Kb).")
     }
   }
 
