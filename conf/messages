@@ -1,7 +1,6 @@
 ############################################################################
 # Page titles
 service.name = Guaranteed Minimum Pension (GMP) checker
-service.title=Guaranteed Minimum Pension
 generic.errorSummary = There is a problem
 generic.errorPrefix = Error
 gov.uk=GOV.UK
