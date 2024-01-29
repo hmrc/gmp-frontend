@@ -69,7 +69,8 @@
     @mainContent
     @hmrcReportTechnicalIssueHelper()
 }
-@gdsSuffix = @{" - " + messages("service.name") + " - GOV.UK"}
+@gdsHeader = @{messages("gmp.dashboard_header")}
+@gdsSuffix = @{if(!title.contains(gdsHeader)) {" - " + messages("service.name") + " - GOV.UK"} else {" - GOV.UK"}}
 @errorPrefix = @{messages("generic.errorPrefix") + ": "}
 @gdsTitle = @{
     s"${if(hasErrors && !title.startsWith(errorPrefix)) { s"$errorPrefix$title" } else { title }}${if(!title.endsWith("GOV.UK")) { gdsSuffix } else { "" }}"
