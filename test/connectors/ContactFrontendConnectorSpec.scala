@@ -33,11 +33,14 @@ import uk.gov.hmrc.http.HttpClient
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class ContactFrontendConnectorSpec @Inject()(servicesConfig: ServicesConfig) extends PlaySpec with GuiceOneAppPerSuite
-  with MockitoSugar with BeforeAndAfterEach{
+class ContactFrontendConnectorSpec @Inject()(servicesConfig: ServicesConfig) extends PlaySpec
+  with GuiceOneAppPerSuite with MockitoSugar with BeforeAndAfterEach {
+
   implicit override lazy val app: Application = new GuiceApplicationBuilder()
-  .configure(Map("Test.microservice.assets.url" -> "test-url", "Test.microservice.assets.version" -> "test-version"))
-  .build
+    .configure(Map("Test.microservice.assets.url" -> "test-url", "Test.microservice.assets.version" -> "test-version"))
+    .build
+
+  implicit val ec: scala.concurrent.ExecutionContext = scala.concurrent.ExecutionContext.global
 
   protected def mode: Mode = app.injector.instanceOf[Mode]
   protected def runModeConfiguration: Configuration = app.injector.instanceOf[Configuration]
