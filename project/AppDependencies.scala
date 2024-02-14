@@ -1,4 +1,3 @@
-import play.core.PlayVersion
 import play.sbt.PlayImport._
 import sbt._
 
@@ -16,8 +15,8 @@ object AppDependencies {
     "org.typelevel"                              %% "cats-core"                  % "2.9.0",
     "com.typesafe.play"                          %% "play-json-joda"             % "2.9.4",
     "com.fasterxml.jackson.module"               %% "jackson-module-scala"       % "2.14.2",
-    compilerPlugin("com.github.ghik" %  "silencer-plugin"            % "1.7.12" cross CrossVersion.full),
-    "com.github.ghik"                            %  "silencer-lib"               % "1.7.12" % Provided cross CrossVersion.full
+    compilerPlugin("com.github.ghik" %  "silencer-plugin"            % "1.7.14" cross CrossVersion.full),
+    "com.github.ghik"                            %  "silencer-lib"               % "1.7.14" % Provided cross CrossVersion.full
   )
 
   val test: Seq[ModuleID] = Seq(
@@ -27,7 +26,7 @@ object AppDependencies {
     "org.scalatestplus"       %% "scalatestplus-mockito" % "1.0.0-M2",
     "org.pegdown"             %  "pegdown"               % "1.6.0",
     "org.jsoup"               %  "jsoup"                 % "1.15.4",
-    "com.typesafe.play"       %% "play-test"             % PlayVersion.current,
+    "com.typesafe.play"       %% "play-test"             % "2.8.19",
     "org.mockito"             %  "mockito-core"          % "5.2.0",
     "com.github.tomakehurst"  %  "wiremock-jre8"         % "2.35.0",
     "com.vladsch.flexmark"    %  "flexmark-all"          % "0.64.6"
