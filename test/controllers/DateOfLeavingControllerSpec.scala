@@ -21,7 +21,7 @@ import controllers.auth.{AuthAction, FakeAuthAction}
 import forms.DateOfLeavingForm
 import helpers.RandomNino
 import models._
-import org.joda.time.{DateTime, DateTimeUtils}
+import java.time.{DateTime, DateTimeUtils}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito._
 import org.scalatestplus.mockito.MockitoSugar

@@ -18,7 +18,7 @@ package connectors
 
 import com.google.inject.Inject
 import models.{BulkCalculationRequest, BulkPreviousRequest, BulkResultsSummary}
-import org.joda.time.LocalDateTime
+import java.time.LocalDateTime
 import play.api.Mode
 import play.api.{Configuration, Environment, Logging}
 import uk.gov.hmrc.http._

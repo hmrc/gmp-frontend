@@ -17,7 +17,7 @@
 package forms
 
 import models.{GmpDate, Leaving}
-import org.joda.time.{DateTime, DateTimeUtils}
+import java.time.{DateTime, DateTimeUtils}
 import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import org.scalatestplus.play.PlaySpec

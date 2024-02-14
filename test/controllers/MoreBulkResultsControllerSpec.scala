@@ -20,7 +20,7 @@ import config.ApplicationConfig
 import connectors.GmpBulkConnector
 import controllers.auth.{AuthAction, FakeAuthAction}
 import models._
-import org.joda.time.LocalDateTime
+import java.time.LocalDateTime
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito._
 import org.scalatestplus.mockito.MockitoSugar

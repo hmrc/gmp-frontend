@@ -24,7 +24,7 @@ import controllers.auth.{AuthAction, FakeAuthAction}
 import helpers.RandomNino
 import models._
 import models.upscan.UploadedSuccessfully
-import org.joda.time.{LocalDate, LocalDateTime}
+import java.time.{LocalDate, LocalDateTime}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito._
 import org.scalatestplus.mockito.MockitoSugar

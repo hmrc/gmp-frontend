@@ -22,7 +22,7 @@ import java.nio.charset.Charset
 import helpers.RandomNino
 import models.upscan.UploadedSuccessfully
 import models.{BulkCalculationRequest, BulkCalculationRequestLine, CalculationRequestLine}
-import org.joda.time.{LocalDate, LocalDateTime}
+import java.time.{LocalDate, LocalDateTime}
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
