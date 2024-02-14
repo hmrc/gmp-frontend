@@ -32,7 +32,6 @@ class MoreBulkResultsSpec extends GmpViewSpec {
   override def view: Html = new views.html.more_bulk_results(layout, table)(bulkPreviousRequestsList)
 
   "MoreBulkResults page" must {
-
     behave like pageWithTitle(messages("gmp.more_bulk_results.header"))
     behave like pageWithHeader(messages("gmp.more_bulk_results.header"))
     behave like pageWithBackLink
