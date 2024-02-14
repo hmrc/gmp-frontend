@@ -84,7 +84,7 @@
                 )
             )),
             rows = previousBulkCalculations.zipWithIndex.take(3).map { case (calculation, count) =>
-                val days = 30 - Duration.between(new LocalDate(calculation.timestamp), LocalDate.now()).getDays
+                val days = 30 - Duration.between(LocalDate.from(calculation.timestamp), LocalDate.now()).toDays
                 Seq(
                     TableRow(
                         content = HtmlContent(s"""<a class="govuk-link" href="${routes.BulkResultsController.get(calculation.uploadReference, 0)}">${calculation.reference}</a>""")),

@@ -46,7 +46,7 @@
                         content = Text(Messages("gmp.th.time_left")))
                        )),
         rows = previousBulkCalculations.zipWithIndex.drop(3).map { case(calculation, count) =>
-                        val days = 30 - Duration.between(new LocalDate(calculation.timestamp), LocalDate.now()).getDays
+                        val days = 30 - Duration.between(LocalDate.from(calculation.timestamp), LocalDate.now()).toDays
                                 Seq(
                                 TableRow(
                                     content = HtmlContent(s"""<a href="${routes.BulkResultsController.get(calculation.uploadReference, 0)}">${calculation.reference}</a>""")),
