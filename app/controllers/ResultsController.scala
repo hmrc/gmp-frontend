@@ -128,7 +128,7 @@ class ResultsController @Inject()(authAction: AuthAction,
       gmpSession.scenario.toInt,
       gmpSession.revaluationDate match {
         case Some(rDate: GmpDate) if (rDate.day.isDefined && rDate.month.isDefined && rDate.year.isDefined) =>
-          Some(new LocalDate(rDate.year.get.toInt, rDate.month.get.toInt, rDate.day.get.toInt))
+          Some(LocalDate.of(rDate.year.get.toInt, rDate.month.get.toInt, rDate.day.get.toInt))
         case _ => None
       }, gmpSession.rate match {
         case Some(RevaluationRate.HMRC) => Some(0)
@@ -140,7 +140,7 @@ class ResultsController @Inject()(authAction: AuthAction,
       gmpSession.equalise,
       gmpSession.leaving.leavingDate match {
         case lDate: GmpDate if (lDate.day.isDefined && lDate.month.isDefined && lDate.year.isDefined) =>
-          Some(new LocalDate(lDate.year.get.toInt, lDate.month.get.toInt, lDate.day.get.toInt))
+          Some(LocalDate.of(lDate.year.get.toInt, lDate.month.get.toInt, lDate.day.get.toInt))
         case _ => None
       })
   }
