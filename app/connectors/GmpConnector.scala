@@ -25,8 +25,8 @@ import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import uk.gov.hmrc.http.HttpClient
 import uk.gov.hmrc.http.HttpReads.Implicits._
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class GmpConnector @Inject()(environment: Environment,
@@ -35,7 +35,7 @@ class GmpConnector @Inject()(environment: Environment,
                              httpPost: HttpClient,
                              httpGet: HttpClient,
                              httpPut: HttpClient,
-                             val servicesConfig: ServicesConfig) extends Logging  {
+                             val servicesConfig: ServicesConfig)(implicit ec: ExecutionContext) extends Logging  {
 
    def mode: Mode = environment.mode
 

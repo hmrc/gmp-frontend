@@ -23,10 +23,11 @@ import models._
 import models.upscan._
 import play.api.Logging
 import uk.gov.hmrc.http.HeaderCarrier
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
 
-class SessionService @Inject()(metrics: ApplicationMetrics,gmpSessionCache: GmpSessionCache) extends Logging{
+import scala.concurrent.{ExecutionContext, Future}
+
+class SessionService @Inject()(metrics: ApplicationMetrics,
+                               gmpSessionCache: GmpSessionCache)(implicit ec: ExecutionContext) extends Logging{
 
   val GMP_SESSION_KEY = "gmp_session"
   val cleanSession = GmpSession(MemberDetails("", "", ""), "", "", None, None, Leaving(GmpDate(None, None, None), None), None)

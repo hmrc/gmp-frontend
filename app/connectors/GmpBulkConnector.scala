@@ -18,6 +18,7 @@ package connectors
 
 import com.google.inject.Inject
 import models.{BulkCalculationRequest, BulkPreviousRequest, BulkResultsSummary}
+
 import java.time.LocalDateTime
 import play.api.Mode
 import play.api.{Configuration, Environment, Logging}
@@ -26,14 +27,13 @@ import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import uk.gov.hmrc.http.HttpClient
 import uk.gov.hmrc.http.HttpReads.Implicits._
 
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 class GmpBulkConnector @Inject()(environment: Environment,
                                  val runModeConfiguration: Configuration,
                                  httpGet: HttpClient,
                                  httpPost: HttpClient,
-                                 servicesConfig: ServicesConfig) extends Logging {
+                                 servicesConfig: ServicesConfig)(implicit ec: ExecutionContext) extends Logging {
 
    def mode: Mode = environment.mode
 

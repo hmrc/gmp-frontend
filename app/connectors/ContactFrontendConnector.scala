@@ -22,15 +22,15 @@ import play.api.{Configuration, Environment, Logging}
 import uk.gov.hmrc.http.{BadGatewayException, HeaderCarrier}
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import uk.gov.hmrc.http.HttpReads.Implicits.readRaw
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+
+import scala.concurrent.{ExecutionContext, Future}
 import uk.gov.hmrc.http.HttpClient
 
 @Singleton
 class ContactFrontendConnector @Inject()(http: HttpClient,
                                          environment: Environment,
                                          val runModeConfiguration: Configuration,
-                                         val servicesConfig: ServicesConfig) extends Logging {
+                                         val servicesConfig: ServicesConfig)(implicit ec: ExecutionContext) extends Logging {
 
   val mode: Mode = environment.mode
 
