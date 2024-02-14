@@ -15,7 +15,7 @@
  *@
 
 @import config.ApplicationConfig
-@import java.time.{Days, LocalDate, LocalDateTime}
+@import java.time.{Duration, LocalDate, LocalDateTime}
 @import uk.gov.hmrc.govukfrontend.views.html.components._
 
 @this(
@@ -83,7 +83,7 @@
                 )
             )),
             rows = previousBulkCalculations.zipWithIndex.take(3).map { case (calculation, count) =>
-                val days = 30 - Days.daysBetween(new LocalDate(calculation.timestamp), LocalDate.now()).getDays
+                val days = 30 - Duration.between(new LocalDate(calculation.timestamp), LocalDate.now()).getDays
                 Seq(
                     TableRow(
                         content = HtmlContent(s"""<a class="govuk-link" href="${routes.BulkResultsController.get(calculation.uploadReference, 0)}">${calculation.reference}</a>""")),
