@@ -21,7 +21,6 @@ import controllers.auth.{AuthAction, FakeAuthAction}
 import forms.DateOfLeavingForm
 import helpers.RandomNino
 import models._
-import java.time.{DateTime, DateTimeUtils}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito._
 import org.scalatestplus.mockito.MockitoSugar
@@ -39,7 +38,7 @@ import views.Views
 import scala.concurrent.{ExecutionContext, Future}
 
 class DateOfLeavingControllerSpec extends PlaySpec with GuiceOneServerPerSuite with MockitoSugar {
-  DateTimeUtils.setCurrentMillisFixed(new DateTime(2016, 1, 1, 1, 1).toDate.getTime)
+//  DateTimeUtils.setCurrentMillisFixed(new DateTime(2016, 1, 1, 1, 1).toDate.getTime)
   val mockAuthConnector = mock[AuthConnector]
   val mockSessionService = mock[SessionService]
   val mockAuthAction = mock[AuthAction]
