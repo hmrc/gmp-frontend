@@ -118,7 +118,7 @@ class DashboardControllerSpec extends PlaySpec with GuiceOneServerPerSuite with 
       }
 
       "handle timestamp conversion" in {
-        val localDateTime = new LocalDateTime(2016,5,18,17,50,55,511)
+        val localDateTime = LocalDateTime.of(2016,5,18,17,50,55,511)
 
         val bpr = new BulkPreviousRequest("","",localDateTime,localDateTime)
         val bprJson = Json.parse(

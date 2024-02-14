@@ -147,7 +147,7 @@ class BulkRequestCreationServiceSpec extends PlaySpec with ScalaFutures with Moc
 
   "Bulk Request Creation Service" must {
 
-    val localDateTime = new LocalDateTime(2016, 5, 18, 17, 50, 55, 511)
+    val localDateTime = LocalDateTime.of(2016, 5, 18, 17, 50, 55, 511)
 
     val bulkRequest1 = BulkCalculationRequest("1", "bill@bixby.com", "uploadRef1", List(calcLine1), "", localDateTime)
     val bulkRequest2 = BulkCalculationRequest("2", "timburton@scary.com", "uploadRef2", List(calcLine2))

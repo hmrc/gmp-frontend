@@ -17,10 +17,13 @@
 package views.html
 
 import models.BulkPreviousRequest
+
 import java.time.LocalDateTime
 import play.twirl.api.Html
 import uk.gov.hmrc.govukfrontend.views.html.components.GovukTable
 import utils.GmpViewSpec
+
+import java.time.format.DateTimeFormatter
 
 class MoreBulkResultsSpec extends GmpViewSpec {
 
@@ -40,7 +43,7 @@ class MoreBulkResultsSpec extends GmpViewSpec {
       doc must haveThWithText(messages("gmp.th.time_left"))
 
       doc must haveTdWithText("fake")
-      doc must haveTdWithText(LocalDateTime.now.toString("dd MMMM yyyy"))
+      doc must haveTdWithText(LocalDateTime.now.format(DateTimeFormatter.ofPattern("dd MMMM yyyy")))
       //doc must haveTdWithText("30 Days")
     }
 
