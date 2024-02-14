@@ -17,13 +17,13 @@
 package controllers
 
 import java.util.UUID
-
 import config.{ApplicationConfig, GmpSessionCache}
 import connectors.GmpBulkConnector
 import controllers.auth.{AuthAction, FakeAuthAction}
 import helpers.RandomNino
 import models._
 import models.upscan.UploadedSuccessfully
+
 import java.time.{LocalDate, LocalDateTime}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito._
@@ -41,6 +41,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.SessionId
 import views.Views
 
+import java.time.format.DateTimeFormatter
 import scala.concurrent.{ExecutionContext, Future}
 
 class BulkRequestReceivedControllerSpec extends PlaySpec with GuiceOneServerPerSuite with MockitoSugar {
@@ -174,7 +175,7 @@ class BulkRequestReceivedControllerSpec extends PlaySpec with GuiceOneServerPerS
       val dateRegEx = """([0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9])""".r
       item match {
         case None => ","
-        case s: String if s.matches(dateRegEx.regex) => new LocalDate(s).toString("dd/MM/yyyy") + ","
+        case s: String if s.matches(dateRegEx.regex) => LocalDate.parse(s).format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) + ","
         case Some(x) => s"$x,"
         case x: String => x + ","
         case x: Int => x.toString + ","
