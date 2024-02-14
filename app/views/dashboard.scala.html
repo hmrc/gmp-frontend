@@ -16,6 +16,7 @@
 
 @import config.ApplicationConfig
 @import java.time.{Duration, LocalDate, LocalDateTime}
+@import java.time.format.DateTimeFormatter
 @import uk.gov.hmrc.govukfrontend.views.html.components._
 
 @this(
@@ -89,7 +90,7 @@
                         content = HtmlContent(s"""<a class="govuk-link" href="${routes.BulkResultsController.get(calculation.uploadReference, 0)}">${calculation.reference}</a>""")),
                     TableRow(
                         content = Text({
-                            new LocalDateTime(calculation.timestamp).toString("dd MMMM yyyy")
+                            LocalDateTime.from(calculation.timestamp).format(DateTimeFormatter.ofPattern("dd MMMM yyyy"))
                         })),
                     TableRow(
                         content = Text(Messages("gmp.days_left", days.toString, days match { case 1 => ""; case _ => "s"; })))
