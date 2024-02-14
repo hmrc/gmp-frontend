@@ -18,11 +18,10 @@ package metrics
 
 import com.codahale.metrics.MetricRegistry
 import com.google.inject.Inject
-import com.codahale.metrics
 
-class ApplicationMetrics @Inject()() {
-  lazy val registry: MetricRegistry = metrics.MetricRegistry
-
+class ApplicationMetrics @Inject()(
+                                  registry: MetricRegistry
+                                  ) {
   val keystoreStoreTimer = registry.timer("gmp-keystore-storage-timer")
   val keystoreRetrieveTimer = registry.timer("gmp-keystore-retrieve-timer")
   val gmpConnectorTimer = registry.timer("gmp-connector-timer")
