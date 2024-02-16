@@ -38,7 +38,6 @@ import views.Views
 import scala.concurrent.{ExecutionContext, Future}
 
 class DateOfLeavingControllerSpec extends PlaySpec with GuiceOneServerPerSuite with MockitoSugar {
-//  DateTimeUtils.setCurrentMillisFixed(new DateTime(2016, 1, 1, 1, 1).toDate.getTime)
   val mockAuthConnector = mock[AuthConnector]
   val mockSessionService = mock[SessionService]
   val mockAuthAction = mock[AuthAction]
