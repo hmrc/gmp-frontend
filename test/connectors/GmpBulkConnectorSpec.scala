@@ -36,8 +36,9 @@ import uk.gov.hmrc.http.HttpClient
 
 import scala.concurrent.Future
 
-class GmpBulkConnectorSpec extends PlaySpec with GuiceOneServerPerSuite with MockitoSugar with BeforeAndAfter with ScalaFutures{
+class GmpBulkConnectorSpec extends PlaySpec with GuiceOneServerPerSuite with MockitoSugar with BeforeAndAfter with ScalaFutures {
 
+  implicit val ec: scala.concurrent.ExecutionContext = scala.concurrent.ExecutionContext.global
   val mockHttpPost = mock[HttpClient]
   val mockHttpGet = mock[HttpClient]
   val link = "some-link"

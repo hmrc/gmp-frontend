@@ -17,7 +17,6 @@
 package forms
 
 import models.{GmpDate, Leaving}
-import org.joda.time.{DateTime, DateTimeUtils}
 import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import org.scalatestplus.play.PlaySpec
@@ -32,7 +31,6 @@ class DateOfLeavingFormSpec extends PlaySpec with GuiceOneAppPerSuite with Mocki
   lazy val mcc = app.injector.instanceOf[MessagesControllerComponents]
   lazy val dateOfLeavingForm = new DateOfLeavingForm(mcc).dateOfLeavingForm()
   val fromJsonMaxChars: Int = 102400
-  DateTimeUtils.setCurrentMillisFixed(new DateTime(2016,1,1,1,1).toDate.getTime)
   val leavingDate = GmpDate(Some("06"), Some("04"), Some("2016"))
   def invalidDateError(key: String = "leavingDate", error: String = "error.invalid"): FormError = FormError(key, List(error), List.empty)
 

@@ -39,6 +39,8 @@ import scala.concurrent.{Await, Future}
 
 class SessionServiceSpec extends PlaySpec with GuiceOneServerPerSuite with ScalaFutures with MockitoSugar {
 
+  implicit val ec: scala.concurrent.ExecutionContext = scala.concurrent.ExecutionContext.global
+
   val memberDetails = MemberDetails(RandomNino.generate, "John", "Johnson")
   val scon = "S3123456A"
   val gmpSession = GmpSession(memberDetails, scon, CalculationType.DOL, None, None, Leaving(GmpDate(None,None,None),None), None)

@@ -20,7 +20,7 @@ import config.{ApplicationConfig, GmpSessionCache}
 import connectors.GmpBulkConnector
 import controllers.auth.{AuthAction, FakeAuthAction}
 import models._
-import org.joda.time.LocalDateTime
+import java.time.LocalDateTime
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito._
 import org.scalatestplus.mockito.MockitoSugar
@@ -118,7 +118,7 @@ class DashboardControllerSpec extends PlaySpec with GuiceOneServerPerSuite with 
       }
 
       "handle timestamp conversion" in {
-        val localDateTime = new LocalDateTime(2016,5,18,17,50,55,511)
+        val localDateTime = LocalDateTime.of(2016,5,18,17,50,55,511000000)
 
         val bpr = new BulkPreviousRequest("","",localDateTime,localDateTime)
         val bprJson = Json.parse(

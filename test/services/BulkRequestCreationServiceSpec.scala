@@ -18,11 +18,11 @@ package services
 
 import java.io.ByteArrayInputStream
 import java.nio.charset.Charset
-
 import helpers.RandomNino
 import models.upscan.UploadedSuccessfully
 import models.{BulkCalculationRequest, BulkCalculationRequestLine, CalculationRequestLine}
-import org.joda.time.{LocalDate, LocalDateTime}
+
+import java.time.{LocalDate, LocalDateTime}
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
@@ -31,6 +31,8 @@ import play.api.Environment
 import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl}
 import play.api.mvc.MessagesControllerComponents
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
+
+import java.time.format.DateTimeFormatter
 import scala.language.postfixOps
 import scala.io.Source
 
@@ -147,7 +149,7 @@ class BulkRequestCreationServiceSpec extends PlaySpec with ScalaFutures with Moc
 
   "Bulk Request Creation Service" must {
 
-    val localDateTime = new LocalDateTime(2016, 5, 18, 17, 50, 55, 511)
+    val localDateTime = LocalDateTime.of(2016, 5, 18, 17, 50, 55, 511)
 
     val bulkRequest1 = BulkCalculationRequest("1", "bill@bixby.com", "uploadRef1", List(calcLine1), "", localDateTime)
     val bulkRequest2 = BulkCalculationRequest("2", "timburton@scary.com", "uploadRef2", List(calcLine2))
@@ -394,7 +396,7 @@ class BulkRequestCreationServiceSpec extends PlaySpec with ScalaFutures with Moc
     {
       (l collect {
         case (None, i) => ""
-        case (Some(s: String), i) if s.matches(dateRegEx.regex) => new LocalDate(s).toString("dd/MM/yyyy")
+        case (Some(s: String), i) if s.matches(dateRegEx.regex) => LocalDate.parse(s).format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
         case (x: Int, BulkRequestCsvColumn.DUAL_CALC) => x match {
           case 1 => "Y";
           case _ => "N"

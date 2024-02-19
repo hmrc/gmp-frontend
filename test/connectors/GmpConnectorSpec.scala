@@ -38,7 +38,7 @@ import scala.concurrent.Future
 
 
 class GmpConnectorSpec extends PlaySpec with GuiceOneServerPerSuite with MockitoSugar with BeforeAndAfter {
-
+  implicit val ec: scala.concurrent.ExecutionContext = scala.concurrent.ExecutionContext.global
   val email = "Bill@Gill.com"
   val reference = "Smith's Reference"
   val groupId = "S1401234A"
