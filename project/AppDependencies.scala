@@ -12,7 +12,7 @@ object AppDependencies {
     "uk.gov.hmrc"                                %% s"domain$playSuffix"              % "9.0.0",
     "uk.gov.hmrc"                                %% s"http-caching-client$playSuffix" % "11.2.0",
     "uk.gov.hmrc"                                %% s"play-partials$playSuffix"       % "9.1.0",
-    "uk.gov.hmrc"                                %% s"play-frontend-hmrc$playSuffix"  % bootstrapVersion,
+    "uk.gov.hmrc"                                %% s"play-frontend-hmrc$playSuffix"  % "8.5.0",
     "uk.gov.hmrc"                                %% "tax-year"                        % "4.0.0",
     "uk.gov.hmrc"                                %% "emailaddress"                    % "3.8.0",
     "org.typelevel"                              %% "cats-core"                       % "2.10.0",
