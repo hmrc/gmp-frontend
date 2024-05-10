@@ -36,7 +36,6 @@
         applicationConfig: config.ApplicationConfig,
         title: String,
         userLoggedIn: Boolean = true,
-        isUserResearchBannerVisible:Boolean = false,
         signOutEnabled:Boolean = true,
         customHead: Option[Html] = None,
         hasErrors: Boolean = false,
@@ -80,9 +79,6 @@
     HmrcStandardPageParams(
         serviceURLs = ServiceURLs(
             signOutUrl = if(signOutEnabled) Some(routes.ApplicationController.signout.url) else None
-        ),
-        banners =  Banners(
-            userResearchBanner = if(isUserResearchBannerVisible) Some(UserResearchBanner(url = applicationConfig.urBannerLink)) else None
         ),
         templateOverrides = TemplateOverrides(
             additionalHeadBlock = Some(head),
