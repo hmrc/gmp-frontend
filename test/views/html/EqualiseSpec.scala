@@ -41,7 +41,7 @@ class EqualiseSpec extends GmpViewSpec {
   "Equalise page" must {
     behave like pageWithTitle("Do you also want an opposite gender calculation?")
     behave like pageWithHeader(messages("gmp.equalise_header"))
-    behave like pageWithNewBackLink
+    behave like pageWithNewBackLink()
 
     "have correct input labels with text" in {
       doc must haveInputLabelWithText("equalise", messages("gmp.generic.yes"))

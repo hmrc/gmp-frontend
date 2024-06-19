@@ -50,7 +50,7 @@ class DateOfLeavingScenarioDolSpec extends DateOfLeavingSpec {
   "DateOfLeavingScenarioDol page" must {
     behave like pageWithTitle("Did the member leave the scheme before 6 April 2016?")
     behave like pageWithHeader(messages("gmp.leaving.dol.question"))
-    behave like pageWithNewBackLink
+    behave like pageWithNewBackLink()
 
     "have correct input labels and legend with text" in {
       doc must haveInputLabelWithText("leaving", messages("gmp.generic.yes"))

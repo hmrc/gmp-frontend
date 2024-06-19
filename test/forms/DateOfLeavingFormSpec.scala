@@ -26,9 +26,9 @@ import play.api.libs.json.Json
 import play.api.mvc.MessagesControllerComponents
 
 class DateOfLeavingFormSpec extends PlaySpec with GuiceOneAppPerSuite with MockitoSugar{
-  implicit lazy val messagesAPI=app.injector.instanceOf[MessagesApi]
-  implicit lazy val messagesProvider=MessagesImpl(Lang("en"), messagesAPI)
-  lazy val mcc = app.injector.instanceOf[MessagesControllerComponents]
+  implicit lazy val messagesAPI: MessagesApi = app.injector.instanceOf[MessagesApi]
+  implicit lazy val messagesProvider: MessagesImpl = MessagesImpl(Lang("en"), messagesAPI)
+  lazy val mcc: MessagesControllerComponents = app.injector.instanceOf[MessagesControllerComponents]
   lazy val dateOfLeavingForm = new DateOfLeavingForm(mcc).dateOfLeavingForm()
   val fromJsonMaxChars: Int = 102400
   val leavingDate = GmpDate(Some("06"), Some("04"), Some("2016"))

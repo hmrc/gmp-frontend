@@ -43,12 +43,12 @@ class DateOfLeavingControllerSpec extends PlaySpec with GuiceOneServerPerSuite w
   val mockAuthAction = mock[AuthAction]
 
   val baseValidDate = GmpDate(day = Some("31"), month = Some("1"), year = Some("2015"))
-  implicit lazy val mcc = app.injector.instanceOf[MessagesControllerComponents]
-  implicit val ec = app.injector.instanceOf[ExecutionContext]
-  implicit val messagesAPI=app.injector.instanceOf[MessagesApi]
-  implicit val messagesProvider=MessagesImpl(Lang("en"), messagesAPI)
-  implicit val ac=app.injector.instanceOf[ApplicationConfig]
-  implicit val gmpSessionCache=app.injector.instanceOf[GmpSessionCache]
+  implicit lazy val mcc: MessagesControllerComponents = app.injector.instanceOf[MessagesControllerComponents]
+  implicit val ec: ExecutionContext = app.injector.instanceOf[ExecutionContext]
+  implicit val messagesAPI: MessagesApi = app.injector.instanceOf[MessagesApi]
+  implicit val messagesProvider: MessagesImpl = MessagesImpl(Lang("en"), messagesAPI)
+  implicit val ac: ApplicationConfig = app.injector.instanceOf[ApplicationConfig]
+  implicit val gmpSessionCache: GmpSessionCache = app.injector.instanceOf[GmpSessionCache]
   lazy val dateOfLeavingForm = new DateOfLeavingForm(mcc)
   lazy val views = app.injector.instanceOf[Views]
 
