@@ -17,14 +17,14 @@
 package models
 
 import java.time.LocalDate
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 import java.time.format.DateTimeFormatter
 
 case class GmpDate(day: Option[String], month: Option[String], year: Option[String]) {
 
   def getAsLocalDate: Option[LocalDate] = {
-
+//    TODO: CLEAN UP
     if (day.isDefined && month.isDefined && year.isDefined)
       Some( LocalDate.of(year.get.toInt, month.get.toInt, day.get.toInt))
     else
@@ -33,6 +33,7 @@ case class GmpDate(day: Option[String], month: Option[String], year: Option[Stri
   }
 
   def isOnOrAfter06042016: Boolean = {
+//    TODO: CLEAN UP
     if (getAsLocalDate.isDefined) {
       val thatDate = LocalDate.of(2016, 4, 6)
       getAsLocalDate.get.isAfter(thatDate) || getAsLocalDate.get.isEqual(thatDate)
@@ -42,6 +43,7 @@ case class GmpDate(day: Option[String], month: Option[String], year: Option[Stri
   }
 
   def isOnOrAfter05041978: Boolean = {
+//    TODO: CLEAN UP
     if (getAsLocalDate.isDefined) {
       val thatDate = LocalDate.of(1978, 4, 5)
       getAsLocalDate.get.isAfter(thatDate) || getAsLocalDate.get.isEqual(thatDate)
@@ -51,6 +53,7 @@ case class GmpDate(day: Option[String], month: Option[String], year: Option[Stri
   }
 
   def isBefore05042046: Boolean = {
+//    TODO: CLEAN UP
     if (getAsLocalDate.isDefined) {
       val thatDate = LocalDate.of(2046, 4, 5)
       getAsLocalDate.get.isBefore(thatDate)
@@ -67,10 +70,10 @@ case class GmpDate(day: Option[String], month: Option[String], year: Option[Stri
   }
 
   def isBefore(date2: GmpDate): Boolean = {
+//    TODO: CLEAN UP
     if (getAsLocalDate.isDefined && date2.getAsLocalDate.isDefined) {
       getAsLocalDate.get.isBefore(date2.getAsLocalDate.get)
-    }
-    else{
+    } else {
       false
     }
   }
@@ -78,5 +81,5 @@ case class GmpDate(day: Option[String], month: Option[String], year: Option[Stri
 
 object GmpDate {
   val emptyDate = GmpDate(None, None, None)
-  implicit val formats = Json.format[GmpDate]
+  implicit val formats: OFormat[GmpDate] = Json.format[GmpDate]
 }

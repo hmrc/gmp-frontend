@@ -18,14 +18,14 @@ package models
 
 import java.time.LocalDate
 import play.api.i18n.Messages
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 import uk.gov.hmrc.time.TaxYear
 import views.helpers.GmpDateFormatter._
 
 case class ContributionsAndEarnings(taxYear: Int, contEarnings: String)
 
 object ContributionsAndEarnings {
-  implicit val formats = Json.format[ContributionsAndEarnings]
+  implicit val formats: OFormat[ContributionsAndEarnings] = Json.format[ContributionsAndEarnings]
 }
 
 case class CalculationPeriod(startDate: Option[LocalDate],
@@ -40,18 +40,14 @@ case class CalculationPeriod(startDate: Option[LocalDate],
                              inflationProofBeyondDod: Option[Int] = None,
                              contsAndEarnings: Option[List[ContributionsAndEarnings]] = None
                               ){
-  def endTaxYear : Int = {
-    CalculationResponse.getTaxYear(Some(endDate))
-  }
+  def endTaxYear: Int = CalculationResponse.getTaxYear(Some(endDate))
 
-  def startTaxYear : Int = {
-    CalculationResponse.getTaxYear(startDate)
-  }
+  def startTaxYear: Int = CalculationResponse.getTaxYear(startDate)
 
 }
 
 object CalculationPeriod {
-  implicit val formats = Json.format[CalculationPeriod]
+  implicit val formats: OFormat[CalculationPeriod] = Json.format[CalculationPeriod]
 }
 
 case class CalculationResponse(
@@ -68,12 +64,10 @@ case class CalculationResponse(
                                 dualCalc: Boolean,
                                 calcType: Int) {
 
-
-  def leavingDate : LocalDate = {
+  def leavingDate: LocalDate = {
     if (revaluationDate.isDefined) revaluationDate.get
     else calculationPeriods.head.endDate
   }
-
 
   def hasErrors: Boolean = calculationPeriods.foldLeft(globalErrorCode){_ + _.errorCode} > 0
 
@@ -99,10 +93,7 @@ case class CalculationResponse(
     }
   }
 
-  def numPeriodsInError: Int = {
-      calculationPeriods.filter(_.errorCode > 0).size
-  }
-
+  def numPeriodsInError: Int = calculationPeriods.filter(_.errorCode > 0).size
 
   def trueCalculation: BigDecimal = calculationPeriods.foldLeft(BigDecimal(0)){ (sum, period) => sum +
     BigDecimal(period.dualCalcPost90TrueTotal.getOrElse("0.00"))}
@@ -111,14 +102,8 @@ case class CalculationResponse(
     BigDecimal(period.dualCalcPost90OppositeTotal.getOrElse("0.00"))}
 
   def dodInSameTaxYearAsRevaluationDate: Boolean = {
-
-    if(CalculationResponse.getTaxYear(dateOfDeath) != 0 &&
-       CalculationResponse.getTaxYear(dateOfDeath) == CalculationResponse.getTaxYear(revaluationDate)) {
-      true
-    }
-    else
-      false
-
+    CalculationResponse.getTaxYear(dateOfDeath) != 0 &&
+      CalculationResponse.getTaxYear(dateOfDeath) == CalculationResponse.getTaxYear(revaluationDate)
   }
 
   def header(messages : Messages): String = {
@@ -140,13 +125,12 @@ case class CalculationResponse(
     }
   }
 
-
   def showRateColumn: Boolean = calculationPeriods.size > 1 && revaluationRate == Some("0")
 
 }
 
 object CalculationResponse {
-  implicit val formats = Json.format[CalculationResponse]
+  implicit val formats: OFormat[CalculationResponse] = Json.format[CalculationResponse]
 
   def getTaxYear(date: Option[LocalDate]): Int = {
     date match {

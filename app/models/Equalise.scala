@@ -16,12 +16,10 @@
 
 package models
 
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
-case class Equalise(equalise: Option[Int]) {
+case class Equalise(equalise: Option[Int])
 
-}
-
-object Equalise{
-  implicit val formats = Json.format[Equalise]
+object Equalise {
+  implicit val formats: OFormat[Equalise] = Json.format[Equalise]
 }

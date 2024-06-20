@@ -16,12 +16,12 @@
 
 package models
 
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 case class GmpSession(memberDetails: MemberDetails, scon: String, scenario: String, revaluationDate: Option[GmpDate], rate: Option[String],
                       leaving: Leaving, equalise: Option[Int])
 
 
 object GmpSession {
-  implicit val formats = Json.format[GmpSession]
+  implicit val formats: OFormat[GmpSession] = Json.format[GmpSession]
 }

@@ -46,7 +46,7 @@ class RevaluationRateController @Inject()( authAction: AuthAction,
                                          ) extends GmpPageFlow(authConnector,sessionService,config,messagesControllerComponents,ac) with Logging{
 
 
-  lazy val revaluationRateForm=rrf.revaluationRateForm
+  lazy val revaluationRateForm = rrf.revaluationRateForm
 
   def get = authAction.async {
       implicit request => sessionService.fetchGmpSession() map {
@@ -67,7 +67,7 @@ class RevaluationRateController @Inject()( authAction: AuthAction,
 
         logger.debug(s"[RevaluationRateController][post][POST] : ${request.body}")
 
-        revaluationRateForm.bindFromRequest.fold(
+        revaluationRateForm.bindFromRequest().fold(
           formWithErrors => {
             sessionService.fetchGmpSession() map {
               case Some(x) => BadRequest(views.revaluationRate(formWithErrors, x))

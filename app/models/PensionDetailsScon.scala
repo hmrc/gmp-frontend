@@ -18,14 +18,14 @@ package models
 
 import play.api.data.Form
 import play.api.data.Forms.{mapping, text}
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 import validation.SconValidate
 import play.api.i18n.Messages
 
 case class PensionDetailsScon(scon: String)
 
 object PensionDetailsScon {
-  implicit val formats = Json.format[PensionDetailsScon]
+  implicit val formats: OFormat[PensionDetailsScon] = Json.format[PensionDetailsScon]
 
   def pensionDetailsSconForm()(implicit messages: Messages) = Form(
     mapping(

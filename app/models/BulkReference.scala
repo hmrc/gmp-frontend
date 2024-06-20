@@ -16,12 +16,12 @@
 
 package models
 
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 case class BulkReference(email: String, reference: String) {
 
 }
 
 object BulkReference{
-  implicit val formats = Json.format[BulkReference]
+  implicit val formats: OFormat[BulkReference] = Json.format[BulkReference]
 }

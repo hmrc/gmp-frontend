@@ -16,10 +16,10 @@
 
 package models
 
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 case class RevaluationDate(leaving: Leaving, revaluationDate: GmpDate)
 
 object RevaluationDate {
-  implicit val formats = Json.format[RevaluationDate]
+  implicit val formats: OFormat[RevaluationDate] = Json.format[RevaluationDate]
 }

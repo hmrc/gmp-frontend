@@ -46,7 +46,7 @@ class DateOfLeavingController @Inject()(authAction: AuthAction,
 
   def get = authAction.async {
     implicit request =>
-      sessionService.fetchGmpSession.map {
+      sessionService.fetchGmpSession().map {
         case Some(session) => session match {
           case _ if session.scon == "" => Ok(views.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/pension-details"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title")))
           case _ if session.memberDetails.nino == "" || session.memberDetails.firstForename == "" || session.memberDetails.surname == "" => Ok(views.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/member-details"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title")))
@@ -60,14 +60,14 @@ class DateOfLeavingController @Inject()(authAction: AuthAction,
   def post = authAction.async {
     implicit request => {
       logger.debug(s"[DateOfLeavingController][post][POST] : ${request.body}")
-      val form = sessionService.fetchGmpSession.map{
+      val form = sessionService.fetchGmpSession().map {
         case Some(session) => dateOfLeavingForm(session)
         case None => throw new RuntimeException("No session found in order to retrieve scenario")
       }
 
-      form.flatMap {f => f.bindFromRequest.fold(
+      form.flatMap { f => f.bindFromRequest().fold(
         formWithErrors => {
-          sessionService.fetchGmpSession.map {
+          sessionService.fetchGmpSession().map {
             case Some(session) => BadRequest(views.dateOfLeaving(formWithErrors, session.scenario))
             case _ => throw new RuntimeException
           }

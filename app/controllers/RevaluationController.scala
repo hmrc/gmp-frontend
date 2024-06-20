@@ -47,11 +47,11 @@ class RevaluationController @Inject()( authAction: AuthAction,
 
   def revalForm(session: GmpSession) = {
     val revalDate = session.revaluationDate.fold(GmpDate(None, None, None))(identity)
-  rvform.revaluationForm(session).fill(RevaluationDate(session.leaving, revalDate))
+    rvform.revaluationForm(session).fill(RevaluationDate(session.leaving, revalDate))
   }
 
   def get = authAction.async { implicit request =>
-    sessionService.fetchGmpSession.map {
+    sessionService.fetchGmpSession().map {
         case Some(session) => {
           val revalDate = session.revaluationDate.fold(GmpDate(None, None, None))(identity)
           Ok(views.revaluation(revalForm(session).fill(RevaluationDate(session.leaving, revalDate))))
@@ -64,7 +64,7 @@ class RevaluationController @Inject()( authAction: AuthAction,
   def post = authAction.async {
     implicit request => {
       logger.debug(s"[RevaluationController][post][POST] : ${request.body}")
-      val form = sessionService.fetchGmpSession.map {
+      val form = sessionService.fetchGmpSession().map {
         _ match {
           case Some(session) => revalForm(session)
           case None => throw new RuntimeException("No session found in order to retrieve scenario")
@@ -72,7 +72,7 @@ class RevaluationController @Inject()( authAction: AuthAction,
       }
 
       form.flatMap { f =>
-        f.bindFromRequest.fold(
+        f.bindFromRequest().fold(
           formWithErrors => {
             Future.successful(BadRequest(views.revaluation(formWithErrors)))
           },

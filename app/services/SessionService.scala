@@ -127,7 +127,7 @@ class SessionService @Inject()(metrics: ApplicationMetrics,
 
     logger.debug(s"[SessionService][fetchGmpSessionWithScon]")
 
-    fetchPensionDetails.flatMap { s =>
+    fetchPensionDetails().flatMap { s =>
       val session = cleanSession.copy(scon = s.getOrElse(""))
       gmpSessionCache.cache[GmpSession](GMP_SESSION_KEY, session) map (cacheMap => {
         timer.stop()

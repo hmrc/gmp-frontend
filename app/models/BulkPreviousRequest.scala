@@ -17,23 +17,23 @@
 package models
 
 import java.time.LocalDateTime
-import play.api.libs.json.{JsString, Json, Reads, Writes}
+import play.api.libs.json.{JsString, Json, OFormat, Reads, Writes}
 
 case class BulkPreviousRequest(uploadReference: String, reference: String, timestamp: LocalDateTime, processedDateTime: LocalDateTime)
 
 object BulkPreviousRequest {
 
-  implicit val timestampReads = Reads[LocalDateTime](js =>
+  implicit val timestampReads: Reads[LocalDateTime] = Reads[LocalDateTime](js =>
     js.validate[String].map[LocalDateTime](dtString =>
       LocalDateTime.parse(dtString)
     )
   )
 
-  implicit val timestampWrites = new Writes[LocalDateTime]{
+  implicit val timestampWrites: Writes[LocalDateTime] = new Writes[LocalDateTime] {
     def writes(localDateTime: LocalDateTime) = JsString(localDateTime.toString)
   }
 
-  implicit val formats = Json.format[BulkPreviousRequest]
+  implicit val formats: OFormat[BulkPreviousRequest] = Json.format[BulkPreviousRequest]
 
   implicit def defaultOrdering: Ordering[BulkPreviousRequest] = Ordering.fromLessThan(_.processedDateTime isAfter _.processedDateTime)
 }

@@ -17,7 +17,7 @@
 package models
 
 import java.time.LocalDateTime
-import play.api.libs.json.{JsString, Json, Reads, Writes}
+import play.api.libs.json.{JsString, Json, OFormat, Reads, Writes}
 
 case class CalculationRequestLine (scon: String,
                                   nino: String,
@@ -43,7 +43,7 @@ case class CalculationRequestLine (scon: String,
 }
 
 object CalculationRequestLine {
-  implicit val formats = Json.format[CalculationRequestLine]
+  implicit val formats: OFormat[CalculationRequestLine] = Json.format[CalculationRequestLine]
 }
 
 case class BulkCalculationRequestLine(lineId: Int,
@@ -53,7 +53,7 @@ case class BulkCalculationRequestLine(lineId: Int,
                                      )
 
 object BulkCalculationRequestLine {
-  implicit val formats = Json.format[BulkCalculationRequestLine]
+  implicit val formats: OFormat[BulkCalculationRequestLine] = Json.format[BulkCalculationRequestLine]
 }
 
 case class BulkCalculationRequest(uploadReference: String,
@@ -66,15 +66,15 @@ case class BulkCalculationRequest(uploadReference: String,
 
 object BulkCalculationRequest {
 
-  implicit val timestampReads = Reads[LocalDateTime](js =>
+  implicit val timestampReads: Reads[LocalDateTime] = Reads[LocalDateTime](js =>
     js.validate[String].map[LocalDateTime](dtString =>
       LocalDateTime.parse(dtString)
     )
   )
 
-  implicit val timestampWrites = new Writes[LocalDateTime]{
+  implicit val timestampWrites: Writes[LocalDateTime] = new Writes[LocalDateTime] {
     def writes(localDateTime: LocalDateTime) = JsString(localDateTime.toString)
   }
 
-  implicit val formats = Json.format[BulkCalculationRequest]
+  implicit val formats: OFormat[BulkCalculationRequest] = Json.format[BulkCalculationRequest]
 }
