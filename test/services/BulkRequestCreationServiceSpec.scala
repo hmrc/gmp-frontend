@@ -37,10 +37,10 @@ import scala.language.postfixOps
 import scala.io.Source
 
 class BulkRequestCreationServiceSpec extends PlaySpec with ScalaFutures with MockitoSugar with GuiceOneServerPerSuite {
-  implicit val messages=app.injector.instanceOf[MessagesControllerComponents]
-  implicit val servicesConfig=app.injector.instanceOf[ServicesConfig]
-  implicit val messagesAPI=app.injector.instanceOf[MessagesApi]
-  implicit val messagesProvider=MessagesImpl(Lang("en"), messagesAPI)
+  implicit val messages: MessagesControllerComponents = app.injector.instanceOf[MessagesControllerComponents]
+  implicit val servicesConfig: ServicesConfig = app.injector.instanceOf[ServicesConfig]
+  implicit val messagesAPI: MessagesApi = app.injector.instanceOf[MessagesApi]
+  implicit val messagesProvider: MessagesImpl = MessagesImpl(Lang("en"), messagesAPI)
 
   val nino1 = RandomNino.generate
   val nino2 = RandomNino.generate

@@ -57,8 +57,7 @@ class PensionDetailsSconControllerSpec extends PlaySpec with GuiceOneServerPerSu
   lazy val pensionDetailsForm = new PensionDetails_no_longer_used_Form(mcc)
   lazy val views = app.injector.instanceOf[Views]
 
-
-  implicit val hc = new HeaderCarrier(sessionId = Some(SessionId(s"session-${UUID.randomUUID}")))
+  implicit val hc: HeaderCarrier = new HeaderCarrier(sessionId = Some(SessionId(s"session-${UUID.randomUUID}")))
 
   object TestPensionDetailsController extends PensionDetailsController(FakeAuthAction, mockAuthConnector, mockGmpConnector,mockSessionService,FakeGmpContext, metrics,ac,pensionDetailsForm,mcc,ec,gmpSessionCache,views) {
   }

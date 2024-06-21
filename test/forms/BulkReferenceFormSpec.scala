@@ -25,8 +25,8 @@ import play.api.mvc.MessagesControllerComponents
 
 class BulkReferenceFormSpec extends PlaySpec with GuiceOneAppPerSuite {
 
-  implicit lazy val messagesAPI=app.injector.instanceOf[MessagesApi]
-  implicit lazy val messagesProvider=MessagesImpl(Lang("en"), messagesAPI)
+  implicit lazy val messagesAPI: MessagesApi = app.injector.instanceOf[MessagesApi]
+  implicit lazy val messagesProvider: MessagesImpl = MessagesImpl(Lang("en"), messagesAPI)
   lazy val mcc = app.injector.instanceOf[MessagesControllerComponents]
   lazy val bulkReferenceForm = new BulkReferenceForm(mcc).bulkReferenceForm
   val fromJsonMaxChars: Int = 102400

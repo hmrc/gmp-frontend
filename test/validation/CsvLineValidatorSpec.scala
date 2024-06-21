@@ -24,13 +24,9 @@ import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl}
 import services.BulkRequestCsvColumn
 
-/**
-  * Created by stevenhobbs on 12/05/2016.
-  */
 class CsvLineValidatorSpec extends AnyFlatSpec with Matchers with GuiceOneAppPerSuite {
-  implicit val messagesAPI=app.injector.instanceOf[MessagesApi]
-  implicit val messagesProvider=MessagesImpl(Lang("en"), messagesAPI)
-
+  implicit val messagesAPI: MessagesApi = app.injector.instanceOf[MessagesApi]
+  implicit val messagesProvider: MessagesImpl = MessagesImpl(Lang("en"), messagesAPI)
 
   object CsvLine extends CalculationRequestLine(
     "S1301234T", // SCON

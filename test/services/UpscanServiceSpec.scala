@@ -38,7 +38,7 @@ import scala.concurrent.Future
 
 class UpscanServiceSpec extends BaseSpec with GuiceOneAppPerSuite with MockitoSugar with ScalaFutures {
 
-  override def fakeApplication: Application = new GuiceApplicationBuilder()
+  override def fakeApplication(): Application = new GuiceApplicationBuilder()
     .overrides(bind[UpscanConnector].toInstance(mockUpscanConnector))
     .build()
 

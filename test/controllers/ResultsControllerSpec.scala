@@ -61,7 +61,7 @@ class ResultsControllerSpec extends PlaySpec with GuiceOneServerPerSuite with Mo
   implicit val applicationConfig: ApplicationConfig = app.injector.instanceOf[ApplicationConfig]
   implicit val gmpSessionCache: GmpSessionCache = app.injector.instanceOf[GmpSessionCache]
   lazy val views = app.injector.instanceOf[Views]
-  implicit val hc = new HeaderCarrier(sessionId = Some(SessionId(s"session-${UUID.randomUUID}")))
+  implicit val hc: HeaderCarrier = new HeaderCarrier(sessionId = Some(SessionId(s"session-${UUID.randomUUID}")))
 
   object TestResultsController extends ResultsController(FakeAuthAction, mockAuthConnector, mockSessionService,FakeGmpContext, mockCalculationConnector, mockAuditConnector, metrics, applicationConfig, mcc, ec, gmpSessionCache, views) {
 

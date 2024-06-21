@@ -34,8 +34,8 @@ class RevaluationFormSpec extends PlaySpec with GuiceOneAppPerSuite {
   val leavingWithDate = Leaving(GmpDate(Some("01"), Some("01"), Some("2012")), None)
   val leavingWithDateAfter = Leaving(GmpDate(Some("01"), Some("01"), Some("2012")), Some(Leaving.YES_AFTER))
   val leavingWithDateAndNO = Leaving(GmpDate(Some("01"), Some("01"), Some("2012")), Some(Leaving.NO))
-  implicit lazy val messagesAPI=app.injector.instanceOf[MessagesApi]
-  implicit lazy val messagesProvider=MessagesImpl(Lang("en"), messagesAPI)
+  implicit lazy val messagesAPI: MessagesApi = app.injector.instanceOf[MessagesApi]
+  implicit lazy val messagesProvider: MessagesImpl = MessagesImpl(Lang("en"), messagesAPI)
   lazy val mcc = app.injector.instanceOf[MessagesControllerComponents]
   val nino = RandomNino.generate
   val memberDetails = MemberDetails(nino, "A", "AAA")

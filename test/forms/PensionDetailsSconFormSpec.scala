@@ -27,8 +27,8 @@ import play.api.mvc.MessagesControllerComponents
 
 class PensionDetailsSconFormSpec extends PlaySpec with GuiceOneAppPerSuite with MockitoSugar{
 
-  implicit lazy val messagesAPI=app.injector.instanceOf[MessagesApi]
-  implicit lazy val messagesProvider=MessagesImpl(Lang("en"), messagesAPI)
+  implicit lazy val messagesAPI: MessagesApi = app.injector.instanceOf[MessagesApi]
+  implicit lazy val messagesProvider: MessagesImpl = MessagesImpl(Lang("en"), messagesAPI)
   lazy val mcc = app.injector.instanceOf[MessagesControllerComponents]
   lazy val pensionDetailsForm = new PensionDetails_no_longer_used_Form(mcc).pensionDetailsForm
   val fromJsonMaxChars: Int = 102400
