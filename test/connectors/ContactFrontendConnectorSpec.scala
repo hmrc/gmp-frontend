@@ -38,15 +38,14 @@ class ContactFrontendConnectorSpec @Inject()(servicesConfig: ServicesConfig) ext
 
   implicit override lazy val app: Application = new GuiceApplicationBuilder()
     .configure(Map("Test.microservice.assets.url" -> "test-url", "Test.microservice.assets.version" -> "test-version"))
-    .build
+    .build()
 
   implicit val ec: scala.concurrent.ExecutionContext = scala.concurrent.ExecutionContext.global
 
   protected def mode: Mode = app.injector.instanceOf[Mode]
   protected def runModeConfiguration: Configuration = app.injector.instanceOf[Configuration]
 
-
-  implicit val headerCarrier = HeaderCarrier()
+  implicit val headerCarrier: HeaderCarrier = HeaderCarrier()
   val mockHttp = mock[HttpClient]
 
   object TestConnector extends ContactFrontendConnector(mockHttp, app.injector.instanceOf[Environment],

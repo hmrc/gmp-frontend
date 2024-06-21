@@ -54,12 +54,12 @@ class ResultsControllerSpec extends PlaySpec with GuiceOneServerPerSuite with Mo
   val mockAuditConnector = mock[AuditConnector]
   val mockAuthAction = mock[AuthAction]
   val metrics = app.injector.instanceOf[ApplicationMetrics]
-  implicit val mcc = app.injector.instanceOf[MessagesControllerComponents]
-  implicit val ec = app.injector.instanceOf[ExecutionContext]
-  implicit val messagesAPI=app.injector.instanceOf[MessagesApi]
-  implicit val messagesProvider=MessagesImpl(Lang("en"), messagesAPI)
-  implicit val applicationConfig=app.injector.instanceOf[ApplicationConfig]
-  implicit val gmpSessionCache=app.injector.instanceOf[GmpSessionCache]
+  implicit val mcc: MessagesControllerComponents = app.injector.instanceOf[MessagesControllerComponents]
+  implicit val ec: ExecutionContext = app.injector.instanceOf[ExecutionContext]
+  implicit val messagesAPI: MessagesApi = app.injector.instanceOf[MessagesApi]
+  implicit val messagesProvider: MessagesImpl = MessagesImpl(Lang("en"), messagesAPI)
+  implicit val ac: ApplicationConfig = app.injector.instanceOf[ApplicationConfig]
+  implicit val gmpSessionCache: GmpSessionCache = app.injector.instanceOf[GmpSessionCache]
   lazy val views = app.injector.instanceOf[Views]
   implicit val hc = new HeaderCarrier(sessionId = Some(SessionId(s"session-${UUID.randomUUID}")))
 

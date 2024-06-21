@@ -43,7 +43,7 @@ class DateOfLeavingControllerSpec extends PlaySpec with GuiceOneServerPerSuite w
   val mockAuthAction = mock[AuthAction]
 
   val baseValidDate = GmpDate(day = Some("31"), month = Some("1"), year = Some("2015"))
-  implicit lazy val mcc: MessagesControllerComponents = app.injector.instanceOf[MessagesControllerComponents]
+  implicit val mcc: MessagesControllerComponents = app.injector.instanceOf[MessagesControllerComponents]
   implicit val ec: ExecutionContext = app.injector.instanceOf[ExecutionContext]
   implicit val messagesAPI: MessagesApi = app.injector.instanceOf[MessagesApi]
   implicit val messagesProvider: MessagesImpl = MessagesImpl(Lang("en"), messagesAPI)

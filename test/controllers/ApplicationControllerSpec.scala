@@ -43,24 +43,23 @@ class ApplicationControllerSpec extends PlaySpec
   with GuiceOneServerPerSuite
   with BeforeAndAfterEach
   with ScalaFutures
-  with MockitoSugar
-  {
+  with MockitoSugar {
 
   val mockAuthConnector: AuthConnector = mock[AuthConnector]
   val mockAuditConnector: AuditConnector = mock[AuditConnector]
   val mockUUIDGenerator: UUIDGenerator = mock[UUIDGenerator]
   val mockAuthAction: AuthAction = mock[AuthAction]
-    implicit val mcc = app.injector.instanceOf[MessagesControllerComponents]
-    implicit val ec = app.injector.instanceOf[ExecutionContext]
-     implicit val ac=app.injector.instanceOf[ApplicationConfig]
-    implicit val ss=app.injector.instanceOf[SessionService]
-    lazy val views = app.injector.instanceOf[Views]
-    lazy val externalUrls = app.injector.instanceOf[ExternalUrls]
 
-    object TestController extends ApplicationController(FakeAuthAction, mockAuditConnector, mockAuthConnector, mockUUIDGenerator,
-                      ss,FakeGmpContext,mcc,ec,ac, views, externalUrls) {
+  implicit val mcc: MessagesControllerComponents = app.injector.instanceOf[MessagesControllerComponents]
+  implicit val ec: ExecutionContext = app.injector.instanceOf[ExecutionContext]
+  implicit val ac: ApplicationConfig = app.injector.instanceOf[ApplicationConfig]
+  implicit val ss: SessionService = app.injector.instanceOf[SessionService]
+  lazy val views = app.injector.instanceOf[Views]
+  lazy val externalUrls = app.injector.instanceOf[ExternalUrls]
 
-  }
+  object TestController extends ApplicationController(
+    FakeAuthAction, mockAuditConnector, mockAuthConnector, mockUUIDGenerator,
+    ss,FakeGmpContext,mcc,ec,ac, views, externalUrls) {}
 
   override def beforeEach(): Unit = {
     reset(mockAuditConnector, mockUUIDGenerator)
