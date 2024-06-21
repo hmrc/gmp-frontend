@@ -179,6 +179,7 @@ class BulkRequestReceivedControllerSpec extends PlaySpec with GuiceOneServerPerS
         case x: String => x + ","
         case x: Int => x.toString + ","
         case x: Boolean => x.toString + ","
+        case _ => throw new Exception("Item type not handled by bulk calculation request")
       }
     }
     {
