@@ -96,16 +96,17 @@ class GMPDateFormatter(maximumDateInclusive: Option[LocalDate],
               .leftMap(_ => Seq(FormError(dateKey, "error.invalid")))
           )
         _ <-
-          if (yearStr.nonEmpty && (yearStr.length < YEAR_FIELD_LENGTH || yearStr.length > YEAR_FIELD_LENGTH))
+          if (yearStr.nonEmpty && (yearStr.length < YEAR_FIELD_LENGTH || yearStr.length > YEAR_FIELD_LENGTH)) {
             Left(Seq(FormError(yearKey, "error.yearLength")))
-          else if (!isValidDate(date))
+          } else if (!isValidDate(date)) {
             Left(Seq(FormError(dateKey, "error.invalid")))
-          else if (maximumDateInclusive.exists(_.isBefore(LocalDate.of(year, month, dayStr.toInt))))
+          } else if (maximumDateInclusive.exists(_.isBefore(LocalDate.of(year, month, dayStr.toInt)))) {
             Left(Seq(FormError(dateKey, "error.tooFuture", tooRecentArgs)))
-          else if (minimumDateInclusive.exists(_.isAfter(LocalDate.of(year, month, dayStr.toInt))))
+          } else if (minimumDateInclusive.exists(_.isAfter(LocalDate.of(year, month, dayStr.toInt)))) {
             Left(Seq(FormError(dateKey, "error.tooFarInPast", tooFarInPastArgs)))
-          else
+          } else {
             Right(date)
+          }
 
       } yield date
     } else {

@@ -64,10 +64,7 @@ case class CalculationResponse(
                                 dualCalc: Boolean,
                                 calcType: Int) {
 
-  def leavingDate: LocalDate = {
-    if (revaluationDate.isDefined) revaluationDate.get
-    else calculationPeriods.head.endDate
-  }
+  def leavingDate: LocalDate = revaluationDate.getOrElse(calculationPeriods.head.endDate)
 
   def hasErrors: Boolean = calculationPeriods.foldLeft(globalErrorCode){_ + _.errorCode} > 0
 
@@ -86,14 +83,15 @@ case class CalculationResponse(
         var errors = calculationPeriods
             .filter(_.errorCode > 0)
             .map(_.errorCode)
-        if (globalErrorCode > 0)
+        if (globalErrorCode > 0) {
           errors = errors :+ globalErrorCode
+        }
 
         errors
     }
   }
 
-  def numPeriodsInError: Int = calculationPeriods.filter(_.errorCode > 0).size
+  def numPeriodsInError: Int = calculationPeriods.count(_.errorCode > 0)
 
   def trueCalculation: BigDecimal = calculationPeriods.foldLeft(BigDecimal(0)){ (sum, period) => sum +
     BigDecimal(period.dualCalcPost90TrueTotal.getOrElse("0.00"))}
@@ -108,24 +106,24 @@ case class CalculationResponse(
 
   def header(messages : Messages): String = {
 
-    if(calcType == CalculationType.SURVIVOR.toInt && revaluationDate.isDefined){
+    if (calcType == CalculationType.SURVIVOR.toInt && revaluationDate.isDefined) {
       messages("gmp.results.survivor.revaluation.header", formatDate(revaluationDate.get))
-    }else if(calcType == CalculationType.SURVIVOR.toInt && dateOfDeath.isDefined){
+    } else if(calcType == CalculationType.SURVIVOR.toInt && dateOfDeath.isDefined) {
       messages("gmp.results.survivor.header", formatDate(dateOfDeath.get))
-    }else if(calcType == CalculationType.SURVIVOR.toInt){
+    } else if(calcType == CalculationType.SURVIVOR.toInt) {
       messages("gmp.results.survivor.header")
-    }else if(calcType == CalculationType.SPA.toInt && spaDate.isDefined) {
+    } else if(calcType == CalculationType.SPA.toInt && spaDate.isDefined) {
       messages("gmp.spa.header", formatDate(spaDate.get))
-    }else if(calcType == CalculationType.PAYABLE_AGE.toInt && payableAgeDate.isDefined) {
+    } else if(calcType == CalculationType.PAYABLE_AGE.toInt && payableAgeDate.isDefined) {
       messages("gmp.payable_age.header", formatDate(payableAgeDate.get))
-    }else if(revaluationDate.isEmpty || revaluationUnsuccessful){
+    } else if(revaluationDate.isEmpty || revaluationUnsuccessful) {
       messages("gmp.leaving.scheme.header", formatDate(leavingDate))
-    }else {
+    } else {
       messages("gmp.leaving.revalued.header", formatDate(leavingDate))
     }
   }
 
-  def showRateColumn: Boolean = calculationPeriods.size > 1 && revaluationRate == Some("0")
+  def showRateColumn: Boolean = calculationPeriods.size > 1 && revaluationRate.contains("0")
 
 }
 

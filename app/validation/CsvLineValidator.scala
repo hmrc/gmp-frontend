@@ -116,10 +116,11 @@ trait FieldValidator {
   }
 
   private def tryParseDate(date: String): Option[LocalDate] =
-    if (!DateValidate.isValid(date))
-      None
-    else
+    if (DateValidate.isValid(date)) {
       Some(LocalDate.parse(date, DATE_FORMAT))
+    } else {
+      None
+    }
 }
 
 object FieldValidator extends FieldValidator

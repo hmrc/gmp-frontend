@@ -38,6 +38,7 @@ case class CalculationRequestLine (scon: String,
       case _ => ""
     }
 
+//    TODO: REPLACE WITH JOIN
     s"""$scon,$nino,$firstForename,$surname,${memberReference.getOrElse("")},${calctype.getOrElse("")},${terminationDate.getOrElse("")},${revaluationDate.getOrElse("")},${revaluationRate.getOrElse("")},$dc"""
   }
 }

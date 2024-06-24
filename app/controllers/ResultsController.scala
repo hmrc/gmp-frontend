@@ -49,7 +49,7 @@ class ResultsController @Inject()(authAction: AuthAction,
                                   implicit val gmpSessionCache: GmpSessionCache,
                                   views: Views) extends GmpPageFlow(authConnector,sessionService,context,messagesControllerComponents,ac) with Logging{
 
-
+//TODO: FIX SCALASTYLE WARNINGS
 
    def resultsView(response: CalculationResponse, revalRateSubheader: Option[String], survivorSubheader: Option[String])(implicit request: Request[_]): HtmlFormat.Appendable = {
     views.results(response, revalRateSubheader,survivorSubheader)

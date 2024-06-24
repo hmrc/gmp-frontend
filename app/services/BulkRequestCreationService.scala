@@ -100,7 +100,8 @@ class BulkRequestCreationService @Inject()(environment: Environment,
           Left(DataLimitExceededException)
         } else {
           if (bulkCalculationRequestLines.size == 1) {
-            val emptyFileLines = List(BulkCalculationRequestLine(1, None, None, Some(Map(BulkRequestCsvColumn.LINE_ERROR_EMPTY.toString -> messages("gmp.error.parsing.empty_file")))))
+            val emptyFileLines = List(BulkCalculationRequestLine(1, None, None,
+              Some(Map(BulkRequestCsvColumn.LINE_ERROR_EMPTY.toString -> messages("gmp.error.parsing.empty_file")))))
             val req = BulkCalculationRequest(upscanCallback.reference, email, reference, enterLineNumbers(emptyFileLines))
             logger.debug(s"[BulkRequestCreationService][createBulkRequest] size : empty")
             Right(req)
@@ -131,7 +132,8 @@ class BulkRequestCreationService @Inject()(environment: Environment,
       lineArray(BulkRequestCsvColumn.SURNAME).toUpperCase,
       emptyStringsToNone(lineArray(BulkRequestCsvColumn.MEMBER_REF), { e: String => Some(e) }),
       emptyStringsToNone(lineArray(BulkRequestCsvColumn.CALC_TYPE), { e: String => protectedToInt(e) }),
-      determineTerminationDate(lineArray(BulkRequestCsvColumn.TERMINATION_DATE), lineArray(BulkRequestCsvColumn.REVAL_DATE), lineArray(BulkRequestCsvColumn.CALC_TYPE)),
+      determineTerminationDate(lineArray(BulkRequestCsvColumn.TERMINATION_DATE),
+        lineArray(BulkRequestCsvColumn.REVAL_DATE), lineArray(BulkRequestCsvColumn.CALC_TYPE)),
       emptyStringsToNone(lineArray(BulkRequestCsvColumn.REVAL_DATE), { e: String => protectedDateConvert(e) }),
       emptyStringsToNone(lineArray(BulkRequestCsvColumn.REVAL_RATE), { e: String => protectedToInt(e) }),
       lineArray(BulkRequestCsvColumn.DUAL_CALC).toUpperCase match {
@@ -186,10 +188,11 @@ class BulkRequestCreationService @Inject()(environment: Environment,
       case _ => {
         val convertedDate = LocalDate.parse(termDate, inputDateFormatter)
         val thatDate = TaxYear(2016).starts.minusDays(1)
-        if (convertedDate.isAfter(thatDate))
+        if (convertedDate.isAfter(thatDate)) {
           Some(convertedDate.format(DATE_FORMAT))
-        else
+        } else {
           None
+        }
       }
     }
 

@@ -60,7 +60,7 @@ class GmpBulkConnector @Inject()(environment: Environment,
         large_file.statusCode
 
       case e: Throwable => logger.error(s"[GmpBulkConnector][sendBulkRequest] ${e.getMessage}", e)
-        500
+        play.api.http.Status.INTERNAL_SERVER_ERROR
     }
   }
 

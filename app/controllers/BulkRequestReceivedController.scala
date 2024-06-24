@@ -52,14 +52,26 @@ class BulkRequestReceivedController @Inject()(authAction: AuthAction,
         sessionService.fetchGmpBulkSession().flatMap {
           case Some(session) if session.callBackData.isDefined && session.callBackData.get.isInstanceOf[UploadedSuccessfully] =>
             val callbackData = session.callBackData.get.asInstanceOf[UploadedSuccessfully]
-            val errorPageForToMuchData = Ok(views.failure(Messages("gmp.bulk.failure.too_large"), Messages("gmp.bulk.file_too_large.header"), Messages("gmp.bulk_failure_file_too_large.title")))
+            val errorPageForToMuchData = Ok(views.failure(
+              Messages("gmp.bulk.failure.too_large"),
+              Messages("gmp.bulk.file_too_large.header"),
+              Messages("gmp.bulk_failure_file_too_large.title")
+            ))
             bulkRequestCreationService.createBulkRequest(callbackData, session.emailAddress.getOrElse(""), session.reference.getOrElse("")) match {
 
               case Right(bulkRequest) => gmpBulkConnector.sendBulkRequest(bulkRequest, link).map {
                   case OK => Ok(views.bulkRequestReceived(bulkRequest.reference))
-                  case CONFLICT => Ok(views.failure(Messages("gmp.bulk.failure.duplicate_upload"), Messages("gmp.bulk.problem.header"), Messages("gmp.bulk_failure_duplicate.title")))
+                  case CONFLICT => Ok(views.failure(
+                    Messages("gmp.bulk.failure.duplicate_upload"),
+                    Messages("gmp.bulk.problem.header"),
+                    Messages("gmp.bulk_failure_duplicate.title")
+                  ))
                   case REQUEST_ENTITY_TOO_LARGE => errorPageForToMuchData
-                  case _ => Ok(views.failure(Messages("gmp.bulk.failure.generic"), Messages("gmp.bulk.problem.header"), Messages("gmp.bulk_failure_generic.title")))
+                  case _ => Ok(views.failure(
+                    Messages("gmp.bulk.failure.generic"),
+                    Messages("gmp.bulk.problem.header"),
+                    Messages("gmp.bulk_failure_generic.title")
+                  ))
                 }
 
               case Left(DataLimitExceededException) => Future.successful(errorPageForToMuchData)
@@ -67,7 +79,11 @@ class BulkRequestReceivedController @Inject()(authAction: AuthAction,
               case Left(_) => Future.successful((Redirect(controllers.routes.IncorrectlyEncodedController.get)))
             }
 
-          case _ => Future.successful(Ok(views.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/upload-csv"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title"))))
+          case _ => Future.successful(Ok(views.failure(
+            Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/upload-csv"),
+            Messages("gmp.cannot_calculate.gmp"),
+            Messages("gmp.session_missing.title")
+          )))
         }
       }
   }
