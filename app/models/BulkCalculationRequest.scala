@@ -37,9 +37,15 @@ case class CalculationRequestLine (scon: String,
       case 0 => "N"
       case _ => ""
     }
-
-//    TODO: REPLACE WITH JOIN
-    s"""$scon,$nino,$firstForename,$surname,${memberReference.getOrElse("")},${calctype.getOrElse("")},${terminationDate.getOrElse("")},${revaluationDate.getOrElse("")},${revaluationRate.getOrElse("")},$dc"""
+    List(
+      scon, nino, firstForename, surname,
+      memberReference.getOrElse(""),
+      calctype.getOrElse(""),
+      terminationDate.getOrElse(""),
+      revaluationDate.getOrElse(""),
+      revaluationRate.getOrElse(""),
+      dc
+    ).mkString(",")
   }
 }
 
