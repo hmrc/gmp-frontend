@@ -24,8 +24,8 @@ import java.time.format.DateTimeFormatter
 case class GmpDate(day: Option[String], month: Option[String], year: Option[String]) {
 
   def getAsLocalDate: Option[LocalDate] = {
-    (day, month, year) match {
-      case (Some(d), Some(m), Some(y)) => Some(LocalDate.of(d.toInt, m.toInt, y.toInt))
+    (year, month, day) match {
+      case (Some(y), Some(m), Some(d)) => Some(LocalDate.of(y.toInt, m.toInt, d.toInt))
       case _ => None
     }
   }
@@ -33,14 +33,14 @@ case class GmpDate(day: Option[String], month: Option[String], year: Option[Stri
   def isOnOrAfter06042016: Boolean = {
     getAsLocalDate.exists(date => {
       val thatDate = LocalDate.of(2016, 4, 6)
-      date.isBefore(thatDate) || date.isEqual(thatDate)
+      date.isAfter(thatDate) || date.isEqual(thatDate)
     })
   }
 
   def isOnOrAfter05041978: Boolean = {
     getAsLocalDate.exists(date => {
       val thatDate = LocalDate.of(1978, 4, 5)
-      date.isBefore(thatDate) || date.isEqual(thatDate)
+      date.isAfter(thatDate) || date.isEqual(thatDate)
     })
   }
 
