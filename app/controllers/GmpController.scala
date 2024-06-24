@@ -134,10 +134,11 @@ class GmpPageFlow @Inject()(val authConnector: AuthConnector,
       session.scenario match {
         case (CalculationType.REVALUATION) => {
 
-          if (sameTaxYear(session) || (session.leaving.leaving.isDefined && session.leaving.leaving.get.equals(Leaving.NO)))
+          if (sameTaxYear(session) || (session.leaving.leaving.isDefined && session.leaving.leaving.get.equals(Leaving.NO))) {
             Redirect(routes.RevaluationController.get)
-          else
+          } else {
             Redirect(routes.RevaluationRateController.get)
+          }
 
         }
         case (CalculationType.SPA | CalculationType.PAYABLE_AGE) =>

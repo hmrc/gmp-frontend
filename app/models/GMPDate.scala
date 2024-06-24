@@ -24,43 +24,27 @@ import java.time.format.DateTimeFormatter
 case class GmpDate(day: Option[String], month: Option[String], year: Option[String]) {
 
   def getAsLocalDate: Option[LocalDate] = {
-//    TODO: CLEAN UP
-    if (day.isDefined && month.isDefined && year.isDefined)
-      Some( LocalDate.of(year.get.toInt, month.get.toInt, day.get.toInt))
-    else
-      None
-
+    (day, month, year) match {
+      case (Some(d), Some(m), Some(y)) => Some(LocalDate.of(d.toInt, m.toInt, y.toInt))
+      case _ => None
+    }
   }
 
   def isOnOrAfter06042016: Boolean = {
-//    TODO: CLEAN UP
-    if (getAsLocalDate.isDefined) {
+    getAsLocalDate.exists(date => {
       val thatDate = LocalDate.of(2016, 4, 6)
-      getAsLocalDate.get.isAfter(thatDate) || getAsLocalDate.get.isEqual(thatDate)
-    }
-    else
-      false
+      date.isBefore(thatDate) || date.isEqual(thatDate)
+    })
   }
 
   def isOnOrAfter05041978: Boolean = {
-//    TODO: CLEAN UP
-    if (getAsLocalDate.isDefined) {
+    getAsLocalDate.exists(date => {
       val thatDate = LocalDate.of(1978, 4, 5)
-      getAsLocalDate.get.isAfter(thatDate) || getAsLocalDate.get.isEqual(thatDate)
-    }
-    else
-      false
+      date.isBefore(thatDate) || date.isEqual(thatDate)
+    })
   }
 
-  def isBefore05042046: Boolean = {
-//    TODO: CLEAN UP
-    if (getAsLocalDate.isDefined) {
-      val thatDate = LocalDate.of(2046, 4, 5)
-      getAsLocalDate.get.isBefore(thatDate)
-    }
-    else
-      false
-  }
+  def isBefore05042046: Boolean = getAsLocalDate.exists(_.isBefore(LocalDate.of(2046, 4, 5)))
 
   def getAsText: String = {
     getAsLocalDate match {
@@ -69,12 +53,10 @@ case class GmpDate(day: Option[String], month: Option[String], year: Option[Stri
     }
   }
 
-  def isBefore(date2: GmpDate): Boolean = {
-//    TODO: CLEAN UP
-    if (getAsLocalDate.isDefined && date2.getAsLocalDate.isDefined) {
-      getAsLocalDate.get.isBefore(date2.getAsLocalDate.get)
-    } else {
-      false
+  def isBefore(otherDate: GmpDate): Boolean = {
+    (getAsLocalDate, otherDate.getAsLocalDate) match {
+      case (Some(date), Some(otherDate)) => date.isBefore(otherDate)
+      case _ => false
     }
   }
 }

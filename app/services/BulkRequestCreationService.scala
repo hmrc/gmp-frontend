@@ -64,12 +64,10 @@ class BulkRequestCreationService @Inject()(environment: Environment,
     override def hasNext: Boolean = iterator.hasNext && count <= limit
 
     override def next(): Char = {
-
       val c = iterator.next()
-
-      if (c == delimiter)
+      if (c == delimiter) {
         count += 1
-
+      }
       c
     }
 
