@@ -37,8 +37,6 @@ class IncorrectlyEncodedController @Inject()( authAction: AuthAction,
                                               views: Views
                                             ) extends GmpPageFlow(authConnector,sessionService,config,messagesControllerComponents,ac){
 
-
-
   def get = authAction.async {
     implicit request => {
       Future.successful(

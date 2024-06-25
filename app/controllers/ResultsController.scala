@@ -49,8 +49,6 @@ class ResultsController @Inject()(authAction: AuthAction,
                                   implicit val gmpSessionCache: GmpSessionCache,
                                   views: Views) extends GmpPageFlow(authConnector,sessionService,context,messagesControllerComponents,ac) with Logging{
 
-
-
    def resultsView(response: CalculationResponse, revalRateSubheader: Option[String], survivorSubheader: Option[String])(implicit request: Request[_]): HtmlFormat.Appendable = {
     views.results(response, revalRateSubheader,survivorSubheader)
   }
@@ -62,10 +60,37 @@ class ResultsController @Inject()(authAction: AuthAction,
           sessionOpt: Option[GmpSession] =>
             sessionOpt match {
               case Some(session) => session match {
-                case _ if session.scon == "" => Future.successful(Ok(views.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/pension-details"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title"))))
-                case _ if session.memberDetails.nino == "" || session.memberDetails.firstForename == "" || session.memberDetails.surname == "" => Future.successful(Ok(views.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/member-details"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title"))))
-                case _ if session.scenario == "" => Future.successful(Ok(views.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/calculation-reason"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title"))))
-                case _ if session.leaving.leaving.isEmpty => Future.successful(Ok(views.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/left-scheme"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title"))))
+                case _ if session.scon == "" =>
+                  Future.successful(
+                    Ok(views.failure(
+                      Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/pension-details"),
+                      Messages("gmp.cannot_calculate.gmp"),
+                      Messages("gmp.session_missing.title")
+                    ))
+                  )
+                case _ if session.memberDetails.nino == "" || session.memberDetails.firstForename == "" || session.memberDetails.surname == "" =>
+                  Future.successful(
+                    Ok(views.failure(
+                      Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/member-details"),
+                      Messages("gmp.cannot_calculate.gmp"),
+                      Messages("gmp.session_missing.title")
+                    ))
+                  )
+                case _ if session.scenario == "" =>
+                  Future.successful(
+                    Ok(views.failure(
+                      Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/calculation-reason"),
+                      Messages("gmp.cannot_calculate.gmp"),
+                      Messages("gmp.session_missing.title")
+                    ))
+                  )
+                case _ if session.leaving.leaving.isEmpty =>
+                  Future.successful(
+                    Ok(views.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/left-scheme"),
+                      Messages("gmp.cannot_calculate.gmp"),
+                      Messages("gmp.session_missing.title")
+                    ))
+                  )
                 case _ =>
                   val calcRequest = createCalculationRequest(session)
                   calculationConnector.calculateSingle(calcRequest, link) map { response: CalculationResponse => {
@@ -91,10 +116,38 @@ class ResultsController @Inject()(authAction: AuthAction,
           sessionOpt: Option[GmpSession] =>
             sessionOpt match {
               case Some(session) => session match {
-                case _ if session.scon == "" => Future.successful(Ok(views.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/pension-details"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title"))))
-                case _ if session.memberDetails.nino == "" || session.memberDetails.firstForename == "" || session.memberDetails.surname == "" => Future.successful(Ok(views.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/member-details"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title"))))
-                case _ if session.scenario == "" => Future.successful(Ok(views.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/calculation-reason"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title"))))
-                case _ if !session.leaving.leaving.isDefined => Future.successful(Ok(views.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/left-scheme"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title"))))
+                case _ if session.scon == "" =>
+                  Future.successful(
+                    Ok(views.failure(
+                      Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/pension-details"),
+                      Messages("gmp.cannot_calculate.gmp"),
+                      Messages("gmp.session_missing.title")
+                    ))
+                  )
+                case _ if session.memberDetails.nino == "" || session.memberDetails.firstForename == "" || session.memberDetails.surname == "" =>
+                  Future.successful(
+                    Ok(views.failure(
+                      Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/member-details"),
+                      Messages("gmp.cannot_calculate.gmp"),
+                      Messages("gmp.session_missing.title")
+                    ))
+                  )
+                case _ if session.scenario == "" =>
+                  Future.successful(
+                    Ok(views.failure(
+                      Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/calculation-reason"),
+                      Messages("gmp.cannot_calculate.gmp"),
+                      Messages("gmp.session_missing.title")
+                    ))
+                  )
+                case _ if session.leaving.leaving.isEmpty =>
+                  Future.successful(
+                    Ok(views.failure(
+                      Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/left-scheme"),
+                      Messages("gmp.cannot_calculate.gmp"),
+                      Messages("gmp.session_missing.title")
+                    ))
+                  )
                 case _ =>
                   val calcRequest = createCalculationRequest(session)
                   calculationConnector.calculateSingle(calcRequest, link) map { response: CalculationResponse => {
@@ -106,7 +159,7 @@ class ResultsController @Inject()(authAction: AuthAction,
                     val contsAndEarningsResult = auditConnector.sendEvent(new ContributionsAndEarningsEvent(link, response.nino))
 
                     contsAndEarningsResult.failed.foreach({
-                      case e: Throwable => logger.error(s"[ResultsController][post] contsAndEarningsResult ${e.getMessage}", e)
+                      e: Throwable => logger.error(s"[ResultsController][post] contsAndEarningsResult ${e.getMessage}", e)
                     })
 
                     Ok(views.contributionsEarnings(response))
@@ -127,7 +180,7 @@ class ResultsController @Inject()(authAction: AuthAction,
       gmpSession.memberDetails.firstForename,
       gmpSession.scenario.toInt,
       gmpSession.revaluationDate match {
-        case Some(rDate: GmpDate) if (rDate.day.isDefined && rDate.month.isDefined && rDate.year.isDefined) =>
+        case Some(rDate: GmpDate) if rDate.day.isDefined && rDate.month.isDefined && rDate.year.isDefined =>
           Some(LocalDate.of(rDate.year.get.toInt, rDate.month.get.toInt, rDate.day.get.toInt))
         case _ => None
       }, gmpSession.rate match {
@@ -139,7 +192,7 @@ class ResultsController @Inject()(authAction: AuthAction,
       }, Some(1),
       gmpSession.equalise,
       gmpSession.leaving.leavingDate match {
-        case lDate: GmpDate if (lDate.day.isDefined && lDate.month.isDefined && lDate.year.isDefined) =>
+        case lDate: GmpDate if lDate.day.isDefined && lDate.month.isDefined && lDate.year.isDefined =>
           Some(LocalDate.of(lDate.year.get.toInt, lDate.month.get.toInt, lDate.day.get.toInt))
         case _ => None
       })
@@ -148,46 +201,50 @@ class ResultsController @Inject()(authAction: AuthAction,
 
   private def revalRateSubheader(response: CalculationResponse, leaving:Leaving): Option[String] = {
 
-    if(response.calculationPeriods.nonEmpty) {
+    if (response.calculationPeriods.nonEmpty) {
 
       response.calcType match {
         case 0 => {
-          if (response.calculationPeriods.length > 1)
+          if (response.calculationPeriods.length > 1) {
             Some(Messages("gmp.notrevalued.multi.subheader"))
-          else
+          } else {
             Some(Messages("gmp.notrevalued.subheader"))
+          }
         }
 
         case 1 => {
-          if (response.revaluationUnsuccessful)
+          if (response.revaluationUnsuccessful) {
             Some(Messages("gmp.notrevalued.subheader"))
-          else if (response.revaluationRate.isDefined) {
-            if (response.revaluationRate == Some("0"))
+          } else if (response.revaluationRate.isDefined) {
+            if (response.revaluationRate.contains("0")) {
               Some(Messages("gmp.reval_rate.subheader", Messages(s"gmp.revaluation_rate.type_${response.revaluationRate.get}")) + " <b class='bold'>(" + Messages(s"gmp.revaluation_rate.type_${response.calculationPeriods.head.revaluationRate}") + ")</b>")
-            else
+            } else {
               Some(Messages("gmp.reval_rate.subheader", Messages(s"gmp.revaluation_rate.type_${response.revaluationRate.get}")))
+            }
+          } else {
+            None
           }
-          else None
         }
 
         case 2 | 3 | 4 => {
           leaving.leaving match {
             case Some(Leaving.NO) => None
             case _ => {
-              if (response.revaluationRate.isDefined && response.revaluationRate == Some("0"))
+              if (response.revaluationRate.isDefined && response.revaluationRate.contains("0")) {
                 Some(Messages("gmp.chosen_rate.subheader", Messages(s"gmp.revaluation_rate.type_${response.revaluationRate.get}")) + " <b class='bold'>(" + Messages(s"gmp.revaluation_rate.type_${response.calculationPeriods.head.revaluationRate}") + ")</b>")
-              else if (response.revaluationRate.isDefined)
+              } else if (response.revaluationRate.isDefined) {
                 Some(Messages("gmp.chosen_rate.subheader", Messages(s"gmp.revaluation_rate.type_${response.calculationPeriods.head.revaluationRate}")))
-              else
+              } else {
                 Some(Messages("gmp.held_rate.subheader", Messages(s"gmp.revaluation_rate.type_${response.calculationPeriods.head.revaluationRate}")))
+              }
             }
           }
         }
 
       }
-    }
-    else
+    } else {
       None
+    }
   }
 
   private def survivorSubheader(session: GmpSession, response: CalculationResponse): Option[String] = {
@@ -198,18 +255,19 @@ class ResultsController @Inject()(authAction: AuthAction,
           session.leaving.leaving match {
             case Some(Leaving.NO) => None
             case _ => {
-              if (response.calculationPeriods.head.inflationProofBeyondDod == Some(0) && response.dodInSameTaxYearAsRevaluationDate)
+              if (response.calculationPeriods.head.inflationProofBeyondDod.contains(0) && response.dodInSameTaxYearAsRevaluationDate) {
                 Some(Messages("gmp.no_inflation.subheader"))
-              else
+              } else {
                 None
+              }
             }
           }
         }
         case _ => None
       }
-    }
-    else
+    } else {
       None
+    }
   }
 
 }

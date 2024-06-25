@@ -20,7 +20,9 @@ import com.google.inject.{Inject, Singleton}
 import config.{ApplicationConfig, GmpContext, GmpSessionCache}
 import controllers.auth.AuthAction
 import forms.InflationProofForm
+import models.InflationProof
 import play.api.Logging
+import play.api.data.Form
 import play.api.mvc.MessagesControllerComponents
 import services.SessionService
 import uk.gov.hmrc.auth.core.AuthConnector
@@ -42,8 +44,7 @@ class InflationProofController @Inject()( authAction: AuthAction,
                                         ) extends GmpPageFlow(authConnector,sessionService,config,messagesControllerComponents,ac) with Logging{
 
 
-  lazy val inflationProofForm=ipf.inflationProofForm(1978,2046)
-
+  lazy val inflationProofForm: Form[InflationProof] = ipf.inflationProofForm(1978,2046)
 
   def get = authAction.async {
       implicit request => {
@@ -55,7 +56,7 @@ class InflationProofController @Inject()( authAction: AuthAction,
       implicit request => {
         logger.debug(s"[InflationProofController][POST] : ${request.body}")
 
-        inflationProofForm.bindFromRequest.fold(
+        inflationProofForm.bindFromRequest().fold(
           formWithErrors => {
             Future.successful(BadRequest(views.inflationProof(formWithErrors)))
           },

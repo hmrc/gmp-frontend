@@ -42,12 +42,12 @@ class MemberDetailsControllerSpec extends PlaySpec with GuiceOneServerPerSuite w
   val mockAuthConnector = mock[AuthConnector]
   val mockSessionService = mock[SessionService]
   val mockAuthAction = mock[AuthAction]
-  implicit lazy val mcc = app.injector.instanceOf[MessagesControllerComponents]
-  implicit val ec = app.injector.instanceOf[ExecutionContext]
-  implicit val messagesAPI=app.injector.instanceOf[MessagesApi]
-  implicit val messagesProvider=MessagesImpl(Lang("en"), messagesAPI)
-  implicit val ac=app.injector.instanceOf[ApplicationConfig]
-  implicit val gmpSessionCache=app.injector.instanceOf[GmpSessionCache]
+  implicit val mcc: MessagesControllerComponents = app.injector.instanceOf[MessagesControllerComponents]
+  implicit val ec: ExecutionContext = app.injector.instanceOf[ExecutionContext]
+  implicit val messagesAPI: MessagesApi = app.injector.instanceOf[MessagesApi]
+  implicit val messagesProvider: MessagesImpl = MessagesImpl(Lang("en"), messagesAPI)
+  implicit val ac: ApplicationConfig = app.injector.instanceOf[ApplicationConfig]
+  implicit val gmpSessionCache: GmpSessionCache = app.injector.instanceOf[GmpSessionCache]
   lazy val form = new MemberDetailsForm(mcc)
   lazy val views = app.injector.instanceOf[Views]
 

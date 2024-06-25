@@ -50,7 +50,7 @@ class PensionDetailsController @Inject()(authAction: AuthAction,
 
   def get = authAction.async {
       implicit request => {
-        sessionService.fetchPensionDetails.map {
+        sessionService.fetchPensionDetails().map {
           case Some(scon) => Ok(views.pensionDetails(pensionDetailsForm.fill(PensionDetailsScon(scon))))
           case _ => Ok(views.pensionDetails(pensionDetailsForm))
         }

@@ -99,7 +99,9 @@ object DateValidate extends Validator {
       val format = new SimpleDateFormat(dateFormat)
       val date = format.parse(value)
       date.compareTo(gmpStart) >= 0
-    } else true
+    } else {
+      true
+    }
   }
 
   def isOnOrBeforeGMPEnd(value: String): Boolean = {
@@ -107,9 +109,10 @@ object DateValidate extends Validator {
       val format = new SimpleDateFormat(dateFormat)
       val date = format.parse(value)
       date.compareTo(gmpEnd) <= 0
-    } else true
+    } else {
+      true
+    }
   }
-
 
 }
 

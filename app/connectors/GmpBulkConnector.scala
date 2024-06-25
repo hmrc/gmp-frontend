@@ -60,7 +60,7 @@ class GmpBulkConnector @Inject()(environment: Environment,
         large_file.statusCode
 
       case e: Throwable => logger.error(s"[GmpBulkConnector][sendBulkRequest] ${e.getMessage}", e)
-        500
+        play.api.http.Status.INTERNAL_SERVER_ERROR
     }
   }
 
@@ -77,9 +77,10 @@ class GmpBulkConnector @Inject()(environment: Environment,
       case response => logger.debug(s"[GmpBulkConnector][getPreviousBulkRequests][response] : $response")
     }
 
-    result.failed.foreach( {
+    result.failed.foreach {
       case e: Exception => logger.error(s"[GmpBulkConnector][getPreviousBulkRequests] ${e.getMessage}", e)
-    })
+      case t: Throwable => logger.error(s"[GmpBulkConnector][getPreviousBulkRequests] ${t.getMessage}", t)
+    }
     // $COVERAGE-ON$
 
     result
@@ -96,13 +97,14 @@ class GmpBulkConnector @Inject()(environment: Environment,
     logger.debug(s"[GmpBulkConnector][getBulkResultsSummary][GET] reference : $uploadReference")
 
     // $COVERAGE-OFF$
-    result onComplete  {
+    result onComplete {
       case response => logger.debug(s"[GmpBulkConnector][getBulkResultsSummary][response] : $response")
     }
 
-    result.failed.foreach({
+    result.failed.foreach {
       case e: Exception => logger.error(s"[GmpBulkConnector][getBulkResultsSummary] ${e.getMessage}", e)
-    })
+      case t: Throwable => logger.error(s"[GmpBulkConnector][getBulkResultsSummary] ${t.getMessage}", t)
+    }
     // $COVERAGE-ON$
 
     result
@@ -117,13 +119,14 @@ class GmpBulkConnector @Inject()(environment: Environment,
     logger.debug(s"[GmpBulkConnector][getResultsAsCsv][GET] reference : $uploadReference")
 
     // $COVERAGE-OFF$
-    result onComplete  {
+    result onComplete {
       case response => logger.debug(s"[GmpBulkConnector][getResultsAsCsv][response] : $response")
     }
 
-    result.failed.foreach({
+    result.failed.foreach {
       case e: Exception => logger.error(s"[GmpBulkConnector][getResultsAsCsv] ${e.getMessage}", e)
-    })
+      case t: Throwable => logger.error(s"[GmpBulkConnector][getResultsAsCsv] ${t.getMessage}", t)
+    }
     // $COVERAGE-ON$
 
     result.map {
@@ -140,13 +143,14 @@ class GmpBulkConnector @Inject()(environment: Environment,
     logger.debug(s"[GmpBulkConnector][getContributionsAndEarningsAsCsv][GET] reference : $uploadReference")
 
     // $COVERAGE-OFF$
-    result onComplete  {
+    result onComplete {
       case response => logger.debug(s"[GmpBulkConnector][getContributionsAndEarningsAsCsv][response] : $response")
     }
 
-    result.failed.foreach({
+    result.failed.foreach {
       case e: Exception => logger.error(s"[GmpBulkConnector][getContributionsAndEarningsAsCsv] ${e.getMessage}", e)
-    })
+      case t: Throwable => logger.error(s"[GmpBulkConnector][getContributionsAndEarningsAsCsv] ${t.getMessage}", t)
+    }
     // $COVERAGE-ON$
 
     result.map {

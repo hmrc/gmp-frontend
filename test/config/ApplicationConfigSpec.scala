@@ -22,7 +22,7 @@ import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 
 class ApplicationConfigSpec extends PlaySpec with GuiceOneServerPerSuite{
 
-  implicit val ac=app.injector.instanceOf[ApplicationConfig]
+  implicit val ac: ApplicationConfig = app.injector.instanceOf[ApplicationConfig]
 
 
   "Application Config" must {

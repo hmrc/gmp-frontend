@@ -16,10 +16,10 @@
 
 package models
 
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 case class InflationProof(revaluationDate: GmpDate, revaluate: Option[String])
 
 object InflationProof {
-  implicit val formats = Json.format[InflationProof]
+  implicit val formats: OFormat[InflationProof] = Json.format[InflationProof]
 }

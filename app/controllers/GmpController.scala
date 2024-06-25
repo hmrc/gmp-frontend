@@ -62,14 +62,15 @@ class GmpPageFlow @Inject()(val authConnector: AuthConnector,
   val forwardNavigation: Map[String, GmpSession => Result] = Map(
     PageType.INFLATION_PROOF -> { (session: GmpSession) => Redirect(routes.ResultsController.get) },
     PageType.REVALUATION -> { (session: GmpSession) =>
-      if (session.leaving.leaving.isDefined && session.leaving.leaving.get.equals(Leaving.NO))
+      if (session.leaving.leaving.isDefined && session.leaving.leaving.get.equals(Leaving.NO)) {
         Redirect(controllers.routes.EqualiseController.get)
-      else if (session.leaving.leaving.isDefined && session.leaving.leaving.get.equals(Leaving.YES_BEFORE))
+      } else if (session.leaving.leaving.isDefined && session.leaving.leaving.get.equals(Leaving.YES_BEFORE)) {
         Redirect(controllers.routes.RevaluationRateController.get)
-      else if (sameTaxYear(session))
+      } else if (sameTaxYear(session)) {
         Redirect(routes.EqualiseController.get)
-      else
+      } else {
         Redirect(routes.RevaluationRateController.get)
+      }
     },
     PageType.EQUALISE -> { (session: GmpSession) => Redirect(routes.ResultsController.get) },
 
@@ -133,10 +134,11 @@ class GmpPageFlow @Inject()(val authConnector: AuthConnector,
       session.scenario match {
         case (CalculationType.REVALUATION) => {
 
-          if (sameTaxYear(session) || (session.leaving.leaving.isDefined && session.leaving.leaving.get.equals(Leaving.NO)))
+          if (sameTaxYear(session) || (session.leaving.leaving.isDefined && session.leaving.leaving.get.equals(Leaving.NO))) {
             Redirect(routes.RevaluationController.get)
-          else
+          } else {
             Redirect(routes.RevaluationRateController.get)
+          }
 
         }
         case (CalculationType.SPA | CalculationType.PAYABLE_AGE) =>

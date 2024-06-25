@@ -19,7 +19,7 @@ package utils
 import org.jsoup.nodes.{Attributes, Document, Element}
 import org.jsoup.select.Elements
 import org.scalatest.matchers.{MatchResult, Matcher}
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 
 trait JSoupMatchers {
 

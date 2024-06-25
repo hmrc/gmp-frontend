@@ -62,9 +62,10 @@ class GmpConnector @Inject()(environment: Environment,
       case response => logger.debug(s"[GmpConnector][calculateSingle][response] : $response")
     }
 
-    result.failed.foreach({
+    result.failed.foreach {
       case e: Exception => logger.error(s"[GmpConnector][calculateSingle] ${e.getMessage}", e)
-    })
+      case t: Throwable => logger.error(s"[GmpConnector][calculateSingle] ${t.getMessage}", t)
+    }
     // $COVERAGE-ON$
 
     result
@@ -89,9 +90,10 @@ class GmpConnector @Inject()(environment: Environment,
       case response => logger.debug(s"[GmpConnector][validateScon][response] : $response")
     }
 
-    result.failed.foreach({
+    result.failed.foreach {
       case e: Exception => logger.error(s"[GmpConnector][validateScon] ${e.getMessage}", e)
-    })
+      case t: Throwable => logger.error(s"[GmpConnector][validateScon] ${t.getMessage}", t)
+    }
     // $COVERAGE-ON$
 
     result

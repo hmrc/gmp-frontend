@@ -46,15 +46,35 @@ class RevaluationRateController @Inject()( authAction: AuthAction,
                                          ) extends GmpPageFlow(authConnector,sessionService,config,messagesControllerComponents,ac) with Logging{
 
 
-  lazy val revaluationRateForm=rrf.revaluationRateForm
+  lazy val revaluationRateForm = rrf.revaluationRateForm
 
   def get = authAction.async {
       implicit request => sessionService.fetchGmpSession() map {
         case Some(session) => session match {
-          case _ if session.scon == "" => Ok(views.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/pension-details"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title")))
-          case _ if session.memberDetails.nino == "" || session.memberDetails.firstForename == "" || session.memberDetails.surname == "" => Ok(views.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/member-details"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title")))
-          case _ if session.scenario == "" => Ok(views.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/calculation-reason"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title")))
-          case _ if !session.leaving.leaving.isDefined => Ok(views.failure(Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/left-scheme"), Messages("gmp.cannot_calculate.gmp"), Messages("gmp.session_missing.title")))
+          case _ if session.scon == "" =>
+            Ok(views.failure(
+              Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/pension-details"),
+              Messages("gmp.cannot_calculate.gmp"),
+              Messages("gmp.session_missing.title")
+            ))
+          case _ if session.memberDetails.nino == "" || session.memberDetails.firstForename == "" || session.memberDetails.surname == "" =>
+            Ok(views.failure(
+              Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/member-details"),
+              Messages("gmp.cannot_calculate.gmp"),
+              Messages("gmp.session_missing.title")
+            ))
+          case _ if session.scenario == "" =>
+            Ok(views.failure(
+              Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/calculation-reason"),
+              Messages("gmp.cannot_calculate.gmp"),
+              Messages("gmp.session_missing.title")
+            ))
+          case _ if session.leaving.leaving.isEmpty =>
+            Ok(views.failure(
+              Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/left-scheme"),
+              Messages("gmp.cannot_calculate.gmp"),
+              Messages("gmp.session_missing.title")
+            ))
           case _ => Ok(views.revaluationRate(revaluationRateForm.fill(RevaluationRate(session.rate)), session))
         }
         case _ => throw new RuntimeException
@@ -67,7 +87,7 @@ class RevaluationRateController @Inject()( authAction: AuthAction,
 
         logger.debug(s"[RevaluationRateController][post][POST] : ${request.body}")
 
-        revaluationRateForm.bindFromRequest.fold(
+        revaluationRateForm.bindFromRequest().fold(
           formWithErrors => {
             sessionService.fetchGmpSession() map {
               case Some(x) => BadRequest(views.revaluationRate(formWithErrors, x))

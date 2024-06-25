@@ -51,20 +51,19 @@ class BulkRequestReceivedControllerSpec extends PlaySpec with GuiceOneServerPerS
   val mockGmpBulkConnector = mock[GmpBulkConnector]
   val mockAuthAction = mock[AuthAction]
 
-  implicit val hc = new HeaderCarrier(sessionId = Some(SessionId(s"session-${UUID.randomUUID}")))
-  implicit val mcc = app.injector.instanceOf[MessagesControllerComponents]
-  implicit val ec = app.injector.instanceOf[ExecutionContext]
-  implicit val messagesApi = app.injector.instanceOf[MessagesApi]
-  implicit val messagesProvider=MessagesImpl(Lang("en"), messagesApi)
-  implicit val ac=app.injector.instanceOf[ApplicationConfig]
-  implicit val sc=app.injector.instanceOf[GmpSessionCache]
+  implicit val hc: HeaderCarrier = new HeaderCarrier(sessionId = Some(SessionId(s"session-${UUID.randomUUID}")))
+  implicit val mcc: MessagesControllerComponents = app.injector.instanceOf[MessagesControllerComponents]
+  implicit val ec: ExecutionContext = app.injector.instanceOf[ExecutionContext]
+  implicit val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
+  implicit val messagesProvider: MessagesImpl = MessagesImpl(Lang("en"), messagesApi)
+  implicit val ac: ApplicationConfig = app.injector.instanceOf[ApplicationConfig]
+  implicit val sc: GmpSessionCache = app.injector.instanceOf[GmpSessionCache]
   lazy val views = app.injector.instanceOf[Views]
 
   val callBackData = UploadedSuccessfully("ref1", "name1", "download1")
   val gmpBulkSession = GmpBulkSession(Some(callBackData), Some(EmailAddress("somebody@somewhere.com")), Some("reference"))
 
   val calcLine1 = BulkCalculationRequestLine(1, Some(CalculationRequestLine("S1301234T", RandomNino.generate, "Isambard", "Brunell", Some("IB"), Some(1), Some("2010-02-02"), Some("2010-01-01"), Some(1), 0)),None, None)
-
 
   val inputLine1 = lineListFromCalculationRequestLine(calcLine1)
   val bulkRequest1 = BulkCalculationRequest("1", "bill@bixby.com", "uploadRef1", List(calcLine1), "userid", LocalDateTime.now() )
@@ -180,6 +179,7 @@ class BulkRequestReceivedControllerSpec extends PlaySpec with GuiceOneServerPerS
         case x: String => x + ","
         case x: Int => x.toString + ","
         case x: Boolean => x.toString + ","
+        case _ => throw new Exception("Item type not handled by bulk calculation request")
       }
     }
     {

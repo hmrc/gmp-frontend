@@ -26,8 +26,8 @@ import views.helpers.GmpDateFormatter._
 
 class CalculationResponseSpec extends PlaySpec with MockitoSugar with GuiceOneServerPerSuite {
 
-  implicit val messagesAPI=app.injector.instanceOf[MessagesApi]
-  implicit val messagesProvider=MessagesImpl(Lang("en"), messagesAPI)
+  implicit val messagesAPI: MessagesApi = app.injector.instanceOf[MessagesApi]
+  implicit val messagesProvider: MessagesImpl = MessagesImpl(Lang("en"), messagesAPI)
 
   val messages = messagesProvider.messages
 

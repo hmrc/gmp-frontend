@@ -16,12 +16,12 @@
 
 package models
 
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 case class Leaving(leavingDate: GmpDate, leaving: Option[String])
 
 object Leaving {
-  implicit val formats = Json.format[Leaving]
+  implicit val formats: OFormat[Leaving] = Json.format[Leaving]
   val YES_BEFORE = "yes-before"
   val YES_AFTER = "yes-after"
   val NO = "no"

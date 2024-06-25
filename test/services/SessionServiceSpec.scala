@@ -28,6 +28,7 @@ import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 import org.scalatestplus.play.PlaySpec
 import play.api.libs.json._
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import uk.gov.hmrc.emailaddress.EmailAddress
 import uk.gov.hmrc.http.HeaderCarrier
@@ -35,11 +36,11 @@ import uk.gov.hmrc.http.cache.client.CacheMap
 
 import scala.concurrent.duration._
 import scala.language.postfixOps
-import scala.concurrent.{Await, Future}
+import scala.concurrent.{Await, ExecutionContext, Future}
 
 class SessionServiceSpec extends PlaySpec with GuiceOneServerPerSuite with ScalaFutures with MockitoSugar {
 
-  implicit val ec: scala.concurrent.ExecutionContext = scala.concurrent.ExecutionContext.global
+  implicit val ec: ExecutionContext = scala.concurrent.ExecutionContext.global
 
   val memberDetails = MemberDetails(RandomNino.generate, "John", "Johnson")
   val scon = "S3123456A"
@@ -54,7 +55,7 @@ class SessionServiceSpec extends PlaySpec with GuiceOneServerPerSuite with Scala
 
   object TestSessionService extends SessionService(metrics, mockSessionCache)
 
-  implicit val request = FakeRequest()
+  implicit val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
   val hc = HeaderCarrier()
 
   "Session service" must {

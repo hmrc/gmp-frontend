@@ -56,7 +56,7 @@ class MemberDetailsController @Inject()(authAction: AuthAction,
 
       logger.debug(s"[MemberDetailsController][POST] : ${request.body}")
 
-      form.bindFromRequest.fold(
+      form.bindFromRequest().fold(
         formWithErrors => {
           Future.successful(BadRequest(views.memberDetails(formWithErrors)))
         },

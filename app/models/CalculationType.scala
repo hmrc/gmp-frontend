@@ -16,12 +16,12 @@
 
 package models
 
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 case class CalculationType(calcType: Option[String])
 
-object CalculationType{
-  implicit val format = Json.format[CalculationType]
+object CalculationType {
+  implicit val format: OFormat[CalculationType] = Json.format[CalculationType]
   val DOL = "0"
   val REVALUATION = "1"
   val PAYABLE_AGE = "2"

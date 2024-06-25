@@ -24,9 +24,10 @@ import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl}
 import play.api.libs.json.Json
 import play.api.mvc.MessagesControllerComponents
 
-class inflationProofFormSpec extends PlaySpec with GuiceOneAppPerSuite {
-  implicit lazy val messagesAPI=app.injector.instanceOf[MessagesApi]
-  implicit lazy val messagesProvider=MessagesImpl(Lang("en"), messagesAPI)
+class InflationProofFormSpec extends PlaySpec with GuiceOneAppPerSuite {
+
+  implicit lazy val messagesAPI: MessagesApi = app.injector.instanceOf[MessagesApi]
+  implicit lazy val messagesProvider: MessagesImpl = MessagesImpl(Lang("en"), messagesAPI)
   lazy val mcc = app.injector.instanceOf[MessagesControllerComponents]
   lazy val inflationProofForm = new InflationProofForm(mcc).inflationProofForm(1978,2046)
 

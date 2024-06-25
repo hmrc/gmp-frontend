@@ -17,47 +17,34 @@
 package models
 
 import java.time.LocalDate
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 import java.time.format.DateTimeFormatter
 
 case class GmpDate(day: Option[String], month: Option[String], year: Option[String]) {
 
   def getAsLocalDate: Option[LocalDate] = {
-
-    if (day.isDefined && month.isDefined && year.isDefined)
-      Some( LocalDate.of(year.get.toInt, month.get.toInt, day.get.toInt))
-    else
-      None
-
+    (year, month, day) match {
+      case (Some(y), Some(m), Some(d)) => Some(LocalDate.of(y.toInt, m.toInt, d.toInt))
+      case _ => None
+    }
   }
 
   def isOnOrAfter06042016: Boolean = {
-    if (getAsLocalDate.isDefined) {
+    getAsLocalDate.exists(date => {
       val thatDate = LocalDate.of(2016, 4, 6)
-      getAsLocalDate.get.isAfter(thatDate) || getAsLocalDate.get.isEqual(thatDate)
-    }
-    else
-      false
+      date.isAfter(thatDate) || date.isEqual(thatDate)
+    })
   }
 
   def isOnOrAfter05041978: Boolean = {
-    if (getAsLocalDate.isDefined) {
+    getAsLocalDate.exists(date => {
       val thatDate = LocalDate.of(1978, 4, 5)
-      getAsLocalDate.get.isAfter(thatDate) || getAsLocalDate.get.isEqual(thatDate)
-    }
-    else
-      false
+      date.isAfter(thatDate) || date.isEqual(thatDate)
+    })
   }
 
-  def isBefore05042046: Boolean = {
-    if (getAsLocalDate.isDefined) {
-      val thatDate = LocalDate.of(2046, 4, 5)
-      getAsLocalDate.get.isBefore(thatDate)
-    }
-    else
-      false
-  }
+  def isBefore05042046: Boolean = getAsLocalDate.exists(_.isBefore(LocalDate.of(2046, 4, 5)))
 
   def getAsText: String = {
     getAsLocalDate match {
@@ -66,17 +53,15 @@ case class GmpDate(day: Option[String], month: Option[String], year: Option[Stri
     }
   }
 
-  def isBefore(date2: GmpDate): Boolean = {
-    if (getAsLocalDate.isDefined && date2.getAsLocalDate.isDefined) {
-      getAsLocalDate.get.isBefore(date2.getAsLocalDate.get)
-    }
-    else{
-      false
+  def isBefore(otherDate: GmpDate): Boolean = {
+    (getAsLocalDate, otherDate.getAsLocalDate) match {
+      case (Some(date), Some(otherDate)) => date.isBefore(otherDate)
+      case _ => false
     }
   }
 }
 
 object GmpDate {
   val emptyDate = GmpDate(None, None, None)
-  implicit val formats = Json.format[GmpDate]
+  implicit val formats: OFormat[GmpDate] = Json.format[GmpDate]
 }

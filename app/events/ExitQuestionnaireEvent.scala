@@ -18,7 +18,14 @@ package events
 
 import uk.gov.hmrc.http.HeaderCarrier
 
-class ExitQuestionnaireEvent (serviceDifficulty:String, serviceFeel: String, comments: String, fullName: String, email: String, phoneNumber: String)(implicit hc: HeaderCarrier)
+class ExitQuestionnaireEvent(
+                              serviceDifficulty: String,
+                              serviceFeel: String,
+                              comments: String,
+                              fullName: String,
+                              email: String,
+                              phoneNumber: String
+                            )(implicit hc: HeaderCarrier)
   extends GmpBusinessEvent("GMP-Exit Questionnaire",
     Map(
       "serviceDifficulty" -> serviceDifficulty,

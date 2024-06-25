@@ -22,25 +22,25 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 import org.scalatestplus.play.PlaySpec
-import play.api.i18n.{Messages, MessagesApi, MessagesImpl}
-import play.api.mvc.MessagesControllerComponents
+import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl}
+import play.api.mvc.{AnyContentAsEmpty, MessagesControllerComponents}
 import play.api.test.FakeRequest
 import play.twirl.api.Html
 
 trait GmpViewSpec extends PlaySpec with JSoupMatchers with GuiceOneServerPerSuite {
 
-  implicit lazy val messagesControllerComponents = app.injector.instanceOf[MessagesControllerComponents].langs.availables.head
-  implicit val messagesApi =  app.injector.instanceOf[MessagesApi]
+  implicit lazy val messagesControllerComponents: Lang = app.injector.instanceOf[MessagesControllerComponents].langs.availables.head
+  implicit val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
   implicit lazy val messages: Messages = MessagesImpl(messagesControllerComponents, messagesApi)
 
-  implicit val applicationConfig=app.injector.instanceOf[ApplicationConfig]
+  implicit val applicationConfig: ApplicationConfig = app.injector.instanceOf[ApplicationConfig]
 
   override def haveBackLink = new CssSelector("a[id='back-link'], a[id='js-back-link']")
 
   private val backLink = new CssSelector("a[class=govuk-back-link]")
 
-  implicit val request = FakeRequest()
-  implicit val context = FakeGmpContext
+  implicit val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
+  implicit val context: FakeGmpContext.type = FakeGmpContext
 
   def view: Html
   def doc: Document = Jsoup.parse(view.toString())

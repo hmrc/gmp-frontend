@@ -16,7 +16,7 @@
 
 package models
 
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 case class ExitQuestionnaire (serviceDifficulty: Option[String],
                               serviceFeel: Option[String],
@@ -38,5 +38,5 @@ object ExitQuestionnaire {
   val DIFFICULT = "difficult"
   val VERY_DIFFICULT = "very_difficult"
 
-  implicit val formats = Json.format[ExitQuestionnaire]
+  implicit val formats: OFormat[ExitQuestionnaire] = Json.format[ExitQuestionnaire]
 }

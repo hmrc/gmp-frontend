@@ -34,7 +34,7 @@ class MoreBulkResultsSpec extends GmpViewSpec {
   "MoreBulkResults page" must {
     behave like pageWithTitle(messages("gmp.more_bulk_results.header"))
     behave like pageWithHeader(messages("gmp.more_bulk_results.header"))
-    behave like pageWithBackLink
+    behave like pageWithBackLink()
 
     "display recent calculations table" in {
       doc must haveThWithText(messages("gmp.th.reference"))

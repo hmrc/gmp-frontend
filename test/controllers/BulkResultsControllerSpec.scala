@@ -42,19 +42,17 @@ class BulkResultsControllerSpec extends PlaySpec with GuiceOneServerPerSuite wit
   val mockAuthConnector = mock[AuthConnector]
   val mockGmpBulkConnector = mock[GmpBulkConnector]
 
-  implicit val hc = new HeaderCarrier(sessionId = Some(SessionId(s"session-${UUID.randomUUID}")))
-  implicit val mcc = app.injector.instanceOf[MessagesControllerComponents]
-  implicit val ec = app.injector.instanceOf[ExecutionContext]
-  implicit val messagesAPI=app.injector.instanceOf[MessagesApi]
-  implicit val messagesProvider=MessagesImpl(Lang("en"), messagesAPI)
+  implicit val hc: HeaderCarrier = new HeaderCarrier(sessionId = Some(SessionId(s"session-${UUID.randomUUID}")))
+  implicit val mcc: MessagesControllerComponents = app.injector.instanceOf[MessagesControllerComponents]
+  implicit val ec: ExecutionContext = app.injector.instanceOf[ExecutionContext]
+  implicit val messagesAPI: MessagesApi = app.injector.instanceOf[MessagesApi]
+  implicit val messagesProvider: MessagesImpl = MessagesImpl(Lang("en"), messagesAPI)
 
-  implicit val ac=app.injector.instanceOf[ApplicationConfig]
-  implicit val ss=app.injector.instanceOf[SessionService]
+  implicit val ac: ApplicationConfig = app.injector.instanceOf[ApplicationConfig]
+  implicit val ss: SessionService = app.injector.instanceOf[SessionService]
   lazy val views = app.injector.instanceOf[Views]
 
-
-  object TestBulkResultsController extends BulkResultsController(FakeAuthAction,mockAuthConnector, mockGmpBulkConnector,mcc,ac,ss,FakeGmpContext,ec,views) {
-  }
+  object TestBulkResultsController extends BulkResultsController(FakeAuthAction,mockAuthConnector, mockGmpBulkConnector,mcc,ac,ss,FakeGmpContext,ec,views) {}
 
   "Bulk Results Controller" must {
     val comingFromDashboard = 0

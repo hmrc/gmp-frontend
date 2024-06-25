@@ -41,8 +41,8 @@ class SessionCacheController @Inject()(authAction: AuthAction,
 
         logger.debug(s"[SessionCacheController][newCalculation][GET] : $request")
 
-        sessionService.resetGmpSessionWithScon map {
-          case Some(x) => Redirect(controllers.routes.PensionDetailsController.get)
+        sessionService.resetGmpSessionWithScon() map {
+          case Some(_) => Redirect(controllers.routes.PensionDetailsController.get)
           case None => throw new RuntimeException
         }
       }
@@ -54,7 +54,7 @@ class SessionCacheController @Inject()(authAction: AuthAction,
         logger.debug(s"[SessionCacheController][newBulkCalculation][GET] : $request")
 
         sessionService.resetGmpBulkSession() map {
-          case Some(x) => Redirect(controllers.routes.FileUploadController.get)
+          case Some(_) => Redirect(controllers.routes.FileUploadController.get)
           case None => throw new RuntimeException
         }
       }

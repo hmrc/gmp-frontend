@@ -17,10 +17,10 @@
 package models
 
 import models.upscan.UploadStatus
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 case class GmpBulkSession(callBackData: Option[UploadStatus], emailAddress: Option[String], reference: Option[String])
 
 object GmpBulkSession {
-  implicit val formats = Json.format[GmpBulkSession]
+  implicit val formats: OFormat[GmpBulkSession] = Json.format[GmpBulkSession]
 }
