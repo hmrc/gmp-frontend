@@ -24,6 +24,20 @@ Requirements
 This service is written in [Scala] and [Play], so needs at least a [JRE] to run.
 
 
+Run the application locally
+---------------------------
+
+Use service manager to run all the required services:
+
+```
+sm2 --start GMP_ALL
+```
+
+To run the application execute
+```
+sbt run -Dapplication.router=testOnlyDoNotUseInAppConf.Routes
+```
+
 Authentication
 ------------
 
