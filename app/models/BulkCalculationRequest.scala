@@ -40,10 +40,10 @@ case class CalculationRequestLine (scon: String,
     List(
       scon, nino, firstForename, surname,
       memberReference.getOrElse(""),
-      calctype.map(ct => ct.toString).getOrElse(""),
+      calctype.getOrElse(""),
       terminationDate.getOrElse(""),
       revaluationDate.getOrElse(""),
-      revaluationRate.map(rr => rr.toString).getOrElse(""),
+      revaluationRate.getOrElse(""),
       dc
     ).mkString(",")
   }
