@@ -16,7 +16,6 @@
 
 package controllers
 
-import java.util.UUID
 import config.ApplicationConfig
 import connectors.GmpBulkConnector
 import controllers.auth.FakeAuthAction
@@ -32,9 +31,10 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.SessionService
 import uk.gov.hmrc.auth.core.AuthConnector
-import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, NotFoundException, SessionId, Upstream4xxResponse, UpstreamErrorResponse}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, SessionId, UpstreamErrorResponse}
 import views.Views
 
+import java.util.UUID
 import scala.concurrent.{ExecutionContext, Future}
 
 class BulkResultsControllerSpec extends PlaySpec with GuiceOneServerPerSuite with MockitoSugar {

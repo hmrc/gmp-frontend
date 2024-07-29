@@ -20,7 +20,6 @@ import config.{ApplicationConfig, GmpSessionCache}
 import connectors.GmpBulkConnector
 import controllers.auth.{AuthAction, FakeAuthAction}
 import models._
-import java.time.LocalDateTime
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito._
 import org.scalatestplus.mockito.MockitoSugar
@@ -33,9 +32,10 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.SessionService
 import uk.gov.hmrc.auth.core.AuthConnector
-import uk.gov.hmrc.http.{Upstream5xxResponse, UpstreamErrorResponse}
+import uk.gov.hmrc.http.UpstreamErrorResponse
 import views.Views
 
+import java.time.LocalDateTime
 import scala.concurrent.{ExecutionContext, Future}
 
 class DashboardControllerSpec extends PlaySpec with GuiceOneServerPerSuite with MockitoSugar {
