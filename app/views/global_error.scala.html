@@ -28,7 +28,7 @@
         hmrcTimeoutDialogHelper: HmrcTimeoutDialogHelper
 )
 
-@(pageTitle: String, heading: String, message: String)(implicit request: Request[_], messages: Messages)
+@(pageTitle: String, heading: String, message: String)(implicit request: RequestHeader, messages: Messages)
 @head = {
     <meta name="format-detection" content="telephone=no"/>
     @hmrcTimeoutDialogHelper(signOutUrl = routes.ApplicationController.signout.url)

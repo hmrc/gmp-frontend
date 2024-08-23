@@ -23,12 +23,13 @@ import play.api.{Configuration, Environment}
 import uk.gov.hmrc.http.cache.client.SessionCache
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import uk.gov.hmrc.http.HttpClient
+import uk.gov.hmrc.http.client.HttpClientV2
 
 @Singleton
 class GmpSessionCache @Inject()(@Named("appName") appName: String,
                                 environment: Environment,
                                 configuration: Configuration,
-                                val http: HttpClient,
+                                val httpClientV2: HttpClientV2,
                                val serviceConfig: ServicesConfig)  extends SessionCache{
 
 

@@ -40,7 +40,7 @@
         customHead: Option[Html] = None,
         hasErrors: Boolean = false,
         backLink: Option[BackLinkParams] = None
-)(mainContent: Html = HtmlFormat.empty)(implicit request: Request[_], messages: Messages)
+)(mainContent: Html = HtmlFormat.empty)(implicit request: RequestHeader, messages: Messages)
 
 @head = {
     <meta name="format-detection" content="telephone=no"/>
