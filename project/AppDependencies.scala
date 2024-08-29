@@ -4,16 +4,16 @@ import sbt._
 object AppDependencies {
 
   private val playSuffix = "-play-30"
-  private val bootstrapVersion = "8.4.0"
+  private val bootstrapVersion = "9.3.0"
 
   val compile: Seq[ModuleID] = Seq(
     ws,
-    "uk.gov.hmrc"                                %% s"bootstrap-frontend$playSuffix"  % "8.4.0",
-    "uk.gov.hmrc"                                %% s"domain$playSuffix"              % "9.0.0",
-    "uk.gov.hmrc"                                %% s"http-caching-client$playSuffix" % "11.2.0",
-    "uk.gov.hmrc"                                %% s"play-partials$playSuffix"       % "9.1.0",
-    "uk.gov.hmrc"                                %% s"play-frontend-hmrc$playSuffix"  % "8.5.0",
-    "uk.gov.hmrc"                                %% "tax-year"                        % "4.0.0",
+    "uk.gov.hmrc"                                %% s"bootstrap-frontend$playSuffix"  % bootstrapVersion,
+    "uk.gov.hmrc"                                %% s"domain$playSuffix"              % "10.0.0",
+    "uk.gov.hmrc"                                %% s"http-caching-client$playSuffix" % "12.1.0",
+    "uk.gov.hmrc"                                %% s"play-partials$playSuffix"       % "10.0.0",
+    "uk.gov.hmrc"                                %% s"play-frontend-hmrc$playSuffix"  % "10.5.0",
+    "uk.gov.hmrc"                                %% "tax-year"                        % "5.0.0",
     "uk.gov.hmrc"                                %% "emailaddress"                    % "3.8.0",
     "org.typelevel"                              %% "cats-core"                       % "2.10.0",
     "com.fasterxml.jackson.module"               %% "jackson-module-scala"            % "2.16.1",

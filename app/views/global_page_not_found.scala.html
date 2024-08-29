@@ -23,7 +23,7 @@
     signOutEnabled: Boolean = true,
     getHelpForm: Html  = HtmlFormat.empty,
     supportLinkEnabled: Boolean = true
-)(implicit messages: Messages, request: Request[_], applicationConfig:config.ApplicationConfig)
+)(implicit messages: Messages, request: RequestHeader, applicationConfig:config.ApplicationConfig)
 
 @title = @{messages("gmp.page_not_found.tabtitle")}
 

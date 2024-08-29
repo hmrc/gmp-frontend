@@ -26,6 +26,8 @@ import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import uk.gov.hmrc.http.HttpClient
+import uk.gov.hmrc.http.client.HttpClientV2
+
 import scala.concurrent.{ExecutionContext, Future}
 
 case class AuthenticatedRequest[A](linkId: String, request:Request[A]) extends WrappedRequest[A](request)
@@ -72,16 +74,4 @@ class AuthAction @Inject()(override val authConnector: AuthConnector,
 
     case ex: InsufficientEnrolments => Results.Redirect(controllers.routes.ApplicationController.unauthorised.url)
   }
-}
-
-
-@Singleton
-class GmpAuthConnector @Inject()(val http: HttpClient,
-                                 environment: Environment,
-                                 val runModeConfiguration: Configuration,
-                                servicesConfig: ServicesConfig) extends PlayAuthConnector {
-
-  val serviceUrl: String = servicesConfig.baseUrl("auth")
-
-  protected def mode: Mode = environment.mode
 }
