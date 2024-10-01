@@ -4,7 +4,7 @@ import sbt._
 object AppDependencies {
 
   private val playSuffix = "-play-30"
-  private val bootstrapVersion = "9.3.0"
+  private val bootstrapVersion = "9.5.0"
 
   val compile: Seq[ModuleID] = Seq(
     ws,
@@ -12,7 +12,7 @@ object AppDependencies {
     "uk.gov.hmrc"                                %% s"domain$playSuffix"              % "10.0.0",
     "uk.gov.hmrc"                                %% s"http-caching-client$playSuffix" % "12.1.0",
     "uk.gov.hmrc"                                %% s"play-partials$playSuffix"       % "10.0.0",
-    "uk.gov.hmrc"                                %% s"play-frontend-hmrc$playSuffix"  % "10.5.0",
+    "uk.gov.hmrc"                                %% s"play-frontend-hmrc$playSuffix"  % "10.12.0",
     "uk.gov.hmrc"                                %% "tax-year"                        % "5.0.0",
     "uk.gov.hmrc"                                %% "emailaddress"                    % "3.8.0",
     "org.typelevel"                              %% "cats-core"                       % "2.12.0",

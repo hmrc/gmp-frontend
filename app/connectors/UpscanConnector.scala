@@ -17,17 +17,20 @@
 package connectors
 
 import config.ApplicationConfig
+
 import javax.inject.{Inject, Named}
 import models.upscan.UpscanInitiateRequest
 import models.upscan.{PreparedUpload, UpscanInitiateResponse}
-import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.http.HttpClient
+import play.api.libs.json.Json
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, StringContextOps, UpstreamErrorResponse}
 import uk.gov.hmrc.http.HttpReads.Implicits._
+import uk.gov.hmrc.http.client.HttpClientV2
+
 import scala.concurrent.{ExecutionContext, Future}
 
 class UpscanConnector @Inject()(
                                  configuration: ApplicationConfig,
-                                 httpClient: HttpClient,
+                                 httpClient: HttpClientV2,
                                  @Named("appName") appName: String
                                )(implicit ec: ExecutionContext) {
 
@@ -35,10 +38,20 @@ class UpscanConnector @Inject()(
   private[connectors] val upscanInitiatePath: String = "/upscan/v2/initiate"
   private val upscanInitiateUrl: String = upscanInitiateHost + upscanInitiatePath
 
-  def getUpscanFormData(body: UpscanInitiateRequest)
-                       (implicit hc: HeaderCarrier): Future[UpscanInitiateResponse] = {
-    httpClient.POST[UpscanInitiateRequest, PreparedUpload](upscanInitiateUrl, body).map {
-      _.toUpscanInitiateResponse
+  def getUpscanFormData(body: UpscanInitiateRequest)(implicit hc: HeaderCarrier): Future[UpscanInitiateResponse] = {
+    httpClient.post(url"$upscanInitiateUrl")
+      .withBody(Json.toJson(body))
+      .execute[HttpResponse]
+      .flatMap { httpResponse =>
+        httpResponse.status match {
+          case status if status >= 200 && status < 300 =>
+            Future.successful(Json.parse(httpResponse.body).as[PreparedUpload].toUpscanInitiateResponse)
+          case _ =>
+            Future.failed(UpstreamErrorResponse(s"Error with status ${httpResponse.status}: ${httpResponse.body}", httpResponse.status))
+        }
+      } recover { case e: Throwable =>
+      throw UpstreamErrorResponse(e.getMessage, 500)
     }
   }
+
 }
