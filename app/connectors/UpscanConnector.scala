@@ -22,7 +22,7 @@ import javax.inject.{Inject, Named}
 import models.upscan.UpscanInitiateRequest
 import models.upscan.{PreparedUpload, UpscanInitiateResponse}
 import play.api.libs.json.Json
-import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, StringContextOps, UpstreamErrorResponse}
+import uk.gov.hmrc.http.{HeaderCarrier, StringContextOps}
 import uk.gov.hmrc.http.HttpReads.Implicits._
 import uk.gov.hmrc.http.client.HttpClientV2
 
@@ -41,17 +41,7 @@ class UpscanConnector @Inject()(
   def getUpscanFormData(body: UpscanInitiateRequest)(implicit hc: HeaderCarrier): Future[UpscanInitiateResponse] = {
     httpClient.post(url"$upscanInitiateUrl")
       .withBody(Json.toJson(body))
-      .execute[HttpResponse]
-      .flatMap { httpResponse =>
-        httpResponse.status match {
-          case status if status >= 200 && status < 300 =>
-            Future.successful(Json.parse(httpResponse.body).as[PreparedUpload].toUpscanInitiateResponse)
-          case _ =>
-            Future.failed(UpstreamErrorResponse(s"Error with status ${httpResponse.status}: ${httpResponse.body}", httpResponse.status))
-        }
-      } recover { case e: Throwable =>
-      throw UpstreamErrorResponse(e.getMessage, 500)
-    }
+      .execute[PreparedUpload]
+      .map(_.toUpscanInitiateResponse)
   }
-
 }
