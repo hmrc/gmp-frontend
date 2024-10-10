@@ -19,15 +19,15 @@ package connectors
 import com.google.inject.{Inject, Singleton}
 import play.api.Mode
 import play.api.{Configuration, Environment, Logging}
-import uk.gov.hmrc.http.{BadGatewayException, HeaderCarrier}
+import uk.gov.hmrc.http.{BadGatewayException, HeaderCarrier, HttpResponse, StringContextOps}
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import uk.gov.hmrc.http.HttpReads.Implicits.readRaw
 
 import scala.concurrent.{ExecutionContext, Future}
-import uk.gov.hmrc.http.HttpClient
+import uk.gov.hmrc.http.client.HttpClientV2
 
 @Singleton
-class ContactFrontendConnector @Inject()(http: HttpClient,
+class ContactFrontendConnector @Inject()(http: HttpClientV2,
                                          environment: Environment,
                                          val runModeConfiguration: Configuration,
                                          val servicesConfig: ServicesConfig)(implicit ec: ExecutionContext) extends Logging {
@@ -40,12 +40,13 @@ class ContactFrontendConnector @Inject()(http: HttpClient,
 
     val url = s"$serviceBase/problem_reports"
 
-    http.GET(url) map { r =>
-      r.body
-    } recover {
-      case e: BadGatewayException =>
-        logger.error(s"[ContactFrontendConnector] ${e.message}", e)
-        ""
-    }
+    http.get(url"$url")
+      .execute[HttpResponse]
+      .map(_.body)
+      .recover {
+        case e: BadGatewayException =>
+          logger.error(s"[ContactFrontendConnector] ${e.message}", e)
+          ""
+      }
   }
 }

@@ -20,11 +20,12 @@ import com.google.inject.{Inject, Singleton}
 import metrics.ApplicationMetrics
 import models._
 import play.api.Mode
+import play.api.libs.json.Json
 import play.api.{Configuration, Environment, Logging}
-import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.http.{HeaderCarrier, StringContextOps}
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
-import uk.gov.hmrc.http.HttpClient
 import uk.gov.hmrc.http.HttpReads.Implicits._
+import uk.gov.hmrc.http.client.HttpClientV2
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -32,9 +33,9 @@ import scala.concurrent.{ExecutionContext, Future}
 class GmpConnector @Inject()(environment: Environment,
                              val runModeConfiguration: Configuration,
                              metrics: ApplicationMetrics,
-                             httpPost: HttpClient,
-                             httpGet: HttpClient,
-                             httpPut: HttpClient,
+                             httpPost: HttpClientV2,
+                             httpGet: HttpClientV2,
+                             httpPut: HttpClientV2,
                              val servicesConfig: ServicesConfig)(implicit ec: ExecutionContext) extends Logging  {
 
    def mode: Mode = environment.mode
@@ -49,7 +50,9 @@ class GmpConnector @Inject()(environment: Environment,
     val calculateUri = s"$serviceURL$gmpLink/$baseURI"
 
     val timer = metrics.gmpConnectorTimer.time()
-    val result = httpPost.POST[CalculationRequest, CalculationResponse](calculateUri, calculationRequest)
+    val result = httpPost.post(url"$calculateUri")
+      .withBody(Json.toJson(calculationRequest))
+      .execute[CalculationResponse]
 
     logger.debug(s"[GmpConnector][calculateSingle][POST] : $calculationRequest")
 
@@ -79,7 +82,9 @@ class GmpConnector @Inject()(environment: Environment,
     val validateSconUri = s"$serviceURL$gmpLink/$baseURI"
 
     val timer = metrics.gmpConnectorTimer.time()
-    val result = httpPost.POST[ValidateSconRequest, ValidateSconResponse](validateSconUri, validateSconRequest)
+    val result = httpPost.post(url"$validateSconUri")
+      .withBody(Json.toJson(validateSconRequest))
+      .execute[ValidateSconResponse]
 
     logger.debug(s"[GmpConnector][validateScon][POST] $validateSconRequest")
 
