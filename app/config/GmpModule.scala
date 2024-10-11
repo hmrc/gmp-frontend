@@ -20,8 +20,8 @@ import play.api.{Configuration, Environment, Mode}
 import uk.gov.hmrc.auth.core.AuthConnector
 import com.google.inject.AbstractModule
 import uk.gov.hmrc.play.bootstrap.auth.DefaultAuthConnector
-import uk.gov.hmrc.play.bootstrap.http.DefaultHttpClient
-import uk.gov.hmrc.http.HttpClient
+import uk.gov.hmrc.play.bootstrap.http.HttpClientV2Provider
+import uk.gov.hmrc.http.client.HttpClientV2
 
 class GmpModule(environment: Environment,
                 configuration: Configuration) extends AbstractModule {
@@ -30,7 +30,7 @@ class GmpModule(environment: Environment,
   val runModeConfiguration: Configuration = configuration
 
   override def configure(): Unit = {
-    bind(classOf[HttpClient]).to(classOf[DefaultHttpClient])
+    bind(classOf[HttpClientV2]).toProvider(classOf[HttpClientV2Provider])
       bind(classOf[AuthConnector]).to(classOf[DefaultAuthConnector])
 
 

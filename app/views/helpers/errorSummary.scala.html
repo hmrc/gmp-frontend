@@ -28,7 +28,7 @@
                     error.args.nonEmpty match {
                         case true => {
                             if (error.key.nonEmpty) {
-                                error.key + (error.args.fold("") { _ + "." + _ })
+                                error.key + (error.args.foldLeft("")((acc, item) => s"$acc.$item"))
                             } else {
                                 error.args.head
                             }
