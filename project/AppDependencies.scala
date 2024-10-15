@@ -31,7 +31,6 @@ object AppDependencies {
     "uk.gov.hmrc"            %% s"bootstrap-test$playSuffix" % bootstrapVersion,
     "org.jsoup"              %  "jsoup"                      % "1.18.1",
     "uk.gov.hmrc.mongo"      %% s"hmrc-mongo-test$playSuffix" % hmrcMongoVersion
-
   ).map(_ % "test")
 
   val all: Seq[ModuleID] = compile ++ test
