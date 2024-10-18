@@ -21,7 +21,6 @@ import play.api.data.Form
 import play.api.data.Forms.{mapping, text}
 import play.api.data.validation.{Constraint, Invalid, Valid, ValidationError}
 import play.twirl.api.Html
-import uk.gov.hmrc.emailaddress.EmailAddress
 import utils.GmpViewSpec
 import views.{ViewHelpers}
 
@@ -68,13 +67,14 @@ class BulkReferenceSpec extends GmpViewSpec {
   val CHARS_ALLOWED = "^[\\s,a-zA-Z0-9_-]*$"
   val emailConstraintRegex = "^((?:[a-zA-Z][a-zA-Z0-9_]*))(.)((?:[a-zA-Z][a-zA-Z0-9_]*))*$"
   val WHITE_SPACES = ".*\\s.*"
+  val emailRegex = "^([a-zA-Z0-9.!#$%&’'*+/=?^_{|}~-]+)@([a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*)$".r
 
   lazy val emailConstraint : Constraint[String] = Constraint("constraints.email") ({
     text =>
       if (text.trim.length == 0){
         Invalid(Seq(ValidationError(messages("gmp.error.mandatory.an", messages("gmp.email")))))
       }
-      else if (!EmailAddress.isValid(text.trim.toUpperCase())){
+      else if (!text.trim.toUpperCase.matches(emailRegex.regex)){
         Invalid(Seq(ValidationError(messages("gmp.error.email.invalid"))))
       }
       else if(text.trim matches emailConstraintRegex){

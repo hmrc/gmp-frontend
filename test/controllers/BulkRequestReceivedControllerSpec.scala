@@ -36,7 +36,6 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.{BulkRequestCreationService, DataLimitExceededException, SessionService}
 import uk.gov.hmrc.auth.core.AuthConnector
-import uk.gov.hmrc.emailaddress.EmailAddress
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.SessionId
 import views.Views
@@ -61,8 +60,10 @@ class BulkRequestReceivedControllerSpec extends PlaySpec with GuiceOneServerPerS
   lazy val views = app.injector.instanceOf[Views]
 
   val callBackData = UploadedSuccessfully("ref1", "name1", "download1")
-  val gmpBulkSession = GmpBulkSession(Some(callBackData), Some(EmailAddress("somebody@somewhere.com")), Some("reference"))
-
+  val emailRegex = "^([a-zA-Z0-9.!#$%&’'*+/=?^_{|}~-]+)@([a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*)$".r
+  val email = "somebody@somewhere.com"
+  require(email.matches(emailRegex.regex), "Invalid email format")
+  val gmpBulkSession = GmpBulkSession(Some(callBackData), Some(email), Some("reference"))
   val calcLine1 = BulkCalculationRequestLine(1, Some(CalculationRequestLine("S1301234T", RandomNino.generate, "Isambard", "Brunell", Some("IB"), Some(1), Some("2010-02-02"), Some("2010-01-01"), Some(1), 0)),None, None)
 
   val inputLine1 = lineListFromCalculationRequestLine(calcLine1)
