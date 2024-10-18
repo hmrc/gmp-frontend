@@ -19,7 +19,7 @@ package forms
 import com.google.inject.{Inject, Singleton}
 import models.BulkReference
 import play.api.data.Form
-import play.api.data.Forms.{text, _}
+import play.api.data.Forms._
 import play.api.data.validation.{Constraint, Invalid, Valid, ValidationError}
 import play.api.i18n.{Messages, MessagesImpl}
 import play.api.mvc.MessagesControllerComponents
