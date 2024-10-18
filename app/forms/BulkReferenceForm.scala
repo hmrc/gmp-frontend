@@ -19,11 +19,10 @@ package forms
 import com.google.inject.{Inject, Singleton}
 import models.BulkReference
 import play.api.data.Form
-import play.api.data.Forms._
+import play.api.data.Forms.{text, _}
 import play.api.data.validation.{Constraint, Invalid, Valid, ValidationError}
 import play.api.i18n.{Messages, MessagesImpl}
 import play.api.mvc.MessagesControllerComponents
-import uk.gov.hmrc.emailaddress.EmailAddress
 
 @Singleton
 class BulkReferenceForm  @Inject()(mcc: MessagesControllerComponents) {
@@ -33,13 +32,14 @@ class BulkReferenceForm  @Inject()(mcc: MessagesControllerComponents) {
   val CHARS_ALLOWED = "^[\\s,a-zA-Z0-9_-]*$"
   val emailConstraintRegex = "^((?:[a-zA-Z][a-zA-Z0-9_]*))(.)((?:[a-zA-Z][a-zA-Z0-9_]*))*$"
   val WHITE_SPACES = ".*\\s.*"
+  val emailRegex = "^([a-zA-Z0-9.!#$%&’'*+/=?^_{|}~-]+)@([a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*)$".r
 
   val emailConstraint : Constraint[String] = Constraint("constraints.email") ({
     text =>
       if (text.trim.length == 0){
         Invalid(Seq(ValidationError(messages("gmp.error.mandatory.an", messages("gmp.email")))))
       }
-      else if (!EmailAddress.isValid(text.trim.toUpperCase())){
+      else if (!text.trim.toUpperCase.matches(emailRegex.regex)){
         Invalid(Seq(ValidationError(messages("gmp.error.email.invalid"))))
       }
       else if(text.trim matches emailConstraintRegex){

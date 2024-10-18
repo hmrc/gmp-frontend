@@ -15,7 +15,6 @@ object AppDependencies {
     "uk.gov.hmrc"                                %% s"play-partials$playSuffix"       % "10.0.0",
     "uk.gov.hmrc"                                %% s"play-frontend-hmrc$playSuffix"  % "10.12.0",
     "uk.gov.hmrc"                                %% "tax-year"                        % "5.0.0",
-    "uk.gov.hmrc"                                %% "emailaddress"                    % "3.8.0",
     "org.typelevel"                              %% "cats-core"                       % "2.12.0",
     "com.fasterxml.jackson.module"               %% "jackson-module-scala"            % "2.17.2",
     compilerPlugin("com.github.ghik" %  "silencer-plugin"                 % "1.7.14" cross CrossVersion.full),
