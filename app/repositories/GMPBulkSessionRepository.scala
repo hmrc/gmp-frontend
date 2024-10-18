@@ -41,9 +41,9 @@ class GMPBulkSessionRepository @Inject() (
     domainFormat = GMPBulkSession.formats,
     indexes = Seq(
       IndexModel(
-        Indexes.ascending("lastModified"),
+        Indexes.ascending("lastModifiedIdx"),
         IndexOptions()
-          .name("lastModified")
+          .name("lastModifiedIdx")
           .expireAfter(appConfig.cacheTtl, TimeUnit.SECONDS)
       )
     )
@@ -57,7 +57,7 @@ class GMPBulkSessionRepository @Inject() (
     collection
       .updateOne(
         filter = byId(id),
-        update = Updates.set("lastModified", Instant.now())
+        update = Updates.set("lastModifiedIdx", Instant.now())
       )
       .toFuture()
       .map(_ => true)
