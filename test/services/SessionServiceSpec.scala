@@ -30,7 +30,6 @@ import org.scalatestplus.play.PlaySpec
 import play.api.libs.json._
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
-import uk.gov.hmrc.emailaddress.EmailAddress
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.cache.client.CacheMap
 
@@ -50,7 +49,11 @@ class SessionServiceSpec extends PlaySpec with GuiceOneServerPerSuite with Scala
   val metrics = app.injector.instanceOf[ApplicationMetrics]
 
   val callBackData = UploadedSuccessfully("ref1", "file1", "download1")
-  val gmpBulkSession = GmpBulkSession(Some(callBackData), Some(EmailAddress("somebody@somewhere.com")), Some("reference"))
+  val emailRegex = "^([a-zA-Z0-9.!#$%&’'*+/=?^_{|}~-]+)@([a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*)$".r
+  val email = "somebody@somewhere.com"
+  require(email.matches(emailRegex.regex), "Invalid email format")
+
+  val gmpBulkSession = GmpBulkSession(Some(callBackData), Some(email), Some("reference"))
   val bulkJson = Json.toJson[GmpBulkSession](gmpBulkSession)
 
   object TestSessionService extends SessionService(metrics, mockSessionCache)
