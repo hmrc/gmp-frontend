@@ -29,13 +29,10 @@ import models.upscan.{UploadStatus, UploadedSuccessfully}
 import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
 
 
-
 class GMPBulkSessionSpec extends  AnyFreeSpec with Matchers with ScalaFutures with IntegrationPatience with OptionValues
 with GuiceOneAppPerSuite with FutureAwaits with DefaultAwaitTimeout with BeforeAndAfterEach {
+
   implicit val encryption: Encryption = app.injector.instanceOf[Encryption]
-
-git add
-
   val id: String = "id"
   val callBackData: UploadStatus = UploadedSuccessfully("testReference", "testFileName", "testUrl")
   val emailAddress: String = "testData"
