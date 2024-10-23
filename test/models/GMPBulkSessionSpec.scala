@@ -26,8 +26,6 @@ import org.scalatest.matchers.must.Matchers
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.test.{DefaultAwaitTimeout, FutureAwaits}
 import models.upscan.{UploadStatus, UploadedSuccessfully}
-import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
-
 
 class GMPBulkSessionSpec extends  AnyFreeSpec with Matchers with ScalaFutures with IntegrationPatience with OptionValues
 with GuiceOneAppPerSuite with FutureAwaits with DefaultAwaitTimeout with BeforeAndAfterEach {
@@ -50,10 +48,8 @@ with GuiceOneAppPerSuite with FutureAwaits with DefaultAwaitTimeout with BeforeA
     gmpSession = gmpBulkSession
   )
 
-
     "Encrypt data" in {
       val result = ModelEncryption.encryptSessionCache(gmpSessionCache)
-
       result._1 mustBe gmpSessionCache.id
       Json
         .parse(encryption.crypto.decrypt(result._2, gmpSessionCache.id))
@@ -67,14 +63,4 @@ with GuiceOneAppPerSuite with FutureAwaits with DefaultAwaitTimeout with BeforeA
       )
       result mustBe gmpSessionCache
     }
-
 }
-
-
-
-
-
-
-
-
-
