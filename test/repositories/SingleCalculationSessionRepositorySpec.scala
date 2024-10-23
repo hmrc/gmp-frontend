@@ -108,7 +108,7 @@ class SingleCalculationSessionRepositorySpec
       updatedRecord.equalise mustBe sessionCacheBefore.equalise
     }
 
-    "correctly encrypt the session cache data" in {
+    "must correctly encrypt all session cache data" in {
       val sessionCacheBefore: SingleCalculationSessionCache = SingleCalculationSessionCache(
         id = "id",
         memberDetails = memberDetails,
@@ -130,8 +130,20 @@ class SingleCalculationSessionRepositorySpec
       val memberDetailsDecrypted = {
         Json.parse(encryption.crypto.decrypt((resultParsedToJson \ "memberDetails").as[EncryptedValue], sessionCacheBefore.id)).as[MemberDetails]
       }
+      val sconDecrypted = encryption.crypto.decrypt((resultParsedToJson \ "scon").as[EncryptedValue], sessionCacheBefore.id)
+      val scenarioDecrypted = encryption.crypto.decrypt((resultParsedToJson \ "scenario").as[EncryptedValue], sessionCacheBefore.id)
+      val revaluationDateDecrypted = (resultParsedToJson \ "revaluationDate").asOpt[EncryptedValue].map(value => Json.parse(encryption.crypto.decrypt(value, sessionCacheBefore.id)).as[GmpDate])
+      val rateDecrypted = (resultParsedToJson \ "rate").asOpt[EncryptedValue].map(rate => encryption.crypto.decrypt(rate, sessionCacheBefore.id))
+      val leavingDecrypted = Json.parse(encryption.crypto.decrypt((resultParsedToJson \ "leaving").as[EncryptedValue], sessionCacheBefore.id)).as[Leaving]
+      val equaliseDecrypted = (resultParsedToJson \ "equalise").asOpt[EncryptedValue].map(equalise => encryption.crypto.decrypt(equalise, sessionCacheBefore.id).toInt)
 
       memberDetailsDecrypted mustBe sessionCacheBefore.memberDetails
+      sconDecrypted mustBe sessionCacheBefore.scon
+      scenarioDecrypted mustBe sessionCacheBefore.scenario
+      revaluationDateDecrypted mustBe sessionCacheBefore.revaluationDate
+      rateDecrypted mustBe sessionCacheBefore.rate
+      leavingDecrypted mustBe sessionCacheBefore.leaving
+      equaliseDecrypted mustBe sessionCacheBefore.equalise
     }
   }
 

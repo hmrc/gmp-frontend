@@ -41,37 +41,39 @@ object SingleCalculationSessionCache {
     import uk.gov.hmrc.mongo.play.json.formats.MongoJavatimeFormats.Implicits._
     implicit val cryptEncryptedValueFormats: Format[EncryptedValue] = CryptoFormats.encryptedValueFormat
 
-    def reads()(implicit encryption: Encryption): Reads[SingleCalculationSessionCache] = (
-      (__ \ "id").read[String] and
-        (__ \ "memberDetails").read[EncryptedValue] and
-        (__ \ "scon").read[String] and
-        (__ \ "scenario").read[String] and
-        (__ \ "revaluationDate").readNullable[GmpDate] and
-        (__ \ "rate").readNullable[String] and
-        (__ \ "leaving").read[Leaving] and
-        (__ \ "equalise").readNullable[Int] and
-        (__ \ "lastModified").read[Instant]
-      )(ModelEncryption.decryptSingleCalculationSessionCache _)
+    def reads(implicit encryption: Encryption): Reads[SingleCalculationSessionCache] = {
+      (
+        (__ \ "id").read[String] and
+          (__ \ "memberDetails").read[EncryptedValue] and
+          (__ \ "scon").read[EncryptedValue] and
+          (__ \ "scenario").read[EncryptedValue] and
+          (__ \ "revaluationDate").readNullable[EncryptedValue] and
+          (__ \ "rate").readNullable[EncryptedValue] and
+          (__ \ "leaving").read[EncryptedValue] and
+          (__ \ "equalise").readNullable[EncryptedValue] and
+          (__ \ "lastModified").read[Instant]
+        )(ModelEncryption.decryptSingleCalculationSessionCache _)
+    }
 
     def writes(implicit encryption: Encryption): OWrites[SingleCalculationSessionCache] = new OWrites[SingleCalculationSessionCache] {
       override def writes(singleCalculationSessionCache: SingleCalculationSessionCache): JsObject = {
-        val encryptedValue: (String, EncryptedValue, String, String, Option[GmpDate], Option[String], Leaving, Option[Int], Instant) = {
+        val encryptedValues: (String, EncryptedValue, EncryptedValue, EncryptedValue, Option[EncryptedValue], Option[EncryptedValue], EncryptedValue, Option[EncryptedValue], Instant) = {
           ModelEncryption.encryptSingleCalculationSessionCache(singleCalculationSessionCache)
         }
         Json.obj(
-          "id" -> encryptedValue._1,
-          "memberDetails" -> encryptedValue._2,
-          "scon" -> encryptedValue._3,
-          "scenario" -> encryptedValue._4,
-          "revaluationDate" -> encryptedValue._5,
-          "rate" -> encryptedValue._6,
-          "leaving" -> encryptedValue._7,
-          "equalise" -> encryptedValue._8,
-          "lastModified" -> encryptedValue._9
+          "id" -> encryptedValues._1,
+          "memberDetails" -> encryptedValues._2,
+          "scon" -> encryptedValues._3,
+          "scenario" -> encryptedValues._4,
+          "revaluationDate" -> encryptedValues._5,
+          "rate" -> encryptedValues._6,
+          "leaving" -> encryptedValues._7,
+          "equalise" -> encryptedValues._8,
+          "lastModified" -> encryptedValues._9
         )
       }
     }
 
-    def formats(implicit encryption: Encryption): OFormat[SingleCalculationSessionCache] = OFormat(reads(), writes)
+    def formats(implicit encryption: Encryption): OFormat[SingleCalculationSessionCache] = OFormat(reads, writes)
   }
 }

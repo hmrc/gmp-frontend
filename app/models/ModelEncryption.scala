@@ -53,38 +53,38 @@ object ModelEncryption {
 
 
   def encryptSingleCalculationSessionCache(singleCalculationSessionCache: SingleCalculationSessionCache)
-                                          (implicit encryption: Encryption): (String, EncryptedValue, String, String, Option[GmpDate], Option[String], Leaving, Option[Int], Instant) = {
+                                          (implicit encryption: Encryption): (String, EncryptedValue, EncryptedValue, EncryptedValue, Option[EncryptedValue], Option[EncryptedValue], EncryptedValue, Option[EncryptedValue], Instant) = {
     (
       singleCalculationSessionCache.id,
       encryption.crypto.encrypt(Json.toJson(singleCalculationSessionCache.memberDetails).toString, singleCalculationSessionCache.id),
-      singleCalculationSessionCache.scon,
-      singleCalculationSessionCache.scenario,
-      singleCalculationSessionCache.revaluationDate,
-      singleCalculationSessionCache.rate,
-      singleCalculationSessionCache.leaving,
-      singleCalculationSessionCache.equalise,
+      encryption.crypto.encrypt(singleCalculationSessionCache.scon, singleCalculationSessionCache.id),
+      encryption.crypto.encrypt(singleCalculationSessionCache.scenario, singleCalculationSessionCache.id),
+      singleCalculationSessionCache.revaluationDate.map(date => encryption.crypto.encrypt(Json.toJson(date).toString, singleCalculationSessionCache.id)),
+      singleCalculationSessionCache.rate.map(rate => encryption.crypto.encrypt(rate, singleCalculationSessionCache.id)),
+      encryption.crypto.encrypt(Json.toJson(singleCalculationSessionCache.leaving).toString, singleCalculationSessionCache.id),
+      singleCalculationSessionCache.equalise.map(equalise => encryption.crypto.encrypt(equalise.toString, singleCalculationSessionCache.id)),
       singleCalculationSessionCache.lastModified
     )
   }
 
   def decryptSingleCalculationSessionCache(id: String,
                                            encryptedMemberDetails: EncryptedValue,
-                                           scon: String,
-                                           scenario: String,
-                                           revaluationDate: Option[GmpDate],
-                                           rate: Option[String],
-                                           leaving: Leaving,
-                                           equalise: Option[Int],
+                                           encryptedScon: EncryptedValue,
+                                           encryptedScenario: EncryptedValue,
+                                           encryptedRevaluationDate: Option[EncryptedValue],
+                                           encryptedRate: Option[EncryptedValue],
+                                           encryptedLeaving: EncryptedValue,
+                                           encryptedEqualise: Option[EncryptedValue],
                                            lastModified: Instant)(implicit encryption: Encryption): SingleCalculationSessionCache = {
     SingleCalculationSessionCache(
       id = id,
       memberDetails = Json.parse(encryption.crypto.decrypt(encryptedMemberDetails, id)).as[MemberDetails],
-      scon = scon,
-      scenario = scenario,
-      revaluationDate = revaluationDate,
-      rate = rate,
-      leaving = leaving,
-      equalise = equalise,
+      scon = encryption.crypto.decrypt(encryptedScon, id),
+      scenario = encryption.crypto.decrypt(encryptedScenario, id),
+      revaluationDate = encryptedRevaluationDate.map(date => Json.parse(encryption.crypto.decrypt(date, id)).as[GmpDate]),
+      rate = encryptedRate.map(rate => encryption.crypto.decrypt(rate, id)),
+      leaving = Json.parse(encryption.crypto.decrypt(encryptedLeaving, id)).as[Leaving],
+      equalise = encryptedEqualise.map(equalise => encryption.crypto.decrypt(equalise, id).toInt),
       lastModified = lastModified
     )
   }

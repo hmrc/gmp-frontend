@@ -49,17 +49,18 @@ class ModelEncryptionSpec extends PlaySpec with GuiceOneServerPerSuite {
   )
 
   "SingleCalculationSessionCacheEncryption" should {
+
     "Encrypt SingleCalculationSessionCache data" in {
       val result = ModelEncryption.encryptSingleCalculationSessionCache(singleCalculationSessionCache)
 
       result._1 mustBe singleCalculationSessionCache.id
       Json.parse(encryption.crypto.decrypt(result._2, singleCalculationSessionCache.id)).as[MemberDetails] mustBe singleCalculationSessionCache.memberDetails
-      result._3 mustBe singleCalculationSessionCache.scon
-      result._4 mustBe singleCalculationSessionCache.scenario
-      result._5 mustBe singleCalculationSessionCache.revaluationDate
-      result._6 mustBe singleCalculationSessionCache.rate
-      result._7 mustBe singleCalculationSessionCache.leaving
-      result._8 mustBe singleCalculationSessionCache.equalise
+      encryption.crypto.decrypt(result._3, singleCalculationSessionCache.id) mustBe singleCalculationSessionCache.scon
+      encryption.crypto.decrypt(result._4, singleCalculationSessionCache.id) mustBe singleCalculationSessionCache.scenario
+      result._5.map(date => Json.parse(encryption.crypto.decrypt(date, singleCalculationSessionCache.id)).as[GmpDate]) mustBe singleCalculationSessionCache.revaluationDate
+      result._6.map(rate => encryption.crypto.decrypt(rate, singleCalculationSessionCache.id)) mustBe singleCalculationSessionCache.rate
+      Json.parse(encryption.crypto.decrypt(result._7, singleCalculationSessionCache.id)).as[Leaving] mustBe singleCalculationSessionCache.leaving
+      result._8.map(equalise => encryption.crypto.decrypt(equalise, singleCalculationSessionCache.id).toInt) mustBe singleCalculationSessionCache.equalise
       result._9 mustBe singleCalculationSessionCache.lastModified
     }
 
@@ -67,12 +68,12 @@ class ModelEncryptionSpec extends PlaySpec with GuiceOneServerPerSuite {
       val result = ModelEncryption.decryptSingleCalculationSessionCache(
         id = singleCalculationSessionCache.id,
         encryptedMemberDetails = encryption.crypto.encrypt(Json.toJson(singleCalculationSessionCache.memberDetails).toString, singleCalculationSessionCache.id),
-        scon = singleCalculationSessionCache.scon,
-        scenario = singleCalculationSessionCache.scenario,
-        revaluationDate = singleCalculationSessionCache.revaluationDate,
-        rate = singleCalculationSessionCache.rate,
-        leaving = singleCalculationSessionCache.leaving,
-        equalise = singleCalculationSessionCache.equalise,
+        encryptedScon = encryption.crypto.encrypt(singleCalculationSessionCache.scon, singleCalculationSessionCache.id),
+        encryptedScenario = encryption.crypto.encrypt(singleCalculationSessionCache.scenario, singleCalculationSessionCache.id),
+        encryptedRevaluationDate = singleCalculationSessionCache.revaluationDate.map(date => encryption.crypto.encrypt(Json.toJson(date).toString, singleCalculationSessionCache.id)),
+        encryptedRate = singleCalculationSessionCache.rate.map(rate => encryption.crypto.encrypt(rate, singleCalculationSessionCache.id)),
+        encryptedLeaving = encryption.crypto.encrypt(Json.toJson(singleCalculationSessionCache.leaving).toString, singleCalculationSessionCache.id),
+        encryptedEqualise = singleCalculationSessionCache.equalise.map(equalise => encryption.crypto.encrypt(equalise.toString, singleCalculationSessionCache.id)),
         lastModified = singleCalculationSessionCache.lastModified
       )
 
