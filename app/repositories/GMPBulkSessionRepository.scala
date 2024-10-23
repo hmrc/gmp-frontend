@@ -34,7 +34,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class GMPBulkSessionRepository @Inject() (
     mongoComponent: MongoComponent,
     appConfig: ApplicationConfig
-)(implicit ec: ExecutionContext, encryption:Encryption)
+)(implicit ec: ExecutionContext)
   extends PlayMongoRepository[GMPBulkSession](
     collectionName = "gmp-bulk-session",
     mongoComponent = mongoComponent,
