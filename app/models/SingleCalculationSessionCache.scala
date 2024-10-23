@@ -57,9 +57,8 @@ object SingleCalculationSessionCache {
 
     def writes(implicit encryption: Encryption): OWrites[SingleCalculationSessionCache] = new OWrites[SingleCalculationSessionCache] {
       override def writes(singleCalculationSessionCache: SingleCalculationSessionCache): JsObject = {
-        val encryptedValues: (String, EncryptedValue, EncryptedValue, EncryptedValue, Option[EncryptedValue], Option[EncryptedValue], EncryptedValue, Option[EncryptedValue], Instant) = {
+        val encryptedValues: (String, EncryptedValue, EncryptedValue, EncryptedValue, Option[EncryptedValue], Option[EncryptedValue], EncryptedValue, Option[EncryptedValue], Instant) =
           ModelEncryption.encryptSingleCalculationSessionCache(singleCalculationSessionCache)
-        }
         Json.obj(
           "id" -> encryptedValues._1,
           "memberDetails" -> encryptedValues._2,

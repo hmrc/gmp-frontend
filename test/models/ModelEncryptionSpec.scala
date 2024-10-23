@@ -20,10 +20,9 @@ import helpers.RandomNino
 import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 import play.api.libs.json.Json
-import repositories.DatedCacheMap
 import services.Encryption
 
-import java.time.{Instant, LocalDate, LocalDateTime}
+import java.time.{Instant, LocalDate}
 
 class ModelEncryptionSpec extends PlaySpec with GuiceOneServerPerSuite {
   implicit val encryption: Encryption = app.injector.instanceOf[Encryption]
@@ -78,36 +77,6 @@ class ModelEncryptionSpec extends PlaySpec with GuiceOneServerPerSuite {
       )
 
       result mustBe singleCalculationSessionCache
-    }
-  }
-
-  "DatedCacheMapEncrpytion" should {
-    "Encrypt Data" in {
-      val datedCacheMap: DatedCacheMap = DatedCacheMap(
-        "foo",
-        Map("string" -> Json.obj("foo" -> "bar")),
-        Instant.now()
-      )
-
-      val result = ModelEncryption.encryptDatedCacheMap(datedCacheMap)
-      result._1 mustBe datedCacheMap.id
-      result._2.head._1 mustBe datedCacheMap.data.head._1
-      Json.parse(encryption.crypto.decrypt(result._2.head._2, datedCacheMap.id)) mustBe datedCacheMap.data.head._2
-      result._3 mustBe result._3
-    }
-    "Decrypt Data" in {
-      val datedCacheMap: DatedCacheMap = DatedCacheMap(
-        "foo",
-        Map("string" -> Json.obj("foo" -> "bar")),
-        Instant.now()
-      )
-
-      val result = ModelEncryption.decryptDatedCacheMap(
-        datedCacheMap.id,
-        datedCacheMap.data.map(item => item._1 -> encryption.crypto.encrypt(item._2.toString(), datedCacheMap.id)),
-        datedCacheMap.lastUpdated
-      )
-      result mustBe datedCacheMap
     }
   }
 }
