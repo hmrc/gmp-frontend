@@ -24,7 +24,6 @@ import uk.gov.hmrc.mongo.play.json.PlayMongoRepository
 import config.ApplicationConfig
 import models.GMPBulkSession
 import uk.gov.hmrc.mongo.play.json.formats.MongoJavatimeFormats
-import services.Encryption
 import java.time.Instant
 import java.util.concurrent.TimeUnit
 import javax.inject.{Inject, Singleton}
