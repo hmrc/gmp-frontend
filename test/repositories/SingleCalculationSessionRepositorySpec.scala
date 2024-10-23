@@ -28,7 +28,11 @@ import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
+import play.api.libs.json.{Format, JsObject, Json}
 import play.api.test.{DefaultAwaitTimeout, FutureAwaits}
+import services.Encryption
+import uk.gov.hmrc.crypto.EncryptedValue
+import uk.gov.hmrc.crypto.json.CryptoFormats
 
 import java.time._
 import java.util.concurrent.TimeUnit
@@ -45,6 +49,8 @@ class SingleCalculationSessionRepositorySpec
     .build()
 
   val repository: SingleCalculationSessionRepository = app.injector.instanceOf[SingleCalculationSessionRepository]
+  val encryption: Encryption = app.injector.instanceOf[Encryption]
+  implicit val cryptEncryptedValueFormats: Format[EncryptedValue]  = CryptoFormats.encryptedValueFormat
 
   override def beforeEach(): Unit = {
     await(repository.collection.deleteMany(BsonDocument()).toFuture())
@@ -100,6 +106,32 @@ class SingleCalculationSessionRepositorySpec
       updatedRecord.rate mustBe sessionCacheBefore.rate
       updatedRecord.leaving mustBe sessionCacheBefore.leaving
       updatedRecord.equalise mustBe sessionCacheBefore.equalise
+    }
+
+    "correctly encrypt the session cache data" in {
+      val sessionCacheBefore: SingleCalculationSessionCache = SingleCalculationSessionCache(
+        id = "id",
+        memberDetails = memberDetails,
+        scon = "S123456789T",
+        scenario = "Scenario 1",
+        revaluationDate = Some(currentDateGmp),
+        rate = Some("4.5%"),
+        leaving = leaving,
+        equalise = Some(1),
+        lastModified = Instant.ofEpochSecond(1)
+      )
+
+      val setResult = await(repository.set(sessionCacheBefore))
+      setResult mustEqual true
+
+      val updatedRecord = await(repository.collection.find[BsonDocument](BsonDocument()).toFuture()).head
+      val resultParsedToJson = Json.parse(updatedRecord.toJson).as[JsObject]
+
+      val memberDetailsDecrypted = {
+        Json.parse(encryption.crypto.decrypt((resultParsedToJson \ "memberDetails").as[EncryptedValue], sessionCacheBefore.id)).as[MemberDetails]
+      }
+
+      memberDetailsDecrypted mustBe sessionCacheBefore.memberDetails
     }
   }
 

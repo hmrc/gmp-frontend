@@ -16,11 +16,12 @@
 
 package models
 
-
-import play.api.libs.json._
-import uk.gov.hmrc.crypto.EncryptedValue
+import play.api.libs.json.Json
+import repositories.DatedCacheMap
 import services.Encryption
+import uk.gov.hmrc.crypto.EncryptedValue
 
+import java.time.Instant
 
 object ModelEncryption {
 
@@ -32,4 +33,60 @@ object ModelEncryption {
       id = id,
       gmpSession = Json.parse(encryption.crypto.decrypt(gmpSession, id)).as[GMPBulkSession]
     )
+  def encryptDatedCacheMap(datedCacheMap: DatedCacheMap)(implicit encryption: Encryption): (String, Map[String, EncryptedValue], Instant) = {
+    (
+      datedCacheMap.id,
+      datedCacheMap.data.map(item => item._1 -> encryption.crypto.encrypt(item._2.toString(), datedCacheMap.id)),
+      datedCacheMap.lastUpdated
+    )
+  }
+
+  def decryptDatedCacheMap(id: String,
+                           data: Map[String, EncryptedValue],
+                           lastUpdated: Instant)(implicit encryption: Encryption): DatedCacheMap = {
+    DatedCacheMap(
+      id = id,
+      data = data.map(item => item._1 -> Json.parse(encryption.crypto.decrypt(item._2, id))),
+      lastUpdated = lastUpdated
+    )
+  }
+
+
+  def encryptSingleCalculationSessionCache(singleCalculationSessionCache: SingleCalculationSessionCache)
+                                          (implicit encryption: Encryption): (String, EncryptedValue, String, String, Option[GmpDate], Option[String], Leaving, Option[Int], Instant) = {
+    (
+      singleCalculationSessionCache.id,
+      encryption.crypto.encrypt(Json.toJson(singleCalculationSessionCache.memberDetails).toString, singleCalculationSessionCache.id),
+      singleCalculationSessionCache.scon,
+      singleCalculationSessionCache.scenario,
+      singleCalculationSessionCache.revaluationDate,
+      singleCalculationSessionCache.rate,
+      singleCalculationSessionCache.leaving,
+      singleCalculationSessionCache.equalise,
+      singleCalculationSessionCache.lastModified
+    )
+  }
+
+  def decryptSingleCalculationSessionCache(id: String,
+                                           encryptedMemberDetails: EncryptedValue,
+                                           scon: String,
+                                           scenario: String,
+                                           revaluationDate: Option[GmpDate],
+                                           rate: Option[String],
+                                           leaving: Leaving,
+                                           equalise: Option[Int],
+                                           lastModified: Instant)(implicit encryption: Encryption): SingleCalculationSessionCache = {
+    SingleCalculationSessionCache(
+      id = id,
+      memberDetails = Json.parse(encryption.crypto.decrypt(encryptedMemberDetails, id)).as[MemberDetails],
+      scon = scon,
+      scenario = scenario,
+      revaluationDate = revaluationDate,
+      rate = rate,
+      leaving = leaving,
+      equalise = equalise,
+      lastModified = lastModified
+    )
+  }
+
 }

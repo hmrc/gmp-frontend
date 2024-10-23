@@ -16,10 +16,12 @@
 
 package models
 
-import play.api.libs.json.{Json, OFormat}
-
+import play.api.libs.functional.syntax.toFunctionalBuilderOps
 import play.api.libs.json._
-import play.api.libs.functional.syntax._
+import services.Encryption
+import uk.gov.hmrc.crypto.EncryptedValue
+import uk.gov.hmrc.crypto.json.CryptoFormats
+
 import java.time.Instant
 
 case class SingleCalculationSessionCache(
@@ -37,9 +39,11 @@ case class SingleCalculationSessionCache(
 object SingleCalculationSessionCache {
   object MongoFormats {
     import uk.gov.hmrc.mongo.play.json.formats.MongoJavatimeFormats.Implicits._
-    def reads: Reads[SingleCalculationSessionCache] = (
+    implicit val cryptEncryptedValueFormats: Format[EncryptedValue] = CryptoFormats.encryptedValueFormat
+
+    def reads()(implicit encryption: Encryption): Reads[SingleCalculationSessionCache] = (
       (__ \ "id").read[String] and
-        (__ \ "memberDetails").read[MemberDetails] and
+        (__ \ "memberDetails").read[EncryptedValue] and
         (__ \ "scon").read[String] and
         (__ \ "scenario").read[String] and
         (__ \ "revaluationDate").readNullable[GmpDate] and
@@ -47,22 +51,27 @@ object SingleCalculationSessionCache {
         (__ \ "leaving").read[Leaving] and
         (__ \ "equalise").readNullable[Int] and
         (__ \ "lastModified").read[Instant]
-      )(SingleCalculationSessionCache.apply _)
+      )(ModelEncryption.decryptSingleCalculationSessionCache _)
 
-    def writes: OWrites[SingleCalculationSessionCache] = new OWrites[SingleCalculationSessionCache] {
-      override def writes(datedCacheMap: SingleCalculationSessionCache): JsObject = Json.obj(
-        "id" -> datedCacheMap.id,
-        "memberDetails" -> datedCacheMap.memberDetails,
-        "scon" -> datedCacheMap.scon,
-        "scenario" -> datedCacheMap.scenario,
-        "revaluationDate" -> datedCacheMap.revaluationDate,
-        "rate" -> datedCacheMap.rate,
-        "leaving" -> datedCacheMap.leaving,
-        "equalise" -> datedCacheMap.equalise,
-        "lastModified" -> datedCacheMap.lastModified
-      )
+    def writes(implicit encryption: Encryption): OWrites[SingleCalculationSessionCache] = new OWrites[SingleCalculationSessionCache] {
+      override def writes(singleCalculationSessionCache: SingleCalculationSessionCache): JsObject = {
+        val encryptedValue: (String, EncryptedValue, String, String, Option[GmpDate], Option[String], Leaving, Option[Int], Instant) = {
+          ModelEncryption.encryptSingleCalculationSessionCache(singleCalculationSessionCache)
+        }
+        Json.obj(
+          "id" -> encryptedValue._1,
+          "memberDetails" -> encryptedValue._2,
+          "scon" -> encryptedValue._3,
+          "scenario" -> encryptedValue._4,
+          "revaluationDate" -> encryptedValue._5,
+          "rate" -> encryptedValue._6,
+          "leaving" -> encryptedValue._7,
+          "equalise" -> encryptedValue._8,
+          "lastModified" -> encryptedValue._9
+        )
+      }
     }
 
-    implicit val formats: OFormat[SingleCalculationSessionCache] = OFormat(reads, writes)
+    def formats(implicit encryption: Encryption): OFormat[SingleCalculationSessionCache] = OFormat(reads(), writes)
   }
 }

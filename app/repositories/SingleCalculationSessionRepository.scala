@@ -21,6 +21,7 @@ import models.SingleCalculationSessionCache
 import org.mongodb.scala.bson.conversions.Bson
 import org.mongodb.scala.model._
 import play.api.libs.json.Format
+import services.Encryption
 import uk.gov.hmrc.mongo.MongoComponent
 import uk.gov.hmrc.mongo.play.json.PlayMongoRepository
 import uk.gov.hmrc.mongo.play.json.formats.MongoJavatimeFormats
@@ -35,7 +36,7 @@ class SingleCalculationSessionRepository @Inject()(
                                                 mongoComponent: MongoComponent,
                                                 appConfig: ApplicationConfig,
                                                 clock: Clock
-                                              )(implicit ec: ExecutionContext)
+                                              )(implicit ec: ExecutionContext, encryption: Encryption)
   extends PlayMongoRepository[SingleCalculationSessionCache](
     collectionName = "single-calculation-session-cache",
     mongoComponent = mongoComponent,

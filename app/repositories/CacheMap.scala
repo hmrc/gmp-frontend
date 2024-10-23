@@ -14,15 +14,14 @@
  * limitations under the License.
  */
 
-package services
+package repositories
 
-import play.api.Configuration
-import uk.gov.hmrc.crypto.{AdDecrypter, AdEncrypter, SymmetricCryptoFactory}
+import play.api.libs.json.{JsValue, Json, OFormat}
 
-import javax.inject.Inject
+case class CacheMap(id: String,
+                    data: Map[String, JsValue])
 
-class Encryption @Inject()(configuration: Configuration) {
-
-  val crypto: AdEncrypter with AdDecrypter = SymmetricCryptoFactory.aesGcmAdCryptoFromConfig("mongodb.encryption", configuration.underlying)
-
+object CacheMap {
+  implicit val formats: OFormat[CacheMap] = Json.format[CacheMap]
 }
+
