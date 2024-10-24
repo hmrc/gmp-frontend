@@ -48,6 +48,22 @@ class ModelEncryptionSpec extends PlaySpec with GuiceOneServerPerSuite {
     lastModified = Instant.ofEpochSecond(1)
   )
 
+  val id: String = "id"
+  val callBackData: UploadStatus = UploadedSuccessfully("testReference", "testFileName", "testUrl")
+  val emailAddress: String = "testData"
+  val reference: String = "testData"
+
+  val gmpSession: GMPBulkSessionWithId = GMPBulkSessionWithId(
+    id = "id",
+    callBackData = Some(callBackData),
+    emailAddress = Some(emailAddress),
+    reference = Some(reference)
+  )
+  val gmpSessionCache: GMPBulkSessionCache = GMPBulkSessionCache(
+    id = "id",
+    gmpSession = gmpSession
+  )
+
   "SingleCalculationSessionCacheEncryption" should {
 
     "Encrypt SingleCalculationSessionCache data" in {
@@ -81,21 +97,7 @@ class ModelEncryptionSpec extends PlaySpec with GuiceOneServerPerSuite {
     }
   }
 
-  val id: String = "id"
-  val callBackData: UploadStatus = UploadedSuccessfully("testReference", "testFileName", "testUrl")
-  val emailAddress: String = "testData"
-  val reference: String = "testData"
 
-  val gmpSession: GMPBulkSessionWithId = GMPBulkSessionWithId(
-    id = "id",
-    callBackData = Some(callBackData),
-    emailAddress = Some(emailAddress),
-    reference = Some(reference)
-  )
-  val gmpSessionCache: GMPBulkSessionCache = GMPBulkSessionCache(
-    id = "id",
-    gmpSession = gmpSession
-  )
 
   "GmpBulkSessionCacheEncryption" should {
 
