@@ -21,14 +21,14 @@ import play.api.libs.json.{Json, OFormat}
 
 
 
-case class GMPBulkSession(
+case class GMPBulkSessionWithId(
                            id: String,
                            callBackData: Option[UploadStatus],
                            emailAddress: Option[String],
                            reference: Option[String])
 
-object GMPBulkSession {
-  implicit val formats: OFormat[GMPBulkSession] = Json.format[GMPBulkSession]
+object GMPBulkSessionWithId {
+  implicit val formats: OFormat[GMPBulkSessionWithId] = Json.format[GMPBulkSessionWithId]
 }
 
 
