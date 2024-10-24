@@ -16,11 +16,12 @@
 
 package models
 
-import play.api.libs.json.Json
-import services.Encryption
-import uk.gov.hmrc.crypto.EncryptedValue
 
+import play.api.libs.json._
+import uk.gov.hmrc.crypto.EncryptedValue
+import services.Encryption
 import java.time.Instant
+
 
 object ModelEncryption {
 
