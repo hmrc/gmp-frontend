@@ -31,7 +31,7 @@ object ModelEncryption {
   def decryptSessionCache(id: String, gmpSession: EncryptedValue)(implicit encryption: Encryption): GMPBulkSessionCache =
     GMPBulkSessionCache(
       id = id,
-      gmpSession = Json.parse(encryption.crypto.decrypt(gmpSession, id)).as[GMPBulkSession]
+      gmpSession = Json.parse(encryption.crypto.decrypt(gmpSession, id)).as[GMPBulkSessionWithId]
     )
 
   def encryptSingleCalculationSessionCache(singleCalculationSessionCache: SingleCalculationSessionCache)
