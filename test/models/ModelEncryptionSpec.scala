@@ -21,6 +21,7 @@ import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 import play.api.libs.json.Json
 import services.Encryption
+import models.upscan.{UploadStatus, UploadedSuccessfully}
 
 import java.time.{Instant, LocalDate}
 
@@ -77,6 +78,41 @@ class ModelEncryptionSpec extends PlaySpec with GuiceOneServerPerSuite {
       )
 
       result mustBe singleCalculationSessionCache
+    }
+  }
+
+  val id: String = "id"
+  val callBackData: UploadStatus = UploadedSuccessfully("testReference", "testFileName", "testUrl")
+  val emailAddress: String = "testData"
+  val reference: String = "testData"
+
+  val gmpSession: GMPBulkSessionWithId = GMPBulkSessionWithId(
+    id = "id",
+    callBackData = Some(callBackData),
+    emailAddress = Some(emailAddress),
+    reference = Some(reference)
+  )
+  val gmpSessionCache: GMPBulkSessionCache = GMPBulkSessionCache(
+    id = "id",
+    gmpSession = gmpSession
+  )
+
+  "GmpBulkSessionCacheEncryption" should {
+
+    "Encrypt GmpBulkSessionCache data" in {
+      val result = ModelEncryption.encryptSessionCache(gmpSessionCache)
+      result._1 mustBe gmpSessionCache.id
+      Json
+        .parse(encryption.crypto.decrypt(result._2, gmpSessionCache.id))
+        .as[GMPBulkSessionWithId] mustBe gmpSessionCache.gmpSession
+    }
+
+    "Decrypt GmpBulkSessionCache data into model" in {
+      val result = ModelEncryption.decryptSessionCache(
+        id = gmpSessionCache.id,
+        gmpSession = encryption.crypto.encrypt(Json.toJson(gmpSessionCache.gmpSession).toString, gmpSessionCache.id)
+      )
+      result mustBe gmpSessionCache
     }
   }
 }
