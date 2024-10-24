@@ -17,7 +17,7 @@
 package models
 
 import play.api.libs.json.Json
-import models.GMPBulkSession._
+import models.GMPBulkSessionWithId._
 import services.Encryption
 import org.scalatest.{BeforeAndAfterEach, OptionValues}
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
@@ -27,7 +27,7 @@ import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.test.{DefaultAwaitTimeout, FutureAwaits}
 import models.upscan.{UploadStatus, UploadedSuccessfully}
 
-class GMPBulkSessionSpec extends  AnyFreeSpec with Matchers with ScalaFutures with IntegrationPatience with OptionValues
+class GMPBulkSessionWithIdSpec extends  AnyFreeSpec with Matchers with ScalaFutures with IntegrationPatience with OptionValues
 with GuiceOneAppPerSuite with FutureAwaits with DefaultAwaitTimeout with BeforeAndAfterEach {
 
   implicit val encryption: Encryption = app.injector.instanceOf[Encryption]
@@ -36,7 +36,7 @@ with GuiceOneAppPerSuite with FutureAwaits with DefaultAwaitTimeout with BeforeA
   val emailAddress: String = "testData"
   val reference: String = "testData"
 
-  val gmpBulkSession: GMPBulkSession = GMPBulkSession(
+  val gmpBulkSession: GMPBulkSessionWithId = GMPBulkSessionWithId(
     id = "id",
     callBackData = Some(callBackData),
     emailAddress = Some(emailAddress),
@@ -53,7 +53,7 @@ with GuiceOneAppPerSuite with FutureAwaits with DefaultAwaitTimeout with BeforeA
       result._1 mustBe gmpSessionCache.id
       Json
         .parse(encryption.crypto.decrypt(result._2, gmpSessionCache.id))
-        .as[GMPBulkSession] mustBe gmpSessionCache.gmpSession
+        .as[GMPBulkSessionWithId] mustBe gmpSessionCache.gmpSession
     }
 
     "Decrypt data into model" in {

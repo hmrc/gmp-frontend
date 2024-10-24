@@ -24,7 +24,7 @@ import services.Encryption
 
 case class GMPBulkSessionCache(
    id: String,
-   gmpSession: GMPBulkSession
+   gmpSession: GMPBulkSessionWithId
 )
 
 object GMPBulkSessionCache {

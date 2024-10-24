@@ -26,7 +26,7 @@ import org.scalatest.matchers.must.Matchers
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.test.{DefaultAwaitTimeout, FutureAwaits}
 import models.upscan.{UploadStatus, UploadedSuccessfully}
-import models.GMPBulkSession
+import models.GMPBulkSessionWithId
 import java.util.concurrent.TimeUnit
 
 class GMPBulkSessionRepositorySpec
@@ -38,8 +38,8 @@ class GMPBulkSessionRepositorySpec
   val callBackData: UploadStatus = UploadedSuccessfully("testReference", "testFileName", "testUrl")
   val emailAddress: String = "testData"
   val reference: String = "testData"
-  val GMPBulkSession: GMPBulkSession =
-    new GMPBulkSession(id, Some(callBackData), Some(emailAddress), Some(reference))
+  val GMPBulkSession: GMPBulkSessionWithId =
+    new GMPBulkSessionWithId(id, Some(callBackData), Some(emailAddress), Some(reference))
 
   override def beforeEach(): Unit = {
     await(repository.collection.deleteMany(BsonDocument()).toFuture())
@@ -76,7 +76,7 @@ class GMPBulkSessionRepositorySpec
   ".get" - {
     "when there is a record for this id" - {
       "must return the correct record" in {
-        await(repository.set(GMPBulkSession : GMPBulkSession))
+        await(repository.set(GMPBulkSession : GMPBulkSessionWithId))
 
         val insertedRecord = await(repository.get(GMPBulkSession.id)).get
         insertedRecord.id mustBe GMPBulkSession.id

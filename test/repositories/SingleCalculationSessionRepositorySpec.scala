@@ -28,7 +28,11 @@ import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
+import play.api.libs.json.{Format, JsObject, Json}
 import play.api.test.{DefaultAwaitTimeout, FutureAwaits}
+import services.Encryption
+import uk.gov.hmrc.crypto.EncryptedValue
+import uk.gov.hmrc.crypto.json.CryptoFormats
 
 import java.time._
 import java.util.concurrent.TimeUnit
@@ -45,6 +49,8 @@ class SingleCalculationSessionRepositorySpec
     .build()
 
   val repository: SingleCalculationSessionRepository = app.injector.instanceOf[SingleCalculationSessionRepository]
+  val encryption: Encryption = app.injector.instanceOf[Encryption]
+  implicit val cryptEncryptedValueFormats: Format[EncryptedValue]  = CryptoFormats.encryptedValueFormat
 
   override def beforeEach(): Unit = {
     await(repository.collection.deleteMany(BsonDocument()).toFuture())
@@ -100,6 +106,44 @@ class SingleCalculationSessionRepositorySpec
       updatedRecord.rate mustBe sessionCacheBefore.rate
       updatedRecord.leaving mustBe sessionCacheBefore.leaving
       updatedRecord.equalise mustBe sessionCacheBefore.equalise
+    }
+
+    "must correctly encrypt all session cache data" in {
+      val sessionCacheBefore: SingleCalculationSessionCache = SingleCalculationSessionCache(
+        id = "id",
+        memberDetails = memberDetails,
+        scon = "S123456789T",
+        scenario = "Scenario 1",
+        revaluationDate = Some(currentDateGmp),
+        rate = Some("4.5%"),
+        leaving = leaving,
+        equalise = Some(1),
+        lastModified = Instant.ofEpochSecond(1)
+      )
+
+      val setResult = await(repository.set(sessionCacheBefore))
+      setResult mustEqual true
+
+      val updatedRecord = await(repository.collection.find[BsonDocument](BsonDocument()).toFuture()).head
+      val resultParsedToJson = Json.parse(updatedRecord.toJson).as[JsObject]
+
+      val memberDetailsDecrypted = {
+        Json.parse(encryption.crypto.decrypt((resultParsedToJson \ "memberDetails").as[EncryptedValue], sessionCacheBefore.id)).as[MemberDetails]
+      }
+      val sconDecrypted = encryption.crypto.decrypt((resultParsedToJson \ "scon").as[EncryptedValue], sessionCacheBefore.id)
+      val scenarioDecrypted = encryption.crypto.decrypt((resultParsedToJson \ "scenario").as[EncryptedValue], sessionCacheBefore.id)
+      val revaluationDateDecrypted = (resultParsedToJson \ "revaluationDate").asOpt[EncryptedValue].map(value => Json.parse(encryption.crypto.decrypt(value, sessionCacheBefore.id)).as[GmpDate])
+      val rateDecrypted = (resultParsedToJson \ "rate").asOpt[EncryptedValue].map(rate => encryption.crypto.decrypt(rate, sessionCacheBefore.id))
+      val leavingDecrypted = Json.parse(encryption.crypto.decrypt((resultParsedToJson \ "leaving").as[EncryptedValue], sessionCacheBefore.id)).as[Leaving]
+      val equaliseDecrypted = (resultParsedToJson \ "equalise").asOpt[EncryptedValue].map(equalise => encryption.crypto.decrypt(equalise, sessionCacheBefore.id).toInt)
+
+      memberDetailsDecrypted mustBe sessionCacheBefore.memberDetails
+      sconDecrypted mustBe sessionCacheBefore.scon
+      scenarioDecrypted mustBe sessionCacheBefore.scenario
+      revaluationDateDecrypted mustBe sessionCacheBefore.revaluationDate
+      rateDecrypted mustBe sessionCacheBefore.rate
+      leavingDecrypted mustBe sessionCacheBefore.leaving
+      equaliseDecrypted mustBe sessionCacheBefore.equalise
     }
   }
 

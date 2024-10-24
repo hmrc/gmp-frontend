@@ -22,7 +22,7 @@ import play.api.libs.json.Format
 import uk.gov.hmrc.mongo.MongoComponent
 import uk.gov.hmrc.mongo.play.json.PlayMongoRepository
 import config.ApplicationConfig
-import models.GMPBulkSession
+import models.GMPBulkSessionWithId
 import uk.gov.hmrc.mongo.play.json.formats.MongoJavatimeFormats
 import java.time.Instant
 import java.util.concurrent.TimeUnit
@@ -34,10 +34,10 @@ class GMPBulkSessionRepository @Inject() (
     mongoComponent: MongoComponent,
     appConfig: ApplicationConfig
 )(implicit ec: ExecutionContext)
-  extends PlayMongoRepository[GMPBulkSession](
+  extends PlayMongoRepository[GMPBulkSessionWithId](
     collectionName = "gmp-bulk-session",
     mongoComponent = mongoComponent,
-    domainFormat = GMPBulkSession.formats,
+    domainFormat = GMPBulkSessionWithId.formats,
     indexes = Seq(
       IndexModel(
         Indexes.ascending("lastModifiedIdx"),
@@ -61,14 +61,14 @@ class GMPBulkSessionRepository @Inject() (
       .toFuture()
       .map(_ => true)
 
-  def get(id: String): Future[Option[GMPBulkSession]] =
+  def get(id: String): Future[Option[GMPBulkSessionWithId]] =
     keepAlive(id).flatMap { _ =>
       collection
         .find(byId(id))
         .headOption()
     }
 
-  def set(GMPBulkSession: GMPBulkSession): Future[Boolean] =
+  def set(GMPBulkSession: GMPBulkSessionWithId): Future[Boolean] =
     collection
       .replaceOne(
         filter = byId(GMPBulkSession.id),
