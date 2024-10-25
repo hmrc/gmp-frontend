@@ -26,14 +26,11 @@ import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.test.{DefaultAwaitTimeout, FutureAwaits}
 import models.upscan.{UploadStatus, UploadedSuccessfully}
 import models.{GMPBulkSessionCache, GMPBulkSessionWithId}
-
-
 import java.util.concurrent.TimeUnit
 
 class GMPBulkSessionRepositorySpec
   extends AnyFreeSpec with Matchers with ScalaFutures with IntegrationPatience with OptionValues
     with GuiceOneAppPerSuite with FutureAwaits with DefaultAwaitTimeout with BeforeAndAfterEach  {
-
 
   val repository: GMPBulkSessionRepository = app.injector.instanceOf[GMPBulkSessionRepository]
   val id: String = "id"
@@ -92,9 +89,8 @@ class GMPBulkSessionRepositorySpec
     ".get" - {
       "when there is no record for this id" - {
         "must return None" in {
-          // Fetching a record that does not exist by creating a non-existing GreetingCache instance
           val nonExistingCache = gmpBulkSessionCache.copy(id = "non-existing-id")
-          val result = await(repository.get(nonExistingCache)) // <-- Fetch with a non-existing GreetingCache
+          val result = await(repository.get(nonExistingCache))
           result mustBe None
         }
       }
