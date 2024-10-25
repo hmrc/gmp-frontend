@@ -16,7 +16,6 @@
 
 package repositories
 
-
 import org.mongodb.scala.bson.BsonDocument
 import org.mongodb.scala.model.{IndexModel, IndexOptions, Indexes}
 import org.scalatest.{BeforeAndAfterEach, OptionValues}
@@ -26,12 +25,12 @@ import org.scalatest.matchers.must.Matchers
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.test.{DefaultAwaitTimeout, FutureAwaits}
 import models.upscan.{UploadStatus, UploadedSuccessfully}
-import models.GMPBulkSessionWithId
+import models.{GMPBulkSessionCache, GMPBulkSessionWithId}
 import java.util.concurrent.TimeUnit
 
 class GMPBulkSessionRepositorySpec
   extends AnyFreeSpec with Matchers with ScalaFutures with IntegrationPatience with OptionValues
-    with GuiceOneAppPerSuite with FutureAwaits with DefaultAwaitTimeout with BeforeAndAfterEach {
+    with GuiceOneAppPerSuite with FutureAwaits with DefaultAwaitTimeout with BeforeAndAfterEach  {
 
   val repository: GMPBulkSessionRepository = app.injector.instanceOf[GMPBulkSessionRepository]
   val id: String = "id"
@@ -40,6 +39,7 @@ class GMPBulkSessionRepositorySpec
   val reference: String = "testData"
   val GMPBulkSession: GMPBulkSessionWithId =
     new GMPBulkSessionWithId(id, Some(callBackData), Some(emailAddress), Some(reference))
+  val gmpBulkSessionCache: GMPBulkSessionCache = new GMPBulkSessionCache(id, GMPBulkSession)
 
   override def beforeEach(): Unit = {
     await(repository.collection.deleteMany(BsonDocument()).toFuture())
@@ -61,36 +61,39 @@ class GMPBulkSessionRepositorySpec
 
   ".set" - {
     "Must successfully save a record to the DB" - {
-      val result = await(repository.set(GMPBulkSession))
+      val result = await(repository.set(gmpBulkSessionCache))
 
       result mustEqual true
 
-      val insertedModel = await(repository.get(GMPBulkSession.id)).get
-      insertedModel.id mustBe GMPBulkSession.id
-      insertedModel.reference mustBe GMPBulkSession.reference
-      insertedModel.emailAddress mustBe GMPBulkSession.emailAddress
-      insertedModel.callBackData mustBe GMPBulkSession.callBackData
+      val insertedModel = await(repository.get(gmpBulkSessionCache)).get
+      insertedModel.id mustBe gmpBulkSessionCache.gmpSession.id
+      insertedModel.gmpSession.reference mustBe gmpBulkSessionCache.gmpSession.reference
+      insertedModel.gmpSession.emailAddress mustBe gmpBulkSessionCache.gmpSession.emailAddress
+      insertedModel.gmpSession.callBackData mustBe gmpBulkSessionCache.gmpSession.callBackData
     }
   }
 
   ".get" - {
     "when there is a record for this id" - {
       "must return the correct record" in {
-        await(repository.set(GMPBulkSession : GMPBulkSessionWithId))
+        await(repository.set(gmpBulkSessionCache))
 
-        val insertedRecord = await(repository.get(GMPBulkSession.id)).get
-        insertedRecord.id mustBe GMPBulkSession.id
-        insertedRecord.reference mustBe GMPBulkSession.reference
-        insertedRecord.emailAddress mustBe GMPBulkSession.emailAddress
-        insertedRecord.callBackData mustBe GMPBulkSession.callBackData
+        val insertedRecord = await(repository.get(gmpBulkSessionCache)).get
+        insertedRecord.id mustBe gmpBulkSessionCache.gmpSession.id
+        insertedRecord.gmpSession.reference mustBe gmpBulkSessionCache.gmpSession.reference
+        insertedRecord.gmpSession.emailAddress mustBe gmpBulkSessionCache.gmpSession.emailAddress
+        insertedRecord.gmpSession.callBackData mustBe gmpBulkSessionCache.gmpSession.callBackData
       }
     }
 
-    "when there is no record for this id" - {
-      "must return None" in {
-        repository.get("id that does not exist").futureValue must not be defined
+    ".get" - {
+      "when there is no record for this id" - {
+        "must return None" in {
+          val nonExistingCache = gmpBulkSessionCache.copy(id = "non-existing-id")
+          val result = await(repository.get(nonExistingCache))
+          result mustBe None
+        }
       }
     }
-
   }
 }

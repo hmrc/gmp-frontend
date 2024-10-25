@@ -22,8 +22,10 @@ import play.api.libs.json.Format
 import uk.gov.hmrc.mongo.MongoComponent
 import uk.gov.hmrc.mongo.play.json.PlayMongoRepository
 import config.ApplicationConfig
-import models.GMPBulkSessionWithId
+import models.GMPBulkSessionCache
+import services.Encryption
 import uk.gov.hmrc.mongo.play.json.formats.MongoJavatimeFormats
+
 import java.time.Instant
 import java.util.concurrent.TimeUnit
 import javax.inject.{Inject, Singleton}
@@ -31,13 +33,14 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class GMPBulkSessionRepository @Inject() (
-    mongoComponent: MongoComponent,
-    appConfig: ApplicationConfig
-)(implicit ec: ExecutionContext)
-  extends PlayMongoRepository[GMPBulkSessionWithId](
+                                           mongoComponent: MongoComponent,
+                                           appConfig: ApplicationConfig,
+                                           implicit val encryption: Encryption
+                                         )(implicit ec: ExecutionContext)
+  extends PlayMongoRepository[GMPBulkSessionCache](
     collectionName = "gmp-bulk-session",
     mongoComponent = mongoComponent,
-    domainFormat = GMPBulkSessionWithId.formats,
+    domainFormat = GMPBulkSessionCache.MongoFormats.formats,
     indexes = Seq(
       IndexModel(
         Indexes.ascending("lastModifiedIdx"),
@@ -49,30 +52,30 @@ class GMPBulkSessionRepository @Inject() (
   ){
   implicit val instantFormat: Format[Instant] = MongoJavatimeFormats.instantFormat
 
-  private def byId(id: String): Bson =
-    Filters.equal("_id", id)
+  private def byId(gmpBulkSessionCache: GMPBulkSessionCache): Bson =
+    Filters.equal("_id", gmpBulkSessionCache.id)
 
-  private def keepAlive(id: String): Future[Boolean] =
+  private def keepAlive(gmpBulkSessionCache: GMPBulkSessionCache): Future[Boolean] =
     collection
       .updateOne(
-        filter = byId(id),
+        filter = byId(gmpBulkSessionCache),
         update = Updates.set("lastModifiedIdx", Instant.now())
       )
       .toFuture()
       .map(_ => true)
 
-  def get(id: String): Future[Option[GMPBulkSessionWithId]] =
-    keepAlive(id).flatMap { _ =>
+  def get(gmpBulkSessionCache: GMPBulkSessionCache): Future[Option[GMPBulkSessionCache]] =
+    keepAlive(gmpBulkSessionCache).flatMap { _ =>
       collection
-        .find(byId(id))
+        .find(byId(gmpBulkSessionCache))
         .headOption()
     }
 
-  def set(GMPBulkSession: GMPBulkSessionWithId): Future[Boolean] =
+  def set(gmpBulkSessionCache: GMPBulkSessionCache): Future[Boolean] =
     collection
       .replaceOne(
-        filter = byId(GMPBulkSession.id),
-        replacement = GMPBulkSession,
+        filter = byId(gmpBulkSessionCache),
+        replacement = gmpBulkSessionCache,
         options = ReplaceOptions().upsert(true)
       )
       .toFuture()
