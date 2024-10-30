@@ -98,27 +98,4 @@ class GMPBulkSessionService @Inject()(metrics: ApplicationMetrics,
       cacheMap.getEntry[GmpBulkSession](GMP_BULK_SESSION_KEY)
     })
   }
-
-
-  def cacheRevaluationRate(rate: String)(implicit  hc: HeaderCarrier ): Future[Option[GmpSession]] = {
-    val timer = metrics.keystoreStoreTimer.time()
-
-    logger.debug(s"[SessionService][cacheRevaluationRate] : $rate")
-
-    val result = gmpSessionCache.fetchAndGetEntry[GmpSession](GMP_SESSION_KEY) flatMap { currentSession =>
-      gmpSessionCache.cache[GmpSession](GMP_SESSION_KEY,
-        currentSession match {
-          case Some(returnedSession) => returnedSession.copy(rate = Some(rate))
-          case None => cleanSession.copy(rate = Some(rate))
-        }
-      )
-    }
-
-    result.map(cacheMap => {
-      timer.stop()
-      cacheMap.getEntry[GmpSession](GMP_SESSION_KEY)
-    })
-  }
-
-
 }
