@@ -35,16 +35,25 @@ class ModelEncryptionSpec extends PlaySpec with GuiceOneServerPerSuite {
 
   val memberDetails: MemberDetails = MemberDetails("John", "Doe", RandomNino.generate)
   val leaving: Leaving = Leaving(currentDateGmp, Some(Leaving.YES_BEFORE))
+  val scon = "S123456789T"
+  val scenario = "Scenario 1"
+  val rate = "4.5%"
+  val equalise = 1
+
+
+  val gmpSession: GmpSession = GmpSession(
+    memberDetails = memberDetails,
+    scon = scon,
+    scenario = scenario,
+    revaluationDate = Some(currentDateGmp),
+    rate = Some(rate),
+    leaving = leaving,
+    equalise = Some(equalise)
+  )
 
   val singleCalculationSessionCache: SingleCalculationSessionCache = SingleCalculationSessionCache(
     id = "id",
-    memberDetails = memberDetails,
-    scon = "S123456789T",
-    scenario = "Scenario 1",
-    revaluationDate = Some(currentDateGmp),
-    rate = Some("4.5%"),
-    leaving = leaving,
-    equalise = Some(1),
+    gmpSession = gmpSession,
     lastModified = Instant.ofEpochSecond(1)
   )
 
@@ -53,15 +62,15 @@ class ModelEncryptionSpec extends PlaySpec with GuiceOneServerPerSuite {
   val emailAddress: String = "testData"
   val reference: String = "testData"
 
-  val gmpSession: GMPBulkSessionWithId = GMPBulkSessionWithId(
-    id = "id",
+  val gmpBulkSession: GmpBulkSession = GmpBulkSession(
     callBackData = Some(callBackData),
     emailAddress = Some(emailAddress),
     reference = Some(reference)
   )
-  val gmpSessionCache: GMPBulkSessionCache = GMPBulkSessionCache(
+  val gmpBulkSessionCache: GMPBulkSessionCache = GMPBulkSessionCache(
     id = "id",
-    gmpSession = gmpSession
+    gmpBulkSession = gmpBulkSession,
+    lastModified = Instant.ofEpochSecond(1)
   )
 
   "SingleCalculationSessionCacheEncryption" should {
@@ -70,26 +79,14 @@ class ModelEncryptionSpec extends PlaySpec with GuiceOneServerPerSuite {
       val result = ModelEncryption.encryptSingleCalculationSessionCache(singleCalculationSessionCache)
 
       result._1 mustBe singleCalculationSessionCache.id
-      Json.parse(encryption.crypto.decrypt(result._2, singleCalculationSessionCache.id)).as[MemberDetails] mustBe singleCalculationSessionCache.memberDetails
-      encryption.crypto.decrypt(result._3, singleCalculationSessionCache.id) mustBe singleCalculationSessionCache.scon
-      encryption.crypto.decrypt(result._4, singleCalculationSessionCache.id) mustBe singleCalculationSessionCache.scenario
-      result._5.map(date => Json.parse(encryption.crypto.decrypt(date, singleCalculationSessionCache.id)).as[GmpDate]) mustBe singleCalculationSessionCache.revaluationDate
-      result._6.map(rate => encryption.crypto.decrypt(rate, singleCalculationSessionCache.id)) mustBe singleCalculationSessionCache.rate
-      Json.parse(encryption.crypto.decrypt(result._7, singleCalculationSessionCache.id)).as[Leaving] mustBe singleCalculationSessionCache.leaving
-      result._8.map(equalise => encryption.crypto.decrypt(equalise, singleCalculationSessionCache.id).toInt) mustBe singleCalculationSessionCache.equalise
-      result._9 mustBe singleCalculationSessionCache.lastModified
+      Json.parse(encryption.crypto.decrypt(result._2, singleCalculationSessionCache.id)).as[GmpSession] mustBe singleCalculationSessionCache.gmpSession
+      result._3 mustBe singleCalculationSessionCache.lastModified
     }
 
     "Decrypt SingleCalculationSessionCache data" in {
       val result = ModelEncryption.decryptSingleCalculationSessionCache(
         id = singleCalculationSessionCache.id,
-        encryptedMemberDetails = encryption.crypto.encrypt(Json.toJson(singleCalculationSessionCache.memberDetails).toString, singleCalculationSessionCache.id),
-        encryptedScon = encryption.crypto.encrypt(singleCalculationSessionCache.scon, singleCalculationSessionCache.id),
-        encryptedScenario = encryption.crypto.encrypt(singleCalculationSessionCache.scenario, singleCalculationSessionCache.id),
-        encryptedRevaluationDate = singleCalculationSessionCache.revaluationDate.map(date => encryption.crypto.encrypt(Json.toJson(date).toString, singleCalculationSessionCache.id)),
-        encryptedRate = singleCalculationSessionCache.rate.map(rate => encryption.crypto.encrypt(rate, singleCalculationSessionCache.id)),
-        encryptedLeaving = encryption.crypto.encrypt(Json.toJson(singleCalculationSessionCache.leaving).toString, singleCalculationSessionCache.id),
-        encryptedEqualise = singleCalculationSessionCache.equalise.map(equalise => encryption.crypto.encrypt(equalise.toString, singleCalculationSessionCache.id)),
+        gmpSession = encryption.crypto.encrypt(Json.toJson(singleCalculationSessionCache.gmpSession).toString, singleCalculationSessionCache.id),
         lastModified = singleCalculationSessionCache.lastModified
       )
 
@@ -102,19 +99,19 @@ class ModelEncryptionSpec extends PlaySpec with GuiceOneServerPerSuite {
   "GmpBulkSessionCacheEncryption" should {
 
     "Encrypt GmpBulkSessionCache data" in {
-      val result = ModelEncryption.encryptSessionCache(gmpSessionCache)
-      result._1 mustBe gmpSessionCache.id
-      Json
-        .parse(encryption.crypto.decrypt(result._2, gmpSessionCache.id))
-        .as[GMPBulkSessionWithId] mustBe gmpSessionCache.gmpSession
+      val result = ModelEncryption.encryptSessionCache(gmpBulkSessionCache)
+      result._1 mustBe gmpBulkSessionCache.id
+      Json.parse(encryption.crypto.decrypt(result._2, gmpBulkSessionCache.id)).as[GmpBulkSession] mustBe gmpBulkSessionCache.gmpBulkSession
+      result._3 mustBe gmpBulkSessionCache.lastModified
     }
 
     "Decrypt GmpBulkSessionCache data into model" in {
       val result = ModelEncryption.decryptSessionCache(
-        id = gmpSessionCache.id,
-        gmpSession = encryption.crypto.encrypt(Json.toJson(gmpSessionCache.gmpSession).toString, gmpSessionCache.id)
+        id = gmpBulkSessionCache.id,
+        gmpBulkSession = encryption.crypto.encrypt(Json.toJson(gmpBulkSessionCache.gmpBulkSession).toString, gmpBulkSessionCache.id),
+        lastModified = gmpBulkSessionCache.lastModified
       )
-      result mustBe gmpSessionCache
+      result mustBe gmpBulkSessionCache
     }
   }
 }

@@ -22,9 +22,12 @@ import uk.gov.hmrc.crypto.EncryptedValue
 import uk.gov.hmrc.crypto.json.CryptoFormats
 import services.Encryption
 
+import java.time.Instant
+
 case class GMPBulkSessionCache(
    id: String,
-   gmpSession: GMPBulkSessionWithId
+   gmpBulkSession: GmpBulkSession,
+   lastModified: Instant = Instant.now()
 )
 
 object GMPBulkSessionCache {
@@ -35,18 +38,20 @@ object GMPBulkSessionCache {
     def reads()(implicit encryption: Encryption): Reads[GMPBulkSessionCache] =
       (
         (__ \ "id").read[String] and
-          (__ \ "gmpSession").read[EncryptedValue]
+          (__ \ "gmpBulkSession").read[EncryptedValue] and
+          (__ \ "lastModified").read[Instant]
         )(ModelEncryption.decryptSessionCache _)
 
     def writes(implicit encryption: Encryption): OWrites[GMPBulkSessionCache] =
       new OWrites[GMPBulkSessionCache] {
 
         override def writes(sessionCache: GMPBulkSessionCache): JsObject = {
-          val encryptedValue: (String, EncryptedValue) =
+          val encryptedValue: (String, EncryptedValue, Instant) =
             ModelEncryption.encryptSessionCache(sessionCache)
           Json.obj(
-            "id"        -> encryptedValue._1,
-            "gmpSession" -> encryptedValue._2
+            "id" -> encryptedValue._1,
+            "gmpBulkSession" -> encryptedValue._2,
+            "lastModified" -> encryptedValue._3
           )
         }
       }

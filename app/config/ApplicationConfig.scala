@@ -21,11 +21,18 @@ import com.typesafe.config.ConfigFactory
 import play.api.{Configuration, Environment}
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
+
+trait AppConfig {
+  val isMongoDBCacheEnabled: Boolean
+
+  def serviceMaxNoOfAttempts: Int
+}
+
 @Singleton
 class ApplicationConfig @Inject()(
   val runModeConfiguration: Configuration,
   val environment: Environment,
-  servicesConfig: ServicesConfig) {
+  servicesConfig: ServicesConfig) extends ServicesConfig(runModeConfiguration) with AppConfig {
 
   private def loadConfig(key: String) = runModeConfiguration.getOptional[String](key).getOrElse(throw new Exception(s"Missing key: $key"))
 
@@ -48,6 +55,11 @@ class ApplicationConfig @Inject()(
   lazy val timeout = servicesConfig.getInt("timeout.seconds")
   lazy val timeoutCountdown = servicesConfig.getInt("timeout.countdown")
   lazy val cacheTtl: Int = servicesConfig.getInt("mongodb.timeToLiveInSeconds")
+
+  override val isMongoDBCacheEnabled: Boolean = getBoolean("isMongoDBCacheEnabled")
+
+  override def serviceMaxNoOfAttempts: Int = getConfString("gmp-service_max_no_of_attempts", "").toInt
+
 }
 
 

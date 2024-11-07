@@ -52,32 +52,35 @@ class GMPBulkSessionRepository @Inject() (
   ){
   implicit val instantFormat: Format[Instant] = MongoJavatimeFormats.instantFormat
 
-  private def byId(gmpBulkSessionCache: GMPBulkSessionCache): Bson =
-    Filters.equal("_id", gmpBulkSessionCache.id)
+  private def byId(id: String): Bson = Filters.equal("_id", id)
 
-  private def keepAlive(gmpBulkSessionCache: GMPBulkSessionCache): Future[Boolean] =
+  private def keepAlive(id: String): Future[Boolean] =
     collection
       .updateOne(
-        filter = byId(gmpBulkSessionCache),
+        filter = byId(id),
         update = Updates.set("lastModifiedIdx", Instant.now())
       )
       .toFuture()
       .map(_ => true)
 
-  def get(gmpBulkSessionCache: GMPBulkSessionCache): Future[Option[GMPBulkSessionCache]] =
-    keepAlive(gmpBulkSessionCache).flatMap { _ =>
-      collection
-        .find(byId(gmpBulkSessionCache))
-        .headOption()
-    }
+  def get(id: String): Future[Option[GMPBulkSessionCache]] = {
+    for {
+      _ <- keepAlive(id)
+      optUserAnswers <- collection.find(byId(id)).headOption()
+    } yield optUserAnswers
+  }
 
-  def set(gmpBulkSessionCache: GMPBulkSessionCache): Future[Boolean] =
+  def set(answers: GMPBulkSessionCache): Future[Boolean] = {
+
+    val updatedAnswers = answers copy (lastModified = Instant.now())
+
     collection
       .replaceOne(
-        filter = byId(gmpBulkSessionCache),
-        replacement = gmpBulkSessionCache,
+        filter = byId(updatedAnswers.id),
+        replacement = updatedAnswers,
         options = ReplaceOptions().upsert(true)
       )
       .toFuture()
       .map(_ => true)
+  }
 }

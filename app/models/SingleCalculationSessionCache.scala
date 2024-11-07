@@ -26,13 +26,7 @@ import java.time.Instant
 
 case class SingleCalculationSessionCache(
                                           id: String,
-                                          memberDetails: MemberDetails,
-                                          scon: String,
-                                          scenario: String,
-                                          revaluationDate: Option[GmpDate],
-                                          rate: Option[String],
-                                          leaving: Leaving,
-                                          equalise: Option[Int],
+                                          gmpSession: GmpSession,
                                           lastModified: Instant = Instant.now()
                                         )
 
@@ -44,31 +38,19 @@ object SingleCalculationSessionCache {
     def reads(implicit encryption: Encryption): Reads[SingleCalculationSessionCache] = {
       (
         (__ \ "id").read[String] and
-          (__ \ "memberDetails").read[EncryptedValue] and
-          (__ \ "scon").read[EncryptedValue] and
-          (__ \ "scenario").read[EncryptedValue] and
-          (__ \ "revaluationDate").readNullable[EncryptedValue] and
-          (__ \ "rate").readNullable[EncryptedValue] and
-          (__ \ "leaving").read[EncryptedValue] and
-          (__ \ "equalise").readNullable[EncryptedValue] and
+          (__ \ "gmpSession").read[EncryptedValue] and
           (__ \ "lastModified").read[Instant]
         )(ModelEncryption.decryptSingleCalculationSessionCache _)
     }
 
     def writes(implicit encryption: Encryption): OWrites[SingleCalculationSessionCache] = new OWrites[SingleCalculationSessionCache] {
       override def writes(singleCalculationSessionCache: SingleCalculationSessionCache): JsObject = {
-        val encryptedValues: (String, EncryptedValue, EncryptedValue, EncryptedValue, Option[EncryptedValue], Option[EncryptedValue], EncryptedValue, Option[EncryptedValue], Instant) =
+        val encryptedValues: (String, EncryptedValue, Instant) =
           ModelEncryption.encryptSingleCalculationSessionCache(singleCalculationSessionCache)
         Json.obj(
           "id" -> encryptedValues._1,
-          "memberDetails" -> encryptedValues._2,
-          "scon" -> encryptedValues._3,
-          "scenario" -> encryptedValues._4,
-          "revaluationDate" -> encryptedValues._5,
-          "rate" -> encryptedValues._6,
-          "leaving" -> encryptedValues._7,
-          "equalise" -> encryptedValues._8,
-          "lastModified" -> encryptedValues._9
+          "gmpSession" -> encryptedValues._2,
+          "lastModified" -> encryptedValues._3,
         )
       }
     }
