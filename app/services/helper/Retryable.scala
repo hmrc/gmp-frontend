@@ -14,21 +14,21 @@
  * limitations under the License.
  */
 
-package models
+package services.helper
 
-import models.upscan.UploadStatus
-import play.api.libs.json.{Json, OFormat}
+import play.api.Logging
 
+import scala.concurrent.{ExecutionContext, Future}
 
+trait Retryable extends Logging {
 
-case class GMPBulkSessionWithId(
-                           id: String,
-                           callBackData: Option[UploadStatus],
-                           emailAddress: Option[String],
-                           reference: Option[String])
-
-object GMPBulkSessionWithId {
-  implicit val formats: OFormat[GMPBulkSessionWithId] = Json.format[GMPBulkSessionWithId]
+  def retry[T](noOfTimes: Int, context: String)(block: => Future[T])(implicit ec: ExecutionContext): Future[T] =
+    if (noOfTimes == 0) {
+      Future.failed(new Exception(s"$context - [Retry limit met]"))
+    } else {
+      block recoverWith { case e =>
+        logger.warn(s"$context - [Attempting Retry] Cause: " + e.getMessage)
+        retry(noOfTimes - 1, context)(block)
+      }
+    }
 }
-
-

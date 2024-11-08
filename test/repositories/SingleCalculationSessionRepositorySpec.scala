@@ -17,7 +17,7 @@
 package repositories
 
 import helpers.RandomNino
-import models.{GmpDate, Leaving, MemberDetails, SingleCalculationSessionCache}
+import models.{GmpDate, GmpSession, Leaving, MemberDetails, SingleCalculationSessionCache}
 import org.mongodb.scala.bson.BsonDocument
 import org.mongodb.scala.model.{IndexModel, IndexOptions, Indexes}
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
@@ -64,6 +64,22 @@ class SingleCalculationSessionRepositorySpec
 
   val memberDetails: MemberDetails = MemberDetails("John", "Doe", RandomNino.generate)
   val leaving: Leaving = Leaving(currentDateGmp, Some(Leaving.YES_BEFORE))
+  val scon = "S123456789T"
+  val scenario = "Scenario 1"
+  val rate = "4.5%"
+  val equalise = 1
+
+  val gmpSession: GmpSession = GmpSession(
+    memberDetails = memberDetails,
+    scon = scon,
+    scenario = scenario,
+    revaluationDate = Some(currentDateGmp),
+    rate = Some(rate),
+    leaving = leaving,
+    equalise = Some(equalise)
+  )
+
+
 
   "indexes" - {
     "are correct" in {
@@ -80,13 +96,7 @@ class SingleCalculationSessionRepositorySpec
     "must set the last updated time on the supplied session cache to `now`, and save it" in {
       val sessionCacheBefore: SingleCalculationSessionCache = SingleCalculationSessionCache(
         id = "id",
-        memberDetails = memberDetails,
-        scon = "S123456789T",
-        scenario = "Scenario 1",
-        revaluationDate = Some(currentDateGmp),
-        rate = Some("4.5%"),
-        leaving = leaving,
-        equalise = Some(1),
+        gmpSession = gmpSession,
         lastModified = Instant.ofEpochSecond(1)
       )
       val timeBeforeTest = Instant.now()
@@ -99,25 +109,19 @@ class SingleCalculationSessionRepositorySpec
       assert(updatedRecord.lastModified.toEpochMilli < timeAfterTest.toEpochMilli || updatedRecord.lastModified.toEpochMilli == timeAfterTest.toEpochMilli)
 
       updatedRecord.id mustBe sessionCacheBefore.id
-      updatedRecord.memberDetails mustBe sessionCacheBefore.memberDetails
-      updatedRecord.scon mustBe sessionCacheBefore.scon
-      updatedRecord.scenario mustBe sessionCacheBefore.scenario
-      updatedRecord.revaluationDate mustBe sessionCacheBefore.revaluationDate
-      updatedRecord.rate mustBe sessionCacheBefore.rate
-      updatedRecord.leaving mustBe sessionCacheBefore.leaving
-      updatedRecord.equalise mustBe sessionCacheBefore.equalise
+      updatedRecord.gmpSession.memberDetails mustBe sessionCacheBefore.gmpSession.memberDetails
+      updatedRecord.gmpSession.scon mustBe sessionCacheBefore.gmpSession.scon
+      updatedRecord.gmpSession.scenario mustBe sessionCacheBefore.gmpSession.scenario
+      updatedRecord.gmpSession.revaluationDate mustBe sessionCacheBefore.gmpSession.revaluationDate
+      updatedRecord.gmpSession.rate mustBe sessionCacheBefore.gmpSession.rate
+      updatedRecord.gmpSession.leaving mustBe sessionCacheBefore.gmpSession.leaving
+      updatedRecord.gmpSession.equalise mustBe sessionCacheBefore.gmpSession.equalise
     }
 
     "must correctly encrypt all session cache data" in {
       val sessionCacheBefore: SingleCalculationSessionCache = SingleCalculationSessionCache(
         id = "id",
-        memberDetails = memberDetails,
-        scon = "S123456789T",
-        scenario = "Scenario 1",
-        revaluationDate = Some(currentDateGmp),
-        rate = Some("4.5%"),
-        leaving = leaving,
-        equalise = Some(1),
+        gmpSession = gmpSession,
         lastModified = Instant.ofEpochSecond(1)
       )
 
@@ -127,23 +131,10 @@ class SingleCalculationSessionRepositorySpec
       val updatedRecord = await(repository.collection.find[BsonDocument](BsonDocument()).toFuture()).head
       val resultParsedToJson = Json.parse(updatedRecord.toJson).as[JsObject]
 
-      val memberDetailsDecrypted = {
-        Json.parse(encryption.crypto.decrypt((resultParsedToJson \ "memberDetails").as[EncryptedValue], sessionCacheBefore.id)).as[MemberDetails]
-      }
-      val sconDecrypted = encryption.crypto.decrypt((resultParsedToJson \ "scon").as[EncryptedValue], sessionCacheBefore.id)
-      val scenarioDecrypted = encryption.crypto.decrypt((resultParsedToJson \ "scenario").as[EncryptedValue], sessionCacheBefore.id)
-      val revaluationDateDecrypted = (resultParsedToJson \ "revaluationDate").asOpt[EncryptedValue].map(value => Json.parse(encryption.crypto.decrypt(value, sessionCacheBefore.id)).as[GmpDate])
-      val rateDecrypted = (resultParsedToJson \ "rate").asOpt[EncryptedValue].map(rate => encryption.crypto.decrypt(rate, sessionCacheBefore.id))
-      val leavingDecrypted = Json.parse(encryption.crypto.decrypt((resultParsedToJson \ "leaving").as[EncryptedValue], sessionCacheBefore.id)).as[Leaving]
-      val equaliseDecrypted = (resultParsedToJson \ "equalise").asOpt[EncryptedValue].map(equalise => encryption.crypto.decrypt(equalise, sessionCacheBefore.id).toInt)
+      val gmpSessionDecrypted = Json.parse(encryption.crypto.decrypt((resultParsedToJson \ "gmpSession").as[EncryptedValue], sessionCacheBefore.id)).as[GmpSession]
 
-      memberDetailsDecrypted mustBe sessionCacheBefore.memberDetails
-      sconDecrypted mustBe sessionCacheBefore.scon
-      scenarioDecrypted mustBe sessionCacheBefore.scenario
-      revaluationDateDecrypted mustBe sessionCacheBefore.revaluationDate
-      rateDecrypted mustBe sessionCacheBefore.rate
-      leavingDecrypted mustBe sessionCacheBefore.leaving
-      equaliseDecrypted mustBe sessionCacheBefore.equalise
+      gmpSessionDecrypted mustBe sessionCacheBefore.gmpSession
+
     }
   }
 
@@ -154,13 +145,7 @@ class SingleCalculationSessionRepositorySpec
       "must update the lastModified time and get the record" in {
         val sessionCacheBefore: SingleCalculationSessionCache = SingleCalculationSessionCache(
           id = "id",
-          memberDetails = memberDetails,
-          scon = "S123456789T",
-          scenario = "Scenario 1",
-          revaluationDate = Some(currentDateGmp),
-          rate = Some("4.5%"),
-          leaving = leaving,
-          equalise = Some(1),
+          gmpSession = gmpSession,
           lastModified = Instant.ofEpochSecond(1)
         )
         await(repository.set(sessionCacheBefore))
@@ -173,13 +158,13 @@ class SingleCalculationSessionRepositorySpec
         assert(updatedRecord.lastModified.toEpochMilli < timeAfterTest.toEpochMilli || updatedRecord.lastModified.toEpochMilli == timeAfterTest.toEpochMilli)
 
         updatedRecord.id mustBe sessionCacheBefore.id
-        updatedRecord.memberDetails mustBe sessionCacheBefore.memberDetails
-        updatedRecord.scon mustBe sessionCacheBefore.scon
-        updatedRecord.scenario mustBe sessionCacheBefore.scenario
-        updatedRecord.revaluationDate mustBe sessionCacheBefore.revaluationDate
-        updatedRecord.rate mustBe sessionCacheBefore.rate
-        updatedRecord.leaving mustBe sessionCacheBefore.leaving
-        updatedRecord.equalise mustBe sessionCacheBefore.equalise
+        updatedRecord.gmpSession.memberDetails mustBe sessionCacheBefore.gmpSession.memberDetails
+        updatedRecord.gmpSession.scon mustBe sessionCacheBefore.gmpSession.scon
+        updatedRecord.gmpSession.scenario mustBe sessionCacheBefore.gmpSession.scenario
+        updatedRecord.gmpSession.revaluationDate mustBe sessionCacheBefore.gmpSession.revaluationDate
+        updatedRecord.gmpSession.rate mustBe sessionCacheBefore.gmpSession.rate
+        updatedRecord.gmpSession.leaving mustBe sessionCacheBefore.gmpSession.leaving
+        updatedRecord.gmpSession.equalise mustBe sessionCacheBefore.gmpSession.equalise
       }
     }
 
@@ -195,13 +180,7 @@ class SingleCalculationSessionRepositorySpec
     "must remove a record" in {
       val sessionCacheBefore: SingleCalculationSessionCache = SingleCalculationSessionCache(
         id = "id",
-        memberDetails = memberDetails,
-        scon = "S123456789T",
-        scenario = "Scenario 1",
-        revaluationDate = Some(currentDateGmp),
-        rate = Some("4.5%"),
-        leaving = leaving,
-        equalise = Some(1),
+        gmpSession = gmpSession,
         lastModified = Instant.ofEpochSecond(1)
       )
       repository.set(sessionCacheBefore).futureValue

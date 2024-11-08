@@ -16,10 +16,11 @@
 
 package services
 
-import config.GmpSessionCache
+import config.ApplicationConfig
 import metrics.ApplicationMetrics
-import models.{GmpDate, GmpSession, Leaving, MemberDetails}
-import play.api.Logging
+import models.{CalculationType, GmpDate, GmpSession, Leaving, MemberDetails, RevaluationRate, SingleCalculationSessionCache}
+import repositories.SingleCalculationSessionRepository
+import services.helper.Retryable
 import uk.gov.hmrc.http.HeaderCarrier
 
 import javax.inject.Inject
@@ -27,165 +28,293 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class SingleCalculationSessionService @Inject()(
                                                  metrics: ApplicationMetrics,
-                                                 gmpSessionCache: GmpSessionCache)(implicit ec: ExecutionContext) extends Logging{
+                                                 appConfig: ApplicationConfig,
+                                                 singleCalculationSessionRepository: SingleCalculationSessionRepository
+                                               )(implicit ec: ExecutionContext) extends Retryable {
 
-  val GMP_SESSION_KEY = "gmp_session"
-  val cleanSession = GmpSession(MemberDetails("", "", ""), "", "", None, None, Leaving(GmpDate(None, None, None), None), None)
+  val cleanGmpSession: GmpSession = GmpSession(MemberDetails("", "", ""), "", "", None, None, Leaving(GmpDate(None, None, None), None), None)
+
+
+private def cleanGmpSingleCalculationSessionCache(
+                                      id: String,
+                                      gmpSession: GmpSession
+                                    ): SingleCalculationSessionCache =
+  SingleCalculationSessionCache(id, gmpSession)
+
+  private def getSessionId(implicit hc: HeaderCarrier): String = {
+    hc.sessionId match {
+      case Some(id) => id.value
+      case None => throw new RuntimeException("Unexpected error: No session ID found.")
+    }
+  }
+
+
+  def fetchGmpSession()(implicit hc: HeaderCarrier): Future[Option[GmpSession]] = {
+    val timer = metrics.keystoreStoreTimer.time()
+    logger.debug("[SingleCalculationSessionService][fetchGmpSession]: Fetching Gmp Session data...")
+
+    getSessionCacheDataWithRetry.map { result =>
+      timer.stop()
+      result.map(_.gmpSession)
+    }.recover { case e: Throwable =>
+      timer.stop()
+      logger.warn("[SingleCalculationSessionService][fetchGmpSession] Error fetching Gmp Session data: " + e.getMessage)
+      None
+    }
+  }
+
+
+  def resetGmpSession()(implicit hc: HeaderCarrier): Future[Option[GmpSession]] = {
+    val timer = metrics.keystoreStoreTimer.time()
+    logger.debug("[SingleCalculationSessionService][resetGmpSession]: Resetting Gmp Session data...")
+
+    val cacheData = cleanGmpSingleCalculationSessionCache(getSessionId, cleanGmpSession)
+    setSessionCacheDataWithRetry(cacheData).map { _ =>
+      timer.stop()
+      Some(cleanGmpSession)
+    }
+  }
+
+
+  def resetGmpSessionWithScon()(implicit hc: HeaderCarrier ): Future[Option[GmpSession]] = {
+    val timer = metrics.keystoreStoreTimer.time()
+
+    logger.debug(s"[SingleCalculationSessionService][fetchGmpSessionWithScon]: Resetting Gmp Session with scon data... ")
+
+    fetchPensionDetails().flatMap { s =>
+      val session = cleanGmpSession.copy(scon = s.getOrElse(""))
+
+      val cacheData = cleanGmpSingleCalculationSessionCache(getSessionId, session)
+      setSessionCacheDataWithRetry(cacheData).map { _ =>
+        timer.stop()
+        Some(session)
+      }
+    }
+  }
 
 
   def cacheMemberDetails(memberDetails: MemberDetails)(implicit hc: HeaderCarrier): Future[Option[GmpSession]] = {
     val timer = metrics.keystoreStoreTimer.time()
     logger.debug(s"[SingleCalculationSessionService][cacheMemberDetails] : $memberDetails")
-    val result = gmpSessionCache.fetchAndGetEntry[GmpSession](GMP_SESSION_KEY) flatMap { currentSession =>
-      gmpSessionCache.cache[GmpSession](GMP_SESSION_KEY,
-        currentSession match {
-          case Some(returnedSession) => returnedSession.copy(memberDetails = memberDetails)
-          case None => cleanSession.copy(memberDetails = memberDetails)
-        }
-      )
+
+    val updatedCacheData: Future[SingleCalculationSessionCache] = singleCalculationSessionRepository.get(getSessionId).map {
+      case Some(returnedSession) => returnedSession.copy(gmpSession = returnedSession.gmpSession.copy(memberDetails = memberDetails))
+      case None => cleanGmpSingleCalculationSessionCache(getSessionId, cleanGmpSession.copy(memberDetails = memberDetails))
     }
-    result.map(cacheMap => {
-      timer.stop()
-      cacheMap.getEntry[GmpSession](GMP_SESSION_KEY)
-    })
+
+    updatedCacheData.flatMap { sessionCache =>
+      setSessionCacheDataWithRetry(sessionCache).map { _ =>
+        timer.stop()
+        Some(sessionCache.gmpSession)
+      }.recover { case e: Throwable =>
+        timer.stop()
+        logger.warn("[SingleCalculationSessionService][cacheMemberDetails] Error caching member details: " + e.getMessage)
+        None
+      }
+
+    }
   }
 
   def fetchMemberDetails()(implicit hc: HeaderCarrier): Future[Option[MemberDetails]] = {
     val timer = metrics.keystoreStoreTimer.time()
-    logger.debug("[SingleCalculationSessionService][fetchMemberDetails]")
-    gmpSessionCache.fetchAndGetEntry[GmpSession](GMP_SESSION_KEY).map { currentSession =>
+    logger.debug("[SingleCalculationSessionService][fetchMemberDetails]: Fetching Member Details Session data...")
+
+    getSessionCacheDataWithRetry.map { currentSession =>
       timer.stop()
-      currentSession.map(_.memberDetails)
+      currentSession.map(_.gmpSession.memberDetails)
+    }.recover { case e: Throwable =>
+      timer.stop()
+      logger.warn("[SingleCalculationSessionService][fetchMemberDetails] Error fetching member details: " + e.getMessage)
+      None
     }
   }
 
   def cachePensionDetails(scon: String)(implicit hc: HeaderCarrier): Future[Option[GmpSession]] = {
     val timer = metrics.keystoreStoreTimer.time()
     logger.debug(s"[SingleCalculationSessionService][cachePensionDetails] : $scon")
-    val result = gmpSessionCache.fetchAndGetEntry[GmpSession](GMP_SESSION_KEY) flatMap { currentSession =>
-      gmpSessionCache.cache[GmpSession](GMP_SESSION_KEY,
-        currentSession match {
-          case Some(returnedSession) => returnedSession.copy(scon = scon)
-          case None => cleanSession.copy(scon = scon)
-        }
-      )
+
+    val updatedCacheData = singleCalculationSessionRepository.get(getSessionId).map {
+      case Some(returnedSession) =>  returnedSession.copy(gmpSession = returnedSession.gmpSession.copy(scon = scon))
+      case None => cleanGmpSingleCalculationSessionCache(getSessionId, cleanGmpSession.copy(scon = scon))
     }
-    result.map(cacheMap => {
-      timer.stop()
-      cacheMap.getEntry[GmpSession](GMP_SESSION_KEY)
-    })
+
+    updatedCacheData.flatMap { sessionCache =>
+      setSessionCacheDataWithRetry(sessionCache).map { _ =>
+        timer.stop()
+        Some(sessionCache.gmpSession)
+      }.recover { case e: Throwable =>
+        timer.stop()
+        logger.warn("[SingleCalculationSessionService][cachePensionDetails] Error caching pension details: " + e.getMessage)
+        None
+      }
+    }
   }
 
   def fetchPensionDetails()(implicit hc: HeaderCarrier): Future[Option[String]] = {
     val timer = metrics.keystoreStoreTimer.time()
     logger.debug("[SingleCalculationSessionService][fetchPensionDetails]")
-    gmpSessionCache.fetchAndGetEntry[GmpSession](GMP_SESSION_KEY).map { currentSession =>
+
+    getSessionCacheDataWithRetry.map { currentSession =>
       timer.stop()
-      currentSession.map(_.scon)
+      currentSession.map(_.gmpSession.scon)
+    }.recover { case e: Throwable =>
+      timer.stop()
+      logger.warn("[SingleCalculationSessionService][fetchPensionDetails] Error fetching pension details: " + e.getMessage)
+      None
     }
   }
 
   def cacheScenario(scenario: String)(implicit hc: HeaderCarrier): Future[Option[GmpSession]] = {
     val timer = metrics.keystoreStoreTimer.time()
     logger.debug(s"[SingleCalculationSessionService][cacheScenario] : $scenario")
-    val result = gmpSessionCache.fetchAndGetEntry[GmpSession](GMP_SESSION_KEY) flatMap { currentSession =>
-      gmpSessionCache.cache[GmpSession](GMP_SESSION_KEY,
-        currentSession match {
-          case Some(returnedSession) => returnedSession.copy(scenario = scenario)
-          case None => cleanSession.copy(scenario = scenario)
-        }
-      )
+
+    val updatedCacheData = singleCalculationSessionRepository.get(getSessionId).map {
+      case Some(returnedSession) => returnedSession.copy(gmpSession = returnedSession.gmpSession.copy(scenario = scenario, rate = None, revaluationDate = None))
+      case None => cleanGmpSingleCalculationSessionCache(getSessionId, cleanGmpSession.copy(scenario = scenario))
     }
-    result.map(cacheMap => {
-      timer.stop()
-      cacheMap.getEntry[GmpSession](GMP_SESSION_KEY)
-    })
+
+    updatedCacheData.flatMap { sessionCache =>
+      setSessionCacheDataWithRetry(sessionCache).map { _ =>
+        timer.stop()
+        Some(sessionCache.gmpSession)
+      }.recover { case e: Throwable =>
+        timer.stop()
+        logger.warn("[SingleCalculationSessionService][cacheScenario] Error caching scenario: " + e.getMessage)
+        None
+      }
+    }
   }
 
   def fetchScenario()(implicit hc: HeaderCarrier): Future[Option[String]] = {
     val timer = metrics.keystoreStoreTimer.time()
     logger.debug("[SingleCalculationSessionService][fetchScenario]")
-    gmpSessionCache.fetchAndGetEntry[GmpSession](GMP_SESSION_KEY).map { currentSession =>
+
+    getSessionCacheDataWithRetry.map { currentSession =>
       timer.stop()
-      currentSession.map(_.scenario)
+      currentSession.map(_.gmpSession.scenario)
+    }.recover { case e: Throwable =>
+      timer.stop()
+      logger.warn("[SingleCalculationSessionService][fetchScenario] Error fetching scenario details: " + e.getMessage)
+      None
     }
   }
 
   def cacheEqualise(equalise: Option[Int])(implicit hc: HeaderCarrier): Future[Option[GmpSession]] = {
     val timer = metrics.keystoreStoreTimer.time()
     logger.debug(s"[SingleCalculationSessionService][cacheEqualise] : $equalise")
-    val result = gmpSessionCache.fetchAndGetEntry[GmpSession](GMP_SESSION_KEY) flatMap { currentSession =>
-      gmpSessionCache.cache[GmpSession](GMP_SESSION_KEY,
-        currentSession match {
-          case Some(returnedSession) => returnedSession.copy(equalise = equalise)
-          case None => cleanSession.copy(equalise = equalise)
-        }
-      )
+
+    val updatedCacheData = singleCalculationSessionRepository.get(getSessionId).map {
+      case Some(returnedSession) => returnedSession.copy(gmpSession = returnedSession.gmpSession.copy(equalise = equalise))
+      case None => cleanGmpSingleCalculationSessionCache(getSessionId, cleanGmpSession.copy(equalise = equalise))
     }
-    result.map(cacheMap => {
-      timer.stop()
-      cacheMap.getEntry[GmpSession](GMP_SESSION_KEY)
-    })
+
+    updatedCacheData.flatMap { sessionCache =>
+      setSessionCacheDataWithRetry(sessionCache).map { _ =>
+        timer.stop()
+        Some(sessionCache.gmpSession)
+      }.recover { case e: Throwable =>
+        timer.stop()
+        logger.warn("[SingleCalculationSessionService][cacheEqualise] Error caching equalise option: " + e.getMessage)
+        None
+      }
+    }
   }
 
   def cacheRevaluationDate(date: Option[GmpDate])(implicit hc: HeaderCarrier): Future[Option[GmpSession]] = {
     val timer = metrics.keystoreStoreTimer.time()
     logger.debug(s"[SingleCalculationSessionService][cacheRevaluationDate] : $date")
-    val result = gmpSessionCache.fetchAndGetEntry[GmpSession](GMP_SESSION_KEY) flatMap { currentSession =>
-      gmpSessionCache.cache[GmpSession](GMP_SESSION_KEY,
-        currentSession match {
-          case Some(returnedSession) => returnedSession.copy(revaluationDate = date)
-          case None => cleanSession.copy(revaluationDate = date)
+
+    val updatedCacheData = singleCalculationSessionRepository.get(getSessionId).map {
+      case Some(returnedSession) =>
+        (returnedSession.gmpSession.scenario, returnedSession.gmpSession.leaving.leaving) match {
+          case (CalculationType.REVALUATION, Some(Leaving.NO)) => returnedSession.copy(gmpSession = returnedSession.gmpSession.copy(
+              revaluationDate = date,
+              rate = Some(RevaluationRate.HMRC),
+              leaving = Leaving(date.get, Some(Leaving.NO))
+            ))
+          case _ => returnedSession.copy(gmpSession = returnedSession.gmpSession.copy(revaluationDate = date))
         }
-      )
+      case None => cleanGmpSingleCalculationSessionCache(getSessionId, cleanGmpSession.copy(revaluationDate = date))
     }
-    result.map(cacheMap => {
-      timer.stop()
-      cacheMap.getEntry[GmpSession](GMP_SESSION_KEY)
-    })
+
+    updatedCacheData.flatMap { sessionCache =>
+      setSessionCacheDataWithRetry(sessionCache).map { _ =>
+        timer.stop()
+        Some(sessionCache.gmpSession)
+      }.recover { case e: Throwable =>
+        timer.stop()
+        logger.warn("[SingleCalculationSessionService][cacheRevaluationDate] Error caching revaluation date: " + e.getMessage)
+        None
+      }
+    }
   }
 
   def cacheLeaving(leaving: Leaving)(implicit hc: HeaderCarrier): Future[Option[GmpSession]] = {
     val timer = metrics.keystoreStoreTimer.time()
     logger.debug(s"[SingleCalculationSessionService][cacheLeaving] : $leaving")
-    val result = gmpSessionCache.fetchAndGetEntry[GmpSession](GMP_SESSION_KEY) flatMap { currentSession =>
-      gmpSessionCache.cache[GmpSession](GMP_SESSION_KEY,
-        currentSession match {
-          case Some(returnedSession) => returnedSession.copy(leaving = leaving)
-          case None => cleanSession.copy(leaving = leaving)
-        }
-      )
+
+    val updatedCacheData = singleCalculationSessionRepository.get(getSessionId).map {
+      case Some(returnedSession) => returnedSession.copy(gmpSession = returnedSession.gmpSession.copy(leaving = leaving))
+      case None => cleanGmpSingleCalculationSessionCache(getSessionId, cleanGmpSession.copy(leaving = leaving))
     }
-    result.map(cacheMap => {
-      timer.stop()
-      cacheMap.getEntry[GmpSession](GMP_SESSION_KEY)
-    })
+
+    updatedCacheData.flatMap { sessionCache =>
+      setSessionCacheDataWithRetry(sessionCache).map { _ =>
+        timer.stop()
+        Some(sessionCache.gmpSession)
+      }.recover { case e: Throwable =>
+        timer.stop()
+        logger.warn("[SingleCalculationSessionService][cacheLeaving] Error caching leaving details: " + e.getMessage)
+        None
+      }
+    }
   }
 
   def fetchLeaving()(implicit hc: HeaderCarrier): Future[Option[Leaving]] = {
     val timer = metrics.keystoreStoreTimer.time()
     logger.debug("[SingleCalculationSessionService][fetchLeaving]")
-    gmpSessionCache.fetchAndGetEntry[GmpSession](GMP_SESSION_KEY).map { currentSession =>
+
+    getSessionCacheDataWithRetry.map { currentSession =>
       timer.stop()
-      currentSession.map(_.leaving)
+      currentSession.map(_.gmpSession.leaving)
+    }.recover { case e: Throwable =>
+      timer.stop()
+      logger.warn("[SingleCalculationSessionService][fetchLeaving] Error fetching leaving details: " + e.getMessage)
+      None
     }
   }
 
   def cacheRevaluationRate(rate: String)(implicit hc: HeaderCarrier): Future[Option[GmpSession]] = {
     val timer = metrics.keystoreStoreTimer.time()
     logger.debug(s"[SingleCalculationSessionService][cacheRevaluationRate] : $rate")
-    val result = gmpSessionCache.fetchAndGetEntry[GmpSession](GMP_SESSION_KEY) flatMap { currentSession =>
-      gmpSessionCache.cache[GmpSession](GMP_SESSION_KEY,
-        currentSession match {
-          case Some(returnedSession) => returnedSession.copy(rate = Some(rate))
-          case None => cleanSession.copy(rate = Some(rate))
-        }
-      )
+
+    val updatedCacheData = singleCalculationSessionRepository.get(getSessionId).map {
+      case Some(returnedSession) => returnedSession.copy(gmpSession = returnedSession.gmpSession.copy(rate = Some(rate)))
+      case None => cleanGmpSingleCalculationSessionCache(getSessionId, cleanGmpSession.copy(rate = Some(rate)))
     }
-    result.map(cacheMap => {
-      timer.stop()
-      cacheMap.getEntry[GmpSession](GMP_SESSION_KEY)
-    })
+
+    updatedCacheData.flatMap { sessionCache =>
+      setSessionCacheDataWithRetry(sessionCache).map { _ =>
+        timer.stop()
+        Some(sessionCache.gmpSession)
+      }.recover { case e: Throwable =>
+        timer.stop()
+        logger.warn("[SingleCalculationSessionService][cacheRevaluationRate] Error caching revaluation rate: " + e.getMessage)
+        None
+      }
+    }
   }
 
+
+  private def getSessionCacheDataWithRetry(implicit hc: HeaderCarrier): Future[Option[SingleCalculationSessionCache]] = {
+    retry(appConfig.serviceMaxNoOfAttempts, "Reading Single Calculation Session") {
+      singleCalculationSessionRepository.get(getSessionId)
+    }
+  }
+
+  private def setSessionCacheDataWithRetry(updatedSession: SingleCalculationSessionCache): Future[Boolean] = {
+    retry(appConfig.serviceMaxNoOfAttempts, "Storing Single Calculation Session") {
+      singleCalculationSessionRepository.set(updatedSession)
+    }
+  }
 }

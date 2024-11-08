@@ -16,21 +16,22 @@
 
 package services
 
-import config.GmpSessionCache
-import helpers.RandomNino
+import config.{ApplicationConfig, GmpSessionCache}
 import metrics.ApplicationMetrics
-import models._
+import models.{CalculationType, GmpDate, GmpSession, Leaving, MemberDetails, RevaluationRate, SingleCalculationSessionCache}
+import helpers.RandomNino
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito._
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
-import play.api.libs.json._
+import play.api.libs.json.Json
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
-import uk.gov.hmrc.http.HeaderCarrier
+import repositories.SingleCalculationSessionRepository
 import uk.gov.hmrc.http.cache.client.CacheMap
+import uk.gov.hmrc.http.{HeaderCarrier, SessionId}
 
 import scala.concurrent.duration._
 import scala.concurrent.{Await, ExecutionContext, Future}
@@ -42,252 +43,323 @@ class SingleCalculationSessionServiceSpec extends PlaySpec with GuiceOneServerPe
 
   val memberDetails = MemberDetails(RandomNino.generate, "John", "Johnson")
   val scon = "S3123456A"
-  val gmpSession = GmpSession(memberDetails, scon, CalculationType.DOL, None, None, Leaving(GmpDate(None,None,None),None), None)
+  val gmpSession = GmpSession(memberDetails, scon, CalculationType.DOL, None, None, Leaving(GmpDate(None, None, None), None), None)
   val json = Json.toJson[GmpSession](gmpSession)
   val mockSessionCache = mock[GmpSessionCache]
+
+  val mockSessionRepository = mock[SingleCalculationSessionRepository]
   val metrics = app.injector.instanceOf[ApplicationMetrics]
+  val mockAppConfig = mock[ApplicationConfig]
+  when(mockAppConfig.serviceMaxNoOfAttempts).thenReturn(3)
 
-
-  object TestSessionService extends SessionService(metrics, mockSessionCache)
+  object TestSessionService extends SingleCalculationSessionService(metrics, mockAppConfig, mockSessionRepository)
 
   implicit val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
-  val hc = HeaderCarrier()
+  implicit val hc: HeaderCarrier = HeaderCarrier(sessionId = Some(SessionId("testSessionId")))
 
-  "Session service" must {
+  "SingleCalculationSessionService" must {
 
-    "gmpSession" must {
+    "cache new member details" in {
+      when(mockSessionRepository.get(any())).thenReturn(Future.successful(None))
+      when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))
 
-      "cache new member details" in {
-        when(mockSessionCache.fetchAndGetEntry[GmpSession](any())(any(), any(), any())).thenReturn(Future.successful(None))
+      val newMemberDetails = MemberDetails(RandomNino.generate, "John", "Johnson")
+      val json = Json.toJson[GmpSession](gmpSession.copy(newMemberDetails))
 
-        val newMemberDetails = MemberDetails(RandomNino.generate, "John", "Johnson")
-        val json = Json.toJson[GmpSession](gmpSession.copy(newMemberDetails))
+      when(mockSessionCache.cache[GmpSession](any(), any())(any(), any(), any())).thenReturn(Future.successful(CacheMap("sessionValue", Map("gmp_session" -> json))))
+
+      val result = Await.result(TestSessionService.cacheMemberDetails(newMemberDetails)(hc), 10.seconds)
+      result must be(Some(TestSessionService.cleanGmpSession.copy(memberDetails = newMemberDetails)))
+    }
+
+    "update member details" in {
+      when(mockSessionRepository.get(any())).thenReturn(Future.successful(Some(SingleCalculationSessionCache("sessionId", gmpSession))))
+      when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))
+
+      val newMemberDetails = MemberDetails(RandomNino.generate, "John", "Johnson")
+      val json = Json.toJson[GmpSession](gmpSession.copy(memberDetails = newMemberDetails))
+
+      when(mockSessionCache.cache[GmpSession](any(), any())(any(), any(), any())).thenReturn(Future.successful(CacheMap("sessionValue", Map("gmp_session" -> json))))
+
+      val result = Await.result(TestSessionService.cacheMemberDetails(newMemberDetails)(hc), 10.seconds)
+      result must be(Some(gmpSession.copy(memberDetails = newMemberDetails)))
+    }
+
+
+    "fetch member details" in {
+      when(mockSessionRepository.get(any())).thenReturn(Future.successful(Some(SingleCalculationSessionCache("sessionId", gmpSession))))
+
+      val result = Await.result(TestSessionService.fetchMemberDetails()(hc), 10.seconds)
+      result must be(Some(memberDetails))
+    }
+
+    "cache new pension details" in {
+      when(mockSessionRepository.get(any())).thenReturn(Future.successful(None))
+      when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))
+
+      val newScon = "S3123226B"
+      val json = Json.toJson[GmpSession](gmpSession.copy(scon = newScon))
+      when(mockSessionCache.cache[GmpSession](any(), any())(any(), any(), any())).thenReturn(Future.successful(CacheMap("sessionValue", Map("gmp_session" -> json))))
+
+      val result = Await.result(TestSessionService.cachePensionDetails(newScon)(hc), 10.seconds)
+      result must be(Some(TestSessionService.cleanGmpSession.copy(scon = newScon)))
+    }
+
+    "update pension details" in {
+      when(mockSessionRepository.get(any())).thenReturn(Future.successful(Some(SingleCalculationSessionCache("sessionId", gmpSession))))
+      when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))
+
+      val newScon = "S3123226B"
+      val json = Json.toJson[GmpSession](gmpSession.copy(scon = newScon))
+      when(mockSessionCache.cache[GmpSession](any(), any())(any(), any(), any())).thenReturn(Future.successful(CacheMap("sessionValue", Map("gmp_session" -> json))))
+
+
+      val result = Await.result(TestSessionService.cachePensionDetails(newScon)(hc), 10.seconds)
+      result must be(Some(gmpSession.copy(scon = newScon)))
+    }
+
+    "fetch pension details" in {
+      when(mockSessionRepository.get(any())).thenReturn(Future.successful(Some(SingleCalculationSessionCache("sessionId", gmpSession))))
+
+      val result = Await.result(TestSessionService.fetchPensionDetails()(hc), 10.seconds)
+      result must be(Some(scon))
+    }
+
+    "cache scenario" in {
+      when(mockSessionRepository.get(any())).thenReturn(Future.successful(None))
+      when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))
+
+      val json = Json.toJson[GmpSession](gmpSession)
+      when(mockSessionCache.cache[GmpSession](any(), any())(any(), any(), any())).thenReturn(Future.successful(CacheMap("sessionValue", Map("gmp_session" -> json))))
+
+      val result = Await.result(TestSessionService.cacheScenario("2")(hc), 10.seconds)
+      result must be(Some(TestSessionService.cleanGmpSession.copy(scenario = "2")))
+    }
+
+    "update scenario" in {
+      when(mockSessionRepository.get(any())).thenReturn(Future.successful(Some(SingleCalculationSessionCache("sessionId", gmpSession))))
+      when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))
+
+      val newScenario = "2"
+      val json = Json.toJson[GmpSession](gmpSession.copy(scenario = newScenario))
+
+      when(mockSessionCache.cache[GmpSession](any(), any())(any(), any(), any())).thenReturn(Future.successful(CacheMap("sessionValue", Map("gmp_session" -> json))))
+
+      val result = Await.result(TestSessionService.cacheScenario(newScenario)(hc), 10.seconds)
+      result must be(Some(gmpSession.copy(scenario = newScenario)))
+    }
+
+    "fetch the scenario" in {
+      when(mockSessionRepository.get(any())).thenReturn(Future.successful(Some(SingleCalculationSessionCache("sessionId", gmpSession))))
+
+      val result = Await.result(TestSessionService.fetchScenario()(hc), 10.seconds)
+      result must be(Some(CalculationType.DOL))
+    }
+
+    "caching a revaluation date" must {
+
+      "update the leaving date when the member has not left the scheme and revaluing" in {
+        when(mockSessionRepository.get(any())).thenReturn(Future.successful(Some(SingleCalculationSessionCache(
+          "sessionId",
+          gmpSession.copy(scenario = CalculationType.REVALUATION, leaving = Leaving(GmpDate(None, None, None), Some(Leaving.NO)))
+        ))))
+
+        when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))
+
+        val revalDate = GmpDate(Some("01"), Some("01"), Some("2010"))
+        val expectedSession = gmpSession.copy(
+          scenario = CalculationType.REVALUATION,
+          revaluationDate = Some(revalDate),
+          leaving = Leaving(revalDate, Some(Leaving.NO)),
+          rate = Some("hmrc")
+        )
+
+        val json = Json.toJson(expectedSession)
+        when(mockSessionCache.cache[GmpSession](any(), any())(any(), any(), any())).thenReturn(Future.successful(CacheMap("sessionValue", Map("gmp_session" -> json))))
+
+        val result = Await.result(TestSessionService.cacheRevaluationDate(Some(revalDate))(hc), 10.seconds)
+        result must be(Some(expectedSession))
+      }
+
+      "cache revaluation date when the member has left the scheme" in {
+        when(mockSessionRepository.get(any())).thenReturn(Future.successful(Some(SingleCalculationSessionCache(
+          "sessionId",
+          gmpSession.copy(leaving = Leaving(GmpDate(None, None, None), Some(Leaving.YES_AFTER)))
+        ))))
+
+        when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))
+
+        val revalDate = GmpDate(Some("01"), Some("01"), Some("2010"))
+        val expectedSession = gmpSession.copy(
+          revaluationDate = Some(revalDate),
+          leaving = Leaving(GmpDate(None, None, None), Some(Leaving.YES_AFTER))
+        )
+        val json = Json.toJson(expectedSession)
+        when(mockSessionCache.cache[GmpSession](any(), any())(any(), any(), any())).thenReturn(Future.successful(CacheMap("sessionValue", Map("gmp_session" -> json))))
+
+        val result = Await.result(TestSessionService.cacheRevaluationDate(Some(revalDate))(hc), 10.seconds)
+        result must be(Some(expectedSession))
+      }
+
+
+      "cache revaluation date" in {
+        when(mockSessionRepository.get(any())).thenReturn(Future.successful(None))
+        when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))
+
+        val revalDate = GmpDate(Some("01"), Some("01"), Some("2010"))
+        val json = Json.toJson[GmpSession](gmpSession.copy(revaluationDate = Some(revalDate)))
 
         when(mockSessionCache.cache[GmpSession](any(), any())(any(), any(), any())).thenReturn(Future.successful(CacheMap("sessionValue", Map("gmp_session" -> json))))
 
-        val result = Await.result(TestSessionService.cacheMemberDetails(newMemberDetails)(hc), 10 seconds)
-        result must be(Some(gmpSession.copy(memberDetails = newMemberDetails)))
+        val result = Await.result(TestSessionService.cacheRevaluationDate(Some(revalDate))(hc), 10.seconds)
+        result must be(Some(TestSessionService.cleanGmpSession.copy(revaluationDate = Some(revalDate))))
       }
 
-      "update member details" in {
-        when(mockSessionCache.fetchAndGetEntry[GmpSession](any())(any(), any(), any())).thenReturn(Future.successful(Some(gmpSession)))
+      "set revaluation date to termination date and cache it when member has not left the scheme" in {
+        val dol = GmpDate(Some("24"), Some("08"), Some("2016"))
 
-        val newMemberDetails = MemberDetails(RandomNino.generate, "John", "Johnson")
-        val json = Json.toJson[GmpSession](gmpSession.copy(memberDetails = newMemberDetails))
+        when(mockSessionRepository.get(any())).thenReturn(Future.successful(Some(SingleCalculationSessionCache(
+          "sessionId",
+          gmpSession.copy(scenario = CalculationType.REVALUATION, leaving = Leaving(dol, Some(Leaving.NO)))
+        ))))
+        when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))
 
+        val expectedSession = gmpSession.copy(
+          scenario = CalculationType.REVALUATION,
+          revaluationDate = Some(dol),
+          leaving = Leaving(dol, Some(Leaving.NO)),
+          rate = Some("hmrc")
+        )
+
+        val json = Json.toJson(expectedSession)
         when(mockSessionCache.cache[GmpSession](any(), any())(any(), any(), any())).thenReturn(Future.successful(CacheMap("sessionValue", Map("gmp_session" -> json))))
 
-        val result = Await.result(TestSessionService.cacheMemberDetails(newMemberDetails)(hc), 10 seconds)
-        result must be(Some(gmpSession.copy(memberDetails = newMemberDetails)))
+        val result = Await.result(TestSessionService.cacheRevaluationDate(Some(dol))(hc), 10.seconds)
+        result must be(Some(expectedSession))
       }
+    }
 
-      "fetch member details" in {
-        when(mockSessionCache.fetchAndGetEntry[GmpSession](any())(any(), any(), any())).thenReturn(Future.successful(Some(gmpSession)))
-        val result = Await.result(TestSessionService.fetchMemberDetails()(hc), 10 seconds)
-        result must be(Some(memberDetails))
-      }
+    "cache leaving" in {
+      when(mockSessionRepository.get(any())).thenReturn(Future.successful(None))
+      when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))
 
-      "cache new pension details" in {
-        when(mockSessionCache.fetchAndGetEntry[GmpSession](any())(any(), any(), any())).thenReturn(Future.successful(None))
+      val dol = GmpDate(Some("01"), Some("01"), Some("2010"))
+      val json = Json.toJson[GmpSession](gmpSession.copy(leaving = Leaving(leavingDate = dol, leaving = Some("Yes"))))
+      when(mockSessionCache.cache[GmpSession](any(), any())(any(), any(), any())).thenReturn(Future.successful(CacheMap("sessionValue", Map("gmp_session" -> json))))
 
-        val newScon = "S3123226B"
-        val json = Json.toJson[GmpSession](gmpSession.copy(scon = newScon))
-        when(mockSessionCache.cache[GmpSession](any(), any())(any(), any(), any())).thenReturn(Future.successful(CacheMap("sessionValue", Map("gmp_session" -> json))))
+      val result = Await.result(TestSessionService.cacheLeaving(Leaving(leavingDate = dol, leaving = Some("Yes")))(hc), 10 seconds)
+      result must be(Some(TestSessionService.cleanGmpSession.copy(leaving = Leaving(leavingDate = dol, leaving = Some("Yes")))))
+    }
 
-        val result = Await.result(TestSessionService.cachePensionDetails(newScon)(hc), 10 seconds)
-        result must be(Some(gmpSession.copy(scon = newScon)))
-      }
+    "fetch leaving" in {
+      when(mockSessionRepository.get(any())).thenReturn(Future.successful(Some(SingleCalculationSessionCache("sessionId", gmpSession))))
 
-      "update pension details" in {
-        when(mockSessionCache.fetchAndGetEntry[GmpSession](any())(any(), any(), any())).thenReturn(Future.successful(Some(gmpSession)))
+      val result = Await.result(TestSessionService.fetchLeaving()(hc), 10.seconds)
+      result must be(Some(Leaving(GmpDate(None, None, None), None)))
+    }
 
-        val newScon = "S3123226B"
-        val json = Json.toJson[GmpSession](gmpSession.copy(scon = newScon))
 
-        when(mockSessionCache.cache[GmpSession](any(), any())(any(), any(), any())).thenReturn(Future.successful(CacheMap("sessionValue", Map("gmp_session" -> json))))
+    "update leaving" in {
+      when(mockSessionRepository.get(any())).thenReturn(Future.successful(Some(SingleCalculationSessionCache("sessionId", gmpSession))))
+      when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))
 
-        val result = Await.result(TestSessionService.cachePensionDetails(newScon)(hc), 10 seconds)
-        result must be(Some(gmpSession.copy(scon = newScon)))
-      }
+      val dol = GmpDate(Some("01"), Some("01"), Some("2010"))
+      val json = Json.toJson[GmpSession](gmpSession.copy(leaving = Leaving(leavingDate = dol, leaving = Some("Yes"))))
+      when(mockSessionCache.cache[GmpSession](any(), any())(any(), any(), any())).thenReturn(Future.successful(CacheMap("sessionValue", Map("gmp_session" -> json))))
 
-      "fetch pension details" in {
-        when(mockSessionCache.fetchAndGetEntry[GmpSession](any())(any(), any(), any())).thenReturn(Future.successful(Some(gmpSession)))
-        val result = Await.result(TestSessionService.fetchPensionDetails()(hc), 10 seconds)
-        result must be(Some(scon))
-      }
+      val result = Await.result(TestSessionService.cacheLeaving(Leaving(leavingDate = dol, leaving = Some("Yes")))(hc), 10 seconds)
+      result must be(Some(gmpSession.copy(leaving = Leaving(leavingDate = dol, leaving = Some("Yes")))))
+    }
 
-      "cache scenario" in {
-        when(mockSessionCache.fetchAndGetEntry[GmpSession](any())(any(), any(), any())).thenReturn(Future.successful(None))
+    "cache revaluation rate" in {
+      when(mockSessionRepository.get(any())).thenReturn(Future.successful(None))
+      when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))
 
-        val json = Json.toJson[GmpSession](gmpSession)
+      val revalRate = RevaluationRate.FIXED
+      val json = Json.toJson[GmpSession](gmpSession.copy(rate = Some(revalRate)))
+      when(mockSessionCache.cache[GmpSession](any(), any())(any(), any(), any())).thenReturn(Future.successful(CacheMap("sessionValue", Map("gmp_session" -> json))))
 
-        when(mockSessionCache.cache[GmpSession](any(), any())(any(), any(), any())).thenReturn(Future.successful(CacheMap("sessionValue", Map("gmp_session" -> json))))
-        val result = Await.result(TestSessionService.cacheScenario("2")(hc), 10 seconds)
-        result must be(Some(gmpSession))
-      }
+      val result = Await.result(TestSessionService.cacheRevaluationRate(revalRate)(hc), 10.seconds)
+      result must be(Some(TestSessionService.cleanGmpSession.copy(rate = Some(revalRate))))
+    }
 
-      "update scenario" in {
-        when(mockSessionCache.fetchAndGetEntry[GmpSession](any())(any(), any(), any())).thenReturn(Future.successful(Some(gmpSession)))
 
-        val newScenario = "2"
-        val json = Json.toJson[GmpSession](gmpSession.copy(scenario = newScenario))
+    "update revaluation rate" in {
+      when(mockSessionRepository.get(any())).thenReturn(Future.successful(Some(SingleCalculationSessionCache("sessionId", gmpSession))))
+      when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))
 
-        when(mockSessionCache.cache[GmpSession](any(), any())(any(), any(), any())).thenReturn(Future.successful(CacheMap("sessionValue", Map("gmp_session" -> json))))
+      val revalRate = RevaluationRate.FIXED
+      val json = Json.toJson[GmpSession](gmpSession.copy(rate = Some(revalRate)))
+      when(mockSessionCache.cache[GmpSession](any(), any())(any(), any(), any())).thenReturn(Future.successful(CacheMap("sessionValue", Map("gmp_session" -> json))))
 
-        val result = Await.result(TestSessionService.cacheScenario(newScenario)(hc), 10 seconds)
-        result must be(Some(gmpSession.copy(scenario = newScenario)))
-      }
+      val result = Await.result(TestSessionService.cacheRevaluationRate(revalRate)(hc), 10.seconds)
+      result must be(Some(gmpSession.copy(rate = Some(revalRate))))
+    }
 
-      "fetch the scenario" in {
-        when(mockSessionCache.fetchAndGetEntry[GmpSession](any())(any(), any(), any())).thenReturn(Future.successful(Some(gmpSession)))
-        val result = Await.result(TestSessionService.fetchScenario()(hc), 10 seconds)
-        result must be(Some(CalculationType.DOL))
-      }
 
-      "caching a revaluation date" must {
+    "keep revaluation rate when revaluation date is cached" in {
+      when(mockSessionRepository.get(any())).thenReturn(Future.successful(Some(SingleCalculationSessionCache(
+        "sessionId",
+        gmpSession.copy(scenario = CalculationType.SURVIVOR, rate = Some(RevaluationRate.FIXED))
+      ))))
+      when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))
 
-        "update the leaving date when the member has not left the scheme and revaluing" in {
-          when(mockSessionCache.fetchAndGetEntry[GmpSession](any())(any(), any(), any())).thenReturn(Future.successful(Some(gmpSession.copy(scenario = CalculationType.REVALUATION, leaving = Leaving(GmpDate(None, None, None), Some(Leaving.NO))))))
+      val expectedSession = gmpSession.copy(
+        scenario = CalculationType.SURVIVOR,
+        rate = Some(RevaluationRate.FIXED)
+      )
+      val json = Json.toJson(expectedSession)
+      when(mockSessionCache.cache[GmpSession](any(), any())(any(), any(), any())).thenReturn(Future.successful(CacheMap("sessionValue", Map("gmp_session" -> json))))
 
-          val revalDate = GmpDate(Some("01"), Some("01"), Some("2010"))
-          val json = Json.toJson[GmpSession](gmpSession.copy(scenario = CalculationType.REVALUATION, leaving = Leaving(revalDate, Some(Leaving.NO))))
+      val result = Await.result(TestSessionService.cacheRevaluationDate(None)(hc), 10.seconds)
+      result must be(Some(expectedSession))
+    }
 
-          when(mockSessionCache.cache[GmpSession](any(), any())(any(), any(), any())).thenReturn(Future.successful(CacheMap("sessionValue", Map("gmp_session" -> json))))
 
-          val result = Await.result(TestSessionService.cacheRevaluationDate(Some(revalDate))(hc), 10 seconds)
-          result must be(Some(gmpSession.copy(scenario = CalculationType.REVALUATION, leaving = Leaving(revalDate, Some(Leaving.NO)))))
-        }
+    "cache equalise" in {
+      when(mockSessionRepository.get(any())).thenReturn(Future.successful(None))
+      when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))
 
-        "cache revaluation date when the member has left the scheme" in {
-          when(mockSessionCache.fetchAndGetEntry[GmpSession](any())(any(), any(), any())).thenReturn(Future.successful(Some(gmpSession.copy(leaving = Leaving(GmpDate(None, None, None), Some(Leaving.YES_AFTER))))))
+      val json = Json.toJson[GmpSession](gmpSession.copy(equalise = Some(1)))
+      when(mockSessionCache.cache[GmpSession](any(), any())(any(), any(), any())).thenReturn(Future.successful(CacheMap("sessionValue", Map("gmp_session" -> json))))
 
-          val revalDate = GmpDate(Some("01"), Some("01"), Some("2010"))
-          val json = Json.toJson[GmpSession](gmpSession.copy(revaluationDate = Some(revalDate)))
+      val result = Await.result(TestSessionService.cacheEqualise(Some(1))(hc), 10.seconds)
+      result must be(Some(TestSessionService.cleanGmpSession.copy(equalise = Some(1))))
+    }
 
-          when(mockSessionCache.cache[GmpSession](any(), any())(any(), any(), any())).thenReturn(Future.successful(CacheMap("sessionValue", Map("gmp_session" -> json))))
+    "update equalise" in {
+      when(mockSessionRepository.get(any())).thenReturn(Future.successful(Some(SingleCalculationSessionCache("sessionId", gmpSession))))
+      when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))
 
-          val result = Await.result(TestSessionService.cacheRevaluationDate(Some(revalDate))(hc), 10 seconds)
-          result must be(Some(gmpSession.copy(revaluationDate = Some(revalDate))))
-        }
+      val json = Json.toJson[GmpSession](gmpSession.copy(equalise = Some(1)))
+      when(mockSessionCache.cache[GmpSession](any(), any())(any(), any(), any())).thenReturn(Future.successful(CacheMap("sessionValue", Map("gmp_session" -> json))))
 
-        "cahe reval date" in {
-          when(mockSessionCache.fetchAndGetEntry[GmpSession](any())(any(), any(), any())).thenReturn(Future.successful(None))
-          val revalDate = GmpDate(Some("01"), Some("01"), Some("2010"))
-          val json = Json.toJson[GmpSession](gmpSession.copy(revaluationDate = Some(revalDate)))
+      val result = Await.result(TestSessionService.cacheEqualise(Some(1))(hc), 10.seconds)
+      result must be(Some(gmpSession.copy(equalise = Some(1))))
+    }
 
-          when(mockSessionCache.cache[GmpSession](any(), any())(any(), any(), any())).thenReturn(Future.successful(CacheMap("sessionValue", Map("gmp_session" -> json))))
+    "reset the session" in {
+      when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))
+      val result = Await.result(TestSessionService.resetGmpSession()(hc), 10 seconds)
+      result must be(Some(TestSessionService.cleanGmpSession))
+    }
 
-          val result = Await.result(TestSessionService.cacheRevaluationDate(Some(revalDate))(hc), 10 seconds)
-          result must be(Some(gmpSession.copy(revaluationDate = Some(revalDate))))
-        }
+    "reset the session with scon" in {
+      when(mockSessionRepository.get(any())).thenReturn(Future.successful(Some(SingleCalculationSessionCache(
+        "sessionId",
+        gmpSession.copy(scon = scon))
+      )))
 
-        "set revaluation date to termination date and cache it when member has not left the scheme" in {
+      when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))
+      val result = Await.result(TestSessionService.resetGmpSessionWithScon()(hc), 10 seconds)
+      result must be(Some(TestSessionService.cleanGmpSession.copy(scon = scon)))
+    }
 
-          val dol = GmpDate(Some("24"), Some("08"), Some("2016"))
-          when(mockSessionCache.fetchAndGetEntry[GmpSession](any())(any(), any(), any())).thenReturn(
-            Future.successful(Some(gmpSession.copy(scenario = CalculationType.REVALUATION, leaving = Leaving(dol, Some(Leaving.NO))))))
 
-          val json = Json.toJson[GmpSession](gmpSession.copy(scenario = CalculationType.REVALUATION,revaluationDate = Some(dol) ,leaving = Leaving(dol, Some(Leaving.NO))))
-          when(mockSessionCache.cache[GmpSession](any(), any())(any(), any(), any())).thenReturn(Future.successful(CacheMap("sessionValue", Map("gmp_session" -> json))))
-
-          val result = Await.result(TestSessionService.cacheRevaluationDate(Some(dol))(hc), 10 seconds)
-          result must be(Some(gmpSession.copy(scenario = CalculationType.REVALUATION , revaluationDate = Some(dol), leaving = Leaving(dol, Some(Leaving.NO)))))
-
-        }
-      }
-
-      "cache leaving" in {
-        when(mockSessionCache.fetchAndGetEntry[GmpSession](any())(any(), any(), any())).thenReturn(Future.successful(None))
-
-        val dol = GmpDate(Some("01"), Some("01"), Some("2010"))
-        val json = Json.toJson[GmpSession](gmpSession.copy(leaving = Leaving(leavingDate = dol, leaving = Some("Yes"))))
-        when(mockSessionCache.cache[GmpSession](any(), any())(any(), any(), any())).thenReturn(Future.successful(CacheMap("sessionValue", Map("gmp_session" -> json))))
-        val result = Await.result(TestSessionService.cacheLeaving(Leaving(leavingDate = dol, leaving = Some("Yes")))(hc), 10 seconds)
-        result must be(Some(gmpSession.copy(leaving = Leaving(leavingDate = dol, leaving = Some("Yes")))))
-      }
-
-      "fetch leaving" in {
-        when(mockSessionCache.fetchAndGetEntry[GmpSession](any())(any(), any(), any())).thenReturn(Future.successful(Some(gmpSession)))
-        val result = Await.result(TestSessionService.fetchLeaving()(hc), 10 seconds)
-        result must be(Some(Leaving(GmpDate(None,None,None),None)))
-      }
-
-      "update leaving" in {
-        when(mockSessionCache.fetchAndGetEntry[GmpSession](any())(any(), any(), any())).thenReturn(Future.successful(Some(gmpSession)))
-
-        val dol = GmpDate(Some("01"), Some("01"), Some("2010"))
-        val json = Json.toJson[GmpSession](gmpSession.copy(leaving = Leaving(leavingDate = dol, leaving = Some("Yes"))))
-        when(mockSessionCache.cache[GmpSession](any(), any())(any(), any(), any())).thenReturn(Future.successful(CacheMap("sessionValue", Map("gmp_session" -> json))))
-        val result = Await.result(TestSessionService.cacheLeaving(Leaving(leavingDate = dol, leaving = Some("Yes")))(hc), 10 seconds)
-        result must be(Some(gmpSession.copy(leaving = Leaving(leavingDate = dol, leaving = Some("Yes")))))
-      }
-
-      "cache revaluation rate" in {
-        when(mockSessionCache.fetchAndGetEntry[GmpSession](any())(any(), any(), any())).thenReturn(Future.successful(None))
-
-        val revalRate = RevaluationRate.FIXED
-        val json = Json.toJson[GmpSession](gmpSession.copy(rate = Some(revalRate)))
-
-        when(mockSessionCache.cache[GmpSession](any(), any())(any(), any(), any())).thenReturn(Future.successful(CacheMap("sessionValue", Map("gmp_session" -> json))))
-
-        val result = Await.result(TestSessionService.cacheRevaluationRate(revalRate)(hc), 10 seconds)
-        result must be(Some(gmpSession.copy(rate = Some(revalRate))))
-      }
-
-      "update revaluation rate" in {
-        when(mockSessionCache.fetchAndGetEntry[GmpSession](any())(any(), any(), any())).thenReturn(Future.successful(Some(gmpSession)))
-
-        val revalRate = RevaluationRate.FIXED
-        val json = Json.toJson[GmpSession](gmpSession.copy(rate = Some(revalRate)))
-
-        when(mockSessionCache.cache[GmpSession](any(), any())(any(), any(), any())).thenReturn(Future.successful(CacheMap("sessionValue", Map("gmp_session" -> json))))
-
-        val result = Await.result(TestSessionService.cacheRevaluationRate(revalRate)(hc), 10 seconds)
-        result must be(Some(gmpSession.copy(rate = Some(revalRate))))
-      }
-
-      "keep revaluation rate when revaluation date is cached" in {
-
-        val json = Json.toJson[GmpSession](gmpSession.copy(scenario = CalculationType.SURVIVOR, rate = Some(RevaluationRate.FIXED)))
-
-        when(mockSessionCache.cache[GmpSession](any(), any())(any(), any(), any())).thenReturn(Future.successful(CacheMap("sessionValue", Map("gmp_session" -> json))))
-
-        val result = Await.result(TestSessionService.cacheRevaluationDate(None)(hc), 10 seconds)
-        result must be(Some(gmpSession.copy(scenario = CalculationType.SURVIVOR, rate = Some(RevaluationRate.FIXED))))
-      }
-
-      "cache equalise" in {
-        when(mockSessionCache.fetchAndGetEntry[GmpSession](any())(any(), any(), any())).thenReturn(Future.successful(None))
-        val json = Json.toJson[GmpSession](gmpSession.copy(equalise = Some(1)))
-        when(mockSessionCache.cache[GmpSession](any(), any())(any(), any(), any())).thenReturn(Future.successful(CacheMap("sessionValue", Map("gmp_session" -> json))))
-        val result = Await.result(TestSessionService.cacheEqualise(Some(1))(hc), 10 seconds)
-        result must be(Some(gmpSession.copy(equalise = Some(1))))
-      }
-
-      "update equalise" in {
-        when(mockSessionCache.fetchAndGetEntry[GmpSession](any())(any(), any(), any())).thenReturn(Future.successful(Some(gmpSession)))
-        val json = Json.toJson[GmpSession](gmpSession.copy(equalise = Some(1)))
-        when(mockSessionCache.cache[GmpSession](any(), any())(any(), any(), any())).thenReturn(Future.successful(CacheMap("sessionValue", Map("gmp_session" -> json))))
-        val result = Await.result(TestSessionService.cacheEqualise(Some(1))(hc), 10 seconds)
-        result must be(Some(gmpSession.copy(equalise = Some(1))))
-      }
-
-      "reset the session" in {
-        val result = Await.result(TestSessionService.resetGmpSession()(hc), 10 seconds)
-        result must be(Some(new SessionService(metrics, mockSessionCache).cleanSession))
-      }
-
-      "reset the session with scon" in {
-        when(mockSessionCache.fetchAndGetEntry[GmpSession](any())(any(), any(), any())).thenReturn(Future.successful(Some(gmpSession.copy(scon = scon))))
-        val result = Await.result(TestSessionService.resetGmpSessionWithScon()(hc), 10 seconds)
-        result must be(Some(new SessionService(metrics, mockSessionCache).cleanSession.copy(scon = scon)))
-      }
-
-      "fetch the session" in {
-        when(mockSessionCache.fetchAndGetEntry[GmpSession](any())(any(), any(), any())).thenReturn(Future.successful(Some(gmpSession)))
-        val result = Await.result(TestSessionService.fetchGmpSession()(hc), 10 seconds)
-        result must be(Some(gmpSession))
-      }
+    "fetch the session" in {
+      when(mockSessionRepository.get(any())).thenReturn(Future.successful(Some(SingleCalculationSessionCache("sessionId", gmpSession))))
+      val result = Await.result(TestSessionService.fetchGmpSession()(hc), 10 seconds)
+      result must be(Some(gmpSession))
     }
 
   }

@@ -17,85 +17,158 @@
 package services
 
 import com.google.inject.Inject
-import config.GmpSessionCache
+import config.ApplicationConfig
 import metrics.ApplicationMetrics
 import models._
-import models.upscan._
-import play.api.Logging
+import models.upscan.{NotStarted, UploadStatus}
+import repositories.GMPBulkSessionRepository
+import services.helper.Retryable
 import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class GMPBulkSessionService @Inject()(metrics: ApplicationMetrics,
-                               gmpSessionCache: GmpSessionCache)(implicit ec: ExecutionContext) extends Logging{
+class GMPBulkSessionService @Inject()(
+                                       metrics: ApplicationMetrics,
+                                       appConfig: ApplicationConfig,
+                                       gmpBulkSessionRepository: GMPBulkSessionRepository
+                                     )(implicit ec: ExecutionContext) extends Retryable {
 
-  val GMP_SESSION_KEY = "gmp_session"
-  val cleanSession = GmpSession(MemberDetails("", "", ""), "", "", None, None, Leaving(GmpDate(None, None, None), None), None)
-
-  val GMP_BULK_SESSION_KEY = "gmp_bulk_session"
-  val CALLBACK_SESSION_KEY = "gmp_callback_session"
   val cleanBulkSession = GmpBulkSession(None, None, None)
 
-  def fetchGmpBulkSession()(implicit hc: HeaderCarrier): Future[Option[GmpBulkSession]] = {
+  private def cleanGmpBulkSessionCache(
+                                     id: String,
+                                     gmpBulkSession: GmpBulkSession
+                                   ): GMPBulkSessionCache =
+    GMPBulkSessionCache(id, gmpBulkSession)
 
-    val timer = metrics.keystoreStoreTimer.time()
-
-    logger.debug(s"[SessionService][fetchGmpBulkSession]")
-
-    gmpSessionCache.fetchAndGetEntry[GmpBulkSession](GMP_BULK_SESSION_KEY) map (gmpBulkSession => {
-      timer.stop()
-      gmpBulkSession
-    })
+  private def getSessionId(implicit hc: HeaderCarrier): String = {
+    hc.sessionId match {
+      case Some(id) => id.value
+      case None => throw new RuntimeException("Unexpected error, No session id found")
+    }
   }
 
-  def resetGmpBulkSession()(implicit hc: HeaderCarrier ): Future[Option[GmpBulkSession]] = {
+  def fetchGmpBulkSession()(implicit hc: HeaderCarrier): Future[Option[GmpBulkSession]] = {
     val timer = metrics.keystoreStoreTimer.time()
+    logger.info("[GMPBulkSessionService][fetchGmpBulkSession]: Fetching Bulk Session data...")
 
-    logger.debug(s"[SessionService][fetchGmpBulkSession]")
+    getSessionCacheDataWithRetry.map { result =>
+      timer.stop()
+      result.map(_.gmpBulkSession)
+    }.recover { case e: Throwable =>
+      timer.stop()
+      logger.warn("[GMPBulkSessionService][fetchGmpBulkSession] Error fetching Bulk Session data: " + e.getMessage)
+      None
+    }
+  }
 
-    gmpSessionCache.cache[GmpBulkSession](GMP_BULK_SESSION_KEY, cleanBulkSession) map (cacheMap => {
+  def resetGmpBulkSession()(implicit hc: HeaderCarrier): Future[Option[GmpBulkSession]] = {
+    val timer = metrics.keystoreStoreTimer.time()
+    logger.info("[GMPBulkSessionService][resetGmpBulkSession]: Resetting Bulk Session data...")
+
+    val cacheData = cleanGmpBulkSessionCache(getSessionId, cleanBulkSession)
+    setSessionCacheDataWithRetry(cacheData).map { _ =>
       timer.stop()
       Some(cleanBulkSession)
-    })
+    }
   }
 
-  def cacheCallBackData(_callBackData: Option[UploadStatus])(implicit  hc: HeaderCarrier): Future[Option[GmpBulkSession]] = {
+  def cacheCallBackData(_callBackData: Option[UploadStatus])(implicit hc: HeaderCarrier): Future[Option[GmpBulkSession]] = {
     val timer = metrics.keystoreStoreTimer.time()
-    logger.debug(s"[SessionService][cacheCallBackData] : ${_callBackData}")
+    logger.debug(s"[GMPBulkSessionService][cacheCallBackData] : ${_callBackData}")
 
-    val result = gmpSessionCache.fetchAndGetEntry[GmpBulkSession](GMP_BULK_SESSION_KEY) flatMap { currentSession =>
-      gmpSessionCache.cache[GmpBulkSession](GMP_BULK_SESSION_KEY,
-        currentSession match {
-          case Some(returnedSession) => returnedSession.copy(callBackData = _callBackData)
-          case None => cleanBulkSession.copy(callBackData = _callBackData)
-        }
-      )
+    val updatedCacheData: Future[Option[GMPBulkSessionCache]] = gmpBulkSessionRepository.get(getSessionId).map {
+      case Some(returnedSession) =>
+        Some(returnedSession.copy(gmpBulkSession = returnedSession.gmpBulkSession.copy(callBackData = _callBackData)))
+      case None =>
+        Some(cleanGmpBulkSessionCache(getSessionId, cleanBulkSession.copy(callBackData = _callBackData)))
     }
 
-    result.map(cacheMap => {
-      timer.stop()
-      cacheMap.getEntry[GmpBulkSession](GMP_BULK_SESSION_KEY)
-    })
+    updatedCacheData.flatMap {
+      case Some(bulkSessionCache) =>
+        gmpBulkSessionRepository.set(bulkSessionCache).map { _ =>
+          timer.stop()
+          Some(bulkSessionCache.gmpBulkSession)
+        }
+      case None =>
+        timer.stop()
+        Future.successful(None)
+    }
+
   }
 
-  def cacheEmailAndReference(_email: Option[String], _reference: Option[String])
-                            (implicit  hc: HeaderCarrier ): Future[Option[GmpBulkSession]] = {
+  def cacheEmailAndReference(_email: Option[String], _reference: Option[String])(implicit hc: HeaderCarrier): Future[Option[GmpBulkSession]] = {
     val timer = metrics.keystoreStoreTimer.time()
 
-    logger.debug(s"[SessionService][cacheEmailAndReferencea] : email: ${_email}; reference: ${_reference}")
+    logger.debug(s"[GMPBulkSessionService][cacheEmailAndReferencea] : email: ${_email}; reference: ${_reference}")
 
-    val result = gmpSessionCache.fetchAndGetEntry[GmpBulkSession](GMP_BULK_SESSION_KEY) flatMap { currentSession =>
-      gmpSessionCache.cache[GmpBulkSession](GMP_BULK_SESSION_KEY,
-        currentSession match {
-          case Some(returnedSession) => returnedSession.copy(emailAddress = _email, reference = _reference)
-          case None => cleanBulkSession.copy(emailAddress = _email, reference = _reference)
-        }
-      )
+    val updatedCache = gmpBulkSessionRepository.get(getSessionId).map {
+      case Some(bulkSessionCache) =>
+        bulkSessionCache.copy(gmpBulkSession = bulkSessionCache.gmpBulkSession.copy(emailAddress = _email, reference = _reference))
+      case None =>
+        cleanGmpBulkSessionCache(getSessionId, cleanBulkSession.copy(emailAddress = _email, reference = _reference))
     }
 
-    result.map(cacheMap => {
+    updatedCache.flatMap { sessionCache =>
+      setSessionCacheDataWithRetry(sessionCache).map { _ =>
+        timer.stop()
+        Some(sessionCache.gmpBulkSession)
+      }.recover { case e: Throwable =>
+        timer.stop()
+        logger.warn("[GMPBulkSessionService][cacheEmailAndReference] Error storing Email and Reference: " + e.getMessage)
+        None
+      }
+    }
+  }
+
+
+  def createCallbackRecord(implicit hc: HeaderCarrier): Future[Any] = {
+    logger.info("[GMPBulkSessionService][createCallbackRecord]: Creating Callback Record...")
+
+    getSessionCacheDataWithRetry.map {_.map { gmpBulkSessionCache =>
+        val updatedSession = gmpBulkSessionCache.copy(
+          gmpBulkSession = gmpBulkSessionCache.gmpBulkSession.copy(callBackData = Some(NotStarted))
+        )
+
+        setSessionCacheDataWithRetry(updatedSession)
+      }
+    }
+  }
+
+  def updateCallbackRecord(uploadStatus: UploadStatus)(implicit hc: HeaderCarrier): Future[Any] = {
+    logger.info("[GMPBulkSessionService][updateCallbackRecord]: Updating Callback Record...")
+
+    getSessionCacheDataWithRetry.map {
+      _.map { gmpBulkSessionCache =>
+        val updatedSession = gmpBulkSessionCache.copy(
+          gmpBulkSession = gmpBulkSessionCache.gmpBulkSession.copy(callBackData = Some(uploadStatus))
+        )
+
+        setSessionCacheDataWithRetry(updatedSession)
+      }
+    }
+  }
+
+
+  def getCallbackRecord(implicit hc: HeaderCarrier): Future[Option[UploadStatus]] = {
+    val timer = metrics.keystoreStoreTimer.time()
+    logger.info("[GMPBulkSessionService][getCallbackRecord]: Reading Callback Record...")
+
+    gmpBulkSessionRepository.get(getSessionId).map { result =>
       timer.stop()
-      cacheMap.getEntry[GmpBulkSession](GMP_BULK_SESSION_KEY)
-    })
+      result.flatMap(_.gmpBulkSession.callBackData)
+    }
+  }
+
+  private def getSessionCacheDataWithRetry(implicit hc: HeaderCarrier): Future[Option[GMPBulkSessionCache]] = {
+    retry(appConfig.serviceMaxNoOfAttempts, "Reading GMP Bulk Session") {
+      gmpBulkSessionRepository.get(getSessionId)
+    }
+  }
+
+  private def setSessionCacheDataWithRetry(updatedSession: GMPBulkSessionCache): Future[Boolean] = {
+    retry(appConfig.serviceMaxNoOfAttempts, "Storing GMP Bulk Session") {
+      gmpBulkSessionRepository.set(updatedSession)
+    }
   }
 }
