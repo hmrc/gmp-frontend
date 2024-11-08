@@ -50,7 +50,7 @@ object SingleCalculationSessionCache {
         Json.obj(
           "id" -> encryptedValues._1,
           "gmpSession" -> encryptedValues._2,
-          "lastModified" -> encryptedValues._3,
+          "lastModified" -> encryptedValues._3
         )
       }
     }
