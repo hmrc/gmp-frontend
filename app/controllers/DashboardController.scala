@@ -38,8 +38,6 @@ class DashboardController @Inject()(authAction: AuthAction,
                                     implicit val gmpSessionCache: GmpSessionCache,
                                     views: Views) extends GmpPageFlow(authConnector,GMPSessionService,config,messagesControllerComponents,ac) with Logging{
 
-
-
   def get = authAction.async {
       implicit request => {
         val link = request.linkId

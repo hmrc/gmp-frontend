@@ -25,7 +25,6 @@ import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.audit.model.DataEvent
 import views.Views
-
 import scala.concurrent.ExecutionContext
 
 @Singleton
@@ -41,13 +40,10 @@ class ApplicationController @Inject()(authAction: AuthAction,
                                       externalUrls: ExternalUrls)
                                       extends GmpController(messagesControllerComponents,ac,GMPSessionService,config) {
 
-
-
   def unauthorised: Action[AnyContent] = Action {
     implicit request =>
       Ok(views.unauthorised())
   }
-
 
   def signout: Action[AnyContent] = authAction {
       implicit request =>

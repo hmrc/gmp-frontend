@@ -38,8 +38,6 @@ class MoreBulkResultsController @Inject()(authAction: AuthAction,
                                           implicit val executionContext: ExecutionContext,
                                           views: Views) extends GmpPageFlow(authConnector,GMPSessionService,config,messagesControllerComponents,ac) {
 
-
-
   def retrieveMoreBulkResults = authAction.async {
       implicit request => {
         val link = request.linkId

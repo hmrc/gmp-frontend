@@ -39,9 +39,7 @@ class BulkResultsController @Inject()(authAction: AuthAction,
                                      ) extends GmpController(messagesControllerComponents,ac,GMPSessionService,config) with Logging {
    def get(uploadReference: String, comingFromPage: Int) = authAction.async {
     implicit request => {
-
       val log = (e: Throwable) => logger.error(s"[BulkResultsController][GET] ${e.getMessage}", e)
-
       val link = request.linkId
 
         gmpBulkConnector.getBulkResultsSummary(uploadReference, link).map {

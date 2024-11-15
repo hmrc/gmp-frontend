@@ -56,7 +56,6 @@ class ApplicationConfig @Inject()(
   lazy val timeoutCountdown = servicesConfig.getInt("timeout.countdown")
   lazy val cacheTtl: Int = servicesConfig.getInt("mongodb.timeToLiveInSeconds")
 
-  // Fetch boolean configuration with a default value
   override val isMongoDBCacheEnabled: Boolean = runModeConfiguration.getOptional[Boolean]("isMongoDBCacheEnabled").getOrElse(false)
   override def serviceMaxNoOfAttempts: Int = {
     runModeConfiguration.getOptional[String]("service.maxAttempts") match {

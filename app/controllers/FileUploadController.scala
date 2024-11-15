@@ -45,7 +45,6 @@ class FileUploadController @Inject()(authAction: AuthAction,
                                      views: Views)
   extends GmpController(messagesControllerComponents, ac, GMPSessionService, config) with Logging{
 
-
   def get = authAction.async {
     implicit request =>
       for {

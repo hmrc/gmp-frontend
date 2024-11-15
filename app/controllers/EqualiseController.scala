@@ -40,7 +40,6 @@ class EqualiseController @Inject()(authAction: AuthAction,
                                    views: Views)
                                   extends GmpPageFlow(authConnector,GMPSessionService,config,messagesControllerComponents,ac) with Logging{
 
-
   lazy val equaliseForm = ef.equaliseForm
   def get = authAction.async {
     implicit request => Future.successful(Ok(views.equalise(equaliseForm)))
@@ -48,9 +47,7 @@ class EqualiseController @Inject()(authAction: AuthAction,
 
   def post = authAction.async {
       implicit request => {
-
         logger.debug(s"[EqualiseController][POST] : ${request.body}")
-
         equaliseForm.bindFromRequest().fold(
           formWithErrors => {Future.successful(BadRequest(views.equalise(formWithErrors)))},
 

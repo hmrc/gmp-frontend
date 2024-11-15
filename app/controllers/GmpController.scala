@@ -16,7 +16,6 @@
 
 package controllers
 
-
 import com.google.inject.{Inject, Singleton}
 import config.{ApplicationConfig, GmpContext}
 import models.{CalculationType, GmpSession, Leaving}
@@ -56,7 +55,6 @@ class GmpPageFlow @Inject()(val authConnector: AuthConnector,
                             messagesControllerComponents: MessagesControllerComponents,
                             applicationConfig: ApplicationConfig)
                           extends GmpController(messagesControllerComponents,applicationConfig,GMPSessionService,context) {
-
 
   val forwardNavigation: Map[String, GmpSession => Result] = Map(
     PageType.INFLATION_PROOF -> { (session: GmpSession) => Redirect(routes.ResultsController.get) },

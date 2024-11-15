@@ -45,7 +45,6 @@ class RevaluationRateController @Inject()( authAction: AuthAction,
                                            views: Views
                                          ) extends GmpPageFlow(authConnector,GMPSessionService,config,messagesControllerComponents,ac) with Logging{
 
-
   lazy val revaluationRateForm = rrf.revaluationRateForm
 
   def get = authAction.async {

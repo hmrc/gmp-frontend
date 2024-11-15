@@ -39,7 +39,6 @@ class MemberDetailsController @Inject()(authAction: AuthAction,
                                         implicit val gmpSessionCache: GmpSessionCache,
                                         views: Views) extends GmpPageFlow(authConnector,GMPSessionService,config,messagesControllerComponents,ac) with Logging{
 
-
   lazy val form=mdf.form()
 
   def get = authAction.async {

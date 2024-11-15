@@ -39,9 +39,7 @@ class SessionCacheController @Inject()(authAction: AuthAction,
 
   def newCalculation = authAction.async {
       implicit request => {
-
         logger.debug(s"[SessionCacheController][newCalculation][GET] : $request")
-
         GMPSessionService.resetGmpSessionWithScon() map {
           case Some(_) => Redirect(controllers.routes.PensionDetailsController.get)
           case None => throw new RuntimeException
