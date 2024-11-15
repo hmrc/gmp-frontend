@@ -30,7 +30,7 @@ import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 import play.api.mvc.MessagesControllerComponents
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import services.SessionService
+import services.{GMPSessionService, SessionService}
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.audit.model.DataEvent
@@ -53,7 +53,7 @@ class ApplicationControllerSpec extends PlaySpec
   implicit val mcc: MessagesControllerComponents = app.injector.instanceOf[MessagesControllerComponents]
   implicit val ec: ExecutionContext = app.injector.instanceOf[ExecutionContext]
   implicit val ac: ApplicationConfig = app.injector.instanceOf[ApplicationConfig]
-  implicit val ss: SessionService = app.injector.instanceOf[SessionService]
+  implicit val ss: GMPSessionService = app.injector.instanceOf[GMPSessionService]
   lazy val views = app.injector.instanceOf[Views]
   lazy val externalUrls = app.injector.instanceOf[ExternalUrls]
 

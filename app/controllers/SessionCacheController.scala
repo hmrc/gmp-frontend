@@ -21,27 +21,28 @@ import config.{ApplicationConfig, GmpContext, GmpSessionCache}
 import controllers.auth.AuthAction
 import play.api.Logging
 import play.api.mvc.MessagesControllerComponents
-import services.SessionService
+import services.{GMPSessionService, SessionService}
 import uk.gov.hmrc.auth.core.AuthConnector
+
 import scala.concurrent.ExecutionContext
 
 @Singleton
 class SessionCacheController @Inject()(authAction: AuthAction,
                                        override val authConnector: AuthConnector,
                                        ac:ApplicationConfig,
-                                       sessionService: SessionService,
+                                       GMPSessionService: GMPSessionService,
                                        implicit val config:GmpContext,
                                        override val messagesControllerComponents: MessagesControllerComponents,
                                        implicit val executionContext: ExecutionContext,
                                        implicit val gmpSessionCache: GmpSessionCache
-                                      ) extends GmpPageFlow(authConnector,sessionService,config,messagesControllerComponents,ac) with Logging {
+                                      ) extends GmpPageFlow(authConnector,GMPSessionService,config,messagesControllerComponents,ac) with Logging {
 
   def newCalculation = authAction.async {
       implicit request => {
 
         logger.debug(s"[SessionCacheController][newCalculation][GET] : $request")
 
-        sessionService.resetGmpSessionWithScon() map {
+        GMPSessionService.resetGmpSessionWithScon() map {
           case Some(_) => Redirect(controllers.routes.PensionDetailsController.get)
           case None => throw new RuntimeException
         }
@@ -53,7 +54,7 @@ class SessionCacheController @Inject()(authAction: AuthAction,
 
         logger.debug(s"[SessionCacheController][newBulkCalculation][GET] : $request")
 
-        sessionService.resetGmpBulkSession() map {
+        GMPSessionService.resetGmpBulkSession() map {
           case Some(_) => Redirect(controllers.routes.FileUploadController.get)
           case None => throw new RuntimeException
         }

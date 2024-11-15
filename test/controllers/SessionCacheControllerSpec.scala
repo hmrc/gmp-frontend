@@ -28,7 +28,7 @@ import play.api.i18n.{Lang, MessagesApi, MessagesImpl}
 import play.api.mvc.MessagesControllerComponents
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import services.SessionService
+import services.{GMPSessionService, SessionService}
 import uk.gov.hmrc.auth.core.AuthConnector
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -36,7 +36,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class SessionCacheControllerSpec extends PlaySpec with GuiceOneServerPerSuite with MockitoSugar {
 
   val mockAuthConnector = mock[AuthConnector]
-  val mockSessionService = mock[SessionService]
+  val mockGMPSessionService = mock[GMPSessionService]
   val mockAuthAction = mock[AuthAction]
   val metrics = app.injector.instanceOf[ApplicationMetrics]
   implicit val mcc: MessagesControllerComponents = app.injector.instanceOf[MessagesControllerComponents]
@@ -46,21 +46,21 @@ class SessionCacheControllerSpec extends PlaySpec with GuiceOneServerPerSuite wi
   implicit val ac: ApplicationConfig = app.injector.instanceOf[ApplicationConfig]
   implicit val gmpSessionCache: GmpSessionCache = app.injector.instanceOf[GmpSessionCache]
 
-  object TestSessionCacheController extends SessionCacheController(FakeAuthAction, mockAuthConnector,ac,mockSessionService,FakeGmpContext,mcc,ec,gmpSessionCache) {
- /*   override val sessionService = mockSessionService
+  object TestSessionCacheController extends SessionCacheController(FakeAuthAction, mockAuthConnector,ac,mockGMPSessionService,FakeGmpContext,mcc,ec,gmpSessionCache) {
+ /*   override val sessionService = mockGMPSessionService
     override val context = FakeGmpContext
 */  }
 
   "new-calculation" must {
 
     "reset the cached calculation parameters except for scon" in {
-        when(mockSessionService.resetGmpSessionWithScon()(any())).thenReturn(Future.successful(Some(new SessionService(metrics, gmpSessionCache).cleanSession)))
+        when(mockGMPSessionService.resetGmpSessionWithScon()(any())).thenReturn(Future.successful(Some(new SessionService(metrics, gmpSessionCache).cleanSession)))
         await(TestSessionCacheController.newCalculation(FakeRequest()))
-        verify(mockSessionService, atLeastOnce()).resetGmpSessionWithScon()(any())
+        verify(mockGMPSessionService, atLeastOnce()).resetGmpSessionWithScon()(any())
     }
 
     "redirect to the pension details page" in {
-        when(mockSessionService.resetGmpSessionWithScon()(any())).thenReturn(Future.successful(Some(new SessionService(metrics, gmpSessionCache).cleanSession)))
+        when(mockGMPSessionService.resetGmpSessionWithScon()(any())).thenReturn(Future.successful(Some(new SessionService(metrics, gmpSessionCache).cleanSession)))
         val result = TestSessionCacheController.newCalculation(FakeRequest())
         status(result) must be(SEE_OTHER)
         redirectLocation(result).get must be("/guaranteed-minimum-pension/pension-details")
@@ -68,7 +68,7 @@ class SessionCacheControllerSpec extends PlaySpec with GuiceOneServerPerSuite wi
 
     "raise an error when the session service is unreachable" in {
 
-        when(mockSessionService.resetGmpSessionWithScon()(any())).thenReturn(Future.successful(None))
+        when(mockGMPSessionService.resetGmpSessionWithScon()(any())).thenReturn(Future.successful(None))
         intercept[RuntimeException]{
           await(TestSessionCacheController.newCalculation(FakeRequest()))
       }
@@ -79,14 +79,14 @@ class SessionCacheControllerSpec extends PlaySpec with GuiceOneServerPerSuite wi
 
     "reset the cached calculation parameters" in {
 
-        when(mockSessionService.resetGmpBulkSession()(any())).thenReturn(Future.successful(Some(new SessionService(metrics, gmpSessionCache).cleanBulkSession)))
+        when(mockGMPSessionService.resetGmpBulkSession()(any())).thenReturn(Future.successful(Some(new SessionService(metrics, gmpSessionCache).cleanBulkSession)))
         await(TestSessionCacheController.newBulkCalculation(FakeRequest()))
-        verify(mockSessionService, atLeastOnce()).resetGmpBulkSession()(any())
+        verify(mockGMPSessionService, atLeastOnce()).resetGmpBulkSession()(any())
     }
 
     "redirect to the upload csv page" in {
 
-        when(mockSessionService.resetGmpBulkSession()(any())).thenReturn(Future.successful(Some(new SessionService(metrics, gmpSessionCache).cleanBulkSession)))
+        when(mockGMPSessionService.resetGmpBulkSession()(any())).thenReturn(Future.successful(Some(new SessionService(metrics, gmpSessionCache).cleanBulkSession)))
         val result = TestSessionCacheController.newBulkCalculation(FakeRequest())
         status(result) must be(SEE_OTHER)
         redirectLocation(result).get must be("/guaranteed-minimum-pension/upload-csv")
@@ -94,7 +94,7 @@ class SessionCacheControllerSpec extends PlaySpec with GuiceOneServerPerSuite wi
 
     "raise an error when the session service is unreachable" in {
 
-        when(mockSessionService.resetGmpBulkSession()(any())).thenReturn(Future.successful(None))
+        when(mockGMPSessionService.resetGmpBulkSession()(any())).thenReturn(Future.successful(None))
         intercept[RuntimeException]{
           await(TestSessionCacheController.newBulkCalculation(FakeRequest()))
       }

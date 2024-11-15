@@ -25,7 +25,7 @@ import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 import play.api.i18n.{Lang, MessagesApi, MessagesImpl}
 import play.api.mvc.MessagesControllerComponents
 import play.api.test.Helpers._
-import services.SessionService
+import services.{GMPSessionService, SessionService}
 import uk.gov.hmrc.auth.core.AuthConnector
 
 import scala.concurrent.ExecutionContext
@@ -34,7 +34,7 @@ import scala.concurrent.ExecutionContext
 class GmpControllerSpec extends PlaySpec with GuiceOneServerPerSuite with MockitoSugar {
 
   val mockAuthConnector = mock[AuthConnector]
-  val mockSessionService = mock[SessionService]
+  val mockGMPSessionService = mock[GMPSessionService]
   val mockAuthAction = mock[AuthAction]
   implicit val mcc: MessagesControllerComponents = app.injector.instanceOf[MessagesControllerComponents]
   implicit val ec: ExecutionContext = app.injector.instanceOf[ExecutionContext]
@@ -42,7 +42,7 @@ class GmpControllerSpec extends PlaySpec with GuiceOneServerPerSuite with Mockit
   implicit val messagesProvider: MessagesImpl = MessagesImpl(Lang("en"), messagesAPI)
   implicit val ac: ApplicationConfig = app.injector.instanceOf[ApplicationConfig]
 
-  object TestGmpController extends GmpPageFlow(mockAuthConnector,mockSessionService,FakeGmpContext,mcc,ac)
+  object TestGmpController extends GmpPageFlow(mockAuthConnector,mockGMPSessionService,FakeGmpContext,mcc,ac)
 
   val gmpSession = GmpSession(MemberDetails("", "", ""), "", "", None, None, Leaving(GmpDate(None, None, None), None), None)
 

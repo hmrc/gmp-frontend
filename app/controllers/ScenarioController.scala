@@ -24,7 +24,7 @@ import models.CalculationType
 import play.api.Logging
 import play.api.i18n.Messages
 import play.api.mvc.MessagesControllerComponents
-import services.SessionService
+import services.{GMPSessionService, SessionService}
 import uk.gov.hmrc.auth.core.AuthConnector
 import views.Views
 
@@ -34,19 +34,19 @@ import scala.concurrent.{ExecutionContext, Future}
 class ScenarioController @Inject()(authAction: AuthAction,
                                    override val authConnector: AuthConnector,
                                    ac:ApplicationConfig,
-                                   sessionService: SessionService,
+                                   GMPSessionService: GMPSessionService,
                                    implicit val config:GmpContext,
                                    override val messagesControllerComponents: MessagesControllerComponents,
                                    sf:ScenarioForm,
                                    implicit val executionContext: ExecutionContext,
                                    implicit val gmpSessionCache: GmpSessionCache,
                                    views: Views
-                                  ) extends GmpPageFlow(authConnector,sessionService,config,messagesControllerComponents,ac) with Logging {
+                                  ) extends GmpPageFlow(authConnector,GMPSessionService,config,messagesControllerComponents,ac) with Logging {
 
   lazy val scenarioForm = sf.scenarioForm
 
   def get = authAction.async {
-      implicit request => sessionService.fetchGmpSession() map {
+      implicit request => GMPSessionService.fetchGmpSession() map {
         case Some(session) => session match {
           case _ if session.scon == "" =>
             Ok(views.failure(
@@ -79,7 +79,7 @@ class ScenarioController @Inject()(authAction: AuthAction,
           formWithErrors => {
             Future.successful(BadRequest(views.scenario(formWithErrors)))
           }, calculationType => {
-            sessionService.cacheScenario(calculationType.calcType.get) map {
+            GMPSessionService.cacheScenario(calculationType.calcType.get) map {
               case Some(session) => nextPage("ScenarioController", session)
               case _ => throw new RuntimeException
             }
@@ -91,7 +91,7 @@ class ScenarioController @Inject()(authAction: AuthAction,
 
   def back = authAction.async {
      implicit request => {
-        sessionService.fetchGmpSession() map {
+       GMPSessionService.fetchGmpSession() map {
           case Some(session) => previousPage("ScenarioController", session)
           case _ => throw new RuntimeException
         }

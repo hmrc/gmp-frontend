@@ -20,7 +20,7 @@ import com.google.inject.{Inject, Singleton}
 import config.{ApplicationConfig, GmpContext}
 import controllers.auth.{AuthAction, ExternalUrls, UUIDGenerator}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import services.SessionService
+import services.{GMPSessionService, SessionService}
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.audit.model.DataEvent
@@ -33,13 +33,13 @@ class ApplicationController @Inject()(authAction: AuthAction,
                                       auditConnector: AuditConnector,
                                       val authConnector: AuthConnector,
                                       uuidGenerator: UUIDGenerator,
-                                      sessionService: SessionService,implicit val config:GmpContext,
+                                      GMPSessionService: GMPSessionService,implicit val config:GmpContext,
                                       messagesControllerComponents: MessagesControllerComponents,
                                       implicit val executionContext: ExecutionContext,
                                       ac:ApplicationConfig,
                                       views: Views,
                                       externalUrls: ExternalUrls)
-                                      extends GmpController(messagesControllerComponents,ac,sessionService,config) {
+                                      extends GmpController(messagesControllerComponents,ac,GMPSessionService,config) {
 
 
 

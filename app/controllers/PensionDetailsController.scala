@@ -26,7 +26,7 @@ import models.{PensionDetailsScon, ValidateSconRequest}
 import play.api.Logging
 import play.api.i18n.Messages
 import play.api.mvc.MessagesControllerComponents
-import services.SessionService
+import services.{GMPSessionService, SessionService}
 import uk.gov.hmrc.auth.core.AuthConnector
 import views.Views
 
@@ -36,7 +36,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class PensionDetailsController @Inject()(authAction: AuthAction,
                                          override val authConnector: AuthConnector,
                                          gmpConnector: GmpConnector,
-                                         sessionService: SessionService,
+                                         GMPSessionService: GMPSessionService,
                                          implicit val config:GmpContext,
                                          metrics: ApplicationMetrics,
                                          ac:ApplicationConfig,
@@ -44,13 +44,13 @@ class PensionDetailsController @Inject()(authAction: AuthAction,
                                          override val messagesControllerComponents: MessagesControllerComponents,
                                          implicit val executionContext: ExecutionContext,
                                          implicit val gmpSessionCache: GmpSessionCache,
-                                         views: Views) extends GmpPageFlow(authConnector,sessionService,config,messagesControllerComponents,ac) with Logging {
+                                         views: Views) extends GmpPageFlow(authConnector,GMPSessionService,config,messagesControllerComponents,ac) with Logging {
 
   lazy val pensionDetailsForm=pdf.pensionDetailsForm
 
   def get = authAction.async {
       implicit request => {
-        sessionService.fetchPensionDetails().map {
+        GMPSessionService.fetchPensionDetails().map {
           case Some(scon) => Ok(views.pensionDetails(pensionDetailsForm.fill(PensionDetailsScon(scon))))
           case _ => Ok(views.pensionDetails(pensionDetailsForm))
         }
@@ -73,7 +73,7 @@ class PensionDetailsController @Inject()(authAction: AuthAction,
             gmpConnector.validateScon(validateSconRequest, link) flatMap {
               response => {
                 if (response.sconExists) {
-                  sessionService.cachePensionDetails(pensionDetails.scon.toUpperCase).map {
+                  GMPSessionService.cachePensionDetails(pensionDetails.scon.toUpperCase).map {
                     case Some(session) => nextPage("PensionDetailsController", session)
                     case _ => throw new RuntimeException
                   }

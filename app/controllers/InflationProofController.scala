@@ -24,7 +24,7 @@ import models.InflationProof
 import play.api.Logging
 import play.api.data.Form
 import play.api.mvc.MessagesControllerComponents
-import services.SessionService
+import services.{GMPSessionService, SessionService}
 import uk.gov.hmrc.auth.core.AuthConnector
 import views.Views
 
@@ -33,7 +33,7 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class InflationProofController @Inject()( authAction: AuthAction,
                                           override val authConnector: AuthConnector,
-                                          sessionService: SessionService,
+                                          GMPSessionService: GMPSessionService,
                                           implicit val config:GmpContext,
                                           override val messagesControllerComponents: MessagesControllerComponents,
                                           ipf:InflationProofForm,
@@ -41,7 +41,7 @@ class InflationProofController @Inject()( authAction: AuthAction,
                                           implicit val executionContext: ExecutionContext,
                                           implicit val gmpSessionCache: GmpSessionCache,
                                           views: Views
-                                        ) extends GmpPageFlow(authConnector,sessionService,config,messagesControllerComponents,ac) with Logging{
+                                        ) extends GmpPageFlow(authConnector,GMPSessionService,config,messagesControllerComponents,ac) with Logging{
 
 
   lazy val inflationProofForm: Form[InflationProof] = ipf.inflationProofForm(1978,2046)
@@ -65,7 +65,7 @@ class InflationProofController @Inject()( authAction: AuthAction,
               case Some("Yes") => Some(revaluation.revaluationDate)
               case _ => None
             }
-            sessionService.cacheRevaluationDate(dateToStore).map {
+            GMPSessionService.cacheRevaluationDate(dateToStore).map {
               case Some(session) => nextPage("InflationProofController", session)
                   // $COVERAGE-OFF$
               case _ => throw new RuntimeException
@@ -78,7 +78,7 @@ class InflationProofController @Inject()( authAction: AuthAction,
 
   def back = authAction.async {
       implicit request => {
-        sessionService.fetchGmpSession() map {
+        GMPSessionService.fetchGmpSession() map {
           case Some(session) => previousPage("InflationProofController", session)
           case _ => throw new RuntimeException
         }

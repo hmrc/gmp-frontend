@@ -20,6 +20,7 @@ import config.{ApplicationConfig, GmpSessionCache}
 import connectors.GmpBulkConnector
 import controllers.auth.{AuthAction, FakeAuthAction}
 import models._
+
 import java.time.LocalDateTime
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito._
@@ -31,7 +32,7 @@ import play.api.libs.json.Json
 import play.api.mvc.MessagesControllerComponents
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import services.SessionService
+import services.{GMPSessionService, SessionService}
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.http.UpstreamErrorResponse
 import views.Views
@@ -41,7 +42,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class DashboardControllerSpec extends PlaySpec with GuiceOneServerPerSuite with MockitoSugar {
 
   val mockAuthConnector = mock[AuthConnector]
-  val mockSessionService = mock[SessionService]
+  val mockGMPSessionService = mock[GMPSessionService]
   val mockGmpBulkConnector = mock[GmpBulkConnector]
   val mockAuthAction = mock[AuthAction]
 
@@ -55,7 +56,7 @@ class DashboardControllerSpec extends PlaySpec with GuiceOneServerPerSuite with 
 
 
   object TestDashboardController extends DashboardController(FakeAuthAction, mockAuthConnector, mockGmpBulkConnector,
-          ac,mockSessionService,FakeGmpContext,mcc,ec,gmpSessionCache,views) {}
+          ac,mockGMPSessionService,FakeGmpContext,mcc,ec,gmpSessionCache,views) {}
 
   val recentBulkCalculations = List(new BulkPreviousRequest("1234","abcd",LocalDateTime.now(),LocalDateTime.now()), new BulkPreviousRequest("5678","efgh", LocalDateTime.now(),LocalDateTime.now()))
 
@@ -98,7 +99,7 @@ class DashboardControllerSpec extends PlaySpec with GuiceOneServerPerSuite with 
         val brokenGmpBulkConnector = mock[GmpBulkConnector]
 
         object BrokenDashboardController extends DashboardController(FakeAuthAction, mockAuthConnector, brokenGmpBulkConnector,
-                    ac,mockSessionService,FakeGmpContext,mcc,ec,gmpSessionCache,views) {
+                    ac,mockGMPSessionService,FakeGmpContext,mcc,ec,gmpSessionCache,views) {
          }
 
         when(brokenGmpBulkConnector.getPreviousBulkRequests(any())(any())).thenReturn(Future.failed(UpstreamErrorResponse("failed",503,503)))
