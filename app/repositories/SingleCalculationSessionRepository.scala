@@ -35,7 +35,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class SingleCalculationSessionRepository @Inject()(
                                                 mongoComponent: MongoComponent,
                                                 appConfig: ApplicationConfig,
-                                                clock: Clock
+
                                               )(implicit ec: ExecutionContext, encryption: Encryption)
   extends PlayMongoRepository[SingleCalculationSessionCache](
     collectionName = "single-calculation-session-cache",
@@ -58,7 +58,7 @@ class SingleCalculationSessionRepository @Inject()(
     collection
       .updateOne(
         filter = byId(id),
-        update = Updates.set("lastModified", Instant.now(clock))
+        update = Updates.set("lastModified", Instant.now())
       )
       .toFuture()
       .map(_ => true)
@@ -72,7 +72,7 @@ class SingleCalculationSessionRepository @Inject()(
 
   def set(answers: SingleCalculationSessionCache): Future[Boolean] = {
 
-    val updatedAnswers = answers copy (lastModified = Instant.now(clock))
+    val updatedAnswers = answers copy (lastModified = Instant.now())
 
     collection
       .replaceOne(
