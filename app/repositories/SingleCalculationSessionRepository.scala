@@ -25,7 +25,6 @@ import services.Encryption
 import uk.gov.hmrc.mongo.MongoComponent
 import uk.gov.hmrc.mongo.play.json.PlayMongoRepository
 import uk.gov.hmrc.mongo.play.json.formats.MongoJavatimeFormats
-
 import java.time.{Clock, Instant}
 import java.util.concurrent.TimeUnit
 import javax.inject.{Inject, Singleton}
@@ -35,7 +34,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class SingleCalculationSessionRepository @Inject()(
                                                 mongoComponent: MongoComponent,
                                                 appConfig: ApplicationConfig,
-
+                                                clock: Clock
                                               )(implicit ec: ExecutionContext, encryption: Encryption)
   extends PlayMongoRepository[SingleCalculationSessionCache](
     collectionName = "single-calculation-session-cache",
@@ -58,7 +57,7 @@ class SingleCalculationSessionRepository @Inject()(
     collection
       .updateOne(
         filter = byId(id),
-        update = Updates.set("lastModified", Instant.now())
+        update = Updates.set("lastModified", Instant.now(clock))
       )
       .toFuture()
       .map(_ => true)
@@ -72,7 +71,7 @@ class SingleCalculationSessionRepository @Inject()(
 
   def set(answers: SingleCalculationSessionCache): Future[Boolean] = {
 
-    val updatedAnswers = answers copy (lastModified = Instant.now())
+    val updatedAnswers = answers copy (lastModified = Instant.now(clock))
 
     collection
       .replaceOne(
