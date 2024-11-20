@@ -22,7 +22,7 @@ import controllers.auth.AuthAction
 import forms.MemberDetailsForm
 import play.api.Logging
 import play.api.mvc.MessagesControllerComponents
-import services.SessionService
+import services.{GMPSessionService, SessionService}
 import uk.gov.hmrc.auth.core.AuthConnector
 import views.Views
 
@@ -31,20 +31,19 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class MemberDetailsController @Inject()(authAction: AuthAction,
                                         override val authConnector: AuthConnector,
-                                        sessionService: SessionService,
+                                        GMPSessionService: GMPSessionService,
                                         implicit val config:GmpContext,
                                         override val messagesControllerComponents: MessagesControllerComponents,
                                         ac:ApplicationConfig,mdf:MemberDetailsForm,
                                         implicit val executionContext: ExecutionContext,
                                         implicit val gmpSessionCache: GmpSessionCache,
-                                        views: Views) extends GmpPageFlow(authConnector,sessionService,config,messagesControllerComponents,ac) with Logging{
-
+                                        views: Views) extends GmpPageFlow(authConnector,GMPSessionService,config,messagesControllerComponents,ac) with Logging{
 
   lazy val form=mdf.form()
 
   def get = authAction.async {
     implicit request => {
-      sessionService.fetchMemberDetails() map {
+      GMPSessionService.fetchMemberDetails() map {
         case Some(memberDetails) => Ok(views.memberDetails(form.fill(memberDetails)))
         case _ => Ok(views.memberDetails(form))
       }
@@ -61,7 +60,7 @@ class MemberDetailsController @Inject()(authAction: AuthAction,
           Future.successful(BadRequest(views.memberDetails(formWithErrors)))
         },
         memberDetails => {
-          sessionService.cacheMemberDetails(memberDetails) map {
+          GMPSessionService.cacheMemberDetails(memberDetails) map {
             case Some(session) => nextPage("MemberDetailsController", session)
             case _ => throw new RuntimeException
           }
@@ -72,7 +71,7 @@ class MemberDetailsController @Inject()(authAction: AuthAction,
 
   def back = authAction.async {
     implicit request => {
-      sessionService.fetchGmpSession() map {
+      GMPSessionService.fetchGmpSession() map {
         case Some(session) => previousPage("MemberDetailsController", session)
         case _ => throw new RuntimeException
       }

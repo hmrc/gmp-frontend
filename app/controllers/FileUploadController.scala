@@ -24,7 +24,7 @@ import models.upscan.UploadStatus
 import play.api.Logging
 import play.api.i18n.Messages
 import play.api.mvc.MessagesControllerComponents
-import services.{SessionService, UpscanService}
+import services.{GMPSessionService, SessionService, UpscanService}
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.SessionId
@@ -35,7 +35,7 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class FileUploadController @Inject()(authAction: AuthAction,
                                      val authConnector: AuthConnector,
-                                     sessionService: SessionService,
+                                     GMPSessionService: GMPSessionService,
                                      implicit val config: GmpContext,
                                      upscanService: UpscanService,
                                      messagesControllerComponents: MessagesControllerComponents,
@@ -43,15 +43,14 @@ class FileUploadController @Inject()(authAction: AuthAction,
                                      implicit val executionContext: ExecutionContext,
                                      implicit val gmpSessionCache: GmpSessionCache,
                                      views: Views)
-  extends GmpController(messagesControllerComponents, ac, sessionService, config) with Logging{
-
+  extends GmpController(messagesControllerComponents, ac, GMPSessionService, config) with Logging{
 
   def get = authAction.async {
     implicit request =>
       for {
-        _ <- sessionService.resetGmpBulkSession()
+        _ <- GMPSessionService.resetGmpBulkSession()
         response <- upscanService.getUpscanFormData()
-        _ <- sessionService.createCallbackRecord
+        _ <- GMPSessionService.createCallbackRecord
       } yield {
         Ok(views.upscanCsvFileUpload(response))
       }
@@ -60,7 +59,7 @@ class FileUploadController @Inject()(authAction: AuthAction,
   def showResult() = authAction.async { implicit request =>
     val sessionId = hc.sessionId
     for {
-      uploadResult <- sessionService.getCallbackRecord
+      uploadResult <- GMPSessionService.getCallbackRecord
     } yield {
           uploadResult match {
             case Some(result: UploadStatus) => Ok(views.uploadResult(result))
@@ -94,12 +93,12 @@ class FileUploadController @Inject()(authAction: AuthAction,
         }
         logger.info(s"Updating callback for session: $sessionId to ${uploadStatus.getClass.getSimpleName}")
         for {
-          result <- sessionService.updateCallbackRecord(sessionId, uploadStatus)(headerCarrier).map(_ => Ok("")).recover {
+          result <- GMPSessionService.updateCallbackRecord(sessionId, uploadStatus)(headerCarrier).map(_ => Ok("")).recover {
             case e: Throwable =>
               logger.error(s"Failed to update callback record for session: $sessionId, timestamp: ${System.currentTimeMillis()}.", e)
               throw new RuntimeException("Exception occurred when attempting to update callback data")
           }
-          _ <- sessionService.cacheCallBackData(Some(uploadStatus))(headerCarrier).map(_ => Ok("")).recover {
+          _ <- GMPSessionService.cacheCallBackData(Some(uploadStatus))(headerCarrier).map(_ => Ok("")).recover {
               case e: Throwable =>
                 logger.error(s"Failed to update gmp bulk session for: $sessionId, timestamp: ${System.currentTimeMillis()}.", e)
                 throw new RuntimeException("Exception occurred when attempting to update gmp bulk session")

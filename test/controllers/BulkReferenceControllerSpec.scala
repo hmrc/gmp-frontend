@@ -17,7 +17,6 @@
 package controllers
 
 import java.util.UUID
-
 import config.{ApplicationConfig, GmpSessionCache}
 import controllers.auth.FakeAuthAction
 import forms.BulkReferenceForm
@@ -31,7 +30,7 @@ import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl}
 import play.api.mvc.MessagesControllerComponents
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import services.SessionService
+import services.{GMPSessionService, SessionService}
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.SessionId
@@ -43,7 +42,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class BulkReferenceControllerSpec extends PlaySpec  with MockitoSugar with GuiceOneAppPerSuite{
 
   val mockAuthConnector: AuthConnector = mock[AuthConnector]
-  val mockSessionService: SessionService = mock[SessionService]
+  val mockSessionService: GMPSessionService = mock[GMPSessionService]
   val mockAuditConnector: AuditConnector = mock[AuditConnector]
 
   implicit lazy val hc: HeaderCarrier = new HeaderCarrier(sessionId = Some(SessionId(s"session-${UUID.randomUUID}")))

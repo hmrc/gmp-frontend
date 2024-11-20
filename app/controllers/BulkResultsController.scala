@@ -22,7 +22,7 @@ import connectors.GmpBulkConnector
 import controllers.auth.AuthAction
 import play.api.Logging
 import play.api.mvc.MessagesControllerComponents
-import services.SessionService
+import services.{GMPSessionService, SessionService}
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.http.UpstreamErrorResponse
 import views.Views
@@ -33,15 +33,13 @@ class BulkResultsController @Inject()(authAction: AuthAction,
                                       val authConnector: AuthConnector,
                                       gmpBulkConnector: GmpBulkConnector,
                                       messagesControllerComponents: MessagesControllerComponents,
-                                      ac:ApplicationConfig,sessionService: SessionService,implicit val config:GmpContext,
+                                      ac:ApplicationConfig,GMPSessionService: GMPSessionService,implicit val config:GmpContext,
                                       implicit val executionContext: ExecutionContext,
                                       views: Views
-                                     ) extends GmpController(messagesControllerComponents,ac,sessionService,config) with Logging {
+                                     ) extends GmpController(messagesControllerComponents,ac,GMPSessionService,config) with Logging {
    def get(uploadReference: String, comingFromPage: Int) = authAction.async {
     implicit request => {
-
       val log = (e: Throwable) => logger.error(s"[BulkResultsController][GET] ${e.getMessage}", e)
-
       val link = request.linkId
 
         gmpBulkConnector.getBulkResultsSummary(uploadReference, link).map {

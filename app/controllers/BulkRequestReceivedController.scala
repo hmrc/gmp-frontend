@@ -24,7 +24,7 @@ import models.upscan.UploadedSuccessfully
 import play.api.Logging
 import play.api.i18n.Messages
 import play.api.mvc.MessagesControllerComponents
-import services.{BulkRequestCreationService, DataLimitExceededException, SessionService}
+import services.{BulkRequestCreationService, DataLimitExceededException, GMPSessionService, SessionService}
 import uk.gov.hmrc.auth.core.AuthConnector
 import views.Views
 
@@ -33,7 +33,7 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class BulkRequestReceivedController @Inject()(authAction: AuthAction,
                                               val authConnector: AuthConnector,
-                                              sessionService: SessionService,
+                                              GMPSessionService: GMPSessionService,
                                               bulkRequestCreationService: BulkRequestCreationService,
                                               gmpBulkConnector: GmpBulkConnector, ac:ApplicationConfig,
                                               implicit val config:GmpContext,
@@ -41,15 +41,13 @@ class BulkRequestReceivedController @Inject()(authAction: AuthAction,
                                               implicit val executionContext: ExecutionContext,
                                               implicit val sessionCache:GmpSessionCache,
                                               views: Views
-                                             ) extends GmpController(messagesControllerComponents,ac,sessionService,config) with Logging {
-
-
+                                             ) extends GmpController(messagesControllerComponents,ac,GMPSessionService,config) with Logging {
 
   def get = authAction.async {
       implicit request => {
         val link = request.linkId
         logger.debug(s"[BulkRequestReceivedController][get][GET] : ${request.body}")
-        sessionService.fetchGmpBulkSession().flatMap {
+        GMPSessionService.fetchGmpBulkSession().flatMap {
           case Some(session) if session.callBackData.isDefined && session.callBackData.get.isInstanceOf[UploadedSuccessfully] =>
             val callbackData = session.callBackData.get.asInstanceOf[UploadedSuccessfully]
             val errorPageForToMuchData = Ok(views.failure(

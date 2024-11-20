@@ -30,7 +30,7 @@ import play.api.libs.json.Json
 import play.api.mvc.MessagesControllerComponents
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import services.SessionService
+import services.{GMPSessionService, SessionService}
 import uk.gov.hmrc.auth.core.AuthConnector
 import views.Views
 
@@ -39,7 +39,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class EqualiseControllerSpec extends PlaySpec with GuiceOneServerPerSuite with MockitoSugar {
 
   val mockAuthConnector = mock[AuthConnector]
-  val mockSessionService = mock[SessionService]
+  val mockGMPSessionService = mock[GMPSessionService]
   val mockAuthAction = mock[AuthAction]
   implicit val mcc: MessagesControllerComponents = app.injector.instanceOf[MessagesControllerComponents]
   implicit val ec: ExecutionContext = app.injector.instanceOf[ExecutionContext]
@@ -50,7 +50,7 @@ class EqualiseControllerSpec extends PlaySpec with GuiceOneServerPerSuite with M
   lazy val equaliseForm = new EqualiseForm(mcc)
   lazy val views = app.injector.instanceOf[Views]
 
-  object TestEqualiseController extends EqualiseController(FakeAuthAction, mockAuthConnector, mockSessionService,FakeGmpContext,equaliseForm,mcc,ac,ec,gmpSessionCache,views) {
+  object TestEqualiseController extends EqualiseController(FakeAuthAction, mockAuthConnector, mockGMPSessionService,FakeGmpContext,equaliseForm,mcc,ac,ec,gmpSessionCache,views) {
     }
 
   "EqualiseController GET" must {
@@ -63,7 +63,7 @@ class EqualiseControllerSpec extends PlaySpec with GuiceOneServerPerSuite with M
     }
 
     "present the equalise page" in {
-      when(mockSessionService.fetchMemberDetails()(any())).thenReturn(Future.successful(None))
+      when(mockGMPSessionService.fetchMemberDetails()(any())).thenReturn(Future.successful(None))
 
         val result = TestEqualiseController.get(FakeRequest())
         contentAsString(result) must include(Messages("gmp.equalise_header"))
@@ -80,14 +80,14 @@ class EqualiseControllerSpec extends PlaySpec with GuiceOneServerPerSuite with M
       val memberDetails = MemberDetails("", "", "")
       val session = GmpSession(memberDetails, "", CalculationType.REVALUATION, None, None, Leaving(GmpDate(None, None, None), None), None)
 
-        when(mockSessionService.fetchGmpSession()(any())).thenReturn(Future.successful(Some(session)))
+        when(mockGMPSessionService.fetchGmpSession()(any())).thenReturn(Future.successful(Some(session)))
         val result = TestEqualiseController.back(FakeRequest())
         status(result) must equal(SEE_OTHER)
     }
 
     "throw an exception when session not fetched" in {
 
-        when(mockSessionService.fetchGmpSession()(any())).thenReturn(Future.successful(None))
+        when(mockGMPSessionService.fetchGmpSession()(any())).thenReturn(Future.successful(None))
         val result = TestEqualiseController.back(FakeRequest())
         intercept[RuntimeException] {
           status(result)
@@ -122,14 +122,14 @@ class EqualiseControllerSpec extends PlaySpec with GuiceOneServerPerSuite with M
 
           "redirect" in {
 
-            when(mockSessionService.cacheEqualise(any())(any())).thenReturn(Future.successful(Some(gmpSession)))
+            when(mockGMPSessionService.cacheEqualise(any())(any())).thenReturn(Future.successful(Some(gmpSession)))
               val result = TestEqualiseController.post(FakeRequest().withMethod("POST")
                 .withFormUrlEncodedBody("equalise" -> "1"))
               status(result) mustBe(SEE_OTHER)
           }
 
           "respond with error when rate not stored" in {
-            when(mockSessionService.cacheEqualise(any())(any())).thenReturn(Future.successful(None))
+            when(mockGMPSessionService.cacheEqualise(any())(any())).thenReturn(Future.successful(None))
               intercept[RuntimeException] {
                 await(TestEqualiseController.post(FakeRequest().withMethod("POST")
                   .withFormUrlEncodedBody("equalise" -> "1")))

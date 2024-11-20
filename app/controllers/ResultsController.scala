@@ -23,12 +23,13 @@ import controllers.auth.AuthAction
 import events.ContributionsAndEarningsEvent
 import metrics.ApplicationMetrics
 import models._
+
 import java.time.LocalDate
 import play.api.Logging
 import play.api.i18n.Messages
 import play.api.mvc.{MessagesControllerComponents, Request}
 import play.twirl.api.HtmlFormat
-import services.SessionService
+import services.{GMPSessionService, SessionService}
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import views.Views
@@ -38,7 +39,7 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class ResultsController @Inject()(authAction: AuthAction,
                                   override val authConnector: AuthConnector,
-                                  sessionService: SessionService,
+                                  GMPSessionService: GMPSessionService,
                                   implicit override val context: GmpContext,
                                   calculationConnector: GmpConnector,
                                   auditConnector: AuditConnector,
@@ -47,7 +48,7 @@ class ResultsController @Inject()(authAction: AuthAction,
                                   override val messagesControllerComponents: MessagesControllerComponents,
                                   implicit val executionContext: ExecutionContext,
                                   implicit val gmpSessionCache: GmpSessionCache,
-                                  views: Views) extends GmpPageFlow(authConnector,sessionService,context,messagesControllerComponents,ac) with Logging{
+                                  views: Views) extends GmpPageFlow(authConnector,GMPSessionService,context,messagesControllerComponents,ac) with Logging{
 
    def resultsView(response: CalculationResponse, revalRateSubheader: Option[String], survivorSubheader: Option[String])(implicit request: Request[_]): HtmlFormat.Appendable = {
     views.results(response, revalRateSubheader,survivorSubheader)
@@ -56,7 +57,7 @@ class ResultsController @Inject()(authAction: AuthAction,
   def get = authAction.async {
       implicit request => {
         val link = request.linkId
-        sessionService.fetchGmpSession() flatMap {
+        GMPSessionService.fetchGmpSession() flatMap {
           sessionOpt: Option[GmpSession] =>
             sessionOpt match {
               case Some(session) => session match {
@@ -112,7 +113,7 @@ class ResultsController @Inject()(authAction: AuthAction,
       implicit request => {
         val link = request.linkId
 
-        sessionService.fetchGmpSession() flatMap {
+        GMPSessionService.fetchGmpSession() flatMap {
           sessionOpt: Option[GmpSession] =>
             sessionOpt match {
               case Some(session) => session match {

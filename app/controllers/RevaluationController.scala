@@ -26,7 +26,7 @@ import play.api.data.Form
 import play.api.data.Forms.{mapping, optional, text}
 import play.api.data.validation.Constraint
 import play.api.mvc.MessagesControllerComponents
-import services.SessionService
+import services.{GMPSessionService, SessionService}
 import uk.gov.hmrc.auth.core.AuthConnector
 import views.Views
 
@@ -35,7 +35,7 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class RevaluationController @Inject()( authAction: AuthAction,
                                        override val authConnector: AuthConnector,
-                                       sessionService: SessionService,
+                                       GMPSessionService: GMPSessionService,
                                        implicit val config:GmpContext,
                                        override val messagesControllerComponents: MessagesControllerComponents,
                                        ac:ApplicationConfig,
@@ -43,7 +43,7 @@ class RevaluationController @Inject()( authAction: AuthAction,
                                        implicit val executionContext: ExecutionContext,
                                        implicit val gmpSessionCache: GmpSessionCache,
                                        views: Views
-                                     ) extends GmpPageFlow(authConnector,sessionService,config,messagesControllerComponents,ac) with Logging {
+                                     ) extends GmpPageFlow(authConnector,GMPSessionService,config,messagesControllerComponents,ac) with Logging {
 
   def revalForm(session: GmpSession) = {
     val revalDate = session.revaluationDate.fold(GmpDate(None, None, None))(identity)
@@ -51,7 +51,7 @@ class RevaluationController @Inject()( authAction: AuthAction,
   }
 
   def get = authAction.async { implicit request =>
-    sessionService.fetchGmpSession().map {
+    GMPSessionService.fetchGmpSession().map {
         case Some(session) => {
           val revalDate = session.revaluationDate.fold(GmpDate(None, None, None))(identity)
           Ok(views.revaluation(revalForm(session).fill(RevaluationDate(session.leaving, revalDate))))
@@ -64,7 +64,7 @@ class RevaluationController @Inject()( authAction: AuthAction,
   def post = authAction.async {
     implicit request => {
       logger.debug(s"[RevaluationController][post][POST] : ${request.body}")
-      val form = sessionService.fetchGmpSession().map {
+      val form = GMPSessionService.fetchGmpSession().map {
         _ match {
           case Some(session) => revalForm(session)
           case None => throw new RuntimeException("No session found in order to retrieve scenario")
@@ -77,7 +77,7 @@ class RevaluationController @Inject()( authAction: AuthAction,
             Future.successful(BadRequest(views.revaluation(formWithErrors)))
           },
           revaluation => {
-            sessionService.cacheRevaluationDate(Some(revaluation.revaluationDate)).map {
+            GMPSessionService.cacheRevaluationDate(Some(revaluation.revaluationDate)).map {
               case Some(session) => nextPage("RevaluationController", session)
               case _ => throw new RuntimeException
             }
@@ -90,7 +90,7 @@ class RevaluationController @Inject()( authAction: AuthAction,
 
   def back = authAction.async {
       implicit request =>{
-        sessionService.fetchGmpSession() map {
+        GMPSessionService.fetchGmpSession() map {
           case Some(session) => previousPage("RevaluationController", session)
           case _ => throw new RuntimeException
         }

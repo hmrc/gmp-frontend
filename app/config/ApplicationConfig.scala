@@ -56,10 +56,17 @@ class ApplicationConfig @Inject()(
   lazy val timeoutCountdown = servicesConfig.getInt("timeout.countdown")
   lazy val cacheTtl: Int = servicesConfig.getInt("mongodb.timeToLiveInSeconds")
 
-  override val isMongoDBCacheEnabled: Boolean = getBoolean("isMongoDBCacheEnabled")
-
-  override def serviceMaxNoOfAttempts: Int = getConfString("gmp-service_max_no_of_attempts", "").toInt
-
+  override val isMongoDBCacheEnabled: Boolean = runModeConfiguration.getOptional[Boolean]("isMongoDBCacheEnabled").getOrElse(false)
+  override def serviceMaxNoOfAttempts: Int = {
+    runModeConfiguration.getOptional[String]("service.maxAttempts") match {
+      case Some(value) if value.matches("^\\d+$") =>
+        value.toInt
+      case Some(invalidValue) =>
+        throw new IllegalArgumentException(s"Invalid configuration for 'service.maxAttempts': $invalidValue. Must be an integer.")
+      case None =>
+        3
+    }
+  }
 }
 
 

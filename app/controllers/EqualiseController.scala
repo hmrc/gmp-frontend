@@ -22,7 +22,7 @@ import controllers.auth.AuthAction
 import forms.EqualiseForm
 import play.api.Logging
 import play.api.mvc.MessagesControllerComponents
-import services.SessionService
+import services.{GMPSessionService, SessionService}
 import uk.gov.hmrc.auth.core.AuthConnector
 import views.Views
 
@@ -31,15 +31,14 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class EqualiseController @Inject()(authAction: AuthAction,
                                    override val authConnector: AuthConnector,
-                                   sessionService: SessionService,
+                                   GMPSessionService: GMPSessionService,
                                    implicit val config:GmpContext,ef:EqualiseForm,
                                    messagesControllerComponents: MessagesControllerComponents,
                                    ac:ApplicationConfig,
                                    implicit val executionContext: ExecutionContext,
                                    implicit val gmpSessionCache: GmpSessionCache,
                                    views: Views)
-                                  extends GmpPageFlow(authConnector,sessionService,config,messagesControllerComponents,ac) with Logging{
-
+                                  extends GmpPageFlow(authConnector,GMPSessionService,config,messagesControllerComponents,ac) with Logging{
 
   lazy val equaliseForm = ef.equaliseForm
   def get = authAction.async {
@@ -48,14 +47,12 @@ class EqualiseController @Inject()(authAction: AuthAction,
 
   def post = authAction.async {
       implicit request => {
-
         logger.debug(s"[EqualiseController][POST] : ${request.body}")
-
         equaliseForm.bindFromRequest().fold(
           formWithErrors => {Future.successful(BadRequest(views.equalise(formWithErrors)))},
 
           equalise => {
-            sessionService.cacheEqualise(equalise.equalise) map {
+            GMPSessionService.cacheEqualise(equalise.equalise) map {
               case Some(session) => nextPage("EqualiseController", session)
               case _ => throw new RuntimeException
             }
@@ -67,7 +64,7 @@ class EqualiseController @Inject()(authAction: AuthAction,
 
   def back = authAction.async {
       implicit request => {
-        sessionService.fetchGmpSession() map {
+        GMPSessionService.fetchGmpSession() map {
           case Some(session) => previousPage("EqualiseController", session)
           case _ => throw new RuntimeException
         }

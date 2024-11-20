@@ -31,7 +31,7 @@ import play.api.libs.json.Json
 import play.api.mvc.MessagesControllerComponents
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import services.SessionService
+import services.{GMPSessionService, SessionService}
 import uk.gov.hmrc.auth.core.AuthConnector
 import views.Views
 
@@ -40,7 +40,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class RevaluationRateControllerSpec extends PlaySpec with GuiceOneServerPerSuite with MockitoSugar {
 
   val mockAuthConnector = mock[AuthConnector]
-  val mockSessionService = mock[SessionService]
+  val mockSessionService = mock[GMPSessionService]
   val mockAuthAction = mock[AuthAction]
 
   implicit val mcc: MessagesControllerComponents = app.injector.instanceOf[MessagesControllerComponents]

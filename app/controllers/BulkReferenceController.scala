@@ -22,7 +22,7 @@ import controllers.auth.AuthAction
 import forms.BulkReferenceForm
 import play.api.Logging
 import play.api.mvc.MessagesControllerComponents
-import services.SessionService
+import services.{GMPSessionService, SessionService}
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import views.Views
@@ -32,12 +32,12 @@ import scala.concurrent.{ExecutionContext, Future}
 class BulkReferenceController @Inject()(authAction: AuthAction,
                                         val authConnector: AuthConnector,
                                         auditConnector : AuditConnector,
-                                        sessionService: SessionService,implicit val config:GmpContext,brf:BulkReferenceForm,
+                                        GMPSessionService: GMPSessionService,implicit val config:GmpContext,brf:BulkReferenceForm,
                                         override val messagesControllerComponents: MessagesControllerComponents,
                                         implicit val executionContext: ExecutionContext,ac:ApplicationConfig,
                                         implicit val gmpSessionCache: GmpSessionCache,
                                         views: Views)
-  extends GmpController(messagesControllerComponents,ac,sessionService,config) with Logging{
+  extends GmpController(messagesControllerComponents,ac,GMPSessionService,config) with Logging{
 
 lazy val bulkReferenceForm = brf.bulkReferenceForm
 
@@ -53,8 +53,7 @@ lazy val bulkReferenceForm = brf.bulkReferenceForm
         bulkReferenceForm.bindFromRequest().fold(
           formWithErrors => {Future.successful(BadRequest(views.bulkReference(formWithErrors)))},
           value => {
-
-            sessionService.cacheEmailAndReference(Some(value.email.trim), Some(value.reference.trim)).map {
+            GMPSessionService.cacheEmailAndReference(Some(value.email.trim), Some(value.reference.trim)).map {
               case Some(session) => Redirect(controllers.routes.BulkRequestReceivedController.get)
               case _ => throw new RuntimeException
             }

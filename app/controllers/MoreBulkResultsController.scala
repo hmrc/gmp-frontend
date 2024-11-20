@@ -21,7 +21,7 @@ import config.{ApplicationConfig, GmpContext}
 import connectors.GmpBulkConnector
 import controllers.auth.AuthAction
 import play.api.mvc.MessagesControllerComponents
-import services.SessionService
+import services.{GMPSessionService, SessionService}
 import uk.gov.hmrc.auth.core.AuthConnector
 import views.Views
 
@@ -30,15 +30,13 @@ import scala.concurrent.ExecutionContext
 @Singleton
 class MoreBulkResultsController @Inject()(authAction: AuthAction,
                                           override val authConnector: AuthConnector,
-                                          sessionService: SessionService,
+                                          GMPSessionService: GMPSessionService,
                                           implicit val config:GmpContext,
                                           gmpBulkConnector: GmpBulkConnector,
                                           ac:ApplicationConfig,
                                           override val messagesControllerComponents: MessagesControllerComponents,
                                           implicit val executionContext: ExecutionContext,
-                                          views: Views) extends GmpPageFlow(authConnector,sessionService,config,messagesControllerComponents,ac) {
-
-
+                                          views: Views) extends GmpPageFlow(authConnector,GMPSessionService,config,messagesControllerComponents,ac) {
 
   def retrieveMoreBulkResults = authAction.async {
       implicit request => {
