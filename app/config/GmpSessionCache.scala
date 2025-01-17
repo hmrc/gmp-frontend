@@ -18,12 +18,10 @@ package config
 
 import com.google.inject.name.Named
 import com.google.inject.{Inject, Singleton}
-import play.api.Mode
-import play.api.{Configuration, Environment}
+import play.api.{Configuration, Environment, Mode}
 import uk.gov.hmrc.http.cache.client.SessionCache
-import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
-import uk.gov.hmrc.http.HttpClient
 import uk.gov.hmrc.http.client.HttpClientV2
+import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
 @Singleton
 class GmpSessionCache @Inject()(@Named("appName") appName: String,
