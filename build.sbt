@@ -8,8 +8,8 @@ val appName = "gmp-frontend"
 lazy val scoverageSettings: Seq[Def.Setting[_]] = {
   Seq(
     coverageExcludedPackages := "<empty>;app.*;config.*;testOnlyDoNotUseInAppConf.*;views.html.helpers*;uk.gov.hmrc.*;prod.*;forms.*",
-    coverageMinimumStmtTotal := 85,
-    coverageFailOnMinimum := false,
+    coverageMinimumStmtTotal := 86,
+    coverageFailOnMinimum := true,
     coverageHighlighting := true
   )
 }
