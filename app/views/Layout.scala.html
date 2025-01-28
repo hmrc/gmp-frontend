@@ -22,6 +22,7 @@
 @import uk.gov.hmrc.hmrcfrontend.views.viewmodels.userresearchbanner.UserResearchBanner
 @import uk.gov.hmrc.govukfrontend.views.Aliases.BackLink
 @import uk.gov.hmrc.govukfrontend.views.html.components._
+@import views.html.helper.CSPNonce
 
 @this(
         hmrcStandardPage: HmrcStandardPage,
@@ -56,7 +57,7 @@
 }
 
 @scriptBlock = {
-    <script src='@routes.AssetsController.at("javascripts/back.js")'> </script>
+    <script @{CSPNonce.attr} src='@routes.AssetsController.at("javascripts/back.js")'> </script>
 }
 
 @backLinkIsJS = @{backLink match {
