@@ -20,6 +20,8 @@
 @import uk.gov.hmrc.hmrcfrontend.views.html.helpers.{HmrcReportTechnicalIssueHelper, HmrcTimeoutDialogHelper}
 @import uk.gov.hmrc.govukfrontend.views.Aliases.BackLink
 @import uk.gov.hmrc.govukfrontend.views.html.components._
+@import views.html.helper.CSPNonce
+
 
 @this(
         hmrcStandardPage: HmrcStandardPage,
@@ -39,7 +41,7 @@
     <p class="govuk-body">@message</p>
     @hmrcReportTechnicalIssueHelper()
 }
-@scriptBlock = {<script src='@routes.AssetsController.at("javascripts/back.js")'> </script>}
+@scriptBlock = {<script @{CSPNonce.attr}  src='@routes.AssetsController.at("javascripts/back.js")'> </script>}
 
 @hmrcStandardPage(
     HmrcStandardPageParams(
