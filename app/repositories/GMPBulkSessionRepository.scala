@@ -26,7 +26,7 @@ import models.GMPBulkSessionCache
 import services.Encryption
 import uk.gov.hmrc.mongo.play.json.formats.MongoJavatimeFormats
 
-import java.time.Instant
+import java.time.{Instant, Clock}
 import java.util.concurrent.TimeUnit
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
@@ -35,7 +35,8 @@ import scala.concurrent.{ExecutionContext, Future}
 class GMPBulkSessionRepository @Inject() (
                                            mongoComponent: MongoComponent,
                                            appConfig: ApplicationConfig,
-                                           implicit val encryption: Encryption
+                                           implicit val encryption: Encryption,
+                                           clock:Clock
                                          )(implicit ec: ExecutionContext)
   extends PlayMongoRepository[GMPBulkSessionCache](
     collectionName = "gmp-bulk-session",
@@ -58,7 +59,7 @@ class GMPBulkSessionRepository @Inject() (
     collection
       .updateOne(
         filter = byId(id),
-        update = Updates.set("lastModifiedIdx", Instant.now())
+        update = Updates.set("lastModifiedIdx", Instant.now(clock))
       )
       .toFuture()
       .map(_ => true)
@@ -72,7 +73,7 @@ class GMPBulkSessionRepository @Inject() (
 
   def set(answers: GMPBulkSessionCache): Future[Boolean] = {
 
-    val updatedAnswers = answers copy (lastModified = Instant.now())
+    val updatedAnswers = answers copy (lastModified = Instant.now(clock))
 
     collection
       .replaceOne(
