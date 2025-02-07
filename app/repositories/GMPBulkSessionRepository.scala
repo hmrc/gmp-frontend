@@ -35,7 +35,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class GMPBulkSessionRepository @Inject() (
                                            mongoComponent: MongoComponent,
                                            appConfig: ApplicationConfig,
-                                           implicit val encryption: Encryption,
+                                           implicit val encryption: Encryption
                                          )(implicit ec: ExecutionContext)
   extends PlayMongoRepository[GMPBulkSessionCache](
     collectionName = "gmp-bulk-session",
@@ -43,7 +43,7 @@ class GMPBulkSessionRepository @Inject() (
     domainFormat = GMPBulkSessionCache.MongoFormats.formats,
     indexes = Seq(
       IndexModel(
-        Indexes.ascending("lastModifiedIdx"),
+        Indexes.ascending("lastModified"),
         IndexOptions()
           .name("lastModifiedIdx")
           .expireAfter(appConfig.cacheTtl, TimeUnit.SECONDS)
@@ -58,7 +58,7 @@ class GMPBulkSessionRepository @Inject() (
     collection
       .updateOne(
         filter = byId(id),
-        update = Updates.set("lastModifiedIdx", Instant.now())
+        update = Updates.set("lastModified", Instant.now())
       )
       .toFuture()
       .map(_ => true)
