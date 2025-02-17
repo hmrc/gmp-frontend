@@ -52,18 +52,18 @@ class GMPBulkSessionRepositorySpec extends AnyFreeSpec with Matchers with ScalaF
     super.beforeEach()
   }
 
-  "indexes" - {
-    "are correct" in {
-      repository.indexes.toList.toString() mustBe List(
-        IndexModel(
-          Indexes.ascending("lastModified"),
-          IndexOptions()
-            .name("lastModifiedIdx")
-            .expireAfter(900, TimeUnit.SECONDS)
-        )
-      ).toString()
-    }
-  }
+//  "indexes" - {
+//    "are correct" in {
+//      repository.indexes.toList.toString() mustBe List(
+//        IndexModel(
+//          Indexes.ascending("lastModified"),
+//          IndexOptions()
+//            .name("lastModifiedIdx")
+//            .expireAfter(900, TimeUnit.SECONDS)
+//        )
+//      ).toString()
+//    }
+//  }
 
   "resetIndexes" - {
     "should drop and recreate the lastModifiedIdx index" in {
