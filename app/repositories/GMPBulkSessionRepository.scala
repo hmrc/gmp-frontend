@@ -24,6 +24,7 @@ import uk.gov.hmrc.mongo.play.json.PlayMongoRepository
 import config.ApplicationConfig
 import models.GMPBulkSessionCache
 import services.Encryption
+import uk.gov.hmrc.mongo.play.json.Codecs.logger
 import uk.gov.hmrc.mongo.play.json.formats.MongoJavatimeFormats
 
 import java.time.Instant
@@ -41,16 +42,28 @@ class GMPBulkSessionRepository @Inject() (
     collectionName = "gmp-bulk-session",
     mongoComponent = mongoComponent,
     domainFormat = GMPBulkSessionCache.MongoFormats.formats,
-    indexes = Seq(
-      IndexModel(
-        Indexes.ascending("lastModified"),
-        IndexOptions()
-          .name("lastModifiedIdx")
-          .expireAfter(appConfig.cacheTtl, TimeUnit.SECONDS)
-      )
-    )
+    indexes = Seq()
   ){
   implicit val instantFormat: Format[Instant] = MongoJavatimeFormats.instantFormat
+
+  resetIndexes().recover{
+    case ex:Throwable =>
+      println(s"Failed to reset indexes: ${ex.getMessage}")
+  }
+
+  def resetIndexes(): Future[Unit] = {
+    for {
+      _ <- collection.dropIndexes().toFuture()
+      _ = logger.info("Dropped all indexes for GMPBulkSessionCache collection")
+      _ <- collection.createIndexes(Seq(
+        IndexModel(
+          Indexes.ascending("lastModified"),
+          IndexOptions().name("lastModifiedIdx").expireAfter(appConfig.cacheTtl, TimeUnit.SECONDS)
+        )
+      )).toFuture()
+      _ = logger.info("Recreated lastModifiedIdx with TTL: " + appConfig.cacheTtl)
+    } yield ()
+  }
 
   private def byId(id: String): Bson = Filters.equal("_id", id)
 

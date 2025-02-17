@@ -16,8 +16,10 @@
 
 package repositories
 
+import com.google.inject.Inject
 import org.mongodb.scala.bson.BsonDocument
 import org.mongodb.scala.model.{IndexModel, IndexOptions, Indexes}
+import org.mongodb.scala.{Document, MongoCollection}
 import org.scalatest.{BeforeAndAfterEach, OptionValues}
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.freespec.AnyFreeSpec
@@ -26,14 +28,17 @@ import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.test.{DefaultAwaitTimeout, FutureAwaits}
 import models.upscan.{UploadStatus, UploadedSuccessfully}
 import models.{GMPBulkSessionCache, GmpBulkSession}
+import config.ApplicationConfig
 
 import java.util.concurrent.TimeUnit
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 
-class GMPBulkSessionRepositorySpec
-  extends AnyFreeSpec with Matchers with ScalaFutures with IntegrationPatience with OptionValues
+class GMPBulkSessionRepositorySpec extends AnyFreeSpec with Matchers with ScalaFutures with IntegrationPatience with OptionValues
     with GuiceOneAppPerSuite with FutureAwaits with DefaultAwaitTimeout with BeforeAndAfterEach  {
 
   val repository: GMPBulkSessionRepository = app.injector.instanceOf[GMPBulkSessionRepository]
+  val appConfig: ApplicationConfig = app.injector.instanceOf[ApplicationConfig]
   val id: String = "id"
   val callBackData: UploadStatus = UploadedSuccessfully("testReference", "testFileName", "testUrl")
   val emailAddress: String = "testData"
@@ -59,6 +64,32 @@ class GMPBulkSessionRepositorySpec
       ).toString()
     }
   }
+
+  "resetIndexes" - {
+    "should drop and recreate the lastModifiedIdx index" in {
+      // Initial state: Ensure the index exists
+      await(repository.resetIndexes())
+
+      // Check indexes after resetting
+      val indexesAfterReset = await(repository.collection.listIndexes().toFuture())
+      indexesAfterReset.exists(_.getString("name") == "lastModifiedIdx") mustBe true
+
+      // Drop all indexes
+      await(repository.collection.dropIndexes().toFuture())
+
+      // Ensure indexes are dropped
+      val indexesAfterDrop = await(repository.collection.listIndexes().toFuture())
+      indexesAfterDrop.exists(_.getString("name") == "lastModifiedIdx") mustBe false
+
+      // Call resetIndexes again
+      await(repository.resetIndexes())
+
+      // Check indexes again after resetting
+      val indexesAfterRecreation = await(repository.collection.listIndexes().toFuture())
+      indexesAfterRecreation.exists(_.getString("name") == "lastModifiedIdx") mustBe true
+    }
+  }
+
 
   ".set" - {
     "Must successfully save a record to the DB" - {
@@ -86,13 +117,14 @@ class GMPBulkSessionRepositorySpec
       }
     }
 
-
-      "when there is no record for this id" - {
-        "must return None" in {
-          val nonExistingCache = gmpBulkSessionCache.copy(id = "non-existing-id")
-          val result = await(repository.get(nonExistingCache.id))
-          result mustBe None
-        }
+    "when there is no record for this id" - {
+      "must return None" in {
+        val nonExistingCache = gmpBulkSessionCache.copy(id = "non-existing-id")
+        val result = await(repository.get(nonExistingCache.id))
+        result mustBe None
       }
+    }
   }
+
+
 }
