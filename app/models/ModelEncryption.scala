@@ -25,33 +25,33 @@ import java.time.Instant
 
 object ModelEncryption {
 
-  def encryptSessionCache(gmpBulkSessionCache: GMPBulkSessionCache)(implicit encryption: Encryption): (String, EncryptedValue, Instant) =
+  def encryptSessionCache(gmpBulkSessionCache: GMPBulkSessionCache)(implicit encryption: Encryption): (String, GmpBulkSession, Instant) =
     (gmpBulkSessionCache.id,
-      encryption.crypto.encrypt(Json.toJson(gmpBulkSessionCache.gmpBulkSession).toString, gmpBulkSessionCache.id),
+      gmpBulkSessionCache.gmpBulkSession,
       gmpBulkSessionCache.lastModified
     )
 
-  def decryptSessionCache(id: String, gmpBulkSession: EncryptedValue, lastModified: Instant)(implicit encryption: Encryption): GMPBulkSessionCache =
+  def decryptSessionCache(id: String, gmpBulkSession: GmpBulkSession, lastModified: Instant)(implicit encryption: Encryption): GMPBulkSessionCache =
     GMPBulkSessionCache(
       id = id,
-      gmpBulkSession = Json.parse(encryption.crypto.decrypt(gmpBulkSession, id)).as[GmpBulkSession],
+      gmpBulkSession,
       lastModified = lastModified
     )
 
   def encryptSingleCalculationSessionCache(singleCalculationSessionCache: SingleCalculationSessionCache)
-                                          (implicit encryption: Encryption): (String, EncryptedValue, Instant) =
+                                          (implicit encryption: Encryption): (String, GmpSession, Instant) =
     (
       singleCalculationSessionCache.id,
-      encryption.crypto.encrypt(Json.toJson(singleCalculationSessionCache.gmpSession).toString, singleCalculationSessionCache.id),
+      singleCalculationSessionCache.gmpSession,
       singleCalculationSessionCache.lastModified
     )
 
 
-  def decryptSingleCalculationSessionCache(id: String, gmpSession: EncryptedValue, lastModified: Instant)
+  def decryptSingleCalculationSessionCache(id: String, gmpSession: GmpSession, lastModified: Instant)
                                           (implicit encryption: Encryption): SingleCalculationSessionCache =
     SingleCalculationSessionCache(
       id = id,
-      gmpSession = Json.parse(encryption.crypto.decrypt(gmpSession, id)).as[GmpSession],
+      gmpSession,
       lastModified = lastModified
     )
 }

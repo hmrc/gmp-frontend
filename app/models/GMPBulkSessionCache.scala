@@ -38,7 +38,7 @@ object GMPBulkSessionCache {
     def reads()(implicit encryption: Encryption): Reads[GMPBulkSessionCache] =
       (
         (__ \ "id").read[String] and
-          (__ \ "gmpBulkSession").read[EncryptedValue] and
+          (__ \ "gmpBulkSession").read[GmpBulkSession] and
           (__ \ "lastModified").read[Instant]
         )(ModelEncryption.decryptSessionCache _)
 
@@ -46,7 +46,7 @@ object GMPBulkSessionCache {
       new OWrites[GMPBulkSessionCache] {
 
         override def writes(sessionCache: GMPBulkSessionCache): JsObject = {
-          val encryptedValue: (String, EncryptedValue, Instant) =
+          val encryptedValue: (String, GmpBulkSession, Instant) =
             ModelEncryption.encryptSessionCache(sessionCache)
           Json.obj(
             "id" -> encryptedValue._1,
