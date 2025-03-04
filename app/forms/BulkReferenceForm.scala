@@ -57,7 +57,6 @@ class BulkReferenceForm  @Inject()(mcc: MessagesControllerComponents) {
         .verifying(messages("gmp.error.mandatory", messages("gmp.reference")), x => x.trim.length != 0)
         .verifying(messages("gmp.error.csv.member_ref.length.invalid", messages("gmp.reference")), x => x.trim.length <= MAX_REFERENCE_LENGTH)
         .verifying(messages("gmp.error.csv.member_ref.character.invalid", messages("gmp.reference")), x => x.trim.matches(CHARS_ALLOWED))
-        .verifying(messages("gmp.error.csv.member_ref.spaces.invalid", messages("gmp.reference")), x => !(x.trim matches WHITE_SPACES))
     )(BulkReference.apply)(BulkReference.unapply)
   )
 }
