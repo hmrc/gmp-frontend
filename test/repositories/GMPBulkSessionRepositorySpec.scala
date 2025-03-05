@@ -51,7 +51,7 @@ class GMPBulkSessionRepositorySpec
     "are correct" in {
       repository.indexes.toList.toString() mustBe List(
         IndexModel(
-          Indexes.ascending("lastModifiedIdx"),
+          Indexes.ascending("lastModified"),
           IndexOptions()
             .name("lastModifiedIdx")
             .expireAfter(900, TimeUnit.SECONDS)
