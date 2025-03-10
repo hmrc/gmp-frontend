@@ -99,14 +99,14 @@ class BulkReferenceFormSpec extends PlaySpec with GuiceOneAppPerSuite {
         assert(validatedForm.errors.contains(FormError("reference", List(Messages("gmp.error.csv.member_ref.character.invalid")))))
       }
 
-      "allow white spaces in reference field" in {
+      "return an error if white spaces" in {
         val postData = Json.obj(
           "email" -> "dan@hmrc.com",
           "reference" -> "Calcu lation"
         )
         val validatedForm = bulkReferenceForm.bind(postData, fromJsonMaxChars)
 
-        assert(validatedForm.errors.isEmpty, s"Unexpected errors: ${validatedForm.errors}")
+        assert(validatedForm.errors.contains(FormError("reference", List(Messages("gmp.error.csv.member_ref.spaces.invalid")))))
       }
     }
 
