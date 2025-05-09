@@ -43,12 +43,11 @@ class GmpBulkConnectorSpec extends HttpClientV2Helper with GuiceOneServerPerSuit
   object testGmpBulkConnector extends GmpBulkConnector(
     app.injector.instanceOf[Environment],
     app.configuration,
-    mockHttpGet,
-    mockHttpPost,
+    mockHttp,
     app.injector.instanceOf[ServicesConfig])
 
-  when(mockHttpGet.get(any[URL])(any[HeaderCarrier])).thenReturn(requestBuilder)
-  when(mockHttpPost.post(any[URL])(any[HeaderCarrier])).thenReturn(requestBuilder)
+  when(mockHttp.get(any[URL])(any[HeaderCarrier])).thenReturn(requestBuilder)
+  when(mockHttp.post(any[URL])(any[HeaderCarrier])).thenReturn(requestBuilder)
 
   "The GMP Bulk Connector" must {
 

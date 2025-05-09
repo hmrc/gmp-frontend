@@ -32,8 +32,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class GmpBulkConnector @Inject()(environment: Environment,
                                  val runModeConfiguration: Configuration,
-                                 httpGet: HttpClientV2,
-                                 httpPost: HttpClientV2,
+                                 http: HttpClientV2,
                                  servicesConfig: ServicesConfig)(implicit ec: ExecutionContext) extends Logging {
 
    def mode: Mode = environment.mode
@@ -44,7 +43,7 @@ class GmpBulkConnector @Inject()(environment: Environment,
 
     val baseURI = s"gmp/${link}/gmp/bulk-data"
     val bulkUri = s"$serviceURL/$baseURI/"
-    val result = httpPost.post(url"$bulkUri")
+    val result = http.post(url"$bulkUri")
       .withBody(Json.toJson(bcr.copy(timestamp = LocalDateTime.now(), userId = link)))
       .execute[HttpResponse]
 
@@ -71,7 +70,7 @@ class GmpBulkConnector @Inject()(environment: Environment,
 
     val baseURI = s"gmp/${link}/gmp/retrieve-previous-requests"
     val bulkUri = s"$serviceURL/$baseURI"
-    val result = httpGet.get(url"$bulkUri")
+    val result = http.get(url"$bulkUri")
       .execute[List[BulkPreviousRequest]]
 
     logger.debug(s"[GmpBulkConnector][getPreviousBulkRequests][GET]")
@@ -96,7 +95,7 @@ class GmpBulkConnector @Inject()(environment: Environment,
     val baseURI = s"gmp/${link}/gmp/get-results-summary"
     val bulkUri = s"$serviceURL/$baseURI/$uploadReference"
 
-    val result = httpGet.get(url"$bulkUri")
+    val result = http.get(url"$bulkUri")
       .execute[BulkResultsSummary]
 
     logger.debug(s"[GmpBulkConnector][getBulkResultsSummary][GET] reference : $uploadReference")
@@ -119,7 +118,7 @@ class GmpBulkConnector @Inject()(environment: Environment,
 
     val baseURI = s"gmp/${link}/gmp/get-results-as-csv"
     val bulkUri = s"$serviceURL/$baseURI/$uploadReference/$filter"
-    val result = httpGet.get(url"$bulkUri")
+    val result = http.get(url"$bulkUri")
       .execute[HttpResponse]
 
     logger.debug(s"[GmpBulkConnector][getResultsAsCsv][GET] reference : $uploadReference")
@@ -144,7 +143,7 @@ class GmpBulkConnector @Inject()(environment: Environment,
 
     val baseURI = s"gmp/${link}/gmp/get-contributions-as-csv"
     val bulkUri = s"$serviceURL/$baseURI/$uploadReference"
-    val result = httpGet.get(url"$bulkUri")
+    val result = http.get(url"$bulkUri")
       .execute[HttpResponse]
 
     logger.debug(s"[GmpBulkConnector][getContributionsAndEarningsAsCsv][GET] reference : $uploadReference")
