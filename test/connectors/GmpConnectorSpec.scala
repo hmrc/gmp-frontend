@@ -50,17 +50,15 @@ class GmpConnectorSpec extends HttpClientV2Helper with GuiceOneServerPerSuite wi
     app.injector.instanceOf[Environment],
     app.configuration,
     metrics,
-    mockHttpPost,
-    mockHttpGet,
-    mockHttpPut,
+    mockHttp,
     app.injector.instanceOf[ServicesConfig]
   )
 
   before {
-    reset(mockHttpPost, mockHttpGet, mockHttpPut, requestBuilder)
-    when(mockHttpPost.post(any())(any())).thenReturn(requestBuilder)
-    when(mockHttpGet.get(any())(any())).thenReturn(requestBuilder)
-    when(mockHttpPut.put(any())(any())).thenReturn(requestBuilder)
+    reset(mockHttp, requestBuilder)
+    when(mockHttp.post(any())(any())).thenReturn(requestBuilder)
+    when(mockHttp.get(any())(any())).thenReturn(requestBuilder)
+    when(mockHttp.put(any())(any())).thenReturn(requestBuilder)
     when(requestBuilder.withBody(any())(any(), any(), any())).thenReturn(requestBuilder)
   }
 
