@@ -33,9 +33,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class GmpConnector @Inject()(environment: Environment,
                              val runModeConfiguration: Configuration,
                              metrics: ApplicationMetrics,
-                             httpPost: HttpClientV2,
-                             httpGet: HttpClientV2,
-                             httpPut: HttpClientV2,
+                             http: HttpClientV2,
                              val servicesConfig: ServicesConfig)(implicit ec: ExecutionContext) extends Logging  {
 
    def mode: Mode = environment.mode
@@ -50,7 +48,7 @@ class GmpConnector @Inject()(environment: Environment,
     val calculateUri = s"$serviceURL$gmpLink/$baseURI"
 
     val timer = metrics.gmpConnectorTimer.time()
-    val result = httpPost.post(url"$calculateUri")
+    val result = http.post(url"$calculateUri")
       .withBody(Json.toJson(calculationRequest))
       .execute[CalculationResponse]
 
@@ -82,7 +80,7 @@ class GmpConnector @Inject()(environment: Environment,
     val validateSconUri = s"$serviceURL$gmpLink/$baseURI"
 
     val timer = metrics.gmpConnectorTimer.time()
-    val result = httpPost.post(url"$validateSconUri")
+    val result = http.post(url"$validateSconUri")
       .withBody(Json.toJson(validateSconRequest))
       .execute[ValidateSconResponse]
 
