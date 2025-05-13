@@ -19,14 +19,16 @@ package services
 import com.google.inject.Inject
 import models.upscan.UploadedSuccessfully
 import models.{BulkCalculationRequest, BulkCalculationRequestLine, CalculationRequestLine}
+
 import java.time.LocalDate
-import java.time.format.DateTimeFormatter
+import java.time.format.{DateTimeFormatter, DateTimeParseException}
 import play.api.i18n.{Messages, MessagesImpl}
 import play.api.mvc.MessagesControllerComponents
 import play.api.{Configuration, Environment, Logging, Mode}
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import uk.gov.hmrc.time.TaxYear
 import validation.{CsvLineValidator, DateValidate, SMValidate}
+
 import scala.util.{Failure, Success, Try}
 
 object BulkRequestCsvColumn {
@@ -158,6 +160,8 @@ class BulkRequestCreationService @Inject()(environment: Environment,
 
     tryConverting match {
       case Success(n) => Some(n)
+      case Failure(_: NumberFormatException) =>
+        None
       case Failure(e) =>
         logger.warn(s"[BulkCreationService][protectedToInt] ${e.getMessage}", e)
         None
@@ -169,6 +173,8 @@ class BulkRequestCreationService @Inject()(environment: Environment,
 
     tryConverting match {
       case Success(convertedDate) => Some(convertedDate)
+      case Failure(_: DateTimeParseException) =>
+        None
       case Failure(e) =>
         logger.warn(s"[BulkCreationService][protectedDateConvert] ${e.getMessage}", e)
         None
@@ -222,3 +228,5 @@ class BulkRequestCreationService @Inject()(environment: Environment,
 
   def sourceData(resourceLocation: String): Iterator[Char] = scala.io.Source.fromURL(resourceLocation, "UTF-8").iter
 }
+
+
