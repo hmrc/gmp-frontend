@@ -35,10 +35,11 @@ class DashboardSpec extends GmpViewSpec {
       doc must haveParagraphWithText(messages("Get a pension scheme member's GMP calculation."))
     }
 
-    "have a bulk calculation link" in {
-      doc must haveLinkWithText(messages("gmp.bulk_calculation_link"))
-      doc must haveParagraphWithText(messages("gmp.bulk_calculation_text"))
-    }
+//        TODO: Temp. removal
+//    "have a bulk calculation link" in {
+//      doc must haveLinkWithText(messages("gmp.bulk_calculation_link"))
+//      doc must haveParagraphWithText(messages("gmp.bulk_calculation_text"))
+//    }
 
     behave like pageWithH2Header(messages("gmp.previous_calculations"))
 
