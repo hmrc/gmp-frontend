@@ -82,12 +82,10 @@ class DashboardControllerSpec extends PlaySpec with GuiceOneServerPerSuite with 
             contentAsString(result) must include(Messages("gmp.dashboard_header"))
             contentAsString(result) must include(Messages("gmp.dashboard.choose_calculation_type"))
             contentAsString(result) must include(Messages("gmp.single_calculation_link"))
-//        TODO: Temp. removal
-//            contentAsString(result) must include(Messages("gmp.bulk_calculation_link"))
+            contentAsString(result) must include(Messages("gmp.bulk_calculation_link"))
             contentAsString(result) must include(Messages("gmp.download_templates_link"))
             contentAsString(result) must include(Messages("gmp.single_calculation_text").replace("’", "&#x27;"))
-//        TODO: Temp. removal
-//            contentAsString(result) must include(Messages("gmp.bulk_calculation_text"))
+            contentAsString(result) must include(Messages("gmp.bulk_calculation_text"))
             contentAsString(result) must include(Messages("gmp.previous_calculations_text"))
       }
 
