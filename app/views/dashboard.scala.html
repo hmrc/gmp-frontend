@@ -48,9 +48,11 @@
         </div>
 
         <div class="govuk-grid-column-one-half">
-            <span class ="govuk-body govuk-!-font-size-24 govuk-!-font-weight-bold" id="bulk-calculation-link">@messages("gmp.bulk_calculation_link")</span>
+            <a class ="govuk-link govuk-!-font-size-24 govuk-!-font-weight-bold" id="bulk-calculation-link"
+            data-journey-click='@messages("gmp.ga-track.link.click"):@messages("gmp.dashboard_header"):@messages("gmp.bulk_calculation_link")'
+            href="@routes.FileUploadController.get">@messages("gmp.bulk_calculation_link")</a>
             <hr class="govuk-section-break govuk-section-break--m" role="presentation" />
-            <p class="govuk-body" id="bulk-calculation-description">@Html(messages("gmp.bulk_calculation_text.currently_unavailable"))</p>
+            <p class="govuk-body" id="bulk-calculation-description">@Html(messages("gmp.bulk_calculation_text"))</p>
         </div>
     </div>
 
