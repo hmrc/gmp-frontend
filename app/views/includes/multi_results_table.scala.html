@@ -24,7 +24,7 @@
 
 @htmlContent1(period: CalculationPeriod) = @{
     if(!period.dualCalcPost90TrueTotal.contains("0.00"))
-        s"<b>£${period.dualCalcPost90TrueTotal.getOrElse("--")}</b" else
+        s"<b>£${period.dualCalcPost90TrueTotal.getOrElse("--")}</b>" else
         s"--"
 }
 
