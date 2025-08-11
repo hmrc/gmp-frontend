@@ -23,15 +23,17 @@
 @dateFormatter = @{DateTimeFormatter.ofPattern("d MMM yyyy")}
 
 @htmlContent1(period: CalculationPeriod) = @{
-    if(!period.dualCalcPost90TrueTotal.contains("0.00"))
-        s"<b>£${period.dualCalcPost90TrueTotal.getOrElse("--")}</b>" else
-        s"--"
+    period.dualCalcPost90TrueTotal match {
+        case Some(amount) if amount != "0.00" => Html(s"<b>£$amount</b>")
+        case _ => Html("--")
+    }
 }
 
 @htmlContent2(period: CalculationPeriod) = @{
-    if(!period.dualCalcPost90OppositeTotal.contains("0.00"))
-        s"<b>£${period.dualCalcPost90OppositeTotal.getOrElse("--")}</b>" else
-        s"--"
+    period.dualCalcPost90OppositeTotal match {
+        case Some(amount) if amount != "0.00" => Html(s"<b>£$amount</b>")
+        case _ => Html("--")
+    }
 }
 
 @htmlContent3(period: CalculationPeriod, count: Int) = @{
@@ -53,10 +55,10 @@
         Some(TableRow(content = HtmlContent(s"<b>£${period.gmpTotal}</b>"))),
         Some(TableRow(content = HtmlContent(s"<b>£${period.post88GMPTotal}</b>"))),
         if(calculationResponse.dualCalc) {
-            Some(TableRow(content = Text(htmlContent1(period))))
+            Some(TableRow(content = HtmlContent(htmlContent1(period))))
         } else None,
         if(calculationResponse.dualCalc) {
-            Some(TableRow(content = Text(htmlContent2(period))))
+            Some(TableRow(content = HtmlContent(htmlContent2(period))))
         } else None,
         if(calculationResponse.revaluationRate.contains("0")) {
             Some(TableRow(content = Text(htmlContent3(period, count))))
