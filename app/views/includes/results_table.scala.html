@@ -120,13 +120,15 @@
 
 @htmlContent1(period: CalculationPeriod) = @{
     if(!period.dualCalcPost90TrueTotal.contains("0.00"))
-        s"£${period.dualCalcPost90TrueTotal.getOrElse("--")}<br>${messages("gmp.frequency.weekly")}" else
-        "--"
+        Html(s"£${period.dualCalcPost90TrueTotal.getOrElse("--")}<br>${messages("gmp.frequency.weekly")}")
+    else
+        Html("--")
 }
 @htmlContent2(period: CalculationPeriod) = @{
     if(!period.dualCalcPost90OppositeTotal.contains("0.00"))
-        s"£${period.dualCalcPost90OppositeTotal.getOrElse("--")}<br>${messages("gmp.frequency.weekly")}" else
-        "--"
+        Html(s"£${period.dualCalcPost90OppositeTotal.getOrElse("--")}<br>${messages("gmp.frequency.weekly")}")
+    else
+        Html("--")
 }
 
 @govukTable(Table(
