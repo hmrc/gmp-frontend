@@ -26,6 +26,7 @@ import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.test.{DefaultAwaitTimeout, FutureAwaits}
 import models.upscan.{UploadStatus, UploadedSuccessfully}
 import models.{GMPBulkSessionCache, GmpBulkSession}
+import org.mongodb.scala.SingleObservableFuture
 
 import java.util.concurrent.TimeUnit
 

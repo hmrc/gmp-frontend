@@ -27,6 +27,7 @@ import uk.gov.hmrc.http._
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import uk.gov.hmrc.http.client.HttpClientV2
 import uk.gov.hmrc.http.HttpReads.Implicits._
+import play.api.libs.ws.JsonBodyWritables.writeableOf_JsValue
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -35,7 +36,7 @@ class GmpBulkConnector @Inject()(environment: Environment,
                                  http: HttpClientV2,
                                  servicesConfig: ServicesConfig)(implicit ec: ExecutionContext) extends Logging {
 
-   def mode: Mode = environment.mode
+  def mode: Mode = environment.mode
 
   lazy val serviceURL = servicesConfig.baseUrl("gmp-bulk")
 

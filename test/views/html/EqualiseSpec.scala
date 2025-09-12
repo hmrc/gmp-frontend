@@ -36,7 +36,7 @@ class EqualiseSpec extends GmpViewSpec {
   val equaliseForm = Form(
     mapping(
       "equalise" -> optional(number).verifying(messages("gmp.error.equalise.error_message"), {_.isDefined})
-    )(Equalise.apply)(Equalise.unapply)
+    )(Equalise.apply)((eq: Equalise) => Some(eq.equalise))
   )
   "Equalise page" must {
     behave like pageWithTitle("Do you also want an opposite gender calculation?")

@@ -32,7 +32,7 @@ class EqualiseForm  @Inject()(mcc: MessagesControllerComponents) {
   val equaliseForm = Form(
     mapping(
       "equalise" -> optional(number).verifying(messages("gmp.error.equalise.error_message"), {_.isDefined})
-    )(Equalise.apply)(Equalise.unapply)
+    )(Equalise.apply)((eq:Equalise) => Some(eq.equalise))
   )
 
 }

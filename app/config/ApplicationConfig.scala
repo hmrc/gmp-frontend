@@ -34,8 +34,6 @@ class ApplicationConfig @Inject()(
   val environment: Environment,
   servicesConfig: ServicesConfig) extends ServicesConfig(runModeConfiguration) with AppConfig {
 
-  private def loadConfig(key: String) = runModeConfiguration.getOptional[String](key).getOrElse(throw new Exception(s"Missing key: $key"))
-
   val contactHost = runModeConfiguration.getOptional[String](s"contact-frontend.host").getOrElse("")
 
   val reportAProblemPartialUrl: String =

@@ -30,7 +30,7 @@ class ScenarioForm @Inject()(mcc: MessagesControllerComponents) {
   val scenarioForm = Form(
     mapping(
       "calcType" -> optional(text).verifying(messages("gmp.error.scenario.mandatory"), {x => {x.isDefined && x.get.matches("[0-4]{1}")}})
-    )(CalculationType.apply)(CalculationType.unapply)
+    )(CalculationType.apply)((ct: CalculationType) => Some(ct.calcType))
   )
 
 }

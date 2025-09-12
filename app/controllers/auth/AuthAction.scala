@@ -17,16 +17,11 @@
 package controllers.auth
 
 import com.google.inject.{Inject, Singleton}
-import play.api.Mode
 import play.api.mvc._
-import play.api.{Configuration, Environment}
 import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
-import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
-import uk.gov.hmrc.http.HttpClient
-import uk.gov.hmrc.http.client.HttpClientV2
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -34,7 +29,6 @@ case class AuthenticatedRequest[A](linkId: String, request:Request[A]) extends W
 
 @Singleton
 class AuthAction @Inject()(override val authConnector: AuthConnector,
-                           configuration: Configuration,
                            messagesControllerComponents: MessagesControllerComponents,
                            externalUrls: ExternalUrls)(implicit ec: ExecutionContext)
   extends ActionBuilder[AuthenticatedRequest, AnyContent] with AuthorisedFunctions{
@@ -49,7 +43,7 @@ class AuthAction @Inject()(override val authConnector: AuthConnector,
 
     authorised(ConfidenceLevel.L50 and (Enrolment("HMRC-PSA-ORG") or Enrolment("HMRC-PP-ORG") or Enrolment("HMRC-PODS-ORG")))
       .retrieve(Retrievals.authorisedEnrolments) {
-        case Enrolments(enrolments) => {
+        case Enrolments(enrolments) =>
 
           val psaid = enrolments.find(_.key == "HMRC-PSA-ORG").flatMap {
             enrolment => enrolment.identifiers.find(id => id.key == "PSAID").map(_.value)
@@ -63,9 +57,6 @@ class AuthAction @Inject()(override val authConnector: AuthConnector,
           }
 
           psaid.orElse(ppid).orElse(podsPsaid).fold(Future.successful(Results.Redirect(externalUrls.signIn)))(id => block(AuthenticatedRequest(id, request)))
-
-        }
-        case _ => throw new RuntimeException("Can't find credentials for user")
       }
   } recover {
     case ex: NoActiveSession => Results.Redirect(externalUrls.signIn)

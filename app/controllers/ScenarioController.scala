@@ -24,7 +24,7 @@ import models.CalculationType
 import play.api.Logging
 import play.api.i18n.Messages
 import play.api.mvc.MessagesControllerComponents
-import services.{GMPSessionService, SessionService}
+import services.GMPSessionService
 import uk.gov.hmrc.auth.core.AuthConnector
 import views.Views
 
@@ -46,55 +46,55 @@ class ScenarioController @Inject()(authAction: AuthAction,
   lazy val scenarioForm = sf.scenarioForm
 
   def get = authAction.async {
-      implicit request => GMPSessionService.fetchGmpSession() map {
-        case Some(session) => session match {
-          case _ if session.scon == "" =>
-            Ok(views.failure(
-              Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/pension-details"),
-              Messages("gmp.cannot_calculate.gmp"),
-              Messages("gmp.session_missing.title")
-            ))
-          case _ if session.memberDetails.nino == "" || session.memberDetails.firstForename == "" || session.memberDetails.surname == "" =>
-            Ok(views.failure(
-              Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/member-details"),
-              Messages("gmp.cannot_calculate.gmp"),
-              Messages("gmp.session_missing.title")
-            ))
-          case _ => Ok(views.scenario(scenarioForm.fill(CalculationType(Some(session.scenario)))))
-        }
-        case _ => Ok(views.failure(
-          Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/dashboard"),
-          Messages("gmp.cannot_calculate.gmp"),
-          Messages("gmp.session_missing.title")
-        ))
+    implicit request => GMPSessionService.fetchGmpSession() map {
+      case Some(session) => session match {
+        case _ if session.scon == "" =>
+          Ok(views.failure(
+            Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/pension-details"),
+            Messages("gmp.cannot_calculate.gmp"),
+            Messages("gmp.session_missing.title")
+          ))
+        case _ if session.memberDetails.nino == "" || session.memberDetails.firstForename == "" || session.memberDetails.surname == "" =>
+          Ok(views.failure(
+            Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/member-details"),
+            Messages("gmp.cannot_calculate.gmp"),
+            Messages("gmp.session_missing.title")
+          ))
+        case _ => Ok(views.scenario(scenarioForm.fill(CalculationType(Some(session.scenario)))))
       }
+      case _ => Ok(views.failure(
+        Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/dashboard"),
+        Messages("gmp.cannot_calculate.gmp"),
+        Messages("gmp.session_missing.title")
+      ))
+    }
   }
 
   def post = authAction.async {
-     implicit request => {
+    implicit request => {
 
-        logger.debug(s"[ScenarioController][post][POST] : ${request.body}")
+      logger.debug(s"[ScenarioController][post][POST] : ${request.body}")
 
-        scenarioForm.bindFromRequest().fold(
-          formWithErrors => {
-            Future.successful(BadRequest(views.scenario(formWithErrors)))
-          }, calculationType => {
-            GMPSessionService.cacheScenario(calculationType.calcType.get) map {
-              case Some(session) => nextPage("ScenarioController", session)
-              case _ => throw new RuntimeException
-            }
+      scenarioForm.bindFromRequest().fold(
+        formWithErrors => {
+          Future.successful(BadRequest(views.scenario(formWithErrors)))
+        }, calculationType => {
+          GMPSessionService.cacheScenario(calculationType.calcType.get) map {
+            case Some(session) => nextPage("ScenarioController", session)
+            case _ => throw new RuntimeException
           }
+        }
 
-        )
-      }
+      )
+    }
   }
 
   def back = authAction.async {
-     implicit request => {
-       GMPSessionService.fetchGmpSession() map {
-          case Some(session) => previousPage("ScenarioController", session)
-          case _ => throw new RuntimeException
-        }
+    implicit request => {
+      GMPSessionService.fetchGmpSession() map {
+        case Some(session) => previousPage("ScenarioController", session)
+        case _ => throw new RuntimeException
       }
+    }
   }
 }

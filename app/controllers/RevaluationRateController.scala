@@ -21,11 +21,11 @@ import com.google.inject.{Inject, Singleton}
 import config.{ApplicationConfig, GmpContext, GmpSessionCache}
 import controllers.auth.AuthAction
 import forms.RevaluationRateForm
-import models.{GmpSession, Leaving, RevaluationRate}
+import models.{GmpSession, RevaluationRate}
 import play.api.Logging
 import play.api.i18n.Messages
 import play.api.mvc.MessagesControllerComponents
-import services.{GMPSessionService, SessionService}
+import services.GMPSessionService
 import uk.gov.hmrc.auth.core.AuthConnector
 import views.Views
 
@@ -48,68 +48,68 @@ class RevaluationRateController @Inject()( authAction: AuthAction,
   lazy val revaluationRateForm = rrf.revaluationRateForm
 
   def get = authAction.async {
-      implicit request => GMPSessionService.fetchGmpSession() map {
-        case Some(session) => session match {
-          case _ if session.scon == "" =>
-            Ok(views.failure(
-              Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/pension-details"),
-              Messages("gmp.cannot_calculate.gmp"),
-              Messages("gmp.session_missing.title")
-            ))
-          case _ if session.memberDetails.nino == "" || session.memberDetails.firstForename == "" || session.memberDetails.surname == "" =>
-            Ok(views.failure(
-              Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/member-details"),
-              Messages("gmp.cannot_calculate.gmp"),
-              Messages("gmp.session_missing.title")
-            ))
-          case _ if session.scenario == "" =>
-            Ok(views.failure(
-              Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/calculation-reason"),
-              Messages("gmp.cannot_calculate.gmp"),
-              Messages("gmp.session_missing.title")
-            ))
-          case _ if session.leaving.leaving.isEmpty =>
-            Ok(views.failure(
-              Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/left-scheme"),
-              Messages("gmp.cannot_calculate.gmp"),
-              Messages("gmp.session_missing.title")
-            ))
-          case _ => Ok(views.revaluationRate(revaluationRateForm.fill(RevaluationRate(session.rate)), session))
-        }
-        case _ => throw new RuntimeException
+    implicit request => GMPSessionService.fetchGmpSession() map {
+      case Some(session) => session match {
+        case _ if session.scon == "" =>
+          Ok(views.failure(
+            Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/pension-details"),
+            Messages("gmp.cannot_calculate.gmp"),
+            Messages("gmp.session_missing.title")
+          ))
+        case _ if session.memberDetails.nino == "" || session.memberDetails.firstForename == "" || session.memberDetails.surname == "" =>
+          Ok(views.failure(
+            Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/member-details"),
+            Messages("gmp.cannot_calculate.gmp"),
+            Messages("gmp.session_missing.title")
+          ))
+        case _ if session.scenario == "" =>
+          Ok(views.failure(
+            Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/calculation-reason"),
+            Messages("gmp.cannot_calculate.gmp"),
+            Messages("gmp.session_missing.title")
+          ))
+        case _ if session.leaving.leaving.isEmpty =>
+          Ok(views.failure(
+            Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/left-scheme"),
+            Messages("gmp.cannot_calculate.gmp"),
+            Messages("gmp.session_missing.title")
+          ))
+        case _ => Ok(views.revaluationRate(revaluationRateForm.fill(RevaluationRate(session.rate)), session))
       }
+      case _ => throw new RuntimeException
+    }
 
   }
 
   def post = authAction.async {
-      implicit request => {
+    implicit request => {
 
-        logger.debug(s"[RevaluationRateController][post][POST] : ${request.body}")
+      logger.debug(s"[RevaluationRateController][post][POST] : ${request.body}")
 
-        revaluationRateForm.bindFromRequest().fold(
-          formWithErrors => {
-            GMPSessionService.fetchGmpSession() map {
-              case Some(x) => BadRequest(views.revaluationRate(formWithErrors, x))
-              case _ => throw new RuntimeException
-            }
-          },
-          revaluationRate => {
-            GMPSessionService.cacheRevaluationRate(revaluationRate.rateType.get) map {
-              case Some(session) => nextPage("RevaluationRateController", session)
-              case _ => throw new RuntimeException
-            }
+      revaluationRateForm.bindFromRequest().fold(
+        formWithErrors => {
+          GMPSessionService.fetchGmpSession() map {
+            case Some(x) => BadRequest(views.revaluationRate(formWithErrors, x))
+            case _ => throw new RuntimeException
           }
-        )
-      }
+        },
+        revaluationRate => {
+          GMPSessionService.cacheRevaluationRate(revaluationRate.rateType.get) map {
+            case Some(session) => nextPage("RevaluationRateController", session)
+            case _ => throw new RuntimeException
+          }
+        }
+      )
+    }
   }
 
   def back = authAction.async {
-     implicit request => {
-       GMPSessionService.fetchGmpSession() map {
-          case Some(session) => previousPage("RevaluationRateController", session)
-          case _ => throw new RuntimeException
-        }
+    implicit request => {
+      GMPSessionService.fetchGmpSession() map {
+        case Some(session) => previousPage("RevaluationRateController", session)
+        case _ => throw new RuntimeException
       }
+    }
   }
 
 }

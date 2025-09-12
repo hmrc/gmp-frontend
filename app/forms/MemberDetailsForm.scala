@@ -68,7 +68,7 @@ class MemberDetailsForm @Inject()(mcc: MessagesControllerComponents) {
         .verifying(messages("gmp.error.name.invalid", messages("gmp.lowercase.lastname")), x => x.length == 0 || x.matches(NAME_REGEX)),
       "nino" -> text
         .verifying(ninoConstraint))
-    (MemberDetails.apply)(MemberDetails.unapply)
+    (MemberDetails.apply)((md: MemberDetails) => Some(md.firstForename, md.surname, md.nino))
   )
 
 }

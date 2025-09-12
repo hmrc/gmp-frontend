@@ -20,7 +20,7 @@ import com.google.inject.{Inject, Singleton}
 import config.{ApplicationConfig, GmpContext}
 import controllers.auth.{AuthAction, ExternalUrls, UUIDGenerator}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import services.{GMPSessionService, SessionService}
+import services.{GMPSessionService}
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.audit.model.DataEvent
@@ -38,7 +38,7 @@ class ApplicationController @Inject()(authAction: AuthAction,
                                       ac:ApplicationConfig,
                                       views: Views,
                                       externalUrls: ExternalUrls)
-                                      extends GmpController(messagesControllerComponents,ac,GMPSessionService,config) {
+  extends GmpController(messagesControllerComponents,ac,GMPSessionService,config) {
 
   def unauthorised: Action[AnyContent] = Action {
     implicit request =>
@@ -46,14 +46,13 @@ class ApplicationController @Inject()(authAction: AuthAction,
   }
 
   def signout: Action[AnyContent] = authAction {
-      implicit request =>
-        val uuid: String = uuidGenerator.generate
-        val auditData = Map("feedbackId" -> uuid)
-        val dataEvent: DataEvent = DataEvent("GMP", "signout", detail = auditData)
+    implicit request =>
+      val uuid: String = uuidGenerator.generate
+      val auditData = Map("feedbackId" -> uuid)
+      val dataEvent: DataEvent = DataEvent("GMP", "signout", detail = auditData)
 
-        auditConnector.sendEvent(dataEvent)
-        Redirect(externalUrls.signOutCallback).withSession(("feedbackId", uuid))
+      auditConnector.sendEvent(dataEvent)
+      Redirect(externalUrls.signOutCallback).withSession(("feedbackId", uuid))
   }
 }
-
 

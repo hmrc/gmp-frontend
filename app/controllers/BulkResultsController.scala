@@ -22,10 +22,10 @@ import connectors.GmpBulkConnector
 import controllers.auth.AuthAction
 import play.api.Logging
 import play.api.mvc.MessagesControllerComponents
-import services.{GMPSessionService, SessionService}
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.http.UpstreamErrorResponse
 import views.Views
+import services.GMPSessionService
 
 import scala.concurrent.ExecutionContext
 
@@ -36,7 +36,7 @@ class BulkResultsController @Inject()(authAction: AuthAction,
                                       ac:ApplicationConfig,GMPSessionService: GMPSessionService,implicit val config:GmpContext,
                                       implicit val executionContext: ExecutionContext,
                                       views: Views
-                                     ) extends GmpController(messagesControllerComponents,ac,GMPSessionService,config) with Logging {
+                                     ) extends GmpController(messagesControllerComponents,ac, GMPSessionService,config) with Logging {
    def get(uploadReference: String, comingFromPage: Int) = authAction.async {
     implicit request => {
       val log = (e: Throwable) => logger.error(s"[BulkResultsController][GET] ${e.getMessage}", e)
@@ -65,21 +65,21 @@ class BulkResultsController @Inject()(authAction: AuthAction,
       }
   }
 
-  def getResultsAsCsv(uploadReference: String, filter: String) = authAction.async {
-      implicit request => {
-        val link = request.linkId
-        gmpBulkConnector.getResultsAsCsv(uploadReference, filter, link).map {
-          csvResponse => Ok(csvResponse.body).as("text/csv").withHeaders(("Content-Disposition", csvResponse.header("Content-Disposition").getOrElse("")))
+    def getResultsAsCsv(uploadReference: String, filter: String) = authAction.async {
+        implicit request => {
+          val link = request.linkId
+          gmpBulkConnector.getResultsAsCsv(uploadReference, filter, link).map {
+            csvResponse => Ok(csvResponse.body).as("text/csv").withHeaders(("Content-Disposition", csvResponse.header("Content-Disposition").getOrElse("")))
+          }
         }
-      }
-  }
+    }
 
-  def getContributionsAndEarningsAsCsv(uploadReference: String) = authAction.async {
-      implicit request => {
-        val link = request.linkId
-        gmpBulkConnector.getContributionsAndEarningsAsCsv(uploadReference, link).map {
-          csvResponse => Ok(csvResponse.body).as("text/csv").withHeaders(("Content-Disposition", csvResponse.header("Content-Disposition").getOrElse("")))
+    def getContributionsAndEarningsAsCsv(uploadReference: String) = authAction.async {
+        implicit request => {
+          val link = request.linkId
+          gmpBulkConnector.getContributionsAndEarningsAsCsv(uploadReference, link).map {
+            csvResponse => Ok(csvResponse.body).as("text/csv").withHeaders(("Content-Disposition", csvResponse.header("Content-Disposition").getOrElse("")))
+          }
         }
-      }
-  }
+    }
 }

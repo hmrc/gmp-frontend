@@ -102,7 +102,7 @@ class RevaluationForm @Inject()(mcc: MessagesControllerComponents) {
       "day" -> optional(text),
       "month" -> optional(text),
       "year" -> optional(text)
-    )(GmpDate.apply)(GmpDate.unapply)
+    )(GmpDate.apply)((gmpDate: GmpDate ) => Some(gmpDate.day, gmpDate.month, gmpDate.year))
     .verifying(Constraint(allDateValuesEntered))
       .verifying(Constraint(dateIsReal))
       .verifying(Constraint(checkDateOnBefore))
@@ -113,15 +113,15 @@ class RevaluationForm @Inject()(mcc: MessagesControllerComponents) {
 
       "month" -> optional(text),
       "year" -> optional(text)
-    )(GmpDate.apply)(GmpDate.unapply),
+    )(GmpDate.apply)((gd: GmpDate) => Some(gd.day, gd.month, gd.year)),
     "leaving" -> optional(text)
-  )(Leaving.apply)(Leaving.unapply)
+  )(Leaving.apply)((lv: Leaving) => Some(lv.leavingDate, lv.leaving))
 
   def revaluationForm(session: GmpSession) = Form(
     mapping(
       "leaving" -> leavingMapping,
       "revaluationDate" -> revaluationDateMapping
-    )(RevaluationDate.apply)(RevaluationDate.unapply)
+    )(RevaluationDate.apply)((rd: RevaluationDate) => Some(rd.leaving, rd.revaluationDate))
       .verifying(revaluationDateConstraint(session))
   )
 }

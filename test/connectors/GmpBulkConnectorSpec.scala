@@ -27,7 +27,6 @@ import play.api.Environment
 import play.api.libs.json.Json
 import play.api.test.Helpers._
 import uk.gov.hmrc.http._
-import uk.gov.hmrc.http.SessionId
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
 import java.net.URL
@@ -151,5 +150,4 @@ class GmpBulkConnectorSpec extends HttpClientV2Helper with GuiceOneServerPerSuit
     }
 
   }
-
 }

@@ -18,7 +18,7 @@ package forms
 
 import com.google.inject.Singleton
 import forms.helper.Mappings
-import models.InflationProof
+import models.{GmpDate, InflationProof}
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.i18n.{Messages, MessagesImpl}
@@ -46,7 +46,7 @@ class InflationProofForm @Inject()(mcc: MessagesControllerComponents) extends Ma
         onlyRequiredIf = Some(dateCondition)
       ),
       "revaluate" -> optional(text).verifying("error.required",{_.isDefined})
-    )(InflationProof.apply)(InflationProof.unapply)
+    )(InflationProof.apply)((ip: InflationProof) => Some(ip.revaluationDate, ip.revaluate))
     )
   }
 }

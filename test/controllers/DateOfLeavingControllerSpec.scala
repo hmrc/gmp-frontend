@@ -31,7 +31,7 @@ import play.api.libs.json.Json
 import play.api.mvc.MessagesControllerComponents
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import services.{GMPSessionService, SessionService}
+import services.GMPSessionService
 import uk.gov.hmrc.auth.core.AuthConnector
 import views.Views
 
@@ -53,8 +53,9 @@ class DateOfLeavingControllerSpec extends PlaySpec with GuiceOneServerPerSuite w
   lazy val views = app.injector.instanceOf[Views]
 
 
-  object TestDateOfLeavingController extends DateOfLeavingController(FakeAuthAction, mockAuthConnector, mockGMPSessionService,ac,FakeGmpContext,dateOfLeavingForm,mcc,ec,gmpSessionCache,views) {
-    override val context = FakeGmpContext
+  object TestDateOfLeavingController extends
+    DateOfLeavingController(FakeAuthAction, mockAuthConnector, mockGMPSessionService,ac,FakeGmpContext,dateOfLeavingForm,mcc,ec,gmpSessionCache,views){
+     
   }
 
   val nino = RandomNino.generate

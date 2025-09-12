@@ -26,6 +26,7 @@ import uk.gov.hmrc.http.{HeaderCarrier, StringContextOps}
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import uk.gov.hmrc.http.HttpReads.Implicits._
 import uk.gov.hmrc.http.client.HttpClientV2
+import play.api.libs.ws.JsonBodyWritables.writeableOf_JsValue
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -38,67 +39,67 @@ class GmpConnector @Inject()(environment: Environment,
 
    def mode: Mode = environment.mode
 
-  lazy val serviceURL = servicesConfig.baseUrl("gmp")
+    lazy val serviceURL = servicesConfig.baseUrl("gmp")
 
-  def calculateSingle(calculationRequest: CalculationRequest, link: String)(implicit headerCarrier: HeaderCarrier): Future[CalculationResponse] = {
+    def calculateSingle(calculationRequest: CalculationRequest, link: String)(implicit headerCarrier: HeaderCarrier): Future[CalculationResponse] = {
 
-    val gmpLink = "/gmp/" + link
+      val gmpLink = "/gmp/" + link
 
-    val baseURI = "gmp/calculate"
-    val calculateUri = s"$serviceURL$gmpLink/$baseURI"
+      val baseURI = "gmp/calculate"
+      val calculateUri = s"$serviceURL$gmpLink/$baseURI"
 
-    val timer = metrics.gmpConnectorTimer.time()
-    val result = http.post(url"$calculateUri")
-      .withBody(Json.toJson(calculationRequest))
-      .execute[CalculationResponse]
+      val timer = metrics.gmpConnectorTimer.time()
+      val result = http.post(url"$calculateUri")
+        .withBody(Json.toJson(calculationRequest))
+        .execute[CalculationResponse]
 
-    logger.debug(s"[GmpConnector][calculateSingle][POST] : $calculationRequest")
+      logger.debug(s"[GmpConnector][calculateSingle][POST] : $calculationRequest")
 
-    result onComplete {
-      case _ => timer.stop()
+      result onComplete {
+        case _ => timer.stop()
+      }
+
+      // $COVERAGE-OFF$
+      result.foreach {
+        case response => logger.debug(s"[GmpConnector][calculateSingle][response] : $response")
+      }
+
+      result.failed.foreach {
+        case e: Exception => logger.error(s"[GmpConnector][calculateSingle] ${e.getMessage}", e)
+        case t: Throwable => logger.error(s"[GmpConnector][calculateSingle] ${t.getMessage}", t)
+      }
+      // $COVERAGE-ON$
+
+      result
     }
 
-    // $COVERAGE-OFF$
-    result.foreach {
-      case response => logger.debug(s"[GmpConnector][calculateSingle][response] : $response")
+    def validateScon(validateSconRequest: ValidateSconRequest, link: String)(implicit headerCarrier: HeaderCarrier): Future[ValidateSconResponse] = {
+
+      val gmpLink = "/gmp/" + link
+
+      val baseURI = "gmp/validateScon"
+      val validateSconUri = s"$serviceURL$gmpLink/$baseURI"
+
+      val timer = metrics.gmpConnectorTimer.time()
+      val result = http.post(url"$validateSconUri")
+        .withBody(Json.toJson(validateSconRequest))
+        .execute[ValidateSconResponse]
+
+      logger.debug(s"[GmpConnector][validateScon][POST] $validateSconRequest")
+
+      result onComplete (_ => timer.stop())
+
+      // $COVERAGE-OFF$
+      result.foreach {
+        case response => logger.debug(s"[GmpConnector][validateScon][response] : $response")
+      }
+
+      result.failed.foreach {
+        case e: Exception => logger.error(s"[GmpConnector][validateScon] ${e.getMessage}", e)
+        case t: Throwable => logger.error(s"[GmpConnector][validateScon] ${t.getMessage}", t)
+      }
+      // $COVERAGE-ON$
+
+      result
     }
-
-    result.failed.foreach {
-      case e: Exception => logger.error(s"[GmpConnector][calculateSingle] ${e.getMessage}", e)
-      case t: Throwable => logger.error(s"[GmpConnector][calculateSingle] ${t.getMessage}", t)
-    }
-    // $COVERAGE-ON$
-
-    result
-  }
-
-  def validateScon(validateSconRequest: ValidateSconRequest, link: String)(implicit headerCarrier: HeaderCarrier): Future[ValidateSconResponse] = {
-
-    val gmpLink = "/gmp/" + link
-
-    val baseURI = "gmp/validateScon"
-    val validateSconUri = s"$serviceURL$gmpLink/$baseURI"
-
-    val timer = metrics.gmpConnectorTimer.time()
-    val result = http.post(url"$validateSconUri")
-      .withBody(Json.toJson(validateSconRequest))
-      .execute[ValidateSconResponse]
-
-    logger.debug(s"[GmpConnector][validateScon][POST] $validateSconRequest")
-
-    result onComplete (_ => timer.stop())
-
-    // $COVERAGE-OFF$
-    result.foreach {
-      case response => logger.debug(s"[GmpConnector][validateScon][response] : $response")
-    }
-
-    result.failed.foreach {
-      case e: Exception => logger.error(s"[GmpConnector][validateScon] ${e.getMessage}", e)
-      case t: Throwable => logger.error(s"[GmpConnector][validateScon] ${t.getMessage}", t)
-    }
-    // $COVERAGE-ON$
-
-    result
-  }
 }

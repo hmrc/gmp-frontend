@@ -27,11 +27,12 @@ import uk.gov.hmrc.http.HttpReads.Implicits._
 import uk.gov.hmrc.http.client.HttpClientV2
 
 import scala.concurrent.{ExecutionContext, Future}
+import play.api.libs.ws.JsonBodyWritables.writeableOf_JsValue
 
 class UpscanConnector @Inject()(
                                  configuration: ApplicationConfig,
                                  httpClient: HttpClientV2,
-                                 @Named("appName") appName: String
+                                 @Named("appName") val appName: String
                                )(implicit ec: ExecutionContext) {
 
   private val upscanInitiateHost: String = configuration.upscanInitiateHost

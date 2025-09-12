@@ -1,4 +1,4 @@
-@*
+/*
  * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,28 +12,27 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *@
+ */
 
-@(
-        calculationResponse: CalculationResponse,
-        revalRateSubheader: Option[String],
-        survivorSubheader: Option[String]
-)(implicit messages: Messages)
+package models
 
-<p class="govuk-body" id="value-revealed">@messages("gmp.results.p1")</p>
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpec
+import play.api.libs.json.Json
 
-<h2 class="govuk-heading-m" id="results-header">
- @calculationResponse.header(messages)
-</h2>
+class EqualiseSpec extends AnyWordSpec with Matchers {
 
-@revalRateSubheader.map { (s: String) =>
-  <div class="govuk-body" id="revaluation-rate-chosen">
-   @Html(s)
-  </div>
-}
+  "Equalise Json formats" should {
+    "serialise Equalise to Json" in {
+      val equalise = Equalise(Some(2))
+      val json = Json.toJson(equalise)
+      (json \ "equalise").asOpt[Int] shouldBe Some(2)
+    }
 
-@survivorSubheader.map { (s: String) =>
- <div class="govuk-body" id="survivor-header">
-  @s
- </div>
+    "deserialise Json to Equalise" in {
+      val json = Json.obj("equalise" -> Some(2))
+      val equalise = json.as[Equalise]
+      equalise shouldBe Equalise(Some(2))
+    }
+  }
 }

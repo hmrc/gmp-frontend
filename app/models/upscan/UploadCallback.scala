@@ -65,7 +65,7 @@ object UpscanCallback extends Logging{
         implicitly[Reads[UpscanReadyCallback]].reads(json)
       case JsDefined(JsString("FAILED")) => implicitly[Reads[UpscanFailedCallback]].reads(json)
       case JsDefined(value) => JsError(s"Invalid type discriminator: $value")
-      case JsUndefined() => JsError(s"Missing type discriminator")
+      case other => JsError(s"Unexpected JsLookupResult: $other")
     }
   }
 }

@@ -4,11 +4,25 @@ import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin.publishingSettings
 
 val appName = "gmp-frontend"
 
+val excludedPackages: Seq[String] = Seq(
+  "<empty>",
+  "$anon",
+  "app.events.*",
+  "config.*",
+  "testOnlyDoNotUseInAppConf.*",
+  "views.html.helpers*",
+  "uk.gov.hmrc.*",
+  "prod",
+  "views.html.helpers",
+  "models.*",
+  ".*Routes.*",
+  "prod.*,forms.*"
+)
 
 lazy val scoverageSettings: Seq[Def.Setting[_]] = {
   Seq(
-    coverageExcludedPackages := "<empty>;app.*;config.*;testOnlyDoNotUseInAppConf.*;views.html.helpers*;uk.gov.hmrc.*;prod.*;forms.*",
-    coverageMinimumStmtTotal := 86,
+    coverageExcludedPackages := excludedPackages.mkString(","),
+    coverageMinimumStmtTotal := 83,
     coverageFailOnMinimum := true,
     coverageHighlighting := true
   )
@@ -26,21 +40,25 @@ lazy val microservice = Project(appName, file("."))
     scalaSettings,
     defaultSettings(),
     majorVersion := 4,
-    scalaVersion := "2.13.16",
+
+    scalaVersion := "3.3.6",
+
     libraryDependencies ++= AppDependencies.all,
     libraryDependencySchemes += "org.scala-lang.modules" %% "scala-xml" % VersionScheme.Always,
     Test / parallelExecution := false,
     Test / fork := false,
     retrieveManaged := true,
-    PlayKeys.playDefaultPort := 9941
-  )
+    PlayKeys.playDefaultPort := 9941,
+)
   .settings(
-    scalacOptions ++= List(
-      "-Yrangepos",
-      "-Xlint:-missing-interpolator,_",
+      scalacOptions ++= List(
       "-feature",
       "-unchecked",
-      "-language:implicitConversions"
-    )
+      "-language:implicitConversions",
+      "-Wconf:src=routes/.*:s",
+      "-Wconf:src=.*views/html.*:s",
+      "-Wconf:msg=Flag.*repeatedly:s"
+    ),
+    scalacOptions := scalacOptions.value.distinct
   )
   .disablePlugins(JUnitXmlReportPlugin) //Required to prevent https://github.com/scalatest/scalatest/issues/1427

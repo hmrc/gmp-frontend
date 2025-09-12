@@ -31,7 +31,7 @@ import play.api.libs.json.Json
 import play.api.mvc.{AnyContentAsEmpty, MessagesControllerComponents, Result}
 import play.api.test.Helpers._
 import play.api.test.{FakeHeaders, FakeRequest}
-import services.{GMPSessionService, SessionService, UpscanService}
+import services.{GMPSessionService, UpscanService}
 import uk.gov.hmrc.auth.core.AuthConnector
 
 import java.net.URL

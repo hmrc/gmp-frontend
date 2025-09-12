@@ -33,6 +33,8 @@ import play.api.test.{DefaultAwaitTimeout, FutureAwaits}
 import services.Encryption
 import uk.gov.hmrc.crypto.EncryptedValue
 import uk.gov.hmrc.crypto.json.CryptoFormats
+import org.mongodb.scala.SingleObservableFuture
+import org.mongodb.scala.ObservableFuture
 
 import java.time._
 import java.util.concurrent.TimeUnit

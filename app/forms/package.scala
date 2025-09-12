@@ -15,7 +15,6 @@
  */
 
 import models.GmpDate
-import play.api.data.validation.Valid
 import validation.DateValidate
 
 package object forms {

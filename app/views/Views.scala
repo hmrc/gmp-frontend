@@ -17,7 +17,6 @@
 package views
 
 import javax.inject.Inject
-import models.BulkReference
 import views.html._
 
 class Views @Inject()(

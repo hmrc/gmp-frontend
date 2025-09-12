@@ -30,7 +30,7 @@ class RevaluationRateForm @Inject()(mcc: MessagesControllerComponents) {
     mapping(
       "rateType" -> optional(text).verifying(messages("gmp.error.revaluation.rate.error"), { x => x.isDefined &&
         List(RevaluationRate.FIXED, RevaluationRate.HMRC, RevaluationRate.LIMITED, RevaluationRate.S148).contains(x.get) })
-    )(RevaluationRate.apply)(RevaluationRate.unapply)
+    )(RevaluationRate.apply)((rr: RevaluationRate) => Some(rr.rateType))
   )
 
 }

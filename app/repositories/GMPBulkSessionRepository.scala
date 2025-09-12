@@ -46,7 +46,7 @@ class GMPBulkSessionRepository @Inject() (
         Indexes.ascending("lastModifiedIdx"),
         IndexOptions()
           .name("lastModifiedIdx")
-          .expireAfter(appConfig.cacheTtl, TimeUnit.SECONDS)
+          .expireAfter(appConfig.cacheTtl.toLong, TimeUnit.SECONDS)
       )
     )
   ){

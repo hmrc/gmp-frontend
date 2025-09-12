@@ -24,7 +24,7 @@ import models.InflationProof
 import play.api.Logging
 import play.api.data.Form
 import play.api.mvc.MessagesControllerComponents
-import services.{GMPSessionService, SessionService}
+import services.GMPSessionService
 import uk.gov.hmrc.auth.core.AuthConnector
 import views.Views
 
@@ -46,42 +46,42 @@ class InflationProofController @Inject()( authAction: AuthAction,
   lazy val inflationProofForm: Form[InflationProof] = ipf.inflationProofForm(1978,2046)
 
   def get = authAction.async {
-      implicit request => {
-        Future.successful(Ok(views.inflationProof(inflationProofForm)))
-      }
+    implicit request => {
+      Future.successful(Ok(views.inflationProof(inflationProofForm)))
+    }
   }
 
   def post = authAction.async {
-      implicit request => {
-        logger.debug(s"[InflationProofController][POST] : ${request.body}")
+    implicit request => {
+      logger.debug(s"[InflationProofController][POST] : ${request.body}")
 
-        inflationProofForm.bindFromRequest().fold(
-          formWithErrors => {
-            Future.successful(BadRequest(views.inflationProof(formWithErrors)))
-          },
-          revaluation => {
-            val dateToStore = revaluation.revaluate match {
-              case Some("Yes") => Some(revaluation.revaluationDate)
-              case _ => None
-            }
-            GMPSessionService.cacheRevaluationDate(dateToStore).map {
-              case Some(session) => nextPage("InflationProofController", session)
-                  // $COVERAGE-OFF$
-              case _ => throw new RuntimeException
-                // $COVERAGE-ON$
-            }
+      inflationProofForm.bindFromRequest().fold(
+        formWithErrors => {
+          Future.successful(BadRequest(views.inflationProof(formWithErrors)))
+        },
+        revaluation => {
+          val dateToStore = revaluation.revaluate match {
+            case Some("Yes") => Some(revaluation.revaluationDate)
+            case _ => None
           }
-        )
-      }
+          GMPSessionService.cacheRevaluationDate(dateToStore).map {
+            case Some(session) => nextPage("InflationProofController", session)
+            // $COVERAGE-OFF$
+            case _ => throw new RuntimeException
+            // $COVERAGE-ON$
+          }
+        }
+      )
+    }
   }
 
   def back = authAction.async {
-      implicit request => {
-        GMPSessionService.fetchGmpSession() map {
-          case Some(session) => previousPage("InflationProofController", session)
-          case _ => throw new RuntimeException
-        }
+    implicit request => {
+      GMPSessionService.fetchGmpSession() map {
+        case Some(session) => previousPage("InflationProofController", session)
+        case _ => throw new RuntimeException
       }
+    }
   }
 
 }
