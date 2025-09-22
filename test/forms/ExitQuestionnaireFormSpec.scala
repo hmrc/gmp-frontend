@@ -16,8 +16,8 @@
 
 package forms
 
-import forms.ExitQuestionnaireForm._
-import models.ExitQuestionnaire
+import forms.ExitQuestionnaireForm.*
+import models.{ExitQuestionnaire}
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import org.scalatestplus.play.PlaySpec
 import play.api.libs.json.Json

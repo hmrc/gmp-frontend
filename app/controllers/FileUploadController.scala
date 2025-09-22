@@ -20,11 +20,10 @@ import com.google.inject.{Inject, Singleton}
 import config.{ApplicationConfig, GmpContext, GmpSessionCache}
 import controllers.auth.AuthAction
 import models.upscan._
-import models.upscan.UploadStatus
 import play.api.Logging
 import play.api.i18n.Messages
-import play.api.mvc.MessagesControllerComponents
-import services.{GMPSessionService, SessionService, UpscanService}
+import play.api.mvc.{AnyContent, MessagesControllerComponents, Request}
+import services.{GMPSessionService, UpscanService}
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.SessionId
@@ -61,19 +60,19 @@ class FileUploadController @Inject()(authAction: AuthAction,
     for {
       uploadResult <- GMPSessionService.getCallbackRecord
     } yield {
-          uploadResult match {
-            case Some(result: UploadStatus) => Ok(views.uploadResult(result))
-            case None => throw new RuntimeException(s"Upload with session id ${sessionId.getOrElse("-")} not found")
-          }
+      uploadResult match {
+        case Some(result: UploadStatus) => Ok(views.uploadResult(result))
+        case None => throw new RuntimeException(s"Upload with session id ${sessionId.getOrElse("-")} not found")
       }
+    }
   }
 
   //Used for Amazon failures
   def failure(errorCode: String, errorMessage: String, errorRequestId: String) = authAction {
-    implicit request =>
-          Ok(views.failure(Messages("gmp.bulk.failure.generic"),
-            Messages("gmp.bulk.problem.header"),
-            Messages("gmp.bulk_failure_generic.title")))
+    implicit request: Request[AnyContent] =>
+      Ok(views.failure(Messages("gmp.bulk.failure.generic"),
+        Messages("gmp.bulk.problem.header"),
+        Messages("gmp.bulk_failure_generic.title")))
   }
 
   def callback(sessionId: String) = Action.async(parse.json) { implicit request =>
@@ -99,10 +98,10 @@ class FileUploadController @Inject()(authAction: AuthAction,
               throw new RuntimeException("Exception occurred when attempting to update callback data")
           }
           _ <- GMPSessionService.cacheCallBackData(Some(uploadStatus))(headerCarrier).map(_ => Ok("")).recover {
-              case e: Throwable =>
-                logger.error(s"Failed to update gmp bulk session for: $sessionId, timestamp: ${System.currentTimeMillis()}.", e)
-                throw new RuntimeException("Exception occurred when attempting to update gmp bulk session")
-            }
+            case e: Throwable =>
+              logger.error(s"Failed to update gmp bulk session for: $sessionId, timestamp: ${System.currentTimeMillis()}.", e)
+              throw new RuntimeException("Exception occurred when attempting to update gmp bulk session")
+          }
 
         } yield {
           result

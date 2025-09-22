@@ -66,7 +66,7 @@ class RevaluationSpec extends GmpViewSpec{
     "day" -> optional(text),
     "month" -> optional(text),
     "year" -> optional(text)
-  )(GmpDate.apply)(GmpDate.unapply)
+  )(GmpDate.apply)((gmpDate: GmpDate) => Some(gmpDate.day, gmpDate.month, gmpDate.year))
     .verifying(messages("gmp.error.reval_date.mandatory"), x => mandatoryDate(x))
     .verifying(messages("gmp.error.date.invalid"), x => checkValidDate(x))
     .verifying(messages("gmp.error.reval_date.from"), x => checkDateOnOrAfterGMPStart(x)) // 1978
@@ -78,15 +78,15 @@ class RevaluationSpec extends GmpViewSpec{
       "day" -> optional(text),
       "month" -> optional(text),
       "year" -> optional(text)
-    )(GmpDate.apply)(GmpDate.unapply),
+    )(GmpDate.apply)((gmpDate: GmpDate) => Some(gmpDate.day, gmpDate.month, gmpDate.year)),
     "leaving" -> optional(text)
-  )(Leaving.apply)(Leaving.unapply)
+  )(Leaving.apply)((le: Leaving) => Some(le.leavingDate, le.leaving))
 
   val revaluationForm = Form(
     mapping(
       "leaving" -> leavingMapping,
       "revaluationDate" -> revaluationDateMapping
-    )(RevaluationDate.apply)(RevaluationDate.unapply)
+    )(RevaluationDate.apply)((revaluationDate: RevaluationDate) => Some(revaluationDate.leaving, revaluationDate.revaluationDate))
       .verifying(revaluationDateConstraint)
   )
 

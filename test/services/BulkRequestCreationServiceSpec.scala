@@ -110,7 +110,7 @@ class BulkRequestCreationServiceSpec extends PlaySpec with ScalaFutures with Moc
     def getFirstValid = request.calculationRequests.head.validCalculationRequest.get
   }
 
-  object TestBulkRequestCreationService extends BulkRequestCreationService(app.injector.instanceOf[Environment], app.configuration,messages,servicesConfig,messagesAPI) {
+  object TestBulkRequestCreationService extends BulkRequestCreationService(app.injector.instanceOf[Environment], app.configuration,messages,messagesAPI) {
 
     override val MAX_LINES: Int = 2
 
@@ -352,7 +352,7 @@ class BulkRequestCreationServiceSpec extends PlaySpec with ScalaFutures with Moc
 
     "return an exception when uploading more than the max number of lines" in {
 
-      object TestService extends BulkRequestCreationService(app.injector.instanceOf[Environment], app.configuration,messages,servicesConfig,messagesAPI) {
+      object TestService extends BulkRequestCreationService(app.injector.instanceOf[Environment], app.configuration,messages,messagesAPI) {
         override val MAX_LINES = 2
         override def sourceData(resourceLocation: String): Iterator[Char] = dataLineWith3Calcs.iterator
       }
@@ -364,7 +364,7 @@ class BulkRequestCreationServiceSpec extends PlaySpec with ScalaFutures with Moc
 
     "allow uploading right up to the line limit" in {
 
-      object TestService extends BulkRequestCreationService(app.injector.instanceOf[Environment], app.configuration,messages,servicesConfig,messagesAPI) {
+      object TestService extends BulkRequestCreationService(app.injector.instanceOf[Environment], app.configuration,messages,messagesAPI) {
         override val MAX_LINES = 3
         override def sourceData(resourceLocation: String): Iterator[Char] = dataLineWith3Calcs.iterator
       }
@@ -376,7 +376,7 @@ class BulkRequestCreationServiceSpec extends PlaySpec with ScalaFutures with Moc
 
     "IncorrectlyEncodedException should be thrown when Incorrectly encoded file is uploaded" in {
 
-      object TestService extends BulkRequestCreationService(app.injector.instanceOf[Environment], app.configuration,messages,servicesConfig,messagesAPI) {
+      object TestService extends BulkRequestCreationService(app.injector.instanceOf[Environment], app.configuration,messages,messagesAPI) {
         override def sourceData(resourceLocation: String): Iterator[Char] = {
           val is = new ByteArrayInputStream(Charset.forName("utf-16").encode("test-data").array())
           Source.fromInputStream(is, "utf-8")

@@ -34,7 +34,7 @@ import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl}
 import play.api.mvc.MessagesControllerComponents
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import services.{BulkRequestCreationService, DataLimitExceededException, GMPSessionService, SessionService}
+import services.{BulkRequestCreationService, DataLimitExceededException, GMPSessionService}
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.SessionId

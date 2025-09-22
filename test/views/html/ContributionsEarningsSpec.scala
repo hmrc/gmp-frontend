@@ -19,7 +19,7 @@ package views.html
 import models.{CalculationPeriod, CalculationResponse, ContributionsAndEarnings}
 import java.time.LocalDate
 import play.twirl.api.Html
-import uk.gov.hmrc.govukfrontend.views.html.components.{GovukBackLink, GovukTable}
+import uk.gov.hmrc.govukfrontend.views.html.components.{GovukTable}
 import utils.GmpViewSpec
 import views.html.includes.{member_details_result, request_another_button}
 

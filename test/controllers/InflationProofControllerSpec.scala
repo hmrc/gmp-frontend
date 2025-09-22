@@ -26,11 +26,10 @@ import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl}
-import play.api.libs.json.Json
 import play.api.mvc.MessagesControllerComponents
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import services.{GMPSessionService, SessionService}
+import services.GMPSessionService
 import uk.gov.hmrc.auth.core.AuthConnector
 import views.Views
 
@@ -125,7 +124,7 @@ class InflationProofControllerSpec extends PlaySpec with GuiceOneServerPerSuite 
 
               val result = TestInflationProofController.post(FakeRequest().withMethod("POST")
                 .withFormUrlEncodedBody("revaluationDate" -> badGmpDate, "revaluate" -> "Yes"))
-            status(result) mustBe(BAD_REQUEST)
+              status(result) mustBe(BAD_REQUEST)
           }
 
           "display the errors" in {

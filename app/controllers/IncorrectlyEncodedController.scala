@@ -21,7 +21,7 @@ import config.{ApplicationConfig, GmpContext}
 import controllers.auth.AuthAction
 import play.api.i18n.Messages
 import play.api.mvc.MessagesControllerComponents
-import services.{GMPSessionService, SessionService}
+import services.GMPSessionService
 import uk.gov.hmrc.auth.core.AuthConnector
 import views.Views
 

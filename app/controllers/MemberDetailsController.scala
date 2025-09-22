@@ -22,7 +22,7 @@ import controllers.auth.AuthAction
 import forms.MemberDetailsForm
 import play.api.Logging
 import play.api.mvc.MessagesControllerComponents
-import services.{GMPSessionService, SessionService}
+import services.GMPSessionService
 import uk.gov.hmrc.auth.core.AuthConnector
 import views.Views
 

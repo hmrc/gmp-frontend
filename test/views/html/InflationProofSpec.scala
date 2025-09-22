@@ -16,12 +16,12 @@
 
 package views.html
 
-import forms.{InflationProofForm, checkDateOnOBeforeGMPEnd, checkDateOnOrAfterGMPStart, checkDayRange, checkForNumber, checkMonthRange, checkValidDate, checkYearLength}
+import forms.{checkDayRange, checkForNumber, checkMonthRange, checkYearLength}
 import models.{GmpDate, InflationProof}
 import play.api.data.Form
 import play.api.data.Forms.{mapping, optional, text}
 import play.twirl.api.Html
-import uk.gov.hmrc.govukfrontend.views.html.components.{GovukBackLink, GovukButton, GovukDateInput, GovukErrorSummary, GovukRadios}
+import uk.gov.hmrc.govukfrontend.views.html.components.{GovukButton, GovukDateInput, GovukErrorSummary, GovukRadios}
 import utils.GmpViewSpec
 import views.ViewHelpers
 
@@ -41,14 +41,14 @@ class InflationProofSpec extends GmpViewSpec {
         "day" -> optional(text),
         "month" -> optional(text),
         "year" -> optional(text)
-      )(GmpDate.apply)(GmpDate.unapply)
+      )(GmpDate.apply)((gmpDate: GmpDate)=> Some(gmpDate.day, gmpDate.month, gmpDate.year))
         .verifying(messages("gmp.error.date.nonnumber"), x => checkForNumber(x.day) && checkForNumber(x.month) && checkForNumber(x.year))
         .verifying(messages("gmp.error.day.invalid"), x => checkDayRange(x.day))
         .verifying(messages("gmp.error.month.invalid"), x => checkMonthRange(x.month))
         .verifying(messages("gmp.error.year.invalid.format"), x => checkYearLength(x.year))
       ,
       "revaluate" -> optional(text).verifying(messages("revaluate.error.required"),{_.isDefined})
-    )(InflationProof.apply)(InflationProof.unapply)
+    )(InflationProof.apply)((ip: InflationProof) => Some(ip.revaluationDate, ip.revaluate))
       .verifying(messages("gmp.error.reval_date.mandatory"), x => dateMustBePresentIfRevaluationWanted(x))
 
   )

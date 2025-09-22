@@ -45,7 +45,7 @@ class SingleCalculationSessionRepository @Inject()(
         Indexes.ascending("lastModified"),
         IndexOptions()
           .name("lastModifiedIdx")
-          .expireAfter(appConfig.cacheTtl, TimeUnit.SECONDS)
+          .expireAfter(appConfig.cacheTtl.toLong, TimeUnit.SECONDS)
       )
     )
   ) {

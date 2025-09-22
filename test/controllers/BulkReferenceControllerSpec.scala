@@ -30,7 +30,7 @@ import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl}
 import play.api.mvc.MessagesControllerComponents
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import services.{GMPSessionService, SessionService}
+import services.GMPSessionService
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.SessionId
@@ -56,7 +56,7 @@ class BulkReferenceControllerSpec extends PlaySpec  with MockitoSugar with Guice
   lazy val views = app.injector.instanceOf[Views]
 
   object TestBulkReferenceController extends BulkReferenceController(
-    FakeAuthAction, mockAuthConnector, mockAuditConnector,mockSessionService,
+    FakeAuthAction, mockAuthConnector,mockAuditConnector,mockSessionService,
     FakeGmpContext,bulkReferenceForm,mcc,ec,ac,gmpSessionCache, views) {}
 
   "BulkReferenceController" must {

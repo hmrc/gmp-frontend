@@ -31,6 +31,6 @@ object ExitQuestionnaireForm {
       "fullName" -> optional(text),
       "email" -> optional(text),
       "phoneNumber" -> optional(text)
-    )(ExitQuestionnaire.apply)(ExitQuestionnaire.unapply)
+    )(ExitQuestionnaire.apply)(((eq: ExitQuestionnaire) => Some(eq.serviceDifficulty, eq.serviceFeel, eq.comments, eq.fullName, eq.email, eq.phoneNumber)))
   )
 }

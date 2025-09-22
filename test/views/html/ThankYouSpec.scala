@@ -19,7 +19,6 @@ package views.html
 import play.twirl.api.Html
 import uk.gov.hmrc.govukfrontend.views.html.components.GovukButton
 import utils.GmpViewSpec
-import views.html.includes.request_another_button
 
 class ThankYouSpec extends GmpViewSpec{
   lazy val layout = app.injector.instanceOf[views.html.Layout]

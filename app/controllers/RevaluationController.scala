@@ -20,13 +20,11 @@ import com.google.inject.{Inject, Singleton}
 import config.{ApplicationConfig, GmpContext, GmpSessionCache}
 import controllers.auth.AuthAction
 import forms.RevaluationForm
-import models.{GmpDate, GmpSession, Leaving, RevaluationDate}
+import models.{GmpDate, GmpSession, RevaluationDate}
 import play.api.Logging
-import play.api.data.Form
-import play.api.data.Forms.{mapping, optional, text}
-import play.api.data.validation.Constraint
+
 import play.api.mvc.MessagesControllerComponents
-import services.{GMPSessionService, SessionService}
+import services.GMPSessionService
 import uk.gov.hmrc.auth.core.AuthConnector
 import views.Views
 
@@ -52,12 +50,12 @@ class RevaluationController @Inject()( authAction: AuthAction,
 
   def get = authAction.async { implicit request =>
     GMPSessionService.fetchGmpSession().map {
-        case Some(session) => {
-          val revalDate = session.revaluationDate.fold(GmpDate(None, None, None))(identity)
-          Ok(views.revaluation(revalForm(session).fill(RevaluationDate(session.leaving, revalDate))))
-        }
-        case _ => sys.error(" Session not present")
+      case Some(session) => {
+        val revalDate = session.revaluationDate.fold(GmpDate(None, None, None))(identity)
+        Ok(views.revaluation(revalForm(session).fill(RevaluationDate(session.leaving, revalDate))))
       }
+      case _ => sys.error(" Session not present")
+    }
   }
 
 
@@ -89,11 +87,11 @@ class RevaluationController @Inject()( authAction: AuthAction,
   }
 
   def back = authAction.async {
-      implicit request =>{
-        GMPSessionService.fetchGmpSession() map {
-          case Some(session) => previousPage("RevaluationController", session)
-          case _ => throw new RuntimeException
-        }
+    implicit request =>{
+      GMPSessionService.fetchGmpSession() map {
+        case Some(session) => previousPage("RevaluationController", session)
+        case _ => throw new RuntimeException
       }
+    }
   }
 }

@@ -21,7 +21,7 @@ import config.{ApplicationConfig, GmpContext}
 import models.{CalculationType, GmpSession, Leaving}
 import play.api.i18n.{Messages, MessagesImpl}
 import play.api.mvc.{MessagesControllerComponents, Result}
-import services.{GMPSessionService, SessionService}
+import services.GMPSessionService
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import uk.gov.hmrc.time.TaxYear
@@ -31,7 +31,7 @@ class GmpController @Inject()(val messagesControllerComponents: MessagesControll
                               ac: ApplicationConfig,
                               GMPSessionService: GMPSessionService,
                               context: GmpContext)
-                  extends FrontendController(messagesControllerComponents){
+  extends FrontendController(messagesControllerComponents){
 
   implicit val applicationConfig: config.ApplicationConfig  = ac
   implicit lazy val messages: Messages = MessagesImpl(messagesControllerComponents.langs.availables.head, messagesApi)
@@ -54,7 +54,7 @@ class GmpPageFlow @Inject()(val authConnector: AuthConnector,
                             implicit val context: GmpContext,
                             messagesControllerComponents: MessagesControllerComponents,
                             applicationConfig: ApplicationConfig)
-                          extends GmpController(messagesControllerComponents,applicationConfig,GMPSessionService,context) {
+  extends GmpController(messagesControllerComponents,applicationConfig,GMPSessionService,context) {
 
   val forwardNavigation: Map[String, GmpSession => Result] = Map(
     PageType.INFLATION_PROOF -> { (session: GmpSession) => Redirect(routes.ResultsController.get) },

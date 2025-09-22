@@ -35,11 +35,11 @@ class SingleCalculationSessionService @Inject()(
   val cleanGmpSession: GmpSession = GmpSession(MemberDetails("", "", ""), "", "", None, None, Leaving(GmpDate(None, None, None), None), None)
 
 
-private def cleanGmpSingleCalculationSessionCache(
-                                      id: String,
-                                      gmpSession: GmpSession
-                                    ): SingleCalculationSessionCache =
-  SingleCalculationSessionCache(id, gmpSession)
+  private def cleanGmpSingleCalculationSessionCache(
+                                        id: String,
+                                        gmpSession: GmpSession
+                                      ): SingleCalculationSessionCache =
+    SingleCalculationSessionCache(id, gmpSession)
 
   private def getSessionId(implicit hc: HeaderCarrier): String = {
     hc.sessionId match {

@@ -17,10 +17,9 @@
 package forms.helper
 
 import cats.syntax.either._
-import models.{GmpDate, Leaving}
+import models.GmpDate
 import play.api.data.FormError
 import play.api.data.format.Formatter
-import play.api.mvc.Call
 
 import java.time.LocalDate
 import scala.util.{Left, Try}

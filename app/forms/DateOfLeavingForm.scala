@@ -18,7 +18,7 @@ package forms
 
 import com.google.inject.Singleton
 import forms.helper.Mappings
-import models.Leaving
+import models.{GmpDate, Leaving}
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.i18n.{Messages, MessagesImpl}
@@ -49,7 +49,7 @@ class DateOfLeavingForm @Inject()(mcc: MessagesControllerComponents) extends Map
       ),
       "leaving" -> optional(text).verifying("error.required", {
         _.isDefined
-      }))(Leaving.apply)(Leaving.unapply))
+      }))(Leaving.apply)((le: Leaving) => Some(le.leavingDate, le.leaving)))
   }
 
 }

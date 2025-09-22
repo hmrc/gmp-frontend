@@ -22,7 +22,7 @@ import controllers.auth.AuthAction
 import forms.EqualiseForm
 import play.api.Logging
 import play.api.mvc.MessagesControllerComponents
-import services.{GMPSessionService, SessionService}
+import services.GMPSessionService
 import uk.gov.hmrc.auth.core.AuthConnector
 import views.Views
 
@@ -38,7 +38,7 @@ class EqualiseController @Inject()(authAction: AuthAction,
                                    implicit val executionContext: ExecutionContext,
                                    implicit val gmpSessionCache: GmpSessionCache,
                                    views: Views)
-                                  extends GmpPageFlow(authConnector,GMPSessionService,config,messagesControllerComponents,ac) with Logging{
+  extends GmpPageFlow(authConnector,GMPSessionService,config,messagesControllerComponents,ac) with Logging{
 
   lazy val equaliseForm = ef.equaliseForm
   def get = authAction.async {
@@ -46,29 +46,29 @@ class EqualiseController @Inject()(authAction: AuthAction,
   }
 
   def post = authAction.async {
-      implicit request => {
-        logger.debug(s"[EqualiseController][POST] : ${request.body}")
-        equaliseForm.bindFromRequest().fold(
-          formWithErrors => {Future.successful(BadRequest(views.equalise(formWithErrors)))},
+    implicit request => {
+      logger.debug(s"[EqualiseController][POST] : ${request.body}")
+      equaliseForm.bindFromRequest().fold(
+        formWithErrors => {Future.successful(BadRequest(views.equalise(formWithErrors)))},
 
-          equalise => {
-            GMPSessionService.cacheEqualise(equalise.equalise) map {
-              case Some(session) => nextPage("EqualiseController", session)
-              case _ => throw new RuntimeException
-            }
+        equalise => {
+          GMPSessionService.cacheEqualise(equalise.equalise) map {
+            case Some(session) => nextPage("EqualiseController", session)
+            case _ => throw new RuntimeException
           }
+        }
 
-        )
-      }
+      )
+    }
   }
 
   def back = authAction.async {
-      implicit request => {
-        GMPSessionService.fetchGmpSession() map {
-          case Some(session) => previousPage("EqualiseController", session)
-          case _ => throw new RuntimeException
-        }
+    implicit request => {
+      GMPSessionService.fetchGmpSession() map {
+        case Some(session) => previousPage("EqualiseController", session)
+        case _ => throw new RuntimeException
       }
+    }
   }
 
 }

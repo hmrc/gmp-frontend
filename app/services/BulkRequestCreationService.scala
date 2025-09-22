@@ -24,7 +24,6 @@ import java.time.format.DateTimeFormatter
 import play.api.i18n.{Messages, MessagesImpl}
 import play.api.mvc.MessagesControllerComponents
 import play.api.{Configuration, Environment, Logging, Mode}
-import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import uk.gov.hmrc.time.TaxYear
 import validation.{CsvLineValidator, DateValidate, SMValidate}
 import scala.util.{Failure, Success, Try}
@@ -50,7 +49,7 @@ case object IncorrectlyEncodedException extends Throwable
 
 class BulkRequestCreationService @Inject()(environment: Environment,
                                            val runModeConfiguration: Configuration, mcc: MessagesControllerComponents,
-                                           servicesConfig: ServicesConfig,val messagesApi : play.api.i18n.MessagesApi
+                                           val messagesApi : play.api.i18n.MessagesApi
                                           ) extends BulkEntityProcessor[BulkCalculationRequestLine] with Logging {
 
   implicit lazy val messages: Messages = MessagesImpl(mcc.langs.availables.head, messagesApi)
@@ -128,12 +127,12 @@ class BulkRequestCreationService @Inject()(environment: Environment,
       lineArray(BulkRequestCsvColumn.NINO).replaceAll("\\s", "").toUpperCase,
       lineArray(BulkRequestCsvColumn.FORENAME).toUpperCase,
       lineArray(BulkRequestCsvColumn.SURNAME).toUpperCase,
-      emptyStringsToNone(lineArray(BulkRequestCsvColumn.MEMBER_REF), { e: String => Some(e) }),
-      emptyStringsToNone(lineArray(BulkRequestCsvColumn.CALC_TYPE), { e: String => protectedToInt(e) }),
+      emptyStringsToNone(lineArray(BulkRequestCsvColumn.MEMBER_REF), { (e: String) => Some(e) }),
+      emptyStringsToNone(lineArray(BulkRequestCsvColumn.CALC_TYPE), { (e: String) => protectedToInt(e) }),
       determineTerminationDate(lineArray(BulkRequestCsvColumn.TERMINATION_DATE),
         lineArray(BulkRequestCsvColumn.REVAL_DATE), lineArray(BulkRequestCsvColumn.CALC_TYPE)),
-      emptyStringsToNone(lineArray(BulkRequestCsvColumn.REVAL_DATE), { e: String => protectedDateConvert(e) }),
-      emptyStringsToNone(lineArray(BulkRequestCsvColumn.REVAL_RATE), { e: String => protectedToInt(e) }),
+      emptyStringsToNone(lineArray(BulkRequestCsvColumn.REVAL_DATE), { (e: String) => protectedDateConvert(e) }),
+      emptyStringsToNone(lineArray(BulkRequestCsvColumn.REVAL_RATE), { (e: String) => protectedToInt(e) }),
       lineArray(BulkRequestCsvColumn.DUAL_CALC).toUpperCase match {
         case "Y" => 1
         case "YES" => 1
@@ -180,7 +179,7 @@ class BulkRequestCreationService @Inject()(environment: Environment,
       case "" => None
       case sm if SMValidate matches sm => calcType match {
         case "3" => None
-        case _ => emptyStringsToNone(revalDate, { date: String => protectedDateConvert(date) })
+        case _ => emptyStringsToNone(revalDate, { (date: String) => protectedDateConvert(date) })
       }
       case d if !DateValidate.isValid(d) => None
       case _ => {

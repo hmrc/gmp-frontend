@@ -24,9 +24,8 @@ import forms.PensionDetails_no_longer_used_Form
 import metrics.ApplicationMetrics
 import models.{PensionDetailsScon, ValidateSconRequest}
 import play.api.Logging
-import play.api.i18n.Messages
 import play.api.mvc.MessagesControllerComponents
-import services.{GMPSessionService, SessionService}
+import services.GMPSessionService
 import uk.gov.hmrc.auth.core.AuthConnector
 import views.Views
 
@@ -49,45 +48,45 @@ class PensionDetailsController @Inject()(authAction: AuthAction,
   lazy val pensionDetailsForm=pdf.pensionDetailsForm
 
   def get = authAction.async {
-      implicit request => {
-        GMPSessionService.fetchPensionDetails().map {
-          case Some(scon) => Ok(views.pensionDetails(pensionDetailsForm.fill(PensionDetailsScon(scon))))
-          case _ => Ok(views.pensionDetails(pensionDetailsForm))
-        }
+    implicit request => {
+      GMPSessionService.fetchPensionDetails().map {
+        case Some(scon) => Ok(views.pensionDetails(pensionDetailsForm.fill(PensionDetailsScon(scon))))
+        case _ => Ok(views.pensionDetails(pensionDetailsForm))
       }
+    }
   }
 
   def post = authAction.async {
-      implicit request => {
-        val link = request.linkId
-        logger.debug(s"[PensionDetailsController][post][POST] : ${request.body}")
+    implicit request => {
+      val link = request.linkId
+      logger.debug(s"[PensionDetailsController][post][POST] : ${request.body}")
 
-        pensionDetailsForm.bindFromRequest().fold(
-          formWithErrors => {
-            Future.successful(BadRequest(views.pensionDetails(formWithErrors)))
-          },
-          pensionDetails => {
+      pensionDetailsForm.bindFromRequest().fold(
+        formWithErrors => {
+          Future.successful(BadRequest(views.pensionDetails(formWithErrors)))
+        },
+        pensionDetails => {
 
-            val validateSconRequest = ValidateSconRequest(pensionDetails.scon.toUpperCase)
+          val validateSconRequest = ValidateSconRequest(pensionDetails.scon.toUpperCase)
 
-            gmpConnector.validateScon(validateSconRequest, link) flatMap {
-              response => {
-                if (response.sconExists) {
-                  GMPSessionService.cachePensionDetails(pensionDetails.scon.toUpperCase).map {
-                    case Some(session) => nextPage("PensionDetailsController", session)
-                    case _ => throw new RuntimeException
-                  }
+          gmpConnector.validateScon(validateSconRequest, link) flatMap {
+            response => {
+              if (response.sconExists) {
+                GMPSessionService.cachePensionDetails(pensionDetails.scon.toUpperCase).map {
+                  case Some(session) => nextPage("PensionDetailsController", session)
+                  case _ => throw new RuntimeException
                 }
-                else {
-                  metrics.countNpsSconInvalid()
-                  Future.successful(BadRequest(views.pensionDetails(pensionDetailsForm.fill(
-                    PensionDetailsScon(pensionDetails.scon)).withError("scon", "error.notRecognised"))))
-                }
-
               }
+              else {
+                metrics.countNpsSconInvalid()
+                Future.successful(BadRequest(views.pensionDetails(pensionDetailsForm.fill(
+                  PensionDetailsScon(pensionDetails.scon)).withError("scon", "error.notRecognised"))))
+              }
+
             }
           }
-        )
-      }
+        }
+      )
+    }
   }
 }

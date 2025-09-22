@@ -16,11 +16,10 @@
 
 package controllers.auth
 
-import play.api.Configuration
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.{MessagesControllerComponents, Request, Result}
 import uk.gov.hmrc.auth.core.AuthConnector
-import uk.gov.hmrc.domain.Generator
+import uk.gov.hmrc.domain._
 
 import scala.concurrent.ExecutionContext.Implicits._
 import scala.concurrent.Future
@@ -28,12 +27,11 @@ import scala.util.Random
 
 object FakeAuthAction extends AuthAction(
   authConnector = new GuiceApplicationBuilder().injector().instanceOf[AuthConnector],
-  configuration = new GuiceApplicationBuilder().injector().instanceOf[Configuration],
   messagesControllerComponents = new GuiceApplicationBuilder().injector().instanceOf[MessagesControllerComponents],
   externalUrls = new GuiceApplicationBuilder().injector().instanceOf[ExternalUrls]) {
 
+  val nino = NinoGenerator(new Random).nextNino
 
-  val nino = new Generator(new Random).nextNino
 
   override def invokeBlock[A](request: Request[A], block: AuthenticatedRequest[A] => Future[Result]): Future[Result] = {
 

@@ -16,8 +16,6 @@
 
 package validation
 
-import play.api.data.validation.{Constraint, Invalid, Valid, ValidationError}
-
 import java.text.{ParseException, SimpleDateFormat}
 import uk.gov.hmrc.domain.Nino
 

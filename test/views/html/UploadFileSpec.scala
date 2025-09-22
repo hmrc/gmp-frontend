@@ -16,7 +16,7 @@
 
 package views.html
 
-import models.upscan.{Reference, UpscanInitiateRequest, UpscanInitiateResponse}
+import models.upscan.{Reference, UpscanInitiateResponse}
 import play.twirl.api.Html
 import utils.GmpViewSpec
 import views.ViewHelpers

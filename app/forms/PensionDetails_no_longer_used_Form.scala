@@ -19,10 +19,9 @@ package forms
 import com.google.inject.Singleton
 
 import javax.inject.Inject
-import models.{GmpDate, PensionDetailsScon}
-import play.api.data.{Form, FormError}
+import models.PensionDetailsScon
+import play.api.data.Form
 import play.api.data.Forms._
-import play.api.data.format.Formatter
 import play.api.data.validation.{Constraint, Invalid, Valid, ValidationResult}
 import play.api.i18n.{Messages, MessagesImpl}
 import play.api.mvc.MessagesControllerComponents

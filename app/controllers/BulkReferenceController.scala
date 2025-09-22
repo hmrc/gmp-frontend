@@ -22,7 +22,7 @@ import controllers.auth.AuthAction
 import forms.BulkReferenceForm
 import play.api.Logging
 import play.api.mvc.MessagesControllerComponents
-import services.{GMPSessionService, SessionService}
+import services.GMPSessionService
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import views.Views
@@ -39,34 +39,33 @@ class BulkReferenceController @Inject()(authAction: AuthAction,
                                         views: Views)
   extends GmpController(messagesControllerComponents,ac,GMPSessionService,config) with Logging{
 
-lazy val bulkReferenceForm = brf.bulkReferenceForm
+  lazy val bulkReferenceForm = brf.bulkReferenceForm
 
   def get = authAction.async {
-      implicit request =>
-        Future.successful(Ok(views.bulkReference(bulkReferenceForm)))
+    implicit request =>
+      Future.successful(Ok(views.bulkReference(bulkReferenceForm)))
   }
 
   def post = authAction.async {
-      implicit request => {
-        logger.debug(s"[BulkReferenceController][post]: ${request.body}")
+    implicit request => {
+      logger.debug(s"[BulkReferenceController][post]: ${request.body}")
 
-        bulkReferenceForm.bindFromRequest().fold(
-          formWithErrors => {Future.successful(BadRequest(views.bulkReference(formWithErrors)))},
-          value => {
-            GMPSessionService.cacheEmailAndReference(Some(value.email.trim), Some(value.reference.trim)).map {
-              case Some(session) => Redirect(controllers.routes.BulkRequestReceivedController.get)
-              case _ => throw new RuntimeException
-            }
+      bulkReferenceForm.bindFromRequest().fold(
+        formWithErrors => {Future.successful(BadRequest(views.bulkReference(formWithErrors)))},
+        value => {
+          GMPSessionService.cacheEmailAndReference(Some(value.email.trim), Some(value.reference.trim)).map {
+            case Some(session) => Redirect(controllers.routes.BulkRequestReceivedController.get)
+            case _ => throw new RuntimeException
           }
-        )
-      }
+        }
+      )
+    }
   }
 
   def back = authAction.async {
-      _ => {
-        Future.successful(Redirect(routes.FileUploadController.get))
-      }
+    _ => {
+      Future.successful(Redirect(routes.FileUploadController.get))
+    }
   }
 }
-
 

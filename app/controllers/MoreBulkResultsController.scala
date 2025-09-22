@@ -21,7 +21,7 @@ import config.{ApplicationConfig, GmpContext}
 import connectors.GmpBulkConnector
 import controllers.auth.AuthAction
 import play.api.mvc.MessagesControllerComponents
-import services.{GMPSessionService, SessionService}
+import services.GMPSessionService
 import uk.gov.hmrc.auth.core.AuthConnector
 import views.Views
 
@@ -39,14 +39,14 @@ class MoreBulkResultsController @Inject()(authAction: AuthAction,
                                           views: Views) extends GmpPageFlow(authConnector,GMPSessionService,config,messagesControllerComponents,ac) {
 
   def retrieveMoreBulkResults = authAction.async {
-      implicit request => {
-        val link = request.linkId
-        gmpBulkConnector.getPreviousBulkRequests(link).map {
-          bulkPreviousRequests => {
-            Ok(views.moreBulkResults(bulkPreviousRequests.sorted))
-          }
+    implicit request => {
+      val link = request.linkId
+      gmpBulkConnector.getPreviousBulkRequests(link).map {
+        bulkPreviousRequests => {
+          Ok(views.moreBulkResults(bulkPreviousRequests.sorted))
         }
       }
+    }
   }
 
 }

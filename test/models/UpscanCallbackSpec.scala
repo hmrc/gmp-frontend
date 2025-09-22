@@ -17,8 +17,8 @@
 package models
 
 import helpers.BaseSpec
-import models.upscan._
-import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
+import models.upscan.*
+import org.scalatest.matchers.should.Matchers.*
 import play.api.libs.json.{JsResultException, Json}
 
 class UpscanCallbackSpec extends BaseSpec {
@@ -56,19 +56,29 @@ class UpscanCallbackSpec extends BaseSpec {
 
     }
 
-    "Throw a JSError if discriminator type is missing" in {
+    "Throw a JsResultException if discriminator type is missing" in {
       val json =
-        s"""{
-    "reference" : "ref1",
-    "failureDetails": {
-        "failureReason": "QUARANTINE",
-        "message": "This file has a virus"
-    }
-}""".stripMargin
+        """
+          |{
+          |  "reference": "ref1",
+          |  "failureDetails": {
+          |    "failureReason": "QUARANTINE",
+          |    "message": "This file has a virus"
+          |  }
+          |}
+        """.stripMargin
 
       val result = intercept[JsResultException] {
-        Json.parse(json).as[UpscanCallback] }
-      result.errors.mkString.contains("Missing type discriminator") shouldBe true
+        Json.parse(json).as[UpscanCallback]
+      }
+
+      val found = result.errors.exists {
+        case (_, errs) =>
+          errs.exists(e =>
+              e.message.contains("Unexpected JsLookupResult")
+          )
+      }
+      found shouldBe true
     }
 
     "Throw an error when download URL is not a valid URL" in {

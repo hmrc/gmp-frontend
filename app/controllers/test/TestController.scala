@@ -22,10 +22,9 @@ import controllers.GmpPageFlow
 import controllers.auth.AuthAction
 import models.upscan.{ErrorDetails, UploadedFailed}
 import play.api.mvc.MessagesControllerComponents
-import services.{GMPSessionService, SessionService}
 import uk.gov.hmrc.auth.core.AuthConnector
 import views.Views
-
+import services.GMPSessionService
 import scala.concurrent.{ExecutionContext, Future}
 
 class TestController @Inject()( authAction: AuthAction,
