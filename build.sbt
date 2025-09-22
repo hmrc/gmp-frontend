@@ -48,7 +48,7 @@ lazy val microservice = Project(appName, file("."))
     Test / parallelExecution := false,
     Test / fork := false,
     retrieveManaged := true,
-    PlayKeys.playDefaultPort := 9941,
+    PlayKeys.playDefaultPort := 9941
 )
   .settings(
       scalacOptions ++= List(
