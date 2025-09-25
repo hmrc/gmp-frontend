@@ -47,7 +47,8 @@ class PensionDetails_no_longer_used_Form @Inject()(mcc: MessagesControllerCompon
   val validScon: Constraint[String] = Constraint(validateScon)
   def pensionDetailsForm: Form[PensionDetailsScon] = Form(
     mapping(
-      "scon" -> nonEmptyText.verifying(validScon)
+      "scon" -> nonEmptyText.transform[String](_.trim.toUpperCase, identity)
+        .verifying(validScon)
     )(customApply)(customUnapply)
   )
 

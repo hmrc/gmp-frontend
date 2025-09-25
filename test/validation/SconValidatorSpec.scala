@@ -26,11 +26,11 @@ class SconValidatorSpec extends AnyFlatSpec with Matchers {
   }
 
   it should "pass with a lower case SCON s1301234t" in {
-    SconValidate.isValid("S1301234T") should be(true)
+    SconValidate.isValid("s1301234t") should be(false)
   }
 
   it should "fail with a leading space SCON S1301234T" in {
-    SconValidate.isValid(" 11301234T") should be(false)
+    SconValidate.isValid(" S1301234T") should be(false)
   }
 
   it should "fail should ail with a trailing space SCON S1301234T" in {
@@ -47,6 +47,10 @@ class SconValidatorSpec extends AnyFlatSpec with Matchers {
 
   it should "fail with an invalid check digit SCON S1301234W" in {
     SconValidate.isValid("S1301234W") should be(false)
+  }
+
+  it should "fail with an invalid schema digit SCON S3301234W" in {
+    SconValidate.isValid("S3301234W") should be(false)
   }
 
 }

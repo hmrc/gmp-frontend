@@ -58,4 +58,12 @@ class DateValidatorSpec extends AnyFlatSpec with Matchers {
     DateValidate.isValid("01 01 2018") should be(false)
   }
 
+  it should "return true with a date on GMP start date" in {
+    DateValidate.isOnOrAfterGMPStart("06-04-1978") should be (true)
+  }
+
+  it should "return false for a date before the GMP start date" in {
+    DateValidate.isOnOrAfterGMPStart("04/04/1978") should be (false)
+  }
+
 }
