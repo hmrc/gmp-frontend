@@ -24,6 +24,7 @@ import play.api.Logging
 import play.api.mvc.MessagesControllerComponents
 import services.GMPSessionService
 import uk.gov.hmrc.auth.core.AuthConnector
+
 import views.Views
 import scala.concurrent.{ExecutionContext, Future}
 
