@@ -24,14 +24,13 @@ import play.api.Logging
 import play.api.mvc.MessagesControllerComponents
 import services.GMPSessionService
 import uk.gov.hmrc.auth.core.AuthConnector
-import uk.gov.hmrc.play.audit.http.connector.AuditConnector
+
 import views.Views
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class BulkReferenceController @Inject()(authAction: AuthAction,
                                         val authConnector: AuthConnector,
-                                        auditConnector : AuditConnector,
                                         GMPSessionService: GMPSessionService,implicit val config:GmpContext,brf:BulkReferenceForm,
                                         override val messagesControllerComponents: MessagesControllerComponents,
                                         implicit val executionContext: ExecutionContext,ac:ApplicationConfig,
