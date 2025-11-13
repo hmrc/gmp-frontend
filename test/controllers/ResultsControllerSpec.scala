@@ -137,6 +137,8 @@ class ResultsControllerSpec extends PlaySpec with GuiceOneServerPerSuite with Mo
 
   val global63119ErrorResponse = CalculationResponse("John Johnson", nino, "S1234567T", None, None, List(), 63119, None, None, None, false, 1)
 
+  val globalGenericErrorResponse = CalculationResponse("John Johnson", nino, "S1234567T", None, None, List(), 99999, None, None, None, false, 1)
+
   val validCalculationSpaResponse = CalculationResponse("John Johnson", nino, "S1234567T", None, None, List(CalculationPeriod(Some(LocalDate.of(2015, 11, 10)), LocalDate.of(2015, 11, 10), "1.11", "2.22", 1, 0, Some(0))), 0, Some(LocalDate.of(2015, 11, 10)), None, None, false, CalculationType.SPA.toInt)
 
   val validCalculationPayableAgeResponse = CalculationResponse("John Johnson", nino, "S1234567T", None, None, List(CalculationPeriod(Some(LocalDate.of(2015, 11, 10)), LocalDate.of(2015, 11, 10), "1.11", "2.22", 1, 0, Some(0))), 0, None, Some(LocalDate.of(2015, 11, 10)), None, false, CalculationType.PAYABLE_AGE.toInt)
@@ -591,6 +593,18 @@ class ResultsControllerSpec extends PlaySpec with GuiceOneServerPerSuite with Mo
             content must include(Messages("gmp.cannot_calculate"))
             content must include(Messages(mockApplicationConfig.globalErrors.getString("63167.reason")))
             content must include(Messages(mockApplicationConfig.globalErrors.getString("63167.solution")))
+        }
+
+        "show error using generic fallback config" in {
+          when(mockGMPSessionService.fetchGmpSession()(any())).thenReturn(Future.successful(Some(gmpSession)))
+          when(mockCalculationConnector.calculateSingle(any(), any())(any())).thenReturn(Future.successful(globalGenericErrorResponse))
+          val result = TestResultsController.get(FakeRequest())
+          val content = contentAsString(result).replaceAll("&#x27;", "'")
+          content must include(Messages(mockApplicationConfig.globalErrors.getString("generic.cannot_calculate")))
+          content must include(Messages(mockApplicationConfig.globalErrors.getString("generic.reason")))
+          content must include(Messages(mockApplicationConfig.globalErrors.getString("generic.solution")))
+          content must include(Messages(mockApplicationConfig.globalErrors.getString("generic.also")))
+          content must include(Messages(mockApplicationConfig.globalErrors.getString("generic.help_link")))
         }
 
         "show error box with member details global" in {
