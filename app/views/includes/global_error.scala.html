@@ -18,7 +18,7 @@
 
 @queryHandlingHeader = {
     @if(application.globalErrors.hasPath(s"$globalErrorCode.solution") || application.globalErrors.hasPath("generic.solution")) {
-        <h2 class="govuk-heading-m" id="global-query-handling-header">{@messages("gmp.errors.query_handling.header")}</h2>
+        <h2 class="govuk-heading-m" id="global-query-handling-header">@{messages("gmp.errors.query_handling.header")}</h2>
     }
 }
 
