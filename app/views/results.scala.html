@@ -33,9 +33,16 @@
 
 @title = @{
     if(calculationResponse.globalErrorCode > 0) {
-        messages(applicationConfig.globalErrors.getString(s"${calculationResponse.globalErrorCode}.cannot_calculate"))
+        val path = if(applicationConfig.globalErrors.hasPath(s"${calculationResponse.globalErrorCode}.cannot_calculate"))
+                    s"${calculationResponse.globalErrorCode}.cannot_calculate"
+                   else "generic.cannot_calculate"
+        messages(applicationConfig.globalErrors.getString(path))
     } else if (calculationResponse.calculationPeriods.length == 1 && calculationResponse.calculationPeriods.head.errorCode > 0) {
-        messages(applicationConfig.globalErrors.getString(s"${calculationResponse.calculationPeriods.head.errorCode}.cannot_calculate"))
+        val errorCode = calculationResponse.calculationPeriods.head.errorCode
+        val path = if(applicationConfig.globalErrors.hasPath(s"$errorCode.cannot_calculate"))
+                    s"$errorCode.cannot_calculate"
+                   else "generic.cannot_calculate"
+        messages(applicationConfig.globalErrors.getString(path))
     } else if(calculationResponse.hasErrors) {
         messages("gmp.part_problem")
     } else {
