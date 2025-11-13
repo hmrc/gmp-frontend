@@ -34,6 +34,7 @@ import services.GMPSessionService
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.SessionId
+import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import views.Views
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -42,6 +43,7 @@ class BulkReferenceControllerSpec extends PlaySpec  with MockitoSugar with Guice
 
   val mockAuthConnector: AuthConnector = mock[AuthConnector]
   val mockSessionService: GMPSessionService = mock[GMPSessionService]
+  val mockAuditConnector: AuditConnector = mock[AuditConnector]
 
   implicit lazy val hc: HeaderCarrier = new HeaderCarrier(sessionId = Some(SessionId(s"session-${UUID.randomUUID}")))
   implicit val mcc: MessagesControllerComponents = app.injector.instanceOf[MessagesControllerComponents]
@@ -54,7 +56,7 @@ class BulkReferenceControllerSpec extends PlaySpec  with MockitoSugar with Guice
   lazy val views = app.injector.instanceOf[Views]
 
   object TestBulkReferenceController extends BulkReferenceController(
-    FakeAuthAction, mockAuthConnector,mockSessionService,
+    FakeAuthAction, mockAuthConnector,mockAuditConnector,mockSessionService,
     FakeGmpContext,bulkReferenceForm,mcc,ec,ac,gmpSessionCache, views) {}
 
   "BulkReferenceController" must {
