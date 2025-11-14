@@ -16,6 +16,8 @@
 
 package controllers
 
+import cats.data.Validated.Invalid
+
 import java.util.UUID
 import config.{ApplicationConfig, GmpSessionCache}
 import connectors.GmpConnector
@@ -47,6 +49,7 @@ class PensionDetailsSconControllerSpec extends PlaySpec with GuiceOneServerPerSu
   val mockGmpConnector = mock[GmpConnector]
   val mockAuthAction = mock[AuthAction]
   val metrics = app.injector.instanceOf[ApplicationMetrics]
+  val mockpdf = mock[PensionDetails_no_longer_used_Form]
   implicit val mcc: MessagesControllerComponents = app.injector.instanceOf[MessagesControllerComponents]
   implicit val ec: ExecutionContext = app.injector.instanceOf[ExecutionContext]
   implicit val messagesAPI: MessagesApi = app.injector.instanceOf[MessagesApi]
@@ -95,6 +98,35 @@ class PensionDetailsSconControllerSpec extends PlaySpec with GuiceOneServerPerSu
           val result = TestPensionDetailsController.post(FakeRequest().withMethod("POST")
             .withFormUrlEncodedBody("scon" -> "S1301234T"))
           status(result) mustBe SEE_OTHER
+      }
+
+      "validate scon with new hip regex pattern" in {
+        val result = TestPensionDetailsController.post(FakeRequest()
+          .withMethod("POST")
+          .withFormUrlEncodedBody("scon" -> "s1301234t"))
+        status(result) mustBe SEE_OTHER
+      }
+
+
+      "validate scon with new hip regex pattern with space as prefix" in {
+        val result = TestPensionDetailsController.post(FakeRequest()
+          .withMethod("POST")
+          .withFormUrlEncodedBody("scon" -> " s1301234t"))
+        status(result) mustBe SEE_OTHER
+      }
+
+      "validate scon with new hip regex pattern with space in between" in {
+        val result = TestPensionDetailsController.post(FakeRequest()
+          .withMethod("POST")
+          .withFormUrlEncodedBody("scon" -> "s130 1234t"))
+        status(result) mustBe SEE_OTHER
+      }
+
+      "validate scon with new hip regex pattern for invalid scon pattern" in {
+        val result = TestPensionDetailsController.post(FakeRequest()
+          .withMethod("POST")
+          .withFormUrlEncodedBody("scon" -> "s3301234t"))
+        status(result) mustBe BAD_REQUEST
       }
 
       "respond with bad request missing SCON" in {
