@@ -17,52 +17,58 @@
 @(globalErrorCode: Integer)(implicit messages: Messages, application: config.ApplicationConfig)
 
 @queryHandlingHeader = {
-    @if(application.globalErrors.hasPath(s"$globalErrorCode.solution") || application.globalErrors.hasPath("generic.solution")) {
+    @if(application.globalErrors.hasPath(s"$globalErrorCode.solution")) {
         <h2 class="govuk-heading-m" id="global-query-handling-header">@{messages("gmp.errors.query_handling.header")}</h2>
     }
 }
 
-@if(application.globalErrors.hasPath(s"$globalErrorCode.reason") || application.globalErrors.hasPath("generic.reason")) {
-    <div class="govuk-body">@messages(application.globalErrors.getString(
-        if (application.globalErrors.hasPath(s"$globalErrorCode.reason"))
-            s"$globalErrorCode.reason"
-        else
-            "generic.reason"
-        ))
+@if(application.globalErrors.hasPath(s"$globalErrorCode.reason")) {
+    <div class="govuk-body">
+         @messages(application.globalErrors.getString(s"$globalErrorCode.reason"))
+    </div>
+} else {
+    <div class="govuk-body">
+         @messages(application.globalErrors.getString("generic.reason"))
     </div>
 }
 
-@if(application.globalErrors.hasPath(s"$globalErrorCode.solution") || application.globalErrors.hasPath("generic.solution")) {
-    <div> <h2 class="govuk-heading-m" id="global-what-now">@messages("gmp.what_now")</h2>
-        <div class="govuk-body">@Html(messages(application.globalErrors.getString(
-             if (application.globalErrors.hasPath(s"$globalErrorCode.solution"))
-                  s"$globalErrorCode.solution"
-             else
-                  "generic.solution"
-        )))
+@if(application.globalErrors.hasPath(s"$globalErrorCode.solution")) {
+    <div>
+        <h2 class="govuk-heading-m" id="global-what-now">@messages("gmp.what_now")</h2>
+        <div class="govuk-body">
+             @Html(messages(application.globalErrors.getString(s"$globalErrorCode.solution")))
+        </div>
+    </div>
+} else {
+    <div>
+        <h2 class="govuk-heading-m" id="global-what-now">@messages("gmp.what_now")</h2>
+        <div class="govuk-body">
+             @Html(messages(application.globalErrors.getString("generic.solution")))
         </div>
     </div>
 }
 
-@if(application.globalErrors.hasPath(s"$globalErrorCode.also") || application.globalErrors.hasPath("generic.also")) {
-    <hr class="govuk-section-break govuk-section-break--m" role="presentation" />
+@if(application.globalErrors.hasPath(s"$globalErrorCode.also")) {
+        <hr class="govuk-section-break govuk-section-break--m" role="presentation" />
     @queryHandlingHeader
-    <p class="govuk-body">@Html(messages(application.globalErrors.getString(
-        if (application.globalErrors.hasPath(s"$globalErrorCode.also"))
-            s"$globalErrorCode.also"
-        else
-            "generic.also"
-        )))
-    </p>
+        <p class="govuk-body">
+             @Html(messages(application.globalErrors.getString(s"$globalErrorCode.also")))
+        </p>
+} else {
+         <hr class="govuk-section-break govuk-section-break--m" role="presentation" />
+    @queryHandlingHeader
+        <p class="govuk-body">
+             @Html(messages(application.globalErrors.getString("generic.also")))
+        </p>
 }
 
-@if(application.globalErrors.hasPath(s"$globalErrorCode.help_link") || application.globalErrors.hasPath("generic.help_link")) {
-    <p class="govuk-body" id="query-handling-link">@Html(messages(application.globalErrors.getString(
-        if (application.globalErrors.hasPath(s"$globalErrorCode.help_link"))
-            s"$globalErrorCode.help_link"
-        else
-            "generic.help_link"
-        )))
+@if(application.globalErrors.hasPath(s"$globalErrorCode.help_link")) {
+    <p class="govuk-body" id="query-handling-link">
+        @Html(messages(application.globalErrors.getString(s"$globalErrorCode.help_link")))
+    </p>
+} else {
+    <p class="govuk-body" id="query-handling-link">
+        @Html(messages(application.globalErrors.getString("generic.help_link")))
     </p>
 }
 
