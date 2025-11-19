@@ -46,7 +46,6 @@ lazy val microservice = Project(appName, file("."))
     libraryDependencies ++= AppDependencies.all,
     libraryDependencySchemes += "org.scala-lang.modules" %% "scala-xml" % VersionScheme.Always,
     Test / parallelExecution := false,
-    Test / fork := false,
     retrieveManaged := true,
     PlayKeys.playDefaultPort := 9941
 )

@@ -16,8 +16,6 @@
 
 package controllers
 
-import cats.data.Validated.Invalid
-
 import java.util.UUID
 import config.{ApplicationConfig, GmpSessionCache}
 import connectors.GmpConnector

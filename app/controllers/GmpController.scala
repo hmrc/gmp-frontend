@@ -26,11 +26,13 @@ import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import uk.gov.hmrc.time.TaxYear
 
+import scala.annotation.unused
+
 @Singleton
 class GmpController @Inject()(val messagesControllerComponents: MessagesControllerComponents,
                               ac: ApplicationConfig,
-                              GMPSessionService: GMPSessionService,
-                              context: GmpContext)
+                              @unused GMPSessionService: GMPSessionService,
+                              @unused context: GmpContext)
   extends FrontendController(messagesControllerComponents){
 
   implicit val applicationConfig: config.ApplicationConfig  = ac

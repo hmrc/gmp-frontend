@@ -24,9 +24,8 @@ import forms.PensionDetails_no_longer_used_Form
 import metrics.ApplicationMetrics
 import models.{PensionDetailsScon, ValidateSconRequest}
 import play.api.Logging
-import play.api.i18n.Messages
 import play.api.mvc.MessagesControllerComponents
-import services.{GMPSessionService, SessionService}
+import services.GMPSessionService
 import uk.gov.hmrc.auth.core.AuthConnector
 import views.Views
 
