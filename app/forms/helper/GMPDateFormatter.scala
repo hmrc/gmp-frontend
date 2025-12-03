@@ -39,7 +39,7 @@ class GMPDateFormatter(maximumDateInclusive: Option[LocalDate],
     try {
       x.getAsLocalDate.isDefined
     } catch {
-      case e: Throwable => false
+      case _: Throwable => false
     }
 
   def dateFieldStringValues(

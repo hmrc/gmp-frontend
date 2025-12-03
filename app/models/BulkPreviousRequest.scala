@@ -35,5 +35,5 @@ object BulkPreviousRequest {
 
   implicit val formats: OFormat[BulkPreviousRequest] = Json.format[BulkPreviousRequest]
 
-  implicit def defaultOrdering: Ordering[BulkPreviousRequest] = Ordering.fromLessThan(_.processedDateTime isAfter _.processedDateTime)
+  implicit def defaultOrdering: Ordering[BulkPreviousRequest] = Ordering.fromLessThan((a, b) => a.processedDateTime.isAfter(b.processedDateTime))
 }

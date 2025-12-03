@@ -22,12 +22,12 @@ import connectors.GmpConnector
 import controllers.auth.AuthAction
 import events.ContributionsAndEarningsEvent
 import metrics.ApplicationMetrics
-import models._
+import models.*
 
 import java.time.LocalDate
 import play.api.Logging
 import play.api.i18n.Messages
-import play.api.mvc.{MessagesControllerComponents, Request}
+import play.api.mvc.{AnyContent, MessagesControllerComponents, Request}
 import play.twirl.api.HtmlFormat
 import services.GMPSessionService
 import uk.gov.hmrc.auth.core.AuthConnector
@@ -50,7 +50,7 @@ class ResultsController @Inject()(authAction: AuthAction,
                                   implicit val gmpSessionCache: GmpSessionCache,
                                   views: Views) extends GmpPageFlow(authConnector,GMPSessionService,context,messagesControllerComponents,ac) with Logging{
 
-   def resultsView(response: CalculationResponse, revalRateSubheader: Option[String], survivorSubheader: Option[String])(implicit request: Request[_]): HtmlFormat.Appendable = {
+   def resultsView(response: CalculationResponse, revalRateSubheader: Option[String], survivorSubheader: Option[String])(implicit request: Request[AnyContent]): HtmlFormat.Appendable = {
     views.results(response, revalRateSubheader,survivorSubheader)
   }
 

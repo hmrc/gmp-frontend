@@ -31,7 +31,7 @@ class UpscanService @Inject()(
 
   lazy val redirectUrlBase: String = applicationConfig.upscanRedirectBase
 
-  def getUpscanFormData()(implicit hc: HeaderCarrier, request: Request[_]): Future[UpscanInitiateResponse] = {
+  def getUpscanFormData()(implicit hc: HeaderCarrier, request: Request[?]): Future[UpscanInitiateResponse] = {
     val callback = controllers.routes.FileUploadController.callback(hc.sessionId.get.value)
       .absoluteURL(applicationConfig.upscanProtocol == "https")
 

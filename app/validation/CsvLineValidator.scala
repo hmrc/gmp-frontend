@@ -74,7 +74,7 @@ trait FieldValidator {
   def validateCalcType(calcType: String)(implicit messages: Messages) = {
     calcType match {
       case "" => Some(Messages("gmp.error.calctype.out_of_range"))
-      case x if !(x matches """\d+""") => Some(Messages("gmp.error.calctype.invalid"))
+      case x if !(x .matches( """\d+""")) => Some(Messages("gmp.error.calctype.invalid"))
       case x if x.toInt > 4 => Some(Messages("gmp.error.calctype.out_of_range"))
       case _ => None
     }
@@ -83,7 +83,7 @@ trait FieldValidator {
   def validateDate(value: String)(implicit messages: Messages) = {
     value match {
       case "" => None
-      case x if !DateValidate.isValid(value) => Some(Messages("gmp.error.csv.date.invalid"))
+      case _ if !DateValidate.isValid(value) => Some(Messages("gmp.error.csv.date.invalid"))
       case _ => None
     }
   }
@@ -101,7 +101,7 @@ trait FieldValidator {
   def validateRevalRate(value: String)(implicit messages: Messages) = {
     value match {
       case "" => None
-      case x if !(x matches """\d+""") => Some(Messages("gmp.error.revaluation_rate.invalid"))
+      case x if !(x .matches( """\d+""")) => Some(Messages("gmp.error.revaluation_rate.invalid"))
       case x if x.toInt > 3 => Some(Messages("gmp.error.revaluation_rate.invalid"))
       case _ => None
     }
@@ -110,7 +110,7 @@ trait FieldValidator {
   def validateDualCalc(value: String)(implicit messages: Messages) = {
     value match {
       case "" => Some(Messages("gmp.error.csv.dual_calc.invalid"))
-      case x if !(x matches "(?i)y(es)?|no?") => Some(Messages("gmp.error.csv.dual_calc.invalid"))
+      case x if !(x .matches( "(?i)y(es)?|no?")) => Some(Messages("gmp.error.csv.dual_calc.invalid"))
       case _ => None
     }
   }
@@ -149,7 +149,7 @@ object CsvLineValidator extends FieldValidator {
           case (value, BulkRequestCsvColumn.REVAL_DATE) => (BulkRequestCsvColumn.REVAL_DATE, validateDate(value))
           case (value, BulkRequestCsvColumn.REVAL_RATE) => (BulkRequestCsvColumn.REVAL_RATE, validateRevalRate(value))
           case (value, BulkRequestCsvColumn.DUAL_CALC) => (BulkRequestCsvColumn.DUAL_CALC, validateDualCalc(value))
-          case (value, key) => (key, None)
+          case (_, key) => (key, None)
         }.toMap.collect {
           case v if v._2.isDefined => (v._1, v._2.get)
         } match {

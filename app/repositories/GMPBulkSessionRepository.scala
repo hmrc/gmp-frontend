@@ -72,7 +72,7 @@ class GMPBulkSessionRepository @Inject() (
 
   def set(answers: GMPBulkSessionCache): Future[Boolean] = {
 
-    val updatedAnswers = answers copy (lastModified = Instant.now())
+    val updatedAnswers = answers.copy (lastModified = Instant.now())
 
     collection
       .replaceOne(

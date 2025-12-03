@@ -91,7 +91,7 @@ class RevaluationForm @Inject()(mcc: MessagesControllerComponents) {
       Seq(
         ValidationError(
           messageKeyForError(error),
-          params: _*
+          params*
         )
       )
     )

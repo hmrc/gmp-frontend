@@ -71,7 +71,7 @@ class SingleCalculationSessionRepository @Inject()(
 
   def set(answers: SingleCalculationSessionCache): Future[Boolean] = {
 
-    val updatedAnswers = answers copy (lastModified = Instant.now(clock))
+    val updatedAnswers = answers.copy (lastModified = Instant.now(clock))
 
     collection
       .replaceOne(

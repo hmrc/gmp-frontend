@@ -40,7 +40,7 @@ object SingleCalculationSessionCache {
         (__ \ "id").read[String] and
           (__ \ "gmpSession").read[EncryptedValue] and
           (__ \ "lastModified").read[Instant]
-        )(ModelEncryption.decryptSingleCalculationSessionCache _)
+        )(ModelEncryption.decryptSingleCalculationSessionCache)
     }
 
     def writes(implicit encryption: Encryption): OWrites[SingleCalculationSessionCache] = new OWrites[SingleCalculationSessionCache] {

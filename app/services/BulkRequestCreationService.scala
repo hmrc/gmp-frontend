@@ -177,7 +177,7 @@ class BulkRequestCreationService @Inject()(environment: Environment,
   private def determineTerminationDate(termDate: String, revalDate: String, calcType: String): Option[String] = {
     termDate match {
       case "" => None
-      case sm if SMValidate matches sm => calcType match {
+      case sm if SMValidate.matches(sm) => calcType match {
         case "3" => None
         case _ => emptyStringsToNone(revalDate, { (date: String) => protectedDateConvert(date) })
       }
@@ -197,7 +197,7 @@ class BulkRequestCreationService @Inject()(environment: Environment,
 
   private def constructBulkCalculationRequestLine(line: String): BulkCalculationRequestLine = {
 
-    val validationErrors = CsvLineValidator.validateLine(line)(messages) match {
+    val validationErrors = CsvLineValidator.validateLine(line)(using messages) match {
       case Some(m) => Some(m.collect {
         case (k, v) => (k.toString, v)
       })
