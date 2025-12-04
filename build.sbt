@@ -56,7 +56,8 @@ lazy val microservice = Project(appName, file("."))
       "-language:implicitConversions",
       "-Wconf:src=routes/.*:s",
       "-Wconf:src=.*views/html.*:s",
-      "-Wconf:msg=Flag.*repeatedly:s"
+      "-Wconf:msg=Flag.*repeatedly:s",
+      "-Wconf:msg=unused explicit parameter*:s"
     ),
     scalacOptions := scalacOptions.value.distinct
   )
