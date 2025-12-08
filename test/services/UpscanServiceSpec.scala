@@ -56,10 +56,10 @@ class UpscanServiceSpec extends BaseSpec with GuiceOneAppPerSuite with MockitoSu
       val upscanInitiateResponse = UpscanInitiateResponse(Reference("reference"), "postTarget", formFields = Map.empty[String, String])
       val initiateRequestCaptor = ArgumentCaptor.forClass(classOf[UpscanInitiateRequest])
 
-      when(mockUpscanConnector.getUpscanFormData(initiateRequestCaptor.capture())(any[HeaderCarrier]))
+      when(mockUpscanConnector.getUpscanFormData(initiateRequestCaptor.capture())(using any[HeaderCarrier]))
         .thenReturn(Future.successful(upscanInitiateResponse))
 
-      (upscanService.getUpscanFormData()(hc, request)).futureValue
+      (upscanService.getUpscanFormData()(using hc, request)).futureValue
 
       initiateRequestCaptor.getValue shouldBe expectedInitiateRequest
     }

@@ -60,7 +60,7 @@ class DashboardControllerSpec extends PlaySpec with GuiceOneServerPerSuite with 
 
   val recentBulkCalculations = List(new BulkPreviousRequest("1234","abcd",LocalDateTime.now(),LocalDateTime.now()), new BulkPreviousRequest("5678","efgh", LocalDateTime.now(),LocalDateTime.now()))
 
-  when(mockGmpBulkConnector.getPreviousBulkRequests(any())(any())).thenReturn(Future.successful(recentBulkCalculations))
+  when(mockGmpBulkConnector.getPreviousBulkRequests(any())(using any())).thenReturn(Future.successful(recentBulkCalculations))
 
   "dashboard GET " must {
 
@@ -102,7 +102,7 @@ class DashboardControllerSpec extends PlaySpec with GuiceOneServerPerSuite with 
                     ac,mockGMPSessionService,FakeGmpContext,mcc,ec,gmpSessionCache,views) {
          }
 
-        when(brokenGmpBulkConnector.getPreviousBulkRequests(any())(any())).thenReturn(Future.failed(UpstreamErrorResponse("failed",503,503)))
+        when(brokenGmpBulkConnector.getPreviousBulkRequests(any())(using any())).thenReturn(Future.failed(UpstreamErrorResponse("failed",503,503)))
           val result = BrokenDashboardController.get(FakeRequest())
           contentAsString(result) must include(Messages("gmp.previous_calculations"))
       }

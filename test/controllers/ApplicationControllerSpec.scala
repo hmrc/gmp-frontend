@@ -96,7 +96,7 @@ class ApplicationControllerSpec extends PlaySpec
           whenReady(result) { _ =>
             val argument = ArgumentCaptor.forClass(classOf[DataEvent])
 
-            verify(mockAuditConnector, times(1)).sendEvent(argument.capture())(any(), any())
+            verify(mockAuditConnector, times(1)).sendEvent(argument.capture())(using any(), any())
 
             argument.getValue.auditSource mustBe "GMP"
             argument.getValue.auditType mustBe "signout"
