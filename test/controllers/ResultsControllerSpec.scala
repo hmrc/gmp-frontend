@@ -22,18 +22,18 @@ import connectors.GmpConnector
 import controllers.auth.{AuthAction, FakeAuthAction}
 import helpers.RandomNino
 import metrics.ApplicationMetrics
-import models._
+import models.*
 
 import java.time.LocalDate
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito._
+import org.mockito.Mockito.*
 import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 import org.scalatestplus.play.PlaySpec
 import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl}
-import play.api.mvc.{MessagesControllerComponents, Request}
+import play.api.mvc.{AnyContent, MessagesControllerComponents, Request}
 import play.api.test.FakeRequest
-import play.api.test.Helpers._
+import play.api.test.Helpers.*
 import play.twirl.api.HtmlFormat
 import services.GMPSessionService
 import uk.gov.hmrc.auth.core.AuthConnector
@@ -41,8 +41,9 @@ import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.SessionId
 import uk.gov.hmrc.play.audit.http.connector.{AuditConnector, AuditResult}
 import views.Views
-import views.helpers.GmpDateFormatter._
+import views.helpers.GmpDateFormatter.*
 
+import scala.annotation.targetName
 import scala.concurrent.{ExecutionContext, Future}
 
 class ResultsControllerSpec extends PlaySpec with GuiceOneServerPerSuite with MockitoSugar {
@@ -65,10 +66,7 @@ class ResultsControllerSpec extends PlaySpec with GuiceOneServerPerSuite with Mo
 
   object TestResultsController extends ResultsController(FakeAuthAction, mockAuthConnector, mockGMPSessionService,FakeGmpContext, mockCalculationConnector, mockAuditConnector, metrics, applicationConfig, mcc, ec, gmpSessionCache, views) {
 
-    override def resultsView(response: CalculationResponse, subheader: Option[String], revalSubheader: Option[String])(implicit request: Request[?]): HtmlFormat.Appendable = {
-      views.results(response, subheader, revalSubheader)
-    }
-
+    override def resultsView(response: CalculationResponse, revalRateSubheader: Option[String], survivorSubheader: Option[String])(implicit request: Request[AnyContent]): HtmlFormat.Appendable = super.resultsView(response, revalRateSubheader, survivorSubheader)
   }
 
   private val nino: String = RandomNino.generate
