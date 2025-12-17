@@ -177,7 +177,7 @@ class CsvLineValidatorSpec extends AnyFlatSpec with Matchers with GuiceOneAppPer
   }
 
   it should "report calculation types that are not numbers" in {
-    val line = CsvLine.copy(calctype = Some(-99)).toString replace("-99", "invalid calc type")
+    val line = CsvLine.copy(calctype = Some(-99)).toString .replace("-99", "invalid calc type")
     val errors = CsvLineValidator.validateLine(line)
 
     errors shouldBe defined
@@ -249,7 +249,7 @@ class CsvLineValidatorSpec extends AnyFlatSpec with Matchers with GuiceOneAppPer
   }
 
   it should "report a revaluation rate that is not a number" in {
-    val line = CsvLine.copy(revaluationRate = Some(-99)).toString replace("-99", "87erewrkjkdf£$389")
+    val line = CsvLine.copy(revaluationRate = Some(-99)).toString .replace("-99", "87erewrkjkdf£$389")
     val errors = CsvLineValidator.validateLine(line)
 
     errors shouldBe defined
@@ -271,7 +271,7 @@ class CsvLineValidatorSpec extends AnyFlatSpec with Matchers with GuiceOneAppPer
   }
 
   it should "report an invalid dual calculation value" in {
-    val errors = CsvLineValidator.validateLine(CsvLine.copy().toString replace(",Y", ",ifdugh"))
+    val errors = CsvLineValidator.validateLine(CsvLine.copy().toString .replace(",Y", ",ifdugh"))
 
     errors shouldBe defined
     errors.get should contain(BulkRequestCsvColumn.DUAL_CALC -> Messages("gmp.error.csv.dual_calc.invalid"))

@@ -41,7 +41,7 @@ lazy val microservice = Project(appName, file("."))
     defaultSettings(),
     majorVersion := 4,
 
-    scalaVersion := "3.3.6",
+    scalaVersion := "3.7.1",
 
     libraryDependencies ++= AppDependencies.all,
     libraryDependencySchemes += "org.scala-lang.modules" %% "scala-xml" % VersionScheme.Always,
@@ -56,7 +56,8 @@ lazy val microservice = Project(appName, file("."))
       "-language:implicitConversions",
       "-Wconf:src=routes/.*:s",
       "-Wconf:src=.*views/html.*:s",
-      "-Wconf:msg=Flag.*repeatedly:s"
+      "-Wconf:msg=Flag.*repeatedly:s",
+      "-Wconf:msg=unused explicit parameter*:s"
     ),
     scalacOptions := scalacOptions.value.distinct
   )

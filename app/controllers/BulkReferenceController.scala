@@ -52,7 +52,7 @@ class BulkReferenceController @Inject()(authAction: AuthAction,
         formWithErrors => {Future.successful(BadRequest(views.bulkReference(formWithErrors)))},
         value => {
           GMPSessionService.cacheEmailAndReference(Some(value.email.trim), Some(value.reference.trim)).map {
-            case Some(session) => Redirect(controllers.routes.BulkRequestReceivedController.get)
+            case Some(_) => Redirect(controllers.routes.BulkRequestReceivedController.get)
             case _ => throw new RuntimeException
           }
         }

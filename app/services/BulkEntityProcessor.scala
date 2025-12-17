@@ -30,8 +30,8 @@ class BulkEntityProcessor[E] extends BulkEntityProcessing[E] {
     }
 
   def list(source: => Iterator[Char], deliminator: Char, convertToEntity: String => E): List[E] = {
-    val streamDataToEntities = processEntityData[E](deliminator, convertToEntity) _
-    val tidyProcessedData = caterForMissingTrailingDeliminator(convertToEntity) _
+    val streamDataToEntities = processEntityData[E](deliminator, convertToEntity)
+    val tidyProcessedData = caterForMissingTrailingDeliminator(convertToEntity)
     val processedInputData = source.foldLeft(EntityContainer[E]("", List[E]()))((entityContainer, streamCharacter) => {
       streamDataToEntities(entityContainer, streamCharacter)
     })

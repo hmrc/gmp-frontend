@@ -42,7 +42,7 @@ class BulkReferenceForm  @Inject()(mcc: MessagesControllerComponents) {
       else if (!text.trim.toUpperCase.matches(emailRegex.regex)){
         Invalid(Seq(ValidationError(messages("gmp.error.email.invalid"))))
       }
-      else if(text.trim matches emailConstraintRegex){
+      else if(text.trim.matches (emailConstraintRegex)){
         Invalid(Seq(ValidationError(messages("gmp.error.email.invalid"))))
       }
       else {
@@ -57,7 +57,7 @@ class BulkReferenceForm  @Inject()(mcc: MessagesControllerComponents) {
         .verifying(messages("gmp.error.mandatory", messages("gmp.reference")), x => x.trim.length != 0)
         .verifying(messages("gmp.error.csv.member_ref.length.invalid", messages("gmp.reference")), x => x.trim.length <= MAX_REFERENCE_LENGTH)
         .verifying(messages("gmp.error.csv.member_ref.character.invalid", messages("gmp.reference")), x => x.trim.matches(CHARS_ALLOWED))
-        .verifying(messages("gmp.error.csv.member_ref.spaces.invalid", messages("gmp.reference")), x => !(x.trim matches WHITE_SPACES))
+        .verifying(messages("gmp.error.csv.member_ref.spaces.invalid", messages("gmp.reference")), x => !(x.trim.matches (WHITE_SPACES)))
     )(BulkReference.apply)((br:BulkReference) => Some(br.email, br.reference))
   )
 }

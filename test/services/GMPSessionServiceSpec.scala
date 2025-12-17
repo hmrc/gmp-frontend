@@ -57,7 +57,7 @@ class GMPSessionServiceSpec extends PlaySpec with ScalaFutures with MockitoSugar
       "return the bulk session using gmpBulkSessionService if MongoDB cache is enabled" in {
         val service = createGmpSessionService
         when(mockAppConfig.isMongoDBCacheEnabled).thenReturn(true)
-        when(mockGmpBulkSessionService.fetchGmpBulkSession()(hc)).thenReturn(Future.successful(Some(gmpBulkSession)))
+        when(mockGmpBulkSessionService.fetchGmpBulkSession()(using hc)).thenReturn(Future.successful(Some(gmpBulkSession)))
 
         val result = Await.result(service.fetchGmpBulkSession(), 10.seconds)
         result mustBe Some(gmpBulkSession)
@@ -66,7 +66,7 @@ class GMPSessionServiceSpec extends PlaySpec with ScalaFutures with MockitoSugar
       "return the bulk session using sessionService if MongoDB cache is disabled" in {
         val service = createGmpSessionService
         when(mockAppConfig.isMongoDBCacheEnabled).thenReturn(false)
-        when(mockSessionService.fetchGmpBulkSession()(hc)).thenReturn(Future.successful(Some(gmpBulkSession)))
+        when(mockSessionService.fetchGmpBulkSession()(using hc)).thenReturn(Future.successful(Some(gmpBulkSession)))
 
         val result = Await.result(service.fetchGmpBulkSession(), 10.seconds)
         result mustBe Some(gmpBulkSession)
@@ -77,7 +77,7 @@ class GMPSessionServiceSpec extends PlaySpec with ScalaFutures with MockitoSugar
       "reset the bulk session using gmpBulkSessionService if MongoDB cache is enabled" in {
         val service = createGmpSessionService
         when(mockAppConfig.isMongoDBCacheEnabled).thenReturn(true)
-        when(mockGmpBulkSessionService.resetGmpBulkSession()(hc)).thenReturn(Future.successful(Some(gmpBulkSession)))
+        when(mockGmpBulkSessionService.resetGmpBulkSession()(using hc)).thenReturn(Future.successful(Some(gmpBulkSession)))
 
         val result = Await.result(service.resetGmpBulkSession(), 10.seconds)
         result mustBe Some(gmpBulkSession)
@@ -86,7 +86,7 @@ class GMPSessionServiceSpec extends PlaySpec with ScalaFutures with MockitoSugar
       "reset the bulk session using sessionService if MongoDB cache is disabled" in {
         val service = createGmpSessionService
         when(mockAppConfig.isMongoDBCacheEnabled).thenReturn(false)
-        when(mockSessionService.resetGmpBulkSession()(hc)).thenReturn(Future.successful(Some(gmpBulkSession)))
+        when(mockSessionService.resetGmpBulkSession()(using hc)).thenReturn(Future.successful(Some(gmpBulkSession)))
 
         val result = Await.result(service.resetGmpBulkSession(), 10.seconds)
         result mustBe Some(gmpBulkSession)
@@ -98,7 +98,7 @@ class GMPSessionServiceSpec extends PlaySpec with ScalaFutures with MockitoSugar
         val service = createGmpSessionService
 
         when(mockAppConfig.isMongoDBCacheEnabled).thenReturn(true)
-        when(mockGmpBulkSessionService.cacheCallBackData(Some(uploadStatus))(hc)).thenReturn(Future.successful(Some(gmpBulkSession)))
+        when(mockGmpBulkSessionService.cacheCallBackData(Some(uploadStatus))(using hc)).thenReturn(Future.successful(Some(gmpBulkSession)))
 
         val result = Await.result(service.cacheCallBackData(Some(uploadStatus)), 10.seconds)
         result mustBe Some(gmpBulkSession)
@@ -108,7 +108,7 @@ class GMPSessionServiceSpec extends PlaySpec with ScalaFutures with MockitoSugar
         val service = createGmpSessionService
 
         when(mockAppConfig.isMongoDBCacheEnabled).thenReturn(false)
-        when(mockSessionService.cacheCallBackData(Some(uploadStatus))(hc)).thenReturn(Future.successful(Some(gmpBulkSession)))
+        when(mockSessionService.cacheCallBackData(Some(uploadStatus))(using hc)).thenReturn(Future.successful(Some(gmpBulkSession)))
 
         val result = Await.result(service.cacheCallBackData(Some(uploadStatus)), 10.seconds)
         result mustBe Some(gmpBulkSession)
@@ -122,7 +122,7 @@ class GMPSessionServiceSpec extends PlaySpec with ScalaFutures with MockitoSugar
         val reference = Some("reference")
 
         when(mockAppConfig.isMongoDBCacheEnabled).thenReturn(true)
-        when(mockGmpBulkSessionService.cacheEmailAndReference(email, reference)(hc)).thenReturn(Future.successful(Some(gmpBulkSession)))
+        when(mockGmpBulkSessionService.cacheEmailAndReference(email, reference)(using hc)).thenReturn(Future.successful(Some(gmpBulkSession)))
 
         val result = Await.result(service.cacheEmailAndReference(email, reference), 10.seconds)
         result mustBe Some(gmpBulkSession)
@@ -134,7 +134,7 @@ class GMPSessionServiceSpec extends PlaySpec with ScalaFutures with MockitoSugar
         val reference = Some("reference")
 
         when(mockAppConfig.isMongoDBCacheEnabled).thenReturn(false)
-        when(mockSessionService.cacheEmailAndReference(email, reference)(hc)).thenReturn(Future.successful(Some(gmpBulkSession)))
+        when(mockSessionService.cacheEmailAndReference(email, reference)(using hc)).thenReturn(Future.successful(Some(gmpBulkSession)))
 
         val result = Await.result(service.cacheEmailAndReference(email, reference), 10.seconds)
         result mustBe Some(gmpBulkSession)
@@ -145,7 +145,7 @@ class GMPSessionServiceSpec extends PlaySpec with ScalaFutures with MockitoSugar
       "return the GmpSession from singleCalculationSessionService if MongoDB cache is enabled" in {
         val service = createGmpSessionService
         when(mockAppConfig.isMongoDBCacheEnabled).thenReturn(true)
-        when(mockSingleCalculationSessionService.fetchGmpSession()(hc)).thenReturn(Future.successful(Some(gmpSession)))
+        when(mockSingleCalculationSessionService.fetchGmpSession()(using hc)).thenReturn(Future.successful(Some(gmpSession)))
 
         val result = Await.result(service.fetchGmpSession(), 10.seconds)
         result mustBe Some(gmpSession)
@@ -154,7 +154,7 @@ class GMPSessionServiceSpec extends PlaySpec with ScalaFutures with MockitoSugar
       "return the GmpSession from sessionService if MongoDB cache is disabled" in {
         val service = createGmpSessionService
         when(mockAppConfig.isMongoDBCacheEnabled).thenReturn(false)
-        when(mockSessionService.fetchGmpSession()(hc)).thenReturn(Future.successful(Some(gmpSession)))
+        when(mockSessionService.fetchGmpSession()(using hc)).thenReturn(Future.successful(Some(gmpSession)))
 
         val result = Await.result(service.fetchGmpSession(), 10.seconds)
         result mustBe Some(gmpSession)
@@ -165,7 +165,7 @@ class GMPSessionServiceSpec extends PlaySpec with ScalaFutures with MockitoSugar
       "reset the GmpSession using singleCalculationSessionService if MongoDB cache is enabled" in {
         val service = createGmpSessionService
         when(mockAppConfig.isMongoDBCacheEnabled).thenReturn(true)
-        when(mockSingleCalculationSessionService.resetGmpSession()(hc)).thenReturn(Future.successful(Some(gmpSession)))
+        when(mockSingleCalculationSessionService.resetGmpSession()(using hc)).thenReturn(Future.successful(Some(gmpSession)))
 
         val result = Await.result(service.resetGmpSession(), 10.seconds)
         result mustBe Some(gmpSession)
@@ -174,7 +174,7 @@ class GMPSessionServiceSpec extends PlaySpec with ScalaFutures with MockitoSugar
       "reset the GmpSession using sessionService if MongoDB cache is disabled" in {
         val service = createGmpSessionService
         when(mockAppConfig.isMongoDBCacheEnabled).thenReturn(false)
-        when(mockSessionService.resetGmpSession()(hc)).thenReturn(Future.successful(Some(gmpSession)))
+        when(mockSessionService.resetGmpSession()(using hc)).thenReturn(Future.successful(Some(gmpSession)))
 
         val result = Await.result(service.resetGmpSession(), 10.seconds)
         result mustBe Some(gmpSession)
@@ -185,7 +185,7 @@ class GMPSessionServiceSpec extends PlaySpec with ScalaFutures with MockitoSugar
       "reset the GmpSession with scon using singleCalculationSessionService if MongoDB cache is enabled" in {
         val service = createGmpSessionService
         when(mockAppConfig.isMongoDBCacheEnabled).thenReturn(true)
-        when(mockSingleCalculationSessionService.resetGmpSessionWithScon()(hc)).thenReturn(Future.successful(Some(gmpSession)))
+        when(mockSingleCalculationSessionService.resetGmpSessionWithScon()(using hc)).thenReturn(Future.successful(Some(gmpSession)))
 
         val result = Await.result(service.resetGmpSessionWithScon(), 10.seconds)
         result mustBe Some(gmpSession)
@@ -194,7 +194,7 @@ class GMPSessionServiceSpec extends PlaySpec with ScalaFutures with MockitoSugar
       "reset the GmpSession with scon using sessionService if MongoDB cache is disabled" in {
         val service = createGmpSessionService
         when(mockAppConfig.isMongoDBCacheEnabled).thenReturn(false)
-        when(mockSessionService.resetGmpSessionWithScon()(hc)).thenReturn(Future.successful(Some(gmpSession)))
+        when(mockSessionService.resetGmpSessionWithScon()(using hc)).thenReturn(Future.successful(Some(gmpSession)))
 
         val result = Await.result(service.resetGmpSessionWithScon(), 10.seconds)
         result mustBe Some(gmpSession)
@@ -206,7 +206,7 @@ class GMPSessionServiceSpec extends PlaySpec with ScalaFutures with MockitoSugar
         val service = createGmpSessionService
 
         when(mockAppConfig.isMongoDBCacheEnabled).thenReturn(true)
-        when(mockSingleCalculationSessionService.cacheMemberDetails(memberDetails)(hc)).thenReturn(Future.successful(Some(gmpSession)))
+        when(mockSingleCalculationSessionService.cacheMemberDetails(memberDetails)(using hc)).thenReturn(Future.successful(Some(gmpSession)))
 
         val result = Await.result(service.cacheMemberDetails(memberDetails), 10.seconds)
         result mustBe Some(gmpSession)
@@ -216,7 +216,7 @@ class GMPSessionServiceSpec extends PlaySpec with ScalaFutures with MockitoSugar
         val service = createGmpSessionService
 
         when(mockAppConfig.isMongoDBCacheEnabled).thenReturn(false)
-        when(mockSessionService.cacheMemberDetails(memberDetails)(hc)).thenReturn(Future.successful(Some(gmpSession)))
+        when(mockSessionService.cacheMemberDetails(memberDetails)(using hc)).thenReturn(Future.successful(Some(gmpSession)))
 
         val result = Await.result(service.cacheMemberDetails(memberDetails), 10.seconds)
         result mustBe Some(gmpSession)
@@ -227,7 +227,7 @@ class GMPSessionServiceSpec extends PlaySpec with ScalaFutures with MockitoSugar
       "fetch member details using singleCalculationSessionService if MongoDB cache is enabled" in {
         val service = createGmpSessionService
         when(mockAppConfig.isMongoDBCacheEnabled).thenReturn(true)
-        when(mockSingleCalculationSessionService.fetchMemberDetails()(hc)).thenReturn(Future.successful(Some(memberDetails)))
+        when(mockSingleCalculationSessionService.fetchMemberDetails()(using hc)).thenReturn(Future.successful(Some(memberDetails)))
 
         val result = Await.result(service.fetchMemberDetails(), 10.seconds)
         result mustBe Some(memberDetails)
@@ -236,7 +236,7 @@ class GMPSessionServiceSpec extends PlaySpec with ScalaFutures with MockitoSugar
       "fetch member details using sessionService if MongoDB cache is disabled" in {
         val service = createGmpSessionService
         when(mockAppConfig.isMongoDBCacheEnabled).thenReturn(false)
-        when(mockSessionService.fetchMemberDetails()(hc)).thenReturn(Future.successful(Some(memberDetails)))
+        when(mockSessionService.fetchMemberDetails()(using hc)).thenReturn(Future.successful(Some(memberDetails)))
 
         val result = Await.result(service.fetchMemberDetails(), 10.seconds)
         result mustBe Some(memberDetails)
@@ -249,7 +249,7 @@ class GMPSessionServiceSpec extends PlaySpec with ScalaFutures with MockitoSugar
         val pensionScon = "S123456A"
 
         when(mockAppConfig.isMongoDBCacheEnabled).thenReturn(true)
-        when(mockSingleCalculationSessionService.cachePensionDetails(pensionScon)(hc)).thenReturn(Future.successful(Some(gmpSession)))
+        when(mockSingleCalculationSessionService.cachePensionDetails(pensionScon)(using hc)).thenReturn(Future.successful(Some(gmpSession)))
 
         val result = Await.result(service.cachePensionDetails(pensionScon), 10.seconds)
         result mustBe Some(gmpSession)
@@ -260,7 +260,7 @@ class GMPSessionServiceSpec extends PlaySpec with ScalaFutures with MockitoSugar
         val pensionScon = "S123456A"
 
         when(mockAppConfig.isMongoDBCacheEnabled).thenReturn(false)
-        when(mockSessionService.cachePensionDetails(pensionScon)(hc)).thenReturn(Future.successful(Some(gmpSession)))
+        when(mockSessionService.cachePensionDetails(pensionScon)(using hc)).thenReturn(Future.successful(Some(gmpSession)))
 
         val result = Await.result(service.cachePensionDetails(pensionScon), 10.seconds)
         result mustBe Some(gmpSession)
@@ -272,7 +272,7 @@ class GMPSessionServiceSpec extends PlaySpec with ScalaFutures with MockitoSugar
         val service = createGmpSessionService
 
         when(mockAppConfig.isMongoDBCacheEnabled).thenReturn(true)
-        when(mockSingleCalculationSessionService.fetchPensionDetails()(hc)).thenReturn(Future.successful(Some(scon)))
+        when(mockSingleCalculationSessionService.fetchPensionDetails()(using hc)).thenReturn(Future.successful(Some(scon)))
 
         val result = Await.result(service.fetchPensionDetails(), 10.seconds)
         result mustBe Some(scon)
@@ -282,7 +282,7 @@ class GMPSessionServiceSpec extends PlaySpec with ScalaFutures with MockitoSugar
         val service = createGmpSessionService
 
         when(mockAppConfig.isMongoDBCacheEnabled).thenReturn(false)
-        when(mockSessionService.fetchPensionDetails()(hc)).thenReturn(Future.successful(Some(scon)))
+        when(mockSessionService.fetchPensionDetails()(using hc)).thenReturn(Future.successful(Some(scon)))
 
         val result = Await.result(service.fetchPensionDetails(), 10.seconds)
         result mustBe Some(scon)
@@ -295,7 +295,7 @@ class GMPSessionServiceSpec extends PlaySpec with ScalaFutures with MockitoSugar
         val scenario = "Scenario1"
 
         when(mockAppConfig.isMongoDBCacheEnabled).thenReturn(true)
-        when(mockSingleCalculationSessionService.cacheScenario(scenario)(hc)).thenReturn(Future.successful(Some(gmpSession)))
+        when(mockSingleCalculationSessionService.cacheScenario(scenario)(using hc)).thenReturn(Future.successful(Some(gmpSession)))
 
         val result = Await.result(service.cacheScenario(scenario), 10.seconds)
         result mustBe Some(gmpSession)
@@ -306,7 +306,7 @@ class GMPSessionServiceSpec extends PlaySpec with ScalaFutures with MockitoSugar
         val scenario = "Scenario1"
 
         when(mockAppConfig.isMongoDBCacheEnabled).thenReturn(false)
-        when(mockSessionService.cacheScenario(scenario)(hc)).thenReturn(Future.successful(Some(gmpSession)))
+        when(mockSessionService.cacheScenario(scenario)(using hc)).thenReturn(Future.successful(Some(gmpSession)))
 
         val result = Await.result(service.cacheScenario(scenario), 10.seconds)
         result mustBe Some(gmpSession)
@@ -318,7 +318,7 @@ class GMPSessionServiceSpec extends PlaySpec with ScalaFutures with MockitoSugar
         val service = createGmpSessionService
 
         when(mockAppConfig.isMongoDBCacheEnabled).thenReturn(true)
-        when(mockSingleCalculationSessionService.fetchScenario()(hc)).thenReturn(Future.successful(Some("Scenario1")))
+        when(mockSingleCalculationSessionService.fetchScenario()(using hc)).thenReturn(Future.successful(Some("Scenario1")))
 
         val result = Await.result(service.fetchScenario(), 10.seconds)
         result mustBe Some("Scenario1")
@@ -328,7 +328,7 @@ class GMPSessionServiceSpec extends PlaySpec with ScalaFutures with MockitoSugar
         val service = createGmpSessionService
 
         when(mockAppConfig.isMongoDBCacheEnabled).thenReturn(false)
-        when(mockSessionService.fetchScenario()(hc)).thenReturn(Future.successful(Some("Scenario1")))
+        when(mockSessionService.fetchScenario()(using hc)).thenReturn(Future.successful(Some("Scenario1")))
 
         val result = Await.result(service.fetchScenario(), 10.seconds)
         result mustBe Some("Scenario1")
@@ -340,7 +340,7 @@ class GMPSessionServiceSpec extends PlaySpec with ScalaFutures with MockitoSugar
         val service = createGmpSessionService
 
         when(mockAppConfig.isMongoDBCacheEnabled).thenReturn(true)
-        when(mockSingleCalculationSessionService.cacheRevaluationDate(revaluationDate)(hc)).thenReturn(Future.successful(Some(gmpSession)))
+        when(mockSingleCalculationSessionService.cacheRevaluationDate(revaluationDate)(using hc)).thenReturn(Future.successful(Some(gmpSession)))
 
         val result = Await.result(service.cacheRevaluationDate(revaluationDate), 10.seconds)
         result mustBe Some(gmpSession)
@@ -350,7 +350,7 @@ class GMPSessionServiceSpec extends PlaySpec with ScalaFutures with MockitoSugar
         val service = createGmpSessionService
 
         when(mockAppConfig.isMongoDBCacheEnabled).thenReturn(false)
-        when(mockSessionService.cacheRevaluationDate(revaluationDate)(hc)).thenReturn(Future.successful(Some(gmpSession)))
+        when(mockSessionService.cacheRevaluationDate(revaluationDate)(using hc)).thenReturn(Future.successful(Some(gmpSession)))
 
         val result = Await.result(service.cacheRevaluationDate(revaluationDate), 10.seconds)
         result mustBe Some(gmpSession)
@@ -362,7 +362,7 @@ class GMPSessionServiceSpec extends PlaySpec with ScalaFutures with MockitoSugar
         val service = createGmpSessionService
 
         when(mockAppConfig.isMongoDBCacheEnabled).thenReturn(true)
-        when(mockSingleCalculationSessionService.cacheRevaluationRate(revaluationRate)(hc)).thenReturn(Future.successful(Some(gmpSession)))
+        when(mockSingleCalculationSessionService.cacheRevaluationRate(revaluationRate)(using hc)).thenReturn(Future.successful(Some(gmpSession)))
 
         val result = Await.result(service.cacheRevaluationRate(revaluationRate), 10.seconds)
         result mustBe Some(gmpSession)
@@ -372,7 +372,7 @@ class GMPSessionServiceSpec extends PlaySpec with ScalaFutures with MockitoSugar
         val service = createGmpSessionService
 
         when(mockAppConfig.isMongoDBCacheEnabled).thenReturn(false)
-        when(mockSessionService.cacheRevaluationRate(revaluationRate)(hc)).thenReturn(Future.successful(Some(gmpSession)))
+        when(mockSessionService.cacheRevaluationRate(revaluationRate)(using hc)).thenReturn(Future.successful(Some(gmpSession)))
 
         val result = Await.result(service.cacheRevaluationRate(revaluationRate), 10.seconds)
         result mustBe Some(gmpSession)
@@ -383,7 +383,7 @@ class GMPSessionServiceSpec extends PlaySpec with ScalaFutures with MockitoSugar
       "create callback record using gmpBulkSessionService if MongoDB cache is enabled" in {
         val service = createGmpSessionService
         when(mockAppConfig.isMongoDBCacheEnabled).thenReturn(true)
-        when(mockGmpBulkSessionService.createCallbackRecord(hc)).thenReturn(Future.successful("callbackRecordCreated"))
+        when(mockGmpBulkSessionService.createCallbackRecord(using hc)).thenReturn(Future.successful("callbackRecordCreated"))
 
         val result = Await.result(service.createCallbackRecord, 10.seconds)
         result mustBe "callbackRecordCreated"
@@ -392,7 +392,7 @@ class GMPSessionServiceSpec extends PlaySpec with ScalaFutures with MockitoSugar
       "create callback record using sessionService if MongoDB cache is disabled" in {
         val service = createGmpSessionService
         when(mockAppConfig.isMongoDBCacheEnabled).thenReturn(false)
-        when(mockSessionService.createCallbackRecord(hc)).thenReturn(Future.successful("callbackRecordCreated"))
+        when(mockSessionService.createCallbackRecord(using hc)).thenReturn(Future.successful("callbackRecordCreated"))
 
         val result = Await.result(service.createCallbackRecord, 10.seconds)
         result mustBe "callbackRecordCreated"
@@ -403,7 +403,7 @@ class GMPSessionServiceSpec extends PlaySpec with ScalaFutures with MockitoSugar
       "update callback record using gmpBulkSessionService if MongoDB cache is enabled" in {
         val service = createGmpSessionService
         when(mockAppConfig.isMongoDBCacheEnabled).thenReturn(true)
-        when(mockGmpBulkSessionService.updateCallbackRecord(uploadStatus)(hc)).thenReturn(Future.successful("callbackRecordUpdated"))
+        when(mockGmpBulkSessionService.updateCallbackRecord(uploadStatus)(using hc)).thenReturn(Future.successful("callbackRecordUpdated"))
 
         val result = Await.result(service.updateCallbackRecord("sessionId", uploadStatus), 10.seconds)
         result mustBe "callbackRecordUpdated"
@@ -412,7 +412,7 @@ class GMPSessionServiceSpec extends PlaySpec with ScalaFutures with MockitoSugar
       "update callback record using sessionService if MongoDB cache is disabled" in {
         val service = createGmpSessionService
         when(mockAppConfig.isMongoDBCacheEnabled).thenReturn(false)
-        when(mockSessionService.updateCallbackRecord("sessionId", uploadStatus)(hc)).thenReturn(Future.successful("callbackRecordUpdated"))
+        when(mockSessionService.updateCallbackRecord("sessionId", uploadStatus)(using hc)).thenReturn(Future.successful("callbackRecordUpdated"))
 
         val result = Await.result(service.updateCallbackRecord("sessionId", uploadStatus), 10.seconds)
         result mustBe "callbackRecordUpdated"
@@ -423,7 +423,7 @@ class GMPSessionServiceSpec extends PlaySpec with ScalaFutures with MockitoSugar
       "get callback record using gmpBulkSessionService if MongoDB cache is enabled" in {
         val service = createGmpSessionService
         when(mockAppConfig.isMongoDBCacheEnabled).thenReturn(true)
-        when(mockGmpBulkSessionService.getCallbackRecord(hc)).thenReturn(Future.successful(Some(uploadStatus)))
+        when(mockGmpBulkSessionService.getCallbackRecord(using hc)).thenReturn(Future.successful(Some(uploadStatus)))
 
         val result = Await.result(service.getCallbackRecord, 10.seconds)
         result mustBe Some(uploadStatus)
@@ -432,7 +432,7 @@ class GMPSessionServiceSpec extends PlaySpec with ScalaFutures with MockitoSugar
       "get callback record using sessionService if MongoDB cache is disabled" in {
         val service = createGmpSessionService
         when(mockAppConfig.isMongoDBCacheEnabled).thenReturn(false)
-        when(mockSessionService.getCallbackRecord(hc)).thenReturn(Future.successful(Some(uploadStatus)))
+        when(mockSessionService.getCallbackRecord(using hc)).thenReturn(Future.successful(Some(uploadStatus)))
 
         val result = Await.result(service.getCallbackRecord, 10.seconds)
         result mustBe Some(uploadStatus)

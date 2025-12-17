@@ -63,14 +63,14 @@ class BulkResultsControllerSpec extends PlaySpec with GuiceOneServerPerSuite wit
       "when authorised" must {
 
         "respond with a status of OK" in {
-          when(mockGmpBulkConnector.getBulkResultsSummary(any(),any())(any())).thenReturn(Future.successful(bulkResultsSummary))
+          when(mockGmpBulkConnector.getBulkResultsSummary(any(),any())(using any())).thenReturn(Future.successful(bulkResultsSummary))
 
             val result = TestBulkResultsController.get("",comingFromDashboard)(FakeRequest())
             status(result) must equal(OK)
         }
 
         "load the results page" in {
-          when(mockGmpBulkConnector.getBulkResultsSummary(any(),any())(any())).thenReturn(Future.successful(bulkResultsSummary))
+          when(mockGmpBulkConnector.getBulkResultsSummary(any(),any())(using any())).thenReturn(Future.successful(bulkResultsSummary))
 
             val result = TestBulkResultsController.get("",comingFromDashboard)(FakeRequest())
 
@@ -84,7 +84,7 @@ class BulkResultsControllerSpec extends PlaySpec with GuiceOneServerPerSuite wit
         "contain correct successful count" in {
 
 
-          when(mockGmpBulkConnector.getBulkResultsSummary(any(),any())(any())).thenReturn(Future.successful(bulkResultsSummary))
+          when(mockGmpBulkConnector.getBulkResultsSummary(any(),any())(using any())).thenReturn(Future.successful(bulkResultsSummary))
 
             val result = TestBulkResultsController.get("",comingFromDashboard)(FakeRequest())
 
@@ -93,14 +93,14 @@ class BulkResultsControllerSpec extends PlaySpec with GuiceOneServerPerSuite wit
         }
 
         "show the incorrect user page" in {
-          when(mockGmpBulkConnector.getBulkResultsSummary(any(),any())(any())).thenReturn(Future.failed(UpstreamErrorResponse("", FORBIDDEN, 0, Map())))
+          when(mockGmpBulkConnector.getBulkResultsSummary(any(),any())(using any())).thenReturn(Future.failed(UpstreamErrorResponse("", FORBIDDEN, 0, Map())))
             val result = TestBulkResultsController.get("",comingFromDashboard)(FakeRequest())
 
             contentAsString(result) must include(Messages("gmp.bulk.wrong_user.login_text"))
         }
 
         "show the calc not found page" in {
-          when(mockGmpBulkConnector.getBulkResultsSummary(any(),any())(any())).thenReturn(Future.failed(UpstreamErrorResponse("Not Found", 404)))
+          when(mockGmpBulkConnector.getBulkResultsSummary(any(),any())(using any())).thenReturn(Future.failed(UpstreamErrorResponse("Not Found", 404)))
 
             val result = TestBulkResultsController.get("",comingFromDashboard)(FakeRequest())
 
@@ -113,7 +113,7 @@ class BulkResultsControllerSpec extends PlaySpec with GuiceOneServerPerSuite wit
 
       "download the results summary in csv format" in {
 
-        when(mockGmpBulkConnector.getResultsAsCsv(any(),any(),any())(any())).thenReturn(Future.successful(HttpResponse(200, "CSV STRING")))
+        when(mockGmpBulkConnector.getResultsAsCsv(any(),any(),any())(using any())).thenReturn(Future.successful(HttpResponse(200, "CSV STRING")))
 
           val result = TestBulkResultsController.getResultsAsCsv("","")(FakeRequest())
 
@@ -127,7 +127,7 @@ class BulkResultsControllerSpec extends PlaySpec with GuiceOneServerPerSuite wit
 
       "download the contributions and earnings in csv format" in {
 
-        when(mockGmpBulkConnector.getContributionsAndEarningsAsCsv(any(),any())(any())).thenReturn(Future.successful(HttpResponse(200, "CSV STRING")))
+        when(mockGmpBulkConnector.getContributionsAndEarningsAsCsv(any(),any())(using any())).thenReturn(Future.successful(HttpResponse(200, "CSV STRING")))
 
           val result = TestBulkResultsController.getContributionsAndEarningsAsCsv("")(FakeRequest())
 

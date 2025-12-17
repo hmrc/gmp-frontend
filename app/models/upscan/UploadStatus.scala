@@ -38,8 +38,8 @@ object UploadStatus {
       jsObject.value.get("_type") match {
         case Some(JsString("NotStarted")) => JsSuccess(NotStarted)
         case Some(JsString("InProgress")) => JsSuccess(InProgress)
-        case Some(JsString("Failed")) => Json.fromJson[UploadedFailed](jsObject)(uploadedFailedFormat)
-        case Some(JsString("UploadedSuccessfully")) => Json.fromJson[UploadedSuccessfully](jsObject)(uploadedSuccessfullyFormat)
+        case Some(JsString("Failed")) => Json.fromJson[UploadedFailed](jsObject)(using uploadedFailedFormat)
+        case Some(JsString("UploadedSuccessfully")) => Json.fromJson[UploadedSuccessfully](jsObject)(using uploadedSuccessfullyFormat)
         case Some(value) => JsError(s"Unexpected value of _type: $value")
         case None => JsError("Missing _type field")
       }
@@ -51,8 +51,8 @@ object UploadStatus {
       p match {
         case NotStarted => JsObject(Map("_type" -> JsString("NotStarted")))
         case InProgress => JsObject(Map("_type" -> JsString("InProgress")))
-        case f : UploadedFailed => Json.toJson(f)(uploadedFailedFormat).as[JsObject] + ("_type" -> JsString("Failed"))
-        case s : UploadedSuccessfully => Json.toJson(s)(uploadedSuccessfullyFormat).as[JsObject] + ("_type" -> JsString("UploadedSuccessfully"))
+        case f : UploadedFailed => Json.toJson(f)(using uploadedFailedFormat).as[JsObject] + ("_type" -> JsString("Failed"))
+        case s : UploadedSuccessfully => Json.toJson(s)(using uploadedSuccessfullyFormat).as[JsObject] + ("_type" -> JsString("UploadedSuccessfully"))
       }
     }
   }

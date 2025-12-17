@@ -64,7 +64,7 @@ class RevaluationRateControllerSpec extends PlaySpec with GuiceOneServerPerSuite
 
       val gmpSession = GmpSession(MemberDetails(nino, "A", "AAA"), "S1301234T", CalculationType.REVALUATION, None,
         Some(""), Leaving(GmpDate(None, None, None), Some(Leaving.NO)), None)
-      when(mockSessionService.fetchGmpSession()(any())).thenReturn(Future.successful(Some(gmpSession)))
+      when(mockSessionService.fetchGmpSession()(using any())).thenReturn(Future.successful(Some(gmpSession)))
       "respond with ok" in {
 
         val result = TestRevaluationRateController.get(FakeRequest())
@@ -74,7 +74,7 @@ class RevaluationRateControllerSpec extends PlaySpec with GuiceOneServerPerSuite
       }
 
       "throw an exception when session not fetched" in {
-        when(mockSessionService.fetchGmpSession()(any())).thenReturn(Future.successful(None))
+        when(mockSessionService.fetchGmpSession()(using any())).thenReturn(Future.successful(None))
         val result = TestRevaluationRateController.get(FakeRequest())
             intercept[RuntimeException] {
               contentAsString(result)
@@ -84,9 +84,9 @@ class RevaluationRateControllerSpec extends PlaySpec with GuiceOneServerPerSuite
       "go to failure page when session missing scon" in {
         val emptySession = GmpSession(MemberDetails("", "", ""), "", "", None, None, Leaving(GmpDate(None, None, None),
           Some(Leaving.NO)), None)
-        when(mockSessionService.fetchGmpSession()(any())).thenReturn(Future.successful(Some(emptySession)))
+        when(mockSessionService.fetchGmpSession()(using any())).thenReturn(Future.successful(Some(emptySession)))
           val result = TestRevaluationRateController.get(FakeRequest())
-          contentAsString(result)replaceAll("&#x27;", "'") must include (Messages("gmp.cannot_calculate.gmp"))
+          contentAsString(result).replaceAll("&#x27;", "'") must include (Messages("gmp.cannot_calculate.gmp"))
           contentAsString(result) must include (Messages("gmp.error.session_parts_missing",
             "/guaranteed-minimum-pension/pension-details"))
       }
@@ -94,10 +94,10 @@ class RevaluationRateControllerSpec extends PlaySpec with GuiceOneServerPerSuite
       "go to failure page when session missing nino" in {
         val emptySession = GmpSession(MemberDetails("", "", ""), "S1234567T", "", None, None,
           Leaving(GmpDate(None, None, None), None), None)
-        when(mockSessionService.fetchGmpSession()(any())).thenReturn(Future.successful(Some(emptySession)))
+        when(mockSessionService.fetchGmpSession()(using any())).thenReturn(Future.successful(Some(emptySession)))
 
           val result = TestRevaluationRateController.get(FakeRequest())
-          contentAsString(result)replaceAll("&#x27;", "'") must include (Messages("gmp.cannot_calculate.gmp"))
+          contentAsString(result).replaceAll("&#x27;", "'") must include (Messages("gmp.cannot_calculate.gmp"))
           contentAsString(result) must include (Messages("gmp.error.session_parts_missing",
             "/guaranteed-minimum-pension/member-details"))
       }
@@ -107,10 +107,10 @@ class RevaluationRateControllerSpec extends PlaySpec with GuiceOneServerPerSuite
         val emptySession = GmpSession(MemberDetails(nino, "", ""), "S1234567T", "", None, None,
           Leaving(GmpDate(None, None, None), None), None)
 
-        when(mockSessionService.fetchGmpSession()(any())).thenReturn(Future.successful(Some(emptySession)))
+        when(mockSessionService.fetchGmpSession()(using any())).thenReturn(Future.successful(Some(emptySession)))
 
           val result = TestRevaluationRateController.get(FakeRequest())
-          contentAsString(result)replaceAll("&#x27;", "'") must include (Messages("gmp.cannot_calculate.gmp"))
+          contentAsString(result).replaceAll("&#x27;", "'") must include (Messages("gmp.cannot_calculate.gmp"))
           contentAsString(result) must include (Messages("gmp.error.session_parts_missing",
             "/guaranteed-minimum-pension/member-details"))
       }
@@ -119,10 +119,10 @@ class RevaluationRateControllerSpec extends PlaySpec with GuiceOneServerPerSuite
       "go to failure page when session missing lastname" in {
         val emptySession = GmpSession(MemberDetails(nino, "A", ""), "S1234567T", "", None, None, Leaving(GmpDate(None,
           None, None), None), None)
-        when(mockSessionService.fetchGmpSession()(any())).thenReturn(Future.successful(Some(emptySession)))
+        when(mockSessionService.fetchGmpSession()(using any())).thenReturn(Future.successful(Some(emptySession)))
 
           val result = TestRevaluationRateController.get(FakeRequest())
-          contentAsString(result)replaceAll("&#x27;", "'") must include (Messages("gmp.cannot_calculate.gmp"))
+          contentAsString(result).replaceAll("&#x27;", "'") must include (Messages("gmp.cannot_calculate.gmp"))
           contentAsString(result) must include (Messages("gmp.error.session_parts_missing",
             "/guaranteed-minimum-pension/member-details"))
       }
@@ -130,10 +130,10 @@ class RevaluationRateControllerSpec extends PlaySpec with GuiceOneServerPerSuite
       "go to failure page when session missing scenario" in {
         val emptySession = GmpSession(MemberDetails(nino, "A", "AAA"), "S1234567T", "", None, None,
           Leaving(GmpDate(None, None, None), None), None)
-        when(mockSessionService.fetchGmpSession()(any())).thenReturn(Future.successful(Some(emptySession)))
+        when(mockSessionService.fetchGmpSession()(using any())).thenReturn(Future.successful(Some(emptySession)))
 
           val result = TestRevaluationRateController.get(FakeRequest())
-          contentAsString(result)replaceAll("&#x27;", "'") must include (Messages("gmp.cannot_calculate.gmp"))
+          contentAsString(result).replaceAll("&#x27;", "'") must include (Messages("gmp.cannot_calculate.gmp"))
           contentAsString(result) must include (Messages("gmp.error.session_parts_missing",
             "/guaranteed-minimum-pension/calculation-reason"))
       }
@@ -141,23 +141,23 @@ class RevaluationRateControllerSpec extends PlaySpec with GuiceOneServerPerSuite
       "go to failure page when session missing leaving" in {
         val emptySession = GmpSession(MemberDetails(nino, "A", "AAA"), "S1234567T", "0", None, None,
           Leaving(GmpDate(None, None, None), None), None)
-        when(mockSessionService.fetchGmpSession()(any())).thenReturn(Future.successful(Some(emptySession)))
+        when(mockSessionService.fetchGmpSession()(using any())).thenReturn(Future.successful(Some(emptySession)))
 
           val result = TestRevaluationRateController.get(FakeRequest())
-          contentAsString(result)replaceAll("&#x27;", "'") must include (Messages("gmp.cannot_calculate.gmp"))
+          contentAsString(result).replaceAll("&#x27;", "'") must include (Messages("gmp.cannot_calculate.gmp"))
           contentAsString(result) must include (Messages("gmp.error.session_parts_missing",
             "/guaranteed-minimum-pension/left-scheme"))
       }
 
       "include the correct header when Payable Date scenario selected" in {
-        when(mockSessionService.fetchGmpSession()(any())).thenReturn(Future.successful(Some(gmpSession
+        when(mockSessionService.fetchGmpSession()(using any())).thenReturn(Future.successful(Some(gmpSession
           .copy(scenario = CalculationType.PAYABLE_AGE))))
         val result = TestRevaluationRateController.get(FakeRequest())
             contentAsString(result) must include(Messages("gmp.revaluation_rate.header"))
       }
 
       "include the correct header when Survivor scenario selected" in {
-        when(mockSessionService.fetchGmpSession()(any())).thenReturn(Future.successful(Some(gmpSession
+        when(mockSessionService.fetchGmpSession()(using any())).thenReturn(Future.successful(Some(gmpSession
           .copy(scenario = CalculationType.SURVIVOR))))
         val result = TestRevaluationRateController.get(FakeRequest())
             contentAsString(result) must include(Messages("gmp.revaluation_rate.header"))
@@ -165,7 +165,7 @@ class RevaluationRateControllerSpec extends PlaySpec with GuiceOneServerPerSuite
 
       "include the correct header when non Payable Date scenario selected" in {
 
-        when(mockSessionService.fetchGmpSession()(any())).thenReturn(Future.successful(Some(gmpSession
+        when(mockSessionService.fetchGmpSession()(using any())).thenReturn(Future.successful(Some(gmpSession
           .copy(scenario = CalculationType.DOL))))
 
         val result = TestRevaluationRateController.get(FakeRequest())
@@ -177,7 +177,7 @@ class RevaluationRateControllerSpec extends PlaySpec with GuiceOneServerPerSuite
         val gmpSession = GmpSession(MemberDetails(nino, "A", "AAA"), "S1234567T", CalculationType.REVALUATION,
           Some(GmpDate(Some("1"), Some("1"), Some("2015"))), None, Leaving(GmpDate(None, None, None),
             Some(Leaving.YES_BEFORE)), None)
-        when(mockSessionService.fetchGmpSession()(any())).thenReturn(Future.successful(Some(gmpSession)))
+        when(mockSessionService.fetchGmpSession()(using any())).thenReturn(Future.successful(Some(gmpSession)))
         val result = TestRevaluationRateController.get(FakeRequest())
             contentAsString(result) must include(Messages("gmp.revaluation_rate.header"))
       }
@@ -187,7 +187,7 @@ class RevaluationRateControllerSpec extends PlaySpec with GuiceOneServerPerSuite
         val gmpSession = GmpSession(MemberDetails(nino, "A", "AAA"), "S1234567T", CalculationType.REVALUATION,
           Some(GmpDate(Some("1"), Some("1"), Some("2018"))), None, Leaving(GmpDate(None, None, None),
             Some(Leaving.YES_AFTER)), None)
-        when(mockSessionService.fetchGmpSession()(any())).thenReturn(Future.successful(Some(gmpSession)))
+        when(mockSessionService.fetchGmpSession()(using any())).thenReturn(Future.successful(Some(gmpSession)))
         val result = TestRevaluationRateController.get(FakeRequest())
             contentAsString(result) must include(Messages("gmp.revaluation_rate.header"))
       }
@@ -197,7 +197,7 @@ class RevaluationRateControllerSpec extends PlaySpec with GuiceOneServerPerSuite
         val gmpSession = GmpSession(MemberDetails(nino, "A", "AAA"), "S1234567T", CalculationType.SPA, None, None,
           Leaving(GmpDate(Some("1"), Some("5"), Some("2016")), Some(Leaving.YES_AFTER)), None)
 
-        when(mockSessionService.fetchGmpSession()(any())).thenReturn(Future.successful(Some(gmpSession)))
+        when(mockSessionService.fetchGmpSession()(using any())).thenReturn(Future.successful(Some(gmpSession)))
         val result = TestRevaluationRateController.get(FakeRequest())
             contentAsString(result) must not include (Messages("gmp.revaluation_rate.limited"))
       }
@@ -207,7 +207,7 @@ class RevaluationRateControllerSpec extends PlaySpec with GuiceOneServerPerSuite
         val gmpSession = GmpSession(MemberDetails(nino, "A", "AAA"), "S1234567T", CalculationType.SPA, None, None,
           Leaving(GmpDate(None, None, None), Some(Leaving.YES_BEFORE)), None)
 
-        when(mockSessionService.fetchGmpSession()(any())).thenReturn(Future.successful(Some(gmpSession)))
+        when(mockSessionService.fetchGmpSession()(using any())).thenReturn(Future.successful(Some(gmpSession)))
         val result = TestRevaluationRateController.get(FakeRequest())
             contentAsString(result) must include (Messages("gmp.revaluation_rate.limited"))
       }
@@ -217,7 +217,7 @@ class RevaluationRateControllerSpec extends PlaySpec with GuiceOneServerPerSuite
 
   "Revaluation controller POST" must {
 
-    when(mockSessionService.fetchScenario()(any())).thenReturn(Future.successful(None))
+    when(mockSessionService.fetchScenario()(using any())).thenReturn(Future.successful(None))
 
     "authenticated users" must {
 
@@ -237,7 +237,7 @@ class RevaluationRateControllerSpec extends PlaySpec with GuiceOneServerPerSuite
         }
 
         "respond with error when can't get session" in {
-          when(mockSessionService.fetchGmpSession()(any())).thenReturn(Future.successful(None))
+          when(mockSessionService.fetchGmpSession()(using any())).thenReturn(Future.successful(None))
 
             intercept[RuntimeException] {
               await(TestRevaluationRateController.post(FakeRequest().withMethod("POST")
@@ -253,7 +253,7 @@ class RevaluationRateControllerSpec extends PlaySpec with GuiceOneServerPerSuite
 
         "redirect" in {
 
-          when(mockSessionService.cacheRevaluationRate(any())(any())).thenReturn(Future.successful(Some(gmpSession)))
+          when(mockSessionService.cacheRevaluationRate(any())(using any())).thenReturn(Future.successful(Some(gmpSession)))
             val result = TestRevaluationRateController.post(FakeRequest().withMethod("POST")
               .withFormUrlEncodedBody("rateType" -> "hmrc"))
             status(result) must equal(SEE_OTHER)
@@ -261,7 +261,7 @@ class RevaluationRateControllerSpec extends PlaySpec with GuiceOneServerPerSuite
 
 
         "respond with error when rate not stored" in {
-          when(mockSessionService.cacheRevaluationRate(any())(any())).thenReturn(Future.successful(None))
+          when(mockSessionService.cacheRevaluationRate(any())(using any())).thenReturn(Future.successful(None))
             intercept[RuntimeException] {
               await(TestRevaluationRateController.post(FakeRequest().withMethod("POST")
                 .withFormUrlEncodedBody("rateType" -> "hmrc")))
@@ -280,14 +280,14 @@ class RevaluationRateControllerSpec extends PlaySpec with GuiceOneServerPerSuite
         Leaving(GmpDate(None, None, None), None), None)
 
 
-        when(mockSessionService.fetchGmpSession()(any())).thenReturn(Future.successful(Some(session)))
+        when(mockSessionService.fetchGmpSession()(using any())).thenReturn(Future.successful(Some(session)))
         val result = TestRevaluationRateController.back(FakeRequest())
         status(result) must equal(SEE_OTHER)
     }
 
     "throw an exception when session not fetched" in {
 
-        when(mockSessionService.fetchGmpSession()(any())).thenReturn(Future.successful(None))
+        when(mockSessionService.fetchGmpSession()(using any())).thenReturn(Future.successful(None))
         val result = TestRevaluationRateController.back(FakeRequest())
         intercept[RuntimeException] {
           status(result) must equal(SEE_OTHER)

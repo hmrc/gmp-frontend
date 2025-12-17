@@ -62,7 +62,7 @@ class EqualiseControllerSpec extends PlaySpec with GuiceOneServerPerSuite with M
     }
 
     "present the equalise page" in {
-      when(mockGMPSessionService.fetchMemberDetails()(any())).thenReturn(Future.successful(None))
+      when(mockGMPSessionService.fetchMemberDetails()(using any())).thenReturn(Future.successful(None))
 
         val result = TestEqualiseController.get(FakeRequest())
         contentAsString(result) must include(Messages("gmp.equalise_header"))
@@ -79,14 +79,14 @@ class EqualiseControllerSpec extends PlaySpec with GuiceOneServerPerSuite with M
       val memberDetails = MemberDetails("", "", "")
       val session = GmpSession(memberDetails, "", CalculationType.REVALUATION, None, None, Leaving(GmpDate(None, None, None), None), None)
 
-        when(mockGMPSessionService.fetchGmpSession()(any())).thenReturn(Future.successful(Some(session)))
+        when(mockGMPSessionService.fetchGmpSession()(using any())).thenReturn(Future.successful(Some(session)))
         val result = TestEqualiseController.back(FakeRequest())
         status(result) must equal(SEE_OTHER)
     }
 
     "throw an exception when session not fetched" in {
 
-        when(mockGMPSessionService.fetchGmpSession()(any())).thenReturn(Future.successful(None))
+        when(mockGMPSessionService.fetchGmpSession()(using any())).thenReturn(Future.successful(None))
         val result = TestEqualiseController.back(FakeRequest())
         intercept[RuntimeException] {
           status(result)
@@ -121,14 +121,14 @@ class EqualiseControllerSpec extends PlaySpec with GuiceOneServerPerSuite with M
 
           "redirect" in {
 
-            when(mockGMPSessionService.cacheEqualise(any())(any())).thenReturn(Future.successful(Some(gmpSession)))
+            when(mockGMPSessionService.cacheEqualise(any())(using any())).thenReturn(Future.successful(Some(gmpSession)))
               val result = TestEqualiseController.post(FakeRequest().withMethod("POST")
                 .withFormUrlEncodedBody("equalise" -> "1"))
               status(result) mustBe(SEE_OTHER)
           }
 
           "respond with error when rate not stored" in {
-            when(mockGMPSessionService.cacheEqualise(any())(any())).thenReturn(Future.successful(None))
+            when(mockGMPSessionService.cacheEqualise(any())(using any())).thenReturn(Future.successful(None))
               intercept[RuntimeException] {
                 await(TestEqualiseController.post(FakeRequest().withMethod("POST")
                   .withFormUrlEncodedBody("equalise" -> "1")))

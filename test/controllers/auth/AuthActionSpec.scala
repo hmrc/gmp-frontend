@@ -53,7 +53,7 @@ class AuthActionSpec extends PlaySpec with GuiceOneAppPerSuite with MockitoSugar
 
 
 
-        when(mockAuthConnector.authorise(any(),any())(any(), any()))
+        when(mockAuthConnector.authorise(any(),any())(using any(), any()))
           .thenReturn(Future.failed(new MissingBearerToken))
 
         val authAction = new AuthAction(mockAuthConnector,mcc, externalUrls)
@@ -70,7 +70,7 @@ class AuthActionSpec extends PlaySpec with GuiceOneAppPerSuite with MockitoSugar
 
         val mockAuthConnector = mock[AuthConnector]
 
-        when(mockAuthConnector.authorise(any(),any())(any(), any()))
+        when(mockAuthConnector.authorise(any(),any())(using any(), any()))
           .thenReturn(Future.failed(new InsufficientConfidenceLevel))
 
         val authAction = new AuthAction(mockAuthConnector,mcc,externalUrls)
@@ -86,7 +86,7 @@ class AuthActionSpec extends PlaySpec with GuiceOneAppPerSuite with MockitoSugar
       "redirect the user to the unauthorised page" in {
         val mockAuthConnector = mock[AuthConnector]
 
-        when(mockAuthConnector.authorise[Enrolments](any(), any())(any(), any()))
+        when(mockAuthConnector.authorise[Enrolments](any(), any())(using any(), any()))
           .thenReturn(Future.failed(new InsufficientEnrolments))
 
         val authAction = new AuthAction(mockAuthConnector,mcc,externalUrls)
@@ -106,7 +106,7 @@ class AuthActionSpec extends PlaySpec with GuiceOneAppPerSuite with MockitoSugar
         val retrievalResult: Future[Enrolments] =
           Future.successful(Enrolments(Set(Enrolment("HMRC-PSA-ORG", Seq(EnrolmentIdentifier("PSAID", "someID")), ""))))
 
-        when(mockAuthConnector.authorise[Enrolments](any(), any())(any(), any()))
+        when(mockAuthConnector.authorise[Enrolments](any(), any())(using any(), any()))
           .thenReturn(retrievalResult)
 
         val authAction = new AuthAction(mockAuthConnector, mcc,externalUrls)
@@ -126,7 +126,7 @@ class AuthActionSpec extends PlaySpec with GuiceOneAppPerSuite with MockitoSugar
           val retrievalResult: Future[Enrolments] =
             Future.successful(Enrolments(Set(Enrolment("HMRC-PP-ORG", Seq(EnrolmentIdentifier("PPID", "someID")), ""))))
 
-          when(mockAuthConnector.authorise[Enrolments](any(), any())(any(), any()))
+          when(mockAuthConnector.authorise[Enrolments](any(), any())(using any(), any()))
             .thenReturn(retrievalResult)
 
           val authAction = new AuthAction(mockAuthConnector, mcc,externalUrls)
@@ -155,7 +155,7 @@ class AuthActionSpec extends PlaySpec with GuiceOneAppPerSuite with MockitoSugar
             )
           )
 
-        when(mockAuthConnector.authorise[Enrolments](any(), any())(any(), any()))
+        when(mockAuthConnector.authorise[Enrolments](any(), any())(using any(), any()))
           .thenReturn(retrievalResult)
 
         val authAction = new AuthAction(mockAuthConnector, mcc,externalUrls)
@@ -176,7 +176,7 @@ class AuthActionSpec extends PlaySpec with GuiceOneAppPerSuite with MockitoSugar
         val retrievalResult: Future[Enrolments] =
           Future.successful(Enrolments(Set(Enrolment("HMRC-PODS-ORG", Seq(EnrolmentIdentifier("PSAID", "somePODSID")), ""))))
 
-        when(mockAuthConnector.authorise[Enrolments](any(), any())(any(), any()))
+        when(mockAuthConnector.authorise[Enrolments](any(), any())(using any(), any()))
           .thenReturn(retrievalResult)
 
         val authAction = new AuthAction(mockAuthConnector, mcc,externalUrls)

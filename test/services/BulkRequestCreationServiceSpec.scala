@@ -395,14 +395,14 @@ class BulkRequestCreationServiceSpec extends PlaySpec with ScalaFutures with Moc
 
     {
       (l collect {
-        case (None, i) => ""
-        case (Some(s: String), i) if s.matches(dateRegEx.regex) => LocalDate.parse(s).format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
+        case (None, _) => ""
+        case (Some(s: String), _) if s.matches(dateRegEx.regex) => LocalDate.parse(s).format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
         case (x: Int, BulkRequestCsvColumn.DUAL_CALC) => x match {
           case 1 => "Y";
           case _ => "N"
         }
-        case (Some(x), i) => s"$x"
-        case (x: String, i) => x
+        case (Some(x), _) => s"$x"
+        case (x: String, _) => x
       })
         .mkString(",") + "\n"
     }

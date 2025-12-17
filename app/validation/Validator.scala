@@ -58,7 +58,7 @@ object NameValidate extends Validator {
 object SMValidate extends Validator {
   private val pattern = "(?i)^\\s*sm\\s*$"
 
-  override def isValid(sm: String) = sm matches pattern
+  override def isValid(sm: String) = sm .matches(pattern)
 
   def matches(sm: String) = isValid(sm)
 }
@@ -83,7 +83,7 @@ object DateValidate extends Validator {
         format.parse(value)
         true
       } catch {
-        case e: ParseException => {
+        case _: ParseException => {
           false
         }
       }

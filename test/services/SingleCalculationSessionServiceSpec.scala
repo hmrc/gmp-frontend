@@ -66,9 +66,9 @@ class SingleCalculationSessionServiceSpec extends PlaySpec with GuiceOneServerPe
       val newMemberDetails = MemberDetails(RandomNino.generate, "John", "Johnson")
       val json = Json.toJson[GmpSession](gmpSession.copy(newMemberDetails))
 
-      when(mockSessionCache.cache[GmpSession](any(), any())(any(), any(), any())).thenReturn(Future.successful(CacheMap("sessionValue", Map("gmp_session" -> json))))
+      when(mockSessionCache.cache[GmpSession](any(), any())(using any(), any(), any())).thenReturn(Future.successful(CacheMap("sessionValue", Map("gmp_session" -> json))))
 
-      val result = Await.result(TestSessionService.cacheMemberDetails(newMemberDetails)(hc), 10.seconds)
+      val result = Await.result(TestSessionService.cacheMemberDetails(newMemberDetails)(using hc), 10.seconds)
       result must be(Some(TestSessionService.cleanGmpSession.copy(memberDetails = newMemberDetails)))
     }
 
@@ -79,9 +79,9 @@ class SingleCalculationSessionServiceSpec extends PlaySpec with GuiceOneServerPe
       val newMemberDetails = MemberDetails(RandomNino.generate, "John", "Johnson")
       val json = Json.toJson[GmpSession](gmpSession.copy(memberDetails = newMemberDetails))
 
-      when(mockSessionCache.cache[GmpSession](any(), any())(any(), any(), any())).thenReturn(Future.successful(CacheMap("sessionValue", Map("gmp_session" -> json))))
+      when(mockSessionCache.cache[GmpSession](any(), any())(using any(), any(), any())).thenReturn(Future.successful(CacheMap("sessionValue", Map("gmp_session" -> json))))
 
-      val result = Await.result(TestSessionService.cacheMemberDetails(newMemberDetails)(hc), 10.seconds)
+      val result = Await.result(TestSessionService.cacheMemberDetails(newMemberDetails)(using hc), 10.seconds)
       result must be(Some(gmpSession.copy(memberDetails = newMemberDetails)))
     }
 
@@ -89,7 +89,7 @@ class SingleCalculationSessionServiceSpec extends PlaySpec with GuiceOneServerPe
     "fetch member details" in {
       when(mockSessionRepository.get(any())).thenReturn(Future.successful(Some(SingleCalculationSessionCache("sessionId", gmpSession))))
 
-      val result = Await.result(TestSessionService.fetchMemberDetails()(hc), 10.seconds)
+      val result = Await.result(TestSessionService.fetchMemberDetails()(using hc), 10.seconds)
       result must be(Some(memberDetails))
     }
 
@@ -99,9 +99,9 @@ class SingleCalculationSessionServiceSpec extends PlaySpec with GuiceOneServerPe
 
       val newScon = "S3123226B"
       val json = Json.toJson[GmpSession](gmpSession.copy(scon = newScon))
-      when(mockSessionCache.cache[GmpSession](any(), any())(any(), any(), any())).thenReturn(Future.successful(CacheMap("sessionValue", Map("gmp_session" -> json))))
+      when(mockSessionCache.cache[GmpSession](any(), any())(using any(), any(), any())).thenReturn(Future.successful(CacheMap("sessionValue", Map("gmp_session" -> json))))
 
-      val result = Await.result(TestSessionService.cachePensionDetails(newScon)(hc), 10.seconds)
+      val result = Await.result(TestSessionService.cachePensionDetails(newScon)(using hc), 10.seconds)
       result must be(Some(TestSessionService.cleanGmpSession.copy(scon = newScon)))
     }
 
@@ -111,17 +111,17 @@ class SingleCalculationSessionServiceSpec extends PlaySpec with GuiceOneServerPe
 
       val newScon = "S3123226B"
       val json = Json.toJson[GmpSession](gmpSession.copy(scon = newScon))
-      when(mockSessionCache.cache[GmpSession](any(), any())(any(), any(), any())).thenReturn(Future.successful(CacheMap("sessionValue", Map("gmp_session" -> json))))
+      when(mockSessionCache.cache[GmpSession](any(), any())(using any(), any(), any())).thenReturn(Future.successful(CacheMap("sessionValue", Map("gmp_session" -> json))))
 
 
-      val result = Await.result(TestSessionService.cachePensionDetails(newScon)(hc), 10.seconds)
+      val result = Await.result(TestSessionService.cachePensionDetails(newScon)(using hc), 10.seconds)
       result must be(Some(gmpSession.copy(scon = newScon)))
     }
 
     "fetch pension details" in {
       when(mockSessionRepository.get(any())).thenReturn(Future.successful(Some(SingleCalculationSessionCache("sessionId", gmpSession))))
 
-      val result = Await.result(TestSessionService.fetchPensionDetails()(hc), 10.seconds)
+      val result = Await.result(TestSessionService.fetchPensionDetails()(using hc), 10.seconds)
       result must be(Some(scon))
     }
 
@@ -130,9 +130,9 @@ class SingleCalculationSessionServiceSpec extends PlaySpec with GuiceOneServerPe
       when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))
 
       val json = Json.toJson[GmpSession](gmpSession)
-      when(mockSessionCache.cache[GmpSession](any(), any())(any(), any(), any())).thenReturn(Future.successful(CacheMap("sessionValue", Map("gmp_session" -> json))))
+      when(mockSessionCache.cache[GmpSession](any(), any())(using any(), any(), any())).thenReturn(Future.successful(CacheMap("sessionValue", Map("gmp_session" -> json))))
 
-      val result = Await.result(TestSessionService.cacheScenario("2")(hc), 10.seconds)
+      val result = Await.result(TestSessionService.cacheScenario("2")(using hc), 10.seconds)
       result must be(Some(TestSessionService.cleanGmpSession.copy(scenario = "2")))
     }
 
@@ -143,16 +143,16 @@ class SingleCalculationSessionServiceSpec extends PlaySpec with GuiceOneServerPe
       val newScenario = "2"
       val json = Json.toJson[GmpSession](gmpSession.copy(scenario = newScenario))
 
-      when(mockSessionCache.cache[GmpSession](any(), any())(any(), any(), any())).thenReturn(Future.successful(CacheMap("sessionValue", Map("gmp_session" -> json))))
+      when(mockSessionCache.cache[GmpSession](any(), any())(using any(), any(), any())).thenReturn(Future.successful(CacheMap("sessionValue", Map("gmp_session" -> json))))
 
-      val result = Await.result(TestSessionService.cacheScenario(newScenario)(hc), 10.seconds)
+      val result = Await.result(TestSessionService.cacheScenario(newScenario)(using hc), 10.seconds)
       result must be(Some(gmpSession.copy(scenario = newScenario)))
     }
 
     "fetch the scenario" in {
       when(mockSessionRepository.get(any())).thenReturn(Future.successful(Some(SingleCalculationSessionCache("sessionId", gmpSession))))
 
-      val result = Await.result(TestSessionService.fetchScenario()(hc), 10.seconds)
+      val result = Await.result(TestSessionService.fetchScenario()(using hc), 10.seconds)
       result must be(Some(CalculationType.DOL))
     }
 
@@ -175,9 +175,9 @@ class SingleCalculationSessionServiceSpec extends PlaySpec with GuiceOneServerPe
         )
 
         val json = Json.toJson(expectedSession)
-        when(mockSessionCache.cache[GmpSession](any(), any())(any(), any(), any())).thenReturn(Future.successful(CacheMap("sessionValue", Map("gmp_session" -> json))))
+        when(mockSessionCache.cache[GmpSession](any(), any())(using any(), any(), any())).thenReturn(Future.successful(CacheMap("sessionValue", Map("gmp_session" -> json))))
 
-        val result = Await.result(TestSessionService.cacheRevaluationDate(Some(revalDate))(hc), 10.seconds)
+        val result = Await.result(TestSessionService.cacheRevaluationDate(Some(revalDate))(using hc), 10.seconds)
         result must be(Some(expectedSession))
       }
 
@@ -195,9 +195,9 @@ class SingleCalculationSessionServiceSpec extends PlaySpec with GuiceOneServerPe
           leaving = Leaving(GmpDate(None, None, None), Some(Leaving.YES_AFTER))
         )
         val json = Json.toJson(expectedSession)
-        when(mockSessionCache.cache[GmpSession](any(), any())(any(), any(), any())).thenReturn(Future.successful(CacheMap("sessionValue", Map("gmp_session" -> json))))
+        when(mockSessionCache.cache[GmpSession](any(), any())(using any(), any(), any())).thenReturn(Future.successful(CacheMap("sessionValue", Map("gmp_session" -> json))))
 
-        val result = Await.result(TestSessionService.cacheRevaluationDate(Some(revalDate))(hc), 10.seconds)
+        val result = Await.result(TestSessionService.cacheRevaluationDate(Some(revalDate))(using hc), 10.seconds)
         result must be(Some(expectedSession))
       }
 
@@ -209,9 +209,9 @@ class SingleCalculationSessionServiceSpec extends PlaySpec with GuiceOneServerPe
         val revalDate = GmpDate(Some("01"), Some("01"), Some("2010"))
         val json = Json.toJson[GmpSession](gmpSession.copy(revaluationDate = Some(revalDate)))
 
-        when(mockSessionCache.cache[GmpSession](any(), any())(any(), any(), any())).thenReturn(Future.successful(CacheMap("sessionValue", Map("gmp_session" -> json))))
+        when(mockSessionCache.cache[GmpSession](any(), any())(using any(), any(), any())).thenReturn(Future.successful(CacheMap("sessionValue", Map("gmp_session" -> json))))
 
-        val result = Await.result(TestSessionService.cacheRevaluationDate(Some(revalDate))(hc), 10.seconds)
+        val result = Await.result(TestSessionService.cacheRevaluationDate(Some(revalDate))(using hc), 10.seconds)
         result must be(Some(TestSessionService.cleanGmpSession.copy(revaluationDate = Some(revalDate))))
       }
 
@@ -232,9 +232,9 @@ class SingleCalculationSessionServiceSpec extends PlaySpec with GuiceOneServerPe
         )
 
         val json = Json.toJson(expectedSession)
-        when(mockSessionCache.cache[GmpSession](any(), any())(any(), any(), any())).thenReturn(Future.successful(CacheMap("sessionValue", Map("gmp_session" -> json))))
+        when(mockSessionCache.cache[GmpSession](any(), any())(using any(), any(), any())).thenReturn(Future.successful(CacheMap("sessionValue", Map("gmp_session" -> json))))
 
-        val result = Await.result(TestSessionService.cacheRevaluationDate(Some(dol))(hc), 10.seconds)
+        val result = Await.result(TestSessionService.cacheRevaluationDate(Some(dol))(using hc), 10.seconds)
         result must be(Some(expectedSession))
       }
     }
@@ -245,16 +245,16 @@ class SingleCalculationSessionServiceSpec extends PlaySpec with GuiceOneServerPe
 
       val dol = GmpDate(Some("01"), Some("01"), Some("2010"))
       val json = Json.toJson[GmpSession](gmpSession.copy(leaving = Leaving(leavingDate = dol, leaving = Some("Yes"))))
-      when(mockSessionCache.cache[GmpSession](any(), any())(any(), any(), any())).thenReturn(Future.successful(CacheMap("sessionValue", Map("gmp_session" -> json))))
+      when(mockSessionCache.cache[GmpSession](any(), any())(using any(), any(), any())).thenReturn(Future.successful(CacheMap("sessionValue", Map("gmp_session" -> json))))
 
-      val result = Await.result(TestSessionService.cacheLeaving(Leaving(leavingDate = dol, leaving = Some("Yes")))(hc), 10 seconds)
+      val result = Await.result(TestSessionService.cacheLeaving(Leaving(leavingDate = dol, leaving = Some("Yes")))(using hc), 10 seconds)
       result must be(Some(TestSessionService.cleanGmpSession.copy(leaving = Leaving(leavingDate = dol, leaving = Some("Yes")))))
     }
 
     "fetch leaving" in {
       when(mockSessionRepository.get(any())).thenReturn(Future.successful(Some(SingleCalculationSessionCache("sessionId", gmpSession))))
 
-      val result = Await.result(TestSessionService.fetchLeaving()(hc), 10.seconds)
+      val result = Await.result(TestSessionService.fetchLeaving()(using hc), 10.seconds)
       result must be(Some(Leaving(GmpDate(None, None, None), None)))
     }
 
@@ -265,9 +265,9 @@ class SingleCalculationSessionServiceSpec extends PlaySpec with GuiceOneServerPe
 
       val dol = GmpDate(Some("01"), Some("01"), Some("2010"))
       val json = Json.toJson[GmpSession](gmpSession.copy(leaving = Leaving(leavingDate = dol, leaving = Some("Yes"))))
-      when(mockSessionCache.cache[GmpSession](any(), any())(any(), any(), any())).thenReturn(Future.successful(CacheMap("sessionValue", Map("gmp_session" -> json))))
+      when(mockSessionCache.cache[GmpSession](any(), any())(using any(), any(), any())).thenReturn(Future.successful(CacheMap("sessionValue", Map("gmp_session" -> json))))
 
-      val result = Await.result(TestSessionService.cacheLeaving(Leaving(leavingDate = dol, leaving = Some("Yes")))(hc), 10 seconds)
+      val result = Await.result(TestSessionService.cacheLeaving(Leaving(leavingDate = dol, leaving = Some("Yes")))(using hc), 10 seconds)
       result must be(Some(gmpSession.copy(leaving = Leaving(leavingDate = dol, leaving = Some("Yes")))))
     }
 
@@ -277,9 +277,9 @@ class SingleCalculationSessionServiceSpec extends PlaySpec with GuiceOneServerPe
 
       val revalRate = RevaluationRate.FIXED
       val json = Json.toJson[GmpSession](gmpSession.copy(rate = Some(revalRate)))
-      when(mockSessionCache.cache[GmpSession](any(), any())(any(), any(), any())).thenReturn(Future.successful(CacheMap("sessionValue", Map("gmp_session" -> json))))
+      when(mockSessionCache.cache[GmpSession](any(), any())(using any(), any(), any())).thenReturn(Future.successful(CacheMap("sessionValue", Map("gmp_session" -> json))))
 
-      val result = Await.result(TestSessionService.cacheRevaluationRate(revalRate)(hc), 10.seconds)
+      val result = Await.result(TestSessionService.cacheRevaluationRate(revalRate)(using hc), 10.seconds)
       result must be(Some(TestSessionService.cleanGmpSession.copy(rate = Some(revalRate))))
     }
 
@@ -290,9 +290,9 @@ class SingleCalculationSessionServiceSpec extends PlaySpec with GuiceOneServerPe
 
       val revalRate = RevaluationRate.FIXED
       val json = Json.toJson[GmpSession](gmpSession.copy(rate = Some(revalRate)))
-      when(mockSessionCache.cache[GmpSession](any(), any())(any(), any(), any())).thenReturn(Future.successful(CacheMap("sessionValue", Map("gmp_session" -> json))))
+      when(mockSessionCache.cache[GmpSession](any(), any())(using any(), any(), any())).thenReturn(Future.successful(CacheMap("sessionValue", Map("gmp_session" -> json))))
 
-      val result = Await.result(TestSessionService.cacheRevaluationRate(revalRate)(hc), 10.seconds)
+      val result = Await.result(TestSessionService.cacheRevaluationRate(revalRate)(using hc), 10.seconds)
       result must be(Some(gmpSession.copy(rate = Some(revalRate))))
     }
 
@@ -309,9 +309,9 @@ class SingleCalculationSessionServiceSpec extends PlaySpec with GuiceOneServerPe
         rate = Some(RevaluationRate.FIXED)
       )
       val json = Json.toJson(expectedSession)
-      when(mockSessionCache.cache[GmpSession](any(), any())(any(), any(), any())).thenReturn(Future.successful(CacheMap("sessionValue", Map("gmp_session" -> json))))
+      when(mockSessionCache.cache[GmpSession](any(), any())(using any(), any(), any())).thenReturn(Future.successful(CacheMap("sessionValue", Map("gmp_session" -> json))))
 
-      val result = Await.result(TestSessionService.cacheRevaluationDate(None)(hc), 10.seconds)
+      val result = Await.result(TestSessionService.cacheRevaluationDate(None)(using hc), 10.seconds)
       result must be(Some(expectedSession))
     }
 
@@ -321,9 +321,9 @@ class SingleCalculationSessionServiceSpec extends PlaySpec with GuiceOneServerPe
       when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))
 
       val json = Json.toJson[GmpSession](gmpSession.copy(equalise = Some(1)))
-      when(mockSessionCache.cache[GmpSession](any(), any())(any(), any(), any())).thenReturn(Future.successful(CacheMap("sessionValue", Map("gmp_session" -> json))))
+      when(mockSessionCache.cache[GmpSession](any(), any())(using any(), any(), any())).thenReturn(Future.successful(CacheMap("sessionValue", Map("gmp_session" -> json))))
 
-      val result = Await.result(TestSessionService.cacheEqualise(Some(1))(hc), 10.seconds)
+      val result = Await.result(TestSessionService.cacheEqualise(Some(1))(using hc), 10.seconds)
       result must be(Some(TestSessionService.cleanGmpSession.copy(equalise = Some(1))))
     }
 
@@ -332,15 +332,15 @@ class SingleCalculationSessionServiceSpec extends PlaySpec with GuiceOneServerPe
       when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))
 
       val json = Json.toJson[GmpSession](gmpSession.copy(equalise = Some(1)))
-      when(mockSessionCache.cache[GmpSession](any(), any())(any(), any(), any())).thenReturn(Future.successful(CacheMap("sessionValue", Map("gmp_session" -> json))))
+      when(mockSessionCache.cache[GmpSession](any(), any())(using any(), any(), any())).thenReturn(Future.successful(CacheMap("sessionValue", Map("gmp_session" -> json))))
 
-      val result = Await.result(TestSessionService.cacheEqualise(Some(1))(hc), 10.seconds)
+      val result = Await.result(TestSessionService.cacheEqualise(Some(1))(using hc), 10.seconds)
       result must be(Some(gmpSession.copy(equalise = Some(1))))
     }
 
     "reset the session" in {
       when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))
-      val result = Await.result(TestSessionService.resetGmpSession()(hc), 10 seconds)
+      val result = Await.result(TestSessionService.resetGmpSession()(using hc), 10 seconds)
       result must be(Some(TestSessionService.cleanGmpSession))
     }
 
@@ -351,14 +351,14 @@ class SingleCalculationSessionServiceSpec extends PlaySpec with GuiceOneServerPe
       )))
 
       when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))
-      val result = Await.result(TestSessionService.resetGmpSessionWithScon()(hc), 10 seconds)
+      val result = Await.result(TestSessionService.resetGmpSessionWithScon()(using hc), 10 seconds)
       result must be(Some(TestSessionService.cleanGmpSession.copy(scon = scon)))
     }
 
 
     "fetch the session" in {
       when(mockSessionRepository.get(any())).thenReturn(Future.successful(Some(SingleCalculationSessionCache("sessionId", gmpSession))))
-      val result = Await.result(TestSessionService.fetchGmpSession()(hc), 10 seconds)
+      val result = Await.result(TestSessionService.fetchGmpSession()(using hc), 10 seconds)
       result must be(Some(gmpSession))
     }
 

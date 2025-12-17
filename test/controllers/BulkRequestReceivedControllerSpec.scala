@@ -85,9 +85,9 @@ class BulkRequestReceivedControllerSpec extends PlaySpec with GuiceOneServerPerS
 
         "respond with ok" in {
 
-          when(mockGMPSessionService.fetchGmpBulkSession()(any())).thenReturn(Future.successful(Some(gmpBulkSession)))
+          when(mockGMPSessionService.fetchGmpBulkSession()(using any())).thenReturn(Future.successful(Some(gmpBulkSession)))
           when(mockBulkRequestCreationService.createBulkRequest(any(),any(),any())).thenReturn(Right(bulkRequest1))
-          when(mockGmpBulkConnector.sendBulkRequest(any(),any())(any())).thenReturn(Future.successful(OK))
+          when(mockGmpBulkConnector.sendBulkRequest(any(),any())(using any())).thenReturn(Future.successful(OK))
 
           val result = TestBulkRequestReceivedController.get(FakeRequest())
               status(result) must equal(OK)
@@ -100,9 +100,9 @@ class BulkRequestReceivedControllerSpec extends PlaySpec with GuiceOneServerPerS
 
         "respond with ok and failure page if conflict received usually for a duplicate record trying to be inserted" in {
 
-          when(mockGMPSessionService.fetchGmpBulkSession()(any())).thenReturn(Future.successful(Some(gmpBulkSession)))
+          when(mockGMPSessionService.fetchGmpBulkSession()(using any())).thenReturn(Future.successful(Some(gmpBulkSession)))
           when(mockBulkRequestCreationService.createBulkRequest(any(),any(),any())).thenReturn(Right(bulkRequest1))
-          when(mockGmpBulkConnector.sendBulkRequest(any(),any())(any())).thenReturn(Future.successful(CONFLICT))
+          when(mockGmpBulkConnector.sendBulkRequest(any(),any())(using any())).thenReturn(Future.successful(CONFLICT))
 
           val result = TestBulkRequestReceivedController.get(FakeRequest())
               status(result) must equal(OK)
@@ -112,9 +112,9 @@ class BulkRequestReceivedControllerSpec extends PlaySpec with GuiceOneServerPerS
 
         "respond with ok and failure page if file too large" in {
 
-          when(mockGMPSessionService.fetchGmpBulkSession()(any())).thenReturn(Future.successful(Some(gmpBulkSession)))
+          when(mockGMPSessionService.fetchGmpBulkSession()(using any())).thenReturn(Future.successful(Some(gmpBulkSession)))
           when(mockBulkRequestCreationService.createBulkRequest(any(),any(),any())).thenReturn(Right(bulkRequest1))
-          when(mockGmpBulkConnector.sendBulkRequest(any(),any())(any())).thenReturn(Future.successful(REQUEST_ENTITY_TOO_LARGE))
+          when(mockGmpBulkConnector.sendBulkRequest(any(),any())(using any())).thenReturn(Future.successful(REQUEST_ENTITY_TOO_LARGE))
 
           val result = TestBulkRequestReceivedController.get(FakeRequest())
               status(result) must equal(OK)
@@ -124,7 +124,7 @@ class BulkRequestReceivedControllerSpec extends PlaySpec with GuiceOneServerPerS
 
         "respond with ok and failure page if file row limit exceeded" in {
 
-          when(mockGMPSessionService.fetchGmpBulkSession()(any())).thenReturn(Future.successful(Some(gmpBulkSession)))
+          when(mockGMPSessionService.fetchGmpBulkSession()(using any())).thenReturn(Future.successful(Some(gmpBulkSession)))
           when(mockBulkRequestCreationService.createBulkRequest(any(),any(),any())).thenReturn(Left(DataLimitExceededException))
 
           val result = TestBulkRequestReceivedController.get(FakeRequest())
@@ -135,9 +135,9 @@ class BulkRequestReceivedControllerSpec extends PlaySpec with GuiceOneServerPerS
 
         "generic failure page if bulk fails for 5XX reason" in {
 
-          when(mockGMPSessionService.fetchGmpBulkSession()(any())).thenReturn(Future.successful(Some(gmpBulkSession)))
+          when(mockGMPSessionService.fetchGmpBulkSession()(using any())).thenReturn(Future.successful(Some(gmpBulkSession)))
           when(mockBulkRequestCreationService.createBulkRequest(any(),any(),any())).thenReturn(Right(bulkRequest1))
-          when(mockGmpBulkConnector.sendBulkRequest(any(),any())(any())).thenReturn(Future.successful(500))
+          when(mockGmpBulkConnector.sendBulkRequest(any(),any())(using any())).thenReturn(Future.successful(500))
 
           val result = TestBulkRequestReceivedController.get(FakeRequest())
               status(result) must equal(OK)
@@ -147,16 +147,16 @@ class BulkRequestReceivedControllerSpec extends PlaySpec with GuiceOneServerPerS
 
         "throw exception when fails to get session" in {
 
-          when(mockGMPSessionService.fetchGmpBulkSession()(any())).thenReturn(Future.successful(None))
+          when(mockGMPSessionService.fetchGmpBulkSession()(using any())).thenReturn(Future.successful(None))
 
           val result = TestBulkRequestReceivedController.get(FakeRequest())
-              contentAsString(result)replaceAll("&#x27;", "'") must include (Messages("gmp.cannot_calculate.gmp"))
+              contentAsString(result).replaceAll("&#x27;", "'") must include (Messages("gmp.cannot_calculate.gmp"))
               contentAsString(result) must include (Messages("gmp.error.session_parts_missing", "/guaranteed-minimum-pension/upload-csv"))
         }
 
 
         "redirect to an error page explaining they have uploaded an incorrectly encoded file when they upload an incorrectly encoded file" in {
-          when(mockGMPSessionService.fetchGmpBulkSession()(any())).thenReturn(Future.successful(Some(gmpBulkSession)))
+          when(mockGMPSessionService.fetchGmpBulkSession()(using any())).thenReturn(Future.successful(Some(gmpBulkSession)))
           when(mockBulkRequestCreationService.createBulkRequest(any(),any(),any())).thenReturn(Left(new UnsupportedOperationException))
 
           val result = TestBulkRequestReceivedController.get(FakeRequest())

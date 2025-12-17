@@ -56,7 +56,7 @@ class MoreBulkResultsControllerSpec extends PlaySpec with GuiceOneServerPerSuite
 
   val recentBulkCalculations = List(new BulkPreviousRequest("1234","abcd",LocalDateTime.now(),LocalDateTime.now()), new BulkPreviousRequest("5678","efgh", LocalDateTime.now(),LocalDateTime.now()))
 
-  when(mockGmpBulkConnector.getPreviousBulkRequests(any())(any())).thenReturn(Future.successful(recentBulkCalculations))
+  when(mockGmpBulkConnector.getPreviousBulkRequests(any())(using any())).thenReturn(Future.successful(recentBulkCalculations))
 
   "more bulk results GET " must {
 

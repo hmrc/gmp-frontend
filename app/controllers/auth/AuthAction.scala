@@ -59,10 +59,10 @@ class AuthAction @Inject()(override val authConnector: AuthConnector,
           psaid.orElse(ppid).orElse(podsPsaid).fold(Future.successful(Results.Redirect(externalUrls.signIn)))(id => block(AuthenticatedRequest(id, request)))
       }
   } recover {
-    case ex: NoActiveSession => Results.Redirect(externalUrls.signIn)
+    case _: NoActiveSession => Results.Redirect(externalUrls.signIn)
 
-    case ex: InsufficientConfidenceLevel => Results.Redirect(controllers.routes.ApplicationController.unauthorised.url)
+    case _: InsufficientConfidenceLevel => Results.Redirect(controllers.routes.ApplicationController.unauthorised.url)
 
-    case ex: InsufficientEnrolments => Results.Redirect(controllers.routes.ApplicationController.unauthorised.url)
+    case _: InsufficientEnrolments => Results.Redirect(controllers.routes.ApplicationController.unauthorised.url)
   }
 }

@@ -51,8 +51,8 @@ class ContactFrontendConnectorSpec @Inject()(servicesConfig: ServicesConfig) ext
 
   override def beforeEach() = {
     reset(mockHttp, requestBuilder)
-    when(mockHttp.get(any[URL])(any[HeaderCarrier])).thenReturn(requestBuilder)
-    when(requestBuilder.withBody(any())(any(), any(), any())).thenReturn(requestBuilder)
+    when(mockHttp.get(any[URL])(using any[HeaderCarrier])).thenReturn(requestBuilder)
+    when(requestBuilder.withBody(any())(using any(), any(), any())).thenReturn(requestBuilder)
   }
 
   "ContactFrontendConnector" must {
@@ -69,7 +69,7 @@ class ContactFrontendConnectorSpec @Inject()(servicesConfig: ServicesConfig) ext
 
       await(TestConnector.getHelpPartial)
 
-      verify(mockHttp).get(new URL(serviceUrl))(any[HeaderCarrier])
+      verify(mockHttp).get(new URL(serviceUrl))(using any[HeaderCarrier])
     }
 
     "return an empty string if a BadGatewayException is encountered" in {

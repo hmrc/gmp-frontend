@@ -40,7 +40,7 @@ object GMPBulkSessionCache {
         (__ \ "id").read[String] and
           (__ \ "gmpBulkSession").read[EncryptedValue] and
           (__ \ "lastModified").read[Instant]
-        )(ModelEncryption.decryptSessionCache _)
+        )(ModelEncryption.decryptSessionCache)
 
     def writes(implicit encryption: Encryption): OWrites[GMPBulkSessionCache] =
       new OWrites[GMPBulkSessionCache] {
