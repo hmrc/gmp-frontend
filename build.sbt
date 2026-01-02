@@ -41,7 +41,7 @@ lazy val microservice = Project(appName, file("."))
     defaultSettings(),
     majorVersion := 4,
 
-    scalaVersion := "3.7.1",
+    scalaVersion := "3.7.4",
 
     libraryDependencies ++= AppDependencies.all,
     libraryDependencySchemes += "org.scala-lang.modules" %% "scala-xml" % VersionScheme.Always,
