@@ -43,7 +43,6 @@ import uk.gov.hmrc.play.audit.http.connector.{AuditConnector, AuditResult}
 import views.Views
 import views.helpers.GmpDateFormatter.*
 
-import scala.annotation.targetName
 import scala.concurrent.{ExecutionContext, Future}
 
 class ResultsControllerSpec extends PlaySpec with GuiceOneServerPerSuite with MockitoSugar {
