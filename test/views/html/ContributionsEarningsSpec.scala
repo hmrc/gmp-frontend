@@ -36,17 +36,21 @@ class ContributionsEarningsSpec extends GmpViewSpec {
   "Contributions Earnings page" must {
     behave like pageWithTitle(messages("gmp.contributions_earnings.header"))
     behave like pageWithHeader(messages("gmp.contributions_earnings.header"))
-    behave like pageWithTableCaption(messages("gmp.entered_details.title"))
+    behave like pageWithH2Header(messages("gmp.entered_details.title"))
 
 
     "have a valid back link" in {
       doc must haveLinkWithText("Back")
     }
 
-    "have a table with th's" in {
-      doc must haveThWithText(messages("Name"))
-      doc must haveThWithText(messages("Scheme Contracted Out Number"))
-      doc must haveThWithText(messages("National Insurance number"))
+    "have a scheme member summary list" in {
+      doc must haveDescriptionListWithId("member-details-table")
+      doc must haveElementAtPathWithText("dt", messages("gmp.name"))
+      doc must haveElementAtPathWithText("dt", messages("gmp.scon.noabrv"))
+      doc must haveElementAtPathWithText("dt", messages("gmp.nino"))
+      doc must haveElementAtPathWithText("dd", "name")
+      doc must haveElementAtPathWithText("dd", "scon")
+      doc must haveElementAtPathWithText("dd", "nino")
     }
 
     "have a valid submit button" in {

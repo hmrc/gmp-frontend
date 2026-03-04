@@ -46,16 +46,25 @@
     } else if(calculationResponse.hasErrors) {
         messages("gmp.part_problem")
     } else {
-        messages("gmp.results.h1")
+        calculationResponse.header(messages)
+    }
+}
+
+@displayTitle = @{
+    val prefix = messages("gmp.results.h1.prefix")
+    if(!calculationResponse.hasErrors && title.startsWith(prefix + " ")) {
+        Html(title.replaceFirst(prefix + " ", prefix + "<br>"))
+    } else {
+        Html(title)
     }
 }
 
 @layout(
     applicationConfig = applicationConfig,
     title = title,
-    backLink = if(title.matches(messages("gmp.results.h1"))) Some(BackLinkParams(href = controllers.routes.DashboardController.get.url, label = Some(messages("gmp.back_to_dashboard")))) else None
+    backLink = if(!calculationResponse.hasErrors) Some(BackLinkParams(href = controllers.routes.DashboardController.get.url, label = Some(messages("gmp.back_to_dashboard")))) else None
 ) {
-    <h1 class="govuk-heading-l" id="page-title">@title</h1>
+    <h1 class="govuk-heading-l" id="page-title">@displayTitle</h1>
 
     @{
         if(calculationResponse.globalErrorCode > 0) {
@@ -82,8 +91,3 @@
         @request_another_button()
 
     }
-
-
-
-
-

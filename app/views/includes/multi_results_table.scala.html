@@ -17,6 +17,7 @@
 @import uk.gov.hmrc.govukfrontend.views.html.components._
 @import java.time.LocalDate
 @import java.time.format.DateTimeFormatter
+@import views.helpers.CurrencyFormatter._
 
 @(calculationResponse:CalculationResponse, govukTable : GovukTable)(implicit messages: Messages)
 
@@ -24,14 +25,14 @@
 
 @htmlContent1(period: CalculationPeriod) = @{
     period.dualCalcPost90TrueTotal match {
-        case Some(amount) if amount != "0.00" => Html(s"<b>£$amount</b>")
+        case Some(amount) if formatAmount(amount) != "0.00" => Html(messages("gmp.amount_bold", formatAmount(amount)))
         case _ => Html("--")
     }
 }
 
 @htmlContent2(period: CalculationPeriod) = @{
     period.dualCalcPost90OppositeTotal match {
-        case Some(amount) if amount != "0.00" => Html(s"<b>£$amount</b>")
+        case Some(amount) if formatAmount(amount) != "0.00" => Html(messages("gmp.amount_bold", formatAmount(amount)))
         case _ => Html("--")
     }
 }
@@ -51,9 +52,9 @@
 
 @tableRowWithErrorCode0(currentDate: String, endDate: String, period: CalculationPeriod, count: Int) = @{
     Seq(
-        Some(TableRow(content = HtmlContent(s"<b>${messages("gmp.date_from")}<br></b>$currentDate<br><b>${messages("gmp.date_to")}</b><br>$endDate"))),
-        Some(TableRow(content = HtmlContent(s"<b>£${period.gmpTotal}</b>"))),
-        Some(TableRow(content = HtmlContent(s"<b>£${period.post88GMPTotal}</b>"))),
+        Some(TableRow(content = HtmlContent(messages("gmp.date_range_html", currentDate, endDate)))),
+        Some(TableRow(content = HtmlContent(messages("gmp.amount_bold", formatAmount(period.gmpTotal))))),
+        Some(TableRow(content = HtmlContent(messages("gmp.amount_bold", formatAmount(period.post88GMPTotal))))),
         if(calculationResponse.dualCalc) {
             Some(TableRow(content = HtmlContent(htmlContent1(period))))
         } else None,
@@ -68,7 +69,7 @@
 
 @tableRowWithErrorCodeNonZero(currentDate: String, endDate: String, period: CalculationPeriod) = @{
     val unavailableHeader = List(
-        TableRow(content = HtmlContent(s"<b>${messages("gmp.date_from")}<br></b>$currentDate<br><b>${messages("gmp.date_to")}</b><br>$endDate")),
+        TableRow(content = HtmlContent(messages("gmp.date_range_html", currentDate, endDate)))
     )
     val unavailableCells = List.fill(columnCount - 1)(TableRow(content = Text(messages("gmp.unavailable"))))
     unavailableHeader ::: unavailableCells
@@ -77,7 +78,7 @@
 @head = @{
     Seq(
         Some(HeadCell(
-            content = Text(messages("gmp.table.period")),
+            content = HtmlContent(s"""<span class="govuk-visually-hidden">${messages("gmp.table.period")}</span>"""),
             classes = "govuk-!-width-one-half"
         )),
         Some(HeadCell(content = Text(messages("gmp.per.week")))),
@@ -97,7 +98,7 @@
 @govukTable(Table(
     captionClasses = "govuk-visually-hidden",
     firstCellIsHeader = true,
-    caption = Some(calculationResponse.header(messages)),
+    caption = Some(messages("gmp.table.value_for_period")),
     attributes = Map("id" -> "multi-results-table"),
     rows = calculationResponse.calculationPeriods.zipWithIndex.map { result =>
         val (period, count) = result
