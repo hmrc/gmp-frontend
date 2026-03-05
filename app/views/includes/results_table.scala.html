@@ -17,6 +17,7 @@
 @import uk.gov.hmrc.govukfrontend.views.html.components._
 @import java.time.LocalDate
 @import java.time.format.DateTimeFormatter
+@import views.helpers.CurrencyFormatter._
 
 @(calculationResponse:CalculationResponse, govukTable : GovukTable)(implicit messages: Messages)
 
@@ -24,14 +25,14 @@
 @resultsTableHead = @{
     val fixedHead = List(
         HeadCell(
-            content = Text(messages("gmp.table.period")),
+            content = HtmlContent(s"""<span class="govuk-visually-hidden">${messages("gmp.table.period")}</span>"""),
             classes = "govuk-!-width-one-half"
         ),
         HeadCell(
-            content = HtmlContent(heading1)
+            content = Text(heading1)
         ),
         HeadCell(
-            content = HtmlContent(heading2)
+            content = Text(heading2)
         )
     )
     if(calculationResponse.showRateColumn){
@@ -44,73 +45,99 @@
 @dualResultsTableHead = @{
     val fixedHead = List(
         HeadCell(
-            content = Text(messages("gmp.table.period"))
+            content = HtmlContent(s"""<span class="govuk-visually-hidden">${messages("gmp.table.period")}</span>"""),
+            classes = "govuk-!-width-one-half"
         ),
         HeadCell(
-            content = HtmlContent(s"${messages("gmp.post90.true")}<br>£${calculationResponse.trueCalculation}")
+            content = Text(messages("gmp.post90.true"))
         ),
         HeadCell(
-            content = HtmlContent(s"${messages("gmp.post90.opposite")}<br>£${calculationResponse.oppositeCalculation}")
+            content = Text(messages("gmp.post90.opposite"))
         ))
-
-        if(calculationResponse.showRateColumn){
-            fixedHead ::: List(HeadCell(content = Text(messages("gmp.rate"))))
-        } else fixedHead
+    if(calculationResponse.showRateColumn){
+        fixedHead ::: List(HeadCell(content = Text(messages("gmp.rate"))))
+    } else fixedHead
 }
 
-@resultsTableRows = @{calculationResponse.calculationPeriods.zipWithIndex.map { result =>
-    val (period, count) = result
-    val currentDate = period.startDate.get.format(dateFormatter)
-    val endDate = period.endDate.format(dateFormatter)
-    val fixedRows = List(
-        TableRow(
-            content = HtmlContent(s"<b>$currentDate</b> ${messages("gmp.date_to")} <b>$endDate</b>")
-        ),
-        TableRow(
-            content = HtmlContent(s"£${period.gmpTotal}<br>${messages("gmp.frequency.weekly")}")
-        ),
-        TableRow(
-            content = HtmlContent(s"£${period.post88GMPTotal}<br>${messages("gmp.frequency.weekly")}")
+@resultsTableRows = @{
+    val periodRows = calculationResponse.calculationPeriods.zipWithIndex.map { result =>
+        val (period, count) = result
+        val currentDate = period.startDate.get.format(dateFormatter)
+        val endDate = period.endDate.format(dateFormatter)
+        val fixedRows = List(
+            TableRow(
+                content = HtmlContent(messages("gmp.date_range_html", currentDate, endDate))
+            ),
+            TableRow(
+                content = HtmlContent(messages("gmp.amount_per_week", formatAmount(period.gmpTotal)))
+            ),
+            TableRow(
+                content = HtmlContent(messages("gmp.amount_per_week", formatAmount(period.post88GMPTotal)))
+            )
         )
+
+        if(calculationResponse.showRateColumn) {
+            fixedRows ::: List(TableRow(
+                content = Text(content(count, period))
+            ))
+        } else fixedRows
+    }
+
+    val totalRow = List(
+        TableRow(content = Text(messages("gmp.total.row"))),
+        TableRow(content = HtmlContent(messages("gmp.amount_per_week", formatAmount(calculationResponse.totalGmp)))),
+        TableRow(content = HtmlContent(messages("gmp.amount_per_week", formatAmount(calculationResponse.post88Gmp))))
     )
 
     if(calculationResponse.showRateColumn) {
-        fixedRows ::: List(TableRow(
-            content = Text(messages(s"gmp.revaluation_rate.type_${period.revaluationRate}"))
-        ))
-    } else fixedRows
-
-}}
-@dualResultsTableRows = @{calculationResponse.calculationPeriods.zipWithIndex.map { result =>
-    val (period, count) = result
-    val currentDate = period.startDate.get.format(dateFormatter)
-    val endDate = period.endDate.format(dateFormatter)
-    val fixedRows = List(
-        TableRow(
-            content = HtmlContent(s"<b>$currentDate</b> ${messages("gmp.date_to")} <b>$endDate</b>")
-        ),
-        TableRow(
-            content = HtmlContent(htmlContent1(period))
-        ),
-        TableRow(
-            content = HtmlContent(htmlContent2(period))
+        periodRows :+ (totalRow :+ TableRow(content = Text("--")))
+    } else {
+        periodRows :+ totalRow
+    }
+}
+@dualResultsTableRows = @{
+    val periodRows = calculationResponse.calculationPeriods.zipWithIndex.map { result =>
+        val (period, count) = result
+        val currentDate = period.startDate.get.format(dateFormatter)
+        val endDate = period.endDate.format(dateFormatter)
+        val fixedRows = List(
+            TableRow(
+                content = HtmlContent(messages("gmp.date_range_html", currentDate, endDate))
+            ),
+            TableRow(
+                content = HtmlContent(htmlContent1(period))
+            ),
+            TableRow(
+                content = HtmlContent(htmlContent2(period))
+            )
         )
+
+        if(calculationResponse.showRateColumn) {
+            fixedRows ::: List(TableRow(content = Text(content(count, period))))
+        } else fixedRows
+    }
+
+    val totalRow = List(
+        TableRow(content = Text(messages("gmp.total.row"))),
+        TableRow(content = HtmlContent(messages("gmp.amount_per_week", formatAmount(calculationResponse.trueCalculation)))),
+        TableRow(content = HtmlContent(messages("gmp.amount_per_week", formatAmount(calculationResponse.oppositeCalculation))))
     )
 
     if(calculationResponse.showRateColumn) {
-        fixedRows ::: List(TableRow(content = Text(content(count, period))))
-    } else fixedRows
-
-}}
+        periodRows :+ (totalRow :+ TableRow(content = Text("--")))
+    } else {
+        periodRows :+ totalRow
+    }
+}
 
 @heading1 = @{
-    if(calculationResponse.calcType == CalculationType.SURVIVOR.toInt) s"${messages("gmp.total.entitlement")} £${calculationResponse.totalGmp}"
-     else s"${messages("gmp.total")}<br>£${calculationResponse.totalGmp}"
+    if(calculationResponse.calcType == CalculationType.SURVIVOR.toInt) messages("gmp.total.entitlement")
+     else messages("gmp.total")
     }
 
 @heading2 = @{
-    if(calculationResponse.calcType == CalculationType.SURVIVOR.toInt) s"${messages("gmp.post88.entitlement")} £${calculationResponse.post88Gmp}"
-    else s"${messages("gmp.post.1988")}<br>£${calculationResponse.post88Gmp}"
+    if(calculationResponse.calcType == CalculationType.SURVIVOR.toInt) messages("gmp.post88.entitlement")
+    else messages("gmp.post.1988")
 }
 
 @content(count: Int, period: CalculationPeriod) = @{
@@ -119,14 +146,16 @@
 }
 
 @htmlContent1(period: CalculationPeriod) = @{
-    if(!period.dualCalcPost90TrueTotal.contains("0.00"))
-        Html(s"£${period.dualCalcPost90TrueTotal.getOrElse("--")}<br>${messages("gmp.frequency.weekly")}")
+    val formatted = period.dualCalcPost90TrueTotal.map(formatAmount).getOrElse("--")
+    if(formatted != "0.00")
+        Html(messages("gmp.amount_per_week", formatted))
     else
         Html("--")
 }
 @htmlContent2(period: CalculationPeriod) = @{
-    if(!period.dualCalcPost90OppositeTotal.contains("0.00"))
-        Html(s"£${period.dualCalcPost90OppositeTotal.getOrElse("--")}<br>${messages("gmp.frequency.weekly")}")
+    val formatted = period.dualCalcPost90OppositeTotal.map(formatAmount).getOrElse("--")
+    if(formatted != "0.00")
+        Html(messages("gmp.amount_per_week", formatted))
     else
         Html("--")
 }
@@ -137,16 +166,18 @@
     head = Some(resultsTableHead),
     captionClasses = "govuk-visually-hidden",
     firstCellIsHeader = true,
-    caption = Some(calculationResponse.header(messages))
+    caption = Some(messages("gmp.table.value_for_period"))
 ))
 
 @if(calculationResponse.dualCalc){
+
+    <h2 class="govuk-heading-m" id="post-1990-gmp-value">@messages("gmp.multi.dual_calc.header")</h2>
 
     @govukTable(Table(
         attributes = Map("id" -> "dual-results-table"),
         rows = dualResultsTableRows,
         head = Some(dualResultsTableHead),
-        captionClasses = "govuk-table__caption--m",
+        captionClasses = "govuk-visually-hidden",
         firstCellIsHeader = true,
         caption = Some(messages("gmp.multi.dual_calc.header")),
     ))
