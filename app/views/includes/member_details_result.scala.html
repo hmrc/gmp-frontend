@@ -31,16 +31,16 @@
         attributes = Map("id" -> "member-details-table"),
         rows = Seq(
             SummaryListRow(
-                key = Key(content = Text(messages("gmp.name"))),
-                value = Value(content = Text(calculationResponse.name))
+                key = Key(content = Text(messages("gmp.name")), classes = "govuk-!-width-two-thirds"),
+                value = Value(content = Text(calculationResponse.name), classes = "govuk-!-width-one-third")
             ),
             SummaryListRow(
-                key = Key(content = Text(messages("gmp.scon.noabrv"))),
-                value = Value(content = Text(calculationResponse.scon))
+                key = Key(content = Text(messages("gmp.scon.noabrv")), classes = "govuk-!-width-two-thirds"),
+                value = Value(content = Text(calculationResponse.scon), classes = "govuk-!-width-one-third")
             ),
             SummaryListRow(
-                key = Key(content = Text(messages("gmp.nino"))),
-                value = Value(content = Text(calculationResponse.nino))
+                key = Key(content = Text(messages("gmp.nino")), classes = "govuk-!-width-two-thirds"),
+                value = Value(content = Text(calculationResponse.nino), classes = "govuk-!-width-one-third")
             )
         )
     ))
