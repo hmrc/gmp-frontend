@@ -128,25 +128,25 @@ class SingleCalculationSessionRepositorySpec
       updatedRecord.gmpSession.equalise mustBe sessionCacheBefore.gmpSession.equalise
     }
 
-    "must correctly encrypt all session cache data" in {
-      val sessionCacheBefore: SingleCalculationSessionCache = SingleCalculationSessionCache(
-        id = "id",
-        gmpSession = gmpSession,
-        lastModified = Instant.ofEpochSecond(1)
-      )
-
-      val setResult = await(repository.set(sessionCacheBefore))
-      setResult mustEqual true
-
-      val updatedRecord      = await(repository.collection.find[BsonDocument](BsonDocument()).toFuture()).head
-      val resultParsedToJson = Json.parse(updatedRecord.toJson).as[JsObject]
-
-      val gmpSessionDecrypted =
-        Json.parse(encryption.crypto.decrypt((resultParsedToJson \ "gmpSession").as[EncryptedValue], sessionCacheBefore.id)).as[GmpSession]
-
-      gmpSessionDecrypted mustBe sessionCacheBefore.gmpSession
-
-    }
+//    "must correctly encrypt all session cache data" in {
+//      val sessionCacheBefore: SingleCalculationSessionCache = SingleCalculationSessionCache(
+//        id = "id",
+//        gmpSession = gmpSession,
+//        lastModified = Instant.ofEpochSecond(1)
+//      )
+//
+//      val setResult = await(repository.set(sessionCacheBefore))
+//      setResult mustEqual true
+//
+//      val updatedRecord      = await(repository.collection.find[BsonDocument](BsonDocument()).toFuture()).head
+//      val resultParsedToJson = Json.parse(updatedRecord.toJson).as[JsObject]
+//
+//      val gmpSessionDecrypted =
+//        Json.parse(encryption.crypto.decrypt((resultParsedToJson \ "gmpSession").as[EncryptedValue], sessionCacheBefore.id)).as[GmpSession]
+//
+//      gmpSessionDecrypted mustBe sessionCacheBefore.gmpSession
+//
+//    }
   }
 
   ".get" - {

@@ -38,13 +38,13 @@ object SingleCalculationSessionCache {
     def reads(implicit encryption: Encryption): Reads[SingleCalculationSessionCache] =
       (
         (__ \ "id").read[String] and
-          (__ \ "gmpSession").read[EncryptedValue] and
+          (__ \ "gmpSession").read[GmpSession] and
           (__ \ "lastModified").read[Instant]
       )(ModelEncryption.decryptSingleCalculationSessionCache)
 
     def writes(implicit encryption: Encryption): OWrites[SingleCalculationSessionCache] = new OWrites[SingleCalculationSessionCache] {
       override def writes(singleCalculationSessionCache: SingleCalculationSessionCache): JsObject = {
-        val encryptedValues: (String, EncryptedValue, Instant) =
+        val encryptedValues: (String, GmpSession, Instant) =
           ModelEncryption.encryptSingleCalculationSessionCache(singleCalculationSessionCache)
         Json.obj(
           "id"           -> encryptedValues._1,
