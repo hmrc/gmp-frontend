@@ -53,6 +53,13 @@ This project uses [scalafmt](https://scalameta.org/scalafmt/) via the `sbt-scala
 
 Formatting is **not** wired into `compile` by default. Run `scalafmt`/`scalafmtAll` separately (for example, before committing or as part of a CI check), and use `compile` just for compilation.
 
+## Run the application locally
+
+To run the service locally, you need to run the following within the frontend terminal:
+```bash
+sbt run -Dapplication.router=testOnlyDoNotUseInAppConf.Routes
+```
+
 Acronyms
 --------
 
