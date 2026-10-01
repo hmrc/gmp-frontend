@@ -49,7 +49,7 @@
                         val days = 30 - Duration.between(LocalDateTime.from(calculation.timestamp), LocalDateTime.now()).toDays
                                 Seq(
                                 TableRow(
-                                    content = HtmlContent(s"""<a href="${routes.BulkResultsController.get(calculation.uploadReference, 0)}">${calculation.reference}</a>""")),
+                                    content = HtmlContent(s"""<a class="govuk-link" href="${routes.BulkResultsController.get(calculation.uploadReference, 0)}">${calculation.reference}</a>""")),
                                 TableRow(
                                     content = Text({ LocalDateTime.from(calculation.timestamp).format(DateTimeFormatter.ofPattern("dd MMMM yyyy")) })),
                                 TableRow(
