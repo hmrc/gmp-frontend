@@ -48,7 +48,7 @@ class SingleCalculationSessionService @Inject() (
     }
 
   def fetchGmpSession()(implicit hc: HeaderCarrier): Future[Option[GmpSession]] = {
-    val timer = metrics.keystoreStoreTimer.time()
+    val timer = metrics.sessionStoreTimer.time()
     logger.debug("[SingleCalculationSessionService][fetchGmpSession]: Fetching Gmp Session data...")
 
     getSessionCacheDataWithRetry
@@ -64,7 +64,7 @@ class SingleCalculationSessionService @Inject() (
   }
 
   def resetGmpSession()(implicit hc: HeaderCarrier): Future[Option[GmpSession]] = {
-    val timer = metrics.keystoreStoreTimer.time()
+    val timer = metrics.sessionStoreTimer.time()
     logger.debug("[SingleCalculationSessionService][resetGmpSession]: Resetting Gmp Session data...")
 
     val cacheData = cleanGmpSingleCalculationSessionCache(getSessionId, cleanGmpSession)
@@ -75,7 +75,7 @@ class SingleCalculationSessionService @Inject() (
   }
 
   def resetGmpSessionWithScon()(implicit hc: HeaderCarrier): Future[Option[GmpSession]] = {
-    val timer = metrics.keystoreStoreTimer.time()
+    val timer = metrics.sessionStoreTimer.time()
 
     logger.debug(s"[SingleCalculationSessionService][fetchGmpSessionWithScon]: Resetting Gmp Session with scon data... ")
 
@@ -91,7 +91,7 @@ class SingleCalculationSessionService @Inject() (
   }
 
   def cacheMemberDetails(memberDetails: MemberDetails)(implicit hc: HeaderCarrier): Future[Option[GmpSession]] = {
-    val timer = metrics.keystoreStoreTimer.time()
+    val timer = metrics.sessionStoreTimer.time()
     logger.debug(s"[SingleCalculationSessionService][cacheMemberDetails] : $memberDetails")
 
     val updatedCacheData: Future[SingleCalculationSessionCache] = singleCalculationSessionRepository.get(getSessionId).map {
@@ -115,7 +115,7 @@ class SingleCalculationSessionService @Inject() (
   }
 
   def fetchMemberDetails()(implicit hc: HeaderCarrier): Future[Option[MemberDetails]] = {
-    val timer = metrics.keystoreStoreTimer.time()
+    val timer = metrics.sessionStoreTimer.time()
     logger.debug("[SingleCalculationSessionService][fetchMemberDetails]: Fetching Member Details Session data...")
 
     getSessionCacheDataWithRetry
@@ -131,7 +131,7 @@ class SingleCalculationSessionService @Inject() (
   }
 
   def cachePensionDetails(scon: String)(implicit hc: HeaderCarrier): Future[Option[GmpSession]] = {
-    val timer = metrics.keystoreStoreTimer.time()
+    val timer = metrics.sessionStoreTimer.time()
     logger.debug(s"[SingleCalculationSessionService][cachePensionDetails] : $scon")
 
     val updatedCacheData = singleCalculationSessionRepository.get(getSessionId).map {
@@ -154,7 +154,7 @@ class SingleCalculationSessionService @Inject() (
   }
 
   def fetchPensionDetails()(implicit hc: HeaderCarrier): Future[Option[String]] = {
-    val timer = metrics.keystoreStoreTimer.time()
+    val timer = metrics.sessionStoreTimer.time()
     logger.debug("[SingleCalculationSessionService][fetchPensionDetails]")
 
     getSessionCacheDataWithRetry
@@ -170,7 +170,7 @@ class SingleCalculationSessionService @Inject() (
   }
 
   def cacheScenario(scenario: String)(implicit hc: HeaderCarrier): Future[Option[GmpSession]] = {
-    val timer = metrics.keystoreStoreTimer.time()
+    val timer = metrics.sessionStoreTimer.time()
     logger.debug(s"[SingleCalculationSessionService][cacheScenario] : $scenario")
 
     val updatedCacheData = singleCalculationSessionRepository.get(getSessionId).map {
@@ -194,7 +194,7 @@ class SingleCalculationSessionService @Inject() (
   }
 
   def fetchScenario()(implicit hc: HeaderCarrier): Future[Option[String]] = {
-    val timer = metrics.keystoreStoreTimer.time()
+    val timer = metrics.sessionStoreTimer.time()
     logger.debug("[SingleCalculationSessionService][fetchScenario]")
 
     getSessionCacheDataWithRetry
@@ -210,7 +210,7 @@ class SingleCalculationSessionService @Inject() (
   }
 
   def cacheEqualise(equalise: Option[Int])(implicit hc: HeaderCarrier): Future[Option[GmpSession]] = {
-    val timer = metrics.keystoreStoreTimer.time()
+    val timer = metrics.sessionStoreTimer.time()
     logger.debug(s"[SingleCalculationSessionService][cacheEqualise] : $equalise")
 
     val updatedCacheData = singleCalculationSessionRepository.get(getSessionId).map {
@@ -233,7 +233,7 @@ class SingleCalculationSessionService @Inject() (
   }
 
   def cacheRevaluationDate(date: Option[GmpDate])(implicit hc: HeaderCarrier): Future[Option[GmpSession]] = {
-    val timer = metrics.keystoreStoreTimer.time()
+    val timer = metrics.sessionStoreTimer.time()
     logger.debug(s"[SingleCalculationSessionService][cacheRevaluationDate] : $date")
 
     val updatedCacheData = singleCalculationSessionRepository.get(getSessionId).map {
@@ -267,7 +267,7 @@ class SingleCalculationSessionService @Inject() (
   }
 
   def cacheLeaving(leaving: Leaving)(implicit hc: HeaderCarrier): Future[Option[GmpSession]] = {
-    val timer = metrics.keystoreStoreTimer.time()
+    val timer = metrics.sessionStoreTimer.time()
     logger.debug(s"[SingleCalculationSessionService][cacheLeaving] : $leaving")
 
     val updatedCacheData = singleCalculationSessionRepository.get(getSessionId).map {
@@ -290,7 +290,7 @@ class SingleCalculationSessionService @Inject() (
   }
 
   def fetchLeaving()(implicit hc: HeaderCarrier): Future[Option[Leaving]] = {
-    val timer = metrics.keystoreStoreTimer.time()
+    val timer = metrics.sessionStoreTimer.time()
     logger.debug("[SingleCalculationSessionService][fetchLeaving]")
 
     getSessionCacheDataWithRetry
@@ -306,7 +306,7 @@ class SingleCalculationSessionService @Inject() (
   }
 
   def cacheRevaluationRate(rate: String)(implicit hc: HeaderCarrier): Future[Option[GmpSession]] = {
-    val timer = metrics.keystoreStoreTimer.time()
+    val timer = metrics.sessionStoreTimer.time()
     logger.debug(s"[SingleCalculationSessionService][cacheRevaluationRate] : $rate")
 
     val updatedCacheData = singleCalculationSessionRepository.get(getSessionId).map {

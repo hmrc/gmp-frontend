@@ -17,7 +17,7 @@
 package controllers
 
 import com.google.inject.{Inject, Singleton}
-import config.{ApplicationConfig, GmpContext, GmpSessionCache}
+import config.{ApplicationConfig, GmpContext}
 import connectors.GmpBulkConnector
 import controllers.auth.AuthAction
 import models.upscan.UploadedSuccessfully
@@ -41,7 +41,6 @@ class BulkRequestReceivedController @Inject() (
   implicit val config:           GmpContext,
   messagesControllerComponents:  MessagesControllerComponents,
   implicit val executionContext: ExecutionContext,
-  implicit val sessionCache:     GmpSessionCache,
   views:                         Views
 ) extends GmpController(messagesControllerComponents, ac, GMPSessionService, config)
     with Logging {

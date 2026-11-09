@@ -17,7 +17,7 @@
 package controllers
 
 import com.google.inject.{Inject, Singleton}
-import config.{ApplicationConfig, GmpContext, GmpSessionCache}
+import config.{ApplicationConfig, GmpContext}
 import controllers.auth.AuthAction
 import forms.RevaluationForm
 import models.{GmpDate, GmpSession, RevaluationDate}
@@ -40,7 +40,6 @@ class RevaluationController @Inject() (
   ac:                                        ApplicationConfig,
   rvform:                                    RevaluationForm,
   implicit val executionContext:             ExecutionContext,
-  implicit val gmpSessionCache:              GmpSessionCache,
   views:                                     Views
 ) extends GmpPageFlow(authConnector, GMPSessionService, config, messagesControllerComponents, ac)
     with Logging {

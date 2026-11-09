@@ -16,7 +16,7 @@
 
 package controllers
 
-import config.{ApplicationConfig, GmpSessionCache}
+import config.ApplicationConfig
 import controllers.auth.{AuthAction, FakeAuthAction}
 import forms.EqualiseForm
 import models.*
@@ -45,7 +45,6 @@ class EqualiseControllerSpec extends PlaySpec with GuiceOneServerPerSuite with M
   implicit val messagesAPI:      MessagesApi                  = app.injector.instanceOf[MessagesApi]
   implicit val messagesProvider: MessagesImpl                 = MessagesImpl(Lang("en"), messagesAPI)
   implicit val ac:               ApplicationConfig            = app.injector.instanceOf[ApplicationConfig]
-  implicit val gmpSessionCache:  GmpSessionCache              = app.injector.instanceOf[GmpSessionCache]
   lazy val equaliseForm = new EqualiseForm(mcc)
   lazy val views        = app.injector.instanceOf[Views]
 
@@ -59,7 +58,6 @@ class EqualiseControllerSpec extends PlaySpec with GuiceOneServerPerSuite with M
         mcc,
         ac,
         ec,
-        gmpSessionCache,
         views
       ) {}
 

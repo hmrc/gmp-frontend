@@ -17,7 +17,7 @@
 package controllers
 
 import com.google.inject.{Inject, Singleton}
-import config.{ApplicationConfig, GmpContext, GmpSessionCache}
+import config.{ApplicationConfig, GmpContext}
 import connectors.GmpConnector
 import controllers.auth.AuthAction
 import events.ContributionsAndEarningsEvent
@@ -48,7 +48,6 @@ class ResultsController @Inject() (
   ac:                                        ApplicationConfig,
   override val messagesControllerComponents: MessagesControllerComponents,
   implicit val executionContext:             ExecutionContext,
-  implicit val gmpSessionCache:              GmpSessionCache,
   views:                                     Views
 ) extends GmpPageFlow(authConnector, GMPSessionService, context, messagesControllerComponents, ac)
     with Logging {

@@ -17,7 +17,7 @@
 package controllers
 
 import com.google.inject.{Inject, Singleton}
-import config.{ApplicationConfig, GmpContext, GmpSessionCache}
+import config.{ApplicationConfig, GmpContext}
 import controllers.auth.AuthAction
 import forms.BulkReferenceForm
 import play.api.Logging
@@ -37,7 +37,6 @@ class BulkReferenceController @Inject() (
   override val messagesControllerComponents: MessagesControllerComponents,
   implicit val executionContext:             ExecutionContext,
   ac:                                        ApplicationConfig,
-  implicit val gmpSessionCache:              GmpSessionCache,
   views:                                     Views
 ) extends GmpController(messagesControllerComponents, ac, GMPSessionService, config)
     with Logging {

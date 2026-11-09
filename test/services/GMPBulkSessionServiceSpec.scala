@@ -16,7 +16,7 @@
 
 package services
 
-import config.{ApplicationConfig, GmpSessionCache}
+import config.ApplicationConfig
 import metrics.ApplicationMetrics
 import models.*
 import models.upscan.UploadedSuccessfully
@@ -30,7 +30,6 @@ import play.api.libs.json.Json
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import repositories.GMPBulkSessionRepository
-import uk.gov.hmrc.http.cache.client.CacheMap
 import uk.gov.hmrc.http.{HeaderCarrier, SessionId}
 
 import scala.concurrent.duration.*
@@ -41,7 +40,6 @@ class GMPBulkSessionServiceSpec extends PlaySpec with GuiceOneServerPerSuite wit
   implicit val ec: ExecutionContext = scala.concurrent.ExecutionContext.global
 
   val mockSessionRepository = mock[GMPBulkSessionRepository]
-  val mockSessionCache      = mock[GmpSessionCache]
   val mockMetrics           = app.injector.instanceOf[ApplicationMetrics]
   val mockAppConfig         = mock[ApplicationConfig]
   when(mockAppConfig.serviceMaxNoOfAttempts).thenReturn(3)
@@ -78,10 +76,6 @@ class GMPBulkSessionServiceSpec extends PlaySpec with GuiceOneServerPerSuite wit
 
       val callbackData = GmpBulkSession(Some(UploadedSuccessfully("reference", "fileName", "download")), None, None)
       when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))
-      val json = Json.toJson[GmpBulkSession](callbackData)
-
-      when(mockSessionCache.cache[GmpBulkSession](any(), any())(using any(), any(), any()))
-        .thenReturn(Future.successful(CacheMap("sessionValue", Map("gmp_bulk_session" -> json))))
 
       val result =
         Await.result(TestSessionService.cacheCallBackData(Some(UploadedSuccessfully("reference", "fileName", "download")))(using hc), 10.seconds)
@@ -93,10 +87,7 @@ class GMPBulkSessionServiceSpec extends PlaySpec with GuiceOneServerPerSuite wit
 
       val expectedResult = gmpBulkSession.copy(callBackData = Some(UploadedSuccessfully("reference", "fileName", "download")))
       when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))
-      val json = Json.toJson[GmpBulkSession](expectedResult)
 
-      when(mockSessionCache.cache[GmpBulkSession](any(), any())(using any(), any(), any()))
-        .thenReturn(Future.successful(CacheMap("sessionValue", Map("gmp_bulk_session" -> json))))
       val result =
         Await.result(TestSessionService.cacheCallBackData(Some(UploadedSuccessfully("reference", "fileName", "download")))(using hc), 10.seconds)
       result must be(Some(expectedResult))
@@ -107,10 +98,7 @@ class GMPBulkSessionServiceSpec extends PlaySpec with GuiceOneServerPerSuite wit
       when(mockSessionRepository.get(any())).thenReturn(Future.successful(None))
 
       val expectedResult = GmpBulkSession(None, emailAddress = Some("nobody@nowhere.com"), reference = Some("a different reference"))
-      val json           = Json.toJson[GmpBulkSession](expectedResult)
 
-      when(mockSessionCache.cache[GmpBulkSession](any(), any())(using any(), any(), any()))
-        .thenReturn(Future.successful(CacheMap("sessionValue", Map("gmp_bulk_session" -> json))))
       val result =
         Await.result(TestSessionService.cacheEmailAndReference(Some("nobody@nowhere.com"), Some("a different reference"))(using hc), 10.seconds)
       result must be(Some(expectedResult))
@@ -120,10 +108,7 @@ class GMPBulkSessionServiceSpec extends PlaySpec with GuiceOneServerPerSuite wit
       when(mockSessionRepository.get(any())).thenReturn(Future.successful(Some(GMPBulkSessionCache("sessionId", gmpBulkSession))))
 
       val expectedResult = gmpBulkSession.copy(emailAddress = Some("nobody@nowhere.com"), reference = Some("a different reference"))
-      val json           = Json.toJson[GmpBulkSession](expectedResult)
 
-      when(mockSessionCache.cache[GmpBulkSession](any(), any())(using any(), any(), any()))
-        .thenReturn(Future.successful(CacheMap("sessionValue", Map("gmp_bulk_session" -> json))))
       val result =
         Await.result(TestSessionService.cacheEmailAndReference(Some("nobody@nowhere.com"), Some("a different reference"))(using hc), 10.seconds)
       result must be(Some(expectedResult))

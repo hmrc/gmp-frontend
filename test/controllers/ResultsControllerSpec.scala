@@ -17,7 +17,7 @@
 package controllers
 
 import java.util.UUID
-import config.{ApplicationConfig, GmpSessionCache}
+import config.ApplicationConfig
 import connectors.GmpConnector
 import controllers.auth.{AuthAction, FakeAuthAction}
 import helpers.RandomNino
@@ -59,7 +59,6 @@ class ResultsControllerSpec extends PlaySpec with GuiceOneServerPerSuite with Mo
   implicit val messagesAPI:       MessagesApi                  = app.injector.instanceOf[MessagesApi]
   implicit val messagesProvider:  MessagesImpl                 = MessagesImpl(Lang("en"), messagesAPI)
   implicit val applicationConfig: ApplicationConfig            = app.injector.instanceOf[ApplicationConfig]
-  implicit val gmpSessionCache:   GmpSessionCache              = app.injector.instanceOf[GmpSessionCache]
   lazy val views = app.injector.instanceOf[Views]
   implicit val hc: HeaderCarrier = new HeaderCarrier(sessionId = Some(SessionId(s"session-${UUID.randomUUID}")))
 
@@ -75,7 +74,6 @@ class ResultsControllerSpec extends PlaySpec with GuiceOneServerPerSuite with Mo
         applicationConfig,
         mcc,
         ec,
-        gmpSessionCache,
         views
       ) {
 

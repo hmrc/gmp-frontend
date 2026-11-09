@@ -17,7 +17,7 @@
 package controllers
 
 import com.google.inject.{Inject, Singleton}
-import config.{ApplicationConfig, GmpContext, GmpSessionCache}
+import config.{ApplicationConfig, GmpContext}
 import connectors.GmpBulkConnector
 import controllers.auth.AuthAction
 import play.api.Logging
@@ -38,7 +38,6 @@ class DashboardController @Inject() (
   implicit val config:           GmpContext,
   messagesControllerComponents:  MessagesControllerComponents,
   implicit val executionContext: ExecutionContext,
-  implicit val gmpSessionCache:  GmpSessionCache,
   views:                         Views
 ) extends GmpPageFlow(authConnector, GMPSessionService, config, messagesControllerComponents, ac)
     with Logging {

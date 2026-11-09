@@ -17,7 +17,7 @@
 package controllers
 
 import com.google.inject.{Inject, Singleton}
-import config.{ApplicationConfig, GmpContext, GmpSessionCache}
+import config.{ApplicationConfig, GmpContext}
 import controllers.auth.AuthAction
 import play.api.Logging
 import play.api.mvc.MessagesControllerComponents
@@ -34,8 +34,7 @@ class SessionCacheController @Inject() (
   GMPSessionService:                         GMPSessionService,
   implicit val config:                       GmpContext,
   override val messagesControllerComponents: MessagesControllerComponents,
-  implicit val executionContext:             ExecutionContext,
-  implicit val gmpSessionCache:              GmpSessionCache
+  implicit val executionContext:             ExecutionContext
 ) extends GmpPageFlow(authConnector, GMPSessionService, config, messagesControllerComponents, ac)
     with Logging {
 

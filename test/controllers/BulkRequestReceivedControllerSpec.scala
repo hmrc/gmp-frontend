@@ -17,7 +17,7 @@
 package controllers
 
 import java.util.UUID
-import config.{ApplicationConfig, GmpSessionCache}
+import config.ApplicationConfig
 import connectors.GmpBulkConnector
 import controllers.auth.{AuthAction, FakeAuthAction}
 import helpers.RandomNino
@@ -56,7 +56,6 @@ class BulkRequestReceivedControllerSpec extends PlaySpec with GuiceOneServerPerS
   implicit val messagesApi:      MessagesApi                  = app.injector.instanceOf[MessagesApi]
   implicit val messagesProvider: MessagesImpl                 = MessagesImpl(Lang("en"), messagesApi)
   implicit val ac:               ApplicationConfig            = app.injector.instanceOf[ApplicationConfig]
-  implicit val sc:               GmpSessionCache              = app.injector.instanceOf[GmpSessionCache]
   lazy val views = app.injector.instanceOf[Views]
 
   val callBackData = UploadedSuccessfully("ref1", "name1", "download1")
@@ -98,7 +97,6 @@ class BulkRequestReceivedControllerSpec extends PlaySpec with GuiceOneServerPerS
         FakeGmpContext,
         mcc,
         ec,
-        sc,
         views
       ) {}
 

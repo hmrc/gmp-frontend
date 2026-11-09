@@ -17,7 +17,6 @@
 package services
 
 import com.google.inject.Inject
-import config.ApplicationConfig
 import models.*
 import models.upscan.*
 import services.helper.Retryable
@@ -27,9 +26,7 @@ import scala.concurrent.Future
 
 class GMPSessionService @Inject() (
   gmpBulkSessionService:           GMPBulkSessionService,
-  singleCalculationSessionService: SingleCalculationSessionService,
-  sessionService:                  SessionService,
-  appConfig:                       ApplicationConfig
+  singleCalculationSessionService: SingleCalculationSessionService
 ) extends Retryable {
 
   val GMP_SESSION_KEY = "gmp_session"
@@ -39,133 +36,67 @@ class GMPSessionService @Inject() (
   val CALLBACK_SESSION_KEY = "gmp_callback_session"
   val cleanBulkSession     = GmpBulkSession(None, None, None)
 
-  private def featureSwitchCheck[A](expr1: => Future[A], expr2: => Future[A]): Future[A] =
-    if appConfig.isMongoDBCacheEnabled then expr1 else expr2
-
   def fetchGmpBulkSession()(implicit hc: HeaderCarrier): Future[Option[GmpBulkSession]] =
-    featureSwitchCheck(
-      gmpBulkSessionService.fetchGmpBulkSession(),
-      sessionService.fetchGmpBulkSession()
-    )
+    gmpBulkSessionService.fetchGmpBulkSession()
 
   def resetGmpBulkSession()(implicit hc: HeaderCarrier): Future[Option[GmpBulkSession]] =
-    featureSwitchCheck(
-      gmpBulkSessionService.resetGmpBulkSession(),
-      sessionService.resetGmpBulkSession()
-    )
+    gmpBulkSessionService.resetGmpBulkSession()
 
   def cacheCallBackData(_callBackData: Option[UploadStatus])(implicit hc: HeaderCarrier): Future[Option[GmpBulkSession]] =
-    featureSwitchCheck(
-      gmpBulkSessionService.cacheCallBackData(_callBackData),
-      sessionService.cacheCallBackData(_callBackData)
-    )
+    gmpBulkSessionService.cacheCallBackData(_callBackData)
 
   def cacheEmailAndReference(_email: Option[String], _reference: Option[String])(implicit hc: HeaderCarrier): Future[Option[GmpBulkSession]] =
-    featureSwitchCheck(
-      gmpBulkSessionService.cacheEmailAndReference(_email, _reference),
-      sessionService.cacheEmailAndReference(_email, _reference)
-    )
+    gmpBulkSessionService.cacheEmailAndReference(_email, _reference)
 
   def fetchGmpSession()(implicit hc: HeaderCarrier): Future[Option[GmpSession]] =
-    featureSwitchCheck(
-      singleCalculationSessionService.fetchGmpSession(),
-      sessionService.fetchGmpSession()
-    )
+    singleCalculationSessionService.fetchGmpSession()
 
   def resetGmpSession()(implicit hc: HeaderCarrier): Future[Option[GmpSession]] =
-    featureSwitchCheck(
-      singleCalculationSessionService.resetGmpSession(),
-      sessionService.resetGmpSession()
-    )
+    singleCalculationSessionService.resetGmpSession()
 
   def resetGmpSessionWithScon()(implicit hc: HeaderCarrier): Future[Option[GmpSession]] =
-    featureSwitchCheck(
-      singleCalculationSessionService.resetGmpSessionWithScon(),
-      sessionService.resetGmpSessionWithScon()
-    )
+    singleCalculationSessionService.resetGmpSessionWithScon()
 
   def cacheMemberDetails(memberDetails: MemberDetails)(implicit hc: HeaderCarrier): Future[Option[GmpSession]] =
-    featureSwitchCheck(
-      singleCalculationSessionService.cacheMemberDetails(memberDetails),
-      sessionService.cacheMemberDetails(memberDetails)
-    )
+    singleCalculationSessionService.cacheMemberDetails(memberDetails)
 
   def fetchMemberDetails()(implicit hc: HeaderCarrier): Future[Option[MemberDetails]] =
-    featureSwitchCheck(
-      singleCalculationSessionService.fetchMemberDetails(),
-      sessionService.fetchMemberDetails()
-    )
+    singleCalculationSessionService.fetchMemberDetails()
 
   def cachePensionDetails(scon: String)(implicit hc: HeaderCarrier): Future[Option[GmpSession]] =
-    featureSwitchCheck(
-      singleCalculationSessionService.cachePensionDetails(scon),
-      sessionService.cachePensionDetails(scon)
-    )
+    singleCalculationSessionService.cachePensionDetails(scon)
 
   def fetchPensionDetails()(implicit hc: HeaderCarrier): Future[Option[String]] =
-    featureSwitchCheck(
-      singleCalculationSessionService.fetchPensionDetails(),
-      sessionService.fetchPensionDetails()
-    )
+    singleCalculationSessionService.fetchPensionDetails()
 
   def cacheScenario(scenario: String)(implicit hc: HeaderCarrier): Future[Option[GmpSession]] =
-    featureSwitchCheck(
-      singleCalculationSessionService.cacheScenario(scenario),
-      sessionService.cacheScenario(scenario)
-    )
+    singleCalculationSessionService.cacheScenario(scenario)
 
   def fetchScenario()(implicit hc: HeaderCarrier): Future[Option[String]] =
-    featureSwitchCheck(
-      singleCalculationSessionService.fetchScenario(),
-      sessionService.fetchScenario()
-    )
+    singleCalculationSessionService.fetchScenario()
 
   def cacheEqualise(_equalise: Option[Int])(implicit hc: HeaderCarrier): Future[Option[GmpSession]] =
-    featureSwitchCheck(
-      singleCalculationSessionService.cacheEqualise(_equalise),
-      sessionService.cacheEqualise(_equalise)
-    )
+    singleCalculationSessionService.cacheEqualise(_equalise)
 
   def cacheRevaluationDate(date: Option[GmpDate])(implicit hc: HeaderCarrier): Future[Option[GmpSession]] =
-    featureSwitchCheck(
-      singleCalculationSessionService.cacheRevaluationDate(date),
-      sessionService.cacheRevaluationDate(date)
-    )
+    singleCalculationSessionService.cacheRevaluationDate(date)
 
   def cacheLeaving(leaving: Leaving)(implicit hc: HeaderCarrier): Future[Option[GmpSession]] =
-    featureSwitchCheck(
-      singleCalculationSessionService.cacheLeaving(leaving),
-      sessionService.cacheLeaving(leaving)
-    )
+    singleCalculationSessionService.cacheLeaving(leaving)
 
   def fetchLeaving()(implicit hc: HeaderCarrier): Future[Option[Leaving]] =
-    featureSwitchCheck(
-      singleCalculationSessionService.fetchLeaving(),
-      sessionService.fetchLeaving()
-    )
+    singleCalculationSessionService.fetchLeaving()
 
   def cacheRevaluationRate(rate: String)(implicit hc: HeaderCarrier): Future[Option[GmpSession]] =
-    featureSwitchCheck(
-      singleCalculationSessionService.cacheRevaluationRate(rate),
-      sessionService.cacheRevaluationRate(rate)
-    )
+    singleCalculationSessionService.cacheRevaluationRate(rate)
 
   def createCallbackRecord(implicit hc: HeaderCarrier): Future[Any] =
-    featureSwitchCheck(
-      gmpBulkSessionService.createCallbackRecord,
-      sessionService.createCallbackRecord
-    )
+    gmpBulkSessionService.createCallbackRecord
 
   def updateCallbackRecord(sessionId: String, uploadStatus: UploadStatus)(implicit hc: HeaderCarrier): Future[Any] =
-    featureSwitchCheck(
-      gmpBulkSessionService.updateCallbackRecord(uploadStatus),
-      sessionService.updateCallbackRecord(sessionId, uploadStatus)
-    )
+    gmpBulkSessionService.updateCallbackRecord(uploadStatus)
 
   def getCallbackRecord(implicit hc: HeaderCarrier): Future[Option[UploadStatus]] =
-    featureSwitchCheck(
-      gmpBulkSessionService.getCallbackRecord,
-      sessionService.getCallbackRecord
-    )
+    gmpBulkSessionService.getCallbackRecord
 
 }
