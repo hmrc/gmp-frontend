@@ -49,7 +49,7 @@ class GMPBulkSessionService @Inject() (
     }
 
   def fetchGmpBulkSession()(implicit hc: HeaderCarrier): Future[Option[GmpBulkSession]] = {
-    val timer = metrics.keystoreStoreTimer.time()
+    val timer = metrics.sessionStoreTimer.time()
     logger.info("[GMPBulkSessionService][fetchGmpBulkSession]: Fetching Bulk Session data...")
 
     getSessionCacheDataWithRetry
@@ -65,7 +65,7 @@ class GMPBulkSessionService @Inject() (
   }
 
   def resetGmpBulkSession()(implicit hc: HeaderCarrier): Future[Option[GmpBulkSession]] = {
-    val timer = metrics.keystoreStoreTimer.time()
+    val timer = metrics.sessionStoreTimer.time()
     logger.info("[GMPBulkSessionService][resetGmpBulkSession]: Resetting Bulk Session data...")
 
     val cacheData = cleanGmpBulkSessionCache(getSessionId, cleanBulkSession)
@@ -76,7 +76,7 @@ class GMPBulkSessionService @Inject() (
   }
 
   def cacheCallBackData(_callBackData: Option[UploadStatus])(implicit hc: HeaderCarrier): Future[Option[GmpBulkSession]] = {
-    val timer = metrics.keystoreStoreTimer.time()
+    val timer = metrics.sessionStoreTimer.time()
     logger.debug(s"[GMPBulkSessionService][cacheCallBackData] : ${_callBackData}")
 
     val updatedCacheData: Future[Option[GMPBulkSessionCache]] = gmpBulkSessionRepository.get(getSessionId).map {
@@ -100,7 +100,7 @@ class GMPBulkSessionService @Inject() (
   }
 
   def cacheEmailAndReference(_email: Option[String], _reference: Option[String])(implicit hc: HeaderCarrier): Future[Option[GmpBulkSession]] = {
-    val timer = metrics.keystoreStoreTimer.time()
+    val timer = metrics.sessionStoreTimer.time()
 
     logger.debug(s"[GMPBulkSessionService][cacheEmailAndReferencea] : email: ${_email}; reference: ${_reference}")
 
@@ -154,7 +154,7 @@ class GMPBulkSessionService @Inject() (
   }
 
   def getCallbackRecord(implicit hc: HeaderCarrier): Future[Option[UploadStatus]] = {
-    val timer = metrics.keystoreStoreTimer.time()
+    val timer = metrics.sessionStoreTimer.time()
     logger.info("[GMPBulkSessionService][getCallbackRecord]: Reading Callback Record...")
 
     gmpBulkSessionRepository.get(getSessionId).map { result =>

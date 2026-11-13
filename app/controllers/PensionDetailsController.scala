@@ -17,7 +17,7 @@
 package controllers
 
 import com.google.inject.{Inject, Singleton}
-import config.{ApplicationConfig, GmpContext, GmpSessionCache}
+import config.{ApplicationConfig, GmpContext}
 import connectors.GmpConnector
 import controllers.auth.AuthAction
 import forms.PensionDetails_no_longer_used_Form
@@ -43,7 +43,6 @@ class PensionDetailsController @Inject() (
   pdf:                                       PensionDetails_no_longer_used_Form,
   override val messagesControllerComponents: MessagesControllerComponents,
   implicit val executionContext:             ExecutionContext,
-  implicit val gmpSessionCache:              GmpSessionCache,
   views:                                     Views
 ) extends GmpPageFlow(authConnector, GMPSessionService, config, messagesControllerComponents, ac)
     with Logging {

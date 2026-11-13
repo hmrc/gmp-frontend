@@ -22,8 +22,8 @@ import com.google.inject.Inject
 class ApplicationMetrics @Inject() (
   registry: MetricRegistry
 ) {
-  val keystoreStoreTimer          = registry.timer("gmp-keystore-storage-timer")
-  val keystoreRetrieveTimer       = registry.timer("gmp-keystore-retrieve-timer")
+  val sessionStoreTimer           = registry.timer("gmp-session-storage-timer")
+  val sessionRetrieveTimer        = registry.timer("gmp-session-retrieve-timer")
   val gmpConnectorTimer           = registry.timer("gmp-connector-timer")
   def countNpsError(code: String) = registry.counter(s"gmp-npserror-$code").inc()
   def countNpsSconInvalid()       = registry.counter(s"gmp-npssconinvalid").inc()

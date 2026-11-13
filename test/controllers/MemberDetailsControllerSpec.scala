@@ -16,7 +16,7 @@
 
 package controllers
 
-import config.{ApplicationConfig, GmpSessionCache}
+import config.ApplicationConfig
 import controllers.auth.{AuthAction, FakeAuthAction}
 import forms.MemberDetailsForm
 import helpers.RandomNino
@@ -46,7 +46,6 @@ class MemberDetailsControllerSpec extends PlaySpec with GuiceOneServerPerSuite w
   implicit val messagesAPI:      MessagesApi                  = app.injector.instanceOf[MessagesApi]
   implicit val messagesProvider: MessagesImpl                 = MessagesImpl(Lang("en"), messagesAPI)
   implicit val ac:               ApplicationConfig            = app.injector.instanceOf[ApplicationConfig]
-  implicit val gmpSessionCache:  GmpSessionCache              = app.injector.instanceOf[GmpSessionCache]
   lazy val form  = new MemberDetailsForm(mcc)
   lazy val views = app.injector.instanceOf[Views]
 
@@ -60,7 +59,6 @@ class MemberDetailsControllerSpec extends PlaySpec with GuiceOneServerPerSuite w
         ac,
         form,
         ec,
-        gmpSessionCache,
         views
       )
   "GET" must {
@@ -127,7 +125,7 @@ class MemberDetailsControllerSpec extends PlaySpec with GuiceOneServerPerSuite w
           status(result) mustBe SEE_OTHER
         }
 
-        "save details to keystore" in {
+        "save details to session storage" in {
 
           when(mockGMPSessionService.cacheMemberDetails(any())(using any())).thenReturn(Future.successful(Some(session)))
           TestMemberDetailsController.post(

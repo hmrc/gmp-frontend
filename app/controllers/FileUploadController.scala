@@ -17,7 +17,7 @@
 package controllers
 
 import com.google.inject.{Inject, Singleton}
-import config.{ApplicationConfig, GmpContext, GmpSessionCache}
+import config.{ApplicationConfig, GmpContext}
 import controllers.auth.AuthAction
 import models.upscan.*
 import play.api.Logging
@@ -41,7 +41,6 @@ class FileUploadController @Inject() (
   messagesControllerComponents:  MessagesControllerComponents,
   ac:                            ApplicationConfig,
   implicit val executionContext: ExecutionContext,
-  implicit val gmpSessionCache:  GmpSessionCache,
   views:                         Views
 ) extends GmpController(messagesControllerComponents, ac, GMPSessionService, config)
     with Logging {

@@ -17,7 +17,7 @@
 package controllers
 
 import java.util.UUID
-import config.{ApplicationConfig, GmpSessionCache}
+import config.ApplicationConfig
 import controllers.auth.FakeAuthAction
 import forms.BulkReferenceForm
 import models.*
@@ -49,7 +49,6 @@ class BulkReferenceControllerSpec extends PlaySpec with MockitoSugar with GuiceO
   implicit val messagesApi:      MessagesApi                  = app.injector.instanceOf[MessagesApi]
   implicit val messagesProvider: MessagesImpl                 = MessagesImpl(Lang("en"), messagesApi)
   implicit val ac:               ApplicationConfig            = app.injector.instanceOf[ApplicationConfig]
-  implicit val gmpSessionCache:  GmpSessionCache              = app.injector.instanceOf[GmpSessionCache]
   lazy val bulkReferenceForm = new BulkReferenceForm(mcc)
   lazy val views             = app.injector.instanceOf[Views]
 
@@ -63,7 +62,6 @@ class BulkReferenceControllerSpec extends PlaySpec with MockitoSugar with GuiceO
         mcc,
         ec,
         ac,
-        gmpSessionCache,
         views
       ) {}
 

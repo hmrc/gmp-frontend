@@ -17,7 +17,7 @@
 package controllers
 
 import java.util.UUID
-import config.{ApplicationConfig, GmpSessionCache}
+import config.ApplicationConfig
 import connectors.GmpConnector
 import controllers.auth.{AuthAction, FakeAuthAction}
 import forms.PensionDetails_no_longer_used_Form
@@ -53,7 +53,6 @@ class PensionDetailsSconControllerSpec extends PlaySpec with GuiceOneServerPerSu
   implicit val messagesAPI:      MessagesApi                  = app.injector.instanceOf[MessagesApi]
   implicit val messagesProvider: MessagesImpl                 = MessagesImpl(Lang("en"), messagesAPI)
   implicit val ac:               ApplicationConfig            = app.injector.instanceOf[ApplicationConfig]
-  implicit val gmpSessionCache:  GmpSessionCache              = app.injector.instanceOf[GmpSessionCache]
   lazy val pensionDetailsForm = new PensionDetails_no_longer_used_Form(mcc)
   lazy val views              = app.injector.instanceOf[Views]
 
@@ -71,7 +70,6 @@ class PensionDetailsSconControllerSpec extends PlaySpec with GuiceOneServerPerSu
         pensionDetailsForm,
         mcc,
         ec,
-        gmpSessionCache,
         views
       ) {}
 

@@ -17,7 +17,7 @@
 package controllers
 
 import java.time.Instant
-import config.{ApplicationConfig, GmpSessionCache}
+import config.ApplicationConfig
 import controllers.auth.{AuthAction, FakeAuthAction}
 import models.*
 import models.upscan.*
@@ -50,7 +50,6 @@ class FileUploadControllerSpec extends PlaySpec with GuiceOneServerPerSuite with
   implicit val messagesAPI:      MessagesApi                  = app.injector.instanceOf[MessagesApi]
   implicit val messagesProvider: MessagesImpl                 = MessagesImpl(Lang("en"), messagesAPI)
   implicit val ac:               ApplicationConfig            = app.injector.instanceOf[ApplicationConfig]
-  implicit val gmpSessionCache:  GmpSessionCache              = app.injector.instanceOf[GmpSessionCache]
   lazy val views    = app.injector.instanceOf[Views]
   val uploadDetails = UploadDetails(Instant.now, "sum", "csv", "name1")
   val callBackData  = UpscanReadyCallback("ref1", "READY", new URL("http://localhost:9991/download1"), uploadDetails)
@@ -71,7 +70,6 @@ class FileUploadControllerSpec extends PlaySpec with GuiceOneServerPerSuite with
         mcc,
         ac,
         ec,
-        gmpSessionCache,
         views
       ) {}
 

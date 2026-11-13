@@ -16,7 +16,7 @@
 
 package controllers
 
-import config.{ApplicationConfig, GmpSessionCache}
+import config.ApplicationConfig
 import controllers.auth.{AuthAction, FakeAuthAction}
 import forms.RevaluationForm
 import models.*
@@ -45,7 +45,6 @@ class RevaluationControllerSpec extends PlaySpec with GuiceOneServerPerSuite wit
   implicit val messagesAPI:      MessagesApi                  = app.injector.instanceOf[MessagesApi]
   implicit val messagesProvider: MessagesImpl                 = MessagesImpl(Lang("en"), messagesAPI)
   implicit val ac:               ApplicationConfig            = app.injector.instanceOf[ApplicationConfig]
-  implicit val gmpSessionCache:  GmpSessionCache              = app.injector.instanceOf[GmpSessionCache]
   lazy val revaluationForm = new RevaluationForm(mcc)
   lazy val views           = app.injector.instanceOf[Views]
 
@@ -71,7 +70,6 @@ class RevaluationControllerSpec extends PlaySpec with GuiceOneServerPerSuite wit
         ac,
         revaluationForm,
         ec,
-        gmpSessionCache,
         views
       )
 

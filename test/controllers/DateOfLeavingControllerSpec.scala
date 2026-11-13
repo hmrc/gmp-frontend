@@ -16,7 +16,7 @@
 
 package controllers
 
-import config.{ApplicationConfig, GmpSessionCache}
+import config.ApplicationConfig
 import controllers.auth.{AuthAction, FakeAuthAction}
 import forms.DateOfLeavingForm
 import helpers.RandomNino
@@ -48,7 +48,6 @@ class DateOfLeavingControllerSpec extends PlaySpec with GuiceOneServerPerSuite w
   implicit val messagesAPI:      MessagesApi                  = app.injector.instanceOf[MessagesApi]
   implicit val messagesProvider: MessagesImpl                 = MessagesImpl(Lang("en"), messagesAPI)
   implicit val ac:               ApplicationConfig            = app.injector.instanceOf[ApplicationConfig]
-  implicit val gmpSessionCache:  GmpSessionCache              = app.injector.instanceOf[GmpSessionCache]
   lazy val dateOfLeavingForm = new DateOfLeavingForm(mcc)
   lazy val views             = app.injector.instanceOf[Views]
 
@@ -62,7 +61,6 @@ class DateOfLeavingControllerSpec extends PlaySpec with GuiceOneServerPerSuite w
         dateOfLeavingForm,
         mcc,
         ec,
-        gmpSessionCache,
         views
       ) {}
 

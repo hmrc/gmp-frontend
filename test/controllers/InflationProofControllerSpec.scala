@@ -16,7 +16,7 @@
 
 package controllers
 
-import config.{ApplicationConfig, GmpSessionCache}
+import config.ApplicationConfig
 import controllers.auth.{AuthAction, FakeAuthAction}
 import forms.InflationProofForm
 import models.*
@@ -45,7 +45,6 @@ class InflationProofControllerSpec extends PlaySpec with GuiceOneServerPerSuite 
   implicit val messagesAPI:      MessagesApi                  = app.injector.instanceOf[MessagesApi]
   implicit val messagesProvider: MessagesImpl                 = MessagesImpl(Lang("en"), messagesAPI)
   implicit val ac:               ApplicationConfig            = app.injector.instanceOf[ApplicationConfig]
-  implicit val gmpSessionCache:  GmpSessionCache              = app.injector.instanceOf[GmpSessionCache]
   lazy val inflationProofForm = new InflationProofForm(mcc)
   lazy val views              = app.injector.instanceOf[Views]
 
@@ -59,7 +58,6 @@ class InflationProofControllerSpec extends PlaySpec with GuiceOneServerPerSuite 
         inflationProofForm,
         ac,
         ec,
-        gmpSessionCache,
         views
       )
 

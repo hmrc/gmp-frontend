@@ -16,7 +16,7 @@
 
 package controllers
 
-import config.{ApplicationConfig, GmpSessionCache}
+import config.ApplicationConfig
 import connectors.GmpBulkConnector
 import controllers.auth.{AuthAction, FakeAuthAction}
 import models.*
@@ -51,7 +51,6 @@ class DashboardControllerSpec extends PlaySpec with GuiceOneServerPerSuite with 
   implicit val messagesAPI:      MessagesApi                  = app.injector.instanceOf[MessagesApi]
   implicit val messagesProvider: MessagesImpl                 = MessagesImpl(Lang("en"), messagesAPI)
   implicit val ac:               ApplicationConfig            = app.injector.instanceOf[ApplicationConfig]
-  implicit val gmpSessionCache:  GmpSessionCache              = app.injector.instanceOf[GmpSessionCache]
   lazy val views = app.injector.instanceOf[Views]
 
   object TestDashboardController
@@ -64,7 +63,6 @@ class DashboardControllerSpec extends PlaySpec with GuiceOneServerPerSuite with 
         FakeGmpContext,
         mcc,
         ec,
-        gmpSessionCache,
         views
       ) {}
 
@@ -121,7 +119,6 @@ class DashboardControllerSpec extends PlaySpec with GuiceOneServerPerSuite with 
               FakeGmpContext,
               mcc,
               ec,
-              gmpSessionCache,
               views
             ) {}
 

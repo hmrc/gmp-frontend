@@ -22,7 +22,6 @@ import play.api.{Configuration, Environment}
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
 trait AppConfig {
-  val isMongoDBCacheEnabled: Boolean
 
   def serviceMaxNoOfAttempts: Int
 }
@@ -50,8 +49,7 @@ class ApplicationConfig @Inject() (val runModeConfiguration: Configuration, val 
   lazy val timeoutCountdown = servicesConfig.getInt("timeout.countdown")
   lazy val cacheTtl: Int = servicesConfig.getInt("mongodb.timeToLiveInSeconds")
 
-  override val isMongoDBCacheEnabled:  Boolean = runModeConfiguration.getOptional[Boolean]("isMongoDBCacheEnabled").getOrElse(false)
-  override def serviceMaxNoOfAttempts: Int     =
+  override def serviceMaxNoOfAttempts: Int =
     runModeConfiguration.getOptional[String]("service.maxAttempts") match {
       case Some(value) if value.matches("^\\d+$") =>
         value.toInt
